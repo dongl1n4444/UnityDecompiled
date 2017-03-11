@@ -36,6 +36,10 @@
         /// </summary>
         Enum = 7,
         /// <summary>
+        /// <para>A reference to another Object in the Scene. This is done via an ExposedReference type and resolves to a reference to an Object that exists in the context of the SerializedObject containing the SerializedProperty.</para>
+        /// </summary>
+        ExposedReference = 0x12,
+        /// <summary>
         /// <para>Float property.</para>
         /// </summary>
         Float = 2,

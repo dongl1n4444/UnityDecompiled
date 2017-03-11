@@ -4,6 +4,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     [StructLayout(LayoutKind.Sequential)]
     internal struct SavedGUIState
@@ -13,16 +14,17 @@
         internal Vector2 screenManagerSize;
         internal Rect renderManagerRect;
         internal GUISkin skin;
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal int instanceID;
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_SetupSavedGUIState(out IntPtr state, out Vector2 screenManagerSize);
         private static void Internal_ApplySavedGUIState(IntPtr state, Vector2 screenManagerSize)
         {
             INTERNAL_CALL_Internal_ApplySavedGUIState(state, ref screenManagerSize);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_ApplySavedGUIState(IntPtr state, ref Vector2 screenManagerSize);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern int Internal_GetGUIDepth();
         internal static SavedGUIState Create()
         {
@@ -31,6 +33,7 @@
             {
                 state.skin = GUI.skin;
                 state.layoutCache = new GUILayoutUtility.LayoutCache(GUILayoutUtility.current);
+                state.instanceID = GUIUtility.s_OriginalID;
                 Internal_SetupSavedGUIState(out state.guiState, out state.screenManagerSize);
             }
             return state;
@@ -42,6 +45,7 @@
             {
                 GUILayoutUtility.current = this.layoutCache;
                 GUI.skin = this.skin;
+                GUIUtility.s_OriginalID = this.instanceID;
                 Internal_ApplySavedGUIState(this.guiState, this.screenManagerSize);
                 GUIClip.Reapply();
             }

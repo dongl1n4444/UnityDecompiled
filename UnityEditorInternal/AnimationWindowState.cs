@@ -12,6 +12,12 @@
     [Serializable]
     internal class AnimationWindowState : ScriptableObject, ICurveEditorState, IAnimationRecordingState
     {
+        [CompilerGenerated]
+        private static Action <>f__am$cache0;
+        [CompilerGenerated]
+        private static Action <>f__am$cache1;
+        [CompilerGenerated]
+        private static Action<float> <>f__am$cache2;
         [SerializeField]
         public AnimEditor animEditor;
         [NonSerialized]
@@ -20,15 +26,15 @@
         public AnimationWindowHierarchyState hierarchyState;
         public const float kDefaultFrameRate = 60f;
         public const string kEditCurveUndoLabel = "Edit Curve";
+        [SerializeField]
+        public bool linkedWithSequencer;
         private List<AnimationWindowCurve> m_ActiveCurvesCache;
-        private List<CurveWrapper> m_ActiveCurveWrappersCache;
+        private CurveWrapper[] m_ActiveCurveWrappersCache;
         private AnimationWindowKeyframe m_ActiveKeyframeCache;
         [SerializeField]
         private int m_ActiveKeyframeHash;
         [SerializeField]
-        private int m_CurrentFrame;
-        [SerializeField]
-        private float m_CurrentTime;
+        private AnimationWindowControl m_ControlInterface;
         private List<DopeLine> m_dopelinesCache;
         [SerializeField]
         private float m_FrameRate = 60f;
@@ -38,19 +44,20 @@
         private List<LiveEditCurve> m_LiveEditSnapshot;
         private HashSet<int> m_ModifiedCurves = new HashSet<int>();
         [SerializeField]
-        private AnimationWindowPolicy m_Policy;
+        private IAnimationWindowControl m_OverrideControlInterface;
         private int m_PreviousRefreshHash;
-        private AnimationRecordMode m_Recording;
         private RefreshType m_Refresh = RefreshType.None;
         private List<AnimationWindowKeyframe> m_SelectedKeysCache;
         [SerializeField]
         private AnimationWindowSelection m_Selection;
+        private Bounds? m_SelectionBoundsCache;
         [SerializeField]
         private TimeArea m_TimeArea;
         [SerializeField]
         private TimeArea.TimeFormat m_TimeFormat = TimeArea.TimeFormat.TimeFrame;
         [NonSerialized]
         public Action onEndLiveEdit;
+        [NonSerialized]
         public Action<float> onFrameRateChange;
         [NonSerialized]
         public Action onStartLiveEdit;
@@ -74,7 +81,7 @@
         {
             if (this.m_ActiveCurveWrappersCache != null)
             {
-                for (int i = 0; i < this.m_ActiveCurveWrappersCache.Count; i++)
+                for (int i = 0; i < this.m_ActiveCurveWrappersCache.Length; i++)
                 {
                     CurveWrapper wrapper = this.m_ActiveCurveWrappersCache[i];
                     if (wrapper.renderer != null)
@@ -96,6 +103,7 @@
         {
             this.selectedKeyHashes.Clear();
             this.m_SelectedKeysCache = null;
+            this.m_SelectionBoundsCache = null;
         }
 
         public void ClearSelections()
@@ -158,11 +166,13 @@
                     bool flag = false;
                     bool flag2 = false;
                     int hashCode = binding.GetHashCode();
-                    foreach (AnimationWindowSelectionItem item in itemArray)
+                    for (int i = 0; i < itemArray.Length; i++)
                     {
-                        foreach (AnimationWindowCurve curve in item.curves)
+                        List<AnimationWindowCurve> curves = itemArray[i].curves;
+                        for (int j = 0; j < curves.Count; j++)
                         {
-                            if (curve.binding.GetHashCode() == hashCode)
+                            AnimationWindowCurve curve = curves[j];
+                            if (curve.GetBindingHashCode() == hashCode)
                             {
                                 this.m_ModifiedCurves.Add(curve.GetHashCode());
                                 flag = true;
@@ -199,7 +209,7 @@
                     this.SaveCurve(keyframe.curve, "Edit Curve");
                 }
             }
-            this.ResampleAnimation();
+            this.StartRecording();
         }
 
         public void DeleteSelectedKeys()
@@ -213,11 +223,10 @@
         public void EndLiveEdit()
         {
             this.SaveSelectedKeys("Edit Curve");
-            this.ResampleAnimation();
             this.m_LiveEditSnapshot = null;
             if (this.onEndLiveEdit != null)
             {
-                this.onEndLiveEdit.Invoke();
+                this.onEndLiveEdit();
             }
         }
 
@@ -289,7 +298,7 @@
             <GetAggregateKeys>c__AnonStorey4 storey = new <GetAggregateKeys>c__AnonStorey4 {
                 hierarchyNode = hierarchyNode
             };
-            DopeLine line = Enumerable.FirstOrDefault<DopeLine>(this.dopelines, new Func<DopeLine, bool>(storey, (IntPtr) this.<>m__0));
+            DopeLine line = Enumerable.FirstOrDefault<DopeLine>(this.dopelines, new Func<DopeLine, bool>(storey.<>m__0));
             return line?.keys;
         }
 
@@ -358,20 +367,16 @@
             {
                 this.m_Selection.Clear();
             }
-            Object.DestroyImmediate(this.m_KeySelection);
+            UnityEngine.Object.DestroyImmediate(this.m_KeySelection);
+            UnityEngine.Object.DestroyImmediate(this.m_ControlInterface);
+            UnityEngine.Object.DestroyImmediate(this.m_OverrideControlInterface);
         }
 
         public void OnDisable()
         {
-            this.recording = false;
-            this.playing = false;
             AnimationUtility.onCurveWasModified = (AnimationUtility.OnCurveWasModified) Delegate.Remove(AnimationUtility.onCurveWasModified, new AnimationUtility.OnCurveWasModified(this.CurveWasModified));
             Undo.undoRedoPerformed = (Undo.UndoRedoCallback) Delegate.Remove(Undo.undoRedoPerformed, new Undo.UndoRedoCallback(this.UndoRedoPerformed));
-            if (this.m_Recording != null)
-            {
-                this.m_Recording.Dispose();
-                this.m_Recording = null;
-            }
+            this.m_ControlInterface.OnDisable();
         }
 
         public void OnEnable()
@@ -379,7 +384,29 @@
             base.hideFlags = HideFlags.HideAndDontSave;
             AnimationUtility.onCurveWasModified = (AnimationUtility.OnCurveWasModified) Delegate.Combine(AnimationUtility.onCurveWasModified, new AnimationUtility.OnCurveWasModified(this.CurveWasModified));
             Undo.undoRedoPerformed = (Undo.UndoRedoCallback) Delegate.Combine(Undo.undoRedoPerformed, new Undo.UndoRedoCallback(this.UndoRedoPerformed));
-            this.m_Recording = new AnimationRecordMode();
+            if (<>f__am$cache0 == null)
+            {
+                <>f__am$cache0 = delegate {
+                };
+            }
+            this.onStartLiveEdit = (Action) Delegate.Combine(this.onStartLiveEdit, <>f__am$cache0);
+            if (<>f__am$cache1 == null)
+            {
+                <>f__am$cache1 = delegate {
+                };
+            }
+            this.onEndLiveEdit = (Action) Delegate.Combine(this.onEndLiveEdit, <>f__am$cache1);
+            if (<>f__am$cache2 == null)
+            {
+                <>f__am$cache2 = delegate (float frameRate) {
+                };
+            }
+            this.onFrameRateChange = (Action<float>) Delegate.Combine(this.onFrameRateChange, <>f__am$cache2);
+            if (this.m_ControlInterface == null)
+            {
+                this.m_ControlInterface = ScriptableObject.CreateInstance(typeof(AnimationWindowControl)) as AnimationWindowControl;
+            }
+            this.m_ControlInterface.state = this;
         }
 
         public void OnGUI()
@@ -410,25 +437,15 @@
                         }
                     }
                 }
-                if (this.recording)
-                {
-                    this.ResampleAnimation();
-                    InspectorWindow.RepaintAllInspectors();
-                }
+                this.controlInterface.ResampleAnimation();
                 this.m_lastAddedCurveBinding = null;
             }
         }
 
         public void OnSelectionChanged()
         {
-            if (this.onFrameRateChange != null)
-            {
-                this.onFrameRateChange(this.frameRate);
-            }
-            if (this.recording)
-            {
-                this.ResampleAnimation();
-            }
+            this.onFrameRateChange(this.frameRate);
+            this.controlInterface.OnSelectionChanged();
         }
 
         public void PasteKeys()
@@ -519,7 +536,7 @@
             }
             else
             {
-                this.ResampleAnimation();
+                this.StartRecording();
             }
         }
 
@@ -538,16 +555,6 @@
         public float PixelToTime(float pixelX, Rect rect) => 
             (((pixelX * this.visibleTimeSpan) / rect.width) + this.minVisibleTime);
 
-        private UndoPropertyModification[] PostprocessAnimationRecordingModifications(UndoPropertyModification[] modifications)
-        {
-            if (!AnimationMode.InAnimationMode())
-            {
-                Undo.postprocessModifications = (Undo.PostprocessModifications) Delegate.Remove(Undo.postprocessModifications, new Undo.PostprocessModifications(this.PostprocessAnimationRecordingModifications));
-                return modifications;
-            }
-            return AnimationRecording.Process(this, modifications);
-        }
-
         private void Refresh()
         {
             this.selection.Synchronize();
@@ -558,6 +565,7 @@
                 this.m_ActiveCurvesCache = null;
                 this.m_dopelinesCache = null;
                 this.m_SelectedKeysCache = null;
+                this.m_SelectionBoundsCache = null;
                 this.ClearCurveWrapperCache();
                 if (this.hierarchyData != null)
                 {
@@ -577,15 +585,12 @@
             {
                 this.m_ActiveKeyframeCache = null;
                 this.m_SelectedKeysCache = null;
+                this.m_SelectionBoundsCache = null;
                 this.ReloadModifiedAnimationCurveCache();
                 this.ReloadModifiedDopelineCache();
                 this.ReloadModifiedCurveWrapperCache();
                 this.m_Refresh = RefreshType.None;
                 this.m_ModifiedCurves.Clear();
-            }
-            if (this.selection.disabled && this.recording)
-            {
-                this.recording = false;
             }
         }
 
@@ -616,7 +621,7 @@
             if (this.m_ActiveCurveWrappersCache != null)
             {
                 Dictionary<int, AnimationWindowCurve> source = new Dictionary<int, AnimationWindowCurve>();
-                for (int i = 0; i < this.m_ActiveCurveWrappersCache.Count; i++)
+                for (int i = 0; i < this.m_ActiveCurveWrappersCache.Length; i++)
                 {
                     <ReloadModifiedCurveWrapperCache>c__AnonStorey3 storey = new <ReloadModifiedCurveWrapperCache>c__AnonStorey3 {
                         curveWrapper = this.m_ActiveCurveWrappersCache[i]
@@ -689,38 +694,6 @@
             if (this.animEditor != null)
             {
                 this.animEditor.Repaint();
-            }
-        }
-
-        public void ResampleAnimation()
-        {
-            if ((!this.disabled && !this.animatorIsOptimized) && this.canRecord)
-            {
-                bool flag = false;
-                foreach (AnimationWindowSelectionItem item in this.selection.ToArray())
-                {
-                    if (item.animationClip != null)
-                    {
-                        if (!this.recording)
-                        {
-                            this.recording = true;
-                        }
-                        Undo.FlushUndoRecordObjects();
-                        AnimationMode.BeginSampling();
-                        AnimationMode.SampleAnimationClip(item.rootGameObject, item.animationClip, this.currentTime - item.timeOffset);
-                        AnimationMode.EndSampling();
-                        flag = true;
-                    }
-                }
-                if (flag)
-                {
-                    SceneView.RepaintAll();
-                    ParticleSystemWindow instance = ParticleSystemWindow.GetInstance();
-                    if (instance != null)
-                    {
-                        instance.Repaint();
-                    }
-                }
             }
         }
 
@@ -815,6 +788,7 @@
                 this.selectedKeyHashes.Add(hash);
             }
             this.m_SelectedKeysCache = null;
+            this.m_SelectionBoundsCache = null;
         }
 
         public void SelectKeysFromDopeline(DopeLine dopeline)
@@ -845,7 +819,7 @@
         {
             if (this.onStartLiveEdit != null)
             {
-                this.onStartLiveEdit.Invoke();
+                this.onStartLiveEdit();
             }
             this.m_LiveEditSnapshot = new List<LiveEditCurve>();
             this.SaveKeySelection("Edit Curve");
@@ -880,6 +854,30 @@
                     }
                 }
             }
+        }
+
+        public void StartPlayback()
+        {
+            this.controlInterface.StartPlayback();
+        }
+
+        public void StartRecording()
+        {
+            if (this.selectedItem != null)
+            {
+                this.controlInterface.StartRecording(this.selectedItem.sourceObject);
+                this.controlInterface.ResampleAnimation();
+            }
+        }
+
+        public void StopPlayback()
+        {
+            this.controlInterface.StopPlayback();
+        }
+
+        public void StopRecording()
+        {
+            this.controlInterface.StopRecording();
         }
 
         private void SyncSceneSelection(int[] selectedNodeIDs)
@@ -939,13 +937,13 @@
                 {
                     if (curve.curve.animationIsEditable)
                     {
-                        Vector3 v = new Vector3(keyframe.keySnapshot.time, 0f, 0f);
-                        v = matrix.MultiplyPoint3x4(v);
-                        keyframe.key.time = Mathf.Max(!snapToFrame ? v.x : this.SnapToFrame(v.x, curve.curve.clip.frameRate), 0f);
+                        Vector3 point = new Vector3(keyframe.keySnapshot.time, 0f, 0f);
+                        point = matrix.MultiplyPoint3x4(point);
+                        keyframe.key.time = Mathf.Max(!snapToFrame ? point.x : this.SnapToFrame(point.x, curve.curve.clip.frameRate), 0f);
                         if (flipX)
                         {
-                            keyframe.key.inTangent = -keyframe.keySnapshot.outTangent;
-                            keyframe.key.outTangent = -keyframe.keySnapshot.inTangent;
+                            keyframe.key.inTangent = (keyframe.keySnapshot.outTangent == float.PositiveInfinity) ? float.PositiveInfinity : -keyframe.keySnapshot.outTangent;
+                            keyframe.key.outTangent = (keyframe.keySnapshot.inTangent == float.PositiveInfinity) ? float.PositiveInfinity : -keyframe.keySnapshot.inTangent;
                         }
                     }
                     this.SelectKey(keyframe.key);
@@ -1007,21 +1005,21 @@
                 {
                     if (curve.curve.animationIsEditable)
                     {
-                        Vector3 v = new Vector3(keyframe.keySnapshot.time, !keyframe.keySnapshot.isPPtrCurve ? ((float) keyframe.keySnapshot.value) : 0f, 0f);
-                        v = matrix.MultiplyPoint3x4(v);
-                        keyframe.key.time = Mathf.Max(!snapToFrame ? v.x : this.SnapToFrame(v.x, curve.curve.clip.frameRate), 0f);
+                        Vector3 point = new Vector3(keyframe.keySnapshot.time, !keyframe.keySnapshot.isPPtrCurve ? ((float) keyframe.keySnapshot.value) : 0f, 0f);
+                        point = matrix.MultiplyPoint3x4(point);
+                        keyframe.key.time = Mathf.Max(!snapToFrame ? point.x : this.SnapToFrame(point.x, curve.curve.clip.frameRate), 0f);
                         if (flipX)
                         {
-                            keyframe.key.inTangent = -keyframe.keySnapshot.outTangent;
-                            keyframe.key.outTangent = -keyframe.keySnapshot.inTangent;
+                            keyframe.key.inTangent = (keyframe.keySnapshot.outTangent == float.PositiveInfinity) ? float.PositiveInfinity : -keyframe.keySnapshot.outTangent;
+                            keyframe.key.outTangent = (keyframe.keySnapshot.inTangent == float.PositiveInfinity) ? float.PositiveInfinity : -keyframe.keySnapshot.inTangent;
                         }
                         if (!keyframe.key.isPPtrCurve)
                         {
-                            keyframe.key.value = v.y;
+                            keyframe.key.value = point.y;
                             if (flipY)
                             {
-                                keyframe.key.inTangent = -keyframe.key.inTangent;
-                                keyframe.key.outTangent = -keyframe.key.outTangent;
+                                keyframe.key.inTangent = (keyframe.key.inTangent == float.PositiveInfinity) ? float.PositiveInfinity : -keyframe.key.inTangent;
+                                keyframe.key.outTangent = (keyframe.key.outTangent == float.PositiveInfinity) ? float.PositiveInfinity : -keyframe.key.outTangent;
                             }
                         }
                     }
@@ -1037,10 +1035,7 @@
         public void UndoRedoPerformed()
         {
             this.refresh = RefreshType.Everything;
-            if (this.recording)
-            {
-                this.ResampleAnimation();
-            }
+            this.controlInterface.ResampleAnimation();
         }
 
         public void UnSelectHierarchyItem(int hierarchyNodeID)
@@ -1061,6 +1056,7 @@
                 this.selectedKeyHashes.Remove(hash);
             }
             this.m_SelectedKeysCache = null;
+            this.m_SelectionBoundsCache = null;
         }
 
         public void UnselectKeysFromDopeline(DopeLine dopeline)
@@ -1131,7 +1127,7 @@
             }
         }
 
-        public List<CurveWrapper> activeCurveWrappers
+        public CurveWrapper[] activeCurveWrappers
         {
             get
             {
@@ -1155,7 +1151,7 @@
                             }
                         }
                     }
-                    this.m_ActiveCurveWrappersCache = source;
+                    this.m_ActiveCurveWrappersCache = source.ToArray();
                 }
                 return this.m_ActiveCurveWrappersCache;
             }
@@ -1211,33 +1207,14 @@
             }
         }
 
+        public bool addZeroFrame =>
+            true;
+
         public List<AnimationWindowCurve> allCurves =>
             this.selection.curves;
 
-        public bool animatorIsOptimized
-        {
-            get
-            {
-                if (this.activeRootGameObject == null)
-                {
-                    return false;
-                }
-                Animator component = this.activeRootGameObject.GetComponent<Animator>();
-                return ((component != null) && (component.isOptimizable && !component.hasTransformHierarchy));
-            }
-        }
-
-        public bool canRecord
-        {
-            get
-            {
-                if (!this.selection.canRecord)
-                {
-                    return false;
-                }
-                return ((this.m_Recording != null) && this.m_Recording.canEnable);
-            }
-        }
+        public bool animatorIsOptimized =>
+            ((this.selectedItem != null) && this.selectedItem.objectIsOptimized);
 
         public float clipFrameRate
         {
@@ -1270,18 +1247,35 @@
             }
         }
 
+        public IAnimationWindowControl controlInterface
+        {
+            get
+            {
+                if (this.m_OverrideControlInterface != null)
+                {
+                    return this.m_OverrideControlInterface;
+                }
+                return this.m_ControlInterface;
+            }
+        }
+
+        public int currentFrame
+        {
+            get => 
+                this.time.frame;
+            set
+            {
+                this.controlInterface.GoToFrame(value);
+            }
+        }
+
         public float currentTime
         {
             get => 
-                this.m_CurrentTime;
+                this.time.time;
             set
             {
-                if (!Mathf.Approximately(this.m_CurrentTime, value))
-                {
-                    this.m_CurrentTime = Mathf.Max(value, 0f);
-                    this.m_CurrentFrame = this.TimeToFrameFloor(this.m_CurrentTime);
-                    this.ResampleAnimation();
-                }
+                this.controlInterface.GoToTime(value);
             }
         }
 
@@ -1321,21 +1315,6 @@
             }
         }
 
-        public int frame
-        {
-            get => 
-                this.m_CurrentFrame;
-            set
-            {
-                if (this.m_CurrentFrame != value)
-                {
-                    this.m_CurrentFrame = Math.Max(value, 0);
-                    this.m_CurrentTime = this.FrameToTime((float) this.m_CurrentFrame);
-                    this.ResampleAnimation();
-                }
-            }
-        }
-
         public float frameRate
         {
             get => 
@@ -1345,21 +1324,8 @@
                 if (this.m_FrameRate != value)
                 {
                     this.m_FrameRate = value;
-                    if (this.onFrameRateChange != null)
-                    {
-                        this.onFrameRateChange(this.m_FrameRate);
-                    }
+                    this.onFrameRateChange(this.m_FrameRate);
                 }
-            }
-        }
-
-        public bool locked
-        {
-            get => 
-                this.selection.locked;
-            set
-            {
-                this.selection.locked = value;
             }
         }
 
@@ -1381,63 +1347,28 @@
         public float minVisibleTime =>
             this.m_TimeArea.shownArea.xMin;
 
+        public IAnimationWindowControl overrideControlInterface
+        {
+            get => 
+                this.m_OverrideControlInterface;
+            set
+            {
+                if (this.m_OverrideControlInterface != null)
+                {
+                    UnityEngine.Object.DestroyImmediate(this.m_OverrideControlInterface);
+                }
+                this.m_OverrideControlInterface = value;
+            }
+        }
+
         public float pixelPerSecond =>
             this.timeArea.m_Scale.x;
 
-        public bool playing
-        {
-            get => 
-                AnimationMode.InAnimationPlaybackMode();
-            set
-            {
-                if (value && !AnimationMode.InAnimationPlaybackMode())
-                {
-                    AnimationMode.StartAnimationPlaybackMode();
-                    this.recording = true;
-                }
-                if (!value && AnimationMode.InAnimationPlaybackMode())
-                {
-                    AnimationMode.StopAnimationPlaybackMode();
-                    this.currentTime = this.FrameToTime((float) this.frame);
-                }
-            }
-        }
+        public bool playing =>
+            this.controlInterface.playing;
 
-        public AnimationWindowPolicy policy
-        {
-            get => 
-                this.m_Policy;
-            set
-            {
-                this.m_Policy = value;
-            }
-        }
-
-        public bool recording
-        {
-            get => 
-                ((this.m_Recording != null) && this.m_Recording.enable);
-            set
-            {
-                if (this.canRecord && (this.m_Recording != null))
-                {
-                    bool enable = this.m_Recording.enable;
-                    this.m_Recording.enable = value;
-                    bool flag2 = this.m_Recording.enable;
-                    if (enable != flag2)
-                    {
-                        if (flag2)
-                        {
-                            Undo.postprocessModifications = (Undo.PostprocessModifications) Delegate.Combine(Undo.postprocessModifications, new Undo.PostprocessModifications(this.PostprocessAnimationRecordingModifications));
-                        }
-                        else
-                        {
-                            Undo.postprocessModifications = (Undo.PostprocessModifications) Delegate.Remove(Undo.postprocessModifications, new Undo.PostprocessModifications(this.PostprocessAnimationRecordingModifications));
-                        }
-                    }
-                }
-            }
-        }
+        public bool recording =>
+            this.controlInterface.recording;
 
         public RefreshType refresh
         {
@@ -1548,11 +1479,39 @@
             }
         }
 
-        public bool syncTimeDuringDrag =>
-            false;
+        public Bounds selectionBounds
+        {
+            get
+            {
+                if (!this.m_SelectionBoundsCache.HasValue)
+                {
+                    List<AnimationWindowKeyframe> selectedKeys = this.selectedKeys;
+                    if (selectedKeys.Count > 0)
+                    {
+                        AnimationWindowKeyframe keyframe = selectedKeys[0];
+                        float x = keyframe.time + keyframe.curve.timeOffset;
+                        float y = !keyframe.isPPtrCurve ? ((float) keyframe.value) : 0f;
+                        Bounds bounds = new Bounds((Vector3) new Vector2(x, y), (Vector3) Vector2.zero);
+                        for (int i = 1; i < selectedKeys.Count; i++)
+                        {
+                            keyframe = selectedKeys[i];
+                            x = keyframe.time + keyframe.curve.timeOffset;
+                            y = !keyframe.isPPtrCurve ? ((float) keyframe.value) : 0f;
+                            bounds.Encapsulate((Vector3) new Vector2(x, y));
+                        }
+                        this.m_SelectionBoundsCache = new Bounds?(bounds);
+                    }
+                    else
+                    {
+                        this.m_SelectionBoundsCache = new Bounds((Vector3) Vector2.zero, (Vector3) Vector2.zero);
+                    }
+                }
+                return this.m_SelectionBoundsCache.Value;
+            }
+        }
 
         public AnimationKeyTime time =>
-            AnimationKeyTime.Frame(this.frame, this.frameRate);
+            this.controlInterface.time;
 
         public TimeArea timeArea
         {

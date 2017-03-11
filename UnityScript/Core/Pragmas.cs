@@ -25,14 +25,14 @@
 
         public static void DisableOn(Module module, string pragma)
         {
-            module.set_Item(pragma, false);
+            module[pragma] = false;
         }
 
         public static bool IsDisabledOn(Module module, string pragma) => 
-            RuntimeServices.EqualityOperator(false, module.get_Item(pragma));
+            RuntimeServices.EqualityOperator(false, module[pragma]);
 
         public static bool IsEnabledOn(Module module, string pragma) => 
-            RuntimeServices.EqualityOperator(true, module.get_Item(pragma));
+            RuntimeServices.EqualityOperator(true, module[pragma]);
 
         public static bool IsValid(string pragma) => 
             RuntimeServices.op_Member(pragma, ValidPragmas);

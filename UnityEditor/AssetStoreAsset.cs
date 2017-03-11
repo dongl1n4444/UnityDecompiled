@@ -12,7 +12,7 @@
         public int id;
         public string name;
         public int packageID;
-        internal Object previewAsset;
+        internal UnityEngine.Object previewAsset;
         internal AssetBundle previewBundle;
         internal AssetBundleCreateRequest previewBundleRequest;
         public Texture2D previewImage;
@@ -24,7 +24,7 @@
         {
             if (this.previewImage != null)
             {
-                Object.DestroyImmediate(this.previewImage);
+                UnityEngine.Object.DestroyImmediate(this.previewImage);
                 this.previewImage = null;
             }
             if (this.previewBundle != null)
@@ -108,7 +108,7 @@
         public bool HasLivePreview =>
             (this.previewAsset != null);
 
-        public Object Preview
+        public UnityEngine.Object Preview
         {
             get
             {

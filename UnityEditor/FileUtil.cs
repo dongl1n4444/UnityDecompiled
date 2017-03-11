@@ -6,6 +6,7 @@
     using System.Runtime.CompilerServices;
     using System.Text.RegularExpressions;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Lets you do move, copy, delete operations over files or directories.</para>
@@ -48,7 +49,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <CopyDirectory>m__0);
+                <>f__am$cache0 = f => true;
             }
             CopyDirectoryFiltered(source, target, overwrite, <>f__am$cache0, false);
         }
@@ -62,7 +63,7 @@
             }
             foreach (string str in Directory.GetFiles(source))
             {
-                if (includeCallback.Invoke(str))
+                if (includeCallback(str))
                 {
                     string fileName = Path.GetFileName(str);
                     string to = Path.Combine(target, fileName);
@@ -73,7 +74,7 @@
             {
                 foreach (string str4 in Directory.GetDirectories(source))
                 {
-                    if (includeCallback.Invoke(str4))
+                    if (includeCallback(str4))
                     {
                         string str5 = Path.GetFileName(str4);
                         CopyDirectoryFiltered(Path.Combine(source, str5), Path.Combine(target, str5), overwrite, includeCallback, recursive);
@@ -99,7 +100,7 @@
                 Debug.Log("CopyDirectoryRecursive: Pattern '" + regExExcludeFilter + "' is not a correct Regular Expression. Not excluding any files.");
                 return;
             }
-            Func<string, bool> includeCallback = new Func<string, bool>(storey, (IntPtr) this.<>m__0);
+            Func<string, bool> includeCallback = new Func<string, bool>(storey.<>m__0);
             CopyDirectoryFiltered(source, target, overwrite, includeCallback, recursive);
         }
 
@@ -146,14 +147,14 @@
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void CopyFileOrDirectory(string from, string to);
         /// <summary>
         /// <para>Copies the file or directory.</para>
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void CopyFileOrDirectoryFollowSymlinks(string from, string to);
         internal static void CreateOrCleanDirectory(string dir)
         {
@@ -168,11 +169,11 @@
         /// <para>Deletes a file or a directory given a path.</para>
         /// </summary>
         /// <param name="path"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool DeleteFileOrDirectory(string path);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern string DeleteLastPathNameComponent(string path);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern string GetActualPathName(string path);
         internal static List<string> GetAllFilesRecursive(string path)
         {
@@ -181,7 +182,7 @@
             };
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<string, bool>(null, (IntPtr) <GetAllFilesRecursive>m__1);
+                <>f__am$cache1 = p => true;
             }
             WalkFilesystemRecursively(path, new Action<string>(storey.<>m__0), <>f__am$cache1);
             return storey.files;
@@ -199,18 +200,18 @@
             return num;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern string GetLastPathNameComponent(string path);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern string GetPathExtension(string path);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern string GetPathWithoutExtension(string path);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetProjectRelativePath(string path);
         /// <summary>
         /// <para>Returns a unique path in the Temp folder within your current project.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetUniqueTempPathInProject();
         internal static void MoveFileIfExists(string src, string dst)
         {
@@ -227,7 +228,7 @@
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void MoveFileOrDirectory(string from, string to);
         internal static string NiceWinPath(string unityPath) => 
             ((Application.platform != RuntimePlatform.WindowsEditor) ? unityPath : unityPath.Replace("/", @"\"));
@@ -368,7 +369,7 @@
             }
             foreach (string str2 in Directory.GetDirectories(path))
             {
-                if (directoryCallback.Invoke(str2))
+                if (directoryCallback(str2))
                 {
                     WalkFilesystemRecursively(str2, fileCallback, directoryCallback);
                 }

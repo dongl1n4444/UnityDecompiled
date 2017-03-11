@@ -87,7 +87,7 @@ internal class ParticleSystemCurveEditor
         for (int i = 0; i < this.m_AddedCurves.Count; i++)
         {
             CurveData data = this.m_AddedCurves[i];
-            if (data.m_Visible)
+            if ((data.m_Visible && ((data.m_Max == null) || !data.m_Max.hasMultipleDifferentValues)) && ((data.m_Min == null) || !data.m_Min.hasMultipleDifferentValues))
             {
                 int regionId = -1;
                 if (data.IsRegion())
@@ -163,14 +163,14 @@ internal class ParticleSystemCurveEditor
                 for (int i = 0; i < selectedCurves.Count; i++)
                 {
                     CurveWrapper curveWrapperFromSelection = this.m_CurveEditor.GetCurveWrapperFromSelection(selectedCurves[i]);
-                    num += !AnimationUtility.IsValidPolynomialCurve(curveWrapperFromSelection.curve) ? 0 : 1;
+                    num += !AnimationUtility.IsValidOptimizedPolynomialCurve(curveWrapperFromSelection.curve) ? 0 : 1;
                 }
                 if ((selectedCurves.Count != num) && GUI.Button(position, s_Styles.optimizeCurveText, s_Styles.plus))
                 {
                     for (int j = 0; j < selectedCurves.Count; j++)
                     {
                         CurveWrapper wrapper2 = this.m_CurveEditor.GetCurveWrapperFromSelection(selectedCurves[j]);
-                        if (!AnimationUtility.IsValidPolynomialCurve(wrapper2.curve))
+                        if (!AnimationUtility.IsValidOptimizedPolynomialCurve(wrapper2.curve))
                         {
                             wrapper2.curve.preWrapMode = WrapMode.Once;
                             wrapper2.curve.postWrapMode = WrapMode.Once;
@@ -188,7 +188,7 @@ internal class ParticleSystemCurveEditor
                 if (this.m_CurveEditor.GetTopMostCurveID(out num4))
                 {
                     CurveWrapper curveWrapperFromID = this.m_CurveEditor.GetCurveWrapperFromID(num4);
-                    if (!AnimationUtility.IsValidPolynomialCurve(curveWrapperFromID.curve) && GUI.Button(position, s_Styles.optimizeCurveText, s_Styles.plus))
+                    if (!AnimationUtility.IsValidOptimizedPolynomialCurve(curveWrapperFromID.curve) && GUI.Button(position, s_Styles.optimizeCurveText, s_Styles.plus))
                     {
                         curveWrapperFromID.curve.preWrapMode = WrapMode.Once;
                         curveWrapperFromID.curve.postWrapMode = WrapMode.Once;
@@ -445,7 +445,7 @@ internal class ParticleSystemCurveEditor
 
     private void PresetDropDown(Rect rect)
     {
-        if (EditorGUI.ButtonMouseDown(rect, EditorGUI.GUIContents.titleSettingsIcon, FocusType.Passive, EditorStyles.inspectorTitlebarText) && (this.CreateDoubleCurveFromTopMostCurve() != null))
+        if (EditorGUI.DropdownButton(rect, EditorGUI.GUIContents.titleSettingsIcon, FocusType.Passive, EditorStyles.inspectorTitlebarText) && (this.CreateDoubleCurveFromTopMostCurve() != null))
         {
             this.InitDoubleCurvePresets();
             if (this.m_DoubleCurvePresets != null)
@@ -634,11 +634,11 @@ internal class ParticleSystemCurveEditor
                     {
                         if (data.m_MaxId > 0)
                         {
-                            this.SetCurve(this.m_CurveEditor.GetCurveFromID(data.m_MaxId), doubleCurve.maxCurve);
+                            this.SetCurve(this.m_CurveEditor.GetCurveWrapperFromID(data.m_MaxId), doubleCurve.maxCurve);
                         }
                         if (data.m_MinId > 0)
                         {
-                            this.SetCurve(this.m_CurveEditor.GetCurveFromID(data.m_MinId), doubleCurve.minCurve);
+                            this.SetCurve(this.m_CurveEditor.GetCurveWrapperFromID(data.m_MinId), doubleCurve.minCurve);
                         }
                     }
                     else

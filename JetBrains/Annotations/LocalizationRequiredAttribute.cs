@@ -7,7 +7,7 @@
     [AttributeUsage(AttributeTargets.All, AllowMultiple=false, Inherited=true)]
     public sealed class LocalizationRequiredAttribute : Attribute
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <Required>k__BackingField;
 
         public LocalizationRequiredAttribute() : this(true)

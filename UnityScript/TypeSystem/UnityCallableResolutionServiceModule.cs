@@ -16,9 +16,9 @@
 
         public static bool IsArrayArgumentExplicitlyProvided(IParameter[] parameters, ExpressionCollection args)
         {
-            IType expressionType = TypeSystemServices.GetExpressionType(args.get_Item(-1));
-            IType rhs = parameters[parameters.Length + -1].get_Type();
-            if (!RuntimeServices.EqualityOperator(expressionType, rhs))
+            IType expressionType = TypeSystemServices.GetExpressionType(args[-1]);
+            IType type = parameters[parameters.Length + -1].Type;
+            if (!RuntimeServices.EqualityOperator(expressionType, type))
             {
             }
             return ((parameters.Length == args.Count) ? RuntimeServices.EqualityOperator(expressionType, EmptyArrayType.Default) : false);

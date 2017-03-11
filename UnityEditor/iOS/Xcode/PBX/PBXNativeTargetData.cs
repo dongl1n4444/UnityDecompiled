@@ -10,6 +10,7 @@
         public GUIDList dependencies;
         public string name;
         public GUIDList phases;
+        public string productReference;
 
         static PBXNativeTargetData()
         {
@@ -28,6 +29,7 @@
             data.SetPropertyList("buildRules", new List<string>());
             data.dependencies = new GUIDList();
             data.name = name;
+            data.productReference = productRef;
             data.SetPropertyString("productName", name);
             data.SetPropertyString("productReference", productRef);
             data.SetPropertyString("productType", productType);
@@ -38,6 +40,7 @@
         {
             base.SetPropertyString("buildConfigurationList", this.buildConfigList);
             base.SetPropertyString("name", this.name);
+            base.SetPropertyString("productReference", this.productReference);
             base.SetPropertyList("buildPhases", (List<string>) this.phases);
             base.SetPropertyList("dependencies", (List<string>) this.dependencies);
         }
@@ -46,6 +49,7 @@
         {
             this.buildConfigList = base.GetPropertyString("buildConfigurationList");
             this.name = base.GetPropertyString("name");
+            this.productReference = base.GetPropertyString("productReference");
             this.phases = base.GetPropertyList("buildPhases");
             this.dependencies = base.GetPropertyList("dependencies");
         }

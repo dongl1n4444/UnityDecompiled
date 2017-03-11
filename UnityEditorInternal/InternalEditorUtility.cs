@@ -13,6 +13,7 @@
     using UnityEditor.Utils;
     using UnityEngine;
     using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
     public sealed class InternalEditorUtility
     {
@@ -23,17 +24,17 @@
         [CompilerGenerated]
         private static Dictionary<string, int> <>f__switch$map0;
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern int AddScriptComponentUncheckedUndoable(GameObject gameObject, MonoScript script);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void AddSortingLayer();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void AddTag(string tag);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void AuxWindowManager_OnAssemblyReload();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern CanAppendBuild BuildCanBeAppended(BuildTarget target, string location);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void BumpMapSettingsFixingWindowReportResult(int result);
         internal static bool BumpMapTextureNeedsFixing(MaterialProperty prop)
         {
@@ -51,12 +52,12 @@
             return false;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool BumpMapTextureNeedsFixingInternal(Material material, string propName, bool flaggedAsNormal);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void CalculateAmbientProbeFromSkybox();
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern string CalculateHashForObjectsAndDependencies(Object[] objects);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern string CalculateHashForObjectsAndDependencies(UnityEngine.Object[] objects);
         public static Bounds CalculateSelectionBounds(bool usePivotOnlyForParticles, bool onlyUseActiveSelection)
         {
             Bounds bounds;
@@ -105,23 +106,43 @@
             return new Bounds((Vector3) ((vector + vector2) * 0.5f), vector2 - vector);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool CanConnectToCacheServer();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void ClearSceneLighting();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static LayerMask ConcatenatedLayersMaskToLayerMask(int concatenatedLayersMask)
+        {
+            LayerMask mask;
+            INTERNAL_CALL_ConcatenatedLayersMaskToLayerMask(concatenatedLayersMask, out mask);
+            return mask;
+        }
+
+        public static string CountToString(ulong count)
+        {
+            string[] strArray = new string[] { "g", "m", "k", "" };
+            float[] numArray = new float[] { 1E+09f, 1000000f, 1000f, 1f };
+            int index = 0;
+            while ((index < 3) && (count < (numArray[index] / 2f)))
+            {
+                index++;
+            }
+            float num2 = ((float) count) / numArray[index];
+            return (num2.ToString("0.0") + strArray[index]);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int CreateScriptableObjectUnchecked(MonoScript script);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern DllType DetectDotNetDll(string path);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int DetermineDepthOrder(Transform lhs, Transform rhs);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void DrawSkyboxMaterial(Material mat, Camera cam);
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("use EditorSceneManager.EnsureUntitledSceneHasBeenSaved")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("use EditorSceneManager.EnsureUntitledSceneHasBeenSaved"), GeneratedByOldBindingsGenerator]
         public static extern bool EnsureSceneHasBeenSaved(string operation);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void ExecuteCommandOnKeyWindow(string commandName);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern ulong FixCacheServerIntegrityErrors();
         internal static void FixNormalmapTexture(MaterialProperty prop)
         {
@@ -131,17 +152,17 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void FixNormalmapTextureInternal(Material material, string propName);
         internal static IEnumerable<string> GetAllScriptGUIDs()
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <GetAllScriptGUIDs>m__0);
+                <>f__am$cache0 = asset => IsScriptOrAssembly(asset);
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<string, string>(null, (IntPtr) <GetAllScriptGUIDs>m__1);
+                <>f__am$cache1 = asset => AssetDatabase.AssetPathToGUID(asset);
             }
             return Enumerable.Select<string, string>(Enumerable.Where<string>(AssetDatabase.GetAllAssetPaths(), <>f__am$cache0), <>f__am$cache1);
         }
@@ -162,11 +183,11 @@
             return string.Empty;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetAssetsFolder();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetAuthToken();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string[] GetAvailableDiffTools();
         public static Rect GetBoundsOfDesktopAtPoint(Vector2 pos)
         {
@@ -175,9 +196,9 @@
             return rect;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int GetClassIDWithoutLoadingObject(int instanceID);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetCrashReportFolder();
         private static string GetDefaultStringEditorArgs()
         {
@@ -188,7 +209,7 @@
             return "\"$(File)\"";
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern Resolution GetDesktopResolution();
         public static string GetDisplayStringOfInvalidCharsOfFileName(string filename)
         {
@@ -212,9 +233,9 @@
             return str3;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetEditorAssemblyPath();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetEditorFolder();
         public static string[] GetEditorSettingsList(string prefix, int count)
         {
@@ -231,7 +252,7 @@
             return (list.ToArray(typeof(string)) as string[]);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetEngineAssemblyPath();
         public static string GetExternalScriptEditor() => 
             EditorPrefs.GetString("kScriptsDefaultApp");
@@ -264,9 +285,9 @@
             return ((firstIndex != -1) && (lastIndex != -1));
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetFullUnityVersion();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int GetGameObjectInstanceIDFromComponent(int instanceID);
         public static Texture2D GetIconForFile(string fileName)
         {
@@ -869,16 +890,16 @@
             return EditorGUIUtility.FindTexture("DefaultAsset Icon");
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern bool GetIsInspectorExpanded(Object obj);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern bool GetIsInspectorExpanded(UnityEngine.Object obj);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetLayerName(int layer);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int[] GetLicenseFlags();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetLicenseInfo();
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern Object GetLoadedObjectFromInstanceID(int instanceID);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern UnityEngine.Object GetLoadedObjectFromInstanceID(int instanceID);
         private static Bounds GetLocalBounds(GameObject gameObject)
         {
             RectTransform component = gameObject.GetComponent<RectTransform>();
@@ -902,7 +923,7 @@
             return new Bounds(Vector3.zero, Vector3.zero);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern MonoIsland[] GetMonoIslands();
         public static List<int> GetNewSelection(int clickedInstanceID, List<int> allInstanceIDs, List<int> selectedInstanceIDs, int lastClickedInstanceID, bool keepMultiSelection, bool useShiftAsActionKey, bool allowMultiSelection)
         {
@@ -934,7 +955,8 @@
                 int num8;
                 if (clickedInstanceID == lastClickedInstanceID)
                 {
-                    return selectedInstanceIDs;
+                    list.AddRange(selectedInstanceIDs);
+                    return list;
                 }
                 if (!GetFirstAndLastSelected(allInstanceIDs, selectedInstanceIDs, out num, out num2))
                 {
@@ -997,10 +1019,10 @@
             return list;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetNoDiffToolsDetectedMessage();
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern Object GetObjectFromInstanceID(int instanceID);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern UnityEngine.Object GetObjectFromInstanceID(int instanceID);
         public static Camera[] GetSceneViewCameras() => 
             SceneView.GetAllSceneCameras();
 
@@ -1047,15 +1069,15 @@
         public static ScriptEditor GetScriptEditorFromPreferences() => 
             GetScriptEditorFromPath(GetExternalScriptEditor());
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern int GetSortingLayerCount();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool GetSortingLayerLocked(int index);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern string GetSortingLayerName(int index);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern string GetSortingLayerNameFromUniqueID(int id);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern int GetSortingLayerUniqueID(int index);
         public static Vector4 GetSpriteOuterUV(Sprite sprite, bool getAtlasData)
         {
@@ -1064,11 +1086,11 @@
             return vector;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetUnityBuildBranch();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetUnityCopyright();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int GetUnityRevision();
         public static Version GetUnityVersion()
         {
@@ -1076,51 +1098,55 @@
             return new Version(version.Major, version.Minor, version.Build, GetUnityRevision());
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int GetUnityVersionDate();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetUnityVersionDigits();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetUnityVersionFull();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool HasAdvancedLicenseOnBuildTarget(BuildTarget target);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern bool HasEduLicense();
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern bool HasFreeLicense();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool HasFullscreenCamera();
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern bool HasPro();
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         public static extern bool HasTeamLicense();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern DragAndDropVisualMode HierarchyWindowDrag(HierarchyProperty property, bool perform, HierarchyDropMode dropMode);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern DragAndDropVisualMode InspectorWindowDrag(Object[] targets, bool perform);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern DragAndDropVisualMode InspectorWindowDrag(UnityEngine.Object[] targets, bool perform);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern Material[] InstantiateMaterialsInEditMode(Renderer renderer);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_CalculateSelectionBounds(bool usePivotOnlyForParticles, bool onlyUseActiveSelection, out Bounds value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_ConcatenatedLayersMaskToLayerMask(int concatenatedLayersMask, out LayerMask value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetBoundsOfDesktopAtPoint(ref Vector2 pos, out Rect value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetSpriteOuterUV(Sprite sprite, bool getAtlasData, out Vector4 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern int INTERNAL_CALL_LayerMaskToConcatenatedLayersMask(ref LayerMask mask);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_PassAndReturnColor32(ref Color32 c, out Color32 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_PassAndReturnVector2(ref Vector2 v, out Vector2 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Color[] INTERNAL_CALL_ReadScreenPixel(ref Vector2 pixelPos, int sizex, int sizey);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool INTERNAL_CALL_SaveCursorToFile(string path, Texture2D image, ref Vector2 hotSpot);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern DragAndDropVisualMode INTERNAL_CALL_SceneViewDrag(Object dropUpon, ref Vector3 worldPosition, ref Vector2 viewportPosition, bool perform);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern DragAndDropVisualMode INTERNAL_CALL_SceneViewDrag(UnityEngine.Object dropUpon, ref Vector3 worldPosition, ref Vector2 viewportPosition, bool perform);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SetCustomLighting(Light[] lights, ref Color ambient);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SetRectTransformTemporaryRect(RectTransform rectTransform, ref Rect rect);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_TransformBounds(ref Bounds b, Transform t, out Bounds value);
         public static bool IsDotNet4Dll(string path)
         {
@@ -1141,7 +1167,7 @@
             throw new Exception($"Unknown dll type: {type}");
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool IsInEditorFolder(string path);
         public static bool IsScriptEditorSpecial(string path) => 
             (GetScriptEditorFromPath(path) != ScriptEditor.Other);
@@ -1165,9 +1191,9 @@
             return false;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool IsSortingLayerDefault(int index);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool IsUnityBeta();
         public static bool IsValidFileName(string filename)
         {
@@ -1179,19 +1205,24 @@
             return true;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern bool LaunchApplication(string path, string[] arguments);
+        public static int LayerMaskToConcatenatedLayersMask(LayerMask mask) => 
+            INTERNAL_CALL_LayerMaskToConcatenatedLayersMask(ref mask);
+
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern Assembly LoadAssemblyWrapper(string dllName, string dllLocation);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void LoadDefaultLayout();
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern Object[] LoadSerializedFileAndForget(string path);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern UnityEngine.Object[] LoadSerializedFileAndForget(string path);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void OnGameViewFocus(bool focus);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void OpenEditorConsole();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool OpenFileAtLineExternal(string filename, int line);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void OpenPlayerConsole();
         internal static T ParentHasComponent<T>(Transform trans) where T: Component
         {
@@ -1229,18 +1260,18 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void PrepareDragAndDropTestingInternal(GUIView guiView);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern DragAndDropVisualMode ProjectWindowDrag(HierarchyProperty property, bool perform);
         public static Color[] ReadScreenPixel(Vector2 pixelPos, int sizex, int sizey) => 
             INTERNAL_CALL_ReadScreenPixel(ref pixelPos, sizex, sizey);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void RegisterExtensionDll(string dllLocation, string guid);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void ReloadWindowLayoutMenu();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void RemoveCustomLighting();
         public static string RemoveInvalidCharsFromFileName(string filename, bool logIfInvalidChars)
         {
@@ -1279,15 +1310,15 @@
             return str3;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void RemoveTag(string tag);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void RepaintAllViews();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void RequestScriptReload();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void ResetCursor();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void RevertFactoryLayoutSettings(bool quitOnCancel);
         [ExcludeFromDocs]
         internal static bool RunningUnderWindows8()
@@ -1328,9 +1359,9 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void SaveToSerializedFileAndForget(Object[] obj, string path, bool allowTextSerialization);
-        public static DragAndDropVisualMode SceneViewDrag(Object dropUpon, Vector3 worldPosition, Vector2 viewportPosition, bool perform) => 
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern void SaveToSerializedFileAndForget(UnityEngine.Object[] obj, string path, bool allowTextSerialization);
+        public static DragAndDropVisualMode SceneViewDrag(UnityEngine.Object dropUpon, Vector3 worldPosition, Vector2 viewportPosition, bool perform) => 
             INTERNAL_CALL_SceneViewDrag(dropUpon, ref worldPosition, ref viewportPosition, perform);
 
         public static void SetCustomLighting(Light[] lights, Color ambient)
@@ -1348,29 +1379,29 @@
             EditorPrefs.SetString(GetScriptEditorArgsKey(GetExternalScriptEditor()), args);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void SetIsInspectorExpanded(Object obj, bool isExpanded);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern void SetIsInspectorExpanded(UnityEngine.Object obj, bool isExpanded);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void SetPlatformPath(string path);
         public static void SetRectTransformTemporaryRect(RectTransform rectTransform, Rect rect)
         {
             INTERNAL_CALL_SetRectTransformTemporaryRect(rectTransform, ref rect);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void SetSortingLayerLocked(int index, bool locked);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void SetSortingLayerName(int index, string name);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void SetupCustomDll(string dllName, string dllLocation);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetupShaderMenu(Material material);
         public static void ShowGameView()
         {
             WindowLayout.ShowAppropriateViewOnEnterExitPlaymode(true);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void ShowPackageManagerWindow();
         internal static bool SupportsRectLayout(Transform tr)
         {
@@ -1385,7 +1416,7 @@
             return true;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SwitchSkinAndRepaintAllViews();
         public static string TextAreaForDocBrowser(Rect position, string text, GUIStyle style)
         {
@@ -1634,51 +1665,52 @@
             return bounds;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void UpdateSortingLayersOrder();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern ulong VerifyCacheServerIntegrity();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool WiiUSaveStartupScreenToFile(Texture2D image, string path, int outputWidth, int outputHeight);
 
-        public static float defaultScreenHeight { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static float defaultScreenHeight { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public static float defaultScreenWidth { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static float defaultScreenWidth { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public static float defaultWebScreenHeight { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static float defaultWebScreenHeight { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public static float defaultWebScreenWidth { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static float defaultWebScreenWidth { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public static int[] expandedProjectWindowItems { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static int[] expandedProjectWindowItems { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        public static bool ignoreInspectorChanges { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool ignoreInspectorChanges { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public static bool inBatchMode { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool inBatchMode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public static bool isApplicationActive { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool isApplicationActive { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public static bool isHumanControllingUs { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool isHumanControllingUs { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public static string[] layers { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static string[] layers { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public static float remoteScreenHeight { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static float remoteScreenHeight { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public static float remoteScreenWidth { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static float remoteScreenWidth { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        internal static string[] sortingLayerNames { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal static string[] sortingLayerNames { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        internal static int[] sortingLayerUniqueIDs { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal static int[] sortingLayerUniqueIDs { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public static string[] tags { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static string[] tags { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public static string unityPreferencesFolder { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static string unityPreferencesFolder { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         public enum HierarchyDropMode
         {
             kHierarchyDragNormal = 0,
             kHierarchyDropAfterParent = 4,
             kHierarchyDropBetween = 2,
-            kHierarchyDropUpon = 1
+            kHierarchyDropUpon = 1,
+            kHierarchySearchActive = 8
         }
 
         public enum ScriptEditor

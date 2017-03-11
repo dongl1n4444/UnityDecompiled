@@ -6,13 +6,13 @@
 
     internal class AssetPreviewUpdater
     {
-        public static Texture2D CreatePreviewForAsset(Object obj, Object[] subAssets, string assetPath)
+        public static Texture2D CreatePreviewForAsset(UnityEngine.Object obj, UnityEngine.Object[] subAssets, string assetPath)
         {
             if (obj == null)
             {
                 return null;
             }
-            Type type = CustomEditorAttributes.FindCustomEditorType(obj, false);
+            System.Type type = CustomEditorAttributes.FindCustomEditorType(obj, false);
             if (type == null)
             {
                 return null;
@@ -33,7 +33,7 @@
                 return null;
             }
             Texture2D textured2 = editor.RenderStaticPreview(assetPath, subAssets, 0x80, 0x80);
-            Object.DestroyImmediate(editor);
+            UnityEngine.Object.DestroyImmediate(editor);
             return textured2;
         }
     }

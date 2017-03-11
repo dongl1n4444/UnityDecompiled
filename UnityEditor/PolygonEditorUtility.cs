@@ -11,39 +11,21 @@
         [CompilerGenerated]
         private static Handles.CapFunction <>f__mg$cache1;
         private const float k_HandlePickDistance = 50f;
-        private const float k_HandlePointSnap = 0.2f;
+        private const float k_HandlePointSnap = 10f;
         private Collider2D m_ActiveCollider;
         private bool m_DeleteMode = false;
         private bool m_FirstOnSceneGUIAfterReset;
+        private bool m_HandleEdge = false;
+        private bool m_HandlePoint = false;
         private bool m_LeftIntersect = false;
         private bool m_LoopingCollider = false;
         private int m_MinPathPoints = 3;
         private bool m_RightIntersect = false;
-        private float m_SelectedDistance = 0f;
-        private float m_SelectedEdgeDistance = 0f;
         private int m_SelectedEdgePath = -1;
         private int m_SelectedEdgeVertex0 = -1;
         private int m_SelectedEdgeVertex1 = -1;
         private int m_SelectedPath = -1;
         private int m_SelectedVertex = -1;
-
-        private void ApplyEditing(Collider2D collider)
-        {
-            PolygonCollider2D colliderd = collider as PolygonCollider2D;
-            if (colliderd != null)
-            {
-                PolygonEditor.ApplyEditing(colliderd);
-            }
-            else
-            {
-                EdgeCollider2D colliderd2 = collider as EdgeCollider2D;
-                if (colliderd2 == null)
-                {
-                    throw new NotImplementedException($"PolygonEditorUtility does not support {collider}");
-                }
-                PolygonEditor.ApplyEditing(colliderd2);
-            }
-        }
 
         private bool DeleteCommandEvent(Event evt) => 
             (((evt.type == EventType.ExecuteCommand) || (evt.type == EventType.ValidateCommand)) && ((evt.commandName == "Delete") || (evt.commandName == "SoftDelete")));
@@ -135,7 +117,6 @@
                     {
                         this.m_SelectedPath = num2;
                         this.m_SelectedVertex = num3;
-                        this.m_SelectedDistance = num5;
                     }
                     else
                     {
@@ -146,7 +127,6 @@
                         this.m_SelectedEdgePath = num2;
                         this.m_SelectedEdgeVertex0 = num3;
                         this.m_SelectedEdgeVertex1 = num4;
-                        this.m_SelectedEdgeDistance = num5;
                     }
                     else
                     {
@@ -162,82 +142,84 @@
                     this.m_LeftIntersect = false;
                     this.m_RightIntersect = false;
                 }
+                if (GUIUtility.hotControl == 0)
+                {
+                    if ((this.m_SelectedPath != -1) && (this.m_SelectedEdgePath != -1))
+                    {
+                        Vector2 vector4;
+                        PolygonEditor.GetPoint(this.m_SelectedPath, this.m_SelectedVertex, out vector4);
+                        vector4 += offset;
+                        Vector3 world = transform.TransformPoint((Vector3) vector4);
+                        Vector2 vector6 = HandleUtility.WorldToGUIPoint(world) - Event.current.mousePosition;
+                        this.m_HandleEdge = vector6.sqrMagnitude > 100f;
+                        this.m_HandlePoint = !this.m_HandleEdge;
+                    }
+                    else if (this.m_SelectedPath != -1)
+                    {
+                        this.m_HandlePoint = true;
+                    }
+                    else if (this.m_SelectedEdgePath != -1)
+                    {
+                        this.m_HandleEdge = true;
+                    }
+                    if (this.m_DeleteMode && this.m_HandleEdge)
+                    {
+                        this.m_HandleEdge = false;
+                        this.m_HandlePoint = true;
+                    }
+                }
                 bool flag = false;
-                bool flag2 = false;
-                if ((this.m_SelectedPath != -1) && (this.m_SelectedEdgePath != -1))
+                if (this.m_HandleEdge && !this.m_DeleteMode)
                 {
-                    Vector2 vector4;
-                    PolygonEditor.GetPoint(this.m_SelectedPath, this.m_SelectedVertex, out vector4);
-                    vector4 += offset;
-                    float num6 = HandleUtility.GetHandleSize(transform.TransformPoint((Vector3) vector4)) * 0.2f;
-                    flag2 = this.m_SelectedEdgeDistance < (this.m_SelectedDistance - num6);
-                    flag = !flag2;
-                }
-                else if (this.m_SelectedPath != -1)
-                {
-                    flag = true;
-                }
-                else if (this.m_SelectedEdgePath != -1)
-                {
-                    flag2 = true;
-                }
-                if (this.m_DeleteMode && flag2)
-                {
-                    flag2 = false;
-                    flag = true;
-                }
-                bool flag3 = false;
-                if (flag2 && !this.m_DeleteMode)
-                {
-                    Vector2 vector6;
                     Vector2 vector7;
-                    PolygonEditor.GetPoint(this.m_SelectedEdgePath, this.m_SelectedEdgeVertex0, out vector6);
-                    PolygonEditor.GetPoint(this.m_SelectedEdgePath, this.m_SelectedEdgeVertex1, out vector7);
-                    vector6 += offset;
+                    Vector2 vector8;
+                    PolygonEditor.GetPoint(this.m_SelectedEdgePath, this.m_SelectedEdgeVertex0, out vector7);
+                    PolygonEditor.GetPoint(this.m_SelectedEdgePath, this.m_SelectedEdgeVertex1, out vector8);
                     vector7 += offset;
-                    Vector3 start = transform.TransformPoint((Vector3) vector6);
-                    Vector3 end = transform.TransformPoint((Vector3) vector7);
+                    vector8 += offset;
+                    Vector3 start = transform.TransformPoint((Vector3) vector7);
+                    Vector3 end = transform.TransformPoint((Vector3) vector8);
                     start.z = end.z = 0f;
                     Handles.color = Color.green;
                     Vector3[] points = new Vector3[] { start, end };
                     Handles.DrawAAPolyLine((float) 4f, points);
                     Handles.color = Color.white;
-                    Vector2 vector10 = this.GetNearestPointOnEdge(transform.TransformPoint((Vector3) vector3), start, end);
+                    Vector2 vector11 = this.GetNearestPointOnEdge(transform.TransformPoint((Vector3) vector3), start, end);
                     EditorGUI.BeginChangeCheck();
-                    float handleSize = HandleUtility.GetHandleSize((Vector3) vector10) * 0.04f;
+                    float handleSize = HandleUtility.GetHandleSize((Vector3) vector11) * 0.04f;
                     Handles.color = Color.green;
                     if (<>f__mg$cache0 == null)
                     {
                         <>f__mg$cache0 = new Handles.CapFunction(Handles.DotHandleCap);
                     }
-                    vector10 = Handles.Slider2D((Vector3) vector10, new Vector3(0f, 0f, 1f), new Vector3(1f, 0f, 0f), new Vector3(0f, 1f, 0f), handleSize, <>f__mg$cache0, Vector3.zero);
+                    vector11 = Handles.Slider2D((Vector3) vector11, new Vector3(0f, 0f, 1f), new Vector3(1f, 0f, 0f), new Vector3(0f, 1f, 0f), handleSize, <>f__mg$cache0, Vector3.zero);
                     Handles.color = Color.white;
                     if (EditorGUI.EndChangeCheck())
                     {
-                        PolygonEditor.InsertPoint(this.m_SelectedEdgePath, this.m_SelectedEdgeVertex1, ((Vector2) ((vector6 + vector7) / 2f)) - offset);
+                        PolygonEditor.InsertPoint(this.m_SelectedEdgePath, this.m_SelectedEdgeVertex1, ((Vector2) ((vector7 + vector8) / 2f)) - offset);
                         this.m_SelectedPath = this.m_SelectedEdgePath;
                         this.m_SelectedVertex = this.m_SelectedEdgeVertex1;
-                        this.m_SelectedDistance = 0f;
+                        this.m_HandleEdge = false;
+                        this.m_HandlePoint = true;
                         flag = true;
-                        flag3 = true;
                     }
                 }
-                if (flag)
+                if (this.m_HandlePoint)
                 {
-                    Vector2 vector11;
-                    PolygonEditor.GetPoint(this.m_SelectedPath, this.m_SelectedVertex, out vector11);
-                    vector11 += offset;
-                    Vector3 world = transform.TransformPoint((Vector3) vector11);
-                    world.z = 0f;
-                    Vector2 a = HandleUtility.WorldToGUIPoint(world);
-                    float num9 = HandleUtility.GetHandleSize(world) * 0.04f;
+                    Vector2 vector12;
+                    PolygonEditor.GetPoint(this.m_SelectedPath, this.m_SelectedVertex, out vector12);
+                    vector12 += offset;
+                    Vector3 vector13 = transform.TransformPoint((Vector3) vector12);
+                    vector13.z = 0f;
+                    Vector2 a = HandleUtility.WorldToGUIPoint(vector13);
+                    float num8 = HandleUtility.GetHandleSize(vector13) * 0.04f;
                     if (((this.m_DeleteMode && (current.type == EventType.MouseDown)) && (Vector2.Distance(a, Event.current.mousePosition) < 50f)) || this.DeleteCommandEvent(current))
                     {
                         if ((current.type != EventType.ValidateCommand) && (PolygonEditor.GetPointCount(this.m_SelectedPath) > this.m_MinPathPoints))
                         {
                             PolygonEditor.RemovePoint(this.m_SelectedPath, this.m_SelectedVertex);
                             this.Reset();
-                            flag3 = true;
+                            flag = true;
                         }
                         current.Use();
                     }
@@ -247,21 +229,21 @@
                     {
                         <>f__mg$cache1 = new Handles.CapFunction(Handles.DotHandleCap);
                     }
-                    Vector3 position = Handles.Slider2D(world, new Vector3(0f, 0f, 1f), new Vector3(1f, 0f, 0f), new Vector3(0f, 1f, 0f), num9, <>f__mg$cache1, Vector3.zero);
+                    Vector3 position = Handles.Slider2D(vector13, new Vector3(0f, 0f, 1f), new Vector3(1f, 0f, 0f), new Vector3(0f, 1f, 0f), num8, <>f__mg$cache1, Vector3.zero);
                     Handles.color = Color.white;
                     if (EditorGUI.EndChangeCheck() && !this.m_DeleteMode)
                     {
-                        vector11 = transform.InverseTransformPoint(position) - offset;
-                        PolygonEditor.TestPointMove(this.m_SelectedPath, this.m_SelectedVertex, vector11, out this.m_LeftIntersect, out this.m_RightIntersect, this.m_LoopingCollider);
-                        PolygonEditor.SetPoint(this.m_SelectedPath, this.m_SelectedVertex, vector11);
-                        flag3 = true;
+                        vector12 = transform.InverseTransformPoint(position) - offset;
+                        PolygonEditor.TestPointMove(this.m_SelectedPath, this.m_SelectedVertex, vector12, out this.m_LeftIntersect, out this.m_RightIntersect, this.m_LoopingCollider);
+                        PolygonEditor.SetPoint(this.m_SelectedPath, this.m_SelectedVertex, vector12);
+                        flag = true;
                     }
-                    if (!flag3)
+                    if (!flag)
                     {
                         this.DrawEdgesForSelectedPoint(position, transform, this.m_LeftIntersect, this.m_RightIntersect, this.m_LoopingCollider);
                     }
                 }
-                if (flag3)
+                if (flag)
                 {
                     Undo.RecordObject(this.m_ActiveCollider, "Edit Collider");
                     PolygonEditor.ApplyEditing(this.m_ActiveCollider);
@@ -284,6 +266,8 @@
             this.m_LeftIntersect = false;
             this.m_RightIntersect = false;
             this.m_FirstOnSceneGUIAfterReset = true;
+            this.m_HandlePoint = false;
+            this.m_HandleEdge = false;
         }
 
         public void StartEditing(Collider2D collider)

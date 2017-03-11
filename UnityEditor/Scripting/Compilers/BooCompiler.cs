@@ -37,7 +37,7 @@
             {
                 arguments.Add(ScriptCompilerBase.PrepareFileName(str3));
             }
-            string compiler = Path.Combine(base.GetProfileDirectory(), "booc.exe");
+            string compiler = Path.Combine(base.GetMonoProfileLibDirectory(), "booc.exe");
             return base.StartCompiler(this._island._target, compiler, arguments);
         }
     }

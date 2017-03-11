@@ -270,7 +270,15 @@
             get
             {
                 EventType type = this.type;
-                return ((((type == EventType.MouseMove) || (type == EventType.MouseDown)) || (type == EventType.MouseUp)) || (type == EventType.MouseDrag));
+                return (((((type == EventType.MouseMove) || (type == EventType.MouseDown)) || ((type == EventType.MouseUp) || (type == EventType.MouseDrag))) || ((type == EventType.ContextClick) || (type == EventType.MouseEnterWindow))) || (type == EventType.MouseLeaveWindow));
+            }
+        }
+        public bool isScrollWheel
+        {
+            get
+            {
+                EventType type = this.type;
+                return ((type == EventType.ScrollWheel) || (type == EventType.ScrollWheel));
             }
         }
         /// <summary>
@@ -884,81 +892,83 @@
             this.Internal_Use();
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private extern void Init(int displayIndex);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private extern void Cleanup();
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private extern void InitCopy(Event other);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private extern void InitPtr(IntPtr ptr);
-        public EventType rawType { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
+        internal extern void CopyFromPtr(IntPtr ptr);
+        public EventType rawType { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
         /// <summary>
         /// <para>The type of event.</para>
         /// </summary>
-        public EventType type { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public EventType type { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
         /// <summary>
         /// <para>Get a filtered event type for a given control ID.</para>
         /// </summary>
         /// <param name="controlID">The ID of the control you are querying from.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern EventType GetTypeForControl(int controlID);
         private void Internal_SetMousePosition(Vector2 value)
         {
             INTERNAL_CALL_Internal_SetMousePosition(this, ref value);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_SetMousePosition(Event self, ref Vector2 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Internal_GetMousePosition(out Vector2 value);
         private void Internal_SetMouseDelta(Vector2 value)
         {
             INTERNAL_CALL_Internal_SetMouseDelta(this, ref value);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_SetMouseDelta(Event self, ref Vector2 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Internal_GetMouseDelta(out Vector2 value);
         /// <summary>
         /// <para>Which mouse button was pressed.</para>
         /// </summary>
-        public int button { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int button { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
         /// <summary>
         /// <para>Which modifier keys are held down.</para>
         /// </summary>
-        public EventModifiers modifiers { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
-        public float pressure { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public EventModifiers modifiers { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+        public float pressure { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
         /// <summary>
         /// <para>How many consecutive mouse clicks have we received.</para>
         /// </summary>
-        public int clickCount { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int clickCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
         /// <summary>
         /// <para>The character typed.</para>
         /// </summary>
-        public char character { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public char character { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
         /// <summary>
         /// <para>The name of an ExecuteCommand or ValidateCommand Event.</para>
         /// </summary>
-        public string commandName { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public string commandName { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
         /// <summary>
         /// <para>The raw key code for keyboard events.</para>
         /// </summary>
-        public KeyCode keyCode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        public KeyCode keyCode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_SetNativeEvent(IntPtr ptr);
         /// <summary>
         /// <para>Index of display that the event belongs to.</para>
         /// </summary>
-        public int displayIndex { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        public int displayIndex { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Internal_Use();
         /// <summary>
         /// <para>Get the next queued [Event] from the event system.</para>
         /// </summary>
         /// <param name="outEvent">Next Event.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool PopEvent(Event outEvent);
         /// <summary>
         /// <para>Returns the current number of events that are stored in the event queue.</para>
@@ -966,7 +976,7 @@
         /// <returns>
         /// <para>Current number of events currently in the event queue.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int GetEventCount();
     }
 }

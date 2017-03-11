@@ -17,6 +17,7 @@
         private PresetLibraryEditor<GradientPresetLibrary> m_GradientLibraryEditor;
         [SerializeField]
         private PresetLibraryEditorState m_GradientLibraryEditorState;
+        private bool m_HDR;
         private static GradientPicker s_GradientPicker;
 
         public static void CloseWindow()
@@ -28,12 +29,13 @@
             }
         }
 
-        private void Init(Gradient newGradient)
+        private void Init(Gradient newGradient, bool hdr)
         {
             this.m_Gradient = newGradient;
+            this.m_HDR = hdr;
             if (this.m_GradientEditor != null)
             {
-                this.m_GradientEditor.Init(newGradient, 0);
+                this.m_GradientEditor.Init(newGradient, 0, this.m_HDR);
             }
             base.Repaint();
         }
@@ -43,7 +45,7 @@
             if (this.m_GradientEditor == null)
             {
                 this.m_GradientEditor = new GradientEditor();
-                this.m_GradientEditor.Init(this.m_Gradient, 0);
+                this.m_GradientEditor.Init(this.m_Gradient, 0, this.m_HDR);
             }
             if (this.m_GradientLibraryEditorState == null)
             {
@@ -53,7 +55,7 @@
             if (this.m_GradientLibraryEditor == null)
             {
                 ScriptableObjectSaveLoadHelper<GradientPresetLibrary> helper = new ScriptableObjectSaveLoadHelper<GradientPresetLibrary>("gradients", SaveType.Text);
-                this.m_GradientLibraryEditor = new PresetLibraryEditor<GradientPresetLibrary>(helper, this.m_GradientLibraryEditorState, new Action<int, object>(this, (IntPtr) this.PresetClickedCallback));
+                this.m_GradientLibraryEditor = new PresetLibraryEditor<GradientPresetLibrary>(helper, this.m_GradientLibraryEditorState, new Action<int, object>(this.PresetClickedCallback));
                 this.m_GradientLibraryEditor.showHeader = true;
                 this.m_GradientLibraryEditor.minMaxPreviewHeight = new Vector2(14f, 14f);
             }
@@ -115,7 +117,7 @@
             Gradient gradient = presetObject as Gradient;
             if (gradient == null)
             {
-                Debug.LogError("Incorrect object passed " + presetObject);
+                UnityEngine.Debug.LogError("Incorrect object passed " + presetObject);
             }
             SetCurrentGradient(gradient);
             this.gradientChanged = true;
@@ -157,15 +159,16 @@
             this.m_Gradient.colorKeys = gradient.colorKeys;
             this.m_Gradient.alphaKeys = gradient.alphaKeys;
             this.m_Gradient.mode = gradient.mode;
-            this.Init(this.m_Gradient);
+            this.Init(this.m_Gradient, this.m_HDR);
         }
 
-        public static void Show(Gradient newGradient)
+        public static void Show(Gradient newGradient, bool hdr)
         {
             GUIView current = GUIView.current;
             if (s_GradientPicker == null)
             {
-                s_GradientPicker = (GradientPicker) EditorWindow.GetWindow(typeof(GradientPicker), true, "Gradient Editor", false);
+                string title = !hdr ? "Gradient Editor" : "HDR Gradient Editor";
+                s_GradientPicker = (GradientPicker) EditorWindow.GetWindow(typeof(GradientPicker), true, title, false);
                 Vector2 vector = new Vector2(360f, 224f);
                 Vector2 vector2 = new Vector2(1900f, 3000f);
                 s_GradientPicker.minSize = vector;
@@ -178,7 +181,7 @@
                 s_GradientPicker.Repaint();
             }
             s_GradientPicker.m_DelegateView = current;
-            s_GradientPicker.Init(newGradient);
+            s_GradientPicker.Init(newGradient, hdr);
             GradientPreviewCache.ClearCache();
         }
 
@@ -216,7 +219,7 @@
             {
                 if (s_GradientPicker == null)
                 {
-                    Debug.LogError("Gradient Picker not initalized, did you call Show first?");
+                    UnityEngine.Debug.LogError("Gradient Picker not initalized, did you call Show first?");
                 }
                 return s_GradientPicker;
             }

@@ -24,7 +24,7 @@
             m_SkyboxMaterial = null;
             if (m_LookDevCompositing != null)
             {
-                Object.DestroyImmediate(m_LookDevCompositing);
+                UnityEngine.Object.DestroyImmediate(m_LookDevCompositing);
                 m_LookDevCompositing = null;
             }
         }

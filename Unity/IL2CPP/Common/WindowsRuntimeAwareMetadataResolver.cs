@@ -8,11 +8,12 @@
     using System.Linq;
     using System.Runtime.CompilerServices;
 
-    internal class WindowsRuntimeAwareMetadataResolver : MetadataResolver
+    public class WindowsRuntimeAwareMetadataResolver : MetadataResolver
     {
         private readonly Unity.IL2CPP.Common.IAssemblyResolver _assemblyResolver;
         private readonly HashSet<NPath> _loadedWinmdPaths;
         private readonly HashSet<AssemblyDefinition> _loadedWinmds;
+        private readonly HashSet<string> _pendingWinmds;
         [CompilerGenerated]
         private static Func<NPath, bool> <>f__am$cache0;
         [CompilerGenerated]
@@ -21,35 +22,51 @@
         public WindowsRuntimeAwareMetadataResolver(Unity.IL2CPP.Common.IAssemblyResolver assemblyResolver) : base(assemblyResolver)
         {
             this._loadedWinmdPaths = new HashSet<NPath>();
+            this._pendingWinmds = new HashSet<string>();
             this._loadedWinmds = new HashSet<AssemblyDefinition>();
             this._assemblyResolver = assemblyResolver;
         }
 
-        private TypeDefinition FindTypeInUnknownWinmd(AssemblyNameReference assemblyNameReference, TypeReference type)
+        private TypeDefinition FindTypeInUnknownWinmd(TypeReference type)
         {
-            if (<>f__am$cache0 == null)
-            {
-                <>f__am$cache0 = new Func<NPath, bool>(null, (IntPtr) <FindTypeInUnknownWinmd>m__0);
-            }
-            if (<>f__am$cache1 == null)
-            {
-                <>f__am$cache1 = new Func<NPath, IEnumerable<NPath>>(null, (IntPtr) <FindTypeInUnknownWinmd>m__1);
-            }
-            IEnumerable<NPath> enumerable = this._assemblyResolver.GetSearchDirectories().Where<NPath>(<>f__am$cache0).SelectMany<NPath, NPath>(<>f__am$cache1).Where<NPath>(new Func<NPath, bool>(this, (IntPtr) this.<FindTypeInUnknownWinmd>m__2));
-            foreach (NPath path in enumerable)
-            {
-                AssemblyNameReference name = new AssemblyNameReference(path.FileNameWithoutExtension, new Version()) {
-                    IsWindowsRuntime = true
-                };
-                this._loadedWinmds.Add(this._assemblyResolver.Resolve(name));
-                this._loadedWinmdPaths.Add(path);
-            }
             foreach (AssemblyDefinition definition in this._loadedWinmds)
             {
                 TypeDefinition definition2 = GetType(definition.MainModule, type);
                 if (definition2 != null)
                 {
                     return definition2;
+                }
+            }
+            if (<>f__am$cache0 == null)
+            {
+                <>f__am$cache0 = d => d.Exists("");
+            }
+            if (<>f__am$cache1 == null)
+            {
+                <>f__am$cache1 = d => d.Files("*.winmd", false);
+            }
+            IEnumerable<NPath> enumerable = from winmd in this._assemblyResolver.GetSearchDirectories().Where<NPath>(<>f__am$cache0).SelectMany<NPath, NPath>(<>f__am$cache1)
+                where !this._loadedWinmdPaths.Contains(winmd)
+                select winmd;
+            foreach (NPath path in enumerable)
+            {
+                if (!this._pendingWinmds.Contains(path.FileNameWithoutExtension))
+                {
+                    this._pendingWinmds.Add(path.FileNameWithoutExtension);
+                    AssemblyNameReference name = new AssemblyNameReference(path.FileNameWithoutExtension, new Version(0, 0, 0, 0)) {
+                        IsWindowsRuntime = true
+                    };
+                    this._loadedWinmds.Add(this._assemblyResolver.Resolve(name));
+                    this._loadedWinmdPaths.Add(path);
+                    this._pendingWinmds.Remove(path.FileNameWithoutExtension);
+                }
+            }
+            foreach (AssemblyDefinition definition4 in this._loadedWinmds)
+            {
+                TypeDefinition definition5 = GetType(definition4.MainModule, type);
+                if (definition5 != null)
+                {
+                    return definition5;
                 }
             }
             return null;
@@ -123,13 +140,13 @@
             AssemblyNameReference assemblyName = scope as AssemblyNameReference;
             if (assemblyName != null)
             {
-                if (!assemblyName.IsWindowsRuntime || this._assemblyResolver.IsAssemblyCached(assemblyName))
+                if (assemblyName.IsWindowsRuntime && !this._assemblyResolver.IsAssemblyCached(assemblyName))
                 {
-                    AssemblyDefinition definition2 = this._assemblyResolver.Resolve(assemblyName);
-                    if (definition2 == null)
-                    {
-                        return null;
-                    }
+                    return this.FindTypeInUnknownWinmd(type);
+                }
+                AssemblyDefinition definition2 = this._assemblyResolver.Resolve(assemblyName);
+                if (definition2 != null)
+                {
                     TypeDefinition definition3 = GetType(definition2.MainModule, type);
                     if (definition3 != null)
                     {
@@ -137,19 +154,27 @@
                     }
                     if ((type.Module.MetadataKind != MetadataKind.Ecma335) && (assemblyName.Name == "mscorlib"))
                     {
-                        return this.FindTypeInUnknownWinmd(assemblyName, type);
+                        return this.FindTypeInUnknownWinmd(type);
                     }
-                    if (!assemblyName.IsWindowsRuntime)
+                    if (assemblyName.IsWindowsRuntime)
                     {
-                        throw new InvalidOperationException($"Unable to resolve [{assemblyName.Name}]{type.FullName}.");
+                        return this.FindTypeInUnknownWinmd(type);
                     }
                 }
-                return this.FindTypeInUnknownWinmd(assemblyName, type);
+                return null;
             }
             ModuleDefinition module = scope as ModuleDefinition;
             if (module != null)
             {
-                return GetType(module, type);
+                TypeDefinition definition5 = GetType(module, type);
+                if (definition5 != null)
+                {
+                    return definition5;
+                }
+                if (module.MetadataKind == MetadataKind.WindowsMetadata)
+                {
+                    return this.FindTypeInUnknownWinmd(type);
+                }
             }
             ModuleReference reference2 = scope as ModuleReference;
             if (reference2 != null)
@@ -157,10 +182,10 @@
                 Collection<ModuleDefinition> modules = type.Module.Assembly.Modules;
                 for (int i = 0; i < modules.Count; i++)
                 {
-                    ModuleDefinition definition5 = modules[i];
-                    if (definition5.Name == reference2.Name)
+                    ModuleDefinition definition6 = modules[i];
+                    if (definition6.Name == reference2.Name)
                     {
-                        return GetType(definition5, type);
+                        return GetType(definition6, type);
                     }
                 }
             }

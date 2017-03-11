@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Stores settings of a TextureImporter.</para>
@@ -97,7 +98,11 @@
         [SerializeField]
         private int m_TextureType;
         [SerializeField]
-        private int m_WrapMode;
+        private int m_WrapU;
+        [SerializeField]
+        private int m_WrapV;
+        [SerializeField]
+        private int m_WrapW;
 
         public void ApplyTextureType(TextureImporterType type)
         {
@@ -119,16 +124,16 @@
         /// <para>Copy parameters into another TextureImporterSettings object.</para>
         /// </summary>
         /// <param name="target">TextureImporterSettings object to copy settings to.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void CopyTo(TextureImporterSettings target);
         /// <summary>
         /// <para>Test texture importer settings for equality.</para>
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool Equal(TextureImporterSettings a, TextureImporterSettings b);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_ApplyTextureType(TextureImporterSettings s, TextureImporterType type);
 
         /// <summary>
@@ -275,10 +280,10 @@
         /// <summary>
         /// <para>Filtering mode of the texture.</para>
         /// </summary>
-        public FilterMode filterMode
+        public UnityEngine.FilterMode filterMode
         {
             get => 
-                ((FilterMode) this.m_FilterMode);
+                ((UnityEngine.FilterMode) this.m_FilterMode);
             set
             {
                 this.m_FilterMode = (int) value;
@@ -717,15 +722,56 @@
         }
 
         /// <summary>
-        /// <para>Wrap mode (Repeat or Clamp) of the texture.</para>
+        /// <para>Texture coordinate wrapping mode.</para>
         /// </summary>
         public TextureWrapMode wrapMode
         {
             get => 
-                ((TextureWrapMode) this.m_WrapMode);
+                ((TextureWrapMode) this.m_WrapU);
             set
             {
-                this.m_WrapMode = (int) value;
+                this.m_WrapU = (int) value;
+                this.m_WrapV = (int) value;
+                this.m_WrapW = (int) value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Texture U coordinate wrapping mode.</para>
+        /// </summary>
+        public TextureWrapMode wrapModeU
+        {
+            get => 
+                ((TextureWrapMode) this.m_WrapU);
+            set
+            {
+                this.m_WrapU = (int) value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Texture V coordinate wrapping mode.</para>
+        /// </summary>
+        public TextureWrapMode wrapModeV
+        {
+            get => 
+                ((TextureWrapMode) this.m_WrapV);
+            set
+            {
+                this.m_WrapV = (int) value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Texture W coordinate wrapping mode for Texture3D.</para>
+        /// </summary>
+        public TextureWrapMode wrapModeW
+        {
+            get => 
+                ((TextureWrapMode) this.m_WrapW);
+            set
+            {
+                this.m_WrapW = (int) value;
             }
         }
     }

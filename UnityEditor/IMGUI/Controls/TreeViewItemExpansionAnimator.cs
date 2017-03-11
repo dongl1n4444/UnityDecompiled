@@ -15,7 +15,7 @@
         {
             if (this.m_Setup != null)
             {
-                if (this.m_Setup.item.id == setup.item.id)
+                if ((this.m_Setup.item.id == setup.item.id) && (this.m_Setup.expanding != setup.expanding))
                 {
                     if (this.m_Setup.elapsedTime >= 0.0)
                     {
@@ -23,13 +23,13 @@
                     }
                     else
                     {
-                        Debug.LogError("Invaid duration " + this.m_Setup.elapsedTime);
+                        Debug.LogError("Invalid duration " + this.m_Setup.elapsedTime);
                     }
                     this.m_Setup = setup;
                 }
                 else
                 {
-                    this.m_Setup.FireAnimationEndedEvent();
+                    this.SkipAnimating();
                     this.m_Setup = setup;
                 }
                 this.m_Setup.expanding = setup.expanding;
@@ -119,6 +119,10 @@
             {
                 HandleUtility.Repaint();
             }
+            if (this.isAnimating && (Event.current.type == EventType.Repaint))
+            {
+                this.m_Setup.CaptureTime();
+            }
         }
 
         public void OnBeforeAllRowsGUI()
@@ -174,8 +178,17 @@
             }
         }
 
+        public void SkipAnimating()
+        {
+            if (this.m_Setup != null)
+            {
+                this.m_Setup.FireAnimationEndedEvent();
+                this.m_Setup = null;
+            }
+        }
+
         public float deltaHeight =>
-            (this.m_Setup.rowsRect.height - (this.m_Setup.rowsRect.height * this.expandedValueNormalized));
+            Mathf.Floor(this.m_Setup.rowsRect.height - (this.m_Setup.rowsRect.height * this.expandedValueNormalized));
 
         public int endRow =>
             this.m_Setup.endRow;

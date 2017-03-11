@@ -75,9 +75,6 @@
             return new WindowsStandaloneIl2CppPlatformProvider(target, base.DataFolder, base.Development);
         }
 
-        public string GetScriptLayoutFileFromBuild(BuildOptions options, string installPath, string fileName) => 
-            string.Empty;
-
         protected override string GetVariationName()
         {
             string str = "mono";
@@ -135,7 +132,7 @@
             true;
 
         public bool SupportsScriptsOnlyBuild() => 
-            false;
+            true;
 
         private string ToWindowsPath(string path)
         {

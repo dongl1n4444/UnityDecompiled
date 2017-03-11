@@ -8,9 +8,9 @@
     {
         private int horizontalScrollbarID;
         private const float kMaxScale = 100000f;
-        private const float kMinHeight = 0.1f;
+        private const float kMinHeight = 0.05f;
         private const float kMinScale = 1E-05f;
-        private const float kMinWidth = 0.1f;
+        private const float kMinWidth = 0.05f;
         [SerializeField]
         private Rect m_DrawArea;
         [SerializeField]
@@ -329,7 +329,10 @@
                 num = -num;
             }
             float num2 = Mathf.Max((float) 0.01f, (float) (1f + (num * 0.01f)));
-            this.SetScaleFocused(zoomAround, (Vector2) (num2 * this.m_Scale), Event.current.shift, EditorGUI.actionKey);
+            if ((this.shownAreaInsideMargins.width / num2) > 0.05f)
+            {
+                this.SetScaleFocused(zoomAround, (Vector2) (num2 * this.m_Scale), Event.current.shift, EditorGUI.actionKey);
+            }
         }
 
         private bool IsPanEvent() => 
@@ -390,6 +393,10 @@
 
         public void SetScaleFocused(Vector2 focalPoint, Vector2 newScale, bool lockHorizontal, bool lockVertical)
         {
+            if (this.uniformScale)
+            {
+                lockHorizontal = lockVertical = false;
+            }
             if (!this.m_HRangeLocked && !lockHorizontal)
             {
                 this.m_Translation.x -= focalPoint.x * (newScale.x - this.m_Scale.x);
@@ -406,9 +413,9 @@
         public void SetShownHRange(float min, float max)
         {
             float num = max - min;
-            if (num < 0.1f)
+            if (num < 0.05f)
             {
-                num = 0.1f;
+                num = 0.05f;
             }
             this.m_Scale.x = this.drawRect.width / num;
             this.m_Translation.x = -min * this.m_Scale.x;
@@ -418,14 +425,14 @@
         public void SetShownHRangeInsideMargins(float min, float max)
         {
             float num = (this.drawRect.width - this.leftmargin) - this.rightmargin;
-            if (num < 0.1f)
+            if (num < 0.05f)
             {
-                num = 0.1f;
+                num = 0.05f;
             }
             float num2 = max - min;
-            if (num2 < 0.1f)
+            if (num2 < 0.05f)
             {
-                num2 = 0.1f;
+                num2 = 0.05f;
             }
             this.m_Scale.x = num / num2;
             this.m_Translation.x = (-min * this.m_Scale.x) + this.leftmargin;
@@ -810,8 +817,8 @@
             }
             set
             {
-                float num = (value.width >= 0.1f) ? value.width : 0.1f;
-                float num2 = (value.height >= 0.1f) ? value.height : 0.1f;
+                float num = (value.width >= 0.05f) ? value.width : 0.05f;
+                float num2 = (value.height >= 0.05f) ? value.height : 0.05f;
                 if (this.m_UpDirection == YDirection.Positive)
                 {
                     this.m_Scale.x = this.drawRect.width / num;
@@ -858,17 +865,17 @@
             }
             set
             {
-                float num = (value.width >= 0.1f) ? value.width : 0.1f;
-                float num2 = (value.height >= 0.1f) ? value.height : 0.1f;
+                float num = (value.width >= 0.05f) ? value.width : 0.05f;
+                float num2 = (value.height >= 0.05f) ? value.height : 0.05f;
                 float num3 = (this.drawRect.width - this.leftmargin) - this.rightmargin;
-                if (num3 < 0.1f)
+                if (num3 < 0.05f)
                 {
-                    num3 = 0.1f;
+                    num3 = 0.05f;
                 }
                 float num4 = (this.drawRect.height - this.topmargin) - this.bottommargin;
-                if (num4 < 0.1f)
+                if (num4 < 0.05f)
                 {
-                    num4 = 0.1f;
+                    num4 = 0.05f;
                 }
                 if (this.m_UpDirection == YDirection.Positive)
                 {

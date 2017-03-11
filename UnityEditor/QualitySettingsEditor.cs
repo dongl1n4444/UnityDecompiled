@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+    using UnityEditor.Build;
     using UnityEngine;
 
     [CustomEditor(typeof(QualitySettings))]
@@ -24,7 +25,7 @@
         private SerializedObject m_QualitySettings;
         private SerializedProperty m_QualitySettingsProperty;
         private bool m_ShouldAddNewLevel;
-        private List<BuildPlayerWindow.BuildPlatform> m_ValidPlatforms;
+        private List<BuildPlatform> m_ValidPlatforms;
 
         private int DoQualityLevelSelection(int currentQualitylevel, IList<QualitySetting> qualitySettings, Dictionary<string, int> platformDefaultQualitySettings)
         {
@@ -38,7 +39,7 @@
             position.x += EditorGUI.indent;
             position.width -= EditorGUI.indent;
             GUI.Label(position, "Levels", EditorStyles.boldLabel);
-            foreach (BuildPlayerWindow.BuildPlatform platform in this.m_ValidPlatforms)
+            foreach (BuildPlatform platform in this.m_ValidPlatforms)
             {
                 GUILayoutOption[] optionArray2 = new GUILayoutOption[] { GUILayout.MinWidth(15f), GUILayout.MaxWidth(20f), GUILayout.Height(20f) };
                 Rect rect2 = GUILayoutUtility.GetRect(GUIContent.none, Styles.kToggle, optionArray2);
@@ -111,7 +112,7 @@
                         break;
                     }
                 }
-                foreach (BuildPlayerWindow.BuildPlatform platform2 in this.m_ValidPlatforms)
+                foreach (BuildPlatform platform2 in this.m_ValidPlatforms)
                 {
                     bool flag2 = false;
                     if (platformDefaultQualitySettings.ContainsKey(platform2.name) && (platformDefaultQualitySettings[platform2.name] == i))
@@ -170,7 +171,7 @@
             rect6.x += EditorGUI.indent;
             rect6.width -= EditorGUI.indent;
             GUI.Label(rect6, "Default", EditorStyles.boldLabel);
-            foreach (BuildPlayerWindow.BuildPlatform platform3 in this.m_ValidPlatforms)
+            foreach (BuildPlatform platform3 in this.m_ValidPlatforms)
             {
                 int num3;
                 GUILayoutOption[] optionArray9 = new GUILayoutOption[] { GUILayout.MinWidth(15f), GUILayout.MaxWidth(20f), GUILayout.Height(20f) };
@@ -181,7 +182,7 @@
                 }
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<QualitySetting, string>(null, (IntPtr) <DoQualityLevelSelection>m__0);
+                    <>f__am$cache0 = x => x.m_Name;
                 }
                 num3 = EditorGUI.Popup(rect7, num3, Enumerable.Select<QualitySetting, string>(qualitySettings, <>f__am$cache0).ToArray<string>(), Styles.kDefaultDropdown);
                 platformDefaultQualitySettings[platform3.name] = num3;
@@ -206,7 +207,7 @@
         private void DrawCascadeSplitGUI<T>(ref SerializedProperty shadowCascadeSplit)
         {
             float[] normalizedCascadePartitions = null;
-            Type type = typeof(T);
+            System.Type type = typeof(T);
             if (type == typeof(float))
             {
                 normalizedCascadePartitions = new float[] { shadowCascadeSplit.floatValue };
@@ -367,7 +368,7 @@
             this.m_QualitySettings = new SerializedObject(base.target);
             this.m_QualitySettingsProperty = this.m_QualitySettings.FindProperty("m_QualitySettings");
             this.m_PerPlatformDefaultQualityProperty = this.m_QualitySettings.FindProperty("m_PerPlatformDefaultQuality");
-            this.m_ValidPlatforms = BuildPlayerWindow.GetValidPlatforms();
+            this.m_ValidPlatforms = BuildPlatforms.instance.GetValidPlatforms();
         }
 
         public override void OnInspectorGUI()
@@ -566,7 +567,6 @@
         private static class Styles
         {
             public static readonly GUIContent kBillboardsFaceCameraPos = EditorGUIUtility.TextContent("Billboards Face Camera Position|Make billboards face towards camera position. Otherwise they face towards camera plane. This makes billboards look nicer when camera rotates but is more expensive to render.");
-            public static readonly GUIStyle kButton = "Button";
             public static readonly GUIStyle kDefaultDropdown = "QualitySettingsDefault";
             public static readonly GUIStyle kDefaultToggle = "OL ToggleWhite";
             public const int kHeaderRowHeight = 20;
@@ -577,7 +577,6 @@
             public const int kMaxToggleWidth = 20;
             public const int kMinToggleWidth = 15;
             public static readonly GUIContent kPlatformTooltip = new GUIContent("", "Allow quality setting on platform");
-            public static readonly GUIStyle kSelected = "PR Label";
             public static readonly GUIContent kSoftParticlesHint = EditorGUIUtility.TextContent("Soft Particles require using Deferred Lighting or making camera render the depth texture.");
             public static readonly GUIStyle kToggle = "OL Toggle";
         }

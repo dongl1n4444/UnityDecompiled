@@ -408,7 +408,7 @@
             }
             if (<>f__am$cacheF == null)
             {
-                <>f__am$cacheF = new Func<Slot, bool>(null, (IntPtr) <ResetGenericPropertyArgumentType>m__10);
+                <>f__am$cacheF = s => s.isGeneric && s.isOutputDataSlot;
             }
             foreach (Slot slot2 in Enumerable.Where<Slot>(this.slots, <>f__am$cacheF))
             {
@@ -425,7 +425,7 @@
         {
             if (<>f__am$cacheD == null)
             {
-                <>f__am$cacheD = new Func<Slot, bool>(null, (IntPtr) <SetGenericPropertyArgumentType>m__E);
+                <>f__am$cacheD = s => s.isGeneric;
             }
             foreach (Slot slot in Enumerable.Where<Slot>(this.inputDataSlots, <>f__am$cacheD))
             {
@@ -435,7 +435,7 @@
             }
             if (<>f__am$cacheE == null)
             {
-                <>f__am$cacheE = new Func<Slot, bool>(null, (IntPtr) <SetGenericPropertyArgumentType>m__F);
+                <>f__am$cacheE = s => s.isGeneric;
             }
             foreach (Slot slot2 in Enumerable.Where<Slot>(this.outputDataSlots, <>f__am$cacheE))
             {
@@ -472,12 +472,12 @@
             string str = ("[" + base.GetType().Name + "   " + this.title) + "| ";
             if (<>f__am$cache10 == null)
             {
-                <>f__am$cache10 = new Func<string, Slot, string>(null, (IntPtr) <ToString>m__11);
+                <>f__am$cache10 = (current, slot) => current + "o[" + slot.name + "]";
             }
             str = Enumerable.Aggregate<Slot, string>(this.outputSlots, str, <>f__am$cache10);
             if (<>f__am$cache11 == null)
             {
-                <>f__am$cache11 = new Func<string, Slot, string>(null, (IntPtr) <ToString>m__12);
+                <>f__am$cache11 = (current, slot) => current + "i[" + slot.name + "]";
             }
             return (Enumerable.Aggregate<Slot, string>(this.outputSlots, str, <>f__am$cache11) + "]");
         }
@@ -487,7 +487,7 @@
             <TryGetProperty>c__AnonStorey1 storey = new <TryGetProperty>c__AnonStorey1 {
                 name = name
             };
-            return Enumerable.FirstOrDefault<Property>(this.m_Properties, new Func<Property, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.FirstOrDefault<Property>(this.m_Properties, new Func<Property, bool>(storey.<>m__0));
         }
 
         public object TryGetSlotPropertyValue(Slot slot)
@@ -546,7 +546,7 @@
             {
                 if (<>f__am$cacheC == null)
                 {
-                    <>f__am$cacheC = new Func<Slot, IEnumerable<UnityEditor.Graphs.Edge>>(null, (IntPtr) <get_inputDataEdges>m__D);
+                    <>f__am$cacheC = s => s.edges;
                 }
                 return Enumerable.SelectMany<Slot, UnityEditor.Graphs.Edge>(this.inputDataSlots, <>f__am$cacheC);
             }
@@ -558,7 +558,7 @@
             {
                 if (<>f__am$cache3 == null)
                 {
-                    <>f__am$cache3 = new Func<Slot, bool>(null, (IntPtr) <get_inputDataSlots>m__3);
+                    <>f__am$cache3 = s => ((s.type == SlotType.InputSlot) && s.isDataSlot) && (s.name != "$Target");
                 }
                 return Enumerable.Where<Slot>(this.m_Slots, <>f__am$cache3);
             }
@@ -570,7 +570,7 @@
             {
                 if (<>f__am$cache8 == null)
                 {
-                    <>f__am$cache8 = new Func<Slot, IEnumerable<UnityEditor.Graphs.Edge>>(null, (IntPtr) <get_inputEdges>m__9);
+                    <>f__am$cache8 = s => s.edges;
                 }
                 return Enumerable.SelectMany<Slot, UnityEditor.Graphs.Edge>(this.inputSlots, <>f__am$cache8);
             }
@@ -582,7 +582,7 @@
             {
                 if (<>f__am$cacheA == null)
                 {
-                    <>f__am$cacheA = new Func<Slot, IEnumerable<UnityEditor.Graphs.Edge>>(null, (IntPtr) <get_inputFlowEdges>m__B);
+                    <>f__am$cacheA = s => s.edges;
                 }
                 return Enumerable.SelectMany<Slot, UnityEditor.Graphs.Edge>(this.inputFlowSlots, <>f__am$cacheA);
             }
@@ -594,7 +594,7 @@
             {
                 if (<>f__am$cache5 == null)
                 {
-                    <>f__am$cache5 = new Func<Slot, bool>(null, (IntPtr) <get_inputFlowSlots>m__5);
+                    <>f__am$cache5 = s => (s.type == SlotType.InputSlot) && s.isFlowSlot;
                 }
                 return Enumerable.Where<Slot>(this.m_Slots, <>f__am$cache5);
             }
@@ -606,7 +606,7 @@
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<Slot, bool>(null, (IntPtr) <get_inputSlots>m__1);
+                    <>f__am$cache1 = s => s.type == SlotType.InputSlot;
                 }
                 return Enumerable.Where<Slot>(this.m_Slots, <>f__am$cache1);
             }
@@ -621,7 +621,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<Slot, bool>(null, (IntPtr) <get_isGeneric>m__0);
+                    <>f__am$cache0 = s => s.isGeneric;
                 }
                 return Enumerable.Any<Slot>(this.slots, <>f__am$cache0);
             }
@@ -634,7 +634,7 @@
                 <>c__AnonStorey0 storey = new <>c__AnonStorey0 {
                     name = name
                 };
-                return Enumerable.FirstOrDefault<Slot>(this.m_Slots, new Func<Slot, bool>(storey, (IntPtr) this.<>m__0));
+                return Enumerable.FirstOrDefault<Slot>(this.m_Slots, new Func<Slot, bool>(storey.<>m__0));
             }
         }
 
@@ -660,7 +660,7 @@
             {
                 if (<>f__am$cacheB == null)
                 {
-                    <>f__am$cacheB = new Func<Slot, IEnumerable<UnityEditor.Graphs.Edge>>(null, (IntPtr) <get_outputDataEdges>m__C);
+                    <>f__am$cacheB = s => s.edges;
                 }
                 return Enumerable.SelectMany<Slot, UnityEditor.Graphs.Edge>(this.outputDataSlots, <>f__am$cacheB);
             }
@@ -672,7 +672,7 @@
             {
                 if (<>f__am$cache4 == null)
                 {
-                    <>f__am$cache4 = new Func<Slot, bool>(null, (IntPtr) <get_outputDataSlots>m__4);
+                    <>f__am$cache4 = s => (s.type == SlotType.OutputSlot) && s.isDataSlot;
                 }
                 return Enumerable.Where<Slot>(this.m_Slots, <>f__am$cache4);
             }
@@ -684,7 +684,7 @@
             {
                 if (<>f__am$cache7 == null)
                 {
-                    <>f__am$cache7 = new Func<Slot, IEnumerable<UnityEditor.Graphs.Edge>>(null, (IntPtr) <get_outputEdges>m__8);
+                    <>f__am$cache7 = s => s.edges;
                 }
                 return Enumerable.SelectMany<Slot, UnityEditor.Graphs.Edge>(this.outputSlots, <>f__am$cache7);
             }
@@ -696,7 +696,7 @@
             {
                 if (<>f__am$cache9 == null)
                 {
-                    <>f__am$cache9 = new Func<Slot, IEnumerable<UnityEditor.Graphs.Edge>>(null, (IntPtr) <get_outputFlowEdges>m__A);
+                    <>f__am$cache9 = s => s.edges;
                 }
                 return Enumerable.SelectMany<Slot, UnityEditor.Graphs.Edge>(this.outputFlowSlots, <>f__am$cache9);
             }
@@ -708,7 +708,7 @@
             {
                 if (<>f__am$cache6 == null)
                 {
-                    <>f__am$cache6 = new Func<Slot, bool>(null, (IntPtr) <get_outputFlowSlots>m__6);
+                    <>f__am$cache6 = s => (s.type == SlotType.OutputSlot) && s.isFlowSlot;
                 }
                 return Enumerable.Where<Slot>(this.m_Slots, <>f__am$cache6);
             }
@@ -720,7 +720,7 @@
             {
                 if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache2 = new Func<Slot, bool>(null, (IntPtr) <get_outputSlots>m__2);
+                    <>f__am$cache2 = s => s.type == SlotType.OutputSlot;
                 }
                 return Enumerable.Where<Slot>(this.m_Slots, <>f__am$cache2);
             }
@@ -730,7 +730,7 @@
             this.m_Properties;
 
         public IEnumerable<Property> settingProperties =>
-            Enumerable.Select<int, Property>(this.m_SettingProperties, new Func<int, Property>(this, (IntPtr) this.<get_settingProperties>m__7));
+            (from i in this.m_SettingProperties select this.m_Properties[i]);
 
         public List<Slot> slots =>
             this.m_Slots;

@@ -2,7 +2,6 @@
 {
     using System;
     using UnityEditor.Collaboration;
-    using UnityEditor.Connect;
     using UnityEditor.Web;
     using UnityEngine;
 
@@ -17,7 +16,7 @@
 
         private static void CloseHistoryWindows()
         {
-            CollabHistoryWindow[] windowArray = Resources.FindObjectsOfTypeAll(typeof(CollabHistoryWindow)) as CollabHistoryWindow[];
+            CollabHistoryWindow[] windowArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(CollabHistoryWindow)) as CollabHistoryWindow[];
             if (windowArray != null)
             {
                 foreach (CollabHistoryWindow window in windowArray)
@@ -29,7 +28,7 @@
 
         public void OnCollabStateChanged(CollabInfo info)
         {
-            if (Collab.instance.WasWhitelistedRequestSent() && (!info.whitelisted || !CollabAccess.Instance.IsServiceEnabled()))
+            if (!CollabAccess.Instance.IsServiceEnabled())
             {
                 CloseHistoryWindows();
             }
@@ -58,10 +57,10 @@
             base.titleContent.text = title;
         }
 
-        [MenuItem("Window/Collab History", false, 0x7db)]
+        [UnityEditor.MenuItem("Window/Collab History", false, 0x7db)]
         public static CollabHistoryWindow ShowHistoryWindow()
         {
-            Type[] desiredDockNextTo = new Type[] { typeof(InspectorWindow) };
+            System.Type[] desiredDockNextTo = new System.Type[] { typeof(InspectorWindow) };
             return EditorWindow.GetWindow<CollabHistoryWindow>("Collab History", desiredDockNextTo);
         }
 
@@ -70,9 +69,9 @@
             base.ToggleMaximize();
         }
 
-        [MenuItem("Window/Collab History", true)]
+        [UnityEditor.MenuItem("Window/Collab History", true)]
         public static bool ValidateShowHistoryWindow() => 
-            ((UnityConnect.instance.userInfo.whitelisted && Collab.instance.collabInfo.whitelisted) && CollabAccess.Instance.IsServiceEnabled());
+            CollabAccess.Instance.IsServiceEnabled();
     }
 }
 

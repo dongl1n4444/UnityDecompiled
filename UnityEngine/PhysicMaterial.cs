@@ -2,6 +2,7 @@
 {
     using System;
     using System.Runtime.CompilerServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Physics material describes how to handle colliding objects (friction, bounciness).</para>
@@ -25,18 +26,18 @@
             Internal_CreateDynamicsMaterial(this, name);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_CreateDynamicsMaterial([Writable] PhysicMaterial mat, string name);
 
         /// <summary>
         /// <para>Determines how the bounciness is combined.</para>
         /// </summary>
-        public PhysicMaterialCombine bounceCombine { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public PhysicMaterialCombine bounceCombine { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>How bouncy is the surface? A value of 0 will not bounce. A value of 1 will bounce without any loss of energy.</para>
         /// </summary>
-        public float bounciness { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float bounciness { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         [Obsolete("Use PhysicMaterial.bounciness instead", true)]
         public float bouncyness
@@ -52,18 +53,18 @@
         /// <summary>
         /// <para>The friction used when already moving.  This value has to be between 0 and 1.</para>
         /// </summary>
-        public float dynamicFriction { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float dynamicFriction { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>If anisotropic friction is enabled, dynamicFriction2 will be applied along frictionDirection2.</para>
         /// </summary>
         [Obsolete("Anisotropic friction is no longer supported since Unity 5.0.", true)]
-        public float dynamicFriction2 { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float dynamicFriction2 { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Determines how the friction is combined.</para>
         /// </summary>
-        public PhysicMaterialCombine frictionCombine { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public PhysicMaterialCombine frictionCombine { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         [Obsolete("Anisotropic friction is no longer supported since Unity 5.0.", true)]
         public Vector3 frictionDirection
@@ -91,13 +92,13 @@
         /// <summary>
         /// <para>The friction coefficient used when an object is lying on a surface.</para>
         /// </summary>
-        public float staticFriction { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float staticFriction { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>If anisotropic friction is enabled, staticFriction2 will be applied along frictionDirection2.</para>
         /// </summary>
         [Obsolete("Anisotropic friction is no longer supported since Unity 5.0.", true)]
-        public float staticFriction2 { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float staticFriction2 { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
     }
 }
 

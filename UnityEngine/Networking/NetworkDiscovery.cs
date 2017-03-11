@@ -38,7 +38,7 @@
         [SerializeField]
         private bool m_ShowGUI = true;
         [SerializeField]
-        private bool m_UseNetworkManager = true;
+        private bool m_UseNetworkManager = false;
 
         private static string BytesToString(byte[] bytes)
         {
@@ -73,7 +73,7 @@
                 this.m_BroadcastData = string.Concat(objArray1);
                 if (LogFilter.logInfo)
                 {
-                    Debug.Log("NetwrokDiscovery set broadbast data to:" + this.m_BroadcastData);
+                    Debug.Log("NetworkDiscovery set broadcast data to:" + this.m_BroadcastData);
                 }
             }
             this.m_MsgOutBuffer = StringToBytes(this.m_BroadcastData);

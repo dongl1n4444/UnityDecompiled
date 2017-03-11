@@ -24,9 +24,9 @@
         private ObjectListArea m_ListArea;
         private ObjectListAreaState m_ListAreaState;
         private int m_ModalUndoGroup = -1;
-        private Object m_ObjectBeingEdited;
+        private UnityEngine.Object m_ObjectBeingEdited;
         private ObjectTreeForSelector m_ObjectTreeWithSearch = new ObjectTreeForSelector();
-        private Object m_OriginalSelection;
+        private UnityEngine.Object m_OriginalSelection;
         private PreviewResizer m_PreviewResizer = new PreviewResizer();
         private float m_PreviewSize = 0f;
         private string m_RequiredType;
@@ -62,8 +62,8 @@
                 {
                     num = icon.width * 2;
                 }
-                FilterMode filterMode = icon.filterMode;
-                icon.filterMode = FilterMode.Point;
+                UnityEngine.FilterMode filterMode = icon.filterMode;
+                icon.filterMode = UnityEngine.FilterMode.Point;
                 GUI.DrawTexture(new Rect(position.x + ((((int) position.width) - num) / 2), position.y + ((((int) position.height) - num) / 2), (float) num, (float) num), icon, ScaleMode.ScaleToFit);
                 icon.filterMode = filterMode;
             }
@@ -89,13 +89,13 @@
             this.m_ListArea.Init(this.listPosition, hierarchyType, searchFilter, true);
         }
 
-        public static Object GetCurrentObject() => 
+        public static UnityEngine.Object GetCurrentObject() => 
             EditorUtility.InstanceIDToObject(get.GetSelectedInstanceID());
 
-        public static Object GetInitialObject() => 
+        public static UnityEngine.Object GetInitialObject() => 
             get.m_OriginalSelection;
 
-        private Scene GetSceneFromObject(Object obj)
+        private Scene GetSceneFromObject(UnityEngine.Object obj)
         {
             GameObject obj2 = obj as GameObject;
             if (obj2 != null)
@@ -130,7 +130,7 @@
         {
             string[] strArray = new string[] { 
                 "AnimationClip", "AnimatorController", "AnimatorOverrideController", "AudioClip", "Avatar", "Flare", "Font", "Material", "ProceduralMaterial", "Mesh", "PhysicMaterial", "GUISkin", "Shader", "TerrainData", "Texture", "Cubemap",
-                "MovieTexture", "RenderTexture", "Texture2D", "ProceduralTexture", "Sprite", "AudioMixerGroup", "AudioMixerSnapshot"
+                "MovieTexture", "RenderTexture", "Texture2D", "ProceduralTexture", "Sprite", "AudioMixerGroup", "AudioMixerSnapshot", "VideoClip"
             };
             if (checkGameObject && (requiredClassName == "GameObject"))
             {
@@ -179,7 +179,7 @@
                 this.m_ListArea.allowMultiSelect = false;
                 this.m_ListArea.allowRenaming = false;
                 this.m_ListArea.allowBuiltinResources = true;
-                this.m_ListArea.repaintCallback = (Action) Delegate.Combine(this.m_ListArea.repaintCallback, new Action(this, (IntPtr) this.Repaint));
+                this.m_ListArea.repaintCallback = (Action) Delegate.Combine(this.m_ListArea.repaintCallback, new Action(this.Repaint));
                 this.m_ListArea.itemSelectedCallback = (Action<bool>) Delegate.Combine(this.m_ListArea.itemSelectedCallback, new Action<bool>(this.ListAreaItemSelectedCallback));
                 this.m_ListArea.gridSize = this.m_StartGridSize.value;
                 this.FilterSettingsChanged();
@@ -195,7 +195,7 @@
             GUIUtility.ExitGUI();
         }
 
-        private void LinePreview(string s, Object o, EditorWrapper p)
+        private void LinePreview(string s, UnityEngine.Object o, EditorWrapper p)
         {
             if (this.m_ListArea.m_SelectedObjectIcon != null)
             {
@@ -320,7 +320,7 @@
             this.m_ObjectTreeWithSearch.OnGUI(new Rect(0f, 0f, base.position.width, base.position.height));
         }
 
-        private void OverlapPreview(float actualSize, string s, Object o, EditorWrapper p)
+        private void OverlapPreview(float actualSize, string s, UnityEngine.Object o, EditorWrapper p)
         {
             float x = 5f;
             Rect position = new Rect(x, this.m_TopSize + x, base.position.width - (x * 2f), actualSize - (x * 2f));
@@ -348,7 +348,7 @@
             if (this.m_ListArea.GetSelection().Length != 0)
             {
                 EditorWrapper p = null;
-                Object currentObject = GetCurrentObject();
+                UnityEngine.Object currentObject = GetCurrentObject();
                 if (this.m_PreviewSize < 75f)
                 {
                     string str;
@@ -539,12 +539,12 @@
         private static bool ShouldTreeViewBeUsed(string className) => 
             (className == "AudioMixerGroup");
 
-        public void Show(Object obj, Type requiredType, SerializedProperty property, bool allowSceneObjects)
+        public void Show(UnityEngine.Object obj, System.Type requiredType, SerializedProperty property, bool allowSceneObjects)
         {
             this.Show(obj, requiredType, property, allowSceneObjects, null);
         }
 
-        internal void Show(Object obj, Type requiredType, SerializedProperty property, bool allowSceneObjects, List<int> allowedInstanceIDs)
+        internal void Show(UnityEngine.Object obj, System.Type requiredType, SerializedProperty property, bool allowSceneObjects, List<int> allowedInstanceIDs)
         {
             this.m_AllowSceneObjects = allowSceneObjects;
             this.m_IsShowingAssets = true;
@@ -628,7 +628,7 @@
             this.SendEvent("ObjectSelectorUpdated", true);
         }
 
-        private void WidePreview(float actualSize, string s, Object o, EditorWrapper p)
+        private void WidePreview(float actualSize, string s, UnityEngine.Object o, EditorWrapper p)
         {
             float x = 5f;
             Rect position = new Rect(x, this.m_TopSize + x, actualSize - (x * 2f), actualSize - (x * 2f));
@@ -660,7 +660,7 @@
             {
                 if (s_SharedObjectSelector == null)
                 {
-                    Object[] objArray = Resources.FindObjectsOfTypeAll(typeof(ObjectSelector));
+                    UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(ObjectSelector));
                     if ((objArray != null) && (objArray.Length > 0))
                     {
                         s_SharedObjectSelector = (ObjectSelector) objArray[0];

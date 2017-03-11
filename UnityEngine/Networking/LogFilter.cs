@@ -10,6 +10,7 @@
         /// <summary>
         /// <para>The current logging level that UNET is running with.</para>
         /// </summary>
+        [Obsolete("Use LogFilter.currentLogLevel instead")]
         public static FilterLevel current = FilterLevel.Info;
         /// <summary>
         /// <para>Setting LogFilter.currentLogLevel to this will enable verbose debug logging.</para>
@@ -26,6 +27,7 @@
         /// </summary>
         public const int Info = 2;
         private static int s_CurrentLogLevel = 2;
+        internal const int SetInScripting = -1;
         /// <summary>
         /// <para>Setting LogFilter.currentLogLevel to this will log wanring and above messages.</para>
         /// </summary>
@@ -79,12 +81,34 @@
         /// </summary>
         public enum FilterLevel
         {
-            Developer,
-            Debug,
-            Info,
-            Warn,
-            Error,
-            Fatal
+            /// <summary>
+            /// <para>Show log messages with priority Debug and higher.</para>
+            /// </summary>
+            Debug = 1,
+            /// <summary>
+            /// <para>Show log messages with priority Developer and higher, this it the most verbose setting.</para>
+            /// </summary>
+            Developer = 0,
+            /// <summary>
+            /// <para>Show log messages with priority Error and higher.</para>
+            /// </summary>
+            Error = 4,
+            /// <summary>
+            /// <para>Show log messages with priority Fatal and higher. this is the least verbose setting.</para>
+            /// </summary>
+            Fatal = 5,
+            /// <summary>
+            /// <para>Show log messages with priority Info and higher. This is the default setting.</para>
+            /// </summary>
+            Info = 2,
+            /// <summary>
+            /// <para>Tells the NetworkManager to not set the filter level on startup.</para>
+            /// </summary>
+            SetInScripting = -1,
+            /// <summary>
+            /// <para>Show log messages with priority Warning and higher.</para>
+            /// </summary>
+            Warn = 3
         }
     }
 }

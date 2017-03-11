@@ -22,7 +22,7 @@
                 return method;
             }
             storey.staticInterfaces = declaringType.GetAllFactoryTypes().ToArray<TypeReference>();
-            IEnumerable<TypeReference> candidateInterfaces = declaringType.GetInterfaces().Where<TypeReference>(new Func<TypeReference, bool>(storey, (IntPtr) this.<>m__0));
+            IEnumerable<TypeReference> candidateInterfaces = declaringType.GetInterfaces().Where<TypeReference>(new Func<TypeReference, bool>(storey.<>m__0));
             MethodReference overridenInterfaceMethod = method.GetOverridenInterfaceMethod(candidateInterfaces);
             if (overridenInterfaceMethod == null)
             {
@@ -42,7 +42,7 @@
                     <>f__ref$0 = this,
                     iface = iface
                 };
-                return !this.staticInterfaces.Any<TypeReference>(new Func<TypeReference, bool>(storey, (IntPtr) this.<>m__0));
+                return !this.staticInterfaces.Any<TypeReference>(new Func<TypeReference, bool>(storey.<>m__0));
             }
 
             private sealed class <GetInterfaceMethod>c__AnonStorey1

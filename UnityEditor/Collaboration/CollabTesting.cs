@@ -2,26 +2,38 @@
 {
     using System;
     using System.Collections.Generic;
+    using UnityEngine;
 
     internal class CollabTesting
     {
-        private static readonly Queue<Action> m_Actions = new Queue<Action>();
+        private static IEnumerator<bool> _enumerator = null;
+        private static Action _runAfter = null;
 
-        public static void AddAction(Action action)
+        public static void End()
         {
-            m_Actions.Enqueue(action);
-        }
-
-        public static void DropAll()
-        {
-            m_Actions.Clear();
+            if (_enumerator != null)
+            {
+                _runAfter();
+                _enumerator = null;
+            }
         }
 
         public static void Execute()
         {
-            if (m_Actions.Count != 0)
+            if ((_enumerator != null) && !Collab.instance.AnyJobRunning())
             {
-                m_Actions.Dequeue().Invoke();
+                try
+                {
+                    if (!_enumerator.MoveNext())
+                    {
+                        End();
+                    }
+                }
+                catch (Exception)
+                {
+                    Debug.LogError("Something Went wrong with the test framework itself");
+                    throw;
+                }
             }
         }
 
@@ -30,8 +42,24 @@
             Execute();
         }
 
-        public static int ActionsCount =>
-            m_Actions.Count;
+        public static Action AfterRun
+        {
+            set
+            {
+                _runAfter = value;
+            }
+        }
+
+        public static bool IsRunning =>
+            (_enumerator != null);
+
+        public static Func<IEnumerable<bool>> Tick
+        {
+            set
+            {
+                _enumerator = value().GetEnumerator();
+            }
+        }
     }
 }
 

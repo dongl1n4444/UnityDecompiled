@@ -47,7 +47,7 @@
             return AddWorldAnchor_Internal(this.m_NativePtr, id, anchor);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool AddWorldAnchor_Internal(IntPtr context, string id, WorldAnchor anchor);
         private static IntPtr Create_Internal()
         {
@@ -69,9 +69,9 @@
             GC.SuppressFinalize(this);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Dispose_Internal(IntPtr context);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern void DisposeThreaded_Internal(IntPtr context);
         public static void ExportAsync(WorldAnchorTransferBatch transferBatch, SerializationDataAvailableDelegate onDataAvailable, SerializationCompleteDelegate onCompleted)
         {
@@ -90,7 +90,7 @@
             ExportAsync_Internal(transferBatch.m_NativePtr, onDataAvailable, onCompleted);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void ExportAsync_Internal(IntPtr transferBatch, SerializationDataAvailableDelegate onDataAvailable, SerializationCompleteDelegate onComplete);
         ~WorldAnchorTransferBatch()
         {
@@ -134,9 +134,9 @@
             return 0;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int GetAllIds_Internal(IntPtr context, string[] ids);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int GetAnchorCount_Internal(IntPtr context);
         public static void ImportAsync(byte[] serializedData, DeserializationCompleteDelegate onComplete)
         {
@@ -164,9 +164,9 @@
             ImportAsync_Internal(serializedData, offset, length, onComplete);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void ImportAsync_Internal(byte[] serializedData, int offset, int length, DeserializationCompleteDelegate onComplete);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Create_Internal(out IntPtr value);
         [RequiredByNativeCode]
         private static void InvokeWorldAnchorDeserializationCompleteDelegate(DeserializationCompleteDelegate onDeserializationComplete, SerializationCompletionReason completionReason, IntPtr nativePtr)
@@ -187,7 +187,7 @@
             onSerializationDataAvailable(data);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool LoadAnchor_Internal(IntPtr context, string id, WorldAnchor anchor);
         /// <summary>
         /// <para>Locks the provided GameObject to the world by loading and applying the WorldAnchor from the TransferBatch for the provided id.</para>

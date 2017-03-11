@@ -3,12 +3,13 @@
     using System;
     using System.Runtime.CompilerServices;
     using UnityEditor.AnimatedValues;
+    using UnityEditor.IMGUI.Controls;
     using UnityEditorInternal;
     using UnityEngine;
     using UnityEngine.Events;
     using UnityEngine.Rendering;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(LightProbeProxyVolume))]
+    [CustomEditor(typeof(LightProbeProxyVolume)), CanEditMultipleObjects]
     internal class LightProbeProxyVolumeEditor : Editor
     {
         internal static Color kGizmoLightProbeProxyVolumeColor = new Color(1f, 0.8980392f, 0.5803922f, 0.5019608f);
@@ -16,7 +17,7 @@
         private SerializedProperty m_BoundingBoxMode;
         private SerializedProperty m_BoundingBoxOrigin;
         private SerializedProperty m_BoundingBoxSize;
-        private BoxEditor m_BoxEditor = new BoxEditor(true, s_BoxHash);
+        private BoxBoundsHandle m_BoundsHandle = new BoxBoundsHandle(s_HandleControlIDHint);
         private SerializedProperty m_ProbePositionMode;
         private SerializedProperty m_RefreshMode;
         private SerializedProperty m_ResolutionMode;
@@ -30,21 +31,25 @@
         private AnimBool m_ShowNoRendererWarning = new AnimBool();
         private AnimBool m_ShowResolutionProbesOption = new AnimBool();
         private AnimBool m_ShowResolutionXYZOptions = new AnimBool();
-        private static int s_BoxHash = "LightProbeProxyVolumeEditorHash".GetHashCode();
+        private static int s_HandleControlIDHint = typeof(LightProbeProxyVolumeEditor).Name.GetHashCode();
         private static LightProbeProxyVolumeEditor s_LastInteractedEditor;
 
         private void DoBoxEditing()
         {
             LightProbeProxyVolume target = (LightProbeProxyVolume) base.target;
-            Vector3 sizeCustom = target.sizeCustom;
-            Vector3 originCustom = target.originCustom;
-            if (this.m_BoxEditor.OnSceneGUI(target.transform.localToWorldMatrix, kGizmoLightProbeProxyVolumeColor, kGizmoLightProbeProxyVolumeHandleColor, true, ref originCustom, ref sizeCustom))
+            using (new Handles.DrawingScope(target.transform.localToWorldMatrix))
             {
-                Undo.RecordObject(target, "Modified Light Probe Proxy Volume AABB");
-                Vector3 vector3 = originCustom;
-                target.sizeCustom = sizeCustom;
-                target.originCustom = vector3;
-                EditorUtility.SetDirty(base.target);
+                this.m_BoundsHandle.center = target.originCustom;
+                this.m_BoundsHandle.size = target.sizeCustom;
+                EditorGUI.BeginChangeCheck();
+                this.m_BoundsHandle.DrawHandle();
+                if (EditorGUI.EndChangeCheck())
+                {
+                    Undo.RecordObject(target, "Modified Light Probe Proxy Volume AABB");
+                    target.originCustom = this.m_BoundsHandle.center;
+                    target.sizeCustom = this.m_BoundsHandle.size;
+                    EditorUtility.SetDirty(base.target);
+                }
             }
         }
 
@@ -68,14 +73,14 @@
             {
                 GUILayout.BeginHorizontal(new GUILayoutOption[0]);
                 GUILayout.FlexibleSpace();
-                EditMode.SceneViewEditMode editMode = EditMode.editMode;
+                UnityEditorInternal.EditMode.SceneViewEditMode editMode = UnityEditorInternal.EditMode.editMode;
                 EditorGUI.BeginChangeCheck();
-                EditMode.DoInspectorToolbar(Styles.sceneViewEditModes, Styles.toolContents, this.GetGlobalBounds(), this);
+                UnityEditorInternal.EditMode.DoInspectorToolbar(Styles.sceneViewEditModes, Styles.toolContents, this.GetGlobalBounds(), this);
                 if (EditorGUI.EndChangeCheck())
                 {
                     s_LastInteractedEditor = this;
                 }
-                if ((editMode != EditMode.editMode) && (Toolbar.get != null))
+                if ((editMode != UnityEditorInternal.EditMode.editMode) && (Toolbar.get != null))
                 {
                     Toolbar.get.Repaint();
                 }
@@ -85,7 +90,7 @@
                 string baseSceneEditingToolText = Styles.baseSceneEditingToolText;
                 if (this.sceneViewEditing)
                 {
-                    int index = ArrayUtility.IndexOf<EditMode.SceneViewEditMode>(Styles.sceneViewEditModes, EditMode.editMode);
+                    int index = ArrayUtility.IndexOf<UnityEditorInternal.EditMode.SceneViewEditMode>(Styles.sceneViewEditModes, UnityEditorInternal.EditMode.editMode);
                     if (index >= 0)
                     {
                         baseSceneEditingToolText = Styles.toolNames[index].text;
@@ -107,13 +112,8 @@
             return new Bounds();
         }
 
-        private bool IsLightProbeVolumeProxyEditMode(EditMode.SceneViewEditMode editMode) => 
-            ((editMode == EditMode.SceneViewEditMode.LightProbeProxyVolumeBox) || (editMode == EditMode.SceneViewEditMode.LightProbeProxyVolumeOrigin));
-
-        public void OnDisable()
-        {
-            this.m_BoxEditor.OnDisable();
-        }
+        private bool IsLightProbeVolumeProxyEditMode(UnityEditorInternal.EditMode.SceneViewEditMode editMode) => 
+            ((editMode == UnityEditorInternal.EditMode.SceneViewEditMode.LightProbeProxyVolumeBox) || (editMode == UnityEditorInternal.EditMode.SceneViewEditMode.LightProbeProxyVolumeOrigin));
 
         public void OnEnable()
         {
@@ -127,9 +127,8 @@
             this.m_ResolutionProbesPerUnit = base.serializedObject.FindProperty("m_ResolutionProbesPerUnit");
             this.m_ProbePositionMode = base.serializedObject.FindProperty("m_ProbePositionMode");
             this.m_RefreshMode = base.serializedObject.FindProperty("m_RefreshMode");
-            this.m_BoxEditor.OnEnable();
-            this.m_BoxEditor.SetAlwaysDisplayHandles(true);
-            this.m_BoxEditor.allowNegativeSize = false;
+            this.m_BoundsHandle.handleColor = kGizmoLightProbeProxyVolumeHandleColor;
+            this.m_BoundsHandle.wireframeColor = Color.clear;
             this.UpdateShowOptions(true);
         }
 
@@ -209,15 +208,15 @@
             {
                 if (this.m_BoundingBoxMode.intValue != 2)
                 {
-                    EditMode.QuitEditMode();
+                    UnityEditorInternal.EditMode.QuitEditMode();
                 }
-                switch (EditMode.editMode)
+                switch (UnityEditorInternal.EditMode.editMode)
                 {
-                    case EditMode.SceneViewEditMode.LightProbeProxyVolumeBox:
+                    case UnityEditorInternal.EditMode.SceneViewEditMode.LightProbeProxyVolumeBox:
                         this.DoBoxEditing();
                         break;
 
-                    case EditMode.SceneViewEditMode.LightProbeProxyVolumeOrigin:
+                    case UnityEditorInternal.EditMode.SceneViewEditMode.LightProbeProxyVolumeOrigin:
                         this.DoOriginEditing();
                         break;
                 }
@@ -227,7 +226,7 @@
         [DrawGizmo(GizmoType.Active)]
         private static void RenderBoxGizmo(LightProbeProxyVolume probeProxyVolume, GizmoType gizmoType)
         {
-            if ((s_LastInteractedEditor != null) && (s_LastInteractedEditor.sceneViewEditing && (EditMode.editMode == EditMode.SceneViewEditMode.LightProbeProxyVolumeBox)))
+            if ((s_LastInteractedEditor != null) && (s_LastInteractedEditor.sceneViewEditing && (UnityEditorInternal.EditMode.editMode == UnityEditorInternal.EditMode.SceneViewEditMode.LightProbeProxyVolumeBox)))
             {
                 Color color = Gizmos.color;
                 Gizmos.color = kGizmoLightProbeProxyVolumeColor;
@@ -295,12 +294,12 @@
             (!this.m_ResolutionMode.hasMultipleDifferentValues && (this.m_ResolutionMode.intValue == 1));
 
         private bool sceneViewEditing =>
-            (this.IsLightProbeVolumeProxyEditMode(EditMode.editMode) && EditMode.IsOwner(this));
+            (this.IsLightProbeVolumeProxyEditMode(UnityEditorInternal.EditMode.editMode) && UnityEditorInternal.EditMode.IsOwner(this));
 
         private static class Styles
         {
             public static string baseSceneEditingToolText = "<color=grey>Light Probe Proxy Volume Scene Editing Mode:</color> ";
-            public static GUIContent[] bbMode = Enumerable.Select<string, GUIContent>(Enumerable.Select<string, string>(Enum.GetNames(typeof(LightProbeProxyVolume.BoundingBoxMode)), new Func<string, string>(null, (IntPtr) <bbMode>m__0)).ToArray<string>(), new Func<string, GUIContent>(null, (IntPtr) <bbMode>m__1)).ToArray<GUIContent>();
+            public static GUIContent[] bbMode = Enumerable.Select<string, GUIContent>(Enumerable.Select<string, string>(Enum.GetNames(typeof(LightProbeProxyVolume.BoundingBoxMode)), new Func<string, string>(LightProbeProxyVolumeEditor.Styles.<bbMode>m__0)).ToArray<string>(), new Func<string, GUIContent>(LightProbeProxyVolumeEditor.Styles.<bbMode>m__1)).ToArray<GUIContent>();
             public static GUIContent bbModeText = EditorGUIUtility.TextContent("Bounding Box Mode|The mode in which the bounding box is computed. A 3D grid of interpolated light probes will be generated inside this bounding box.\n\nAutomatic Local - the local-space bounding box of the Renderer is used.\n\nAutomatic Global - a bounding box is computed which encloses the current Renderer and all the Renderers down the hierarchy that have the Light Probes property set to Use Proxy Volume. The bounding box will be world-space aligned.\n\nCustom - a custom bounding box is used. The bounding box is specified in the local-space of the game object.");
             public static GUIContent bbSettingsText = EditorGUIUtility.TextContent("Bounding Box Settings");
             public static GUIContent componentUnsuportedOnTreesNote = EditorGUIUtility.TextContent("Tree rendering doesn't support Light Probe Proxy Volume components.");
@@ -308,22 +307,22 @@
             public static GUIContent noLightProbes = EditorGUIUtility.TextContent("The scene doesn't contain any light probes. Add light probes using Light Probe Group components (menu: Component->Rendering->Light Probe Group).");
             public static GUIContent noRendererNode = EditorGUIUtility.TextContent("The component is unused by this game object because there is no Renderer component attached.");
             public static GUIContent originText = EditorGUIUtility.TextContent("Origin");
-            public static GUIContent[] probePositionMode = Enumerable.Select<string, GUIContent>(Enumerable.Select<string, string>(Enum.GetNames(typeof(LightProbeProxyVolume.ProbePositionMode)), new Func<string, string>(null, (IntPtr) <probePositionMode>m__4)).ToArray<string>(), new Func<string, GUIContent>(null, (IntPtr) <probePositionMode>m__5)).ToArray<GUIContent>();
+            public static GUIContent[] probePositionMode = Enumerable.Select<string, GUIContent>(Enumerable.Select<string, string>(Enum.GetNames(typeof(LightProbeProxyVolume.ProbePositionMode)), new Func<string, string>(LightProbeProxyVolumeEditor.Styles.<probePositionMode>m__4)).ToArray<string>(), new Func<string, GUIContent>(LightProbeProxyVolumeEditor.Styles.<probePositionMode>m__5)).ToArray<GUIContent>();
             public static GUIContent probePositionText = EditorGUIUtility.TextContent("Probe Position Mode|The mode in which the interpolated probe positions are generated.\n\nCellCorner - divide the volume in cells and generate interpolated probe positions in the corner/edge of the cells.\n\nCellCenter - divide the volume in cells and generate interpolated probe positions in the center of the cells.");
-            public static GUIContent[] refreshMode = Enumerable.Select<string, GUIContent>(Enumerable.Select<string, string>(Enum.GetNames(typeof(LightProbeProxyVolume.RefreshMode)), new Func<string, string>(null, (IntPtr) <refreshMode>m__6)).ToArray<string>(), new Func<string, GUIContent>(null, (IntPtr) <refreshMode>m__7)).ToArray<GUIContent>();
+            public static GUIContent[] refreshMode = Enumerable.Select<string, GUIContent>(Enumerable.Select<string, string>(Enum.GetNames(typeof(LightProbeProxyVolume.RefreshMode)), new Func<string, string>(LightProbeProxyVolumeEditor.Styles.<refreshMode>m__6)).ToArray<string>(), new Func<string, GUIContent>(LightProbeProxyVolumeEditor.Styles.<refreshMode>m__7)).ToArray<GUIContent>();
             public static GUIContent refreshModeText = EditorGUIUtility.TextContent("Refresh Mode");
-            public static GUIContent[] resMode = Enumerable.Select<string, GUIContent>(Enumerable.Select<string, string>(Enum.GetNames(typeof(LightProbeProxyVolume.ResolutionMode)), new Func<string, string>(null, (IntPtr) <resMode>m__2)).ToArray<string>(), new Func<string, GUIContent>(null, (IntPtr) <resMode>m__3)).ToArray<GUIContent>();
+            public static GUIContent[] resMode = Enumerable.Select<string, GUIContent>(Enumerable.Select<string, string>(Enum.GetNames(typeof(LightProbeProxyVolume.ResolutionMode)), new Func<string, string>(LightProbeProxyVolumeEditor.Styles.<resMode>m__2)).ToArray<string>(), new Func<string, GUIContent>(LightProbeProxyVolumeEditor.Styles.<resMode>m__3)).ToArray<GUIContent>();
             public static GUIContent resModeText = EditorGUIUtility.TextContent("Resolution Mode|The mode in which the resolution of the 3D grid of interpolated light probes is specified:\n\nAutomatic - the resolution on each axis is computed using a user-specified number of interpolated light probes per unit area(Density).\n\nCustom - the user can specify a different resolution on each axis.");
             public static GUIContent resolutionXText = new GUIContent("X");
             public static GUIContent resolutionYText = new GUIContent("Y");
             public static GUIContent resolutionZText = new GUIContent("Z");
             public static GUIContent resProbesPerUnit = EditorGUIUtility.TextContent("Density|Density in probes per world unit.");
             public static GUIStyle richTextMiniLabel = new GUIStyle(EditorStyles.miniLabel);
-            public static EditMode.SceneViewEditMode[] sceneViewEditModes = new EditMode.SceneViewEditMode[] { EditMode.SceneViewEditMode.LightProbeProxyVolumeBox, EditMode.SceneViewEditMode.LightProbeProxyVolumeOrigin };
+            public static UnityEditorInternal.EditMode.SceneViewEditMode[] sceneViewEditModes = new UnityEditorInternal.EditMode.SceneViewEditMode[] { UnityEditorInternal.EditMode.SceneViewEditMode.LightProbeProxyVolumeBox, UnityEditorInternal.EditMode.SceneViewEditMode.LightProbeProxyVolumeOrigin };
             public static GUIContent sizeText = EditorGUIUtility.TextContent("Size");
-            public static GUIContent[] toolContents = new GUIContent[] { EditorGUIUtility.IconContent("EditCollider"), EditorGUIUtility.IconContent("MoveTool", "|Move the selected objects.") };
+            public static GUIContent[] toolContents = new GUIContent[] { PrimitiveBoundsHandle.editModeButton, EditorGUIUtility.IconContent("MoveTool", "|Move the selected objects.") };
             public static GUIContent[] toolNames = new GUIContent[] { new GUIContent(baseSceneEditingToolText + "Box Bounds", ""), new GUIContent(baseSceneEditingToolText + "Box Origin", "") };
-            public static GUIContent[] volTextureSizes = Enumerable.Select<int, GUIContent>(volTextureSizesValues, new Func<int, GUIContent>(null, (IntPtr) <volTextureSizes>m__8)).ToArray<GUIContent>();
+            public static GUIContent[] volTextureSizes = Enumerable.Select<int, GUIContent>(volTextureSizesValues, new Func<int, GUIContent>(LightProbeProxyVolumeEditor.Styles.<volTextureSizes>m__8)).ToArray<GUIContent>();
             public static int[] volTextureSizesValues = new int[] { 1, 2, 4, 8, 0x10, 0x20 };
             public static GUIContent volumeResolutionText = EditorGUIUtility.TextContent("Proxy Volume Resolution|Specifies the resolution of the 3D grid of interpolated light probes. Higher resolution/density means better lighting but the CPU cost will increase.");
 

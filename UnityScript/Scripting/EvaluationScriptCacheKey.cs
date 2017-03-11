@@ -17,7 +17,7 @@
         public override bool Equals(object o)
         {
             EvaluationScriptCacheKey key = o as EvaluationScriptCacheKey;
-            if (key._contextType != this._contextType)
+            if (!(key._contextType == this._contextType))
             {
             }
             return ((key != null) ? (key._code == this._code) : false);

@@ -37,6 +37,12 @@
         public List<T> Elements() => 
             this.m_Root.GetElementsIncludingChildren();
 
+        public List<T> GetItemsAtPosition(Vector2 pos)
+        {
+            Rect area = new Rect(pos, Vector2.one);
+            return this.IntersectsWith(area);
+        }
+
         public void Insert(List<T> items)
         {
             foreach (T local in items)
@@ -50,12 +56,8 @@
             this.m_Root.Insert(item);
         }
 
-        public List<T> IntersectsWith(Rect area)
-        {
-            area.x -= this.m_ScreenSpaceOffset.x;
-            area.y -= this.m_ScreenSpaceOffset.y;
-            return this.m_Root.IntersectsWith(area);
-        }
+        public List<T> IntersectsWith(Rect area) => 
+            this.m_Root.IntersectsWith(area);
 
         public void Remove(T item)
         {

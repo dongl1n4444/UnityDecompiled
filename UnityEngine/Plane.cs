@@ -2,11 +2,12 @@
 {
     using System;
     using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Representation of a plane in 3D space.</para>
     /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential), UsedByNativeCode]
     public struct Plane
     {
         private Vector3 m_Normal;
@@ -76,8 +77,8 @@
         /// <param name="inPoint">A point that lies on the plane.</param>
         public void SetNormalAndPosition(Vector3 inNormal, Vector3 inPoint)
         {
-            this.normal = Vector3.Normalize(inNormal);
-            this.distance = -Vector3.Dot(inNormal, inPoint);
+            this.m_Normal = Vector3.Normalize(inNormal);
+            this.m_Distance = -Vector3.Dot(inNormal, inPoint);
         }
 
         /// <summary>
@@ -88,23 +89,70 @@
         /// <param name="c">Third point in clockwise order.</param>
         public void Set3Points(Vector3 a, Vector3 b, Vector3 c)
         {
-            this.normal = Vector3.Normalize(Vector3.Cross(b - a, c - a));
-            this.distance = -Vector3.Dot(this.normal, a);
+            this.m_Normal = Vector3.Normalize(Vector3.Cross(b - a, c - a));
+            this.m_Distance = -Vector3.Dot(this.m_Normal, a);
+        }
+
+        /// <summary>
+        /// <para>Makes the plane face in the opposite direction.</para>
+        /// </summary>
+        public void Flip()
+        {
+            this.m_Normal = -this.m_Normal;
+            this.m_Distance = -this.m_Distance;
+        }
+
+        /// <summary>
+        /// <para>Returns a copy of the plane that faces in the opposite direction.</para>
+        /// </summary>
+        public Plane flipped =>
+            new Plane(-this.m_Normal, -this.m_Distance);
+        /// <summary>
+        /// <para>Moves the plane in space by the translation vector.</para>
+        /// </summary>
+        /// <param name="translation">The offset in space to move the plane with.</param>
+        public void Translate(Vector3 translation)
+        {
+            this.m_Distance += Vector3.Dot(this.m_Normal, translation);
+        }
+
+        /// <summary>
+        /// <para>Returns a copy of the given plane that is moved in space by the given translation.</para>
+        /// </summary>
+        /// <param name="plane">The plane to move in space.</param>
+        /// <param name="translation">The offset in space to move the plane with.</param>
+        /// <returns>
+        /// <para>The translated plane.</para>
+        /// </returns>
+        public static Plane Translate(Plane plane, Vector3 translation) => 
+            new Plane(plane.m_Normal, plane.m_Distance += Vector3.Dot(plane.m_Normal, translation));
+
+        /// <summary>
+        /// <para>For a given point returns the closest point on the plane.</para>
+        /// </summary>
+        /// <param name="point">The point to project onto the plane.</param>
+        /// <returns>
+        /// <para>A point on the plane that is closest to point.</para>
+        /// </returns>
+        public Vector3 ClosestPointOnPlane(Vector3 point)
+        {
+            float num = Vector3.Dot(this.m_Normal, point) + this.m_Distance;
+            return (point - ((Vector3) (this.m_Normal * num)));
         }
 
         /// <summary>
         /// <para>Returns a signed distance from plane to point.</para>
         /// </summary>
-        /// <param name="inPt"></param>
-        public float GetDistanceToPoint(Vector3 inPt) => 
-            (Vector3.Dot(this.normal, inPt) + this.distance);
+        /// <param name="point"></param>
+        public float GetDistanceToPoint(Vector3 point) => 
+            (Vector3.Dot(this.m_Normal, point) + this.m_Distance);
 
         /// <summary>
         /// <para>Is a point on the positive side of the plane?</para>
         /// </summary>
-        /// <param name="inPt"></param>
-        public bool GetSide(Vector3 inPt) => 
-            ((Vector3.Dot(this.normal, inPt) + this.distance) > 0f);
+        /// <param name="point"></param>
+        public bool GetSide(Vector3 point) => 
+            ((Vector3.Dot(this.m_Normal, point) + this.m_Distance) > 0f);
 
         /// <summary>
         /// <para>Are two points on the same side of the plane?</para>
@@ -120,8 +168,8 @@
 
         public bool Raycast(Ray ray, out float enter)
         {
-            float a = Vector3.Dot(ray.direction, this.normal);
-            float num2 = -Vector3.Dot(ray.origin, this.normal) - this.distance;
+            float a = Vector3.Dot(ray.direction, this.m_Normal);
+            float num2 = -Vector3.Dot(ray.origin, this.m_Normal) - this.m_Distance;
             if (Mathf.Approximately(a, 0f))
             {
                 enter = 0f;
@@ -129,6 +177,18 @@
             }
             enter = num2 / a;
             return (enter > 0f);
+        }
+
+        public override string ToString()
+        {
+            object[] args = new object[] { this.m_Normal.x, this.m_Normal.y, this.m_Normal.z, this.m_Distance };
+            return UnityString.Format("(normal:({0:F1}, {1:F1}, {2:F1}), distance:{3:F1})", args);
+        }
+
+        public string ToString(string format)
+        {
+            object[] args = new object[] { this.m_Normal.x.ToString(format), this.m_Normal.y.ToString(format), this.m_Normal.z.ToString(format), this.m_Distance.ToString(format) };
+            return UnityString.Format("(normal:({0}, {1}, {2}), distance:{3})", args);
         }
     }
 }

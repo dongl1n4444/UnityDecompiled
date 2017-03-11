@@ -52,7 +52,7 @@
                 }
                 catch (Exception exception)
                 {
-                    Debug.LogError("Failed to fix pragmas in file '" + str + "'.\n" + exception.Message);
+                    UnityEngine.Debug.LogError("Failed to fix pragmas in file '" + str + "'.\n" + exception.Message);
                 }
             }
             return list.ToArray();
@@ -86,7 +86,7 @@
                 }
                 catch (Exception exception)
                 {
-                    Debug.LogError("Failed to fix pragmas in file '" + str + "'.\n" + exception.Message);
+                    UnityEngine.Debug.LogError("Failed to fix pragmas in file '" + str + "'.\n" + exception.Message);
                 }
             }
         }
@@ -163,9 +163,9 @@
             internal string[] $locvar3;
             internal int $locvar4;
             internal int $PC;
-            internal string <d>__0;
-            internal string <f>__1;
+            internal string <d>__1;
             internal string <f>__2;
+            internal string <f>__3;
             internal string dir;
             internal string mask;
 
@@ -218,8 +218,8 @@
                 {
                     while (this.$locvar2.MoveNext())
                     {
-                        this.<f>__1 = this.$locvar2.Current;
-                        this.$current = this.<f>__1;
+                        this.<f>__2 = this.$locvar2.Current;
+                        this.$current = this.<f>__2;
                         if (!this.$disposing)
                         {
                             this.$PC = 1;
@@ -242,8 +242,8 @@
             Label_00FB:
                 if (this.$locvar1 < this.$locvar0.Length)
                 {
-                    this.<d>__0 = this.$locvar0[this.$locvar1];
-                    this.$locvar2 = PragmaFixing30.SearchRecursive(this.<d>__0, this.mask).GetEnumerator();
+                    this.<d>__1 = this.$locvar0[this.$locvar1];
+                    this.$locvar2 = PragmaFixing30.SearchRecursive(this.<d>__1, this.mask).GetEnumerator();
                     num = 0xfffffffd;
                     goto Label_0079;
                 }
@@ -251,8 +251,8 @@
                 this.$locvar4 = 0;
                 while (this.$locvar4 < this.$locvar3.Length)
                 {
-                    this.<f>__2 = this.$locvar3[this.$locvar4];
-                    this.$current = this.<f>__2;
+                    this.<f>__3 = this.$locvar3[this.$locvar4];
+                    this.$current = this.<f>__3;
                     if (!this.$disposing)
                     {
                         this.$PC = 2;

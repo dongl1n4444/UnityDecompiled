@@ -32,7 +32,7 @@
         public UnityConnectServiceCollection.ServiceInfo[] GetServices() => 
             UnityConnectServiceCollection.instance.GetAllServiceInfos();
 
-        [MenuItem("Window/Services %0", false, 0x7cf)]
+        [UnityEditor.MenuItem("Window/Services %0", false, 0x7cf)]
         private static void ShowMyWindow()
         {
             UnityConnectServiceCollection.instance.ShowService("Hub", true);

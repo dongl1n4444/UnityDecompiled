@@ -12,9 +12,9 @@
         protected IType _AbstractGenerator;
         protected IType _ScriptBaseType;
         [NonSerialized]
-        public static readonly BuiltinFunction UnityScriptEval = new BuiltinFunction("eval", 6);
+        public static readonly BuiltinFunction UnityScriptEval = new BuiltinFunction("eval", BuiltinFunctionType.Custom);
         [NonSerialized]
-        public static readonly BuiltinFunction UnityScriptTypeof = new BuiltinFunction("typeof", 6);
+        public static readonly BuiltinFunction UnityScriptTypeof = new BuiltinFunction("typeof", BuiltinFunctionType.Custom);
 
         public UnityScriptTypeSystem()
         {
@@ -23,12 +23,12 @@
         }
 
         public override bool CanBeReachedByPromotion(IType expected, IType actual) => 
-            (!base.CanBeReachedByPromotion(expected, actual) ? (!expected.get_IsEnum() ? (actual.get_IsEnum() && this.IsIntegerNumber(expected)) : this.IsIntegerNumber(actual)) : true);
+            (!base.CanBeReachedByPromotion(expected, actual) ? (!expected.IsEnum ? (actual.IsEnum && this.IsIntegerNumber(expected)) : this.IsIntegerNumber(actual)) : true);
 
         public bool IsGenerator(IMethod method)
         {
-            IType type = method.get_ReturnType();
-            return ((type != base.IEnumeratorType) ? type.IsSubclassOf(this._AbstractGenerator) : true);
+            IType returnType = method.ReturnType;
+            return ((returnType != base.IEnumeratorType) ? returnType.IsSubclassOf(this._AbstractGenerator) : true);
         }
 
         public bool IsScriptType(IType type) => 
@@ -62,14 +62,14 @@
             this.AddPrimitiveType("float", base.SingleType);
             this.AddPrimitiveType("double", base.DoubleType);
             this.AddPrimitiveType("Function", base.ICallableType);
-            this.AddPrimitiveType("Array", this.Map(typeof(Array)));
+            this.AddPrimitiveType("Array", this.Map(typeof(UnityScript.Lang.Array)));
         }
 
         public IType ScriptBaseType =>
             this._ScriptBaseType;
 
         public UnityScriptCompilerParameters UnityScriptParameters =>
-            ((UnityScriptCompilerParameters) this.get_Context().get_Parameters());
+            ((UnityScriptCompilerParameters) this.Context.Parameters);
     }
 }
 

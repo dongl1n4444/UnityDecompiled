@@ -4,6 +4,7 @@
     using System.Diagnostics;
     using System.IO;
     using System.Runtime.CompilerServices;
+    using System.Text.RegularExpressions;
     using UnityEditor;
     using UnityEditor.Modules;
     using UnityEditor.Utils;
@@ -50,9 +51,6 @@
             }
             return new OSXStandaloneIl2CppPlatformProvider(target, this.StagingAreaContents + "/Data", base.Development);
         }
-
-        public string GetScriptLayoutFileFromBuild(BuildOptions options, string installPath, string fileName) => 
-            string.Empty;
 
         protected override string GetVariationName()
         {
@@ -142,7 +140,7 @@
                 FileUtil.CreateOrCleanDirectory(dir);
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <RenameFilesInStagingArea>m__0);
+                    <>f__am$cache0 = f => f.EndsWith("-resources.dat");
                 }
                 FileUtil.CopyDirectoryFiltered(path, dir, true, <>f__am$cache0, true);
             }
@@ -153,7 +151,7 @@
                 FileUtil.CreateOrCleanDirectory(str4);
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<string, bool>(null, (IntPtr) <RenameFilesInStagingArea>m__1);
+                    <>f__am$cache1 = f => f.EndsWith("-metadata.dat");
                 }
                 FileUtil.CopyDirectoryFiltered(str3, str4, true, <>f__am$cache1, true);
             }
@@ -161,12 +159,12 @@
             string target = this.StagingAreaContents + "/Data/Managed";
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<string, bool>(null, (IntPtr) <RenameFilesInStagingArea>m__2);
+                <>f__am$cache2 = f => f.EndsWith("SymbolMap");
             }
             FileUtil.CopyDirectoryFiltered(source, target, true, <>f__am$cache2, true);
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<string, bool>(null, (IntPtr) <RenameFilesInStagingArea>m__3);
+                <>f__am$cache3 = f => true;
             }
             FileUtil.CopyDirectoryFiltered(base.StagingArea + "/Data", this.StagingAreaContents + "/Resources/Data", true, <>f__am$cache3, true);
             FileUtil.DeleteFileOrDirectory(base.StagingArea + "/Data");
@@ -176,9 +174,9 @@
                 FileUtil.DeleteFileOrDirectory(this.StagingAreaContents + "/Resources/Data/Managed");
                 FileUtil.DeleteFileOrDirectory(this.StagingAreaContents + "/Resources/Data/il2cppOutput");
             }
-            string str7 = PostprocessBuildPlayer.GenerateBundleIdentifier(this.m_PostProcessArgs.companyName, this.m_PostProcessArgs.productName);
-            string[] input = new string[] { "UNITY_BUNDLE_IDENTIFIER", str7, "UnityPlayerExec", this.InstallNameWithoutExtension, "UnityPlayer", this.m_PostProcessArgs.productName };
-            FileUtil.ReplaceText(this.StagingAreaContents + "/Info.plist", input);
+            string str7 = FileUtil.NiceWinPath(this.StagingAreaContents + "/Info.plist");
+            string[] input = new string[] { "CFBundleShortVersionString", PlayerSettings.bundleVersion, "CFBundleVersion", PlayerSettings.macOS.buildNumber, "CFBundleIdentifier", PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.Standalone), "CFBundleExecutable", this.InstallNameWithoutExtension, "CFBundleName", this.m_PostProcessArgs.productName };
+            this.UpdateInfoPlist(str7, input);
             FileUtil.MoveFileOrDirectory(base.StagingArea + "/UnityPlayer.app", base.StagingArea + "/" + this.InstallNameWithoutExtension + ".app");
             this.m_PostProcessArgs.report.RelocateFiles(base.StagingArea + "/UnityPlayer.app", base.StagingArea + "/" + this.InstallNameWithoutExtension + ".app");
         }
@@ -204,7 +202,24 @@
             true;
 
         public bool SupportsScriptsOnlyBuild() => 
-            false;
+            true;
+
+        private void UpdateInfoPlist(string path, params string[] input)
+        {
+            string[] contents = File.ReadAllLines(path);
+            for (int i = 0; i < (contents.Length - 1); i++)
+            {
+                for (int j = 0; j < input.Length; j += 2)
+                {
+                    if (contents[i].Contains(input[j]))
+                    {
+                        i++;
+                        contents[i] = Regex.Replace(contents[i], "<string>.+</string>", $"<string>{input[j + 1]}</string>");
+                    }
+                }
+            }
+            File.WriteAllLines(path, contents);
+        }
 
         protected override string DestinationFolderForInstallingIntoBuildsFolder =>
             ("build/MacStandaloneSupport/Variations/" + this.GetVariationName() + "/UnityPlayer.app/Contents/Resources/Data");

@@ -5,12 +5,14 @@
 
     internal sealed class EditorGUIInternal : GUI
     {
-        internal static void AssetPopup<T>(SerializedProperty serializedProperty, GUIContent content, string fileExtension) where T: Object, new()
+        private static GUIStyle s_MixedToggleStyle = EditorStyles.toggleMixed;
+
+        internal static void AssetPopup<T>(SerializedProperty serializedProperty, GUIContent content, string fileExtension) where T: UnityEngine.Object, new()
         {
             AssetPopup<T>(serializedProperty, content, fileExtension, "Default");
         }
 
-        internal static void AssetPopup<T>(SerializedProperty serializedProperty, GUIContent content, string fileExtension, string defaultFieldName) where T: Object, new()
+        internal static void AssetPopup<T>(SerializedProperty serializedProperty, GUIContent content, string fileExtension, string defaultFieldName) where T: UnityEngine.Object, new()
         {
             AssetPopupBackend.AssetPopup<T>(serializedProperty, content, fileExtension, defaultFieldName);
         }
@@ -34,7 +36,7 @@
             }
             if (EditorGUI.showMixedValue)
             {
-                style = EditorStyles.toggleMixed;
+                style = mixedToggleStyle;
             }
             EventType type = current.type;
             bool flag = (current.type == EventType.MouseDown) && (current.button != 0);
@@ -60,6 +62,16 @@
 
         internal static Rect GetTooltipRect() => 
             GUI.tooltipRect;
+
+        internal static GUIStyle mixedToggleStyle
+        {
+            get => 
+                s_MixedToggleStyle;
+            set
+            {
+                s_MixedToggleStyle = value;
+            }
+        }
     }
 }
 

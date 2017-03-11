@@ -14,14 +14,14 @@
             checkerData = new PropertyCommentChecker(props);
         }
 
-        public static PBXCopyFilesBuildPhaseData Create(string name, string subfolderSpec)
+        public static PBXCopyFilesBuildPhaseData Create(string name, string dstPath, string subfolderSpec)
         {
             PBXCopyFilesBuildPhaseData data = new PBXCopyFilesBuildPhaseData {
                 guid = PBXGUID.Generate()
             };
             data.SetPropertyString("isa", "PBXCopyFilesBuildPhase");
             data.SetPropertyString("buildActionMask", "2147483647");
-            data.SetPropertyString("dstPath", "");
+            data.SetPropertyString("dstPath", dstPath);
             data.SetPropertyString("dstSubfolderSpec", subfolderSpec);
             data.files = new List<string>();
             data.SetPropertyString("runOnlyForDeploymentPostprocessing", "0");

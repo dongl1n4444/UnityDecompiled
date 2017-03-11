@@ -514,11 +514,11 @@
                 Debug.Log("Only JPEG and PNG files are supported");
                 return false;
             }
-            Texture2D textured = new Texture2D(1, 1);
-            textured.LoadImage(File.ReadAllBytes(imageFile));
-            int num = textured.width;
-            int num2 = textured.height;
-            UnityEngine.Object.DestroyImmediate(textured);
+            Texture2D tex = new Texture2D(1, 1);
+            tex.LoadImage(File.ReadAllBytes(imageFile));
+            int num = tex.width;
+            int num2 = tex.height;
+            UnityEngine.Object.DestroyImmediate(tex);
             if ((num != width) || (num2 != height))
             {
                 Debug.LogError($"Invalid image size ({num}x{num2}), should be {width}x{height}");

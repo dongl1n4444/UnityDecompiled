@@ -7,6 +7,7 @@
     using System.Runtime.InteropServices;
     using System.Text;
     using UnityEngine;
+    using UnityEngine.Scripting;
     using UnityEngineInternal;
 
     /// <summary>
@@ -43,7 +44,7 @@
         public const string kHttpVerbDELETE = "DELETE";
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <disposeDownloadHandlerOnDispose>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <disposeUploadHandlerOnDispose>k__BackingField;
         private static readonly string[] forbiddenHeaderKeys = new string[] { 
             "accept-charset", "access-control-request-headers", "access-control-request-method", "connection", "content-length", "date", "dnt", "expect", "host", "keep-alive", "origin", "referer", "te", "trailer", "transfer-encoding", "upgrade",
@@ -126,8 +127,11 @@
         /// <returns>
         /// <para>A UnityWebRequest properly configured to download an image and convert it to a Texture.</para>
         /// </returns>
-        public static UnityWebRequest GetTexture(string uri) => 
-            GetTexture(uri, false);
+        [Obsolete("UnityWebRequest.GetTexture is obsolete. Use UnityWebRequestTexture.GetTexture instead (UnityUpgradable) -> [UnityEngine] UnityWebRequestTexture.GetTexture(*)", true)]
+        public static UnityWebRequest GetTexture(string uri)
+        {
+            throw new NotSupportedException("UnityWebRequest.GetTexture is obsolete. Use UnityWebRequestTexture.GetTexture instead.");
+        }
 
         /// <summary>
         /// <para>Create a UnityWebRequest intended to download an image via HTTP GET and create a Texture based on the retrieved data.</para>
@@ -137,19 +141,20 @@
         /// <returns>
         /// <para>A UnityWebRequest properly configured to download an image and convert it to a Texture.</para>
         /// </returns>
-        public static UnityWebRequest GetTexture(string uri, bool nonReadable) => 
-            new UnityWebRequest(uri, "GET", new DownloadHandlerTexture(nonReadable), null);
+        [Obsolete("UnityWebRequest.GetTexture is obsolete. Use UnityWebRequestTexture.GetTexture instead (UnityUpgradable) -> [UnityEngine] UnityWebRequestTexture.GetTexture(*)", true)]
+        public static UnityWebRequest GetTexture(string uri, bool nonReadable)
+        {
+            throw new NotSupportedException("UnityWebRequest.GetTexture is obsolete. Use UnityWebRequestTexture.GetTexture instead.");
+        }
 
         /// <summary>
-        /// <para>Create a UnityWebRequest intended to download an audio clip via HTTP GET and create an AudioClip based on the retrieved data.</para>
+        /// <para>OBSOLETE. Use UnityWebRequestMultimedia.GetAudioClip().</para>
         /// </summary>
-        /// <param name="uri">The URI of the audio clip to download.</param>
-        /// <param name="audioType">The type of audio encoding for the downloaded audio clip. See AudioType.</param>
-        /// <returns>
-        /// <para>A UnityWebRequest properly configured to download an audio clip and convert it to an AudioClip.</para>
-        /// </returns>
+        /// <param name="uri"></param>
+        /// <param name="audioType"></param>
+        [Obsolete("UnityWebRequest.GetAudioClip is obsolete. Use UnityWebRequestMultimedia.GetAudioClip instead (UnityUpgradable) -> [UnityEngine] UnityWebRequestMultimedia.GetAudioClip(*)", true)]
         public static UnityWebRequest GetAudioClip(string uri, AudioType audioType) => 
-            new UnityWebRequest(uri, "GET", new DownloadHandlerAudioClip(uri, audioType), null);
+            null;
 
         public static UnityWebRequest GetAssetBundle(string uri) => 
             GetAssetBundle(uri, 0);
@@ -409,9 +414,9 @@
         /// <para>If true, any UploadHandler attached to this UnityWebRequest will have UploadHandler.Dispose called automatically when UnityWebRequest.Dispose is called.</para>
         /// </summary>
         public bool disposeUploadHandlerOnDispose { get; set; }
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void InternalCreate();
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         internal extern void InternalDestroy();
         private void InternalSetDefaults()
         {
@@ -449,9 +454,9 @@
             GC.SuppressFinalize(this);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern AsyncOperation InternalBegin();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void InternalAbort();
         /// <summary>
         /// <para>Begin communicating with the remote server.</para>
@@ -470,13 +475,13 @@
             this.InternalAbort();
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void InternalSetMethod(UnityWebRequestMethod methodType);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void InternalSetCustomMethod(string customMethodName);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern int InternalGetMethod();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern string InternalGetCustomMethod();
         /// <summary>
         /// <para>Defines the HTTP verb used by this UnityWebRequest, such as GET or POST.</para>
@@ -528,16 +533,16 @@
                 this.InternalSetCustomMethod(value.ToUpper());
             }
         }
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern int InternalGetError();
         /// <summary>
         /// <para>A human-readable string describing any system errors encountered by this UnityWebRequest object while handling HTTP requests or responses. (Read Only)</para>
         /// </summary>
-        public string error { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public string error { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
         /// <summary>
         /// <para>Determines whether this UnityWebRequest will include Expect: 100-Continue in its outgoing request headers. (Default: true).</para>
         /// </summary>
-        public bool useHttpContinue { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool useHttpContinue { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
         /// <summary>
         /// <para>Defines the target URL for the UnityWebRequest to communicate with.</para>
         /// </summary>
@@ -551,50 +556,50 @@
                 this.InternalSetUrl(WebRequestUtils.MakeInitialUrl(value, localUrl));
             }
         }
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern string InternalGetUrl();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void InternalSetUrl(string url);
         /// <summary>
         /// <para>The numeric HTTP response code returned by the server, such as 200, 404 or 500. (Read Only)</para>
         /// </summary>
-        public long responseCode { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public long responseCode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
         /// <summary>
         /// <para>Returns a floating-point value between 0.0 and 1.0, indicating the progress of uploading body data to the server.</para>
         /// </summary>
-        public float uploadProgress { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public float uploadProgress { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
         /// <summary>
         /// <para>Returns true while a UnityWebRequest’s configuration properties can be altered. (Read Only)</para>
         /// </summary>
-        public bool isModifiable { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isModifiable { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
         /// <summary>
         /// <para>Returns true after the UnityWebRequest has finished communicating with the remote server. (Read Only)</para>
         /// </summary>
-        public bool isDone { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isDone { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
         /// <summary>
         /// <para>Returns true after this UnityWebRequest encounters a system error. (Read Only)</para>
         /// </summary>
-        public bool isError { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isError { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
         /// <summary>
         /// <para>Returns a floating-point value between 0.0 and 1.0, indicating the progress of downloading body data from the server. (Read Only)</para>
         /// </summary>
-        public float downloadProgress { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public float downloadProgress { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
         /// <summary>
         /// <para>Returns the number of bytes of body data the system has uploaded to the remote server. (Read Only)</para>
         /// </summary>
-        public ulong uploadedBytes { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public ulong uploadedBytes { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
         /// <summary>
         /// <para>Returns the number of bytes of body data the system has downloaded from the remote server. (Read Only)</para>
         /// </summary>
-        public ulong downloadedBytes { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public ulong downloadedBytes { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
         /// <summary>
         /// <para>Indicates the number of redirects which this UnityWebRequest will follow before halting with a “Redirect Limit Exceeded” system error.</para>
         /// </summary>
-        public int redirectLimit { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int redirectLimit { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
         /// <summary>
         /// <para>Indicates whether the UnityWebRequest system should employ the HTTP/1.1 chunked-transfer encoding method.</para>
         /// </summary>
-        public bool chunkedTransfer { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool chunkedTransfer { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
         /// <summary>
         /// <para>Retrieves the value of a custom request header.</para>
         /// </summary>
@@ -602,9 +607,9 @@
         /// <returns>
         /// <para>The value of the custom request header. If no custom header with a matching name has been set, returns an empty string.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern string GetRequestHeader(string name);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void InternalSetRequestHeader(string name, string value);
         /// <summary>
         /// <para>Set a HTTP request header to a custom value.</para>
@@ -639,9 +644,9 @@
         /// <returns>
         /// <para>The value of the HTTP header from the latest HTTP response. If no header with a matching name has been received, or no responses have been received, returns null.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern string GetResponseHeader(string name);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern string[] InternalGetResponseHeaderKeys();
         /// <summary>
         /// <para>Retrieves a dictionary containing all the response headers received by this UnityWebRequest in the latest HTTP response.</para>
@@ -668,11 +673,11 @@
         /// <summary>
         /// <para>Holds a reference to the UploadHandler object which manages body data to be uploaded to the remote server.</para>
         /// </summary>
-        public UploadHandler uploadHandler { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public UploadHandler uploadHandler { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
         /// <summary>
         /// <para>Holds a reference to a DownloadHandler object, which manages body data received from the remote server by this UnityWebRequest.</para>
         /// </summary>
-        public DownloadHandler downloadHandler { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public DownloadHandler downloadHandler { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
         private static bool ContainsForbiddenCharacters(string s, int firstAllowedCharCode)
         {
             foreach (char ch in s)
@@ -835,7 +840,8 @@
             SSLCACertError,
             UnrecognizedContentEncoding,
             LoginFailed,
-            SSLShutdownFailed
+            SSLShutdownFailed,
+            NoInternetConnection
         }
 
         internal enum UnityWebRequestMethod

@@ -67,7 +67,7 @@
             base.serializedObject.ApplyModifiedProperties();
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<Collider2D, bool>(null, (IntPtr) <OnInspectorGUI>m__0);
+                <>f__am$cache0 = collider => collider.enabled && collider.usedByEffector;
             }
             if (!Enumerable.Any<Collider2D>(target.GetComponents<Collider2D>(), <>f__am$cache0))
             {

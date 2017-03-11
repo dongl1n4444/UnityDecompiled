@@ -5,9 +5,8 @@
 
     internal class VRCustomOptionsNone : VRCustomOptions
     {
-        public override void Draw(Rect rect)
-        {
-        }
+        public override Rect Draw(Rect rect) => 
+            rect;
 
         public override float GetHeight() => 
             0f;

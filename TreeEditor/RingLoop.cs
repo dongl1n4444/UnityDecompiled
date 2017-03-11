@@ -72,12 +72,12 @@
                     zero.y = this.surfAngleSin;
                     zero.z = Mathf.Cos(num13) * this.surfAngleCos;
                     vertex2.nor = Vector3.Normalize(this.matrix.MultiplyVector(zero));
-                    Vector3 v = Vector3.zero;
-                    v.x = Mathf.Sin(num14);
-                    v.y = 0f;
-                    v.z = Mathf.Cos(num14);
-                    v = Vector3.Normalize(this.matrix.MultiplyVector(v));
-                    vertex2.tangent = new Vector4(v.x, v.y, v.z, -1f);
+                    Vector3 vector = Vector3.zero;
+                    vector.x = Mathf.Sin(num14);
+                    vector.y = 0f;
+                    vector.z = Mathf.Cos(num14);
+                    vector = Vector3.Normalize(this.matrix.MultiplyVector(vector));
+                    vertex2.tangent = new Vector4(vector.x, vector.y, vector.z, -1f);
                 }
             }
             else

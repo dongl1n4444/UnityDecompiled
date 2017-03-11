@@ -12,18 +12,12 @@
         private SerializedProperty m_AnchorMax;
         private SerializedProperty m_AnchorMin;
         private Vector2[,] m_InitValues;
-        private SerializedProperty m_Pivot;
-        private SerializedProperty m_Position;
-        private SerializedProperty m_SizeDelta;
         private static Styles s_Styles;
 
         public LayoutDropdownWindow(SerializedObject so)
         {
             this.m_AnchorMin = so.FindProperty("m_AnchorMin");
             this.m_AnchorMax = so.FindProperty("m_AnchorMax");
-            this.m_Position = so.FindProperty("m_Position");
-            this.m_SizeDelta = so.FindProperty("m_SizeDelta");
-            this.m_Pivot = so.FindProperty("m_Pivot");
             this.m_InitValues = new Vector2[so.targetObjects.Length, 4];
             for (int i = 0; i < so.targetObjects.Length; i++)
             {
@@ -210,8 +204,8 @@
 
         internal static void DrawLayoutMode(Rect rect, SerializedProperty anchorMin, SerializedProperty anchorMax, SerializedProperty position, SerializedProperty sizeDelta)
         {
-            LayoutMode hMode = GetLayoutModeForAxis(anchorMin, anchorMax, position, sizeDelta, 0);
-            LayoutMode vMode = SwappedVMode(GetLayoutModeForAxis(anchorMin, anchorMax, position, sizeDelta, 1));
+            LayoutMode hMode = GetLayoutModeForAxis(anchorMin, anchorMax, 0);
+            LayoutMode vMode = SwappedVMode(GetLayoutModeForAxis(anchorMin, anchorMax, 1));
             DrawLayoutMode(rect, hMode, vMode);
         }
 
@@ -230,13 +224,13 @@
 
         internal static void DrawLayoutModeHeadersOutsideRect(Rect rect, SerializedProperty anchorMin, SerializedProperty anchorMax, SerializedProperty position, SerializedProperty sizeDelta)
         {
-            LayoutMode mode = GetLayoutModeForAxis(anchorMin, anchorMax, position, sizeDelta, 0);
-            LayoutMode mode2 = SwappedVMode(GetLayoutModeForAxis(anchorMin, anchorMax, position, sizeDelta, 1));
+            LayoutMode mode = GetLayoutModeForAxis(anchorMin, sizeDelta, 0);
+            LayoutMode mode2 = SwappedVMode(GetLayoutModeForAxis(anchorMin, sizeDelta, 1));
             DrawLayoutModeHeaderOutsideRect(rect, 0, mode);
             DrawLayoutModeHeaderOutsideRect(rect, 1, mode2);
         }
 
-        private static LayoutMode GetLayoutModeForAxis(SerializedProperty anchorMin, SerializedProperty anchorMax, SerializedProperty position, SerializedProperty sizeDelta, int axis)
+        private static LayoutMode GetLayoutModeForAxis(SerializedProperty anchorMin, SerializedProperty anchorMax, int axis)
         {
             if ((anchorMin.vector2Value[axis] == 0f) && (anchorMax.vector2Value[axis] == 0f))
             {
@@ -291,22 +285,7 @@
             EditorApplication.modifierKeysChanged = (EditorApplication.CallbackFunction) Delegate.Combine(EditorApplication.modifierKeysChanged, new EditorApplication.CallbackFunction(base.editorWindow.Repaint));
         }
 
-        private static void SetLayoutModeForAxis(SerializedProperty anchorMin, SerializedProperty anchorMax, SerializedProperty position, SerializedProperty sizeDelta, SerializedProperty pivot, int axis, LayoutMode layoutMode)
-        {
-            SetLayoutModeForAxis(anchorMin, anchorMax, position, sizeDelta, pivot, axis, layoutMode, false, false, null);
-        }
-
-        private static void SetLayoutModeForAxis(SerializedProperty anchorMin, SerializedProperty anchorMax, SerializedProperty position, SerializedProperty sizeDelta, SerializedProperty pivot, int axis, LayoutMode layoutMode, bool doPivot)
-        {
-            SetLayoutModeForAxis(anchorMin, anchorMax, position, sizeDelta, pivot, axis, layoutMode, doPivot, false, null);
-        }
-
-        private static void SetLayoutModeForAxis(SerializedProperty anchorMin, SerializedProperty anchorMax, SerializedProperty position, SerializedProperty sizeDelta, SerializedProperty pivot, int axis, LayoutMode layoutMode, bool doPivot, bool doPosition)
-        {
-            SetLayoutModeForAxis(anchorMin, anchorMax, position, sizeDelta, pivot, axis, layoutMode, doPivot, doPosition, null);
-        }
-
-        private static unsafe void SetLayoutModeForAxis(SerializedProperty anchorMin, SerializedProperty anchorMax, SerializedProperty position, SerializedProperty sizeDelta, SerializedProperty pivot, int axis, LayoutMode layoutMode, bool doPivot, bool doPosition, Vector2[,] defaultValues)
+        private static unsafe void SetLayoutModeForAxis(SerializedProperty anchorMin, int axis, LayoutMode layoutMode, bool doPivot, bool doPosition, Vector2[,] defaultValues)
         {
             anchorMin.serializedObject.ApplyModifiedProperties();
             for (int i = 0; i < anchorMin.serializedObject.targetObjects.Length; i++)
@@ -315,18 +294,18 @@
                 Undo.RecordObject(objectToUndo, "Change Rectangle Anchors");
                 if (doPosition && ((defaultValues != null) && (defaultValues.Length > i)))
                 {
-                    Vector2 anchoredPosition = objectToUndo.anchorMin;
-                    anchoredPosition[axis] = defaultValues[i, 0][axis];
-                    objectToUndo.anchorMin = anchoredPosition;
-                    anchoredPosition = objectToUndo.anchorMax;
-                    anchoredPosition[axis] = defaultValues[i, 1][axis];
-                    objectToUndo.anchorMax = anchoredPosition;
-                    anchoredPosition = objectToUndo.anchoredPosition;
-                    anchoredPosition[axis] = defaultValues[i, 2][axis];
-                    objectToUndo.anchoredPosition = anchoredPosition;
-                    anchoredPosition = objectToUndo.sizeDelta;
-                    anchoredPosition[axis] = defaultValues[i, 3][axis];
-                    objectToUndo.sizeDelta = anchoredPosition;
+                    Vector2 anchorMax = objectToUndo.anchorMin;
+                    anchorMax[axis] = defaultValues[i, 0][axis];
+                    objectToUndo.anchorMin = anchorMax;
+                    anchorMax = objectToUndo.anchorMax;
+                    anchorMax[axis] = defaultValues[i, 1][axis];
+                    objectToUndo.anchorMax = anchorMax;
+                    anchorMax = objectToUndo.anchoredPosition;
+                    anchorMax[axis] = defaultValues[i, 2][axis];
+                    objectToUndo.anchoredPosition = anchorMax;
+                    anchorMax = objectToUndo.sizeDelta;
+                    anchorMax[axis] = defaultValues[i, 3][axis];
+                    objectToUndo.sizeDelta = anchorMax;
                 }
                 if (doPivot && (layoutMode != LayoutMode.Undefined))
                 {
@@ -367,14 +346,14 @@
                 {
                     ref Vector2 vectorRef;
                     int num2;
-                    Vector2 vector3 = objectToUndo.anchoredPosition;
-                    (vectorRef = (Vector2) &vector3)[num2 = axis] = vectorRef[num2] - zero[axis];
-                    objectToUndo.anchoredPosition = vector3;
+                    Vector2 anchoredPosition = objectToUndo.anchoredPosition;
+                    (vectorRef = (Vector2) &anchoredPosition)[num2 = axis] = vectorRef[num2] - zero[axis];
+                    objectToUndo.anchoredPosition = anchoredPosition;
                     if (layoutMode == LayoutMode.Stretch)
                     {
-                        Vector2 vector4 = objectToUndo.sizeDelta;
-                        vector4[axis] = 0f;
-                        objectToUndo.sizeDelta = vector4;
+                        Vector2 sizeDelta = objectToUndo.sizeDelta;
+                        sizeDelta[axis] = 0f;
+                        objectToUndo.sizeDelta = sizeDelta;
                     }
                 }
             }
@@ -409,8 +388,8 @@
             GUI.DrawTexture(new Rect(0f, (float) num4, 400f, 1f), EditorGUIUtility.whiteTexture);
             GUI.DrawTexture(new Rect((float) num4, 0f, 1f, 400f), EditorGUIUtility.whiteTexture);
             GUI.color = color;
-            LayoutMode mode = GetLayoutModeForAxis(this.m_AnchorMin, this.m_AnchorMax, this.m_Position, this.m_SizeDelta, 0);
-            LayoutMode mode2 = SwappedVMode(GetLayoutModeForAxis(this.m_AnchorMin, this.m_AnchorMax, this.m_Position, this.m_SizeDelta, 1));
+            LayoutMode mode = GetLayoutModeForAxis(this.m_AnchorMin, this.m_AnchorMax, 0);
+            LayoutMode mode2 = SwappedVMode(GetLayoutModeForAxis(this.m_AnchorMin, this.m_AnchorMax, 1));
             bool shift = Event.current.shift;
             bool alt = Event.current.alt;
             int num5 = 5;
@@ -458,8 +437,8 @@
                         int clickCount = Event.current.clickCount;
                         if (GUI.Button(position, GUIContent.none, GUIStyle.none))
                         {
-                            SetLayoutModeForAxis(this.m_AnchorMin, this.m_AnchorMax, this.m_Position, this.m_SizeDelta, this.m_Pivot, 0, mode3, shift, alt, this.m_InitValues);
-                            SetLayoutModeForAxis(this.m_AnchorMin, this.m_AnchorMax, this.m_Position, this.m_SizeDelta, this.m_Pivot, 1, SwappedVMode(mode4), shift, alt, this.m_InitValues);
+                            SetLayoutModeForAxis(this.m_AnchorMin, 0, mode3, shift, alt, this.m_InitValues);
+                            SetLayoutModeForAxis(this.m_AnchorMin, 1, SwappedVMode(mode4), shift, alt, this.m_InitValues);
                             if (clickCount == 2)
                             {
                                 base.editorWindow.Close();
@@ -502,7 +481,7 @@
                 Texture2D textured = new Texture2D(4, 4);
                 Color[] colors = new Color[] { Color.white, Color.white, Color.white, Color.white, Color.white, Color.clear, Color.clear, Color.white, Color.white, Color.clear, Color.clear, Color.white, Color.white, Color.white, Color.white, Color.white };
                 textured.SetPixels(colors);
-                textured.filterMode = FilterMode.Point;
+                textured.filterMode = UnityEngine.FilterMode.Point;
                 textured.Apply();
                 textured.hideFlags = HideFlags.HideAndDontSave;
                 this.frame.normal.background = textured;

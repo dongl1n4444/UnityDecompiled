@@ -224,24 +224,29 @@
 
         public void HandleEvents()
         {
-            this.m_SelectionScaleTop.HandleEvents();
-            this.m_SelectionScaleBottom.HandleEvents();
-            this.m_SelectionScaleLeft.HandleEvents();
-            this.m_SelectionScaleRight.HandleEvents();
-            this.m_SelectionBox.HandleEvents();
+            if (this.m_CurveEditor.settings.rectangleToolFlags != CurveEditorSettings.RectangleToolFlags.NoRectangleTool)
+            {
+                this.m_SelectionScaleTop.HandleEvents();
+                this.m_SelectionScaleBottom.HandleEvents();
+                this.m_SelectionScaleLeft.HandleEvents();
+                this.m_SelectionScaleRight.HandleEvents();
+                this.m_SelectionBox.HandleEvents();
+            }
         }
 
         public void HandleOverlayEvents()
         {
             base.HandleClutchKeys();
-            if (this.m_CurveEditor.settings.rectangleToolFlags == CurveEditorSettings.RectangleToolFlags.FullRectangleTool)
+            switch (this.m_CurveEditor.settings.rectangleToolFlags)
             {
-                this.m_VBarBottom.HandleEvents();
-                this.m_VBarTop.HandleEvents();
-                this.m_VBar.HandleEvents();
-                this.m_HBarLeft.HandleEvents();
-                this.m_HBarRight.HandleEvents();
-                this.m_HBar.HandleEvents();
+                case CurveEditorSettings.RectangleToolFlags.FullRectangleTool:
+                    this.m_VBarBottom.HandleEvents();
+                    this.m_VBarTop.HandleEvents();
+                    this.m_VBar.HandleEvents();
+                    this.m_HBarLeft.HandleEvents();
+                    this.m_HBarRight.HandleEvents();
+                    this.m_HBar.HandleEvents();
+                    break;
             }
         }
 
@@ -373,8 +378,7 @@
             {
                 this.m_SelectionBox = new AreaManipulator(base.styles.rectangleToolSelection, MouseCursor.MoveArrow);
                 this.m_SelectionBox.onStartDrag = (AnimationWindowManipulator.OnStartDragDelegate) Delegate.Combine(this.m_SelectionBox.onStartDrag, delegate (AnimationWindowManipulator manipulator, Event evt) {
-                    bool flag = evt.shift || EditorGUI.actionKey;
-                    if ((!(Mathf.Approximately(this.selectionBounds.size.x, 0f) && Mathf.Approximately(this.selectionBounds.size.y, 0f)) && !flag) && (this.hasSelection && manipulator.rect.Contains(evt.mousePosition)))
+                    if ((!(evt.shift || EditorGUI.actionKey) && this.hasSelection) && manipulator.rect.Contains(evt.mousePosition))
                     {
                         this.OnStartMove(new Vector2(base.PixelToTime(evt.mousePosition.x, this.frameRate), base.PixelToValue(evt.mousePosition.y)), !base.rippleTimeClutch ? DragMode.MoveBothAxis : DragMode.MoveHorizontal, base.rippleTimeClutch);
                         return true;
@@ -382,7 +386,15 @@
                     return false;
                 });
                 this.m_SelectionBox.onDrag = (AnimationWindowManipulator.OnDragDelegate) Delegate.Combine(this.m_SelectionBox.onDrag, delegate (AnimationWindowManipulator manipulator, Event evt) {
-                    this.OnMove(new Vector2(base.PixelToTime(evt.mousePosition.x, this.frameRate), base.PixelToValue(evt.mousePosition.y)));
+                    if (evt.shift && (this.m_DragMode == DragMode.MoveBothAxis))
+                    {
+                        float f = evt.mousePosition.x - base.TimeToPixel(this.m_Previous.x);
+                        float num2 = evt.mousePosition.y - base.ValueToPixel(this.m_Previous.y);
+                        this.m_DragMode = (Mathf.Abs(f) <= Mathf.Abs(num2)) ? DragMode.MoveVertical : DragMode.MoveHorizontal;
+                    }
+                    float x = ((this.m_DragMode & DragMode.MoveHorizontal) == DragMode.None) ? this.m_Previous.x : base.PixelToTime(evt.mousePosition.x, this.frameRate);
+                    float y = ((this.m_DragMode & DragMode.MoveVertical) == DragMode.None) ? this.m_Previous.y : base.PixelToValue(evt.mousePosition.y);
+                    this.OnMove(new Vector2(x, y));
                     return true;
                 });
                 this.m_SelectionBox.onEndDrag = (AnimationWindowManipulator.OnEndDragDelegate) Delegate.Combine(this.m_SelectionBox.onEndDrag, delegate (AnimationWindowManipulator manipulator, Event evt) {
@@ -472,7 +484,7 @@
             }
         }
 
-        private void OnEndMove()
+        internal void OnEndMove()
         {
             this.m_CurveEditor.EndLiveEdit();
             this.m_DragMode = DragMode.None;
@@ -513,7 +525,7 @@
             }
         }
 
-        private void OnMove(Vector2 position)
+        internal void OnMove(Vector2 position)
         {
             Vector2 vector = position - this.m_Previous;
             Matrix4x4 identity = Matrix4x4.identity;
@@ -539,6 +551,11 @@
             {
                 this.TransformKeys(matrixx, false, flag);
             }
+        }
+
+        internal void OnStartMove(Vector2 position, bool rippleTime)
+        {
+            this.OnStartMove(position, DragMode.None, rippleTime);
         }
 
         private void OnStartMove(Vector2 position, DragMode dragMode, bool rippleTime)

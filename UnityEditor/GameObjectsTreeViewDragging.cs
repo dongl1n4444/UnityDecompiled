@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using UnityEditor.IMGUI.Controls;
@@ -15,22 +14,10 @@
     {
         [CompilerGenerated]
         private static Func<Scene, int> <>f__am$cache0;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-        private bool <allowDragBetween>k__BackingField;
         private const string kSceneHeaderDragString = "SceneHeaderList";
 
         public GameObjectsTreeViewDragging(TreeViewController treeView) : base(treeView)
         {
-            this.allowDragBetween = true;
-        }
-
-        public override bool CanStartDrag(TreeViewItem targetItem, List<int> draggedItemIDs, Vector2 mouseDownPosition)
-        {
-            if (!string.IsNullOrEmpty(((GameObjectTreeViewDataSource) base.m_TreeView.data).searchString))
-            {
-                return false;
-            }
-            return true;
         }
 
         public override DragAndDropVisualMode DoDrag(TreeViewItem parentItem, TreeViewItem targetItem, bool perform, TreeViewDragging.DropPosition dropPos)
@@ -40,27 +27,28 @@
             {
                 return mode;
             }
+            InternalEditorUtility.HierarchyDropMode kHierarchyDragNormal = InternalEditorUtility.HierarchyDropMode.kHierarchyDragNormal;
+            bool flag = !string.IsNullOrEmpty(((GameObjectTreeViewDataSource) base.m_TreeView.data).searchString);
+            if (flag)
+            {
+                kHierarchyDragNormal |= InternalEditorUtility.HierarchyDropMode.kHierarchySearchActive;
+            }
             if ((parentItem == null) || (targetItem == null))
             {
-                return InternalEditorUtility.HierarchyWindowDrag(null, perform, InternalEditorUtility.HierarchyDropMode.kHierarchyDropUpon);
+                kHierarchyDragNormal |= InternalEditorUtility.HierarchyDropMode.kHierarchyDropUpon;
+                return InternalEditorUtility.HierarchyWindowDrag(null, perform, kHierarchyDragNormal);
             }
             HierarchyProperty property = new HierarchyProperty(HierarchyType.GameObjects);
-            if (this.allowDragBetween)
-            {
-                if (!property.Find(targetItem.id, null))
-                {
-                    property = null;
-                }
-            }
-            else if (!property.Find(parentItem.id, null))
+            if (!property.Find(targetItem.id, null))
             {
                 property = null;
             }
-            InternalEditorUtility.HierarchyDropMode kHierarchyDragNormal = InternalEditorUtility.HierarchyDropMode.kHierarchyDragNormal;
-            if (this.allowDragBetween)
+            bool flag2 = dropPos == TreeViewDragging.DropPosition.Upon;
+            if (flag && !flag2)
             {
-                kHierarchyDragNormal = (dropPos != TreeViewDragging.DropPosition.Upon) ? InternalEditorUtility.HierarchyDropMode.kHierarchyDropBetween : InternalEditorUtility.HierarchyDropMode.kHierarchyDropUpon;
+                return DragAndDropVisualMode.None;
             }
+            kHierarchyDragNormal |= !flag2 ? InternalEditorUtility.HierarchyDropMode.kHierarchyDropBetween : InternalEditorUtility.HierarchyDropMode.kHierarchyDropUpon;
             if ((((parentItem != null) && (targetItem != parentItem)) && (dropPos == TreeViewDragging.DropPosition.Above)) && (parentItem.children[0] == targetItem))
             {
                 kHierarchyDragNormal |= InternalEditorUtility.HierarchyDropMode.kHierarchyDropAfterParent;
@@ -76,7 +64,7 @@
             if (!flag && (DragAndDrop.objectReferences.Length > 0))
             {
                 int num = 0;
-                foreach (Object obj2 in DragAndDrop.objectReferences)
+                foreach (UnityEngine.Object obj2 in DragAndDrop.objectReferences)
                 {
                     if (obj2 is SceneAsset)
                     {
@@ -95,7 +83,7 @@
                 if (flag2)
                 {
                     List<Scene> source = new List<Scene>();
-                    foreach (Object obj3 in DragAndDrop.objectReferences)
+                    foreach (UnityEngine.Object obj3 in DragAndDrop.objectReferences)
                     {
                         string assetPath = AssetDatabase.GetAssetPath(obj3);
                         Scene sceneByPath = SceneManager.GetSceneByPath(assetPath);
@@ -127,7 +115,7 @@
                     {
                         if (<>f__am$cache0 == null)
                         {
-                            <>f__am$cache0 = new Func<Scene, int>(null, (IntPtr) <DoDragScenes>m__0);
+                            <>f__am$cache0 = x => x.handle;
                         }
                         Selection.instanceIDs = Enumerable.Select<Scene, int>(source, <>f__am$cache0).ToArray<int>();
                         base.m_TreeView.Frame(source.Last<Scene>().handle, true, false);
@@ -210,7 +198,7 @@
                 };
                 draggedItemIDs = list;
             }
-            Object[] dragAndDropObjects = ProjectWindowUtil.GetDragAndDropObjects(draggedItem.id, draggedItemIDs);
+            UnityEngine.Object[] dragAndDropObjects = ProjectWindowUtil.GetDragAndDropObjects(draggedItem.id, draggedItemIDs);
             DragAndDrop.objectReferences = dragAndDropObjects;
             List<Scene> draggedScenes = this.GetDraggedScenes(draggedItemIDs);
             if (draggedScenes != null)
@@ -254,8 +242,6 @@
                 ((GameObjectTreeViewDataSource) base.m_TreeView.data).SetupChildParentReferencesIfNeeded();
             }
         }
-
-        public bool allowDragBetween { get; set; }
     }
 }
 

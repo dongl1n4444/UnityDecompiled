@@ -8,7 +8,6 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Text;
-    using UnityEditor.Collaboration;
     using UnityEditor.Connect;
     using UnityEditor.Modules;
     using UnityEditor.VisualStudioIntegration;
@@ -48,6 +47,7 @@
         private bool m_ReopenLastUsedProjectOnStartup;
         private string[] m_ScriptAppDisplayNames;
         private string[] m_ScriptApps;
+        private string[] m_ScriptAppsEditions;
         private string m_ScriptEditorArgs = "";
         private RefString m_ScriptEditorPath = new RefString("");
         private List<Section> m_Sections;
@@ -62,15 +62,15 @@
         private bool m_VerifySavingAssets;
         private List<IPreferenceWindowExtension> prefWinExtensions;
         private SortedDictionary<string, List<KeyValuePair<string, PrefColor>>> s_CachedColors = null;
-        private static Vector2 s_ColorScrollPos = Vector2.zero;
         private static int s_KeysControlHash = "KeysControlHash".GetHashCode();
+        private static Vector2 s_ScrollPosition = Vector2.zero;
 
         private void AddCustomSections()
         {
             foreach (Assembly assembly in EditorAssemblies.loadedAssemblies)
             {
-                Type[] typesFromAssembly = AssemblyHelper.GetTypesFromAssembly(assembly);
-                foreach (Type type in typesFromAssembly)
+                System.Type[] typesFromAssembly = AssemblyHelper.GetTypesFromAssembly(assembly);
+                foreach (System.Type type in typesFromAssembly)
                 {
                     foreach (MethodInfo info in type.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static))
                     {
@@ -109,7 +109,7 @@
                     data.str.str = str;
                     if (data.onChanged != null)
                     {
-                        data.onChanged.Invoke();
+                        data.onChanged();
                     }
                 }
             }
@@ -118,7 +118,7 @@
                 data.str.str = data.paths[selected];
                 if (data.onChanged != null)
                 {
-                    data.onChanged.Invoke();
+                    data.onChanged();
                 }
             }
             this.WritePreferences();
@@ -148,12 +148,13 @@
             return array;
         }
 
-        private string[] BuildFriendlyAppNameList(string[] appPathList, string defaultBuiltIn)
+        private string[] BuildFriendlyAppNameList(string[] appPathList, string[] appEditionList, string defaultBuiltIn)
         {
             List<string> list = new List<string>();
-            foreach (string str in appPathList)
+            for (int i = 0; i < appPathList.Length; i++)
             {
-                switch (str)
+                string app = appPathList[i];
+                switch (app)
                 {
                     case "internal":
                     case "":
@@ -161,8 +162,15 @@
                         break;
 
                     default:
-                        list.Add(this.StripMicrosoftFromVisualStudioName(OSUtil.GetAppFriendlyName(str)));
+                    {
+                        string str2 = this.StripMicrosoftFromVisualStudioName(OSUtil.GetAppFriendlyName(app));
+                        if ((appEditionList != null) && !string.IsNullOrEmpty(appEditionList[i]))
+                        {
+                            str2 = $"{str2} ({appEditionList[i]})";
+                        }
+                        list.Add(str2);
                         break;
+                    }
                 }
             }
             return list.ToArray();
@@ -206,7 +214,7 @@
             GUIContent content = new GUIContent((selected.Length != 0) ? names[selected[0]] : defaultString);
             Rect position = GUILayoutUtility.GetRect(GUIContent.none, popup);
             AppsListUserData userData = new AppsListUserData(paths, outString, onChanged);
-            if (EditorGUI.ButtonMouseDown(position, content, FocusType.Passive, popup))
+            if (EditorGUI.DropdownButton(position, content, FocusType.Passive, popup))
             {
                 ArrayUtility.Add<string>(ref names, "Browse...");
                 EditorUtility.DisplayCustomMenu(position, names, selected, new EditorUtility.SelectMenuItemFunction(this.AppsListClick), userData);
@@ -307,10 +315,11 @@
             GUILayout.Space(10f);
             GUILayout.BeginVertical(new GUILayoutOption[0]);
             GUILayout.Label(this.selectedSection.content, constants.sectionHeader, new GUILayoutOption[0]);
-            this.selectedSection.guiFunc();
-            GUILayout.Space(5f);
-            GUILayout.EndVertical();
             GUILayout.Space(10f);
+            s_ScrollPosition = EditorGUILayout.BeginScrollView(s_ScrollPosition, new GUILayoutOption[0]);
+            this.selectedSection.guiFunc();
+            EditorGUILayout.EndScrollView();
+            GUILayout.EndVertical();
             GUILayout.EndHorizontal();
         }
 
@@ -366,33 +375,36 @@
             this.m_ExternalEditorSupportsUnityProj = EditorPrefs.GetBool("kExternalEditorSupportsUnityProj", false);
             this.m_ImageAppPath.str = EditorPrefs.GetString("kImagesDefaultApp");
             this.m_ScriptApps = this.BuildAppPathList((string) this.m_ScriptEditorPath, "RecentlyUsedScriptApp", "internal");
+            this.m_ScriptAppsEditions = new string[this.m_ScriptApps.Length];
             if (Application.platform == RuntimePlatform.WindowsEditor)
             {
-                foreach (string str in SyncVS.InstalledVisualStudios.Values)
+                foreach (VisualStudioPath[] pathArray in SyncVS.InstalledVisualStudios.Values)
                 {
-                    if (Array.IndexOf<string>(this.m_ScriptApps, str) == -1)
+                    foreach (VisualStudioPath path in pathArray)
                     {
-                        if (this.m_ScriptApps.Length < 10)
+                        int index = Array.IndexOf<string>(this.m_ScriptApps, path.Path);
+                        if (index == -1)
                         {
-                            ArrayUtility.Add<string>(ref this.m_ScriptApps, str);
+                            ArrayUtility.Add<string>(ref this.m_ScriptApps, path.Path);
+                            ArrayUtility.Add<string>(ref this.m_ScriptAppsEditions, path.Edition);
                         }
                         else
                         {
-                            this.m_ScriptApps[1] = str;
+                            this.m_ScriptAppsEditions[index] = path.Edition;
                         }
                     }
                 }
             }
             this.m_ImageApps = this.BuildAppPathList((string) this.m_ImageAppPath, "RecentlyUsedImageApp", "");
-            this.m_ScriptAppDisplayNames = this.BuildFriendlyAppNameList(this.m_ScriptApps, "MonoDevelop (built-in)");
-            this.m_ImageAppDisplayNames = this.BuildFriendlyAppNameList(this.m_ImageApps, "Open by file extension");
+            this.m_ScriptAppDisplayNames = this.BuildFriendlyAppNameList(this.m_ScriptApps, this.m_ScriptAppsEditions, "MonoDevelop (built-in)");
+            this.m_ImageAppDisplayNames = this.BuildFriendlyAppNameList(this.m_ImageApps, null, "Open by file extension");
             this.m_DiffTools = InternalEditorUtility.GetAvailableDiffTools();
             if (((this.m_DiffTools == null) || (this.m_DiffTools.Length == 0)) && InternalEditorUtility.HasTeamLicense())
             {
                 this.m_noDiffToolsMessage = InternalEditorUtility.GetNoDiffToolsDetectedMessage();
             }
-            string str2 = EditorPrefs.GetString("kDiffsDefaultApp");
-            this.m_DiffToolIndex = ArrayUtility.IndexOf<string>(this.m_DiffTools, str2);
+            string str = EditorPrefs.GetString("kDiffsDefaultApp");
+            this.m_DiffToolIndex = ArrayUtility.IndexOf<string>(this.m_DiffTools, str);
             if (this.m_DiffToolIndex == -1)
             {
                 this.m_DiffToolIndex = 0;
@@ -457,8 +469,6 @@
                 this.s_CachedColors = this.OrderPrefs<PrefColor>(Settings.Prefs<PrefColor>());
             }
             bool flag = false;
-            s_ColorScrollPos = EditorGUILayout.BeginScrollView(s_ColorScrollPos, new GUILayoutOption[0]);
-            GUILayout.Space(10f);
             PrefColor color = null;
             foreach (KeyValuePair<string, List<KeyValuePair<string, PrefColor>>> pair in this.s_CachedColors)
             {
@@ -479,7 +489,6 @@
                     Settings.Set<PrefColor>(color.Name, color);
                 }
             }
-            EditorGUILayout.EndScrollView();
             GUILayout.Space(5f);
             GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(120f) };
             if (GUILayout.Button("Use Defaults", options))
@@ -495,8 +504,7 @@
 
         private void ShowExternalApplications()
         {
-            GUILayout.Space(10f);
-            this.FilePopup("External Script Editor", (string) this.m_ScriptEditorPath, ref this.m_ScriptAppDisplayNames, ref this.m_ScriptApps, this.m_ScriptEditorPath, "internal", new Action(this, (IntPtr) this.OnScriptEditorChanged));
+            this.FilePopup("External Script Editor", (string) this.m_ScriptEditorPath, ref this.m_ScriptAppDisplayNames, ref this.m_ScriptApps, this.m_ScriptEditorPath, "internal", new Action(this.OnScriptEditorChanged));
             if (!this.IsSelectedScriptEditorSpecial())
             {
                 string scriptEditorArgs = this.m_ScriptEditorArgs;
@@ -552,8 +560,7 @@
 
         private void ShowGeneral()
         {
-            GUILayout.Space(10f);
-            bool disabled = Collab.instance.GetCollabInfo().whitelisted && CollabAccess.Instance.IsServiceEnabled();
+            bool disabled = CollabAccess.Instance.IsServiceEnabled();
             using (new EditorGUI.DisabledScope(disabled))
             {
                 if (disabled)
@@ -665,12 +672,12 @@
                 this.m_GICacheSettings.m_EnableCustomPath = EditorGUILayout.Toggle(Styles.customCacheLocation, this.m_GICacheSettings.m_EnableCustomPath, new GUILayoutOption[0]);
                 if (this.m_GICacheSettings.m_EnableCustomPath)
                 {
-                    GUIStyle popup = EditorStyles.popup;
+                    GUIStyle miniButton = EditorStyles.miniButton;
                     GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-                    EditorGUILayout.PrefixLabel(Styles.cacheFolderLocation, popup);
-                    Rect position = GUILayoutUtility.GetRect(GUIContent.none, popup);
+                    EditorGUILayout.PrefixLabel(Styles.cacheFolderLocation, miniButton);
+                    Rect position = GUILayoutUtility.GetRect(GUIContent.none, miniButton);
                     GUIContent content = !string.IsNullOrEmpty(this.m_GICacheSettings.m_CachePath) ? new GUIContent(this.m_GICacheSettings.m_CachePath) : Styles.browse;
-                    if (EditorGUI.ButtonMouseDown(position, content, FocusType.Passive, popup))
+                    if (EditorGUI.DropdownButton(position, content, FocusType.Passive, miniButton))
                     {
                         string cachePath = this.m_GICacheSettings.m_CachePath;
                         string str2 = EditorUtility.OpenFolderPanel(Styles.browseGICacheLocation.text, cachePath, "");
@@ -712,7 +719,6 @@
         private void ShowKeys()
         {
             int controlID = GUIUtility.GetControlID(s_KeysControlHash, FocusType.Keyboard);
-            GUILayout.Space(10f);
             GUILayout.BeginHorizontal(new GUILayoutOption[0]);
             GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(185f) };
             GUILayout.BeginVertical(options);
@@ -1000,7 +1006,7 @@
             public GUIStyle sectionElement = "PreferencesSection";
             public GUIStyle sectionHeader = new GUIStyle(EditorStyles.largeLabel);
             public GUIStyle sectionScrollView = "PreferencesSectionBox";
-            public GUIStyle selected = "ServerUpdateChangesetOn";
+            public GUIStyle selected = "OL SelectedRow";
             public GUIStyle settingsBox = "OL Box";
             public GUIStyle settingsBoxTitle = "OL Title";
             public GUIStyle warningIcon = "CN EntryWarn";

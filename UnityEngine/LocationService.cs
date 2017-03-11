@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Interface into location functionality.</para>
@@ -34,28 +35,28 @@
         /// </summary>
         /// <param name="desiredAccuracyInMeters"></param>
         /// <param name="updateDistanceInMeters"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void Start([DefaultValue("10f")] float desiredAccuracyInMeters, [DefaultValue("10f")] float updateDistanceInMeters);
         /// <summary>
         /// <para>Stops location service updates. This could be useful for saving battery life.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void Stop();
 
         /// <summary>
         /// <para>Specifies whether location service is enabled in user settings.</para>
         /// </summary>
-        public bool isEnabledByUser { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isEnabledByUser { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Last measured device geographical location.</para>
         /// </summary>
-        public LocationInfo lastData { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public LocationInfo lastData { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Returns location service status.</para>
         /// </summary>
-        public LocationServiceStatus status { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public LocationServiceStatus status { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

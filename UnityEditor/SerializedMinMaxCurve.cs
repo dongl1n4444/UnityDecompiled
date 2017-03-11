@@ -27,31 +27,64 @@
         public SerializedMinMaxCurve(ModuleUI m, GUIContent displayName)
         {
             this.m_MaxAllowedScalar = float.PositiveInfinity;
-            this.Init(m, displayName, "curve", false, false);
+            this.Init(m, displayName, "curve", false, false, true);
         }
 
         public SerializedMinMaxCurve(ModuleUI m, GUIContent displayName, bool signedRange)
         {
             this.m_MaxAllowedScalar = float.PositiveInfinity;
-            this.Init(m, displayName, "curve", signedRange, false);
+            this.Init(m, displayName, "curve", signedRange, false, true);
         }
 
         public SerializedMinMaxCurve(ModuleUI m, GUIContent displayName, string name)
         {
             this.m_MaxAllowedScalar = float.PositiveInfinity;
-            this.Init(m, displayName, name, false, false);
+            this.Init(m, displayName, name, false, false, true);
         }
 
         public SerializedMinMaxCurve(ModuleUI m, GUIContent displayName, string name, bool signedRange)
         {
             this.m_MaxAllowedScalar = float.PositiveInfinity;
-            this.Init(m, displayName, name, signedRange, false);
+            this.Init(m, displayName, name, signedRange, false, true);
         }
 
         public SerializedMinMaxCurve(ModuleUI m, GUIContent displayName, string name, bool signedRange, bool useProp0)
         {
             this.m_MaxAllowedScalar = float.PositiveInfinity;
-            this.Init(m, displayName, name, signedRange, useProp0);
+            this.Init(m, displayName, name, signedRange, useProp0, true);
+        }
+
+        public SerializedMinMaxCurve(ModuleUI m, GUIContent displayName, string name, bool signedRange, bool useProp0, bool addCurveIfNeeded)
+        {
+            this.m_MaxAllowedScalar = float.PositiveInfinity;
+            this.Init(m, displayName, name, signedRange, useProp0, addCurveIfNeeded);
+        }
+
+        private static bool AnimationCurveSupportsProcedural(AnimationCurve curve, ref string failureReason)
+        {
+            switch (AnimationUtility.IsValidPolynomialCurve(curve))
+            {
+                case AnimationUtility.PolynomialValid.Valid:
+                    return true;
+
+                case AnimationUtility.PolynomialValid.InvalidPreWrapMode:
+                    failureReason = "Unsupported curve pre-wrap mode. Loop and ping-pong do not support procedural mode.";
+                    break;
+
+                case AnimationUtility.PolynomialValid.InvalidPostWrapMode:
+                    failureReason = "Unsupported curve post-wrap mode. Loop and ping-pong do not support procedural mode.";
+                    break;
+
+                case AnimationUtility.PolynomialValid.TooManySegments:
+                    failureReason = "Curve uses too many keys. Procedural mode does not support more than " + AnimationUtility.GetMaxNumPolynomialSegmentsSupported() + " keys";
+                    if ((curve.keys[0].time != 0f) || (curve.keys[curve.keys.Length - 1].time != 1f))
+                    {
+                        failureReason = failureReason + " (Additional keys are added to curves that do not start at 0, or do not end at 1)";
+                    }
+                    failureReason = failureReason + ".";
+                    break;
+            }
+            return false;
         }
 
         private float ClampValueToMaxAllowed(float val)
@@ -118,9 +151,9 @@
         }
 
         public string GetUniqueCurveName() => 
-            SerializedModule.Concat(this.m_Module.GetUniqueModuleName(), this.m_Name);
+            SerializedModule.Concat(this.m_Module.GetUniqueModuleName(this.m_Module.serializedObject.targetObject), this.m_Name);
 
-        private void Init(ModuleUI m, GUIContent displayName, string uniqueName, bool signedRange, bool useProp0)
+        private void Init(ModuleUI m, GUIContent displayName, string uniqueName, bool signedRange, bool useProp0, bool addCurveIfNeeded)
         {
             this.m_Module = m;
             this.m_DisplayName = displayName;
@@ -137,7 +170,7 @@
             this.minCurve = !useProp0 ? m.GetProperty(this.m_Name, "minCurve") : m.GetProperty0(this.m_Name, "minCurve");
             this.minCurveFirstKeyValue = this.minCurve.FindPropertyRelative("m_Curve.Array.data[0].value");
             this.minMaxState = !useProp0 ? m.GetProperty(this.m_Name, "minMaxState") : m.GetProperty0(this.m_Name, "minMaxState");
-            if (((this.state == MinMaxCurveState.k_Curve) || (this.state == MinMaxCurveState.k_TwoCurves)) && this.m_Module.m_ParticleSystemUI.m_ParticleEffectUI.IsParticleSystemUIVisible(this.m_Module.m_ParticleSystemUI))
+            if ((addCurveIfNeeded && ((this.state == MinMaxCurveState.k_Curve) || (this.state == MinMaxCurveState.k_TwoCurves))) && this.m_Module.m_ParticleSystemUI.m_ParticleEffectUI.IsParticleSystemUIVisible(this.m_Module.m_ParticleSystemUI))
             {
                 m.GetParticleSystemCurveEditor().AddCurveDataIfNeeded(this.GetUniqueCurveName(), this.CreateCurveData(Color.black));
             }
@@ -268,52 +301,54 @@
             }
         }
 
-        private void SetMinMaxState(MinMaxCurveState newState)
+        public void SetMinMaxState(MinMaxCurveState newState, bool addToCurveEditor)
         {
-            if (newState != this.state)
+            if (!this.stateHasMultipleDifferentValues && (newState == this.state))
             {
-                MinMaxCurveState oldState = this.state;
-                ParticleSystemCurveEditor particleSystemCurveEditor = this.m_Module.GetParticleSystemCurveEditor();
-                if (particleSystemCurveEditor.IsAdded(this.GetMinCurve(), this.maxCurve))
-                {
-                    particleSystemCurveEditor.RemoveCurve(this.GetMinCurve(), this.maxCurve);
-                }
+                return;
+            }
+            MinMaxCurveState oldState = this.state;
+            ParticleSystemCurveEditor particleSystemCurveEditor = this.m_Module.GetParticleSystemCurveEditor();
+            if (particleSystemCurveEditor.IsAdded(this.GetMinCurve(), this.maxCurve))
+            {
+                particleSystemCurveEditor.RemoveCurve(this.GetMinCurve(), this.maxCurve);
+            }
+            switch (newState)
+            {
+                case MinMaxCurveState.k_Scalar:
+                    this.InitSingleScalar(oldState);
+                    break;
+
+                case MinMaxCurveState.k_Curve:
+                    this.InitSingleCurve(oldState);
+                    break;
+
+                case MinMaxCurveState.k_TwoCurves:
+                    this.InitDoubleCurves(oldState);
+                    break;
+
+                case MinMaxCurveState.k_TwoScalars:
+                    this.InitDoubleScalars(oldState);
+                    break;
+            }
+            this.minMaxState.intValue = (int) newState;
+            if (addToCurveEditor)
+            {
                 switch (newState)
                 {
                     case MinMaxCurveState.k_Scalar:
-                        this.InitSingleScalar(oldState);
-                        break;
-
-                    case MinMaxCurveState.k_Curve:
-                        this.InitSingleCurve(oldState);
-                        break;
-
-                    case MinMaxCurveState.k_TwoCurves:
-                        this.InitDoubleCurves(oldState);
-                        break;
-
                     case MinMaxCurveState.k_TwoScalars:
-                        this.InitDoubleScalars(oldState);
-                        break;
-                }
-                this.minMaxState.intValue = (int) newState;
-                switch (newState)
-                {
-                    case MinMaxCurveState.k_Scalar:
-                    case MinMaxCurveState.k_TwoScalars:
-                        break;
+                        goto Label_0102;
 
                     case MinMaxCurveState.k_Curve:
                     case MinMaxCurveState.k_TwoCurves:
                         particleSystemCurveEditor.AddCurve(this.CreateCurveData(particleSystemCurveEditor.GetAvailableColor()));
-                        break;
-
-                    default:
-                        Debug.LogError("Unhandled enum value");
-                        break;
+                        goto Label_0102;
                 }
-                AnimationCurvePreviewCache.ClearCache();
+                Debug.LogError("Unhandled enum value");
             }
+        Label_0102:
+            AnimationCurvePreviewCache.ClearCache();
         }
 
         private void SetNormalizedConstant(SerializedProperty curve, float totalValue)
@@ -330,14 +365,25 @@
             this.SetNormalizedConstant(this.maxCurve, totalMax);
         }
 
-        public bool SupportsProcedural()
+        public bool SupportsProcedural(ref string failureReason)
         {
-            bool flag = AnimationUtility.CurveSupportsProcedural(this.maxCurve.animationCurveValue);
+            string str = "Max Curve: ";
+            bool flag = AnimationCurveSupportsProcedural(this.maxCurve.animationCurveValue, ref str);
+            if (!flag)
+            {
+                failureReason = str;
+            }
             if ((this.state != MinMaxCurveState.k_TwoCurves) && (this.state != MinMaxCurveState.k_TwoScalars))
             {
                 return flag;
             }
-            return (flag && AnimationUtility.CurveSupportsProcedural(this.minCurve.animationCurveValue));
+            string str2 = "Min Curve: ";
+            bool flag3 = AnimationCurveSupportsProcedural(this.minCurve.animationCurveValue, ref str2);
+            if (flag3)
+            {
+                failureReason = failureReason + str2;
+            }
+            return (flag && flag3);
         }
 
         public void ToggleCurveInEditor()
@@ -414,9 +460,12 @@
                 ((MinMaxCurveState) this.minMaxState.intValue);
             set
             {
-                this.SetMinMaxState(value);
+                this.SetMinMaxState(value, true);
             }
         }
+
+        public bool stateHasMultipleDifferentValues =>
+            this.minMaxState.hasMultipleDifferentValues;
     }
 }
 

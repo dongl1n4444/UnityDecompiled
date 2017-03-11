@@ -104,14 +104,14 @@
                 {
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<NPath, IEnumerable<NPath>>(null, (IntPtr) <CompileIDL>m__0);
+                        <>f__am$cache0 = d => d.Files("*.idl", false);
                     }
                     NPath[] data = directories.SourceDirectories.SelectMany<NPath, NPath>(<>f__am$cache0).ToArray<NPath>();
                     if (data.Length != 0)
                     {
                         yb.idlResultDirectory = workingDirectory.EnsureDirectoryExists("idlGenerated");
                         yb.includePaths = this.ToolChainIncludePaths();
-                        IEnumerable<IdlCompilationResult> enumerable = ParallelFor.RunWithResult<NPath, IdlCompilationResult>(data, new Func<NPath, IdlCompilationResult>(yb, (IntPtr) this.<>m__0));
+                        IEnumerable<IdlCompilationResult> enumerable = ParallelFor.RunWithResult<NPath, IdlCompilationResult>(data, new Func<NPath, IdlCompilationResult>(yb.<>m__0));
                         MsvcToolChainContext context = (MsvcToolChainContext) toolChainContext;
                         foreach (IdlCompilationResult result in enumerable)
                         {
@@ -119,7 +119,7 @@
                             {
                                 throw new BuilderFailedException(string.Format(result.StdOut + "{0}{0}Invocation was: " + result.Invocation.Summary(), Environment.NewLine));
                             }
-                            context.AddCompileInstructions(result.OutputDirectory.Files("*_i.c", false).Select<NPath, CppCompilationInstruction>(new Func<NPath, CppCompilationInstruction>(yb, (IntPtr) this.<>m__1)));
+                            context.AddCompileInstructions(result.OutputDirectory.Files("*_i.c", false).Select<NPath, CppCompilationInstruction>(new Func<NPath, CppCompilationInstruction>(yb.<>m__1)));
                             context.AddIncludeDirectory(result.OutputDirectory);
                             foreach (NPath path in result.OutputDirectory.Files("*.tlb", false))
                             {
@@ -181,7 +181,7 @@
                 {
                     if (<>f__am$cache1 == null)
                     {
-                        <>f__am$cache1 = new Func<NPath, IEnumerable<NPath>>(null, (IntPtr) <FindModuleDefinitionFiles>m__1);
+                        <>f__am$cache1 = d => d.Files("*.def", false);
                     }
                     NPath[] source = directories.SourceDirectories.SelectMany<NPath, NPath>(<>f__am$cache1).ToArray<NPath>();
                     if (source.Length != 0)
@@ -190,11 +190,11 @@
                         {
                             if (<>f__am$cache2 == null)
                             {
-                                <>f__am$cache2 = new Func<NPath, string>(null, (IntPtr) <FindModuleDefinitionFiles>m__2);
+                                <>f__am$cache2 = f => f.ToString();
                             }
                             if (<>f__am$cache3 == null)
                             {
-                                <>f__am$cache3 = new Func<string, string, string>(null, (IntPtr) <FindModuleDefinitionFiles>m__3);
+                                <>f__am$cache3 = (x, y) => x + Environment.NewLine + "\t" + y;
                             }
                             throw new BuilderFailedException($"Found more than one module definition file in source directories:{Environment.NewLine}	{source.Select<NPath, string>(<>f__am$cache2).Aggregate<string>(<>f__am$cache3)}");
                         }
@@ -264,8 +264,8 @@
                 list.Add(context.ModuleDefinitionPath);
             }
             ya.bestWorkingDirectory = PickBestDirectoryToUseAsWorkingDirectoryFromObjectFilePaths(objectFiles);
-            IEnumerable<string> enumerable = objectFiles.Select<NPath, string>(new Func<NPath, string>(ya, (IntPtr) this.<>m__0));
-            inputs.AddRange(base.ChooseLinkerFlags(staticLibraries, dynamicLibraries, outputFile, specifiedLinkerFlags, new Func<IEnumerable<NPath>, IEnumerable<NPath>, NPath, IEnumerable<string>>(this, (IntPtr) this.GetDefaultLinkerArgs)));
+            IEnumerable<string> enumerable = objectFiles.Select<NPath, string>(new Func<NPath, string>(ya.<>m__0));
+            inputs.AddRange(base.ChooseLinkerFlags(staticLibraries, dynamicLibraries, outputFile, specifiedLinkerFlags, new Func<IEnumerable<NPath>, IEnumerable<NPath>, NPath, IEnumerable<string>>(this.GetDefaultLinkerArgs)));
             string tempFileName = Path.GetTempFileName();
             File.WriteAllText(tempFileName, enumerable.InQuotes().SeparateWithSpaces(), Encoding.UTF8);
             CppProgramBuilder.LinkerInvocation invocation = new CppProgramBuilder.LinkerInvocation();
@@ -441,9 +441,9 @@
             internal IEnumerator<string> $locvar2;
             internal int $PC;
             internal MsvcToolChain $this;
-            internal string <compilerFlag>__2;
-            internal string <define>__0;
-            internal NPath <includePath>__1;
+            internal string <compilerFlag>__3;
+            internal string <define>__1;
+            internal NPath <includePath>__2;
             internal CppCompilationInstruction cppCompilationInstruction;
 
             [DebuggerHidden]
@@ -527,8 +527,8 @@
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<define>__0 = this.$locvar0.Current;
-                        this.$current = "/D" + this.<define>__0;
+                        this.<define>__1 = this.$locvar0.Current;
+                        this.$current = "/D" + this.<define>__1;
                         if (!this.$disposing)
                         {
                             this.$PC = 1;
@@ -554,8 +554,8 @@
                 {
                     while (this.$locvar1.MoveNext())
                     {
-                        this.<includePath>__1 = this.$locvar1.Current;
-                        this.$current = "/I\"" + this.<includePath>__1 + "\"";
+                        this.<includePath>__2 = this.$locvar1.Current;
+                        this.$current = "/I\"" + this.<includePath>__2 + "\"";
                         if (!this.$disposing)
                         {
                             this.$PC = 2;
@@ -574,15 +574,15 @@
                         this.$locvar1.Dispose();
                     }
                 }
-                this.$locvar2 = this.$this.ChooseCompilerFlags(this.cppCompilationInstruction, new Func<CppCompilationInstruction, IEnumerable<string>>(this.$this, (IntPtr) this.$this.DefaultCompilerFlags)).GetEnumerator();
+                this.$locvar2 = this.$this.ChooseCompilerFlags(this.cppCompilationInstruction, new Func<CppCompilationInstruction, IEnumerable<string>>(this.$this.DefaultCompilerFlags)).GetEnumerator();
                 num = 0xfffffffd;
             Label_0197:
                 try
                 {
                     while (this.$locvar2.MoveNext())
                     {
-                        this.<compilerFlag>__2 = this.$locvar2.Current;
-                        this.$current = this.<compilerFlag>__2;
+                        this.<compilerFlag>__3 = this.$locvar2.Current;
+                        this.$current = this.<compilerFlag>__3;
                         if (!this.$disposing)
                         {
                             this.$PC = 3;
@@ -667,7 +667,7 @@
                 this.$PC = -1;
                 switch (num)
                 {
-                    case 0x10:
+                    case 0x11:
                         try
                         {
                         }
@@ -692,7 +692,7 @@
                     case 0:
                         if (<>f__am$cache0 == null)
                         {
-                            <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <>m__0);
+                            <>f__am$cache0 = new Func<string, bool>(MsvcToolChain.<DefaultCompilerFlags>c__Iterator5.<>m__0);
                         }
                         this.<hasClrFlag>__0 = this.cppCompilationInstruction.CompilerFlags.Any<string>(<>f__am$cache0);
                         this.$current = (this.$this.BuildConfiguration != BuildConfiguration.Debug) ? "/MD" : "/MDd";
@@ -700,7 +700,7 @@
                         {
                             this.$PC = 1;
                         }
-                        goto Label_04DE;
+                        goto Label_0502;
 
                     case 1:
                         this.$current = "/c";
@@ -708,7 +708,7 @@
                         {
                             this.$PC = 2;
                         }
-                        goto Label_04DE;
+                        goto Label_0502;
 
                     case 2:
                         this.$current = "/bigobj";
@@ -716,7 +716,7 @@
                         {
                             this.$PC = 3;
                         }
-                        goto Label_04DE;
+                        goto Label_0502;
 
                     case 3:
                         this.$current = "/W3";
@@ -724,7 +724,7 @@
                         {
                             this.$PC = 4;
                         }
-                        goto Label_04DE;
+                        goto Label_0502;
 
                     case 4:
                         this.$current = "/Zi";
@@ -732,7 +732,7 @@
                         {
                             this.$PC = 5;
                         }
-                        goto Label_04DE;
+                        goto Label_0502;
 
                     case 5:
                         if (this.<hasClrFlag>__0)
@@ -744,7 +744,7 @@
                         {
                             this.$PC = 6;
                         }
-                        goto Label_04DE;
+                        goto Label_0502;
 
                     case 6:
                         this.$current = "/GR-";
@@ -752,7 +752,7 @@
                         {
                             this.$PC = 7;
                         }
-                        goto Label_04DE;
+                        goto Label_0502;
 
                     case 7:
                         break;
@@ -763,7 +763,7 @@
                         {
                             this.$PC = 9;
                         }
-                        goto Label_04DE;
+                        goto Label_0502;
 
                     case 9:
                         this.$current = "/wd4800";
@@ -771,7 +771,7 @@
                         {
                             this.$PC = 10;
                         }
-                        goto Label_04DE;
+                        goto Label_0502;
 
                     case 10:
                         this.$current = "/wd4307";
@@ -779,7 +779,7 @@
                         {
                             this.$PC = 11;
                         }
-                        goto Label_04DE;
+                        goto Label_0502;
 
                     case 11:
                         this.$current = "/wd4056";
@@ -787,7 +787,7 @@
                         {
                             this.$PC = 12;
                         }
-                        goto Label_04DE;
+                        goto Label_0502;
 
                     case 12:
                         this.$current = "/wd4190";
@@ -795,7 +795,7 @@
                         {
                             this.$PC = 13;
                         }
-                        goto Label_04DE;
+                        goto Label_0502;
 
                     case 13:
                         this.$current = "/wd4723";
@@ -803,7 +803,7 @@
                         {
                             this.$PC = 14;
                         }
-                        goto Label_04DE;
+                        goto Label_0502;
 
                     case 14:
                         this.$current = "/wd4467";
@@ -811,102 +811,110 @@
                         {
                             this.$PC = 15;
                         }
-                        goto Label_04DE;
+                        goto Label_0502;
 
                     case 15:
-                        if (this.$this.AdditionalCompilerOptionsForSourceFile == null)
-                        {
-                            goto Label_0371;
-                        }
-                        this.$locvar0 = this.$this.AdditionalCompilerOptionsForSourceFile.Invoke(this.cppCompilationInstruction.SourceFile.ToString()).GetEnumerator();
-                        num = 0xfffffffd;
-                        goto Label_02FA;
-
-                    case 0x10:
-                        goto Label_02FA;
-
-                    case 0x11:
-                        this.$current = "/Zc:inline";
+                        this.$current = "/wd4503";
                         if (!this.$disposing)
                         {
-                            this.$PC = 0x12;
+                            this.$PC = 0x10;
                         }
-                        goto Label_04DE;
+                        goto Label_0502;
+
+                    case 0x10:
+                        if (this.$this.AdditionalCompilerOptionsForSourceFile == null)
+                        {
+                            goto Label_0395;
+                        }
+                        this.$locvar0 = this.$this.AdditionalCompilerOptionsForSourceFile(this.cppCompilationInstruction.SourceFile.ToString()).GetEnumerator();
+                        num = 0xfffffffd;
+                        goto Label_031E;
+
+                    case 0x11:
+                        goto Label_031E;
 
                     case 0x12:
-                        if (this.<hasClrFlag>__0)
-                        {
-                            goto Label_04D5;
-                        }
-                        this.$current = "/RTC1";
+                        this.$current = "/Zc:inline";
                         if (!this.$disposing)
                         {
                             this.$PC = 0x13;
                         }
-                        goto Label_04DE;
+                        goto Label_0502;
 
                     case 0x13:
-                    case 0x1a:
-                        goto Label_04D5;
-
-                    case 20:
-                        this.$current = "/Oi";
+                        if (this.<hasClrFlag>__0)
+                        {
+                            goto Label_04F9;
+                        }
+                        this.$current = "/RTC1";
                         if (!this.$disposing)
                         {
-                            this.$PC = 0x15;
+                            this.$PC = 20;
                         }
-                        goto Label_04DE;
+                        goto Label_0502;
+
+                    case 20:
+                    case 0x1b:
+                        goto Label_04F9;
 
                     case 0x15:
-                        this.$current = "/Oy-";
+                        this.$current = "/Oi";
                         if (!this.$disposing)
                         {
                             this.$PC = 0x16;
                         }
-                        goto Label_04DE;
+                        goto Label_0502;
 
                     case 0x16:
-                        this.$current = "/GS-";
+                        this.$current = "/Oy-";
                         if (!this.$disposing)
                         {
                             this.$PC = 0x17;
                         }
-                        goto Label_04DE;
+                        goto Label_0502;
 
                     case 0x17:
-                        this.$current = "/Gw";
+                        this.$current = "/GS-";
                         if (!this.$disposing)
                         {
                             this.$PC = 0x18;
                         }
-                        goto Label_04DE;
+                        goto Label_0502;
 
                     case 0x18:
-                        this.$current = "/GF";
+                        this.$current = "/Gw";
                         if (!this.$disposing)
                         {
                             this.$PC = 0x19;
                         }
-                        goto Label_04DE;
+                        goto Label_0502;
 
                     case 0x19:
-                        this.$current = "/Zo";
+                        this.$current = "/GF";
                         if (!this.$disposing)
                         {
                             this.$PC = 0x1a;
                         }
-                        goto Label_04DE;
+                        goto Label_0502;
+
+                    case 0x1a:
+                        this.$current = "/Zo";
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 0x1b;
+                        }
+                        goto Label_0502;
 
                     default:
-                        goto Label_04DC;
+                        goto Label_0500;
                 }
                 this.$current = "/Gy";
                 if (!this.$disposing)
                 {
                     this.$PC = 8;
                 }
-                goto Label_04DE;
-            Label_02FA:
+                goto Label_0502;
+            Label_031E:
                 try
                 {
                     while (this.$locvar0.MoveNext())
@@ -915,10 +923,10 @@
                         this.$current = this.<p>__1;
                         if (!this.$disposing)
                         {
-                            this.$PC = 0x10;
+                            this.$PC = 0x11;
                         }
                         flag = true;
-                        goto Label_04DE;
+                        goto Label_0502;
                     }
                 }
                 finally
@@ -931,13 +939,13 @@
                         this.$locvar0.Dispose();
                     }
                 }
-            Label_0371:
+            Label_0395:
                 if (this.$this.BuildConfiguration == BuildConfiguration.Debug)
                 {
                     this.$current = "/Od";
                     if (!this.$disposing)
                     {
-                        this.$PC = 0x11;
+                        this.$PC = 0x12;
                     }
                 }
                 else
@@ -945,15 +953,15 @@
                     this.$current = "/Ox";
                     if (!this.$disposing)
                     {
-                        this.$PC = 20;
+                        this.$PC = 0x15;
                     }
                 }
-                goto Label_04DE;
-            Label_04D5:
+                goto Label_0502;
+            Label_04F9:
                 this.$PC = -1;
-            Label_04DC:
+            Label_0500:
                 return false;
-            Label_04DE:
+            Label_0502:
                 return true;
             }
 
@@ -1060,10 +1068,10 @@
             internal IEnumerator<string> $locvar3;
             internal int $PC;
             internal MsvcToolChain $this;
-            internal string <libpath>__3;
-            internal string <library>__0;
-            internal NPath <library>__1;
+            internal string <libpath>__4;
+            internal string <library>__1;
             internal NPath <library>__2;
+            internal NPath <library>__3;
             internal IEnumerable<NPath> dynamicLibraries;
             internal NPath outputFile;
             internal IEnumerable<NPath> staticLibraries;
@@ -1303,8 +1311,8 @@
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<library>__0 = this.$locvar0.Current;
-                        this.$current = this.<library>__0.InQuotes();
+                        this.<library>__1 = this.$locvar0.Current;
+                        this.$current = this.<library>__1.InQuotes();
                         if (!this.$disposing)
                         {
                             this.$PC = 0x10;
@@ -1330,8 +1338,8 @@
                 {
                     while (this.$locvar1.MoveNext())
                     {
-                        this.<library>__1 = this.$locvar1.Current;
-                        this.$current = this.<library>__1.InQuotes();
+                        this.<library>__2 = this.$locvar1.Current;
+                        this.$current = this.<library>__2.InQuotes();
                         if (!this.$disposing)
                         {
                             this.$PC = 0x11;
@@ -1357,8 +1365,8 @@
                 {
                     while (this.$locvar2.MoveNext())
                     {
-                        this.<library>__2 = this.$locvar2.Current;
-                        this.$current = this.<library>__2.ChangeExtension(".lib").InQuotes();
+                        this.<library>__3 = this.$locvar2.Current;
+                        this.$current = this.<library>__3.ChangeExtension(".lib").InQuotes();
                         if (!this.$disposing)
                         {
                             this.$PC = 0x12;
@@ -1384,8 +1392,8 @@
                 {
                     while (this.$locvar3.MoveNext())
                     {
-                        this.<libpath>__3 = this.$locvar3.Current;
-                        this.$current = this.<libpath>__3;
+                        this.<libpath>__4 = this.$locvar3.Current;
+                        this.$current = this.<libpath>__4;
                         if (!this.$disposing)
                         {
                             this.$PC = 0x13;
@@ -1448,31 +1456,40 @@
         {
             internal string $current;
             internal bool $disposing;
+            internal IEnumerator<NPath> $locvar0;
             internal int $PC;
             internal MsvcToolChain $this;
-            private static Func<NPath, string> <>f__am$cache0;
-            private static Func<string, string, string> <>f__am$cache1;
-            internal string <aggregatedIncludes>__1;
-            internal NPath[] <toolChainIncludes>__0;
+            internal NPath <include>__1;
             internal NPath idl;
-
-            private static string <>m__0(NPath x) => 
-                x.ToString();
-
-            private static string <>m__1(string x, string y) => 
-                (x + ";" + y);
 
             [DebuggerHidden]
             public void Dispose()
             {
+                uint num = (uint) this.$PC;
                 this.$disposing = true;
                 this.$PC = -1;
+                switch (num)
+                {
+                    case 9:
+                        try
+                        {
+                        }
+                        finally
+                        {
+                            if (this.$locvar0 != null)
+                            {
+                                this.$locvar0.Dispose();
+                            }
+                        }
+                        break;
+                }
             }
 
             public bool MoveNext()
             {
                 uint num = (uint) this.$PC;
                 this.$PC = -1;
+                bool flag = false;
                 switch (num)
                 {
                     case 0:
@@ -1553,7 +1570,7 @@
                         break;
 
                     case 9:
-                        goto Label_025A;
+                        goto Label_01D5;
 
                     case 10:
                         this.$current = $"/metadata_dir "{this.$this.MsvcInstallation.GetUnionMetadataDirectory()}"";
@@ -1589,26 +1606,33 @@
                     default:
                         goto Label_0343;
                 }
-                this.<toolChainIncludes>__0 = this.$this.ToolChainIncludePaths().ToArray<NPath>();
-                if (this.<toolChainIncludes>__0.Length > 0)
+                this.$locvar0 = this.$this.ToolChainIncludePaths().GetEnumerator();
+                num = 0xfffffffd;
+            Label_01D5:
+                try
                 {
-                    if (<>f__am$cache0 == null)
+                    while (this.$locvar0.MoveNext())
                     {
-                        <>f__am$cache0 = new Func<NPath, string>(null, (IntPtr) <>m__0);
+                        this.<include>__1 = this.$locvar0.Current;
+                        this.$current = $"/I {this.<include>__1.InQuotes()}";
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 9;
+                        }
+                        flag = true;
+                        goto Label_0345;
                     }
-                    if (<>f__am$cache1 == null)
-                    {
-                        <>f__am$cache1 = new Func<string, string, string>(null, (IntPtr) <>m__1);
-                    }
-                    this.<aggregatedIncludes>__1 = this.<toolChainIncludes>__0.Select<NPath, string>(<>f__am$cache0).Aggregate<string>(<>f__am$cache1);
-                    this.$current = $"/I "{this.<aggregatedIncludes>__1}"";
-                    if (!this.$disposing)
-                    {
-                        this.$PC = 9;
-                    }
-                    goto Label_0345;
                 }
-            Label_025A:
+                finally
+                {
+                    if (!flag)
+                    {
+                    }
+                    if (this.$locvar0 != null)
+                    {
+                        this.$locvar0.Dispose();
+                    }
+                }
                 if (this.$this.MsvcInstallation.HasMetadataDirectories())
                 {
                     this.$current = "/winrt";
@@ -2134,7 +2158,7 @@
             internal IEnumerator<string> $locvar0;
             internal int $PC;
             internal MsvcToolChain $this;
-            internal string <lib>__0;
+            internal string <lib>__1;
 
             [DebuggerHidden]
             public void Dispose()
@@ -2185,8 +2209,8 @@
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<lib>__0 = this.$locvar0.Current;
-                        this.$current = this.<lib>__0;
+                        this.<lib>__1 = this.$locvar0.Current;
+                        this.$current = this.<lib>__1;
                         if (!this.$disposing)
                         {
                             this.$PC = 1;

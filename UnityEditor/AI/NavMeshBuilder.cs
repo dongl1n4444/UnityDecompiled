@@ -5,23 +5,21 @@
     using UnityEditor.SceneManagement;
     using UnityEngine;
     using UnityEngine.SceneManagement;
+    using UnityEngine.Scripting;
     using UnityEngine.Scripting.APIUpdating;
 
-    /// <summary>
-    /// <para>Navigation mesh builder interface.</para>
-    /// </summary>
     [MovedFrom("UnityEditor")]
     public sealed class NavMeshBuilder
     {
         /// <summary>
         /// <para>Build the Navmesh.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void BuildNavMesh();
         /// <summary>
         /// <para>Build the Navmesh Asyncronously.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void BuildNavMeshAsync();
         /// <summary>
         /// <para>Builds the combined navmesh for the contents of multiple scenes.</para>
@@ -52,7 +50,7 @@
                         EditorSceneManager.OpenScene(paths[k], OpenSceneMode.Additive);
                     }
                     BuildNavMesh();
-                    Object sceneNavMeshData = NavMeshBuilder.sceneNavMeshData;
+                    UnityEngine.Object sceneNavMeshData = NavMeshBuilder.sceneNavMeshData;
                     for (int m = 0; m < paths.Length; m++)
                     {
                         if (EditorSceneManager.OpenScene(paths[m]).IsValid())
@@ -65,25 +63,22 @@
             }
         }
 
-        /// <summary>
-        /// <para>Cancel Navmesh construction.</para>
-        /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void Cancel();
         /// <summary>
         /// <para>Clear all Navmeshes.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void ClearAllNavMeshes();
 
         /// <summary>
         /// <para>Returns true if an asynchronous build is still running.</para>
         /// </summary>
-        public static bool isRunning { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool isRunning { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public static Object navMeshSettingsObject { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static UnityEngine.Object navMeshSettingsObject { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        internal static Object sceneNavMeshData { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        internal static UnityEngine.Object sceneNavMeshData { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
     }
 }
 

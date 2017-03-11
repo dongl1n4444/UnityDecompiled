@@ -2,6 +2,7 @@
 {
     using System;
     using System.Runtime.CompilerServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>General settings for how the GUI behaves.</para>
@@ -20,7 +21,7 @@
         [SerializeField]
         private bool m_TripleClickSelectsLine = true;
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern float Internal_GetCursorFlashSpeed();
 
         /// <summary>

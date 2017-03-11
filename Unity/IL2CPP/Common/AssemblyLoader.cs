@@ -2,6 +2,7 @@
 {
     using Mono.Cecil;
     using Mono.Cecil.Mdb;
+    using Mono.Cecil.Pdb;
     using Mono.CompilerServices.SymbolWriter;
     using NiceIO;
     using System;
@@ -9,13 +10,17 @@
     using System.IO;
     using System.Runtime.InteropServices;
 
-    public class AssemblyLoader : IAssemblyLoader
+    public class AssemblyLoader : IAssemblyLoader, IDisposable
     {
-        private readonly ReaderParameters _readerParameters;
-        private readonly ReaderParameters _readerWithoutSymbolsParameters;
+        private readonly ReaderParameters _dllReaderParametersWithMdbSymbols;
+        private readonly ReaderParameters _dllReaderParametersWithoutSymbols;
+        private readonly ReaderParameters _dllReaderParametersWithPdbSymbols;
         private readonly AssemblyResolver _resolver;
+        private AssemblyDefinition _windowsRuntimeMetadataAssembly;
+        private readonly ReaderParameters _winmdReaderParametersWithoutSymbols;
+        private readonly ReaderParameters _winmdReaderParametersWithPdbSymbols;
 
-        public AssemblyLoader(IEnumerable<NPath> searchDirectories, bool readSymbols = false, bool applyWindowsRuntimeProjections = false)
+        public AssemblyLoader(IEnumerable<NPath> searchDirectories, bool applyWindowsRuntimeProjections = false)
         {
             this._resolver = new AssemblyResolver(this);
             foreach (NPath path in searchDirectories)
@@ -28,28 +33,103 @@
             ReaderParameters parameters = new ReaderParameters {
                 AssemblyResolver = this._resolver,
                 MetadataResolver = new WindowsRuntimeAwareMetadataResolver(this._resolver),
-                ReadSymbols = readSymbols,
-                SymbolReaderProvider = !readSymbols ? null : new MdbReaderProvider(),
-                ApplyWindowsRuntimeProjections = applyWindowsRuntimeProjections
-            };
-            this._readerParameters = parameters;
-            parameters = new ReaderParameters {
-                ApplyWindowsRuntimeProjections = this._readerParameters.ApplyWindowsRuntimeProjections,
-                AssemblyResolver = this._readerParameters.AssemblyResolver,
-                MetadataImporterProvider = this._readerParameters.MetadataImporterProvider,
-                MetadataResolver = this._readerParameters.MetadataResolver,
-                ReadingMode = this._readerParameters.ReadingMode,
                 ReadSymbols = false,
                 SymbolReaderProvider = null,
-                ReflectionImporterProvider = this._readerParameters.ReflectionImporterProvider,
-                SymbolStream = this._readerParameters.SymbolStream
+                ApplyWindowsRuntimeProjections = applyWindowsRuntimeProjections,
+                ReadingMode = ReadingMode.Deferred
             };
-            this._readerWithoutSymbolsParameters = parameters;
+            this._dllReaderParametersWithoutSymbols = parameters;
+            this._dllReaderParametersWithPdbSymbols = CloneReaderParameters(this._dllReaderParametersWithoutSymbols);
+            this._dllReaderParametersWithPdbSymbols.ReadSymbols = true;
+            this._dllReaderParametersWithPdbSymbols.SymbolReaderProvider = new PdbReaderProvider();
+            this._dllReaderParametersWithMdbSymbols = CloneReaderParameters(this._dllReaderParametersWithoutSymbols);
+            this._dllReaderParametersWithMdbSymbols.ReadSymbols = true;
+            this._dllReaderParametersWithMdbSymbols.SymbolReaderProvider = new MdbReaderProvider();
+            this._winmdReaderParametersWithPdbSymbols = CloneReaderParameters(this._dllReaderParametersWithPdbSymbols);
+            this._winmdReaderParametersWithPdbSymbols.ReadingMode = ReadingMode.Immediate;
+            this._winmdReaderParametersWithoutSymbols = CloneReaderParameters(this._dllReaderParametersWithoutSymbols);
+            this._winmdReaderParametersWithoutSymbols.ReadingMode = ReadingMode.Immediate;
         }
 
         public void AddSearchDirectory(NPath path)
         {
             this._resolver.AddSearchDirectory(path);
+        }
+
+        private AssemblyDefinition AddWindowsMetadataAssembly(AssemblyDefinition assembly)
+        {
+            if (this._windowsRuntimeMetadataAssembly == null)
+            {
+                AssemblyNameDefinition assemblyName = new AssemblyNameDefinition("WindowsRuntimeMetadata", new Version(0xff, 0xff, 0xff, 0xff)) {
+                    Culture = "",
+                    IsWindowsRuntime = true
+                };
+                ModuleParameters parameters = new ModuleParameters {
+                    AssemblyResolver = this._dllReaderParametersWithMdbSymbols.AssemblyResolver,
+                    MetadataImporterProvider = this._dllReaderParametersWithMdbSymbols.MetadataImporterProvider,
+                    MetadataResolver = this._dllReaderParametersWithMdbSymbols.MetadataResolver,
+                    ReflectionImporterProvider = this._dllReaderParametersWithMdbSymbols.ReflectionImporterProvider,
+                    Runtime = TargetRuntime.Net_4_0
+                };
+                this._windowsRuntimeMetadataAssembly = AssemblyDefinition.CreateAssembly(assemblyName, "WindowsRuntimeMetadata", parameters);
+            }
+            List<TypeDefinition> list = new List<TypeDefinition>(assembly.MainModule.Types.Count);
+            list.AddRange(assembly.MainModule.Types);
+            assembly.MainModule.Types.Clear();
+            foreach (TypeDefinition definition3 in list)
+            {
+                if (definition3.Name != "<Module>")
+                {
+                    this._windowsRuntimeMetadataAssembly.MainModule.Types.Add(definition3);
+                }
+            }
+            foreach (AssemblyNameReference reference in assembly.MainModule.AssemblyReferences)
+            {
+                this._windowsRuntimeMetadataAssembly.MainModule.AssemblyReferences.Add(reference);
+            }
+            this._resolver.CacheAssembly(assembly.Name.Name, this._windowsRuntimeMetadataAssembly);
+            return this._windowsRuntimeMetadataAssembly;
+        }
+
+        private ReaderParameters ChooseReaderParameters(NPath path, bool loadSymbols)
+        {
+            string[] extensions = new string[] { ".winmd" };
+            bool flag = path.HasExtension(extensions);
+            if (loadSymbols)
+            {
+                if (flag)
+                {
+                    return this._winmdReaderParametersWithPdbSymbols;
+                }
+                if (PlatformUtils.IsWindows() && path.ChangeExtension(".pdb").Exists(""))
+                {
+                    return this._dllReaderParametersWithPdbSymbols;
+                }
+                return this._dllReaderParametersWithMdbSymbols;
+            }
+            if (flag)
+            {
+                return this._winmdReaderParametersWithoutSymbols;
+            }
+            return this._dllReaderParametersWithoutSymbols;
+        }
+
+        private static ReaderParameters CloneReaderParameters(ReaderParameters original) => 
+            new ReaderParameters { 
+                ApplyWindowsRuntimeProjections = original.ApplyWindowsRuntimeProjections,
+                AssemblyResolver = original.AssemblyResolver,
+                MetadataImporterProvider = original.MetadataImporterProvider,
+                MetadataResolver = original.MetadataResolver,
+                ReadingMode = original.ReadingMode,
+                ReadSymbols = original.ReadSymbols,
+                ReflectionImporterProvider = original.ReflectionImporterProvider,
+                SymbolReaderProvider = original.SymbolReaderProvider,
+                SymbolStream = original.SymbolStream
+            };
+
+        public void Dispose()
+        {
+            this._resolver.Dispose();
         }
 
         private static AssemblyNameReference GetReference(IMetadataScope scope)
@@ -67,24 +147,28 @@
 
         public AssemblyDefinition Load(string name)
         {
-            if (File.Exists(name))
+            NPath path = name.ToNPath();
+            if (path.FileExists(""))
             {
                 AssemblyDefinition definition;
                 try
                 {
-                    definition = AssemblyDefinition.ReadAssembly(name, this._readerParameters);
+                    definition = AssemblyDefinition.ReadAssembly(name, this.ChooseReaderParameters(path, true));
                 }
-                catch (FileNotFoundException exception)
+                catch (Exception exception)
                 {
-                    if (!exception.FileName.EndsWith(".mdb") || (this._readerParameters.SymbolReaderProvider == null))
+                    if ((!(exception is FileNotFoundException) && !(exception is MonoSymbolFileException)) && !(exception is InvalidOperationException))
                     {
                         throw;
                     }
-                    definition = AssemblyDefinition.ReadAssembly(name, this._readerWithoutSymbolsParameters);
+                    definition = AssemblyDefinition.ReadAssembly(name, this.ChooseReaderParameters(path, false));
                 }
-                catch (MonoSymbolFileException)
+                if (definition.MainModule.MetadataKind == MetadataKind.WindowsMetadata)
                 {
-                    definition = AssemblyDefinition.ReadAssembly(name, this._readerWithoutSymbolsParameters);
+                    using (definition)
+                    {
+                        return this.AddWindowsMetadataAssembly(definition);
+                    }
                 }
                 this._resolver.CacheAssembly(definition);
                 return definition;
@@ -98,7 +182,7 @@
             AssemblyNameReference name = GetReference(scope);
             try
             {
-                definition = this._resolver.Resolve(name, this._readerParameters);
+                definition = this._resolver.Resolve(name, this._dllReaderParametersWithMdbSymbols);
             }
             catch
             {

@@ -18,8 +18,6 @@
         internal static void RunManagedProgram(string exe, string args, string workingDirectory, CompilerOutputParserBase parser, Action<ProcessStartInfo> setupStartInfo)
         {
             Program program;
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
             if (Application.platform == RuntimePlatform.WindowsEditor)
             {
                 ProcessStartInfo info = new ProcessStartInfo {
@@ -37,29 +35,7 @@
             {
                 program = new ManagedProgram(MonoInstallationFinder.GetMonoInstallation("MonoBleedingEdge"), null, exe, args, false, setupStartInfo);
             }
-            using (program)
-            {
-                program.GetProcessStartInfo().WorkingDirectory = workingDirectory;
-                program.Start();
-                program.WaitForExit();
-                stopwatch.Stop();
-                Console.WriteLine("{0} exited after {1} ms.", exe, stopwatch.ElapsedMilliseconds);
-                if (program.ExitCode != 0)
-                {
-                    if (parser != null)
-                    {
-                        string[] errorOutput = program.GetErrorOutput();
-                        string[] standardOutput = program.GetStandardOutput();
-                        IEnumerable<CompilerMessage> enumerable = parser.Parse(errorOutput, standardOutput, true);
-                        foreach (CompilerMessage message in enumerable)
-                        {
-                            Debug.LogPlayerBuildError(message.message, message.file, message.line, message.column);
-                        }
-                    }
-                    Debug.LogError("Failed running " + exe + " " + args + "\n\n" + program.GetAllOutput());
-                    throw new Exception($"{exe} did not run properly!");
-                }
-            }
+            RunProgram(program, exe, args, workingDirectory, parser);
         }
 
         public static void RunNativeProgram(string exe, string args)
@@ -70,7 +46,42 @@
                 program.WaitForExit();
                 if (program.ExitCode != 0)
                 {
-                    Debug.LogError("Failed running " + exe + " " + args + "\n\n" + program.GetAllOutput());
+                    UnityEngine.Debug.LogError("Failed running " + exe + " " + args + "\n\n" + program.GetAllOutput());
+                    throw new Exception($"{exe} did not run properly!");
+                }
+            }
+        }
+
+        internal static void RunNetCoreProgram(string exe, string args, string workingDirectory, CompilerOutputParserBase parser, Action<ProcessStartInfo> setupStartInfo)
+        {
+            NetCoreProgram p = new NetCoreProgram(exe, args, setupStartInfo);
+            RunProgram(p, exe, args, workingDirectory, parser);
+        }
+
+        private static void RunProgram(Program p, string exe, string args, string workingDirectory, CompilerOutputParserBase parser)
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            using (p)
+            {
+                p.GetProcessStartInfo().WorkingDirectory = workingDirectory;
+                p.Start();
+                p.WaitForExit();
+                stopwatch.Stop();
+                Console.WriteLine("{0} exited after {1} ms.", exe, stopwatch.ElapsedMilliseconds);
+                if (p.ExitCode != 0)
+                {
+                    if (parser != null)
+                    {
+                        string[] errorOutput = p.GetErrorOutput();
+                        string[] standardOutput = p.GetStandardOutput();
+                        IEnumerable<CompilerMessage> enumerable = parser.Parse(errorOutput, standardOutput, true);
+                        foreach (CompilerMessage message in enumerable)
+                        {
+                            UnityEngine.Debug.LogPlayerBuildError(message.message, message.file, message.line, message.column);
+                        }
+                    }
+                    UnityEngine.Debug.LogError("Failed running " + exe + " " + args + "\n\n" + p.GetAllOutput());
                     throw new Exception($"{exe} did not run properly!");
                 }
             }

@@ -88,6 +88,7 @@
 
         protected InputField()
         {
+            this.EnforceTextHOverflow();
         }
 
         /// <summary>
@@ -144,13 +145,14 @@
         {
             if (!this.m_ReadOnly && this.InPlaceEditing())
             {
+                int charIndex = Math.Min(this.selectionFocusPosition, this.selectionAnchorPosition);
                 if (this.onValidateInput != null)
                 {
-                    input = this.onValidateInput(this.text, this.caretPositionInternal, input);
+                    input = this.onValidateInput(this.text, charIndex, input);
                 }
                 else if (this.characterValidation != CharacterValidation.None)
                 {
-                    input = this.Validate(this.text, this.caretPositionInternal, input);
+                    input = this.Validate(this.text, charIndex, input);
                 }
                 if (input != '\0')
                 {
@@ -389,6 +391,22 @@
                     this.m_KeyboardType = TouchScreenKeyboardType.NumberPad;
                     this.m_CharacterValidation = CharacterValidation.Integer;
                     break;
+            }
+            this.EnforceTextHOverflow();
+        }
+
+        private void EnforceTextHOverflow()
+        {
+            if (this.m_TextComponent != null)
+            {
+                if (this.multiLine)
+                {
+                    this.m_TextComponent.horizontalOverflow = HorizontalWrapMode.Wrap;
+                }
+                else
+                {
+                    this.m_TextComponent.horizontalOverflow = HorizontalWrapMode.Overflow;
+                }
             }
         }
 
@@ -936,15 +954,26 @@
                             {
                                 this.m_Text = this.m_Text.Substring(0, this.characterLimit);
                             }
-                            int length = this.m_Text.Length;
-                            this.caretSelectPositionInternal = length;
-                            this.caretPositionInternal = length;
+                            if (this.m_Keyboard.canGetSelection)
+                            {
+                                this.UpdateCaretFromKeyboard();
+                            }
+                            else
+                            {
+                                int length = this.m_Text.Length;
+                                this.caretSelectPositionInternal = length;
+                                this.caretPositionInternal = length;
+                            }
                             if (this.m_Text != text)
                             {
                                 this.m_Keyboard.text = this.m_Text;
                             }
                             this.SendOnValueChangedAndUpdateLabel();
                         }
+                    }
+                    else if (this.m_Keyboard.canGetSelection)
+                    {
+                        this.UpdateCaretFromKeyboard();
                     }
                     if (this.m_Keyboard.done)
                     {
@@ -1225,6 +1254,7 @@
             {
                 this.m_TextComponent.UnregisterDirtyVerticesCallback(new UnityAction(this.MarkGeometryAsDirty));
                 this.m_TextComponent.UnregisterDirtyVerticesCallback(new UnityAction(this.UpdateLabel));
+                this.m_TextComponent.UnregisterDirtyMaterialCallback(new UnityAction(this.UpdateCaretMaterial));
             }
             CanvasUpdateRegistry.UnRegisterCanvasElementForRebuild(this);
             if (this.m_CachedInputRenderer != null)
@@ -1271,12 +1301,13 @@
             this.m_DrawEnd = this.m_Text.Length;
             if (this.m_CachedInputRenderer != null)
             {
-                this.m_CachedInputRenderer.SetMaterial(Graphic.defaultGraphicMaterial, Texture2D.whiteTexture);
+                this.m_CachedInputRenderer.SetMaterial(this.m_TextComponent.GetModifiedMaterial(Graphic.defaultGraphicMaterial), Texture2D.whiteTexture);
             }
             if (this.m_TextComponent != null)
             {
                 this.m_TextComponent.RegisterDirtyVerticesCallback(new UnityAction(this.MarkGeometryAsDirty));
                 this.m_TextComponent.RegisterDirtyVerticesCallback(new UnityAction(this.UpdateLabel));
+                this.m_TextComponent.RegisterDirtyMaterialCallback(new UnityAction(this.UpdateCaretMaterial));
                 this.UpdateLabel();
             }
         }
@@ -1432,6 +1463,7 @@
         {
             base.OnValidate();
             this.EnforceContentType();
+            this.EnforceTextHOverflow();
             this.m_CharacterLimit = Math.Max(0, this.m_CharacterLimit);
             if (this.IsActive())
             {
@@ -1505,6 +1537,7 @@
         /// </summary>
         protected void SendOnSubmit()
         {
+            UISystemProfilerApi.AddMarker("InputField.onSubmit", this);
             if (this.onEndEdit != null)
             {
                 this.onEndEdit.Invoke(this.m_Text);
@@ -1513,6 +1546,7 @@
 
         private void SendOnValueChanged()
         {
+            UISystemProfilerApi.AddMarker("InputField.value", this);
             if (this.onValueChanged != null)
             {
                 this.onValueChanged.Invoke(this.text);
@@ -1580,21 +1614,21 @@
                         this.m_DrawStart = this.m_DrawEnd - 1;
                         while (this.m_DrawStart >= 0)
                         {
-                            UICharInfo info10 = characters[this.m_DrawStart];
-                            if ((num9 + info10.charWidth) > size.x)
+                            UICharInfo info13 = characters[this.m_DrawStart];
+                            if ((num9 + info13.charWidth) > size.x)
                             {
                                 break;
                             }
-                            UICharInfo info11 = characters[this.m_DrawStart];
-                            num9 += info11.charWidth;
+                            UICharInfo info14 = characters[this.m_DrawStart];
+                            num9 += info14.charWidth;
                             this.m_DrawStart--;
                         }
                         this.m_DrawStart++;
                     }
                     while (this.m_DrawEnd < this.cachedInputTextGenerator.characterCountVisible)
                     {
-                        UICharInfo info12 = characters[this.m_DrawEnd];
-                        num9 += info12.charWidth;
+                        UICharInfo info15 = characters[this.m_DrawEnd];
+                        num9 += info15.charWidth;
                         if (num9 > size.x)
                         {
                             break;
@@ -1614,16 +1648,26 @@
                         }
                         int num5 = this.DetermineCharacterLine(this.m_DrawStart, this.cachedInputTextGenerator);
                         int num6 = num5;
-                        UILineInfo info4 = lines[num5];
-                        float topY = info4.topY;
-                        UILineInfo info5 = lines[num6];
+                        UILineInfo info5 = lines[num5];
+                        float topY = info5.topY;
                         UILineInfo info6 = lines[num6];
-                        float num8 = info5.topY - info6.height;
+                        UILineInfo info7 = lines[num6];
+                        float num8 = info6.topY - info7.height;
+                        if (num6 == (lines.Count - 1))
+                        {
+                            UILineInfo info8 = lines[num6];
+                            num8 += info8.leading;
+                        }
                         while (num6 < (lines.Count - 1))
                         {
-                            UILineInfo info7 = lines[num6 + 1];
-                            UILineInfo info8 = lines[num6 + 1];
-                            num8 = info7.topY - info8.height;
+                            UILineInfo info9 = lines[num6 + 1];
+                            UILineInfo info10 = lines[num6 + 1];
+                            num8 = info9.topY - info10.height;
+                            if ((num6 + 1) == (lines.Count - 1))
+                            {
+                                UILineInfo info11 = lines[num6 + 1];
+                                num8 += info11.leading;
+                            }
                             if ((topY - num8) > size.y)
                             {
                                 break;
@@ -1633,8 +1677,8 @@
                         this.m_DrawEnd = GetLineEndPosition(this.cachedInputTextGenerator, num6);
                         while (num5 > 0)
                         {
-                            UILineInfo info9 = lines[num5 - 1];
-                            if ((info9.topY - num8) > size.y)
+                            UILineInfo info12 = lines[num5 - 1];
+                            if ((info12.topY - num8) > size.y)
                             {
                                 break;
                             }
@@ -1647,12 +1691,17 @@
                         this.m_DrawEnd = GetLineEndPosition(this.cachedInputTextGenerator, line);
                         UILineInfo info = lines[line];
                         UILineInfo info2 = lines[line];
-                        float num2 = info.topY + info2.height;
+                        float num2 = info.topY - info2.height;
+                        if (line == (lines.Count - 1))
+                        {
+                            UILineInfo info3 = lines[line];
+                            num2 += info3.leading;
+                        }
                         int num3 = line;
                         while (num3 > 0)
                         {
-                            UILineInfo info3 = lines[num3 - 1];
-                            if ((info3.topY - num2) > size.y)
+                            UILineInfo info4 = lines[num3 - 1];
+                            if ((info4.topY - num2) > size.y)
                             {
                                 break;
                             }
@@ -1690,21 +1739,53 @@
         Transform ICanvasElement.get_transform() => 
             base.transform;
 
+        private void UpdateCaretFromKeyboard()
+        {
+            RangeInt selection = this.m_Keyboard.selection;
+            int start = selection.start;
+            int end = selection.end;
+            bool flag = false;
+            if (this.caretPositionInternal != start)
+            {
+                flag = true;
+                this.caretPositionInternal = start;
+            }
+            if (this.caretSelectPositionInternal != end)
+            {
+                this.caretSelectPositionInternal = end;
+                flag = true;
+            }
+            if (flag)
+            {
+                this.m_BlinkStartTime = Time.unscaledTime;
+                this.UpdateLabel();
+            }
+        }
+
+        private void UpdateCaretMaterial()
+        {
+            if ((this.m_TextComponent != null) && (this.m_CachedInputRenderer != null))
+            {
+                this.m_CachedInputRenderer.SetMaterial(this.m_TextComponent.GetModifiedMaterial(Graphic.defaultGraphicMaterial), Texture2D.whiteTexture);
+            }
+        }
+
         private void UpdateGeometry()
         {
             if (Application.isPlaying && this.shouldHideMobileInput)
             {
                 if ((this.m_CachedInputRenderer == null) && (this.m_TextComponent != null))
                 {
-                    GameObject obj2 = new GameObject(base.transform.name + " Input Caret") {
+                    System.Type[] components = new System.Type[] { typeof(RectTransform), typeof(CanvasRenderer) };
+                    GameObject obj2 = new GameObject(base.transform.name + " Input Caret", components) {
                         hideFlags = HideFlags.DontSave
                     };
                     obj2.transform.SetParent(this.m_TextComponent.transform.parent);
                     obj2.transform.SetAsFirstSibling();
                     obj2.layer = base.gameObject.layer;
-                    this.caretRectTrans = obj2.AddComponent<RectTransform>();
-                    this.m_CachedInputRenderer = obj2.AddComponent<CanvasRenderer>();
-                    this.m_CachedInputRenderer.SetMaterial(Graphic.defaultGraphicMaterial, Texture2D.whiteTexture);
+                    this.caretRectTrans = obj2.GetComponent<RectTransform>();
+                    this.m_CachedInputRenderer = obj2.GetComponent<CanvasRenderer>();
+                    this.m_CachedInputRenderer.SetMaterial(this.m_TextComponent.GetModifiedMaterial(Graphic.defaultGraphicMaterial), Texture2D.whiteTexture);
                     obj2.AddComponent<LayoutElement>().ignoreLayout = true;
                     this.AssignPositioningIfNeeded();
                 }
@@ -1820,28 +1901,23 @@
             }
             else if (this.characterValidation == CharacterValidation.Name)
             {
-                char ch3 = (text.Length <= 0) ? ' ' : text[Mathf.Clamp(pos, 0, text.Length - 1)];
-                char ch4 = (text.Length <= 0) ? '\n' : text[Mathf.Clamp(pos + 1, 0, text.Length - 1)];
                 if (char.IsLetter(ch))
                 {
-                    if (char.IsLower(ch) && (ch3 == ' '))
+                    if (char.IsLower(ch) && ((pos == 0) || (text[pos - 1] == ' ')))
                     {
                         return char.ToUpper(ch);
                     }
-                    if ((char.IsUpper(ch) && (ch3 != ' ')) && (ch3 != '\''))
+                    if ((char.IsUpper(ch) && (pos > 0)) && ((text[pos - 1] != ' ') && (text[pos - 1] != '\'')))
                     {
                         return char.ToLower(ch);
                     }
                     return ch;
                 }
-                if (ch == '\'')
+                if ((ch == '\'') && ((!text.Contains("'") && ((pos <= 0) || ((text[pos - 1] != ' ') && (text[pos - 1] != '\'')))) && ((pos >= text.Length) || ((text[pos] != ' ') && (text[pos] != '\'')))))
                 {
-                    if (((ch3 != ' ') && (ch3 != '\'')) && ((ch4 != '\'') && !text.Contains("'")))
-                    {
-                        return ch;
-                    }
+                    return ch;
                 }
-                else if ((ch == ' ') && (((ch3 != ' ') && (ch3 != '\'')) && ((ch4 != ' ') && (ch4 != '\''))))
+                if ((ch == ' ') && (((pos <= 0) || ((text[pos - 1] != ' ') && (text[pos - 1] != '\''))) && ((pos >= text.Length) || ((text[pos] != ' ') && (text[pos] != '\'')))))
                 {
                     return ch;
                 }
@@ -1870,9 +1946,9 @@
                 }
                 if (ch == '.')
                 {
-                    char ch5 = (text.Length <= 0) ? ' ' : text[Mathf.Clamp(pos, 0, text.Length - 1)];
-                    char ch6 = (text.Length <= 0) ? '\n' : text[Mathf.Clamp(pos + 1, 0, text.Length - 1)];
-                    if ((ch5 != '.') && (ch6 != '.'))
+                    char ch3 = (text.Length <= 0) ? ' ' : text[Mathf.Clamp(pos, 0, text.Length - 1)];
+                    char ch4 = (text.Length <= 0) ? '\n' : text[Mathf.Clamp(pos + 1, 0, text.Length - 1)];
+                    if ((ch3 != '.') && (ch4 != '.'))
                     {
                         return ch;
                     }
@@ -2137,6 +2213,10 @@
                 this.m_KeyboardType;
             set
             {
+                if ((EditorUserBuildSettings.activeBuildTarget != BuildTarget.WiiU) && (value == TouchScreenKeyboardType.NintendoNetworkAccount))
+                {
+                    UnityEngine.Debug.LogWarning("Invalid InputField.keyboardType value set. TouchScreenKeyboardType.NintendoNetworkAccount only applies to the Wii U. InputField.keyboardType will default to TouchScreenKeyboardType.Default .");
+                }
                 if (SetPropertyUtility.SetStruct<TouchScreenKeyboardType>(ref this.m_KeyboardType, value))
                 {
                     this.SetToCustom();
@@ -2161,6 +2241,7 @@
                     ContentType[] allowedContentTypes = new ContentType[2];
                     allowedContentTypes[1] = ContentType.Autocorrected;
                     this.SetToCustomIfContentTypeIsNot(allowedContentTypes);
+                    this.EnforceTextHOverflow();
                 }
             }
         }
@@ -2330,7 +2411,7 @@
         }
 
         /// <summary>
-        /// <para>The end point of the selection.</para>
+        /// <para>The the end point of the selection.</para>
         /// </summary>
         public int selectionFocusPosition
         {
@@ -2393,6 +2474,7 @@
                     {
                         value = "";
                     }
+                    value = value.Replace("\0", string.Empty);
                     if (this.m_LineType == LineType.SingleLine)
                     {
                         value = value.Replace("\n", "").Replace("\t", "");
@@ -2458,7 +2540,10 @@
                 this.m_TextComponent;
             set
             {
-                SetPropertyUtility.SetClass<Text>(ref this.m_TextComponent, value);
+                if (SetPropertyUtility.SetClass<Text>(ref this.m_TextComponent, value))
+                {
+                    this.EnforceTextHOverflow();
+                }
             }
         }
 
@@ -2475,7 +2560,7 @@
             internal bool $disposing;
             internal int $PC;
             internal InputField $this;
-            internal float <blinkPeriod>__0;
+            internal float <blinkPeriod>__1;
             internal bool <blinkState>__1;
 
             [DebuggerHidden]
@@ -2504,8 +2589,8 @@
                     case 2:
                         if (this.$this.isFocused && (this.$this.m_CaretBlinkRate > 0f))
                         {
-                            this.<blinkPeriod>__0 = 1f / this.$this.m_CaretBlinkRate;
-                            this.<blinkState>__1 = ((Time.unscaledTime - this.$this.m_BlinkStartTime) % this.<blinkPeriod>__0) < (this.<blinkPeriod>__0 / 2f);
+                            this.<blinkPeriod>__1 = 1f / this.$this.m_CaretBlinkRate;
+                            this.<blinkState>__1 = ((Time.unscaledTime - this.$this.m_BlinkStartTime) % this.<blinkPeriod>__1) < (this.<blinkPeriod>__1 / 2f);
                             if (this.$this.m_CaretVisible != this.<blinkState>__1)
                             {
                                 this.$this.m_CaretVisible = this.<blinkState>__1;
@@ -2550,8 +2635,8 @@
             internal bool $disposing;
             internal int $PC;
             internal InputField $this;
-            internal float <delay>__2;
-            internal Vector2 <localMousePos>__0;
+            internal float <delay>__1;
+            internal Vector2 <localMousePos>__1;
             internal Rect <rect>__1;
             internal PointerEventData eventData;
 
@@ -2572,30 +2657,30 @@
                     case 1:
                         if (this.$this.m_UpdateDrag && this.$this.m_DragPositionOutOfBounds)
                         {
-                            RectTransformUtility.ScreenPointToLocalPointInRectangle(this.$this.textComponent.rectTransform, this.eventData.position, this.eventData.pressEventCamera, out this.<localMousePos>__0);
+                            RectTransformUtility.ScreenPointToLocalPointInRectangle(this.$this.textComponent.rectTransform, this.eventData.position, this.eventData.pressEventCamera, out this.<localMousePos>__1);
                             this.<rect>__1 = this.$this.textComponent.rectTransform.rect;
                             if (this.$this.multiLine)
                             {
-                                if (this.<localMousePos>__0.y > this.<rect>__1.yMax)
+                                if (this.<localMousePos>__1.y > this.<rect>__1.yMax)
                                 {
                                     this.$this.MoveUp(true, true);
                                 }
-                                else if (this.<localMousePos>__0.y < this.<rect>__1.yMin)
+                                else if (this.<localMousePos>__1.y < this.<rect>__1.yMin)
                                 {
                                     this.$this.MoveDown(true, true);
                                 }
                             }
-                            else if (this.<localMousePos>__0.x < this.<rect>__1.xMin)
+                            else if (this.<localMousePos>__1.x < this.<rect>__1.xMin)
                             {
                                 this.$this.MoveLeft(true, false);
                             }
-                            else if (this.<localMousePos>__0.x > this.<rect>__1.xMax)
+                            else if (this.<localMousePos>__1.x > this.<rect>__1.xMax)
                             {
                                 this.$this.MoveRight(true, false);
                             }
                             this.$this.UpdateLabel();
-                            this.<delay>__2 = !this.$this.multiLine ? 0.05f : 0.1f;
-                            this.$current = new WaitForSecondsRealtime(this.<delay>__2);
+                            this.<delay>__1 = !this.$this.multiLine ? 0.05f : 0.1f;
+                            this.$current = new WaitForSecondsRealtime(this.<delay>__1);
                             if (!this.$disposing)
                             {
                                 this.$PC = 1;

@@ -87,7 +87,7 @@
             string unityEngine = Path.Combine(folder, "UnityEngine.dll");
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <WeaveAssembliesInFolder>m__0);
+                <>f__am$cache0 = f => ShouldWeave(Path.GetFileName(f));
             }
             foreach (string str2 in Enumerable.Where<string>(Directory.GetFiles(folder), <>f__am$cache0))
             {
@@ -102,7 +102,7 @@
         {
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<MonoIsland, bool>(null, (IntPtr) <WeaveInto>m__1);
+                <>f__am$cache1 = i => 0 < i._files.Length;
             }
             IEnumerable<MonoIsland> enumerable = Enumerable.Where<MonoIsland>(InternalEditorUtility.GetMonoIslands(), <>f__am$cache1);
             string fullName = Directory.GetParent(Application.dataPath).FullName;
@@ -140,7 +140,7 @@
                 {
                     <>f__mg$cache1 = new Action<string>(Debug.LogError);
                 }
-                if (!Program.Process(unityEngine, unityUNet, Path.GetDirectoryName(destPath), assemblies, list.ToArray(), assemblyResolver, <>f__mg$cache0, <>f__mg$cache1))
+                if (!Unity.UNetWeaver.Program.Process(unityEngine, unityUNet, Path.GetDirectoryName(destPath), assemblies, list.ToArray(), assemblyResolver, <>f__mg$cache0, <>f__mg$cache1))
                 {
                     Debug.LogError("Failure generating network code.");
                     return false;

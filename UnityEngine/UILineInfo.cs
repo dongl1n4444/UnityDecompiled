@@ -22,6 +22,10 @@
         /// <para>The upper Y position of the line in pixels. This is used for text annotation such as the caret and selection box in the InputField.</para>
         /// </summary>
         public float topY;
+        /// <summary>
+        /// <para>Space in pixels between this line and the next line.</para>
+        /// </summary>
+        public float leading;
     }
 }
 

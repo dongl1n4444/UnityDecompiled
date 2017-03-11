@@ -5,6 +5,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Security;
+    using UnityEngine.Scripting;
     using UnityEngineInternal;
 
     /// <summary>
@@ -21,6 +22,23 @@
         internal static void Begin(int instanceID)
         {
             LayoutCache cache = SelectIDList(instanceID, false);
+            if (Event.current.type == EventType.Layout)
+            {
+                current.topLevel = cache.topLevel = new GUILayoutGroup();
+                current.layoutGroups.Clear();
+                current.layoutGroups.Push(current.topLevel);
+                current.windows = cache.windows = new GUILayoutGroup();
+            }
+            else
+            {
+                current.topLevel = cache.topLevel;
+                current.layoutGroups = cache.layoutGroups;
+                current.windows = cache.windows;
+            }
+        }
+
+        internal static void BeginContainer(LayoutCache cache)
+        {
             if (Event.current.type == EventType.Layout)
             {
                 current.topLevel = cache.topLevel = new GUILayoutGroup();
@@ -297,8 +315,6 @@
             switch (Event.current.type)
             {
                 case EventType.Layout:
-                    return kDummyRect;
-
                 case EventType.Used:
                     return kDummyRect;
             }
@@ -468,11 +484,11 @@
             return rect;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetWindowsBounds(out Rect value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_GetWindowRect(int windowID, out Rect value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_MoveWindow(int windowID, ref Rect r);
         private static Rect Internal_GetWindowRect(int windowID)
         {
@@ -510,6 +526,15 @@
                 LayoutSingleGroup(group);
             }
             toplevel.ResetCursor();
+        }
+
+        internal static void LayoutFromContainer(float w, float h)
+        {
+            current.topLevel.CalcWidth();
+            current.topLevel.SetHorizontal(0f, w);
+            current.topLevel.CalcHeight();
+            current.topLevel.SetVertical(0f, h);
+            LayoutFreeGroup(current.windows);
         }
 
         internal static void LayoutFromEditorWindow()

@@ -117,15 +117,15 @@
                 "-o",
                 path2.InQuotes()
             };
-            inputs.AddRange(base.ChooseLinkerFlags(staticLibraries, dynamicLibraries, outputFile, specifiedLinkerFlags, new Func<IEnumerable<NPath>, IEnumerable<NPath>, NPath, IEnumerable<string>>(this, (IntPtr) this.DefaultLinkerFlags)));
-            string path = !objectFiles.Any<NPath>() ? null : objectFiles.First<NPath>().Parent.ToString();
+            inputs.AddRange(base.ChooseLinkerFlags(staticLibraries, dynamicLibraries, outputFile, specifiedLinkerFlags, new Func<IEnumerable<NPath>, IEnumerable<NPath>, NPath, IEnumerable<string>>(this.DefaultLinkerFlags)));
+            string str2 = !objectFiles.Any<NPath>() ? null : objectFiles.First<NPath>().Parent.ToString();
             using (TextWriter writer = new Unity.IL2CPP.Portability.StreamWriter(shortPathName))
             {
                 foreach (NPath path3 in objectFiles)
                 {
-                    if (path != null)
+                    if (str2 != null)
                     {
-                        writer.Write("\"{0}\"\n", path3.RelativeTo(new NPath(path)));
+                        writer.Write("\"{0}\"\n", path3.RelativeTo(new NPath(str2)));
                     }
                     else
                     {
@@ -143,7 +143,7 @@
                 }
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<string, NPath>(null, (IntPtr) <MakeLinkerInvocation>m__0);
+                    <>f__am$cache0 = path => new NPath(path);
                 }
                 list.AddRange(EmscriptenBuildingOptions.JsPre.Select<string, NPath>(<>f__am$cache0));
             }
@@ -155,7 +155,7 @@
                 }
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<string, NPath>(null, (IntPtr) <MakeLinkerInvocation>m__1);
+                    <>f__am$cache1 = path => new NPath(path);
                 }
                 list.AddRange(EmscriptenBuildingOptions.JsLibraries.Select<string, NPath>(<>f__am$cache1));
             }
@@ -171,7 +171,7 @@
                 Executable = str5,
                 Arguments = inputs.Append<string>(("@" + shortPathName.InQuotes())).SeparateWithSpaces(),
                 EnvVars = this.EnvVars(),
-                WorkingDirectory = path
+                WorkingDirectory = str2
             };
             invocation.ExecuteArgs = args;
             invocation.ArgumentsInfluencingOutcome = inputs;
@@ -190,7 +190,10 @@
 
         [DebuggerHidden]
         public override IEnumerable<string> ToolChainDefines() => 
-            new <ToolChainDefines>c__Iterator1 { $PC = -2 };
+            new <ToolChainDefines>c__Iterator1 { 
+                $this = this,
+                $PC = -2
+            };
 
         [DebuggerHidden]
         public override IEnumerable<NPath> ToolChainIncludePaths() => 
@@ -217,9 +220,9 @@
             internal IEnumerator<NPath> $locvar2;
             internal int $PC;
             internal EmscriptenToolChain $this;
-            internal string <compilerFlag>__0;
-            internal string <define>__1;
-            internal NPath <includePath>__2;
+            internal string <compilerFlag>__1;
+            internal string <define>__2;
+            internal NPath <includePath>__3;
             internal CppCompilationInstruction cppCompilationInstruction;
 
             [DebuggerHidden]
@@ -301,7 +304,7 @@
                     }
                     case 1:
                     case 2:
-                        this.$locvar0 = this.$this.ChooseCompilerFlags(this.cppCompilationInstruction, new Func<CppCompilationInstruction, IEnumerable<string>>(this.$this, (IntPtr) this.DefaultCompilerFlags)).GetEnumerator();
+                        this.$locvar0 = this.$this.ChooseCompilerFlags(this.cppCompilationInstruction, new Func<CppCompilationInstruction, IEnumerable<string>>(this.$this.DefaultCompilerFlags)).GetEnumerator();
                         num = 0xfffffffd;
                         break;
 
@@ -325,8 +328,8 @@
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<compilerFlag>__0 = this.$locvar0.Current;
-                        this.$current = this.<compilerFlag>__0;
+                        this.<compilerFlag>__1 = this.$locvar0.Current;
+                        this.$current = this.<compilerFlag>__1;
                         if (!this.$disposing)
                         {
                             this.$PC = 3;
@@ -352,8 +355,8 @@
                 {
                     while (this.$locvar1.MoveNext())
                     {
-                        this.<define>__1 = this.$locvar1.Current;
-                        this.$current = "-D" + this.<define>__1;
+                        this.<define>__2 = this.$locvar1.Current;
+                        this.$current = "-D" + this.<define>__2;
                         if (!this.$disposing)
                         {
                             this.$PC = 4;
@@ -379,8 +382,8 @@
                 {
                     while (this.$locvar2.MoveNext())
                     {
-                        this.<includePath>__2 = this.$locvar2.Current;
-                        this.$current = "-I\"" + EmscriptenToolChain.GetShortPathName(Path.GetFullPath(this.<includePath>__2.ToString())) + "\"";
+                        this.<includePath>__3 = this.$locvar2.Current;
+                        this.$current = "-I\"" + EmscriptenToolChain.GetShortPathName(Path.GetFullPath(this.<includePath>__3.ToString())) + "\"";
                         if (!this.$disposing)
                         {
                             this.$PC = 5;
@@ -732,18 +735,41 @@
             internal string $current;
             internal bool $disposing;
             internal int $PC;
+            internal EmscriptenToolChain $this;
 
             [DebuggerHidden]
             public void Dispose()
             {
+                this.$disposing = true;
+                this.$PC = -1;
             }
 
             public bool MoveNext()
             {
+                uint num = (uint) this.$PC;
                 this.$PC = -1;
-                if (this.$PC == 0)
+                switch (num)
                 {
+                    case 0:
+                        if (this.$this.BuildConfiguration == BuildConfiguration.Debug)
+                        {
+                            break;
+                        }
+                        this.$current = "NDEBUG";
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 1;
+                        }
+                        return true;
+
+                    case 1:
+                        break;
+
+                    default:
+                        goto Label_005A;
                 }
+                this.$PC = -1;
+            Label_005A:
                 return false;
             }
 
@@ -760,7 +786,7 @@
                 {
                     return this;
                 }
-                return new EmscriptenToolChain.<ToolChainDefines>c__Iterator1();
+                return new EmscriptenToolChain.<ToolChainDefines>c__Iterator1 { $this = this.$this };
             }
 
             [DebuggerHidden]

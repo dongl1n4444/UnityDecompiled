@@ -16,7 +16,7 @@
         {
             this.Types = inflatedCollectionCollector.Types.Items;
             this.TypeDeclarations = inflatedCollectionCollector.TypeDeclarations.Items;
-            this.TypeMethodDeclarations = inflatedCollectionCollector.TypeDeclarations.Items;
+            this.TypeMethodDeclarations = inflatedCollectionCollector.TypeMethodDeclarations.Items;
             this.Methods = inflatedCollectionCollector.Methods.Items;
             this.Arrays = inflatedCollectionCollector.Arrays.Items;
             this.EmptyTypes = inflatedCollectionCollector.EmptyTypes.Items;

@@ -442,7 +442,7 @@
                         float f = -num42 - num41;
                         float num44 = num42 - num41;
                         Vector3 vector9 = new Vector3(Mathf.Sin(f), 0f, Mathf.Cos(f));
-                        Vector3 v = new Vector3(vector9.z, 0f, -vector9.x);
+                        Vector3 vector = new Vector3(vector9.z, 0f, -vector9.x);
                         Vector3 vector11 = new Vector3(Mathf.Sin(num44), 0f, -Mathf.Cos(num44));
                         Vector3 vector12 = new Vector3(-vector11.z, 0f, vector11.x);
                         for (int num45 = 0; num45 < list2.Count; num45++)
@@ -457,7 +457,7 @@
                                 float num50 = Mathf.Sin(num49);
                                 float num51 = Mathf.Cos(num49) * this.capSmoothing;
                                 vector9 = new Vector3(Mathf.Sin(f) * num50, num51, Mathf.Cos(f) * num50);
-                                v = new Vector3(vector9.z, vector9.y, -vector9.x);
+                                vector = new Vector3(vector9.z, vector9.y, -vector9.x);
                                 vector11 = new Vector3(Mathf.Sin(num44) * num50, num51, -Mathf.Cos(num44) * num50);
                                 vector12 = new Vector3(-vector11.z, vector11.y, vector11.x);
                             }
@@ -472,7 +472,7 @@
                                 {
                                     TreeVertex vertex = new TreeVertex {
                                         pos = matrixx2.MultiplyPoint((Vector3) (vector9 * num52)),
-                                        nor = matrixx2.MultiplyVector((Vector3) (v * num53)).normalized
+                                        nor = matrixx2.MultiplyVector((Vector3) (vector * num53)).normalized
                                     };
                                     vertex.tangent = TreeGroup.CreateTangent(node, q, vertex.nor);
                                     vertex.tangent.w = -num53;
@@ -537,7 +537,7 @@
                             {
                                 TreeVertex vertex5 = new TreeVertex {
                                     pos = matrixx2.MultiplyPoint((Vector3) (vector9 * num52)),
-                                    nor = matrixx2.MultiplyVector(v).normalized,
+                                    nor = matrixx2.MultiplyVector(vector).normalized,
                                     uv0 = new Vector2(0f, y)
                                 };
                                 TreeVertex vertex6 = new TreeVertex {

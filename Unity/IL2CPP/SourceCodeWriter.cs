@@ -25,17 +25,20 @@
 
         public override void Dispose()
         {
-            using (Unity.IL2CPP.Portability.StreamWriter writer = new Unity.IL2CPP.Portability.StreamWriter(this._filename.ToString(), Encoding.UTF8))
+            if (!base.ErrorOccurred)
             {
-                if (this.IsHeaderFile())
+                using (Unity.IL2CPP.Portability.StreamWriter writer = new Unity.IL2CPP.Portability.StreamWriter(this._filename.ToString(), Encoding.UTF8))
                 {
-                    writer.WriteLine("#pragma once\n");
+                    if (this.IsHeaderFile())
+                    {
+                        writer.WriteLine("#pragma once\n");
+                    }
+                    this.WriteCollectedIncludes(writer);
+                    base.Writer.Flush();
+                    base.Writer.BaseStream.Seek(0L, SeekOrigin.Begin);
+                    base.Writer.BaseStream.CopyTo(writer.BaseStream);
+                    writer.Flush();
                 }
-                this.WriteCollectedIncludes(writer);
-                base.Writer.Flush();
-                base.Writer.BaseStream.Seek(0L, SeekOrigin.Begin);
-                base.Writer.BaseStream.CopyTo(writer.BaseStream);
-                writer.Flush();
             }
             base.Dispose();
         }
@@ -57,9 +60,14 @@
             writer.WriteLine("# include <malloc.h>");
             writer.WriteLine("#endif");
             writer.WriteLine();
-            foreach (string str in base.Includes.Where<string>(new Func<string, bool>(storey, (IntPtr) this.<>m__0)))
+            foreach (string str in base.Includes.Where<string>(new Func<string, bool>(storey.<>m__0)))
             {
                 writer.WriteLine("#include {0}", str);
+            }
+            writer.WriteLine();
+            foreach (string str2 in base.Includes.Where<string>(new Func<string, bool>(storey.<>m__1)))
+            {
+                writer.WriteLine("#include {0}", str2);
             }
             writer.WriteLine();
             foreach (TypeReference reference in base.ForwardDeclarations)
@@ -70,29 +78,39 @@
                 }
                 writer.WriteLine("struct {0};", CppCodeWriter.Naming.ForType(reference));
             }
-            foreach (string str2 in base.RawForwardDeclarations)
+            foreach (string str3 in base.RawTypeForwardDeclarations)
             {
-                writer.WriteLine(str2 + ';');
+                writer.WriteLine(str3 + ';');
             }
             writer.WriteLine();
-            foreach (string str3 in base.Includes.Where<string>(new Func<string, bool>(storey, (IntPtr) this.<>m__1)))
+            foreach (ArrayType type in base.ArrayTypes)
             {
-                writer.WriteLine("#include {0}", str3);
+                TypeDefinitionWriter.WriteArrayTypeDefinition(type, new CodeWriter(writer));
             }
             writer.WriteLine();
-            foreach (GenericInstanceMethod method in base.GenericInstanceMethods)
+            foreach (string str4 in base.RawMethodForwardDeclarations)
             {
-                this.WriteGenericMethod(writer, method);
+                writer.WriteLine(str4 + ';');
+            }
+            writer.WriteLine();
+            foreach (MethodReference reference2 in base.SharedMethods)
+            {
+                WriteSharedMethodDeclaration(writer, reference2);
+            }
+            writer.WriteLine();
+            foreach (MethodReference reference3 in base.Methods)
+            {
+                WriteMethodDeclaration(writer, reference3);
             }
             writer.Flush();
         }
 
-        private void WriteGenericMethod(System.IO.StreamWriter writer, GenericInstanceMethod method)
+        private static void WriteMethodDeclaration(System.IO.StreamWriter writer, MethodReference method)
         {
             GenericInstanceType declaringType = method.DeclaringType as GenericInstanceType;
             if ((declaringType != null) && GenericsUtilities.CheckForMaximumRecursion(declaringType))
             {
-                Unity.IL2CPP.ILPreProcessor.TypeResolver resolver = new Unity.IL2CPP.ILPreProcessor.TypeResolver(method.DeclaringType as GenericInstanceType, method);
+                Unity.IL2CPP.ILPreProcessor.TypeResolver resolver = new Unity.IL2CPP.ILPreProcessor.TypeResolver(method.DeclaringType as GenericInstanceType, method as GenericInstanceMethod);
                 writer.WriteLine("{0};", MethodSignatureWriter.GetMethodSignature(CppCodeWriter.Naming.ForMethodNameOnly(method), CppCodeWriter.Naming.ForVariable(resolver.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveReturnTypeIfNeeded(method))), MethodSignatureWriter.FormatParameters(method, ParameterFormat.WithTypeAndName, false, true), "extern \"C\"", string.Empty));
             }
             else
@@ -101,14 +119,37 @@
                 {
                     writer.WriteLine("// {0}", method.FullName);
                 }
-                MethodReference sharedMethod = CppCodeWriter.GenericSharingAnalysis.GetSharedMethod(method);
-                if (CppCodeWriter.GenericSharingAnalysis.IsSharedMethod(method))
+                if (CppCodeWriter.GenericSharingAnalysis.CanShareMethod(method))
                 {
-                    writer.WriteLine("{0};", MethodSignatureWriter.GetSharedMethodSignatureRaw(method));
+                    object[] arg = new object[] { CppCodeWriter.Naming.ForMethodNameOnly(method), MethodSignatureWriter.FormatParameters(method, ParameterFormat.WithName, false, true), MethodSignatureWriter.GetMethodPointer(method), CppCodeWriter.Naming.ForMethod(CppCodeWriter.GenericSharingAnalysis.GetSharedMethod(method)) + "_gshared", MethodSignatureWriter.FormatParameters(method, ParameterFormat.WithName, false, true) };
+                    writer.WriteLine("#define {0}({1}) (({2}){3})({4})", arg);
                 }
-                string str = MethodSignatureWriter.FormatParameters(method, ParameterFormat.WithName, false, true);
-                object[] arg = new object[] { CppCodeWriter.Naming.ForMethodNameOnly(method), str, MethodSignatureWriter.GetMethodPointer(method), CppCodeWriter.Naming.ForMethod(sharedMethod) + "_gshared", str };
-                writer.WriteLine("#define {0}({1}) (({2}){3})({4})", arg);
+                else
+                {
+                    writer.WriteLine(MethodSignatureWriter.GetMethodSignatureRaw(method) + " IL2CPP_METHOD_ATTR;");
+                }
+            }
+        }
+
+        private static void WriteSharedMethodDeclaration(System.IO.StreamWriter writer, MethodReference method)
+        {
+            GenericInstanceType declaringType = method.DeclaringType as GenericInstanceType;
+            if ((declaringType != null) && GenericsUtilities.CheckForMaximumRecursion(declaringType))
+            {
+                Unity.IL2CPP.ILPreProcessor.TypeResolver resolver = new Unity.IL2CPP.ILPreProcessor.TypeResolver(method.DeclaringType as GenericInstanceType, method as GenericInstanceMethod);
+                writer.WriteLine("{0};", MethodSignatureWriter.GetMethodSignature(CppCodeWriter.Naming.ForMethodNameOnly(method), CppCodeWriter.Naming.ForVariable(resolver.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveReturnTypeIfNeeded(method))), MethodSignatureWriter.FormatParameters(method, ParameterFormat.WithTypeAndName, false, true), "extern \"C\"", string.Empty));
+            }
+            else
+            {
+                if (!CppCodeWriter.GenericSharingAnalysis.IsSharedMethod(method))
+                {
+                    throw new InvalidOperationException();
+                }
+                if (CodeGenOptions.EmitComments)
+                {
+                    writer.WriteLine("// {0}", method.FullName);
+                }
+                writer.WriteLine("{0};", MethodSignatureWriter.GetSharedMethodSignatureRaw(method));
             }
         }
 

@@ -19,19 +19,19 @@
             List<string> elements = new List<string>();
             for (int i = 0; i < localVariableNames.Length; i++)
             {
-                DefaultMarshalInfoWriter writer = base.MarshalInfoWriterFor(base._parameters[i]);
+                DefaultMarshalInfoWriter writer = base.MarshalInfoWriterFor(base.Parameters[i]);
                 foreach (MarshaledType type in writer.MarshaledTypes)
                 {
                     string marshaledVariableName = localVariableNames[i] + type.VariableName;
-                    string item = writer.DecorateVariable(base._parameters[i].NameInGeneratedCode, marshaledVariableName);
+                    string item = writer.DecorateVariable(base.Parameters[i].NameInGeneratedCode, marshaledVariableName);
                     elements.Add(item);
                 }
             }
-            DefaultMarshalInfoWriter writer2 = base.MarshalInfoWriterFor(this.GetMethodReturnType());
-            MarshaledType[] marshaledTypes = base.MarshalInfoWriterFor(this.GetMethodReturnType()).MarshaledTypes;
+            DefaultMarshalInfoWriter writer2 = base.MarshalInfoWriterFor(base.GetMethodReturnType());
+            MarshaledType[] marshaledTypes = base.MarshalInfoWriterFor(base.GetMethodReturnType()).MarshaledTypes;
             for (int j = 0; j < (marshaledTypes.Length - 1); j++)
             {
-                string str3 = InteropMethodBodyWriter.Naming.ForInteropReturnValue() + marshaledTypes[j].VariableName;
+                string str3 = InteropMethodInfo.Naming.ForInteropReturnValue() + marshaledTypes[j].VariableName;
                 elements.Add("&" + writer2.DecorateVariable(null, str3));
             }
             return elements.AggregateWithComma();

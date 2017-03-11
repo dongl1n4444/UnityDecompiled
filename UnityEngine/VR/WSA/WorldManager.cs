@@ -1,6 +1,7 @@
 ﻿namespace UnityEngine.VR.WSA
 {
     using System;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Threading;
@@ -11,6 +12,7 @@
     /// </summary>
     public sealed class WorldManager
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event OnPositionalLocatorStateChangedDelegate OnPositionalLocatorStateChanged;
 
         /// <summary>
@@ -26,7 +28,7 @@
             return ptr;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetNativeISpatialCoordinateSystemPtr(out IntPtr value);
         [RequiredByNativeCode]
         private static void Internal_TriggerPositionalLocatorStateChanged(PositionalLocatorState oldState, PositionalLocatorState newState)
@@ -40,7 +42,7 @@
         /// <summary>
         /// <para>The current state of the world tracking systems.</para>
         /// </summary>
-        public static PositionalLocatorState state { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static PositionalLocatorState state { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Callback on when the world tracking systems state has changed.</para>

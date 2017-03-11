@@ -4,6 +4,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>A DownloadHandler subclass specialized for downloading images for use as Texture objects.</para>
@@ -16,18 +17,21 @@
         /// </summary>
         public DownloadHandlerTexture()
         {
-            base.InternalCreateTexture(true);
+            this.InternalCreateTexture(true);
         }
 
         /// <summary>
         /// <para>Constructor, allows TextureImporter.isReadable property to be set.</para>
         /// </summary>
         /// <param name="readable">Value to set for TextureImporter.isReadable.</param>
+        [RequiredByNativeCode]
         public DownloadHandlerTexture(bool readable)
         {
-            base.InternalCreateTexture(readable);
+            this.InternalCreateTexture(readable);
         }
 
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal extern void InternalCreateTexture(bool readable);
         /// <summary>
         /// <para>Called by DownloadHandler.data. Returns a copy of the downloaded image data as raw bytes.</para>
         /// </summary>
@@ -42,9 +46,9 @@
         /// </summary>
         public Texture2D texture =>
             this.InternalGetTexture();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern Texture2D InternalGetTexture();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern byte[] InternalGetData();
         /// <summary>
         /// <para>Returns the downloaded Texture, or null.</para>

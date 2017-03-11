@@ -3,12 +3,12 @@
     using System;
     using UnityEngine;
 
-    [CustomEditor(typeof(Font)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(Font))]
     internal class FontInspector : Editor
     {
         public override void OnInspectorGUI()
         {
-            foreach (Object obj2 in base.targets)
+            foreach (UnityEngine.Object obj2 in base.targets)
             {
                 if (obj2.hideFlags == HideFlags.NotEditable)
                 {

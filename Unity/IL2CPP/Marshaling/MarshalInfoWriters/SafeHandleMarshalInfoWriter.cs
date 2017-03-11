@@ -34,17 +34,17 @@
             this._safeHandleTypeDefinition = safeHandleTypeTypeDefinition;
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<MethodDefinition, bool>(null, (IntPtr) <SafeHandleMarshalInfoWriter>m__0);
+                <>f__am$cache0 = new Func<MethodDefinition, bool>(SafeHandleMarshalInfoWriter.<SafeHandleMarshalInfoWriter>m__0);
             }
             this._addRefMethod = this._safeHandleTypeDefinition.Methods.Single<MethodDefinition>(<>f__am$cache0);
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<MethodDefinition, bool>(null, (IntPtr) <SafeHandleMarshalInfoWriter>m__1);
+                <>f__am$cache1 = new Func<MethodDefinition, bool>(SafeHandleMarshalInfoWriter.<SafeHandleMarshalInfoWriter>m__1);
             }
             this._releaseMethod = this._safeHandleTypeDefinition.Methods.Single<MethodDefinition>(<>f__am$cache1);
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<MethodDefinition, bool>(null, (IntPtr) <SafeHandleMarshalInfoWriter>m__2);
+                <>f__am$cache2 = new Func<MethodDefinition, bool>(SafeHandleMarshalInfoWriter.<SafeHandleMarshalInfoWriter>m__2);
             }
             this._defaultConstructor = base._typeRef.Resolve().Methods.SingleOrDefault<MethodDefinition>(<>f__am$cache2);
             this._marshaledTypes = new MarshaledType[] { new MarshaledType("void*", "void*") };
@@ -69,7 +69,7 @@
             writer.WriteLine("bool {0} = false;", args);
             object[] objArray2 = new object[1];
             string[] arguments = new string[] { variableName, DefaultMarshalInfoWriter.Naming.AddressOf(str), metadataAccess.HiddenMethodInfo(this._addRefMethod) };
-            objArray2[0] = Emit.Call(DefaultMarshalInfoWriter.Naming.ForMethod(this._addRefMethod), arguments);
+            objArray2[0] = Emit.Call(metadataAccess.Method(this._addRefMethod), arguments);
             writer.WriteLine("{0};", objArray2);
         }
 
@@ -77,7 +77,7 @@
         {
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<FieldDefinition, bool>(null, (IntPtr) <GetIntPtrValueField>m__3);
+                <>f__am$cache3 = f => f.Name == DefaultMarshalInfoWriter.Naming.IntPtrValueField;
             }
             return DefaultMarshalInfoWriter.TypeProvider.SystemIntPtr.Fields.Single<FieldDefinition>(<>f__am$cache3);
         }
@@ -86,7 +86,7 @@
         {
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<FieldDefinition, bool>(null, (IntPtr) <GetSafeHandleHandleField>m__4);
+                <>f__am$cache4 = f => f.Name == "handle";
             }
             return this._safeHandleTypeDefinition.Fields.Single<FieldDefinition>(<>f__am$cache4);
         }
@@ -109,8 +109,6 @@
 
         public override void WriteIncludesForMarshaling(CppCodeWriter writer)
         {
-            writer.AddIncludeForMethodDeclarations(base._typeRef);
-            writer.AddIncludeForMethodDeclarations(this._safeHandleTypeDefinition);
         }
 
         public override void WriteMarshalCleanupEmptyVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, string managedVariableName)
@@ -126,7 +124,7 @@
                 writer.BeginBlock();
                 object[] objArray2 = new object[1];
                 string[] arguments = new string[] { managedVariableName, metadataAccess.HiddenMethodInfo(this._releaseMethod) };
-                objArray2[0] = Emit.Call(DefaultMarshalInfoWriter.Naming.ForMethod(this._releaseMethod), arguments);
+                objArray2[0] = Emit.Call(metadataAccess.Method(this._releaseMethod), arguments);
                 writer.WriteLine("{0};", objArray2);
                 writer.EndBlock(false);
             }
@@ -150,7 +148,7 @@
             }
             else
             {
-                Action writeMarshalFromNativeCode = new Action(storey, (IntPtr) this.<>m__0);
+                Action writeMarshalFromNativeCode = new Action(storey.<>m__0);
                 CustomMarshalInfoWriter.EmitCallToConstructor(storey.writer, base._typeRef.Resolve(), this._defaultConstructor, storey.variableName, storey.destinationVariable, writeMarshalFromNativeCode, false, metadataAccess);
                 if (!returnValue)
                 {

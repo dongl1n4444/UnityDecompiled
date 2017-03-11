@@ -4,6 +4,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>A DownloadHandler subclass specialized for downloading AssetBundles.</para>
@@ -69,7 +70,7 @@
         /// <summary>
         /// <para>Returns the downloaded AssetBundle, or null. (Read Only)</para>
         /// </summary>
-        public AssetBundle assetBundle { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public AssetBundle assetBundle { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
         /// <summary>
         /// <para>Returns the downloaded AssetBundle, or null.</para>
         /// </summary>

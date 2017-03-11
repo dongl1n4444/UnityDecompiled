@@ -161,6 +161,7 @@
                 this.PlayEffect(this.toggleTransition == ToggleTransition.None);
                 if (sendCallback)
                 {
+                    UISystemProfilerApi.AddMarker("Toggle.value", this);
                     this.onValueChanged.Invoke(this.m_IsOn);
                 }
             }

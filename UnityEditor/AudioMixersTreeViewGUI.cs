@@ -40,7 +40,7 @@
         }
 
         protected CreateAssetUtility GetCreateAssetUtility() => 
-            base.m_TreeView.state.createAssetUtility;
+            ((TreeViewStateWithAssetUtility) base.m_TreeView.state).createAssetUtility;
 
         protected override Texture GetIconForItem(TreeViewItem node) => 
             null;
@@ -61,7 +61,7 @@
                 AudioMixerItem item2 = item as AudioMixerItem;
                 if (item2 != null)
                 {
-                    GUIStyle style = !useBoldFont ? TreeViewGUI.s_Styles.lineStyle : TreeViewGUI.s_Styles.lineBoldStyle;
+                    GUIStyle style = !useBoldFont ? TreeViewGUI.Styles.lineStyle : TreeViewGUI.Styles.lineBoldStyle;
                     style.padding.left = (int) ((base.k_IconWidth + base.iconTotalPadding) + base.k_SpaceBetweenIconAndText);
                     style.Draw(rect, label, false, false, selected, focused);
                     item2.UpdateSuspendedString(false);
@@ -79,7 +79,7 @@
                     {
                         Rect rect3 = rect;
                         rect3.width = base.k_IconWidth + base.iconTotalPadding;
-                        base.iconOverlayGUI.Invoke(item, rect3);
+                        base.iconOverlayGUI(item, rect3);
                     }
                 }
             }

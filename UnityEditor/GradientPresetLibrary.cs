@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using UnityEditorInternal;
     using UnityEngine;
 
     internal class GradientPresetLibrary : PresetLibrary
@@ -38,16 +37,16 @@
             for (int i = 0; i < num; i++)
             {
                 List<GradientColorKey> list = new List<GradientColorKey>();
-                int num3 = Random.Range(3, 8);
+                int num3 = UnityEngine.Random.Range(3, 8);
                 for (int j = 0; j < num3; j++)
                 {
-                    list.Add(new GradientColorKey(new Color(Random.value, Random.value, Random.value), Random.value));
+                    list.Add(new GradientColorKey(new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value), UnityEngine.Random.value));
                 }
                 List<GradientAlphaKey> list2 = new List<GradientAlphaKey>();
-                int num5 = Random.Range(3, 8);
+                int num5 = UnityEngine.Random.Range(3, 8);
                 for (int k = 0; k < num5; k++)
                 {
-                    list2.Add(new GradientAlphaKey(Random.value, Random.value));
+                    list2.Add(new GradientAlphaKey(UnityEngine.Random.value, UnityEngine.Random.value));
                 }
                 Gradient presetObject = new Gradient {
                     colorKeys = list.ToArray(),
@@ -71,7 +70,7 @@
         {
             if (gradient != null)
             {
-                GradientEditor.DrawGradientWithBackground(rect, GradientPreviewCache.GetGradientPreview(gradient));
+                GradientEditor.DrawGradientWithBackground(rect, gradient);
             }
         }
 

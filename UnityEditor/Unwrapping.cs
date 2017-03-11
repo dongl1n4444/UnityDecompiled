@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>This class holds everything you may need in regard to uv-unwrapping.</para>
@@ -56,7 +57,7 @@
             MeshUtility.SetPerTriangleUV2(src, GeneratePerTriangleUV(src, settings));
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Vector2[] INTERNAL_CALL_GeneratePerTriangleUVImpl(Mesh src, ref UnwrapParam settings);
     }
 }

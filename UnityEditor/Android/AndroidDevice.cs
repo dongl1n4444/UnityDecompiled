@@ -13,6 +13,7 @@
     internal class AndroidDevice
     {
         private const string ConsoleMessage = "See the Console for more details. ";
+        private const string DeleteError = "Unable to delete file. Please make sure the Android SDK is installed and is properly configured in the Editor. See the Console for more details. ";
         private const string ExternalStorageRootError = "Unable to determine external storagePlease make sure the Android SDK is installed and is properly configured in the Editor. See the Console for more details. ";
         private const string FeaturesError = "Unable to retrieve device features information. Please make sure the Android SDK is installed and is properly configured in the Editor. See the Console for more details. ";
         private const string ForwardError = "Unable to forward network traffic to device. Please make sure the Android SDK is installed and is properly configured in the Editor. See the Console for more details. ";
@@ -26,9 +27,11 @@
         private PropertiesTable<string> m_Properties;
         private const string MakePathError = "Unable to create directory on phone. Please make sure the Android SDK is installed and is properly configured in the Editor. See the Console for more details. ";
         private const string MemInfoError = "Unable to retrieve /proc/meminfo from device. Please make sure the Android SDK is installed and is properly configured in the Editor. See the Console for more details. ";
+        private const string MoveError = "Unable to move file. Please make sure the Android SDK is installed and is properly configured in the Editor. See the Console for more details. ";
         private const string PropertiesError = "Unable to retrieve device properties. Please make sure the Android SDK is installed and is properly configured in the Editor. See the Console for more details. ";
         private const string PullError = "Unable to pull remote file from device. Please make sure the Android SDK is installed and is properly configured in the Editor. See the Console for more details. ";
         private const string PushError = "Unable to push local file to device. Please make sure the Android SDK is installed and is properly configured in the Editor. See the Console for more details. ";
+        private const string ReverseError = "Unable to forward network traffic from device. Please make sure the Android SDK is installed and is properly configured in the Editor. See the Console for more details. ";
         private const string SDKMessage = "Please make sure the Android SDK is installed and is properly configured in the Editor. ";
         private const string SetPropertyError = "Unable to set device property. Please make sure the Android SDK is installed and is properly configured in the Editor. See the Console for more details. ";
         private const string UninstallError = "Unable to uninstall APK from device. Please make sure the Android SDK is installed and is properly configured in the Editor. See the Console for more details. ";
@@ -37,6 +40,12 @@
         {
             this.m_DeviceId = deviceId;
             this.m_ProductModel = this.Properties["ro.product.model"];
+        }
+
+        public string Delete(string target, Command.WaitingForProcessToExit waitingForProcessToExit)
+        {
+            string[] command = new string[] { "shell", "rm", "-f", Quote(target) };
+            return this.Exec(command, waitingForProcessToExit, "Unable to delete file. Please make sure the Android SDK is installed and is properly configured in the Editor. See the Console for more details. ");
         }
 
         public string Describe() => 
@@ -92,6 +101,12 @@
             return this.Exec(command, waitingForProcessToExit, "Unable to create directory on phone. Please make sure the Android SDK is installed and is properly configured in the Editor. See the Console for more details. ");
         }
 
+        public string Move(string source, string destination, Command.WaitingForProcessToExit waitingForProcessToExit)
+        {
+            string[] command = new string[] { "shell", "mv", Quote(source), Quote(destination) };
+            return this.Exec(command, waitingForProcessToExit, "Unable to move file. Please make sure the Android SDK is installed and is properly configured in the Editor. See the Console for more details. ");
+        }
+
         public string Pull(string src, string dst, Command.WaitingForProcessToExit waitingForProcessToExit)
         {
             string[] command = new string[] { "pull", Quote(src), Quote(Path.GetFullPath(dst)) };
@@ -106,6 +121,12 @@
 
         private static string Quote(string val) => 
             $""{val}"";
+
+        public string Reverse(string pc, string device, Command.WaitingForProcessToExit waitingForProcessToExit)
+        {
+            string[] command = new string[] { "reverse", Quote(pc), Quote(device) };
+            return this.Exec(command, waitingForProcessToExit, "Unable to forward network traffic from device. Please make sure the Android SDK is installed and is properly configured in the Editor. See the Console for more details. ");
+        }
 
         public string SetProperty(string key, string val, Command.WaitingForProcessToExit waitingForProcessToExit)
         {

@@ -35,12 +35,12 @@
             InitializeEvetnsInterfaceCacheIfNeeded();
             List<ComponentInterceptedEvents> list = new List<ComponentInterceptedEvents>();
             MonoBehaviour[] components = gameObject.GetComponents<MonoBehaviour>();
-            int index = 0;
+            int num = 0;
             int length = components.Length;
-            while (index < length)
+            while (num < length)
             {
                 ComponentInterceptedEvents events = null;
-                MonoBehaviour behaviour = components[index];
+                MonoBehaviour behaviour = components[num];
                 if (behaviour != null)
                 {
                     System.Type key = behaviour.GetType();
@@ -69,7 +69,7 @@
                             };
                             if (<>f__am$cache0 == null)
                             {
-                                <>f__am$cache0 = new Func<int, string>(null, (IntPtr) <GetEventsInfo>m__0);
+                                <>f__am$cache0 = index => s_PossibleEvents[index].text;
                             }
                             events.interceptedEvents = Enumerable.OrderBy<int, string>(list2, <>f__am$cache0).ToArray<int>();
                         }
@@ -84,7 +84,7 @@
                         list.Add(events);
                     }
                 }
-                index++;
+                num++;
             }
             return list;
         }

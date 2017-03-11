@@ -20,11 +20,12 @@
         string ForArrayType(ArrayType type);
         string ForAssembly(AssemblyDefinition assembly);
         string ForAssemblyScope(AssemblyDefinition assembly, string symbol);
+        string ForComCallableWrapperClass(TypeReference type);
+        string ForComCallableWrapperProjectedMethod(MethodReference method);
         string ForComInterfaceReturnParameterName();
         string ForComTypeInterfaceFieldGetter(TypeReference interfaceType);
         string ForComTypeInterfaceFieldName(TypeReference interfaceType);
         string ForCreateComCallableWrapperFunction(TypeReference type);
-        string ForCreateStringMethod(MethodReference method);
         string ForCustomAttributesCacheGenerator(AssemblyDefinition assemblyDefinition);
         string ForCustomAttributesCacheGenerator(EventDefinition eventDefinition);
         string ForCustomAttributesCacheGenerator(FieldDefinition fieldDefinition);
@@ -35,7 +36,7 @@
         string ForDebugLocalInfo(MethodReference method);
         string ForDebugMethodInfo(MethodReference method);
         string ForDebugMethodInfoOffsetTable(MethodReference method);
-        string ForDebugMethodLocalInfo(VariableDefinition variable, MethodReference method);
+        string ForDebugMethodLocalInfo(VariableDefinition variable, MethodDefinition method);
         string ForDebugTypeInfos(TypeReference type);
         string ForDelegatePInvokeWrapper(TypeReference type);
         string ForField(FieldReference field);
@@ -75,7 +76,8 @@
         string ForTypeNameOnly(TypeReference type);
         string ForVariable(TypeReference variableType);
         string ForVariableName(VariableReference variable);
-        string ForWindowsRuntimeDelegateComCallableWrapperClass(TypeReference delegateType);
+        string ForWindowsRuntimeAdapterClass(TypeReference type);
+        string ForWindowsRuntimeAdapterTypeName(TypeDefinition fromType, TypeDefinition toType);
         string ForWindowsRuntimeDelegateComCallableWrapperInterface(TypeReference delegateType);
         string ForWindowsRuntimeDelegateNativeInvokerMethod(MethodReference invokeMethod);
         int GetFieldIndex(FieldReference field, bool includeBase = false);

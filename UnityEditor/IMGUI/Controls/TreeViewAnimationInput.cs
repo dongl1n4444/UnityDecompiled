@@ -8,25 +8,41 @@
 
     internal class TreeViewAnimationInput
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private double <animationDuration>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private int <endRow>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <expanding>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TreeViewItem <item>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Rect <rowsRect>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private bool <includeChildren>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private TreeViewItem <item>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private Rect <rowsRect>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private int <startRow>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private Rect <startRowRect>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private double <startTime>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private double <timeCaptured>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private TreeViewController <treeView>k__BackingField;
         public Action<TreeViewAnimationInput> animationEnded;
+
+        public TreeViewAnimationInput()
+        {
+            double timeSinceStartup = EditorApplication.timeSinceStartup;
+            this.timeCaptured = timeSinceStartup;
+            this.startTime = timeSinceStartup;
+        }
+
+        public void CaptureTime()
+        {
+            this.timeCaptured = EditorApplication.timeSinceStartup;
+        }
 
         public void FireAnimationEndedEvent()
         {
@@ -47,10 +63,10 @@
         public double elapsedTime
         {
             get => 
-                (EditorApplication.timeSinceStartup - this.startTime);
+                (this.timeCaptured - this.startTime);
             set
             {
-                this.startTime = EditorApplication.timeSinceStartup - value;
+                this.startTime = this.timeCaptured - value;
             }
         }
 
@@ -61,6 +77,8 @@
 
         public bool expanding { get; set; }
 
+        public bool includeChildren { get; set; }
+
         public TreeViewItem item { get; set; }
 
         public Rect rowsRect { get; set; }
@@ -70,6 +88,8 @@
         public Rect startRowRect { get; set; }
 
         public double startTime { get; set; }
+
+        public double timeCaptured { get; set; }
 
         public TreeViewController treeView { get; set; }
     }

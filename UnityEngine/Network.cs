@@ -4,6 +4,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine.Internal;
+    using UnityEngine.Scripting;
     using UnityEngineInternal;
 
     /// <summary>
@@ -174,7 +175,7 @@
         /// <para>Close all open connections and shuts down the network interface.</para>
         /// </summary>
         /// <param name="timeout"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void Disconnect([DefaultValue("200")] int timeout);
         /// <summary>
         /// <para>The last average ping time to the given player in milliseconds.</para>
@@ -193,12 +194,12 @@
         /// <summary>
         /// <para>Check if this machine has a public IP address.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool HavePublicAddress();
         /// <summary>
         /// <para>Initializes security layer.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void InitializeSecurity();
         /// <summary>
         /// <para>Initialize the server.</para>
@@ -216,7 +217,7 @@
         /// <param name="connections"></param>
         /// <param name="listenPort"></param>
         /// <param name="useNat"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern NetworkConnectionError InitializeServer(int connections, int listenPort, bool useNat);
         /// <summary>
         /// <para>Network instantiate a prefab.</para>
@@ -229,27 +230,27 @@
         public static UnityEngine.Object Instantiate(UnityEngine.Object prefab, Vector3 position, Quaternion rotation, int group) => 
             INTERNAL_CALL_Instantiate(prefab, ref position, ref rotation, group);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_AllocateViewID(out NetworkViewID viewID);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_CloseConnection(ref NetworkPlayer target, bool sendDisconnectionNotification);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Destroy(ref NetworkViewID viewID);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_DestroyPlayerObjects(ref NetworkPlayer playerID);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int INTERNAL_CALL_GetAveragePing(ref NetworkPlayer player);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int INTERNAL_CALL_GetLastPing(ref NetworkPlayer player);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern UnityEngine.Object INTERNAL_CALL_Instantiate(UnityEngine.Object prefab, ref Vector3 position, ref Quaternion rotation, int group);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_RemoveRPCs(ref NetworkPlayer playerID, ref NetworkViewID viewID, uint channelMask);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_SetSendingSpecific(ref NetworkPlayer player, int group, bool enabled);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SetReceivingEnabled(ref NetworkPlayer player, int group, bool enabled);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern NetworkConnectionError Internal_ConnectToGuid(string guid, string password);
         [ExcludeFromDocs]
         private static NetworkConnectionError Internal_ConnectToIPs(string[] IP, int remotePort, int localPort)
@@ -258,7 +259,7 @@
             return Internal_ConnectToIPs(IP, remotePort, localPort, password);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern NetworkConnectionError Internal_ConnectToIPs(string[] IP, int remotePort, int localPort, [DefaultValue("\"\"")] string password);
         [ExcludeFromDocs]
         private static NetworkConnectionError Internal_ConnectToSingleIP(string IP, int remotePort, int localPort)
@@ -267,20 +268,20 @@
             return Internal_ConnectToSingleIP(IP, remotePort, localPort, password);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern NetworkConnectionError Internal_ConnectToSingleIP(string IP, int remotePort, int localPort, [DefaultValue("\"\"")] string password);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int Internal_GetPlayer();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_GetTime(out double t);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern NetworkConnectionError Internal_InitializeServerDeprecated(int connections, int listenPort);
         private static void Internal_RemoveRPCs(NetworkPlayer playerID, NetworkViewID viewID, uint channelMask)
         {
             INTERNAL_CALL_Internal_RemoveRPCs(ref playerID, ref viewID, channelMask);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_SetSendingGlobal(int group, bool enabled);
         private static void Internal_SetSendingSpecific(NetworkPlayer player, int group, bool enabled)
         {
@@ -328,7 +329,7 @@
         /// <para>Set the level prefix which will then be prefixed to all network ViewID numbers.</para>
         /// </summary>
         /// <param name="prefix"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetLevelPrefix(int prefix);
         /// <summary>
         /// <para>Enable or disables the reception of messages in a specific group number from a specific player.</para>
@@ -373,7 +374,7 @@
         /// <para>Test this machines network connection.</para>
         /// </summary>
         /// <param name="forceTest"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern ConnectionTesterStatus TestConnection([DefaultValue("false")] bool forceTest);
         [ExcludeFromDocs]
         public static ConnectionTesterStatus TestConnectionNAT()
@@ -386,73 +387,73 @@
         /// <para>Test the connection specifically for NAT punch-through connectivity.</para>
         /// </summary>
         /// <param name="forceTest"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern ConnectionTesterStatus TestConnectionNAT([DefaultValue("false")] bool forceTest);
 
         /// <summary>
         /// <para>All connected players.</para>
         /// </summary>
-        public static NetworkPlayer[] connections { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static NetworkPlayer[] connections { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The IP address of the connection tester used in Network.TestConnection.</para>
         /// </summary>
-        public static string connectionTesterIP { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static string connectionTesterIP { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The port of the connection tester used in Network.TestConnection.</para>
         /// </summary>
-        public static int connectionTesterPort { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static int connectionTesterPort { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Set the password for the server (for incoming connections).</para>
         /// </summary>
-        public static string incomingPassword { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static string incomingPassword { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Returns true if your peer type is client.</para>
         /// </summary>
-        public static bool isClient { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool isClient { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Enable or disable the processing of network messages.</para>
         /// </summary>
-        public static bool isMessageQueueRunning { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static bool isMessageQueueRunning { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Returns true if your peer type is server.</para>
         /// </summary>
-        public static bool isServer { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool isServer { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Set the log level for network messages (default is Off).</para>
         /// </summary>
-        public static NetworkLogLevel logLevel { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static NetworkLogLevel logLevel { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Set the maximum amount of connections/players allowed.</para>
         /// </summary>
-        public static int maxConnections { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static int maxConnections { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Get or set the minimum number of ViewID numbers in the ViewID pool given to clients by the server.</para>
         /// </summary>
-        public static int minimumAllocatableViewIDs { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static int minimumAllocatableViewIDs { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The IP address of the NAT punchthrough facilitator.</para>
         /// </summary>
-        public static string natFacilitatorIP { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static string natFacilitatorIP { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The port of the NAT punchthrough facilitator.</para>
         /// </summary>
-        public static int natFacilitatorPort { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static int natFacilitatorPort { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The status of the peer type, i.e. if it is disconnected, connecting, server or client.</para>
         /// </summary>
-        public static NetworkPeerType peerType { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static NetworkPeerType peerType { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Get the local NetworkPlayer instance.</para>
@@ -470,22 +471,22 @@
         /// <summary>
         /// <para>The IP address of the proxy server.</para>
         /// </summary>
-        public static string proxyIP { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static string proxyIP { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Set the proxy server password.</para>
         /// </summary>
-        public static string proxyPassword { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static string proxyPassword { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The port of the proxy server.</para>
         /// </summary>
-        public static int proxyPort { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static int proxyPort { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The default send rate of network updates for all Network Views.</para>
         /// </summary>
-        public static float sendRate { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static float sendRate { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Get the current network time (seconds).</para>
@@ -501,12 +502,12 @@
         }
 
         [Obsolete("No longer needed. This is now explicitly set in the InitializeServer function call. It is implicitly set when calling Connect depending on if an IP/port combination is used (useNat=false) or a GUID is used(useNat=true).")]
-        public static bool useNat { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static bool useNat { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Indicate if proxy support is needed, in which case traffic is relayed through the proxy server.</para>
         /// </summary>
-        public static bool useProxy { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static bool useProxy { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
     }
 }
 

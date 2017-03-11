@@ -9,7 +9,7 @@
     internal class TextureImportPlatformSettings
     {
         [CompilerGenerated]
-        private static Func<Object, TextureImporter> <>f__am$cache0;
+        private static Func<UnityEngine.Object, TextureImporter> <>f__am$cache0;
         public static readonly int[] kNormalFormatsValueDefault = new int[] { 12, 0x1d, 2, 4 };
         public static readonly int[] kTextureFormatsValueAndroid = new int[] { 
             10, 12, 0x1c, 0x1d, 0x22, 0x2d, 0x2e, 0x2f, 30, 0x1f, 0x20, 0x21, 0x23, 0x24, 0x30, 0x31,
@@ -58,9 +58,9 @@
             this.m_PlatformSettings.overridden = false;
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<Object, TextureImporter>(null, (IntPtr) <TextureImportPlatformSettings>m__0);
+                <>f__am$cache0 = new Func<UnityEngine.Object, TextureImporter>(TextureImportPlatformSettings.<TextureImportPlatformSettings>m__0);
             }
-            this.m_Importers = Enumerable.Select<Object, TextureImporter>(inspector.targets, <>f__am$cache0).ToArray<TextureImporter>();
+            this.m_Importers = Enumerable.Select<UnityEngine.Object, TextureImporter>(inspector.targets, <>f__am$cache0).ToArray<TextureImporter>();
             for (int i = 0; i < this.importers.Length; i++)
             {
                 TextureImporterPlatformSettings platformTextureSettings = this.importers[i].GetPlatformTextureSettings(name);
@@ -104,7 +104,7 @@
         }
 
         [CompilerGenerated]
-        private static TextureImporter <TextureImportPlatformSettings>m__0(Object x) => 
+        private static TextureImporter <TextureImportPlatformSettings>m__0(UnityEngine.Object x) => 
             (x as TextureImporter);
 
         public void Apply()

@@ -14,7 +14,7 @@
         /// <summary>
         /// <para>Object that will be modified.</para>
         /// </summary>
-        public Object target;
+        public UnityEngine.Object target;
         /// <summary>
         /// <para>Property path of the property being modified (Matches as SerializedProperty.propertyPath).</para>
         /// </summary>
@@ -26,7 +26,7 @@
         /// <summary>
         /// <para>The value being applied when it is a object reference (which can not be represented as a string).</para>
         /// </summary>
-        public Object objectReference;
+        public UnityEngine.Object objectReference;
     }
 }
 

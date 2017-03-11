@@ -15,7 +15,7 @@
     public class UnityEventDrawer : PropertyDrawer
     {
         [CompilerGenerated]
-        private static Func<ParameterInfo, Type> <>f__am$cache0;
+        private static Func<System.Reflection.ParameterInfo, System.Type> <>f__am$cache0;
         [CompilerGenerated]
         private static Func<MethodInfo, bool> <>f__am$cache1;
         [CompilerGenerated]
@@ -23,7 +23,7 @@
         [CompilerGenerated]
         private static Func<PropertyInfo, MethodInfo> <>f__am$cache3;
         [CompilerGenerated]
-        private static Func<ParameterInfo, Type> <>f__am$cache4;
+        private static Func<System.Reflection.ParameterInfo, System.Type> <>f__am$cache4;
         [CompilerGenerated]
         private static Func<Component, bool> <>f__am$cache5;
         [CompilerGenerated]
@@ -35,7 +35,7 @@
         [CompilerGenerated]
         private static Func<IGrouping<string, string>, string> <>f__am$cache9;
         [CompilerGenerated]
-        private static Func<Type, string> <>f__am$cacheA;
+        private static Func<System.Type, string> <>f__am$cacheA;
         [CompilerGenerated]
         private static Func<ValidMethodMap, int> <>f__am$cacheB;
         [CompilerGenerated]
@@ -63,14 +63,13 @@
         private SerializedProperty m_Prop;
         private ReorderableList m_ReorderableList;
         private Dictionary<string, State> m_States = new Dictionary<string, State>();
-        private Styles m_Styles;
         private string m_Text;
 
         private void AddEventListener(ReorderableList list)
         {
             if (this.m_ListenersArray.hasMultipleDifferentValues)
             {
-                foreach (Object obj2 in this.m_ListenersArray.serializedObject.targetObjects)
+                foreach (UnityEngine.Object obj2 in this.m_ListenersArray.serializedObject.targetObjects)
                 {
                     SerializedObject obj3 = new SerializedObject(obj2);
                     SerializedProperty property1 = obj3.FindProperty(this.m_ListenersArray.propertyPath);
@@ -106,7 +105,7 @@
         private static void AddFunctionsForScript(GenericMenu menu, SerializedProperty listener, ValidMethodMap method, string targetName)
         {
             PersistentListenerMode mode = method.mode;
-            Object objectReferenceValue = listener.FindPropertyRelative("m_Target").objectReferenceValue;
+            UnityEngine.Object objectReferenceValue = listener.FindPropertyRelative("m_Target").objectReferenceValue;
             string stringValue = listener.FindPropertyRelative("m_MethodName").stringValue;
             PersistentListenerMode mode2 = GetMode(listener.FindPropertyRelative("m_Mode"));
             SerializedProperty property = listener.FindPropertyRelative("m_Arguments").FindPropertyRelative("m_ObjectArgumentAssemblyTypeName");
@@ -114,7 +113,7 @@
             int length = method.methodInfo.GetParameters().Length;
             for (int i = 0; i < length; i++)
             {
-                ParameterInfo info = method.methodInfo.GetParameters()[i];
+                System.Reflection.ParameterInfo info = method.methodInfo.GetParameters()[i];
                 builder.Append($"{GetTypeName(info.ParameterType)}");
                 if (i < (length - 1))
                 {
@@ -138,11 +137,11 @@
         {
             if (<>f__am$cacheB == null)
             {
-                <>f__am$cacheB = new Func<ValidMethodMap, int>(null, (IntPtr) <AddMethodsToMenu>m__B);
+                <>f__am$cacheB = e => !e.methodInfo.Name.StartsWith("set_") ? 1 : 0;
             }
             if (<>f__am$cacheC == null)
             {
-                <>f__am$cacheC = new Func<ValidMethodMap, string>(null, (IntPtr) <AddMethodsToMenu>m__C);
+                <>f__am$cacheC = e => e.methodInfo.Name;
             }
             IEnumerable<ValidMethodMap> enumerable = Enumerable.ThenBy<ValidMethodMap, string>(Enumerable.OrderBy<ValidMethodMap, int>(methods, <>f__am$cacheB), <>f__am$cacheC);
             foreach (ValidMethodMap map in enumerable)
@@ -151,9 +150,9 @@
             }
         }
 
-        private static GenericMenu BuildPopupList(Object target, UnityEventBase dummyEvent, SerializedProperty listener)
+        private static GenericMenu BuildPopupList(UnityEngine.Object target, UnityEventBase dummyEvent, SerializedProperty listener)
         {
-            Object gameObject = target;
+            UnityEngine.Object gameObject = target;
             if (gameObject is Component)
             {
                 gameObject = (target as Component).gameObject;
@@ -170,32 +169,32 @@
                 menu.AddSeparator("");
                 if (<>f__am$cache4 == null)
                 {
-                    <>f__am$cache4 = new Func<ParameterInfo, Type>(null, (IntPtr) <BuildPopupList>m__4);
+                    <>f__am$cache4 = x => x.ParameterType;
                 }
-                Type[] delegateArgumentsTypes = Enumerable.Select<ParameterInfo, Type>(dummyEvent.GetType().GetMethod("Invoke").GetParameters(), <>f__am$cache4).ToArray<Type>();
+                System.Type[] delegateArgumentsTypes = Enumerable.Select<System.Reflection.ParameterInfo, System.Type>(dummyEvent.GetType().GetMethod("Invoke").GetParameters(), <>f__am$cache4).ToArray<System.Type>();
                 GeneratePopUpForType(menu, gameObject, false, listener, delegateArgumentsTypes);
                 if (gameObject is GameObject)
                 {
                     Component[] components = (gameObject as GameObject).GetComponents<Component>();
                     if (<>f__am$cache5 == null)
                     {
-                        <>f__am$cache5 = new Func<Component, bool>(null, (IntPtr) <BuildPopupList>m__5);
+                        <>f__am$cache5 = c => c != null;
                     }
                     if (<>f__am$cache6 == null)
                     {
-                        <>f__am$cache6 = new Func<Component, string>(null, (IntPtr) <BuildPopupList>m__6);
+                        <>f__am$cache6 = c => c.GetType().Name;
                     }
                     if (<>f__am$cache7 == null)
                     {
-                        <>f__am$cache7 = new Func<string, string>(null, (IntPtr) <BuildPopupList>m__7);
+                        <>f__am$cache7 = x => x;
                     }
                     if (<>f__am$cache8 == null)
                     {
-                        <>f__am$cache8 = new Func<IGrouping<string, string>, bool>(null, (IntPtr) <BuildPopupList>m__8);
+                        <>f__am$cache8 = g => g.Count<string>() > 1;
                     }
                     if (<>f__am$cache9 == null)
                     {
-                        <>f__am$cache9 = new Func<IGrouping<string, string>, string>(null, (IntPtr) <BuildPopupList>m__9);
+                        <>f__am$cache9 = g => g.Key;
                     }
                     List<string> list = Enumerable.Select<IGrouping<string, string>, string>(Enumerable.Where<IGrouping<string, string>>(Enumerable.GroupBy<string, string>(Enumerable.Select<Component, string>(Enumerable.Where<Component>(components, <>f__am$cache5), <>f__am$cache6), <>f__am$cache7), <>f__am$cache8), <>f__am$cache9).ToList<string>();
                     foreach (Component component in components)
@@ -210,30 +209,30 @@
             return menu;
         }
 
-        private static IEnumerable<ValidMethodMap> CalculateMethodMap(Object target, Type[] t, bool allowSubclasses)
+        private static IEnumerable<ValidMethodMap> CalculateMethodMap(UnityEngine.Object target, System.Type[] t, bool allowSubclasses)
         {
             List<ValidMethodMap> list = new List<ValidMethodMap>();
             if ((target != null) && (t != null))
             {
-                Type type = target.GetType();
+                System.Type type = target.GetType();
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<MethodInfo, bool>(null, (IntPtr) <CalculateMethodMap>m__1);
+                    <>f__am$cache1 = x => !x.IsSpecialName;
                 }
                 List<MethodInfo> list2 = Enumerable.Where<MethodInfo>(type.GetMethods(), <>f__am$cache1).ToList<MethodInfo>();
                 if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache2 = new Func<PropertyInfo, bool>(null, (IntPtr) <CalculateMethodMap>m__2);
+                    <>f__am$cache2 = x => (x.GetCustomAttributes(typeof(ObsoleteAttribute), true).Length == 0) && (x.GetSetMethod() != null);
                 }
                 IEnumerable<PropertyInfo> enumerable2 = Enumerable.Where<PropertyInfo>(type.GetProperties().AsEnumerable<PropertyInfo>(), <>f__am$cache2);
                 if (<>f__am$cache3 == null)
                 {
-                    <>f__am$cache3 = new Func<PropertyInfo, MethodInfo>(null, (IntPtr) <CalculateMethodMap>m__3);
+                    <>f__am$cache3 = x => x.GetSetMethod();
                 }
                 list2.AddRange(Enumerable.Select<PropertyInfo, MethodInfo>(enumerable2, <>f__am$cache3));
                 foreach (MethodInfo info in list2)
                 {
-                    ParameterInfo[] parameters = info.GetParameters();
+                    System.Reflection.ParameterInfo[] parameters = info.GetParameters();
                     if (((parameters.Length == t.Length) && (info.GetCustomAttributes(typeof(ObsoleteAttribute), true).Length <= 0)) && (info.ReturnType == typeof(void)))
                     {
                         bool flag = true;
@@ -331,23 +330,23 @@
                     break;
             }
             string stringValue = property4.FindPropertyRelative("m_ObjectArgumentAssemblyTypeName").stringValue;
-            Type objType = typeof(Object);
+            System.Type objType = typeof(UnityEngine.Object);
             if (!string.IsNullOrEmpty(stringValue))
             {
-                Type type = Type.GetType(stringValue, false);
+                System.Type type = System.Type.GetType(stringValue, false);
                 if (type != null)
                 {
                     objType = type;
                 }
                 else
                 {
-                    objType = typeof(Object);
+                    objType = typeof(UnityEngine.Object);
                 }
             }
             if (@void == PersistentListenerMode.Object)
             {
                 EditorGUI.BeginChangeCheck();
-                Object obj2 = EditorGUI.ObjectField(rect5, GUIContent.none, property7.objectReferenceValue, objType, true);
+                UnityEngine.Object obj2 = EditorGUI.ObjectField(rect5, GUIContent.none, property7.objectReferenceValue, objType, true);
                 if (EditorGUI.EndChangeCheck())
                 {
                     property7.objectReferenceValue = obj2;
@@ -375,7 +374,7 @@
                     else if (!IsPersistantListenerValid(this.m_DummyEvent, property6.stringValue, property5.objectReferenceValue, GetMode(property3), objType))
                     {
                         string name = "UnknownComponent";
-                        Object objectReferenceValue = property5.objectReferenceValue;
+                        UnityEngine.Object objectReferenceValue = property5.objectReferenceValue;
                         if (objectReferenceValue != null)
                         {
                             name = objectReferenceValue.GetType().Name;
@@ -414,7 +413,7 @@
             this.m_LastSelectedIndex = list.index;
         }
 
-        private static void GeneratePopUpForType(GenericMenu menu, Object target, bool useFullTargetName, SerializedProperty listener, Type[] delegateArgumentsTypes)
+        private static void GeneratePopUpForType(GenericMenu menu, UnityEngine.Object target, bool useFullTargetName, SerializedProperty listener, System.Type[] delegateArgumentsTypes)
         {
             List<ValidMethodMap> methods = new List<ValidMethodMap>();
             string targetName = !useFullTargetName ? target.GetType().Name : target.GetType().FullName;
@@ -426,25 +425,25 @@
                 {
                     if (<>f__am$cacheA == null)
                     {
-                        <>f__am$cacheA = new Func<Type, string>(null, (IntPtr) <GeneratePopUpForType>m__A);
+                        <>f__am$cacheA = e => GetTypeName(e);
                     }
-                    menu.AddDisabledItem(new GUIContent(targetName + "/Dynamic " + string.Join(", ", Enumerable.Select<Type, string>(delegateArgumentsTypes, <>f__am$cacheA).ToArray<string>())));
+                    menu.AddDisabledItem(new GUIContent(targetName + "/Dynamic " + string.Join(", ", Enumerable.Select<System.Type, string>(delegateArgumentsTypes, <>f__am$cacheA).ToArray<string>())));
                     AddMethodsToMenu(menu, listener, methods, targetName);
                     flag = true;
                 }
             }
             methods.Clear();
-            Type[] typeArray1 = new Type[] { typeof(float) };
+            System.Type[] typeArray1 = new System.Type[] { typeof(float) };
             GetMethodsForTargetAndMode(target, typeArray1, methods, PersistentListenerMode.Float);
-            Type[] typeArray2 = new Type[] { typeof(int) };
+            System.Type[] typeArray2 = new System.Type[] { typeof(int) };
             GetMethodsForTargetAndMode(target, typeArray2, methods, PersistentListenerMode.Int);
-            Type[] typeArray3 = new Type[] { typeof(string) };
+            System.Type[] typeArray3 = new System.Type[] { typeof(string) };
             GetMethodsForTargetAndMode(target, typeArray3, methods, PersistentListenerMode.String);
-            Type[] typeArray4 = new Type[] { typeof(bool) };
+            System.Type[] typeArray4 = new System.Type[] { typeof(bool) };
             GetMethodsForTargetAndMode(target, typeArray4, methods, PersistentListenerMode.Bool);
-            Type[] typeArray5 = new Type[] { typeof(Object) };
+            System.Type[] typeArray5 = new System.Type[] { typeof(UnityEngine.Object) };
             GetMethodsForTargetAndMode(target, typeArray5, methods, PersistentListenerMode.Object);
-            GetMethodsForTargetAndMode(target, new Type[0], methods, PersistentListenerMode.Void);
+            GetMethodsForTargetAndMode(target, new System.Type[0], methods, PersistentListenerMode.Void);
             if (methods.Count > 0)
             {
                 if (flag)
@@ -461,7 +460,7 @@
 
         private static UnityEventBase GetDummyEvent(SerializedProperty prop)
         {
-            Type type = Type.GetType(prop.FindPropertyRelative("m_TypeName").stringValue, false);
+            System.Type type = System.Type.GetType(prop.FindPropertyRelative("m_TypeName").stringValue, false);
             if (type == null)
             {
                 return new UnityEvent();
@@ -476,9 +475,9 @@
             builder.Append(" (");
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<ParameterInfo, Type>(null, (IntPtr) <GetEventParams>m__0);
+                <>f__am$cache0 = x => x.ParameterType;
             }
-            Type[] typeArray = Enumerable.Select<ParameterInfo, Type>(info.GetParameters(), <>f__am$cache0).ToArray<Type>();
+            System.Type[] typeArray = Enumerable.Select<System.Reflection.ParameterInfo, System.Type>(info.GetParameters(), <>f__am$cache0).ToArray<System.Type>();
             for (int i = 0; i < typeArray.Length; i++)
             {
                 builder.Append(typeArray[i].Name);
@@ -508,7 +507,7 @@
             return $"{targetName}/{methodName} ({args})";
         }
 
-        private static void GetMethodsForTargetAndMode(Object target, Type[] delegateArgumentsTypes, List<ValidMethodMap> methods, PersistentListenerMode mode)
+        private static void GetMethodsForTargetAndMode(UnityEngine.Object target, System.Type[] delegateArgumentsTypes, List<ValidMethodMap> methods, PersistentListenerMode mode)
         {
             IEnumerable<ValidMethodMap> enumerable = CalculateMethodMap(target, delegateArgumentsTypes, mode == PersistentListenerMode.Object);
             foreach (ValidMethodMap map in enumerable)
@@ -575,7 +574,7 @@
             return state;
         }
 
-        private static string GetTypeName(Type t)
+        private static string GetTypeName(System.Type t)
         {
             if (t == typeof(int))
             {
@@ -596,7 +595,7 @@
             return t.Name;
         }
 
-        public static bool IsPersistantListenerValid(UnityEventBase dummyEvent, string methodName, Object uObject, PersistentListenerMode modeEnum, Type argumentType)
+        public static bool IsPersistantListenerValid(UnityEventBase dummyEvent, string methodName, UnityEngine.Object uObject, PersistentListenerMode modeEnum, System.Type argumentType)
         {
             if ((uObject == null) || string.IsNullOrEmpty(methodName))
             {
@@ -610,19 +609,12 @@
             if ((this.m_ListenersArray != null) && this.m_ListenersArray.isArray)
             {
                 this.m_DummyEvent = GetDummyEvent(this.m_Prop);
-                if (this.m_DummyEvent != null)
+                if ((this.m_DummyEvent != null) && (this.m_ReorderableList != null))
                 {
-                    if (this.m_Styles == null)
-                    {
-                        this.m_Styles = new Styles();
-                    }
-                    if (this.m_ReorderableList != null)
-                    {
-                        int indentLevel = EditorGUI.indentLevel;
-                        EditorGUI.indentLevel = 0;
-                        this.m_ReorderableList.DoList(position);
-                        EditorGUI.indentLevel = indentLevel;
-                    }
+                    int indentLevel = EditorGUI.indentLevel;
+                    EditorGUI.indentLevel = 0;
+                    this.m_ReorderableList.DoList(position);
+                    EditorGUI.indentLevel = indentLevel;
                 }
             }
         }
@@ -668,21 +660,14 @@
             internal ReorderableList m_ReorderableList;
         }
 
-        private class Styles
-        {
-            public readonly GUIStyle genericFieldStyle = EditorStyles.label;
-            public readonly GUIContent iconToolbarMinus = EditorGUIUtility.IconContent("Toolbar Minus");
-            public readonly GUIStyle removeButton = "InvisibleButton";
-        }
-
         [StructLayout(LayoutKind.Sequential)]
         private struct UnityEventFunction
         {
             private readonly SerializedProperty m_Listener;
-            private readonly Object m_Target;
+            private readonly UnityEngine.Object m_Target;
             private readonly MethodInfo m_Method;
             private readonly PersistentListenerMode m_Mode;
-            public UnityEventFunction(SerializedProperty listener, Object target, MethodInfo method, PersistentListenerMode mode)
+            public UnityEventFunction(SerializedProperty listener, UnityEngine.Object target, MethodInfo method, PersistentListenerMode mode)
             {
                 this.m_Listener = listener;
                 this.m_Target = target;
@@ -702,14 +687,14 @@
                 if (this.m_Mode == PersistentListenerMode.Object)
                 {
                     SerializedProperty property5 = arguments.FindPropertyRelative("m_ObjectArgumentAssemblyTypeName");
-                    ParameterInfo[] parameters = this.m_Method.GetParameters();
-                    if ((parameters.Length == 1) && typeof(Object).IsAssignableFrom(parameters[0].ParameterType))
+                    System.Reflection.ParameterInfo[] parameters = this.m_Method.GetParameters();
+                    if ((parameters.Length == 1) && typeof(UnityEngine.Object).IsAssignableFrom(parameters[0].ParameterType))
                     {
                         property5.stringValue = parameters[0].ParameterType.AssemblyQualifiedName;
                     }
                     else
                     {
-                        property5.stringValue = typeof(Object).AssemblyQualifiedName;
+                        property5.stringValue = typeof(UnityEngine.Object).AssemblyQualifiedName;
                     }
                 }
                 this.ValidateObjectParamater(arguments, this.m_Mode);
@@ -720,16 +705,16 @@
             {
                 SerializedProperty property = arguments.FindPropertyRelative("m_ObjectArgumentAssemblyTypeName");
                 SerializedProperty property2 = arguments.FindPropertyRelative("m_ObjectArgument");
-                Object objectReferenceValue = property2.objectReferenceValue;
+                UnityEngine.Object objectReferenceValue = property2.objectReferenceValue;
                 if (mode != PersistentListenerMode.Object)
                 {
-                    property.stringValue = typeof(Object).AssemblyQualifiedName;
+                    property.stringValue = typeof(UnityEngine.Object).AssemblyQualifiedName;
                     property2.objectReferenceValue = null;
                 }
                 else if (objectReferenceValue != null)
                 {
-                    Type c = Type.GetType(property.stringValue, false);
-                    if (!typeof(Object).IsAssignableFrom(c) || !c.IsInstanceOfType(objectReferenceValue))
+                    System.Type c = System.Type.GetType(property.stringValue, false);
+                    if (!typeof(UnityEngine.Object).IsAssignableFrom(c) || !c.IsInstanceOfType(objectReferenceValue))
                     {
                         property2.objectReferenceValue = null;
                     }
@@ -747,7 +732,7 @@
         [StructLayout(LayoutKind.Sequential)]
         private struct ValidMethodMap
         {
-            public Object target;
+            public UnityEngine.Object target;
             public MethodInfo methodInfo;
             public PersistentListenerMode mode;
         }

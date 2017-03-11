@@ -92,7 +92,7 @@
             {
                 if ((type.baseClass != null) && !type.isEditorOnly)
                 {
-                    if (type.hasNativeNamespace)
+                    if (!type.hasNativeNamespace)
                     {
                         output.WriteLine("class {0};", type.name);
                     }
@@ -106,12 +106,14 @@
             output.Write("void RegisterAllClasses() \n{\n");
             output.WriteLine("\tvoid RegisterBuiltinTypes();");
             output.WriteLine("\tRegisterBuiltinTypes();");
-            output.WriteLine("\t// Non stripped classes");
+            output.WriteLine("\t// {0} Non stripped classes\n", nativeClassesAndBaseClasses.Count);
+            int num = 1;
             foreach (UnityType type2 in UnityType.GetTypes())
             {
                 if (((type2.baseClass != null) && !type2.isEditorOnly) && nativeClassesAndBaseClasses.Contains(type2))
                 {
-                    output.WriteLine("\tRegisterClass<{0}>();", type2.qualifiedName);
+                    output.WriteLine("\t// {0}. {1}", num++, type2.qualifiedName);
+                    output.WriteLine("\tRegisterClass<{0}>();\n", type2.qualifiedName);
                 }
             }
             output.WriteLine();
@@ -166,46 +168,12 @@
             output.WriteLine("}\n");
         }
 
-        public static void ResolveDefinedNativeClassesFromMono(AssemblyDefinition[] assemblies, RuntimeClassRegistry res)
-        {
-            if (res != null)
-            {
-                foreach (AssemblyDefinition definition in assemblies)
-                {
-                    foreach (TypeDefinition definition2 in definition.MainModule.Types)
-                    {
-                        if (((definition2.Fields.Count > 0) || (definition2.Methods.Count > 0)) || (definition2.Properties.Count > 0))
-                        {
-                            string name = definition2.Name;
-                            res.AddMonoClass(name);
-                        }
-                    }
-                }
-            }
-        }
-
-        public static void ResolveReferencedUnityEngineClassesFromMono(AssemblyDefinition[] assemblies, AssemblyDefinition unityEngine, RuntimeClassRegistry res)
-        {
-            if (res != null)
-            {
-                foreach (AssemblyDefinition definition in assemblies)
-                {
-                    if (definition != unityEngine)
-                    {
-                        foreach (TypeReference reference in definition.MainModule.GetTypeReferences())
-                        {
-                            if (reference.Namespace.StartsWith("UnityEngine"))
-                            {
-                                string name = reference.Name;
-                                res.AddMonoClass(name);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         public static void WriteCPlusPlusFileForStaticAOTModuleRegistration(BuildTarget buildTarget, string file, CrossCompileOptions crossCompileOptions, bool advancedLic, string targetDevice, bool stripping, RuntimeClassRegistry usedClassRegistry, AssemblyReferenceChecker checker, string stagingAreaDataManaged)
+        {
+            WriteCPlusPlusFileForStaticAOTModuleRegistration(buildTarget, file, crossCompileOptions, advancedLic, targetDevice, stripping, usedClassRegistry, checker, stagingAreaDataManaged, null);
+        }
+
+        public static void WriteCPlusPlusFileForStaticAOTModuleRegistration(BuildTarget buildTarget, string file, CrossCompileOptions crossCompileOptions, bool advancedLic, string targetDevice, bool stripping, RuntimeClassRegistry usedClassRegistry, AssemblyReferenceChecker checker, string stagingAreaDataManaged, IIl2CppPlatformProvider platformProvider)
         {
             HashSet<UnityType> set;
             HashSet<string> set2;
@@ -213,7 +181,7 @@
             string exe = Path.Combine(MonoInstallationFinder.GetFrameWorksFolder(), "Tools/InternalCallRegistrationWriter/InternalCallRegistrationWriter.exe");
             string args = $"-assembly="{Path.Combine(stagingAreaDataManaged, "UnityEngine.dll")}" -summary="{str}"";
             Runner.RunManagedProgram(exe, args);
-            CodeStrippingUtils.GenerateDependencies(Path.GetDirectoryName(stagingAreaDataManaged), str, usedClassRegistry, stripping, out set, out set2, null);
+            CodeStrippingUtils.GenerateDependencies(Path.GetDirectoryName(stagingAreaDataManaged), str, usedClassRegistry, stripping, out set, out set2, platformProvider);
             using (TextWriter writer = new StreamWriter(file))
             {
                 string[] assemblyFileNames = checker.GetAssemblyFileNames();
@@ -324,20 +292,18 @@
                 }
                 writer.WriteLine("}");
                 writer.WriteLine("");
-                AssemblyDefinition unityEngine = null;
+                AssemblyDefinition definition2 = null;
                 for (int j = 0; j < assemblyFileNames.Length; j++)
                 {
                     if (assemblyFileNames[j] == "UnityEngine.dll")
                     {
-                        unityEngine = assemblyDefinitions[j];
+                        definition2 = assemblyDefinitions[j];
                     }
                 }
                 if (buildTarget == BuildTarget.iOS)
                 {
-                    AssemblyDefinition[] assemblies = new AssemblyDefinition[] { unityEngine };
+                    AssemblyDefinition[] assemblies = new AssemblyDefinition[] { definition2 };
                     GenerateRegisterInternalCalls(assemblies, writer);
-                    ResolveDefinedNativeClassesFromMono(assemblies, usedClassRegistry);
-                    ResolveReferencedUnityEngineClassesFromMono(assemblyDefinitions, unityEngine, usedClassRegistry);
                     GenerateRegisterModules(set, set2, writer, stripping);
                     if (stripping && (usedClassRegistry != null))
                     {

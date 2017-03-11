@@ -12,7 +12,7 @@
     /// <para>Render textures are textures that can be rendered to.</para>
     /// </summary>
     [UsedByNativeCode]
-    public sealed class RenderTexture : Texture
+    public class RenderTexture : Texture
     {
         /// <summary>
         /// <para>Creates a new RenderTexture object.</para>
@@ -94,7 +94,7 @@
         /// </summary>
         /// <param name="discardColor">Should the colour buffer be discarded?</param>
         /// <param name="discardDepth">Should the depth buffer be discarded?</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void DiscardContents(bool discardColor, bool discardDepth);
         /// <summary>
         /// <para>Generate mipmap levels of a render texture.</para>
@@ -104,9 +104,9 @@
             INTERNAL_CALL_GenerateMips(this);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void GetColorBuffer(out RenderBuffer res);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void GetDepthBuffer(out RenderBuffer res);
         /// <summary>
         /// <para>Retrieve a native (underlying graphics API) pointer to the depth buffer resource.</para>
@@ -164,41 +164,41 @@
         /// <param name="format">Render texture format.</param>
         /// <param name="readWrite">Color space conversion mode.</param>
         /// <param name="antiAliasing">Anti-aliasing (1,2,4,8).</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern RenderTexture GetTemporary(int width, int height, [UnityEngine.Internal.DefaultValue("0")] int depthBuffer, [UnityEngine.Internal.DefaultValue("RenderTextureFormat.Default")] RenderTextureFormat format, [UnityEngine.Internal.DefaultValue("RenderTextureReadWrite.Default")] RenderTextureReadWrite readWrite, [UnityEngine.Internal.DefaultValue("1")] int antiAliasing);
         [Obsolete("GetTexelOffset always returns zero now, no point in using it.")]
         public Vector2 GetTexelOffset() => 
             Vector2.zero;
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool INTERNAL_CALL_Create(RenderTexture self);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_DiscardContents(RenderTexture self);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GenerateMips(RenderTexture self);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetNativeDepthBufferPtr(RenderTexture self, out IntPtr value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool INTERNAL_CALL_IsCreated(RenderTexture self);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_MarkRestoreExpected(RenderTexture self);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Release(RenderTexture self);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_CreateRenderTexture([Writable] RenderTexture rt);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern TextureDimension Internal_GetDimension(RenderTexture rt);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int Internal_GetHeight(RenderTexture mono);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int Internal_GetWidth(RenderTexture mono);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_SetDimension(RenderTexture rt, TextureDimension dim);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_SetHeight(RenderTexture mono, int width);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_SetSRGBReadWrite(RenderTexture mono, bool sRGB);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_SetWidth(RenderTexture mono, int width);
         /// <summary>
         /// <para>Is the render texture actually created?</para>
@@ -226,7 +226,7 @@
         /// <para>Release a temporary texture allocated with GetTemporary.</para>
         /// </summary>
         /// <param name="temp"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void ReleaseTemporary(RenderTexture temp);
         [Obsolete("SetBorderColor is no longer supported.", true)]
         public void SetBorderColor(Color color)
@@ -237,29 +237,29 @@
         /// <para>Assigns this RenderTexture as a global shader property named propertyName.</para>
         /// </summary>
         /// <param name="propertyName"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetGlobalShaderProperty(string propertyName);
         /// <summary>
         /// <para>Does a RenderTexture have stencil buffer?</para>
         /// </summary>
         /// <param name="rt">Render texture, or null for main screen.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool SupportsStencil(RenderTexture rt);
 
         /// <summary>
         /// <para>Currently active render texture.</para>
         /// </summary>
-        public static RenderTexture active { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static RenderTexture active { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The antialiasing level for the RenderTexture.</para>
         /// </summary>
-        public int antiAliasing { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int antiAliasing { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Mipmap levels are generated automatically when this flag is set.</para>
         /// </summary>
-        public bool autoGenerateMips { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool autoGenerateMips { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Color buffer of the render texture (Read Only).</para>
@@ -277,7 +277,7 @@
         /// <summary>
         /// <para>The precision of the render texture's depth buffer in bits (0, 16, 24/32 are supported).</para>
         /// </summary>
-        public int depth { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int depth { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Depth/stencil buffer of the render texture (Read Only).</para>
@@ -306,17 +306,17 @@
         }
 
         [Obsolete("RenderTexture.enabled is always now, no need to use it")]
-        public static bool enabled { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static bool enabled { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Enable random access write into this render texture on Shader Model 5.0 level shaders.</para>
         /// </summary>
-        public bool enableRandomWrite { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool enableRandomWrite { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The color format of the render texture.</para>
         /// </summary>
-        public RenderTextureFormat format { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public RenderTextureFormat format { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Use RenderTexture.autoGenerateMips instead (UnityUpgradable) -> autoGenerateMips", false)]
         public bool generateMips
@@ -343,30 +343,30 @@
         }
 
         [Obsolete("Use RenderTexture.dimension instead.")]
-        public bool isCubemap { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool isCubemap { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        public bool isPowerOfTwo { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool isPowerOfTwo { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>If enabled, this Render Texture will be used as a Texture3D.</para>
         /// </summary>
         [Obsolete("Use RenderTexture.dimension instead.")]
-        public bool isVolume { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool isVolume { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Does this render texture use sRGB read/write conversions (Read Only).</para>
         /// </summary>
-        public bool sRGB { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool sRGB { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Render texture has mipmaps when this flag is set.</para>
         /// </summary>
-        public bool useMipMap { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool useMipMap { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Volume extent of a 3D render texture.</para>
         /// </summary>
-        public int volumeDepth { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int volumeDepth { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The width of the render texture in pixels.</para>

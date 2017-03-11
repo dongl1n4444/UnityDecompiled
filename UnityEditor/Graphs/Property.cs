@@ -514,7 +514,7 @@
                 }
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<char, bool>(null, (IntPtr) <get_elementCount>m__0);
+                    <>f__am$cache0 = t => t == '↓';
                 }
                 return Enumerable.Count<char>(this.stringValue, <>f__am$cache0);
             }

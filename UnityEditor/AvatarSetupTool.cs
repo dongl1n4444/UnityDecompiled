@@ -14,12 +14,6 @@
         private static BonePoseData[] sBonePoses;
         private static string sHasTranslationDoF = "m_HumanDescription.m_HasTranslationDoF";
         private static string sHuman = "m_HumanDescription.m_Human";
-        internal static int[] sHumanParent = new int[] { 
-            0, 0, 0, 1, 2, 3, 4, 0, 7, 8, 9, 8, 8, 11, 12, 13,
-            14, 15, 0x10, 5, 6, 10, 10, 10, 0x11, 0x18, 0x19, 0x11, 0x1b, 0x1c, 0x11, 30,
-            0x1f, 0x11, 0x21, 0x22, 0x11, 0x24, 0x25, 0x12, 0x27, 40, 0x12, 0x2a, 0x2b, 0x12, 0x2d, 0x2e,
-            0x12, 0x30, 0x31, 0x12, 0x33, 0x34
-        };
         internal static string sName = "m_Name";
         internal static string sParentName = "m_ParentName";
         internal static string sPosition = "m_Position";
@@ -29,7 +23,7 @@
 
         static AvatarSetupTool()
         {
-            BonePoseData[] dataArray1 = new BonePoseData[0x36];
+            BonePoseData[] dataArray1 = new BonePoseData[0x37];
             dataArray1[0] = new BonePoseData(Vector3.up, true, 15f);
             dataArray1[1] = new BonePoseData(new Vector3(-0.05f, -1f, 0f), true, 15f);
             dataArray1[2] = new BonePoseData(new Vector3(0.05f, -1f, 0f), true, 15f);
@@ -37,9 +31,8 @@
             dataArray1[4] = new BonePoseData(new Vector3(0.05f, -1f, -0.15f), true, 20f);
             dataArray1[5] = new BonePoseData(new Vector3(-0.05f, 0f, 1f), true, 20f, Vector3.up, null);
             dataArray1[6] = new BonePoseData(new Vector3(0.05f, 0f, 1f), true, 20f, Vector3.up, null);
-            dataArray1[7] = new BonePoseData(Vector3.up, true, 30f, new int[] { 8, 9, 10 });
-            int[] children = new int[] { 9, 10 };
-            dataArray1[8] = new BonePoseData(Vector3.up, true, 30f, children);
+            dataArray1[7] = new BonePoseData(Vector3.up, true, 30f, new int[] { 8, 0x36, 9, 10 });
+            dataArray1[8] = new BonePoseData(Vector3.up, true, 30f, new int[] { 0x36, 9, 10 });
             dataArray1[9] = new BonePoseData(Vector3.up, true, 30f);
             dataArray1[11] = new BonePoseData(-Vector3.right, true, 20f);
             dataArray1[12] = new BonePoseData(Vector3.right, true, 20f);
@@ -47,10 +40,10 @@
             dataArray1[14] = new BonePoseData(Vector3.right, true, 5f);
             dataArray1[15] = new BonePoseData(-Vector3.right, true, 5f);
             dataArray1[0x10] = new BonePoseData(Vector3.right, true, 5f);
-            int[] numArray2 = new int[] { 30 };
-            dataArray1[0x11] = new BonePoseData(-Vector3.right, false, 10f, Vector3.forward, numArray2);
-            int[] numArray3 = new int[] { 0x2d };
-            dataArray1[0x12] = new BonePoseData(Vector3.right, false, 10f, Vector3.forward, numArray3);
+            int[] children = new int[] { 30 };
+            dataArray1[0x11] = new BonePoseData(-Vector3.right, false, 10f, Vector3.forward, children);
+            int[] numArray2 = new int[] { 0x2d };
+            dataArray1[0x12] = new BonePoseData(Vector3.right, false, 10f, Vector3.forward, numArray2);
             dataArray1[0x18] = new BonePoseData(new Vector3(-1f, 0f, 1f), false, 10f);
             dataArray1[0x19] = new BonePoseData(new Vector3(-1f, 0f, 1f), false, 5f);
             dataArray1[0x1a] = new BonePoseData(new Vector3(-1f, 0f, 1f), false, 5f);
@@ -81,6 +74,8 @@
             dataArray1[0x33] = new BonePoseData(Vector3.right, false, 10f);
             dataArray1[0x34] = new BonePoseData(Vector3.right, false, 5f);
             dataArray1[0x35] = new BonePoseData(Vector3.right, false, 5f);
+            int[] numArray3 = new int[] { 9, 10 };
+            dataArray1[0x36] = new BonePoseData(Vector3.up, true, 30f, numArray3);
             sBonePoses = dataArray1;
         }
 
@@ -139,10 +134,10 @@
 
         public static void AutoSetupOnInstance(GameObject modelPrefab, SerializedObject modelImporterSerializedObject)
         {
-            GameObject modelInstance = Object.Instantiate<GameObject>(modelPrefab);
+            GameObject modelInstance = UnityEngine.Object.Instantiate<GameObject>(modelPrefab);
             modelInstance.hideFlags = HideFlags.HideAndDontSave;
             AutoSetup(modelPrefab, modelInstance, modelImporterSerializedObject);
-            Object.DestroyImmediate(modelInstance);
+            UnityEngine.Object.DestroyImmediate(modelInstance);
         }
 
         public static Quaternion AvatarComputeOrientation(BoneWrapper[] bones)
@@ -216,11 +211,11 @@
 
         public static void CopyPose(GameObject go, GameObject source)
         {
-            GameObject obj2 = Object.Instantiate<GameObject>(source);
+            GameObject obj2 = UnityEngine.Object.Instantiate<GameObject>(source);
             obj2.hideFlags = HideFlags.HideAndDontSave;
             AnimatorUtility.DeoptimizeTransformHierarchy(obj2);
             CopyPose(go.transform, obj2.transform);
-            Object.DestroyImmediate(obj2);
+            UnityEngine.Object.DestroyImmediate(obj2);
         }
 
         private static void CopyPose(Transform t, Transform source)
@@ -600,19 +595,19 @@
 
         public static int GetFirstHumanBoneAncestor(BoneWrapper[] bones, int boneIndex)
         {
-            boneIndex = sHumanParent[boneIndex];
-            while ((bones[boneIndex].bone == null) && (boneIndex != 0))
+            boneIndex = HumanTrait.GetParentBone(boneIndex);
+            while ((boneIndex > 0) && (bones[boneIndex].bone == null))
             {
-                boneIndex = sHumanParent[boneIndex];
+                boneIndex = HumanTrait.GetParentBone(boneIndex);
             }
             return boneIndex;
         }
 
         public static int GetHumanBoneChild(BoneWrapper[] bones, int boneIndex)
         {
-            for (int i = 0; i < sHumanParent.Length; i++)
+            for (int i = 0; i < HumanTrait.BoneCount; i++)
             {
-                if (sHumanParent[i] == boneIndex)
+                if (HumanTrait.GetParentBone(i) == boneIndex)
                 {
                     return i;
                 }
@@ -702,15 +697,18 @@
             BonePoseData data = sBonePoses[boneIndex];
             if (!data.compareInGlobalSpace)
             {
-                int index = sHumanParent[boneIndex];
-                BonePoseData data2 = sBonePoses[index];
-                if ((bones[index].bone != null) && (data2 != null))
+                int parentBone = HumanTrait.GetParentBone(boneIndex);
+                if (parentBone > 0)
                 {
-                    Vector3 toDirection = GetBoneAlignmentDirection(bones, avatarOrientation, index);
-                    if (toDirection != Vector3.zero)
+                    BonePoseData data2 = sBonePoses[parentBone];
+                    if ((bones[parentBone].bone != null) && (data2 != null))
                     {
-                        Vector3 fromDirection = (Vector3) (avatarOrientation * data2.direction);
-                        identity = Quaternion.FromToRotation(fromDirection, toDirection);
+                        Vector3 toDirection = GetBoneAlignmentDirection(bones, avatarOrientation, parentBone);
+                        if (toDirection != Vector3.zero)
+                        {
+                            Vector3 fromDirection = (Vector3) (avatarOrientation * data2.direction);
+                            identity = Quaternion.FromToRotation(fromDirection, toDirection);
+                        }
                     }
                 }
             }
@@ -722,13 +720,13 @@
 
         public static bool IsPoseValidOnInstance(GameObject modelPrefab, SerializedObject modelImporterSerializedObject)
         {
-            GameObject obj2 = Object.Instantiate<GameObject>(modelPrefab);
+            GameObject obj2 = UnityEngine.Object.Instantiate<GameObject>(modelPrefab);
             obj2.hideFlags = HideFlags.HideAndDontSave;
             Dictionary<Transform, bool> actualBones = GetModelBones(obj2.transform, false, null);
             BoneWrapper[] humanBones = GetHumanBones(modelImporterSerializedObject, actualBones);
             TransferDescriptionToPose(modelImporterSerializedObject, obj2.transform);
             bool flag = IsPoseValid(humanBones);
-            Object.DestroyImmediate(obj2);
+            UnityEngine.Object.DestroyImmediate(obj2);
             return flag;
         }
 
@@ -943,7 +941,7 @@
                 {
                     list = new List<string>(File.ReadAllLines(path));
                 }
-                GameObject obj3 = Object.Instantiate<GameObject>(modelAsset);
+                GameObject obj3 = UnityEngine.Object.Instantiate<GameObject>(modelAsset);
                 obj3.hideFlags = HideFlags.HideAndDontSave;
                 Dictionary<Transform, bool> actualBones = GetModelBones(obj3.transform, false, null);
                 BoneWrapper[] humanBones = GetHumanBones(serializedObject, actualBones);
@@ -961,7 +959,7 @@
                         }
                     }
                 }
-                Object.DestroyImmediate(obj3);
+                UnityEngine.Object.DestroyImmediate(obj3);
                 if (flag2)
                 {
                     return false;
@@ -1101,13 +1099,18 @@
                 this.Reset(serializedObject, bones);
             }
 
-            public void BoneDotGUI(Rect rect, int boneIndex, bool doClickSelect, bool doDragDrop, SerializedObject serializedObject, AvatarMappingEditor editor)
+            public void BoneDotGUI(Rect rect, Rect selectRect, int boneIndex, bool doClickSelect, bool doDragDrop, bool doDeleteKey, SerializedObject serializedObject, AvatarMappingEditor editor)
             {
                 Texture image;
                 int controlID = GUIUtility.GetControlID(FocusType.Passive, rect);
+                int keyboardID = GUIUtility.GetControlID(FocusType.Keyboard, selectRect);
                 if (doClickSelect)
                 {
-                    this.HandleClickSelection(rect, boneIndex);
+                    this.HandleClickSelection(keyboardID, selectRect, boneIndex);
+                }
+                if (doDeleteKey)
+                {
+                    this.HandleDeleteSelection(keyboardID, serializedObject, editor);
                 }
                 if (doDragDrop)
                 {
@@ -1193,18 +1196,34 @@
                 return null;
             }
 
-            public void HandleClickSelection(Rect selectRect, int boneIndex)
+            public void HandleClickSelection(int keyboardID, Rect selectRect, int boneIndex)
             {
                 Event current = Event.current;
                 if ((current.type == EventType.MouseDown) && selectRect.Contains(current.mousePosition))
                 {
                     AvatarMappingEditor.s_SelectedBoneIndex = boneIndex;
                     AvatarMappingEditor.s_DirtySelection = true;
+                    AvatarMappingEditor.s_KeyboardControl = keyboardID;
                     Selection.activeTransform = this.bone;
                     if (this.bone != null)
                     {
                         EditorGUIUtility.PingObject(this.bone);
                     }
+                    current.Use();
+                }
+            }
+
+            public void HandleDeleteSelection(int keyboardID, SerializedObject serializedObject, AvatarMappingEditor editor)
+            {
+                Event current = Event.current;
+                if (((current.type == EventType.KeyDown) && (GUIUtility.keyboardControl == keyboardID)) && ((current.keyCode == KeyCode.Backspace) || (current.keyCode == KeyCode.Delete)))
+                {
+                    Undo.RegisterCompleteObjectUndo(editor, "Avatar mapping modified");
+                    this.bone = null;
+                    this.state = BoneState.None;
+                    this.Serialize(serializedObject);
+                    Selection.activeTransform = null;
+                    GUI.changed = true;
                     current.Use();
                 }
             }
@@ -1225,8 +1244,8 @@
                     case EventType.DragPerform:
                         if (dropRect.Contains(Event.current.mousePosition) && GUI.enabled)
                         {
-                            Object[] objectReferences = DragAndDrop.objectReferences;
-                            Object target = (objectReferences.Length != 1) ? null : objectReferences[0];
+                            UnityEngine.Object[] objectReferences = DragAndDrop.objectReferences;
+                            UnityEngine.Object target = (objectReferences.Length != 1) ? null : objectReferences[0];
                             if ((target != null) && ((!(target is Transform) && !(target is GameObject)) || EditorUtility.IsPersistent(target)))
                             {
                                 target = null;
@@ -1270,7 +1289,7 @@
                     <Reset>c__AnonStorey0 storey = new <Reset>c__AnonStorey0 {
                         boneName = serializedProperty.FindPropertyRelative(sBoneName).stringValue
                     };
-                    this.bone = Enumerable.FirstOrDefault<Transform>(bones.Keys, new Func<Transform, bool>(storey, (IntPtr) this.<>m__0));
+                    this.bone = Enumerable.FirstOrDefault<Transform>(bones.Keys, new Func<Transform, bool>(storey.<>m__0));
                 }
                 this.state = BoneState.Valid;
             }
@@ -1329,30 +1348,6 @@
                     }
                     parent = parent.parent;
                     transform2 = transform2.parent;
-                }
-            }
-        }
-
-        private class TransformHierarchySorter : IComparer<Transform>
-        {
-            public int Compare(Transform a, Transform b)
-            {
-                while (true)
-                {
-                    if (a == null)
-                    {
-                        if (b == null)
-                        {
-                            return 0;
-                        }
-                        return -1;
-                    }
-                    if (b == null)
-                    {
-                        return 1;
-                    }
-                    a = a.parent;
-                    b = b.parent;
                 }
             }
         }

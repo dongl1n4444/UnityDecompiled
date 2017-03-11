@@ -8,7 +8,7 @@
     using System.Reflection;
     using System.Runtime.InteropServices;
 
-    [EditorBrowsable(EditorBrowsableState.Never), GeneratedCode("simple-json", "1.0.0")]
+    [GeneratedCode("simple-json", "1.0.0"), EditorBrowsable(EditorBrowsableState.Never)]
     internal class JsonObject : IDictionary<string, object>, ICollection<KeyValuePair<string, object>>, IEnumerable<KeyValuePair<string, object>>, IEnumerable
     {
         private readonly Dictionary<string, object> _members;

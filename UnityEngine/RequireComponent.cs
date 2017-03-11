@@ -3,7 +3,7 @@
     using System;
 
     /// <summary>
-    /// <para>The RequireComponent attribute automatically adds required components as dependencies.</para>
+    /// <para>The RequireComponent attribute lets automatically add required component as a dependency.</para>
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=true)]
     public sealed class RequireComponent : Attribute

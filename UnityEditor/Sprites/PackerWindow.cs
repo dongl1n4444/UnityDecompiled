@@ -11,11 +11,13 @@
     internal class PackerWindow : SpriteUtilityWindow
     {
         [CompilerGenerated]
-        private static Func<Edge, Edge> <>f__am$cache0;
+        private static Action<Rect> <>f__am$cache0;
         [CompilerGenerated]
-        private static Func<IGrouping<Edge, Edge>, bool> <>f__am$cache1;
+        private static Func<Edge, Edge> <>f__am$cache1;
         [CompilerGenerated]
-        private static Func<IGrouping<Edge, Edge>, Edge> <>f__am$cache2;
+        private static Func<IGrouping<Edge, Edge>, bool> <>f__am$cache2;
+        [CompilerGenerated]
+        private static Func<IGrouping<Edge, Edge>, Edge> <>f__am$cache3;
         private string[] m_AtlasNames = s_AtlasNamesEmpty;
         private string[] m_PageNames = s_PageNamesEmpty;
         private int m_SelectedAtlas = 0;
@@ -24,66 +26,85 @@
         private static string[] s_AtlasNamesEmpty = new string[] { "Sprite atlas cache is empty" };
         private static string[] s_PageNamesEmpty = new string[0];
 
-        private void DoToolbarGUI()
+        private Rect DoToolbarGUI()
         {
-            EditorGUILayout.BeginHorizontal(new GUILayoutOption[0]);
+            <DoToolbarGUI>c__AnonStorey0 storey = new <DoToolbarGUI>c__AnonStorey0 {
+                $this = this
+            };
+            Rect position = new Rect(0f, 0f, base.position.width, 17f);
+            if (Event.current.type == EventType.Repaint)
+            {
+                EditorStyles.toolbar.Draw(position, false, false, false, false);
+            }
+            bool enabled = GUI.enabled;
+            GUI.enabled = this.m_AtlasNames.Length > 0;
+            position = base.DoAlphaZoomToolbarGUI(position);
+            GUI.enabled = enabled;
+            Rect drawRect = new Rect(5f, 0f, 0f, 17f);
+            position.width -= drawRect.x;
             using (new EditorGUI.DisabledScope(Application.isPlaying))
             {
-                if (GUILayout.Button("Pack", EditorStyles.toolbarButton, new GUILayoutOption[0]))
+                drawRect.width = EditorStyles.toolbarButton.CalcSize(PackerWindowStyle.packLabel).x;
+                SpriteUtilityWindow.DrawToolBarWidget(ref drawRect, ref position, new Action<Rect>(storey.<>m__0));
+                using (new EditorGUI.DisabledScope(Packer.SelectedPolicy == Packer.kDefaultPolicy))
                 {
-                    Packer.RebuildAtlasCacheIfNeeded(EditorUserBuildSettings.activeBuildTarget, true);
-                    this.m_SelectedSprite = null;
-                    this.RefreshAtlasPageList();
-                    this.RefreshState();
-                }
-                else
-                {
-                    using (new EditorGUI.DisabledScope(Packer.SelectedPolicy == Packer.kDefaultPolicy))
-                    {
-                        if (GUILayout.Button("Repack", EditorStyles.toolbarButton, new GUILayoutOption[0]))
-                        {
-                            Packer.RebuildAtlasCacheIfNeeded(EditorUserBuildSettings.activeBuildTarget, true, Packer.Execution.ForceRegroup);
-                            this.m_SelectedSprite = null;
-                            this.RefreshAtlasPageList();
-                            this.RefreshState();
-                        }
-                    }
+                    drawRect.x += drawRect.width;
+                    drawRect.width = EditorStyles.toolbarButton.CalcSize(PackerWindowStyle.repackLabel).x;
+                    SpriteUtilityWindow.DrawToolBarWidget(ref drawRect, ref position, new Action<Rect>(storey.<>m__1));
                 }
             }
+            float x = GUI.skin.label.CalcSize(PackerWindowStyle.viewAtlasLabel).x;
+            float num2 = ((x + 100f) + 70f) + 100f;
+            drawRect.x += 5f;
+            position.width -= 5f;
+            float width = position.width;
             using (new EditorGUI.DisabledScope(this.m_AtlasNames.Length == 0))
             {
-                GUILayout.Space(16f);
-                GUILayout.Label("View atlas:", new GUILayoutOption[0]);
+                drawRect.x += drawRect.width;
+                drawRect.width = (x / num2) * width;
+                if (<>f__am$cache0 == null)
+                {
+                    <>f__am$cache0 = delegate (Rect adjustedDrawArea) {
+                        GUI.Label(adjustedDrawArea, PackerWindowStyle.viewAtlasLabel);
+                    };
+                }
+                SpriteUtilityWindow.DrawToolBarWidget(ref drawRect, ref position, <>f__am$cache0);
                 EditorGUI.BeginChangeCheck();
-                this.m_SelectedAtlas = EditorGUILayout.Popup(this.m_SelectedAtlas, this.m_AtlasNames, EditorStyles.toolbarPopup, new GUILayoutOption[0]);
+                drawRect.x += drawRect.width;
+                drawRect.width = (100f / num2) * width;
+                SpriteUtilityWindow.DrawToolBarWidget(ref drawRect, ref position, new Action<Rect>(storey.<>m__2));
                 if (EditorGUI.EndChangeCheck())
                 {
                     this.RefreshAtlasPageList();
                     this.m_SelectedSprite = null;
                 }
                 EditorGUI.BeginChangeCheck();
-                GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(70f) };
-                this.m_SelectedPage = EditorGUILayout.Popup(this.m_SelectedPage, this.m_PageNames, EditorStyles.toolbarPopup, options);
+                drawRect.x += drawRect.width;
+                drawRect.width = (70f / num2) * width;
+                SpriteUtilityWindow.DrawToolBarWidget(ref drawRect, ref position, new Action<Rect>(storey.<>m__3));
                 if (EditorGUI.EndChangeCheck())
                 {
                     this.m_SelectedSprite = null;
                 }
             }
             EditorGUI.BeginChangeCheck();
-            string[] policies = Packer.Policies;
-            int index = EditorGUILayout.Popup(Array.IndexOf<string>(policies, Packer.SelectedPolicy), policies, EditorStyles.toolbarPopup, new GUILayoutOption[0]);
+            storey.policies = Packer.Policies;
+            storey.selectedPolicy = Array.IndexOf<string>(storey.policies, Packer.SelectedPolicy);
+            drawRect.x += drawRect.width;
+            drawRect.width = (100f / num2) * width;
+            SpriteUtilityWindow.DrawToolBarWidget(ref drawRect, ref position, new Action<Rect>(storey.<>m__4));
             if (EditorGUI.EndChangeCheck())
             {
-                Packer.SelectedPolicy = policies[index];
+                Packer.SelectedPolicy = storey.policies[storey.selectedPolicy];
             }
-            EditorGUILayout.EndHorizontal();
+            return position;
         }
 
         protected override void DrawGizmos()
         {
             if ((this.m_SelectedSprite != null) && (base.m_Texture != null))
             {
-                Vector2[] spriteUVs = SpriteUtility.GetSpriteUVs(this.m_SelectedSprite, true);
+                Vector2[] spriteUVs = UnityEditor.Sprites.SpriteUtility.GetSpriteUVs(this.m_SelectedSprite, true);
                 ushort[] triangles = this.m_SelectedSprite.triangles;
                 Edge[] edgeArray = this.FindUniqueEdges(triangles);
                 SpriteEditorUtility.BeginLines(new Color(0.3921f, 0.5843f, 0.9294f, 0.75f));
@@ -110,19 +131,19 @@
                 edgeArray[(i * 3) + 1] = new Edge(indices[(i * 3) + 1], indices[(i * 3) + 2]);
                 edgeArray[(i * 3) + 2] = new Edge(indices[(i * 3) + 2], indices[i * 3]);
             }
-            if (<>f__am$cache0 == null)
-            {
-                <>f__am$cache0 = new Func<Edge, Edge>(null, (IntPtr) <FindUniqueEdges>m__0);
-            }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<IGrouping<Edge, Edge>, bool>(null, (IntPtr) <FindUniqueEdges>m__1);
+                <>f__am$cache1 = x => x;
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<IGrouping<Edge, Edge>, Edge>(null, (IntPtr) <FindUniqueEdges>m__2);
+                <>f__am$cache2 = x => x.Count<Edge>() == 1;
             }
-            return Enumerable.Select<IGrouping<Edge, Edge>, Edge>(Enumerable.Where<IGrouping<Edge, Edge>>(Enumerable.GroupBy<Edge, Edge>(edgeArray, <>f__am$cache0), <>f__am$cache1), <>f__am$cache2).ToArray<Edge>();
+            if (<>f__am$cache3 == null)
+            {
+                <>f__am$cache3 = x => x.First<Edge>();
+            }
+            return Enumerable.Select<IGrouping<Edge, Edge>, Edge>(Enumerable.Where<IGrouping<Edge, Edge>>(Enumerable.GroupBy<Edge, Edge>(edgeArray, <>f__am$cache1), <>f__am$cache2), <>f__am$cache3).ToArray<Edge>();
         }
 
         private void OnAtlasNameListChanged()
@@ -146,7 +167,7 @@
         private void OnEnable()
         {
             base.minSize = new Vector2(400f, 256f);
-            base.titleContent = EditorGUIUtility.TextContent("Sprite Packer");
+            base.titleContent = PackerWindowStyle.windowTitle;
             this.Reset();
         }
 
@@ -157,14 +178,7 @@
                 Matrix4x4 matrix = Handles.matrix;
                 base.InitStyles();
                 this.RefreshState();
-                Rect rect = EditorGUILayout.BeginHorizontal(GUIContent.none, EditorStyles.toolbar, new GUILayoutOption[0]);
-                this.DoToolbarGUI();
-                GUILayout.FlexibleSpace();
-                bool enabled = GUI.enabled;
-                GUI.enabled = this.m_AtlasNames.Length > 0;
-                base.DoAlphaZoomToolbarGUI();
-                GUI.enabled = enabled;
-                EditorGUILayout.EndHorizontal();
+                Rect rect = this.DoToolbarGUI();
                 if (base.m_Texture != null)
                 {
                     EditorGUILayout.BeginHorizontal(new GUILayoutOption[0]);
@@ -188,7 +202,7 @@
                 {
                     if (activeObject != null)
                     {
-                        <OnSelectionChange>c__AnonStorey0 storey = new <OnSelectionChange>c__AnonStorey0();
+                        <OnSelectionChange>c__AnonStorey1 storey = new <OnSelectionChange>c__AnonStorey1();
                         Packer.GetAtlasDataForSprite(activeObject, out storey.selAtlasName, out storey.selAtlasTexture);
                         int num = this.m_AtlasNames.ToList<string>().FindIndex(new Predicate<string>(storey.<>m__0));
                         if (num == -1)
@@ -228,7 +242,7 @@
                 this.m_PageNames = new string[texturesForAtlas.Length];
                 for (int i = 0; i < texturesForAtlas.Length; i++)
                 {
-                    this.m_PageNames[i] = $"Page {i + 1}";
+                    this.m_PageNames[i] = string.Format(PackerWindowStyle.pageContentLabel.text, i + 1);
                 }
             }
             else
@@ -290,8 +304,8 @@
             if (EditorSettings.spritePackerMode == SpritePackerMode.Disabled)
             {
                 EditorGUILayout.BeginVertical(new GUILayoutOption[0]);
-                GUILayout.Label("Sprite packing is disabled. Enable it in Edit > Project Settings > Editor.", new GUILayoutOption[0]);
-                if (GUILayout.Button("Open Project Editor Settings", new GUILayoutOption[0]))
+                GUILayout.Label(PackerWindowStyle.packingDisabledLabel, new GUILayoutOption[0]);
+                if (GUILayout.Button(PackerWindowStyle.openProjectSettingButton, new GUILayoutOption[0]))
                 {
                     EditorApplication.ExecuteMenuItem("Edit/Project Settings/Editor");
                 }
@@ -302,7 +316,52 @@
         }
 
         [CompilerGenerated]
-        private sealed class <OnSelectionChange>c__AnonStorey0
+        private sealed class <DoToolbarGUI>c__AnonStorey0
+        {
+            internal PackerWindow $this;
+            internal string[] policies;
+            internal int selectedPolicy;
+
+            internal void <>m__0(Rect adjustedDrawRect)
+            {
+                if (GUI.Button(adjustedDrawRect, PackerWindow.PackerWindowStyle.packLabel, EditorStyles.toolbarButton))
+                {
+                    Packer.RebuildAtlasCacheIfNeeded(EditorUserBuildSettings.activeBuildTarget, true);
+                    this.$this.m_SelectedSprite = null;
+                    this.$this.RefreshAtlasPageList();
+                    this.$this.RefreshState();
+                }
+            }
+
+            internal void <>m__1(Rect adjustedDrawRect)
+            {
+                if (GUI.Button(adjustedDrawRect, PackerWindow.PackerWindowStyle.repackLabel, EditorStyles.toolbarButton))
+                {
+                    Packer.RebuildAtlasCacheIfNeeded(EditorUserBuildSettings.activeBuildTarget, true, Packer.Execution.ForceRegroup);
+                    this.$this.m_SelectedSprite = null;
+                    this.$this.RefreshAtlasPageList();
+                    this.$this.RefreshState();
+                }
+            }
+
+            internal void <>m__2(Rect adjustedDrawArea)
+            {
+                this.$this.m_SelectedAtlas = EditorGUI.Popup(adjustedDrawArea, this.$this.m_SelectedAtlas, this.$this.m_AtlasNames, EditorStyles.toolbarPopup);
+            }
+
+            internal void <>m__3(Rect adjustedDrawArea)
+            {
+                this.$this.m_SelectedPage = EditorGUI.Popup(adjustedDrawArea, this.$this.m_SelectedPage, this.$this.m_PageNames, EditorStyles.toolbarPopup);
+            }
+
+            internal void <>m__4(Rect adjustedDrawArea)
+            {
+                this.selectedPolicy = EditorGUI.Popup(adjustedDrawArea, this.selectedPolicy, this.policies, EditorStyles.toolbarPopup);
+            }
+        }
+
+        [CompilerGenerated]
+        private sealed class <OnSelectionChange>c__AnonStorey1
         {
             internal string selAtlasName;
             internal Texture2D selAtlasTexture;
@@ -336,6 +395,17 @@
                 int num = (this.v1 << 0x10) | this.v0;
                 return (((this.v0 << 0x10) | this.v1) ^ num.GetHashCode());
             }
+        }
+
+        private class PackerWindowStyle
+        {
+            public static readonly GUIContent openProjectSettingButton = EditorGUIUtility.TextContent("Open Project Editor Settings");
+            public static readonly GUIContent packingDisabledLabel = EditorGUIUtility.TextContent("Sprite packing is disabled. Enable it in Edit > Project Settings > Editor.");
+            public static readonly GUIContent packLabel = EditorGUIUtility.TextContent("Pack");
+            public static readonly GUIContent pageContentLabel = EditorGUIUtility.TextContent("Page {0}");
+            public static readonly GUIContent repackLabel = EditorGUIUtility.TextContent("Repack");
+            public static readonly GUIContent viewAtlasLabel = EditorGUIUtility.TextContent("View Atlas:");
+            public static readonly GUIContent windowTitle = EditorGUIUtility.TextContent("Sprite Packer");
         }
     }
 }

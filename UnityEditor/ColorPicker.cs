@@ -743,7 +743,7 @@
             if (this.m_ColorLibraryEditor == null)
             {
                 ScriptableObjectSaveLoadHelper<ColorPresetLibrary> helper = new ScriptableObjectSaveLoadHelper<ColorPresetLibrary>("colors", SaveType.Text);
-                this.m_ColorLibraryEditor = new PresetLibraryEditor<ColorPresetLibrary>(helper, this.m_ColorLibraryEditorState, new Action<int, object>(this, (IntPtr) this.PresetClickedCallback));
+                this.m_ColorLibraryEditor = new PresetLibraryEditor<ColorPresetLibrary>(helper, this.m_ColorLibraryEditorState, new Action<int, object>(this.PresetClickedCallback));
                 this.m_ColorLibraryEditor.previewAspect = 1f;
                 this.m_ColorLibraryEditor.minMaxPreviewHeight = new Vector2(14f, 14f);
                 this.m_ColorLibraryEditor.settingsMenuRightMargin = 2f;
@@ -779,39 +779,39 @@
             Undo.CollapseUndoOperations(this.m_ModalUndoGroup);
             if (this.m_ColorSlider != null)
             {
-                Object.DestroyImmediate(this.m_ColorSlider);
+                UnityEngine.Object.DestroyImmediate(this.m_ColorSlider);
             }
             if (this.m_ColorBox != null)
             {
-                Object.DestroyImmediate(this.m_ColorBox);
+                UnityEngine.Object.DestroyImmediate(this.m_ColorBox);
             }
             if (this.m_RTexture != null)
             {
-                Object.DestroyImmediate(this.m_RTexture);
+                UnityEngine.Object.DestroyImmediate(this.m_RTexture);
             }
             if (this.m_GTexture != null)
             {
-                Object.DestroyImmediate(this.m_GTexture);
+                UnityEngine.Object.DestroyImmediate(this.m_GTexture);
             }
             if (this.m_BTexture != null)
             {
-                Object.DestroyImmediate(this.m_BTexture);
+                UnityEngine.Object.DestroyImmediate(this.m_BTexture);
             }
             if (this.m_HueTexture != null)
             {
-                Object.DestroyImmediate(this.m_HueTexture);
+                UnityEngine.Object.DestroyImmediate(this.m_HueTexture);
             }
             if (this.m_SatTexture != null)
             {
-                Object.DestroyImmediate(this.m_SatTexture);
+                UnityEngine.Object.DestroyImmediate(this.m_SatTexture);
             }
             if (this.m_ValTexture != null)
             {
-                Object.DestroyImmediate(this.m_ValTexture);
+                UnityEngine.Object.DestroyImmediate(this.m_ValTexture);
             }
             if (this.m_AlphaTexture != null)
             {
-                Object.DestroyImmediate(this.m_AlphaTexture);
+                UnityEngine.Object.DestroyImmediate(this.m_AlphaTexture);
             }
             s_SharedColorPicker = null;
             if (this.m_IsOSColorPicker)
@@ -981,7 +981,7 @@
             {
                 if (!OSColorPicker.visible || (Application.platform != RuntimePlatform.OSXEditor))
                 {
-                    Object.DestroyImmediate(this);
+                    UnityEngine.Object.DestroyImmediate(this);
                 }
                 else
                 {
@@ -1085,7 +1085,7 @@
                 {
                     if (((c.r > 1f) || (c.g > 1f)) || (c.b > 1f))
                     {
-                        Debug.LogError($"Invalid normalized color: {c}, normalize value: {this.m_HDRValues.m_HDRScaleFactor}");
+                        UnityEngine.Debug.LogError($"Invalid normalized color: {c}, normalize value: {this.m_HDRValues.m_HDRScaleFactor}");
                     }
                     this.m_resetKeyboardControl = true;
                     this.SetNormalizedColor(c);
@@ -1098,11 +1098,11 @@
         {
             if (!this.m_HDR)
             {
-                Debug.LogError("HDR scale is being set in LDR mode!");
+                UnityEngine.Debug.LogError("HDR scale is being set in LDR mode!");
             }
             if (value < 1f)
             {
-                Debug.LogError("SetHDRScaleFactor is below 1, should be >= 1!");
+                UnityEngine.Debug.LogError("SetHDRScaleFactor is below 1, should be >= 1!");
             }
             this.m_HDRValues.m_HDRScaleFactor = Mathf.Clamp(value, 0f, this.m_HDRConfig.maxBrightness);
             this.m_ColorSliderDirty = true;
@@ -1138,7 +1138,7 @@
         {
             if (c.maxColorComponent > 1f)
             {
-                Debug.LogError("Setting normalized color with a non-normalized color: " + c);
+                UnityEngine.Debug.LogError("Setting normalized color with a non-normalized color: " + c);
             }
             this.m_Color = c;
             this.m_R = c.r;
@@ -1503,7 +1503,7 @@
             {
                 if (s_SharedColorPicker == null)
                 {
-                    Object[] objArray = Resources.FindObjectsOfTypeAll(typeof(ColorPicker));
+                    UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(ColorPicker));
                     if ((objArray != null) && (objArray.Length > 0))
                     {
                         s_SharedColorPicker = (ColorPicker) objArray[0];

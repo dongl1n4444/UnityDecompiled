@@ -8,7 +8,7 @@
 
     internal class SketchUpImportDlg : EditorWindow
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <isModal>k__BackingField;
         private const float kBottomHeight = 30f;
         private const float kHeaderHeight = 25f;

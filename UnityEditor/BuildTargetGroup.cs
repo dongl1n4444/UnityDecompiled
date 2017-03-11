@@ -1,10 +1,12 @@
 ﻿namespace UnityEditor
 {
     using System;
+    using Unity.Bindings;
 
     /// <summary>
     /// <para>Build target group.</para>
     /// </summary>
+    [NativeEnum(GenerateNativeType=false, Name="BuildTargetPlatformGroup", Header="Editor/Src/BuildPipeline/BuildTargetPlatformSpecific.h")]
     public enum BuildTargetGroup
     {
         /// <summary>
@@ -13,6 +15,10 @@
         Android = 7,
         [Obsolete("BlackBerry has been removed as of 5.4")]
         BlackBerry = 0x10,
+        /// <summary>
+        /// <para>Facebook target.</para>
+        /// </summary>
+        Facebook = 0x1a,
         /// <summary>
         /// <para>Apple iOS target.</para>
         /// </summary>
@@ -47,6 +53,10 @@
         /// <para>Mac/PC standalone target.</para>
         /// </summary>
         Standalone = 1,
+        /// <summary>
+        /// <para>Nintendo Switch target.</para>
+        /// </summary>
+        Switch = 0x1b,
         /// <summary>
         /// <para>Samsung Tizen target.</para>
         /// </summary>

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using UnityEditor.Build;
     using UnityEditorInternal;
     using UnityEngine;
 
@@ -17,13 +18,11 @@
         private bool m_AllowTextureSizeModification = false;
         private static Dictionary<ProceduralMaterial, float> m_GeneratingSince = new Dictionary<ProceduralMaterial, float>();
         private static SubstanceImporter m_Importer = null;
-        private string m_LastGroup;
         private static ProceduralMaterial m_Material = null;
         private bool m_MightHaveModified = false;
         protected List<ProceduralPlatformSetting> m_PlatformSettings;
         private bool m_ReimportOnDisable = true;
         private Vector2 m_ScrollPos = new Vector2();
-        private static Shader m_ShaderPMaterial = null;
         private bool m_ShowHSLInputs = true;
         private bool m_ShowTexturesSection = false;
         private Styles m_Styles;
@@ -42,17 +41,22 @@
             base.Awake();
             this.m_ShowTexturesSection = EditorPrefs.GetBool("ProceduralShowTextures", false);
             this.m_ReimportOnDisable = true;
+            if (m_UndoWasPerformed)
+            {
+                m_UndoWasPerformed = false;
+                this.OnShaderChanged();
+            }
             m_UndoWasPerformed = false;
         }
 
         public void BuildTargetList()
         {
-            List<BuildPlayerWindow.BuildPlatform> validPlatforms = BuildPlayerWindow.GetValidPlatforms();
+            List<BuildPlatform> validPlatforms = BuildPlatforms.instance.GetValidPlatforms();
             this.m_PlatformSettings = new List<ProceduralPlatformSetting>();
             this.m_PlatformSettings.Add(new ProceduralPlatformSetting(base.targets, "", BuildTarget.StandaloneWindows, null));
-            foreach (BuildPlayerWindow.BuildPlatform platform in validPlatforms)
+            foreach (BuildPlatform platform in validPlatforms)
             {
-                this.m_PlatformSettings.Add(new ProceduralPlatformSetting(base.targets, platform.name, platform.DefaultTarget, platform.smallIcon));
+                this.m_PlatformSettings.Add(new ProceduralPlatformSetting(base.targets, platform.name, platform.defaultTarget, platform.smallIcon));
             }
         }
 
@@ -72,14 +76,13 @@
             if (m_Material != target)
             {
                 m_Material = target;
-                m_ShaderPMaterial = target.shader;
             }
             this.ProceduralProperties();
             GUILayout.Space(15f);
             this.GeneratedTextures();
         }
 
-        internal static void DoObjectPingField(Rect position, Rect dropRect, int id, Object obj, Type objType)
+        internal static void DoObjectPingField(Rect position, Rect dropRect, int id, UnityEngine.Object obj, System.Type objType)
         {
             Event current = Event.current;
             EventType rawType = current.type;
@@ -93,7 +96,7 @@
                 case EventType.MouseDown:
                     if ((Event.current.button == 0) && position.Contains(Event.current.mousePosition))
                     {
-                        Object gameObject = obj;
+                        UnityEngine.Object gameObject = obj;
                         Component component = gameObject as Component;
                         if (component != null)
                         {
@@ -158,19 +161,19 @@
             }
         }
 
-        [MenuItem("CONTEXT/ProceduralMaterial/Export Bitmaps (remapped alpha channels)", false)]
+        [UnityEditor.MenuItem("CONTEXT/ProceduralMaterial/Export Bitmaps (remapped alpha channels)", false)]
         public static void ExportBitmapsAlphaRemap(MenuCommand command)
         {
             ExportBitmaps(command.context as ProceduralMaterial, true);
         }
 
-        [MenuItem("CONTEXT/ProceduralMaterial/Export Bitmaps (original alpha channels)", false)]
+        [UnityEditor.MenuItem("CONTEXT/ProceduralMaterial/Export Bitmaps (original alpha channels)", false)]
         public static void ExportBitmapsNoAlphaRemap(MenuCommand command)
         {
             ExportBitmaps(command.context as ProceduralMaterial, false);
         }
 
-        [MenuItem("CONTEXT/ProceduralMaterial/Export Preset", false)]
+        [UnityEditor.MenuItem("CONTEXT/ProceduralMaterial/Export Preset", false)]
         public static void ExportPreset(MenuCommand command)
         {
             string exportPath = EditorUtility.SaveFolderPanel("Set preset export path...", "", "");
@@ -647,7 +650,7 @@
 
         public override void OnInspectorGUI()
         {
-            using (new EditorGUI.DisabledScope(AnimationMode.InAnimationMode()))
+            using (new EditorGUI.DisabledScope(UnityEditor.AnimationMode.InAnimationMode()))
             {
                 this.m_MightHaveModified = true;
                 if (this.m_Styles == null)
@@ -665,25 +668,12 @@
                     if (m_Material != target)
                     {
                         m_Material = target;
-                        m_ShaderPMaterial = target.shader;
                     }
                     if (base.isVisible && (target.shader != null))
                     {
-                        if (m_ShaderPMaterial != target.shader)
-                        {
-                            m_ShaderPMaterial = target.shader;
-                            foreach (ProceduralMaterial material2 in base.targets)
-                            {
-                                (AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(material2)) as SubstanceImporter).OnShaderModified(material2);
-                            }
-                        }
                         if (base.PropertiesGUI())
                         {
-                            m_ShaderPMaterial = target.shader;
-                            foreach (ProceduralMaterial material3 in base.targets)
-                            {
-                                (AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(material3)) as SubstanceImporter).OnShaderModified(material3);
-                            }
+                            this.OnShaderChanged();
                             base.PropertiesChanged();
                         }
                         GUILayout.Space(5f);
@@ -701,6 +691,18 @@
             if (ShowIsGenerating(base.target as ProceduralMaterial) && (r.width > 50f))
             {
                 EditorGUI.DropShadowLabel(new Rect(r.x, r.y, r.width, 20f), "Generating...");
+            }
+        }
+
+        protected override void OnShaderChanged()
+        {
+            foreach (ProceduralMaterial material in base.targets)
+            {
+                SubstanceImporter atPath = AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(material)) as SubstanceImporter;
+                if ((atPath != null) && (material != null))
+                {
+                    atPath.OnShaderModified(material);
+                }
             }
         }
 
@@ -769,7 +771,7 @@
             position.width = (position.width - EditorGUIUtility.fieldWidth) - 5f;
             if (GUI.Button(position, this.m_Styles.randomizeButtonContent, EditorStyles.miniButton))
             {
-                val = Random.Range(min, max + 1);
+                val = UnityEngine.Random.Range(min, max + 1);
             }
             position.x += position.width + 5f;
             position.width = EditorGUIUtility.fieldWidth;
@@ -787,7 +789,7 @@
         {
             if (importer != null)
             {
-                Object[] objectsToUndo = new Object[] { material, importer };
+                UnityEngine.Object[] objectsToUndo = new UnityEngine.Object[] { material, importer };
                 Undo.RecordObjects(objectsToUndo, message);
             }
             else
@@ -822,7 +824,7 @@
             }
         }
 
-        [MenuItem("CONTEXT/ProceduralMaterial/Reset", false, -100)]
+        [UnityEditor.MenuItem("CONTEXT/ProceduralMaterial/Reset", false, -100)]
         public static void ResetSubstance(MenuCommand command)
         {
             m_Importer = AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(command.context)) as SubstanceImporter;
@@ -937,7 +939,7 @@
                             if (SubstanceImporter.IsProceduralTextureSlot(material, tex, propertyName))
                             {
                                 string propertyDescription = ShaderUtil.GetPropertyDescription(s, i);
-                                Type textureTypeFromDimension = MaterialEditor.GetTextureTypeFromDimension(ShaderUtil.GetTexDim(s, i));
+                                System.Type textureTypeFromDimension = MaterialEditor.GetTextureTypeFromDimension(ShaderUtil.GetTexDim(s, i));
                                 GUIStyle style = "ObjectPickerResultsGridLabel";
                                 if (flag)
                                 {
@@ -976,7 +978,7 @@
 
         protected void TextureSizeGUI()
         {
-            int num = EditorGUILayout.BeginPlatformGrouping(BuildPlayerWindow.GetValidPlatforms().ToArray(), this.m_Styles.defaultPlatform);
+            int num = EditorGUILayout.BeginPlatformGrouping(BuildPlatforms.instance.GetValidPlatforms().ToArray(), this.m_Styles.defaultPlatform);
             ProceduralPlatformSetting setting = this.m_PlatformSettings[num + 1];
             ProceduralPlatformSetting setting2 = setting;
             bool flag = true;
@@ -1074,28 +1076,14 @@
             }
         }
 
-        private Object TextureValidator(Object[] references, Type objType, SerializedProperty property)
-        {
-            foreach (Object obj2 in references)
-            {
-                Texture texture = obj2 as Texture;
-                if (texture != null)
-                {
-                    return texture;
-                }
-            }
-            return null;
-        }
-
         public override void UndoRedoPerformed()
         {
             m_UndoWasPerformed = true;
-            base.UndoRedoPerformed();
             if (m_Material != null)
             {
                 m_Material.RebuildTextures();
             }
-            base.Repaint();
+            base.UndoRedoPerformed();
         }
 
         [Serializable]
@@ -1109,9 +1097,9 @@
             public int maxTextureWidth;
             public string name;
             public BuildTarget target;
-            private Object[] targets;
+            private UnityEngine.Object[] targets;
 
-            public ProceduralPlatformSetting(Object[] objects, string _name, BuildTarget _target, Texture2D _icon)
+            public ProceduralPlatformSetting(UnityEngine.Object[] objects, string _name, BuildTarget _target, Texture2D _icon)
             {
                 this.targets = objects;
                 this.m_Overridden = false;

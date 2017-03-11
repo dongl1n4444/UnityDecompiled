@@ -22,7 +22,7 @@
             INTERNAL_CALL_CalculateRaycastTexCoord(out output, col, ref uv, ref point, face, index);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_CalculateRaycastTexCoord(out Vector2 output, Collider col, ref Vector2 uv, ref Vector3 point, int face, int index);
         /// <summary>
         /// <para>The impact point in world space where the ray hit the collider.</para>

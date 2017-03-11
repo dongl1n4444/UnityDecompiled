@@ -97,7 +97,7 @@
             ushort count = this.ReadUInt16();
             if (count == 0)
             {
-                return null;
+                return new byte[0];
             }
             return this.ReadBytes(count);
         }

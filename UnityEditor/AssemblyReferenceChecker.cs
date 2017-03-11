@@ -20,13 +20,13 @@
         private DateTime _startTime = DateTime.MinValue;
         private Action _updateProgressAction;
         private readonly HashSet<string> _userReferencedMethods = new HashSet<string>();
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <HasMouseEvent>k__BackingField;
 
         public AssemblyReferenceChecker()
         {
             this.HasMouseEvent = false;
-            this._updateProgressAction = new Action(this, (IntPtr) this.DisplayProgress);
+            this._updateProgressAction = new Action(this.DisplayProgress);
         }
 
         public static AssemblyReferenceChecker AssemblyReferenceCheckerWithUpdateProgressAction(Action action) => 
@@ -37,7 +37,7 @@
             DefaultAssemblyResolver resolver = new DefaultAssemblyResolver();
             if (File.Exists(path) || Directory.Exists(path))
             {
-                if ((File.GetAttributes(path) & FileAttributes.Directory) != FileAttributes.Directory)
+                if ((File.GetAttributes(path) & System.IO.FileAttributes.Directory) != System.IO.FileAttributes.Directory)
                 {
                     path = Path.GetDirectoryName(path);
                 }
@@ -55,9 +55,10 @@
         {
             foreach (AssemblyDefinition definition in assemblyDefinitions)
             {
+                bool isSystem = IsIgnoredSystemDll(definition.Name.Name);
                 foreach (TypeDefinition definition2 in definition.MainModule.Types)
                 {
-                    this.CollectReferencedAndDefinedMethods(definition2);
+                    this.CollectReferencedAndDefinedMethods(definition2, isSystem);
                 }
             }
         }
@@ -66,11 +67,11 @@
         {
             if (this._updateProgressAction != null)
             {
-                this._updateProgressAction.Invoke();
+                this._updateProgressAction();
             }
             foreach (TypeDefinition definition in type.NestedTypes)
             {
-                this.CollectReferencedAndDefinedMethods(definition);
+                this.CollectReferencedAndDefinedMethods(definition, isSystem);
             }
             foreach (MethodDefinition definition2 in type.Methods)
             {
@@ -197,7 +198,7 @@
             <HasDefinedMethod>c__AnonStorey1 storey = new <HasDefinedMethod>c__AnonStorey1 {
                 methodName = methodName
             };
-            return Enumerable.Any<string>(this._definedMethods, new Func<string, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Any<string>(this._definedMethods, new Func<string, bool>(storey.<>m__0));
         }
 
         public bool HasReferenceToMethod(string methodName) => 
@@ -208,7 +209,7 @@
             <HasReferenceToMethod>c__AnonStorey0 storey = new <HasReferenceToMethod>c__AnonStorey0 {
                 methodName = methodName
             };
-            return (ignoreSystemDlls ? Enumerable.Any<string>(this._userReferencedMethods, new Func<string, bool>(storey, (IntPtr) this.<>m__1)) : Enumerable.Any<string>(this._referencedMethods, new Func<string, bool>(storey, (IntPtr) this.<>m__0)));
+            return (ignoreSystemDlls ? Enumerable.Any<string>(this._userReferencedMethods, new Func<string, bool>(storey.<>m__1)) : Enumerable.Any<string>(this._referencedMethods, new Func<string, bool>(storey.<>m__0)));
         }
 
         public bool HasReferenceToType(string typeName)
@@ -216,7 +217,7 @@
             <HasReferenceToType>c__AnonStorey2 storey = new <HasReferenceToType>c__AnonStorey2 {
                 typeName = typeName
             };
-            return Enumerable.Any<string>(this._referencedTypes, new Func<string, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Any<string>(this._referencedTypes, new Func<string, bool>(storey.<>m__0));
         }
 
         private bool InheritsFromMonoBehaviour(TypeReference type)
@@ -230,7 +231,7 @@
         }
 
         public static bool IsIgnoredSystemDll(string name) => 
-            (((name.StartsWith("System") || name.Equals("UnityEngine")) || name.Equals("UnityEngine.Networking")) || name.Equals("Mono.Posix"));
+            (((name.StartsWith("System") || name.Equals("UnityEngine")) || (name.Equals("UnityEngine.Networking") || name.Equals("Mono.Posix"))) || name.Equals("Moq"));
 
         private bool MethodIsMouseEvent(MethodDefinition method)
         {
@@ -259,7 +260,7 @@
                 if (!ignoreSystemDlls || !IsIgnoredSystemDll(definition.Name.Name))
                 {
                     AssemblyDefinition[] assemblies = new AssemblyDefinition[] { definition };
-                    if (Enumerable.Any<string>(MonoAOTRegistration.BuildReferencedTypeList(assemblies), new Func<string, bool>(storey, (IntPtr) this.<>m__0)))
+                    if (Enumerable.Any<string>(MonoAOTRegistration.BuildReferencedTypeList(assemblies), new Func<string, bool>(storey.<>m__0)))
                     {
                         return definition.Name.Name;
                     }

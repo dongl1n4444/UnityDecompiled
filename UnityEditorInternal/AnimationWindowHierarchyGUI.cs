@@ -27,6 +27,7 @@
         public const float k_RowBackgroundColorBrightness = 0.28f;
         private const float k_RowRightOffset = 10f;
         private const float k_SelectedPhantomCurveColorMultiplier = 1.4f;
+        private const float k_ValueFieldDragWidth = 15f;
         private const float k_ValueFieldOffsetFromRightSide = 75f;
         private const float k_ValueFieldWidth = 50f;
         private GUIStyle m_AnimationCurveDropdown;
@@ -48,6 +49,7 @@
             this.m_LightSkinPropertyTextColor = new Color(0.35f, 0.35f, 0.35f);
             this.m_PhantomCurveColor = new Color(0f, 0.6f, 0.6f);
             this.state = state;
+            this.InitStyles();
         }
 
         private void AddKeysAtCurrentTime(List<AnimationWindowCurve> curves)
@@ -72,7 +74,7 @@
                     rootGameObject = selectionBinding.rootGameObject;
                 }
             }
-            return base.GetRenameOverlay().BeginRename(this.GetGameObjectName(rootGameObject, this.m_RenamedNode.path), item.id, delay);
+            return base.GetRenameOverlay().BeginRename(this.m_RenamedNode.path, item.id, delay);
         }
 
         public override void BeginRowGUI()
@@ -149,11 +151,11 @@
                     GUI.color = k_KeyColorForNonCurves;
                 }
                 bool flag = false;
-                if (AnimationMode.InAnimationMode())
+                if (UnityEditor.AnimationMode.InAnimationMode())
                 {
                     foreach (AnimationWindowCurve curve in node.curves)
                     {
-                        if (Enumerable.Any<AnimationWindowKeyframe>(curve.m_Keyframes, new Func<AnimationWindowKeyframe, bool>(this, (IntPtr) this.<DoCurveColorIndicator>m__1)))
+                        if (Enumerable.Any<AnimationWindowKeyframe>(curve.m_Keyframes, (Func<AnimationWindowKeyframe, bool>) (key => this.state.time.ContainsTime(key.time))))
                         {
                             flag = true;
                         }
@@ -184,9 +186,9 @@
             {
                 Rect position = rect;
                 position.x = indent;
-                position.width = TreeViewGUI.s_Styles.foldoutWidth;
+                position.width = TreeViewGUI.Styles.foldoutWidth;
                 EditorGUI.BeginChangeCheck();
-                bool expand = GUI.Toggle(position, this.m_HierarchyItemFoldControlIDs[row], base.m_TreeView.data.IsExpanded(node), GUIContent.none, TreeViewGUI.s_Styles.foldout);
+                bool expand = GUI.Toggle(position, this.m_HierarchyItemFoldControlIDs[row], base.m_TreeView.data.IsExpanded(node), GUIContent.none, TreeViewGUI.Styles.foldout);
                 if (EditorGUI.EndChangeCheck())
                 {
                     if (Event.current.alt)
@@ -207,10 +209,10 @@
                 {
                     Rect rect3 = rect;
                     rect3.x = indent;
-                    rect3.width = TreeViewGUI.s_Styles.foldoutWidth;
+                    rect3.width = TreeViewGUI.Styles.foldoutWidth;
                     EditorGUI.BeginChangeCheck();
                     bool tallMode = state.GetTallMode(node2);
-                    tallMode = GUI.Toggle(rect3, this.m_HierarchyItemFoldControlIDs[row], tallMode, GUIContent.none, TreeViewGUI.s_Styles.foldout);
+                    tallMode = GUI.Toggle(rect3, this.m_HierarchyItemFoldControlIDs[row], tallMode, GUIContent.none, TreeViewGUI.Styles.foldout);
                     if (EditorGUI.EndChangeCheck())
                     {
                         state.SetTallMode(node2, tallMode);
@@ -226,9 +228,9 @@
             {
                 if (selected)
                 {
-                    TreeViewGUI.s_Styles.selectionStyle.Draw(rect, false, false, true, focused);
+                    TreeViewGUI.Styles.selectionStyle.Draw(rect, false, false, true, focused);
                 }
-                if (AnimationMode.InAnimationMode())
+                if (UnityEditor.AnimationMode.InAnimationMode())
                 {
                     rect.width -= 77f;
                 }
@@ -267,20 +269,20 @@
                         string gameObjectName = this.GetGameObjectName(selectionBinding?.rootGameObject, node.path);
                         str3 = !string.IsNullOrEmpty(gameObjectName) ? (gameObjectName + " : ") : "";
                     }
-                    TreeViewGUI.s_Styles.content = new GUIContent(str3 + node.displayName + str, this.GetIconForItem(node), tooltip);
+                    TreeViewGUI.Styles.content = new GUIContent(str3 + node.displayName + str, this.GetIconForItem(node), tooltip);
                     color = !EditorGUIUtility.isProSkin ? Color.black : ((Color) (Color.gray * 1.35f));
                 }
                 else
                 {
-                    TreeViewGUI.s_Styles.content = new GUIContent(node.displayName + str, this.GetIconForItem(node), tooltip);
+                    TreeViewGUI.Styles.content = new GUIContent(node.displayName + str, this.GetIconForItem(node), tooltip);
                     color = !EditorGUIUtility.isProSkin ? this.m_LightSkinPropertyTextColor : Color.gray;
                     Color color3 = !selected ? this.m_PhantomCurveColor : ((Color) (this.m_PhantomCurveColor * 1.4f));
                     color = !flag3 ? color : color3;
                 }
                 color = (!flag && !flag2) ? color : k_LeftoverCurveColor;
                 this.SetStyleTextColor(this.m_AnimationLineStyle, color);
-                rect.xMin += ((int) (indent + TreeViewGUI.s_Styles.foldoutWidth)) + this.m_AnimationLineStyle.margin.left;
-                GUI.Label(rect, TreeViewGUI.s_Styles.content, this.m_AnimationLineStyle);
+                rect.xMin += ((int) (indent + TreeViewGUI.Styles.foldoutWidth)) + this.m_AnimationLineStyle.margin.left;
+                GUI.Label(rect, TreeViewGUI.Styles.content, this.m_AnimationLineStyle);
                 this.SetStyleTextColor(this.m_AnimationLineStyle, textColor);
             }
             if (this.IsRenaming(node.id) && (Event.current.type != EventType.Layout))
@@ -401,6 +403,7 @@
                 if (currentValue is float)
                 {
                     float num = (float) currentValue;
+                    Rect dragHotZone = new Rect((rect.xMax - 75f) - 15f, rect.y, 15f, rect.height);
                     Rect position = new Rect(rect.xMax - 75f, rect.y, 50f, rect.height);
                     if ((Event.current.type == EventType.MouseMove) && position.Contains(Event.current.mousePosition))
                     {
@@ -409,7 +412,7 @@
                     EditorGUI.BeginChangeCheck();
                     if (curve.valueType == typeof(bool))
                     {
-                        num = !GUI.Toggle(position, this.m_HierarchyItemValueControlIDs[row], num != 0f, GUIContent.none, EditorStyles.toggle) ? ((float) 0) : ((float) 1);
+                        num = !GUI.Toggle(position, this.m_HierarchyItemValueControlIDs[row], !(num == 0f), GUIContent.none, EditorStyles.toggle) ? ((float) 0) : ((float) 1);
                     }
                     else
                     {
@@ -419,7 +422,7 @@
                         {
                             GUIUtility.keyboardControl = id;
                         }
-                        num = EditorGUI.DoFloatField(EditorGUI.s_RecycledEditor, position, new Rect(0f, 0f, 0f, 0f), id, num, EditorGUI.kFloatFieldFormatString, this.m_AnimationSelectionTextField, false);
+                        num = EditorGUI.DoFloatField(EditorGUI.s_RecycledEditor, position, dragHotZone, id, num, EditorGUI.kFloatFieldFormatString, this.m_AnimationSelectionTextField, true);
                         if (flag2)
                         {
                             GUI.changed = true;
@@ -458,7 +461,7 @@
             }
             if (flag)
             {
-                this.state.ResampleAnimation();
+                this.state.StartRecording();
             }
         }
 
@@ -506,7 +509,7 @@
                 menu.AddItem(new GUIContent("Interpolation/Euler Angles (Quaternion)"), rotationInterpolationMode == RotationCurveInterpolation.Mode.Baked, !enabled ? function : new GenericMenu.MenuFunction2(this.ChangeRotationInterpolation), RotationCurveInterpolation.Mode.Baked);
                 menu.AddItem(new GUIContent("Interpolation/Quaternion"), rotationInterpolationMode == RotationCurveInterpolation.Mode.NonBaked, !enabled ? function : new GenericMenu.MenuFunction2(this.ChangeRotationInterpolation), RotationCurveInterpolation.Mode.NonBaked);
             }
-            if (AnimationMode.InAnimationMode())
+            if (UnityEditor.AnimationMode.InAnimationMode())
             {
                 menu.AddSeparator("");
                 bool flag3 = true;
@@ -703,9 +706,8 @@
             }
         }
 
-        protected override void InitStyles()
+        protected void InitStyles()
         {
-            base.InitStyles();
             if (this.m_AnimationRowEvenStyle == null)
             {
                 this.m_AnimationRowEvenStyle = new GUIStyle("AnimationRowEven");
@@ -720,7 +722,7 @@
             }
             if (this.m_AnimationLineStyle == null)
             {
-                this.m_AnimationLineStyle = new GUIStyle(TreeViewGUI.s_Styles.lineStyle);
+                this.m_AnimationLineStyle = new GUIStyle(TreeViewGUI.Styles.lineStyle);
                 this.m_AnimationLineStyle.padding.left = 0;
             }
             if (this.m_AnimationCurveDropdown == null)
@@ -807,10 +809,7 @@
                 }
             }
             base.m_TreeView.ReloadData();
-            if (this.state.recording)
-            {
-                this.state.ResampleAnimation();
-            }
+            this.state.controlInterface.ResampleAnimation();
         }
 
         private void RemoveCurvesFromSelectedNodes()
@@ -827,11 +826,10 @@
                 Undo.RecordObject(this.state.activeAnimationClip, "Rename Curve");
                 foreach (AnimationWindowCurve curve in this.m_RenamedNode.curves)
                 {
-                    string newPath = this.RenamePath(curve.path, name);
-                    EditorCurveBinding renamedBinding = AnimationWindowUtility.GetRenamedBinding(curve.binding, newPath);
+                    EditorCurveBinding renamedBinding = AnimationWindowUtility.GetRenamedBinding(curve.binding, name);
                     if (AnimationWindowUtility.CurveExists(renamedBinding, this.state.allCurves.ToArray()))
                     {
-                        Debug.LogWarning("Curve already exists, renaming cancelled.");
+                        UnityEngine.Debug.LogWarning("Curve already exists, renaming cancelled.");
                     }
                     else
                     {
@@ -840,15 +838,6 @@
                 }
             }
             this.m_RenamedNode = null;
-        }
-
-        private string RenamePath(string oldPath, string newGameObjectName)
-        {
-            if (oldPath.Length > 0)
-            {
-                return (this.GetPathWithoutChildmostGameObject(oldPath) + newGameObjectName);
-            }
-            return newGameObjectName;
         }
 
         private void SetStyleTextColor(GUIStyle style, Color color)

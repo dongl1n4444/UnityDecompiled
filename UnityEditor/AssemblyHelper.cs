@@ -43,9 +43,9 @@
                     alreadyFoundAssemblies.Add(assemblyPath);
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<PluginImporter, string>(null, (IntPtr) <AddReferencedAssembliesRecurse>m__0);
+                        <>f__am$cache0 = i => Path.GetFileName(i.assetPath);
                     }
-                    IEnumerable<string> enumerable = Enumerable.Select<PluginImporter, string>(Enumerable.Where<PluginImporter>(PluginImporter.GetImporters(storey.target), new Func<PluginImporter, bool>(storey, (IntPtr) this.<>m__0)), <>f__am$cache0).Distinct<string>();
+                    IEnumerable<string> enumerable = Enumerable.Select<PluginImporter, string>(Enumerable.Where<PluginImporter>(PluginImporter.GetImporters(storey.target), new Func<PluginImporter, bool>(storey.<>m__0)), <>f__am$cache0).Distinct<string>();
                     using (Collection<AssemblyNameReference>.Enumerator enumerator = assemblyDefinitionCached.MainModule.AssemblyReferences.GetEnumerator())
                     {
                         while (enumerator.MoveNext())
@@ -60,13 +60,13 @@
                                 {
                                     bool flag = false;
                                     string[] strArray = new string[] { ".dll", ".winmd" };
-                                    for (int i = 0; i < strArray.Length; i++)
+                                    for (int j = 0; j < strArray.Length; j++)
                                     {
                                         <AddReferencedAssembliesRecurse>c__AnonStorey3 storey3 = new <AddReferencedAssembliesRecurse>c__AnonStorey3 {
                                             <>f__ref$2 = storey2,
-                                            extension = strArray[i]
+                                            extension = strArray[j]
                                         };
-                                        if (Enumerable.Any<string>(enumerable, new Func<string, bool>(storey3, (IntPtr) this.<>m__0)))
+                                        if (Enumerable.Any<string>(enumerable, new Func<string, bool>(storey3.<>m__0)))
                                         {
                                             flag = true;
                                             break;
@@ -92,7 +92,7 @@
             string str2 = ExtractInternalAssemblyName(assemblyPath);
             if (fileNameWithoutExtension != str2)
             {
-                Debug.LogWarning("Assembly '" + str2 + "' has non matching file name: '" + Path.GetFileName(assemblyPath) + "'. This can cause build issues on some platforms.");
+                UnityEngine.Debug.LogWarning("Assembly '" + str2 + "' has non matching file name: '" + Path.GetFileName(assemblyPath) + "'. This can cause build issues on some platforms.");
             }
         }
 
@@ -120,7 +120,7 @@
                     }
                     catch (Exception)
                     {
-                        Debug.LogError("Failed to extract " + definition3.FullName + " class of base type " + baseType.FullName + " when inspecting " + path);
+                        UnityEngine.Debug.LogError("Failed to extract " + definition3.FullName + " class of base type " + baseType.FullName + " when inspecting " + path);
                     }
                 }
             }
@@ -177,11 +177,11 @@
                     DirectoryInfo info = new DirectoryInfo(basePath);
                     if (<>f__am$cache1 == null)
                     {
-                        <>f__am$cache1 = new Func<FileInfo, bool>(null, (IntPtr) <FindAssemblies>m__1);
+                        <>f__am$cache1 = file => IsManagedAssembly(file.FullName);
                     }
                     if (<>f__am$cache2 == null)
                     {
-                        <>f__am$cache2 = new Func<FileInfo, string>(null, (IntPtr) <FindAssemblies>m__2);
+                        <>f__am$cache2 = file => file.FullName;
                     }
                     list.AddRange(Enumerable.Select<FileInfo, string>(Enumerable.Where<FileInfo>(info.GetFiles(), <>f__am$cache1), <>f__am$cache2));
                     foreach (DirectoryInfo info2 in info.GetDirectories())
@@ -289,11 +289,11 @@
             return list.ToArray();
         }
 
-        internal static Type[] GetTypesFromAssembly(Assembly assembly)
+        internal static System.Type[] GetTypesFromAssembly(Assembly assembly)
         {
             if (assembly == null)
             {
-                return new Type[0];
+                return new System.Type[0];
             }
             try
             {
@@ -301,19 +301,19 @@
             }
             catch (ReflectionTypeLoadException)
             {
-                return new Type[0];
+                return new System.Type[0];
             }
         }
 
         private static bool IgnoreAssembly(string assemblyPath, BuildTarget target) => 
-            (((target == BuildTarget.WSAPlayer) && ((((assemblyPath.IndexOf("mscorlib.dll") != -1) || (assemblyPath.IndexOf("System.") != -1)) || ((assemblyPath.IndexOf("Windows.dll") != -1) || (assemblyPath.IndexOf("Microsoft.") != -1))) || (((assemblyPath.IndexOf("Windows.") != -1) || (assemblyPath.IndexOf("WinRTLegacy.dll") != -1)) || (assemblyPath.IndexOf("platform.dll") != -1)))) || IsInternalAssembly(assemblyPath));
+            ((((target == BuildTarget.WSAPlayer) || ((target == BuildTarget.XboxOne) && (PlayerSettings.GetApiCompatibilityLevel(BuildTargetGroup.XboxOne) == ApiCompatibilityLevel.NET_4_6))) && ((((assemblyPath.IndexOf("mscorlib.dll") != -1) || (assemblyPath.IndexOf("System.") != -1)) || ((assemblyPath.IndexOf("Windows.dll") != -1) || (assemblyPath.IndexOf("Microsoft.") != -1))) || (((assemblyPath.IndexOf("Windows.") != -1) || (assemblyPath.IndexOf("WinRTLegacy.dll") != -1)) || (assemblyPath.IndexOf("platform.dll") != -1)))) || IsInternalAssembly(assemblyPath));
 
         public static bool IsInternalAssembly(string file)
         {
             <IsInternalAssembly>c__AnonStorey4 storey = new <IsInternalAssembly>c__AnonStorey4 {
                 file = file
             };
-            return (ModuleManager.IsRegisteredModule(storey.file) || Enumerable.Any<string>(ModuleUtils.GetAdditionalReferencesForUserScripts(), new Func<string, bool>(storey, (IntPtr) this.<>m__0)));
+            return (ModuleManager.IsRegisteredModule(storey.file) || Enumerable.Any<string>(ModuleUtils.GetAdditionalReferencesForUserScripts(), new Func<string, bool>(storey.<>m__0)));
         }
 
         public static bool IsManagedAssembly(string file)
@@ -348,7 +348,7 @@
             if (assembly2 != null)
             {
                 string name = !type.IsGenericInstance ? type.FullName : (type.Namespace + "." + type.Name);
-                Type type2 = assembly2.GetType(name);
+                System.Type type2 = assembly2.GetType(name);
                 if ((type2 == typeof(MonoBehaviour)) || type2.IsSubclassOf(typeof(MonoBehaviour)))
                 {
                     return true;
@@ -402,12 +402,12 @@
         {
             internal T $current;
             internal bool $disposing;
-            internal Type[] $locvar0;
+            internal System.Type[] $locvar0;
             internal int $locvar1;
             internal int $PC;
-            internal Type <interfaze>__0;
+            internal System.Type <interfaze>__0;
             internal T <module>__2;
-            internal Type <type>__1;
+            internal System.Type <type>__1;
             internal Assembly assembly;
 
             [DebuggerHidden]

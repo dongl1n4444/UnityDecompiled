@@ -31,7 +31,7 @@
                             return vector2;
                         }
                         bool success = true;
-                        Vector3 vector3 = Handles.s_InverseMatrix.MultiplyPoint(GetMousePosition(handleDir, handlePos, ref success));
+                        Vector3 vector3 = Handles.inverseMatrix.MultiplyPoint(GetMousePosition(handleDir, handlePos, ref success));
                         if (success)
                         {
                             int num = id;
@@ -68,7 +68,7 @@
                     {
                         s_CurrentMousePosition += current.delta;
                         bool flag2 = true;
-                        Vector3 point = Handles.s_InverseMatrix.MultiplyPoint(GetMousePosition(handleDir, handlePos, ref flag2));
+                        Vector3 point = Handles.inverseMatrix.MultiplyPoint(GetMousePosition(handleDir, handlePos, ref flag2));
                         if (flag2)
                         {
                             vector2.x = HandleUtility.PointOnLineParameter(point, s_StartPosition, slideDir1);
@@ -129,6 +129,7 @@
             return vector2;
         }
 
+        [Obsolete("DrawCapFunction is obsolete. Use the version with CapFunction instead. Example: Change SphereCap to SphereHandleCap.")]
         private static Vector2 CalcDeltaAlongDirections(int id, Vector3 handlePos, Vector3 offset, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, Handles.DrawCapFunction drawFunc, Vector2 snap, bool drawHelper)
         {
             Vector2 vector = new Vector2(0f, 0f);
@@ -147,7 +148,7 @@
                         GUIUtility.hotControl = num2;
                         s_CurrentMousePosition = current.mousePosition;
                         s_StartPosition = handlePos;
-                        Vector3 lhs = Handles.s_InverseMatrix.MultiplyPoint(ray.GetPoint(enter)) - handlePos;
+                        Vector3 lhs = Handles.inverseMatrix.MultiplyPoint(ray.GetPoint(enter)) - handlePos;
                         s_StartPlaneOffset.x = Vector3.Dot(lhs, slideDir1);
                         s_StartPlaneOffset.y = Vector3.Dot(lhs, slideDir2);
                         current.Use();
@@ -182,7 +183,7 @@
                         float num3 = 0f;
                         if (plane2.Raycast(ray2, out num3))
                         {
-                            Vector3 point = Handles.s_InverseMatrix.MultiplyPoint(ray2.GetPoint(num3));
+                            Vector3 point = Handles.inverseMatrix.MultiplyPoint(ray2.GetPoint(num3));
                             vector.x = HandleUtility.PointOnLineParameter(point, s_StartPosition, slideDir1);
                             vector.y = HandleUtility.PointOnLineParameter(point, s_StartPosition, slideDir2);
                             vector -= s_StartPlaneOffset;
@@ -260,6 +261,7 @@
         public static Vector3 Do(int id, Vector3 handlePos, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, Handles.CapFunction capFunction, float snap, bool drawHelper) => 
             Do(id, handlePos, new Vector3(0f, 0f, 0f), handleDir, slideDir1, slideDir2, handleSize, capFunction, new Vector2(snap, snap), drawHelper);
 
+        [Obsolete("DrawCapFunction is obsolete. Use the version with CapFunction instead. Example: Change SphereCap to SphereHandleCap.")]
         public static Vector3 Do(int id, Vector3 handlePos, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, Handles.DrawCapFunction drawFunc, float snap, bool drawHelper) => 
             Do(id, handlePos, new Vector3(0f, 0f, 0f), handleDir, slideDir1, slideDir2, handleSize, drawFunc, new Vector2(snap, snap), drawHelper);
 
@@ -279,9 +281,11 @@
             return handlePos;
         }
 
+        [Obsolete("DrawCapFunction is obsolete. Use the version with CapFunction instead. Example: Change SphereCap to SphereHandleCap.")]
         public static Vector3 Do(int id, Vector3 handlePos, Vector3 offset, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, Handles.DrawCapFunction drawFunc, float snap, bool drawHelper) => 
             Do(id, handlePos, offset, handleDir, slideDir1, slideDir2, handleSize, drawFunc, new Vector2(snap, snap), drawHelper);
 
+        [Obsolete("DrawCapFunction is obsolete. Use the version with CapFunction instead. Example: Change SphereCap to SphereHandleCap.")]
         public static Vector3 Do(int id, Vector3 handlePos, Vector3 offset, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, Handles.DrawCapFunction drawFunc, Vector2 snap, bool drawHelper)
         {
             bool changed = GUI.changed;

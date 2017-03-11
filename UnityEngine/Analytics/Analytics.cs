@@ -124,6 +124,7 @@
         /// <param name="currency">Abbreviation of the currency used for the transaction. For example “USD” (United States Dollars). See http:en.wikipedia.orgwikiISO_4217 for a standardized list of currency abbreviations.</param>
         /// <param name="receiptPurchaseData">Receipt data (iOS)  receipt ID (android)  for in-app purchases to verify purchases with Apple iTunes / Google Play. Use null in the absence of receipts.</param>
         /// <param name="signature">Android receipt signature. If using native Android use the INAPP_DATA_SIGNATURE string containing the signature of the purchase data that was signed with the private key of the developer. The data signature uses the RSASSA-PKCS1-v1_5 scheme. Pass in null in absence of a signature.</param>
+        /// <param name="usingIAPService">Set to true when using UnityIAP.</param>
         public static AnalyticsResult Transaction(string productId, decimal amount, string currency) => 
             GetUnityAnalyticsHandler()?.Transaction(productId, Convert.ToDouble(amount), currency, null, null);
 
@@ -135,11 +136,67 @@
         /// <param name="currency">Abbreviation of the currency used for the transaction. For example “USD” (United States Dollars). See http:en.wikipedia.orgwikiISO_4217 for a standardized list of currency abbreviations.</param>
         /// <param name="receiptPurchaseData">Receipt data (iOS)  receipt ID (android)  for in-app purchases to verify purchases with Apple iTunes / Google Play. Use null in the absence of receipts.</param>
         /// <param name="signature">Android receipt signature. If using native Android use the INAPP_DATA_SIGNATURE string containing the signature of the purchase data that was signed with the private key of the developer. The data signature uses the RSASSA-PKCS1-v1_5 scheme. Pass in null in absence of a signature.</param>
+        /// <param name="usingIAPService">Set to true when using UnityIAP.</param>
         public static AnalyticsResult Transaction(string productId, decimal amount, string currency, string receiptPurchaseData, string signature) => 
             GetUnityAnalyticsHandler()?.Transaction(productId, Convert.ToDouble(amount), currency, receiptPurchaseData, signature);
 
-        internal static AnalyticsResult Transaction(string productId, decimal amount, string currency, string receiptPurchaseData, string signature, bool usingIAPService) => 
+        /// <summary>
+        /// <para>Tracking Monetization (optional).</para>
+        /// </summary>
+        /// <param name="productId">The id of the purchased item.</param>
+        /// <param name="amount">The price of the item.</param>
+        /// <param name="currency">Abbreviation of the currency used for the transaction. For example “USD” (United States Dollars). See http:en.wikipedia.orgwikiISO_4217 for a standardized list of currency abbreviations.</param>
+        /// <param name="receiptPurchaseData">Receipt data (iOS)  receipt ID (android)  for in-app purchases to verify purchases with Apple iTunes / Google Play. Use null in the absence of receipts.</param>
+        /// <param name="signature">Android receipt signature. If using native Android use the INAPP_DATA_SIGNATURE string containing the signature of the purchase data that was signed with the private key of the developer. The data signature uses the RSASSA-PKCS1-v1_5 scheme. Pass in null in absence of a signature.</param>
+        /// <param name="usingIAPService">Set to true when using UnityIAP.</param>
+        public static AnalyticsResult Transaction(string productId, decimal amount, string currency, string receiptPurchaseData, string signature, bool usingIAPService) => 
             GetUnityAnalyticsHandler()?.Transaction(productId, Convert.ToDouble(amount), currency, receiptPurchaseData, signature, usingIAPService);
+
+        /// <summary>
+        /// <para>Controls whether the sending of device stats at runtime is enabled.</para>
+        /// </summary>
+        public static bool deviceStatsEnabled
+        {
+            get => 
+                UnityAnalyticsHandler.deviceStatsEnabled;
+            set
+            {
+                UnityAnalyticsHandler.deviceStatsEnabled = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Controls whether the Analytics service is enabled at runtime.</para>
+        /// </summary>
+        public static bool enabled
+        {
+            get
+            {
+                UnityAnalyticsHandler unityAnalyticsHandler = GetUnityAnalyticsHandler();
+                return unityAnalyticsHandler?.enabled;
+            }
+            set
+            {
+                UnityAnalyticsHandler unityAnalyticsHandler = GetUnityAnalyticsHandler();
+                if (unityAnalyticsHandler != null)
+                {
+                    unityAnalyticsHandler.enabled = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// <para>Controls whether to limit user tracking at runtime.</para>
+        /// </summary>
+        public static bool limitUserTracking
+        {
+            get => 
+                UnityAnalyticsHandler.limitUserTracking;
+            set
+            {
+                UnityAnalyticsHandler.limitUserTracking = value;
+            }
+        }
     }
 }
 

@@ -60,6 +60,9 @@
         private static TypeReference ResolveIfNeeded(IGenericInstance genericInstanceMethod, IGenericInstance genericInstanceType, GenericParameter genericParameterElement) => 
             ((genericParameterElement.MetadataType != MetadataType.MVar) ? genericInstanceType.GenericArguments[genericParameterElement.Position] : ((genericInstanceMethod == null) ? genericParameterElement : genericInstanceMethod.GenericArguments[genericParameterElement.Position]));
 
+        private static PointerType ResolveIfNeeded(IGenericInstance genericInstanceMethod, IGenericInstance genericInstanceType, PointerType pointerType) => 
+            new PointerType(ResolveIfNeeded(genericInstanceMethod, genericInstanceType, pointerType.ElementType));
+
         private static TypeReference ResolveIfNeeded(IGenericInstance genericInstanceMethod, IGenericInstance declaringGenericInstanceType, TypeReference parameterType)
         {
             ByReferenceType byReferenceType = parameterType as ByReferenceType;
@@ -81,6 +84,11 @@
             if (genericParameterElement != null)
             {
                 return ResolveIfNeeded(genericInstanceMethod, declaringGenericInstanceType, genericParameterElement);
+            }
+            PointerType pointerType = parameterType as PointerType;
+            if (pointerType != null)
+            {
+                return ResolveIfNeeded(genericInstanceMethod, declaringGenericInstanceType, pointerType);
             }
             RequiredModifierType typeReference = parameterType as RequiredModifierType;
             if ((typeReference != null) && typeReference.ContainsGenericParameters())
@@ -118,6 +126,26 @@
                 return methodReference.ReturnType;
             }
             return ResolveIfNeeded(genericInstanceMethod, declaringType, methodReference.ReturnType);
+        }
+
+        internal static TypeReference ResolveThisTypeIfNeeded(MethodReference methodReference)
+        {
+            TypeReference declaringType = methodReference.DeclaringType;
+            if (methodReference.DeclaringType.IsArray && ((methodReference.Name == "Get") || (methodReference.Name == "Set")))
+            {
+                return declaringType;
+            }
+            GenericInstanceMethod genericInstanceMethod = methodReference as GenericInstanceMethod;
+            GenericInstanceType declaringGenericInstanceType = methodReference.DeclaringType as GenericInstanceType;
+            if ((genericInstanceMethod == null) && (declaringGenericInstanceType == null))
+            {
+                return declaringType;
+            }
+            if (declaringGenericInstanceType == declaringType)
+            {
+                return declaringType;
+            }
+            return ResolveIfNeeded(genericInstanceMethod, declaringGenericInstanceType, declaringType);
         }
 
         internal static TypeReference ResolveVariableTypeIfNeeded(MethodReference method, VariableReference variable)

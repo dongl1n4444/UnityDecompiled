@@ -4,6 +4,7 @@
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+    using UnityEditor.Build;
     using UnityEngine;
     using UnityEngine.Internal;
 
@@ -47,15 +48,14 @@
             }
             EditorGUIUtility.LockContextWidth();
             GUI.BeginGroup(group.rect);
-            return (value != 0f);
+            return !(value == 0f);
         }
 
         /// <summary>
         /// <para>Begin a horizontal group and get its rect back.</para>
         /// </summary>
         /// <param name="style">Optional GUIStyle.</param>
-        /// <param name="options">An optional list of layout options that specify extra layouting
-        /// properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         public static Rect BeginHorizontal(params GUILayoutOption[] options) => 
@@ -65,8 +65,7 @@
         /// <para>Begin a horizontal group and get its rect back.</para>
         /// </summary>
         /// <param name="style">Optional GUIStyle.</param>
-        /// <param name="options">An optional list of layout options that specify extra layouting
-        /// properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         public static Rect BeginHorizontal(GUIStyle style, params GUILayoutOption[] options) => 
@@ -104,10 +103,10 @@
             return EditorGUIInternal.DoBeginScrollViewForward(group.rect, scrollPosition, new Rect(0f, 0f, group.clientWidth, group.clientHeight), alwaysShowHorizontal, false, horizontalScrollbar, GUI.skin.verticalScrollbar, background);
         }
 
-        internal static int BeginPlatformGrouping(BuildPlayerWindow.BuildPlatform[] platforms, GUIContent defaultTab) => 
+        internal static int BeginPlatformGrouping(BuildPlatform[] platforms, GUIContent defaultTab) => 
             BeginPlatformGrouping(platforms, defaultTab, GUI.skin.box);
 
-        internal static int BeginPlatformGrouping(BuildPlayerWindow.BuildPlatform[] platforms, GUIContent defaultTab, GUIStyle style)
+        internal static int BeginPlatformGrouping(BuildPlatform[] platforms, GUIContent defaultTab, GUIStyle style)
         {
             int num = -1;
             for (int i = 0; i < platforms.Length; i++)
@@ -170,7 +169,7 @@
                     EditorUserBuildSettings.selectedBuildTargetGroup = platforms[index].targetGroup;
                     s_SelectedDefault.value = false;
                 }
-                Object[] objArray = Resources.FindObjectsOfTypeAll(typeof(BuildPlayerWindow));
+                UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(BuildPlayerWindow));
                 for (int k = 0; k < objArray.Length; k++)
                 {
                     BuildPlayerWindow window = objArray[k] as BuildPlayerWindow;
@@ -318,8 +317,7 @@
         /// <para>Begin a vertical group and get its rect back.</para>
         /// </summary>
         /// <param name="style">Optional GUIStyle.</param>
-        /// <param name="options">An optional list of layout options that specify extra layouting properties.
-        /// Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         public static Rect BeginVertical(params GUILayoutOption[] options) => 
@@ -329,8 +327,7 @@
         /// <para>Begin a vertical group and get its rect back.</para>
         /// </summary>
         /// <param name="style">Optional GUIStyle.</param>
-        /// <param name="options">An optional list of layout options that specify extra layouting properties.
-        /// Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         public static Rect BeginVertical(GUIStyle style, params GUILayoutOption[] options) => 
@@ -444,12 +441,6 @@
             float propertyHeight = EditorGUI.GetPropertyHeight(SerializedPropertyType.Bounds, label);
             Rect position = s_LastRect = GetControlRect(hasLabel, propertyHeight, EditorStyles.numberField, options);
             return EditorGUI.BoundsField(position, label, value);
-        }
-
-        internal static bool ButtonMouseDown(GUIContent content, FocusType focusType, GUIStyle style, params GUILayoutOption[] options)
-        {
-            s_LastRect = GUILayoutUtility.GetRect(content, style, options);
-            return EditorGUI.ButtonMouseDown(s_LastRect, content, focusType, style);
         }
 
         internal static Color ColorBrightnessField(GUIContent label, Color value, float minBrightness, float maxBrightness, params GUILayoutOption[] options)
@@ -1331,6 +1322,39 @@
         }
 
         /// <summary>
+        /// <para>Make a button that reacts to mouse down, for displaying your own dropdown content.</para>
+        /// </summary>
+        /// <param name="content">Text, image and tooltip for this button.</param>
+        /// <param name="focusType">Whether the button should be selectable by keyboard or not.</param>
+        /// <param name="style">Optional style to use.</param>
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
+        /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
+        /// <returns>
+        /// <para>true when the user clicks the button.</para>
+        /// </returns>
+        public static bool DropdownButton(GUIContent content, FocusType focusType, params GUILayoutOption[] options) => 
+            DropdownButton(content, focusType, "MiniPullDown", options);
+
+        /// <summary>
+        /// <para>Make a button that reacts to mouse down, for displaying your own dropdown content.</para>
+        /// </summary>
+        /// <param name="content">Text, image and tooltip for this button.</param>
+        /// <param name="focusType">Whether the button should be selectable by keyboard or not.</param>
+        /// <param name="style">Optional style to use.</param>
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
+        /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
+        /// <returns>
+        /// <para>true when the user clicks the button.</para>
+        /// </returns>
+        public static bool DropdownButton(GUIContent content, FocusType focusType, GUIStyle style, params GUILayoutOption[] options)
+        {
+            s_LastRect = GUILayoutUtility.GetRect(content, style, options);
+            return EditorGUI.DropdownButton(s_LastRect, content, focusType, style);
+        }
+
+        /// <summary>
         /// <para>Closes a group started with BeginFadeGroup.</para>
         /// </summary>
         public static void EndFadeGroup()
@@ -1893,8 +1917,8 @@
             return EditorGUI.Foldout(position, foldout, content, toggleOnLabelClick, style);
         }
 
-        internal static bool FoldoutTitlebar(bool foldout, GUIContent label) => 
-            EditorGUI.FoldoutTitlebar(GUILayoutUtility.GetRect(GUIContent.none, EditorStyles.inspectorTitlebar), label, foldout);
+        internal static bool FoldoutTitlebar(bool foldout, GUIContent label, bool skipIconSpacing) => 
+            EditorGUI.FoldoutTitlebar(GUILayoutUtility.GetRect(GUIContent.none, EditorStyles.inspectorTitlebar), label, foldout, skipIconSpacing);
 
         internal static void GameViewSizePopup(GameViewSizeGroupType groupType, int selectedIndex, IGameViewSizeMenuUser gameView, GUIStyle style, params GUILayoutOption[] options)
         {
@@ -1908,7 +1932,7 @@
         /// <param name="hasLabel">Optional boolean to specify if the control has a label. Default is true.</param>
         /// <param name="height">The height in pixels of the control. Default is EditorGUIUtility.singleLineHeight.</param>
         /// <param name="style">Optional GUIStyle to use for the control.</param>
-        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         public static Rect GetControlRect(params GUILayoutOption[] options) => 
@@ -1920,7 +1944,7 @@
         /// <param name="hasLabel">Optional boolean to specify if the control has a label. Default is true.</param>
         /// <param name="height">The height in pixels of the control. Default is EditorGUIUtility.singleLineHeight.</param>
         /// <param name="style">Optional GUIStyle to use for the control.</param>
-        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         public static Rect GetControlRect(bool hasLabel, params GUILayoutOption[] options) => 
@@ -1932,7 +1956,7 @@
         /// <param name="hasLabel">Optional boolean to specify if the control has a label. Default is true.</param>
         /// <param name="height">The height in pixels of the control. Default is EditorGUIUtility.singleLineHeight.</param>
         /// <param name="style">Optional GUIStyle to use for the control.</param>
-        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         public static Rect GetControlRect(bool hasLabel, float height, params GUILayoutOption[] options) => 
@@ -1944,7 +1968,7 @@
         /// <param name="hasLabel">Optional boolean to specify if the control has a label. Default is true.</param>
         /// <param name="height">The height in pixels of the control. Default is EditorGUIUtility.singleLineHeight.</param>
         /// <param name="style">Optional GUIStyle to use for the control.</param>
-        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         public static Rect GetControlRect(bool hasLabel, float height, GUIStyle style, params GUILayoutOption[] options) => 
@@ -2032,7 +2056,7 @@
             return EditorGUI.IconButton(id, s_LastRect, content, style);
         }
 
-        public static void InspectorTitlebar(Object[] targetObjs)
+        public static void InspectorTitlebar(UnityEngine.Object[] targetObjs)
         {
             EditorGUI.InspectorTitlebar(GUILayoutUtility.GetRect(GUIContent.none, EditorStyles.inspectorTitlebar), targetObjs);
         }
@@ -2046,7 +2070,7 @@
         /// <returns>
         /// <para>The foldout state selected by the user.</para>
         /// </returns>
-        public static bool InspectorTitlebar(bool foldout, Object targetObj) => 
+        public static bool InspectorTitlebar(bool foldout, UnityEngine.Object targetObj) => 
             InspectorTitlebar(foldout, targetObj, true);
 
         /// <summary>
@@ -2058,13 +2082,13 @@
         /// <returns>
         /// <para>The foldout state selected by the user.</para>
         /// </returns>
-        public static bool InspectorTitlebar(bool foldout, Object[] targetObjs) => 
+        public static bool InspectorTitlebar(bool foldout, UnityEngine.Object[] targetObjs) => 
             InspectorTitlebar(foldout, targetObjs, true);
 
-        public static bool InspectorTitlebar(bool foldout, Object targetObj, bool expandable) => 
+        public static bool InspectorTitlebar(bool foldout, UnityEngine.Object targetObj, bool expandable) => 
             EditorGUI.InspectorTitlebar(GUILayoutUtility.GetRect(GUIContent.none, EditorStyles.inspectorTitlebar), foldout, targetObj, expandable);
 
-        public static bool InspectorTitlebar(bool foldout, Object[] targetObjs, bool expandable) => 
+        public static bool InspectorTitlebar(bool foldout, UnityEngine.Object[] targetObjs, bool expandable) => 
             EditorGUI.InspectorTitlebar(GUILayoutUtility.GetRect(GUIContent.none, EditorStyles.inspectorTitlebar), foldout, targetObjs, expandable);
 
         /// <summary>
@@ -2722,7 +2746,7 @@
         }
 
         /// <summary>
-        /// <para>Make a text field for entering long integers.</para>
+        /// <para>Make a text field for entering integers.</para>
         /// </summary>
         /// <param name="label">Optional label to display in front of the long field.</param>
         /// <param name="value">The value to edit.</param>
@@ -2737,7 +2761,7 @@
             LongField(value, EditorStyles.numberField, options);
 
         /// <summary>
-        /// <para>Make a text field for entering long integers.</para>
+        /// <para>Make a text field for entering integers.</para>
         /// </summary>
         /// <param name="label">Optional label to display in front of the long field.</param>
         /// <param name="value">The value to edit.</param>
@@ -2755,7 +2779,7 @@
         }
 
         /// <summary>
-        /// <para>Make a text field for entering long integers.</para>
+        /// <para>Make a text field for entering integers.</para>
         /// </summary>
         /// <param name="label">Optional label to display in front of the long field.</param>
         /// <param name="value">The value to edit.</param>
@@ -2770,7 +2794,7 @@
             LongField(label, value, EditorStyles.numberField, options);
 
         /// <summary>
-        /// <para>Make a text field for entering long integers.</para>
+        /// <para>Make a text field for entering integers.</para>
         /// </summary>
         /// <param name="label">Optional label to display in front of the long field.</param>
         /// <param name="value">The value to edit.</param>
@@ -2785,7 +2809,7 @@
             LongField(label, value, EditorStyles.numberField, options);
 
         /// <summary>
-        /// <para>Make a text field for entering long integers.</para>
+        /// <para>Make a text field for entering integers.</para>
         /// </summary>
         /// <param name="label">Optional label to display in front of the long field.</param>
         /// <param name="value">The value to edit.</param>
@@ -2803,7 +2827,7 @@
         }
 
         /// <summary>
-        /// <para>Make a text field for entering long integers.</para>
+        /// <para>Make a text field for entering integers.</para>
         /// </summary>
         /// <param name="label">Optional label to display in front of the long field.</param>
         /// <param name="value">The value to edit.</param>
@@ -2940,7 +2964,7 @@
             return EditorGUI.MaskField(position, label, mask, displayedOptions, style);
         }
 
-        internal static Object MiniThumbnailObjectField(GUIContent label, Object obj, Type objType, EditorGUI.ObjectFieldValidator validator, params GUILayoutOption[] options)
+        internal static UnityEngine.Object MiniThumbnailObjectField(GUIContent label, UnityEngine.Object obj, System.Type objType, EditorGUI.ObjectFieldValidator validator, params GUILayoutOption[] options)
         {
             Rect position = s_LastRect = GetControlRect(true, 16f, options);
             return EditorGUI.MiniThumbnailObjectField(position, label, obj, objType, validator);
@@ -2964,7 +2988,7 @@
             EditorGUI.MinMaxSlider(position, label, ref minValue, ref maxValue, minLimit, maxLimit);
         }
 
-        internal static void MultiSelectionObjectTitleBar(Object[] objects)
+        internal static void MultiSelectionObjectTitleBar(UnityEngine.Object[] objects)
         {
             string t = objects[0].name + " (" + ObjectNames.NicifyVariableName(ObjectNames.GetTypeName(objects[0])) + ")";
             if (objects.Length > 1)
@@ -2983,8 +3007,7 @@
         /// <param name="property">The object reference property the field shows.</param>
         /// <param name="objType">The type of the objects that can be assigned.</param>
         /// <param name="label">Optional label in front of the field. Pass GUIContent.none to hide the label.</param>
-        /// <param name="options">An optional list of layout options that specify extra layouting
-        /// properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         public static void ObjectField(SerializedProperty property, params GUILayoutOption[] options)
@@ -2998,11 +3021,10 @@
         /// <param name="property">The object reference property the field shows.</param>
         /// <param name="objType">The type of the objects that can be assigned.</param>
         /// <param name="label">Optional label in front of the field. Pass GUIContent.none to hide the label.</param>
-        /// <param name="options">An optional list of layout options that specify extra layouting
-        /// properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
-        public static void ObjectField(SerializedProperty property, Type objType, params GUILayoutOption[] options)
+        public static void ObjectField(SerializedProperty property, System.Type objType, params GUILayoutOption[] options)
         {
             ObjectField(property, objType, null, options);
         }
@@ -3013,8 +3035,7 @@
         /// <param name="property">The object reference property the field shows.</param>
         /// <param name="objType">The type of the objects that can be assigned.</param>
         /// <param name="label">Optional label in front of the field. Pass GUIContent.none to hide the label.</param>
-        /// <param name="options">An optional list of layout options that specify extra layouting
-        /// properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         public static void ObjectField(SerializedProperty property, GUIContent label, params GUILayoutOption[] options)
@@ -3023,32 +3044,12 @@
             EditorGUI.ObjectField(position, property, label);
         }
 
-        /// <summary>
-        /// <para>Make a field to receive any object type.</para>
-        /// </summary>
-        /// <param name="obj">The object the field shows.</param>
-        /// <param name="objType">The type of the objects that can be assigned.</param>
-        /// <param name="label">Optional label in front of the field.</param>
-        /// <param name="label">Optional label in front of the field.</param>
-        /// <param name="options">An optional list of layout options that specify extra layout properties. Any values passed in here will override settings defined by the style.
-        /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
-        /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         [Obsolete("Check the docs for the usage of the new parameter 'allowSceneObjects'.")]
-        public static Object ObjectField(Object obj, Type objType, params GUILayoutOption[] options) => 
+        public static UnityEngine.Object ObjectField(UnityEngine.Object obj, System.Type objType, params GUILayoutOption[] options) => 
             ObjectField(obj, objType, true, options);
 
-        /// <summary>
-        /// <para>Make a field to receive any object type.</para>
-        /// </summary>
-        /// <param name="obj">The object the field shows.</param>
-        /// <param name="objType">The type of the objects that can be assigned.</param>
-        /// <param name="label">Optional label in front of the field.</param>
-        /// <param name="label">Optional label in front of the field.</param>
-        /// <param name="options">An optional list of layout options that specify extra layout properties. Any values passed in here will override settings defined by the style.
-        /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
-        /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         [Obsolete("Check the docs for the usage of the new parameter 'allowSceneObjects'.")]
-        public static Object ObjectField(string label, Object obj, Type objType, params GUILayoutOption[] options) => 
+        public static UnityEngine.Object ObjectField(string label, UnityEngine.Object obj, System.Type objType, params GUILayoutOption[] options) => 
             ObjectField(label, obj, objType, true, options);
 
         /// <summary>
@@ -3057,28 +3058,17 @@
         /// <param name="property">The object reference property the field shows.</param>
         /// <param name="objType">The type of the objects that can be assigned.</param>
         /// <param name="label">Optional label in front of the field. Pass GUIContent.none to hide the label.</param>
-        /// <param name="options">An optional list of layout options that specify extra layouting
-        /// properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
-        public static void ObjectField(SerializedProperty property, Type objType, GUIContent label, params GUILayoutOption[] options)
+        public static void ObjectField(SerializedProperty property, System.Type objType, GUIContent label, params GUILayoutOption[] options)
         {
             Rect position = s_LastRect = GetControlRect(true, 16f, EditorStyles.objectField, options);
             EditorGUI.ObjectField(position, property, objType, label);
         }
 
-        /// <summary>
-        /// <para>Make a field to receive any object type.</para>
-        /// </summary>
-        /// <param name="obj">The object the field shows.</param>
-        /// <param name="objType">The type of the objects that can be assigned.</param>
-        /// <param name="label">Optional label in front of the field.</param>
-        /// <param name="label">Optional label in front of the field.</param>
-        /// <param name="options">An optional list of layout options that specify extra layout properties. Any values passed in here will override settings defined by the style.
-        /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
-        /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         [Obsolete("Check the docs for the usage of the new parameter 'allowSceneObjects'.")]
-        public static Object ObjectField(GUIContent label, Object obj, Type objType, params GUILayoutOption[] options) => 
+        public static UnityEngine.Object ObjectField(GUIContent label, UnityEngine.Object obj, System.Type objType, params GUILayoutOption[] options) => 
             ObjectField(label, obj, objType, true, options);
 
         /// <summary>
@@ -3094,7 +3084,7 @@
         /// <returns>
         /// <para>The object that has been set by the user.</para>
         /// </returns>
-        public static Object ObjectField(Object obj, Type objType, bool allowSceneObjects, params GUILayoutOption[] options)
+        public static UnityEngine.Object ObjectField(UnityEngine.Object obj, System.Type objType, bool allowSceneObjects, params GUILayoutOption[] options)
         {
             Rect position = s_LastRect = GetControlRect(false, 16f, options);
             return EditorGUI.ObjectField(position, obj, objType, allowSceneObjects);
@@ -3113,7 +3103,7 @@
         /// <returns>
         /// <para>The object that has been set by the user.</para>
         /// </returns>
-        public static Object ObjectField(string label, Object obj, Type objType, bool allowSceneObjects, params GUILayoutOption[] options) => 
+        public static UnityEngine.Object ObjectField(string label, UnityEngine.Object obj, System.Type objType, bool allowSceneObjects, params GUILayoutOption[] options) => 
             ObjectField(EditorGUIUtility.TempContent(label), obj, objType, allowSceneObjects, options);
 
         /// <summary>
@@ -3129,7 +3119,7 @@
         /// <returns>
         /// <para>The object that has been set by the user.</para>
         /// </returns>
-        public static Object ObjectField(GUIContent label, Object obj, Type objType, bool allowSceneObjects, params GUILayoutOption[] options)
+        public static UnityEngine.Object ObjectField(GUIContent label, UnityEngine.Object obj, System.Type objType, bool allowSceneObjects, params GUILayoutOption[] options)
         {
             float num;
             if (EditorGUIUtility.HasObjectThumbnail(objType))
@@ -3403,7 +3393,7 @@
         /// <summary>
         /// <para>Make a label in front of some control.</para>
         /// </summary>
-        /// <param name="label">Label to show to the left of the control.</param>
+        /// <param name="label">Label to show in front of the control.</param>
         /// <param name="followingStyle"></param>
         /// <param name="labelStyle"></param>
         [ExcludeFromDocs]
@@ -3416,7 +3406,7 @@
         /// <summary>
         /// <para>Make a label in front of some control.</para>
         /// </summary>
-        /// <param name="label">Label to show to the left of the control.</param>
+        /// <param name="label">Label to show in front of the control.</param>
         /// <param name="followingStyle"></param>
         /// <param name="labelStyle"></param>
         [ExcludeFromDocs]
@@ -3429,7 +3419,7 @@
         /// <summary>
         /// <para>Make a label in front of some control.</para>
         /// </summary>
-        /// <param name="label">Label to show to the left of the control.</param>
+        /// <param name="label">Label to show in front of the control.</param>
         /// <param name="followingStyle"></param>
         /// <param name="labelStyle"></param>
         public static void PrefixLabel(string label, [DefaultValue("\"Button\"")] GUIStyle followingStyle)
@@ -3440,7 +3430,7 @@
         /// <summary>
         /// <para>Make a label in front of some control.</para>
         /// </summary>
-        /// <param name="label">Label to show to the left of the control.</param>
+        /// <param name="label">Label to show in front of the control.</param>
         /// <param name="followingStyle"></param>
         /// <param name="labelStyle"></param>
         public static void PrefixLabel(GUIContent label, [DefaultValue("\"Button\"")] GUIStyle followingStyle)
@@ -3451,7 +3441,7 @@
         /// <summary>
         /// <para>Make a label in front of some control.</para>
         /// </summary>
-        /// <param name="label">Label to show to the left of the control.</param>
+        /// <param name="label">Label to show in front of the control.</param>
         /// <param name="followingStyle"></param>
         /// <param name="labelStyle"></param>
         public static void PrefixLabel(string label, GUIStyle followingStyle, GUIStyle labelStyle)
@@ -3462,7 +3452,7 @@
         /// <summary>
         /// <para>Make a label in front of some control.</para>
         /// </summary>
-        /// <param name="label">Label to show to the left of the control.</param>
+        /// <param name="label">Label to show in front of the control.</param>
         /// <param name="followingStyle"></param>
         /// <param name="labelStyle"></param>
         public static void PrefixLabel(GUIContent label, GUIStyle followingStyle, GUIStyle labelStyle)
@@ -3736,6 +3726,12 @@
         {
             Rect position = s_LastRect = GetSliderRect(true, options);
             return EditorGUI.Slider(position, label, value, leftValue, rightValue);
+        }
+
+        internal static void SliderWithTexture(GUIContent label, SerializedProperty property, float leftValue, float rightValue, float power, GUIStyle sliderStyle, GUIStyle thumbStyle, Texture2D sliderBackground, params GUILayoutOption[] options)
+        {
+            Rect position = s_LastRect = GetSliderRect(false, options);
+            EditorGUI.SliderWithTexture(position, label, property, leftValue, rightValue, power, sliderStyle, thumbStyle, sliderBackground);
         }
 
         internal static void SortingLayerField(GUIContent label, SerializedProperty layerID, GUIStyle style)
@@ -4019,9 +4015,7 @@
         /// <param name="label">Optional label in front of the toggle.</param>
         /// <param name="value">The shown state of the toggle.</param>
         /// <param name="style">Optional GUIStyle.</param>
-        /// <param name="options">An optional list of layout options that specify extra layouting
-        /// properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
-        /// 
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         /// <returns>
@@ -4039,9 +4033,7 @@
         /// <param name="label">Optional label in front of the toggle.</param>
         /// <param name="value">The shown state of the toggle.</param>
         /// <param name="style">Optional GUIStyle.</param>
-        /// <param name="options">An optional list of layout options that specify extra layouting
-        /// properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
-        /// 
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         /// <returns>
@@ -4059,9 +4051,7 @@
         /// <param name="label">Optional label in front of the toggle.</param>
         /// <param name="value">The shown state of the toggle.</param>
         /// <param name="style">Optional GUIStyle.</param>
-        /// <param name="options">An optional list of layout options that specify extra layouting
-        /// properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
-        /// 
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         /// <returns>
@@ -4076,9 +4066,7 @@
         /// <param name="label">Optional label in front of the toggle.</param>
         /// <param name="value">The shown state of the toggle.</param>
         /// <param name="style">Optional GUIStyle.</param>
-        /// <param name="options">An optional list of layout options that specify extra layouting
-        /// properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
-        /// 
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         /// <returns>
@@ -4096,9 +4084,7 @@
         /// <param name="label">Optional label in front of the toggle.</param>
         /// <param name="value">The shown state of the toggle.</param>
         /// <param name="style">Optional GUIStyle.</param>
-        /// <param name="options">An optional list of layout options that specify extra layouting
-        /// properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
-        /// 
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         /// <returns>
@@ -4113,9 +4099,7 @@
         /// <param name="label">Optional label in front of the toggle.</param>
         /// <param name="value">The shown state of the toggle.</param>
         /// <param name="style">Optional GUIStyle.</param>
-        /// <param name="options">An optional list of layout options that specify extra layouting
-        /// properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
-        /// 
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         /// <returns>
@@ -4215,7 +4199,8 @@
         /// <param name="label">Label to display above the field.</param>
         /// <param name="value">The value to edit.</param>
         /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
-        /// </param>
+        /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
+        /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
@@ -4228,7 +4213,8 @@
         /// <param name="label">Label to display above the field.</param>
         /// <param name="value">The value to edit.</param>
         /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
-        /// </param>
+        /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
+        /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
@@ -4243,8 +4229,7 @@
         /// </summary>
         /// <param name="label">Label to display above the field.</param>
         /// <param name="value">The value to edit.</param>
-        /// <param name="options">An optional list of layout options that specify extra layouting
-        /// properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         /// <returns>
@@ -4258,8 +4243,7 @@
         /// </summary>
         /// <param name="label">Label to display above the field.</param>
         /// <param name="value">The value to edit.</param>
-        /// <param name="options">An optional list of layout options that specify extra layouting
-        /// properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         /// <returns>
@@ -4316,6 +4300,7 @@
         {
             [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private bool <visible>k__BackingField;
+            private float m_Value;
 
             /// <summary>
             /// <para>Create a new FadeGroupScope and begin the corresponding group.</para>
@@ -4324,11 +4309,15 @@
             public FadeGroupScope(float value)
             {
                 this.visible = EditorGUILayout.BeginFadeGroup(value);
+                this.m_Value = value;
             }
 
             protected override void CloseScope()
             {
-                EditorGUILayout.EndFadeGroup();
+                if ((this.m_Value != 0f) && (this.m_Value != 1f))
+                {
+                    EditorGUILayout.EndFadeGroup();
+                }
             }
 
             /// <summary>
@@ -4342,7 +4331,7 @@
         /// </summary>
         public class HorizontalScope : GUI.Scope
         {
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private Rect <rect>k__BackingField;
 
             /// <summary>
@@ -4387,9 +4376,9 @@
 
         internal class HorizontalScrollViewScope : GUI.Scope
         {
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private bool <handleScrollWheel>k__BackingField;
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private Vector2 <scrollPosition>k__BackingField;
 
             public HorizontalScrollViewScope(Vector2 scrollPosition, params GUILayoutOption[] options)
@@ -4536,7 +4525,7 @@
         /// </summary>
         public class ToggleGroupScope : GUI.Scope
         {
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private bool <enabled>k__BackingField;
 
             /// <summary>
@@ -4620,9 +4609,9 @@
 
         internal class VerticalScrollViewScope : GUI.Scope
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-            private bool <handleScrollWheel>k__BackingField;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            private bool <handleScrollWheel>k__BackingField;
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private Vector2 <scrollPosition>k__BackingField;
 
             public VerticalScrollViewScope(Vector2 scrollPosition, params GUILayoutOption[] options)

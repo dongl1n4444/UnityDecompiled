@@ -37,7 +37,7 @@
             if (this.m_TreeView == null)
             {
                 this.m_Backend = backend;
-                if (this.m_TreeViewState.columnWidths == null)
+                if ((this.m_TreeViewState.columnWidths == null) || (this.m_TreeViewState.columnWidths.Length == 0))
                 {
                     int num = AudioProfilerGroupInfoHelper.GetLastColumnIndex() + 1;
                     this.m_TreeViewState.columnWidths = new float[num];
@@ -146,7 +146,7 @@
 
         internal class AudioProfilerGroupTreeViewItem : TreeViewItem
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private AudioProfilerGroupInfoWrapper <info>k__BackingField;
 
             public AudioProfilerGroupTreeViewItem(int id, int depth, TreeViewItem parent, string displayName, AudioProfilerGroupInfoWrapper info) : base(id, depth, parent, displayName)
@@ -247,7 +247,8 @@
             {
                 if (Event.current.type == EventType.Repaint)
                 {
-                    GUIStyle style = !useBoldFont ? TreeViewGUI.s_Styles.lineStyle : TreeViewGUI.s_Styles.lineBoldStyle;
+                    GUIStyle style = !useBoldFont ? TreeViewGUI.Styles.lineStyle : TreeViewGUI.Styles.lineBoldStyle;
+                    TextAnchor alignment = style.alignment;
                     style.alignment = TextAnchor.MiddleLeft;
                     style.padding.left = 0;
                     int num = 2;
@@ -263,7 +264,7 @@
                         rect.x += this.columnWidths[i];
                         style.alignment = TextAnchor.MiddleRight;
                     }
-                    style.alignment = TextAnchor.MiddleLeft;
+                    style.alignment = alignment;
                 }
             }
 
@@ -276,7 +277,7 @@
             }
 
             private float[] columnWidths =>
-                base.m_TreeView.state.columnWidths;
+                ((AudioProfilerGroupTreeViewState) base.m_TreeView.state).columnWidths;
         }
     }
 }

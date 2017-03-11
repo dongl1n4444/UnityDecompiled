@@ -4,7 +4,7 @@
     using UnityEngine;
     using UnityEngine.AI;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(NavMeshObstacle))]
+    [CustomEditor(typeof(NavMeshObstacle)), CanEditMultipleObjects]
     internal class NavMeshObstacleInspector : Editor
     {
         private SerializedProperty m_Carve;

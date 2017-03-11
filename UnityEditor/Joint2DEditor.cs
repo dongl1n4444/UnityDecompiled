@@ -114,7 +114,7 @@
         {
             base.OnInspectorGUI();
             EditorGUILayout.PropertyField(this.m_BreakForce, new GUILayoutOption[0]);
-            Type type = base.target.GetType();
+            System.Type type = base.target.GetType();
             if (((type != typeof(DistanceJoint2D)) && (type != typeof(TargetJoint2D))) && (type != typeof(SpringJoint2D)))
             {
                 EditorGUILayout.PropertyField(this.m_BreakTorque, new GUILayoutOption[0]);

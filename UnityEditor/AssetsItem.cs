@@ -3,7 +3,7 @@
     using System;
     using System.Runtime.InteropServices;
 
-    [Serializable, StructLayout(LayoutKind.Sequential)]
+    [Serializable, StructLayout(LayoutKind.Sequential), Obsolete("AssetsItem class is not used anymore (Asset Server has been removed)")]
     public sealed class AssetsItem
     {
         public string guid;

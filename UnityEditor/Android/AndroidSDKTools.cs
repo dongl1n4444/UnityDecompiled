@@ -34,23 +34,19 @@
         private const string UpdateSDKError = "Unable to update the SDK. Please run the SDK Manager manually to make sure you have the latest set of tools and the required platforms installed. See the Console for more details. ";
         private static readonly Regex Warnings = new Regex("^Warning:(.*)$", RegexOptions.Multiline);
 
-        private AndroidSDKTools(string sdkRoot)
+        protected AndroidSDKTools(string sdkRoot)
         {
             this.SDKRootDir = sdkRoot;
             this.UpdateToolsDirectories();
         }
 
-        private string BuildToolsExe(string command)
-        {
-            string path = Path.Combine(this.SDKBuildToolsDir, AndroidJavaTools.Exe(command));
-            if (File.Exists(path))
-            {
-                return path;
-            }
-            return this.PlatformToolsExe(command);
-        }
+        private string BuildToolsBat(string command) => 
+            Path.Combine(this.SDKBuildToolsDir, AndroidJavaTools.Bat(command));
 
-        public string BuildToolsVersion(Command.WaitingForProcessToExit waitingForProcessToExit) => 
+        private string BuildToolsExe(string command) => 
+            Path.Combine(this.SDKBuildToolsDir, AndroidJavaTools.Exe(command));
+
+        public Version BuildToolsVersion(Command.WaitingForProcessToExit waitingForProcessToExit) => 
             AndroidComponentVersion.GetComponentVersion(this.SDKBuildToolsDir);
 
         public void CreateKey(string keystore, string storepass, string alias, string password, string dname, int validityInDays)
@@ -100,12 +96,11 @@
         {
             string[] components = new string[] { this.SDKRootDir, "platforms", $"android-{apiLevel}" };
             string str = Paths.Combine(components);
-            if (File.Exists(Path.Combine(str, "android.jar")))
-            {
-                return str;
-            }
-            return null;
+            return (!File.Exists(Path.Combine(str, "android.jar")) ? null : str);
         }
+
+        protected virtual Version GetBuildToolsUpdateVersion() => 
+            new Version(0x18, 0, 3);
 
         public static AndroidSDKTools GetInstance()
         {
@@ -134,6 +129,12 @@
                 throw new UnityException("Unable to locate Android SDK!");
             }
             return instance;
+        }
+
+        protected virtual string GetSDKBuildToolsDir()
+        {
+            string[] sdkToolCommand = new string[] { "build-tool-dir" };
+            return this.RunCommand(sdkToolCommand, null, "Unable to resolve build tools directory. See the Console for more details. ").Trim();
         }
 
         public int GetTopAndroidPlatformAvailable(Command.WaitingForProcessToExit waitingForProcessToExit)
@@ -198,7 +199,7 @@
             return this.ToolsExe(command);
         }
 
-        public string PlatformToolsVersion(Command.WaitingForProcessToExit waitingForProcessToExit) => 
+        public Version PlatformToolsVersion(Command.WaitingForProcessToExit waitingForProcessToExit) => 
             AndroidComponentVersion.GetComponentVersion(this.SDKPlatformToolsDir);
 
         public string[] ReadAvailableKeys(string keystore, string storepass)
@@ -327,7 +328,7 @@
         private string ToolsExe(string command) => 
             Path.Combine(this.SDKToolsDir, AndroidJavaTools.Exe(command));
 
-        public string ToolsVersion(Command.WaitingForProcessToExit waitingForProcessToExit) => 
+        public Version ToolsVersion(Command.WaitingForProcessToExit waitingForProcessToExit) => 
             AndroidComponentVersion.GetComponentVersion(this.SDKToolsDir);
 
         public string UpdateSDK(Command.WaitingForProcessToExit waitingForProcessToExit)
@@ -335,7 +336,7 @@
             string str;
             try
             {
-                string[] sdkToolCommand = new string[] { "android", "update", "sdk", "-a", "-u", "-t", "tool,platform-tool,build-tools-23.0.2" };
+                string[] sdkToolCommand = new string[] { "android", "update", "sdk", "-a", "-u", "-t", "tool,platform-tool,build-tools-" + this.GetBuildToolsUpdateVersion() };
                 str = this.RunCommand(sdkToolCommand, waitingForProcessToExit, "Unable to update the SDK. Please run the SDK Manager manually to make sure you have the latest set of tools and the required platforms installed. See the Console for more details. ");
             }
             finally
@@ -349,9 +350,8 @@
         {
             this.SDKToolsDir = Path.Combine(this.SDKRootDir, "tools");
             this.SDKPlatformToolsDir = Path.Combine(this.SDKRootDir, "platform-tools");
-            string[] sdkToolCommand = new string[] { "build-tool-dir" };
-            this.SDKBuildToolsDir = this.RunCommand(sdkToolCommand, null, "Unable to resolve build tools directory. See the Console for more details. ").Trim();
-            if (this.SDKBuildToolsDir.Length == 0)
+            this.SDKBuildToolsDir = this.GetSDKBuildToolsDir();
+            if (string.IsNullOrEmpty(this.SDKBuildToolsDir))
             {
                 this.SDKBuildToolsDir = this.SDKPlatformToolsDir;
             }
@@ -362,6 +362,12 @@
 
         public string ADB =>
             this.PlatformToolsExe("adb");
+
+        public string APKSIGNER =>
+            this.BuildToolsBat("apksigner");
+
+        public virtual bool IsVisualStudio =>
+            false;
 
         public string ZIPALIGN =>
             this.BuildToolsExe("zipalign");

@@ -10,7 +10,7 @@
     internal class DefaultPackerPolicy : IPackerPolicy
     {
         [CompilerGenerated]
-        private static Func<Object, Sprite> <>f__am$cache0;
+        private static Func<UnityEngine.Object, Sprite> <>f__am$cache0;
         [CompilerGenerated]
         private static Func<Sprite, bool> <>f__am$cache1;
         [CompilerGenerated]
@@ -71,13 +71,13 @@
                 bool flag = (targetName != "") && this.HasPlatformEnabledAlphaSplittingForCompression(targetName, ti);
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<Object, Sprite>(null, (IntPtr) <OnGroupAtlases>m__0);
+                    <>f__am$cache0 = x => x as Sprite;
                 }
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<Sprite, bool>(null, (IntPtr) <OnGroupAtlases>m__1);
+                    <>f__am$cache1 = x => x != null;
                 }
-                Sprite[] spriteArray = Enumerable.Where<Sprite>(Enumerable.Select<Object, Sprite>(AssetDatabase.LoadAllAssetRepresentationsAtPath(ti.assetPath), <>f__am$cache0), <>f__am$cache1).ToArray<Sprite>();
+                Sprite[] spriteArray = Enumerable.Where<Sprite>(Enumerable.Select<UnityEngine.Object, Sprite>(AssetDatabase.LoadAllAssetRepresentationsAtPath(ti.assetPath), <>f__am$cache0), <>f__am$cache1).ToArray<Sprite>();
                 foreach (Sprite sprite in spriteArray)
                 {
                     Entry item = new Entry {
@@ -86,7 +86,7 @@
                             format = format,
                             colorSpace = space,
                             compressionQuality = !TextureUtil.IsCompressedTextureFormat(format) ? 0 : num3,
-                            filterMode = !Enum.IsDefined(typeof(FilterMode), ti.filterMode) ? FilterMode.Bilinear : ti.filterMode,
+                            filterMode = !Enum.IsDefined(typeof(UnityEngine.FilterMode), ti.filterMode) ? UnityEngine.FilterMode.Bilinear : ti.filterMode,
                             maxWidth = 0x800,
                             maxHeight = 0x800,
                             generateMipMaps = ti.mipmapEnabled,
@@ -107,15 +107,15 @@
                     item.anisoLevel = ti.anisoLevel;
                     list.Add(item);
                 }
-                Resources.UnloadAsset(ti);
+                UnityEngine.Resources.UnloadAsset(ti);
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<Entry, string>(null, (IntPtr) <OnGroupAtlases>m__2);
+                <>f__am$cache2 = e => e.atlasName;
             }
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<Entry, Entry>(null, (IntPtr) <OnGroupAtlases>m__3);
+                <>f__am$cache3 = e => e;
             }
             IEnumerable<IGrouping<string, Entry>> enumerable = Enumerable.GroupBy<Entry, string, Entry>(list, <>f__am$cache2, <>f__am$cache3);
             foreach (IGrouping<string, Entry> grouping in enumerable)
@@ -123,11 +123,11 @@
                 int num5 = 0;
                 if (<>f__am$cache4 == null)
                 {
-                    <>f__am$cache4 = new Func<Entry, AtlasSettings>(null, (IntPtr) <OnGroupAtlases>m__4);
+                    <>f__am$cache4 = t => t.settings;
                 }
                 if (<>f__am$cache5 == null)
                 {
-                    <>f__am$cache5 = new Func<Entry, Entry>(null, (IntPtr) <OnGroupAtlases>m__5);
+                    <>f__am$cache5 = t => t;
                 }
                 IEnumerable<IGrouping<AtlasSettings, Entry>> source = Enumerable.GroupBy<Entry, AtlasSettings, Entry>(grouping, <>f__am$cache4, <>f__am$cache5);
                 foreach (IGrouping<AtlasSettings, Entry> grouping2 in source)

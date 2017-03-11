@@ -239,9 +239,19 @@
                         this.manager.StartClient();
                     }
                 }
-                if ((NetworkServer.active && this.manager.IsClientConnected()) && Input.GetKeyDown(KeyCode.X))
+                if (NetworkServer.active)
                 {
-                    this.manager.StopHost();
+                    if (this.manager.IsClientConnected())
+                    {
+                        if (Input.GetKeyDown(KeyCode.X))
+                        {
+                            this.manager.StopHost();
+                        }
+                    }
+                    else if (Input.GetKeyDown(KeyCode.X))
+                    {
+                        this.manager.StopServer();
+                    }
                 }
             }
         }

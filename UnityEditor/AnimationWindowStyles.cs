@@ -39,6 +39,7 @@
         public static GUIContent prevKeyContent = EditorGUIUtility.IconContent("Animation.PrevKey", "|Go to previous keyframe.");
         public static GUIContent recordContent = EditorGUIUtility.IconContent("Animation.Record", "|Enable/disable keyframe recording mode.");
         public static GUIContent samples = EditorGUIUtility.TextContent("Samples");
+        public static GUIContent sequencerLinkContent = EditorGUIUtility.IconContent("Animation.SequencerLink", "|Animation Window is linked to Sequence Editor.  Press to Unlink.");
         public static GUIStyle timelineTick = "AnimationTimelineTick";
         public static GUIStyle toolbarLabel = new GUIStyle(EditorStyles.toolbarPopup);
 

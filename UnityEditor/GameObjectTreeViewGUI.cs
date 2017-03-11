@@ -1,6 +1,7 @@
 ﻿namespace UnityEditor
 {
     using System;
+    using System.Diagnostics;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Threading;
@@ -12,12 +13,14 @@
     {
         private float m_PrevScollPos;
         private float m_PrevTotalHeight;
-        protected static GameObjectStyles s_GOStyles;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event Action mouseAndKeyboardInput;
 
+        [field: DebuggerBrowsable(0), CompilerGenerated]
         public event Action scrollHeightChanged;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event Action scrollPositionChanged;
 
         public GameObjectTreeViewGUI(TreeViewController treeView, bool useHorizontalScroll) : base(treeView, useHorizontalScroll)
@@ -38,7 +41,7 @@
             }
             if ((item2.objectPPTR.hideFlags & HideFlags.NotEditable) != HideFlags.None)
             {
-                Debug.LogWarning("Unable to rename a GameObject with HideFlags.NotEditable.");
+                UnityEngine.Debug.LogWarning("Unable to rename a GameObject with HideFlags.NotEditable.");
                 return false;
             }
             return base.BeginRename(item, delay);
@@ -65,7 +68,7 @@
                 bool flag2 = (current.type == EventType.KeyDown) || (current.type == EventType.KeyUp);
                 if ((flag && base.m_TreeView.GetTotalRect().Contains(current.mousePosition)) || flag2)
                 {
-                    this.mouseAndKeyboardInput.Invoke();
+                    this.mouseAndKeyboardInput();
                 }
             }
         }
@@ -75,7 +78,7 @@
             float y = base.m_TreeView.state.scrollPos.y;
             if ((this.scrollPositionChanged != null) && !Mathf.Approximately(y, this.m_PrevScollPos))
             {
-                this.scrollPositionChanged.Invoke();
+                this.scrollPositionChanged();
             }
             this.m_PrevScollPos = y;
         }
@@ -85,7 +88,7 @@
             float height = base.m_TreeView.GetTotalRect().height;
             if ((this.scrollHeightChanged != null) && !Mathf.Approximately(height, this.m_PrevTotalHeight))
             {
-                this.scrollHeightChanged.Invoke();
+                this.scrollHeightChanged();
             }
             this.m_PrevTotalHeight = height;
         }
@@ -95,12 +98,12 @@
             Rect position = new Rect((rect.width - 16f) - 4f, rect.y + ((rect.height - 6f) * 0.5f), 16f, rect.height);
             if (Event.current.type == EventType.Repaint)
             {
-                s_GOStyles.optionsButtonStyle.Draw(position, false, false, false, false);
+                GameObjectStyles.optionsButtonStyle.Draw(position, false, false, false, false);
             }
             position.y = rect.y;
             position.height = rect.height;
             position.width = 24f;
-            if (EditorGUI.ButtonMouseDown(position, GUIContent.none, FocusType.Passive, GUIStyle.none))
+            if (EditorGUI.DropdownButton(position, GUIContent.none, FocusType.Passive, GUIStyle.none))
             {
                 base.m_TreeView.SelectionClick(goItem, true);
                 base.m_TreeView.contextClickItemCallback(goItem.id);
@@ -116,7 +119,7 @@
                 {
                     Color color = GUI.color;
                     GUI.color *= new Color(1f, 1f, 1f, 0.9f);
-                    GUI.Label(rect, GUIContent.none, s_GOStyles.sceneHeaderBg);
+                    GUI.Label(rect, GUIContent.none, GameObjectStyles.sceneHeaderBg);
                     GUI.color = color;
                 }
                 base.DoItemGUI(rect, row, item, selected, focused, useBoldFont);
@@ -153,7 +156,7 @@
                         {
                             rowRect.y = y;
                         }
-                        GameObjectTreeViewItem item2 = Enumerable.FirstOrDefault<GameObjectTreeViewItem>(((GameObjectTreeViewDataSource) base.m_TreeView.data).sceneHeaderItems, new Func<GameObjectTreeViewItem, bool>(storey, (IntPtr) this.<>m__0));
+                        GameObjectTreeViewItem item2 = Enumerable.FirstOrDefault<GameObjectTreeViewItem>(((GameObjectTreeViewDataSource) base.m_TreeView.data).sceneHeaderItems, new Func<GameObjectTreeViewItem, bool>(storey.<>m__0));
                         if (item2 != null)
                         {
                             bool selected = base.m_TreeView.IsItemDragSelectedOrSelected(item2);
@@ -213,15 +216,6 @@
             }
         }
 
-        protected override void InitStyles()
-        {
-            base.InitStyles();
-            if (s_GOStyles == null)
-            {
-                s_GOStyles = new GameObjectStyles();
-            }
-        }
-
         protected override void OnContentGUI(Rect rect, int row, TreeViewItem item, string label, bool selected, bool focused, bool useBoldFont, bool isPinging)
         {
             if (Event.current.type == EventType.Repaint)
@@ -233,9 +227,7 @@
                     {
                         if (!isPinging)
                         {
-                            float contentIndent = this.GetContentIndent(item);
-                            rect.x += contentIndent;
-                            rect.width -= contentIndent;
+                            rect.xMin += this.GetContentIndent(item) + base.extraSpaceBeforeIconAndLabel;
                         }
                         int colorCode = item2.colorCode;
                         if (string.IsNullOrEmpty(item.displayName))
@@ -250,32 +242,31 @@
                             }
                             label = item2.displayName;
                         }
-                        GUIStyle lineStyle = TreeViewGUI.s_Styles.lineStyle;
+                        GUIStyle lineStyle = TreeViewGUI.Styles.lineStyle;
                         if (!item2.shouldDisplay)
                         {
-                            lineStyle = s_GOStyles.disabledLabel;
+                            lineStyle = GameObjectStyles.disabledLabel;
                         }
                         else if ((colorCode & 3) == 0)
                         {
-                            lineStyle = (colorCode >= 4) ? s_GOStyles.disabledLabel : TreeViewGUI.s_Styles.lineStyle;
+                            lineStyle = (colorCode >= 4) ? GameObjectStyles.disabledLabel : TreeViewGUI.Styles.lineStyle;
                         }
                         else if ((colorCode & 3) == 1)
                         {
-                            lineStyle = (colorCode >= 4) ? s_GOStyles.disabledPrefabLabel : s_GOStyles.prefabLabel;
+                            lineStyle = (colorCode >= 4) ? GameObjectStyles.disabledPrefabLabel : GameObjectStyles.prefabLabel;
                         }
                         else if ((colorCode & 3) == 2)
                         {
-                            lineStyle = (colorCode >= 4) ? s_GOStyles.disabledBrokenPrefabLabel : s_GOStyles.brokenPrefabLabel;
+                            lineStyle = (colorCode >= 4) ? GameObjectStyles.disabledBrokenPrefabLabel : GameObjectStyles.brokenPrefabLabel;
                         }
                         Texture iconForItem = this.GetIconForItem(item);
-                        rect.xMin += lineStyle.margin.left;
                         lineStyle.padding.left = 0;
                         if (iconForItem != null)
                         {
-                            lineStyle.padding.left = (int) ((base.iconTotalPadding + base.k_IconWidth) + base.k_SpaceBetweenIconAndText);
                             Rect position = rect;
                             position.width = base.k_IconWidth;
                             GUI.DrawTexture(position, iconForItem, ScaleMode.ScaleToFit);
+                            rect.xMin += (base.iconTotalPadding + base.k_IconWidth) + base.k_SpaceBetweenIconAndText;
                         }
                         lineStyle.Draw(rect, label, false, false, selected, focused);
                     }
@@ -347,27 +338,40 @@
             Count
         }
 
-        internal class GameObjectStyles
+        internal static class GameObjectStyles
         {
-            public GUIStyle brokenPrefabLabel = new GUIStyle("PR BrokenPrefabLabel");
-            public GUIStyle disabledBrokenPrefabLabel = new GUIStyle("PR DisabledBrokenPrefabLabel");
-            public GUIStyle disabledLabel = new GUIStyle("PR DisabledLabel");
-            public GUIStyle disabledPrefabLabel = new GUIStyle("PR DisabledPrefabLabel");
-            public readonly int kSceneHeaderIconsInterval = 2;
-            public GUIContent loadSceneGUIContent = new GUIContent(EditorGUIUtility.FindTexture("SceneLoadIn"), "Load scene");
-            public GUIStyle optionsButtonStyle = "PaneOptions";
-            public GUIStyle prefabLabel = new GUIStyle("PR PrefabLabel");
-            public GUIContent saveSceneGUIContent = new GUIContent(EditorGUIUtility.FindTexture("SceneSave"), "Save scene");
-            public GUIStyle sceneHeaderBg = "ProjectBrowserTopBarBg";
-            public GUIContent unloadSceneGUIContent = new GUIContent(EditorGUIUtility.FindTexture("SceneLoadOut"), "Unload scene");
+            public static GUIStyle brokenPrefabLabel = new GUIStyle("PR BrokenPrefabLabel");
+            public static GUIStyle disabledBrokenPrefabLabel = new GUIStyle("PR DisabledBrokenPrefabLabel");
+            public static GUIStyle disabledLabel = new GUIStyle("PR DisabledLabel");
+            public static GUIStyle disabledPrefabLabel = new GUIStyle("PR DisabledPrefabLabel");
+            public static readonly int kSceneHeaderIconsInterval = 2;
+            public static GUIContent loadSceneGUIContent = new GUIContent(EditorGUIUtility.FindTexture("SceneLoadIn"), "Load scene");
+            public static GUIStyle optionsButtonStyle = "PaneOptions";
+            public static GUIStyle prefabLabel = new GUIStyle("PR PrefabLabel");
+            public static GUIContent saveSceneGUIContent = new GUIContent(EditorGUIUtility.FindTexture("SceneSave"), "Save scene");
+            public static GUIStyle sceneHeaderBg = "ProjectBrowserTopBarBg";
+            public static GUIContent unloadSceneGUIContent = new GUIContent(EditorGUIUtility.FindTexture("SceneLoadOut"), "Unload scene");
 
-            public GameObjectStyles()
+            static GameObjectStyles()
             {
-                this.disabledLabel.alignment = TextAnchor.MiddleLeft;
-                this.prefabLabel.alignment = TextAnchor.MiddleLeft;
-                this.disabledPrefabLabel.alignment = TextAnchor.MiddleLeft;
-                this.brokenPrefabLabel.alignment = TextAnchor.MiddleLeft;
-                this.disabledBrokenPrefabLabel.alignment = TextAnchor.MiddleLeft;
+                disabledLabel.alignment = TextAnchor.MiddleLeft;
+                prefabLabel.alignment = TextAnchor.MiddleLeft;
+                disabledPrefabLabel.alignment = TextAnchor.MiddleLeft;
+                brokenPrefabLabel.alignment = TextAnchor.MiddleLeft;
+                disabledBrokenPrefabLabel.alignment = TextAnchor.MiddleLeft;
+                ClearSelectionTexture(disabledLabel);
+                ClearSelectionTexture(prefabLabel);
+                ClearSelectionTexture(disabledPrefabLabel);
+                ClearSelectionTexture(brokenPrefabLabel);
+                ClearSelectionTexture(disabledBrokenPrefabLabel);
+            }
+
+            private static void ClearSelectionTexture(GUIStyle style)
+            {
+                Texture2D background = style.hover.background;
+                style.onNormal.background = background;
+                style.onActive.background = background;
+                style.onFocused.background = background;
             }
         }
     }

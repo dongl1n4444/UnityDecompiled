@@ -11,7 +11,6 @@
         private Dictionary<int, InstructionBlock> blocks = new Dictionary<int, InstructionBlock>();
         private MethodBody body;
         private Dictionary<int, InstructionData> data;
-        private List<ExceptionHandlerData> exception_data;
         private HashSet<int> exception_objects_offsets;
 
         internal ControlFlowGraphBuilder(MethodDefinition method)
@@ -29,61 +28,6 @@
             Array.Copy(blocks, destinationArray, blocks.Length);
             destinationArray[destinationArray.Length - 1] = block;
             return destinationArray;
-        }
-
-        private void ComputeExceptionHandlerData()
-        {
-            Collection<ExceptionHandler> exceptionHandlers = this.body.ExceptionHandlers;
-            if (exceptionHandlers.Count != 0)
-            {
-                Dictionary<int, ExceptionHandlerData> datas = new Dictionary<int, ExceptionHandlerData>();
-                foreach (ExceptionHandler handler in exceptionHandlers)
-                {
-                    this.ComputeExceptionHandlerData(datas, handler);
-                    this.ComputeExceptionSuccessor(handler);
-                }
-                this.exception_data = new List<ExceptionHandlerData>(datas.Values);
-                this.exception_data.Sort();
-            }
-        }
-
-        private void ComputeExceptionHandlerData(Dictionary<int, ExceptionHandlerData> datas, ExceptionHandler handler)
-        {
-            ExceptionHandlerData data;
-            if (!datas.TryGetValue(handler.TryStart.Offset, out data))
-            {
-                data = new ExceptionHandlerData(this.ComputeRange(handler.TryStart, handler.TryEnd));
-                datas.Add(handler.TryStart.Offset, data);
-            }
-            this.ComputeExceptionHandlerData(data, handler);
-        }
-
-        private void ComputeExceptionHandlerData(ExceptionHandlerData data, ExceptionHandler handler)
-        {
-            BlockRange range = this.ComputeRange(handler.HandlerStart, handler.HandlerEnd);
-            switch (handler.HandlerType)
-            {
-                case ExceptionHandlerType.Catch:
-                    data.Catches.Add(new CatchHandlerData(handler.CatchType, range));
-                    break;
-
-                case ExceptionHandlerType.Filter:
-                    throw new NotImplementedException();
-
-                case ExceptionHandlerType.Finally:
-                    data.FinallyRange = range;
-                    break;
-
-                case ExceptionHandlerType.Fault:
-                    data.FaultRange = range;
-                    break;
-            }
-        }
-
-        private void ComputeExceptionSuccessor(ExceptionHandler handler)
-        {
-            InstructionBlock block = this.GetBlock(handler.HandlerStart);
-            this.GetBlock(handler.TryStart).AddExceptionSuccessor(block);
         }
 
         private static void ComputeIndexes(InstructionBlock[] blocks)
@@ -134,9 +78,6 @@
 
         private int ComputeNewStackHeight(int stackHeight, Instruction instruction) => 
             ((stackHeight + GetPushDelta(instruction)) - this.GetPopDelta(stackHeight, instruction));
-
-        private BlockRange ComputeRange(Instruction start, Instruction end) => 
-            new BlockRange(this.blocks[start.Offset], this.blocks[end.Offset]);
 
         private void ConnectBlock(InstructionBlock block)
         {
@@ -208,8 +149,7 @@
             this.DelimitBlocks();
             this.ConnectBlocks();
             this.ComputeInstructionData();
-            this.ComputeExceptionHandlerData();
-            return new ControlFlowGraph(this.body, this.ToArray(), this.data, this.exception_data, this.exception_objects_offsets);
+            return new ControlFlowGraph(this.body, this.ToArray(), this.data);
         }
 
         private void DelimitBlocks()

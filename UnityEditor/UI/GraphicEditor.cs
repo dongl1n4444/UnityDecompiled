@@ -46,7 +46,7 @@
                 {
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<UnityEngine.Object, Graphic>(null, (IntPtr) <NativeSizeButtonGUI>m__0);
+                        <>f__am$cache0 = obj => obj as Graphic;
                     }
                     foreach (Graphic graphic in Enumerable.Select<UnityEngine.Object, Graphic>(base.targets, <>f__am$cache0))
                     {

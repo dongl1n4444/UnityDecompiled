@@ -128,7 +128,7 @@
                 Motion stateEffectiveMotion = AnimatorControllerTool.tool.animatorController.GetStateEffectiveMotion(this.state, AnimatorControllerTool.tool.selectedLayerIndex);
                 if (stateEffectiveMotion is BlendTree)
                 {
-                    base.graphGUI.tool.AddBreadCrumb(this.state);
+                    base.graphGUI.tool.AddBreadCrumb(this.state, true);
                 }
                 else if (stateEffectiveMotion is AnimationClip)
                 {

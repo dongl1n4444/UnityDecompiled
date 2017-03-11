@@ -1,11 +1,12 @@
 ﻿namespace Unity.IL2CPP.Debugger
 {
+    using Mono.Cecil;
     using Mono.Cecil.Cil;
+    using Mono.Cecil.Rocks;
     using System;
     using System.Collections.Generic;
-    using Unity.Cecil.Visitor;
 
-    internal class CollectSourceDocumentsVisitor : Unity.Cecil.Visitor.Visitor
+    internal class CollectSourceDocumentsVisitor
     {
         private readonly HashSet<string> _documents;
 
@@ -19,13 +20,42 @@
             this._documents = documents;
         }
 
-        protected override void Visit(Instruction instruction, Context context)
+        public void Process(AssemblyDefinition assembly)
         {
-            base.Visit(instruction, context);
-            SequencePoint sequencePoint = instruction.SequencePoint;
-            if ((sequencePoint != null) && (sequencePoint.Document != null))
+            foreach (TypeDefinition definition in assembly.MainModule.GetAllTypes())
             {
-                this.Documents.Add(sequencePoint.Document.Url);
+                this.Process(definition);
+            }
+        }
+
+        public void Process(MethodDefinition method)
+        {
+            if (method.HasBody)
+            {
+                foreach (Instruction instruction in method.Body.Instructions)
+                {
+                    this.Visit(instruction, method);
+                }
+            }
+        }
+
+        public void Process(TypeDefinition type)
+        {
+            foreach (MethodDefinition definition in type.Methods)
+            {
+                this.Process(definition);
+            }
+        }
+
+        private void Visit(Instruction instruction, MethodDefinition method)
+        {
+            if (method.DebugInformation.HasSequencePoints)
+            {
+                SequencePoint sequencePoint = method.DebugInformation.GetSequencePoint(instruction);
+                if ((sequencePoint != null) && (sequencePoint.Document != null))
+                {
+                    this.Documents.Add(sequencePoint.Document.Url);
+                }
             }
         }
 

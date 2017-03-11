@@ -47,20 +47,20 @@
             EditorGUILayout.EndScrollView();
         }
 
-        protected BaseInspectView GetInspectViewForType(InstructionType type)
+        protected BaseInspectView GetInspectViewForType(UnityEditor.InstructionType type)
         {
             switch (type)
             {
-                case InstructionType.kStyleDraw:
+                case UnityEditor.InstructionType.kStyleDraw:
                     return this.m_InstructionStyleView;
 
-                case InstructionType.kClipPush:
-                case InstructionType.kClipPop:
+                case UnityEditor.InstructionType.kClipPush:
+                case UnityEditor.InstructionType.kClipPop:
                     return this.m_InstructionClipView;
 
-                case InstructionType.kLayoutBeginGroup:
-                case InstructionType.kLayoutEndGroup:
-                case InstructionType.kLayoutEntry:
+                case UnityEditor.InstructionType.kLayoutBeginGroup:
+                case UnityEditor.InstructionType.kLayoutEndGroup:
+                case UnityEditor.InstructionType.kLayoutEntry:
                     return this.m_InstructionLayoutView;
             }
             throw new NotImplementedException("Unhandled InstructionType");

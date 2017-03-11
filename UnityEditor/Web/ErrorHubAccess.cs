@@ -9,7 +9,7 @@
     [InitializeOnLoad]
     internal class ErrorHubAccess : CloudServiceAccess
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private string <errorMessage>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static ErrorHubAccess <instance>k__BackingField;

@@ -11,7 +11,7 @@
     {
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <alwaysAddFirstItemToSearchResult>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <rootIsCollapsable>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <showRootItem>k__BackingField;
@@ -108,13 +108,13 @@
                 }
                 else
                 {
-                    Debug.LogError("TreeView root item is null. Ensure that your TreeViewDataSource sets up at least a root item.");
+                    UnityEngine.Debug.LogError("TreeView root item is null. Ensure that your TreeViewDataSource sets up at least a root item.");
                     this.m_Rows = new List<TreeViewItem>();
                 }
                 this.m_NeedRefreshRows = false;
                 if (this.onVisibleRowsChanged != null)
                 {
-                    this.onVisibleRowsChanged.Invoke();
+                    this.onVisibleRowsChanged();
                 }
                 this.m_TreeView.Repaint();
             }
@@ -122,7 +122,7 @@
 
         public virtual void InsertFakeItem(int id, int parentID, string name, Texture2D icon)
         {
-            Debug.LogError("InsertFakeItem missing implementation");
+            UnityEngine.Debug.LogError("InsertFakeItem missing implementation");
         }
 
         public virtual bool IsExpandable(TreeViewItem item)
@@ -150,7 +150,7 @@
         {
             if (this.m_TreeView.expandedStateChanged != null)
             {
-                this.m_TreeView.expandedStateChanged.Invoke();
+                this.m_TreeView.expandedStateChanged();
             }
         }
 
@@ -163,7 +163,7 @@
             this.m_NeedRefreshRows = true;
         }
 
-        public void ReloadData()
+        public virtual void ReloadData()
         {
             this.m_FakeItem = null;
             this.FetchData();
@@ -281,7 +281,7 @@
         {
             if (fromItem == null)
             {
-                Debug.LogError("item is null");
+                UnityEngine.Debug.LogError("item is null");
             }
             else
             {
@@ -310,6 +310,9 @@
                 this.m_TreeView.state.expandedIDs = value;
             }
         }
+
+        public bool isInitialized =>
+            ((this.m_RootItem != null) && (this.m_Rows != null));
 
         public TreeViewItem root =>
             this.m_RootItem;

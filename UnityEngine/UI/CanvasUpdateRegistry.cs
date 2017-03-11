@@ -154,6 +154,7 @@
 
         private void PerformUpdate()
         {
+            UISystemProfilerApi.BeginSample(UISystemProfilerApi.SampleType.Layout);
             this.CleanInvalidItems();
             this.m_PerformingLayoutUpdate = true;
             this.m_LayoutRebuildQueue.Sort(s_SortLayoutFunction);
@@ -207,6 +208,7 @@
             }
             instance.m_GraphicRebuildQueue.Clear();
             this.m_PerformingGraphicUpdate = false;
+            UISystemProfilerApi.EndSample(UISystemProfilerApi.SampleType.Layout);
         }
 
         /// <summary>

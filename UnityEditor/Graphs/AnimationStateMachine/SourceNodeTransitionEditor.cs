@@ -75,7 +75,7 @@
             this.m_Controller = AnimatorControllerTool.tool?.animatorController;
             if (this.m_Controller != null)
             {
-                this.m_Controller.OnAnimatorControllerDirty = (Action) Delegate.Combine(this.m_Controller.OnAnimatorControllerDirty, new Action(this, (IntPtr) this.ResetTransitionList));
+                this.m_Controller.OnAnimatorControllerDirty = (Action) Delegate.Combine(this.m_Controller.OnAnimatorControllerDirty, new Action(this.ResetTransitionList));
             }
         }
 
@@ -142,16 +142,16 @@
 
         public void OnDisable()
         {
-            AnimatorControllerTool.graphDirtyCallback = (Action) Delegate.Remove(AnimatorControllerTool.graphDirtyCallback, new Action(this, (IntPtr) this.OnGraphDirty));
+            AnimatorControllerTool.graphDirtyCallback = (Action) Delegate.Remove(AnimatorControllerTool.graphDirtyCallback, new Action(this.OnGraphDirty));
             if (this.m_Controller != null)
             {
-                this.m_Controller.OnAnimatorControllerDirty = (Action) Delegate.Remove(this.m_Controller.OnAnimatorControllerDirty, new Action(this, (IntPtr) this.ResetTransitionList));
+                this.m_Controller.OnAnimatorControllerDirty = (Action) Delegate.Remove(this.m_Controller.OnAnimatorControllerDirty, new Action(this.ResetTransitionList));
             }
         }
 
         public void OnEnable()
         {
-            AnimatorControllerTool.graphDirtyCallback = (Action) Delegate.Combine(AnimatorControllerTool.graphDirtyCallback, new Action(this, (IntPtr) this.OnGraphDirty));
+            AnimatorControllerTool.graphDirtyCallback = (Action) Delegate.Combine(AnimatorControllerTool.graphDirtyCallback, new Action(this.OnGraphDirty));
             this.AcquireActiveStateMachine();
             this.AcquireController();
         }

@@ -190,11 +190,11 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<UnityEngine.Object, Image>(null, (IntPtr) <TypeGUI>m__0);
+                    <>f__am$cache0 = obj => obj as Image;
                 }
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<Image, bool>(null, (IntPtr) <TypeGUI>m__1);
+                    <>f__am$cache1 = img => img.hasBorder;
                 }
                 flag = Enumerable.All<Image>(Enumerable.Select<UnityEngine.Object, Image>(base.targets, <>f__am$cache0), <>f__am$cache1);
             }

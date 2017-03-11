@@ -35,7 +35,7 @@
         {
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<Toggle, bool>(null, (IntPtr) <ActiveToggles>m__1);
+                <>f__am$cache1 = x => x.isOn;
             }
             return Enumerable.Where<Toggle>(this.m_Toggles, <>f__am$cache1);
         }

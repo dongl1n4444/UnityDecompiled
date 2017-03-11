@@ -33,7 +33,7 @@
             string extensionVersion = ModuleManager.GetExtensionVersion(target);
             if (!string.IsNullOrEmpty(extensionVersion))
             {
-                string[] textArray1 = new string[] { " [", target, " extension: ", extensionVersion, "]" };
+                string[] textArray1 = new string[] { " [", target, ": ", extensionVersion, "]" };
                 return string.Concat(textArray1);
             }
             return "";
@@ -105,7 +105,7 @@
                     str4 = "Branch: " + unityBuildBranch;
                 }
                 object[] args = new object[] { InternalEditorUtility.GetFullUnityVersion(), str, str2, time.AddSeconds((double) unityVersionDate), str4 };
-                GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(400f), GUILayout.Height(42f) };
+                GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(550f), GUILayout.Height(42f) };
                 EditorGUILayout.SelectableLabel(string.Format("Version {0}{1}{2}\n{3:r}\n{4}", args), options);
                 this.m_TextInitialYPos = 108f;
             }

@@ -6,7 +6,6 @@
     internal interface IBuildPostprocessor
     {
         string GetExtension(BuildTarget target, BuildOptions options);
-        string GetScriptLayoutFileFromBuild(BuildOptions options, string installPath, string fileName);
         void LaunchPlayer(BuildLaunchPlayerArgs args);
         void PostProcess(BuildPostProcessArgs args);
         void PostProcessScriptsOnly(BuildPostProcessArgs args);

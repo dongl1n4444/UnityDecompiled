@@ -1,15 +1,17 @@
 ﻿namespace NiceIO
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Text;
-    using Unity.IL2CPP.Portability;
+    using System.Threading;
 
-    public class NPath : IEquatable<NPath>
+    public class NPath : IEquatable<NPath>, IComparable
     {
         private readonly string _driveLetter;
         private readonly string[] _elements;
@@ -34,6 +36,8 @@
         private static Func<NPath, bool> <>f__am$cache8;
         [CompilerGenerated]
         private static Func<NPath, bool> <>f__mg$cache0;
+        [CompilerGenerated]
+        private static Func<NPath, bool> <>f__mg$cache1;
         private static readonly StringComparison PathStringComparison = (!IsLinux() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
 
         public NPath(string path)
@@ -43,14 +47,22 @@
                 throw new ArgumentNullException();
             }
             path = this.ParseDriveLetter(path, out this._driveLetter);
-            char[] separator = new char[] { '/', '\\' };
-            string[] split = path.Split(separator);
-            this._isRelative = (this._driveLetter == null) && IsRelativeFromSplitString(split);
-            if (<>f__am$cache0 == null)
+            if (path == "/")
             {
-                <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <NPath>m__0);
+                this._isRelative = false;
+                this._elements = new string[0];
             }
-            this._elements = this.ParseSplitStringIntoElements(split.Where<string>(<>f__am$cache0).ToArray<string>());
+            else
+            {
+                char[] separator = new char[] { '/', '\\' };
+                string[] split = path.Split(separator);
+                this._isRelative = (this._driveLetter == null) && IsRelativeFromSplitString(split);
+                if (<>f__am$cache0 == null)
+                {
+                    <>f__am$cache0 = new Func<string, bool>(NPath.<NPath>m__0);
+                }
+                this._elements = this.ParseSplitStringIntoElements(split.Where<string>(<>f__am$cache0).ToArray<string>());
+            }
         }
 
         private NPath(string[] elements, bool isRelative, string driveLetter)
@@ -69,6 +81,7 @@
 
         public NPath ChangeExtension(string extension)
         {
+            this.ThrowIfRoot();
             string[] elements = (string[]) this._elements.Clone();
             elements[elements.Length - 1] = Path.ChangeExtension(this._elements[this._elements.Length - 1], WithDot(extension));
             if (extension == string.Empty)
@@ -83,7 +96,7 @@
         {
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<NPath, bool>(null, (IntPtr) <Combine>m__4);
+                <>f__am$cache4 = p => p.IsRelative;
             }
             if (!append.All<NPath>(<>f__am$cache4))
             {
@@ -91,7 +104,7 @@
             }
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<NPath, IEnumerable<string>>(null, (IntPtr) <Combine>m__5);
+                <>f__am$cache5 = p => p._elements;
             }
             return new NPath(this.ParseSplitStringIntoElements(this._elements.Concat<string>(append.SelectMany<NPath, string>(<>f__am$cache5))), this._isRelative, this._driveLetter);
         }
@@ -100,9 +113,18 @@
         {
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<string, NPath>(null, (IntPtr) <Combine>m__3);
+                <>f__am$cache3 = a => new NPath(a);
             }
             return this.Combine(append.Select<string, NPath>(<>f__am$cache3).ToArray<NPath>());
+        }
+
+        public int CompareTo(object obj)
+        {
+            if (obj == null)
+            {
+                return -1;
+            }
+            return this.ToString().CompareTo(((NPath) obj).ToString());
         }
 
         public IEnumerable<NPath> Contents(bool recurse = false) => 
@@ -115,7 +137,7 @@
         {
             if (<>f__am$cache8 == null)
             {
-                <>f__am$cache8 = new Func<NPath, bool>(null, (IntPtr) <Copy>m__8);
+                <>f__am$cache8 = p => true;
             }
             return this.Copy(dest, <>f__am$cache8);
         }
@@ -144,16 +166,16 @@
 
         public IEnumerable<NPath> CopyFiles(NPath destination, bool recurse, Func<NPath, bool> fileFilter = null)
         {
-            <CopyFiles>c__AnonStorey1 storey = new <CopyFiles>c__AnonStorey1 {
+            <CopyFiles>c__AnonStorey4 storey = new <CopyFiles>c__AnonStorey4 {
                 destination = destination,
                 $this = this
             };
             storey.destination.EnsureDirectoryExists("");
             if ((fileFilter == null) && (<>f__mg$cache0 == null))
             {
-                <>f__mg$cache0 = new Func<NPath, bool>(null, (IntPtr) AlwaysTrue);
+                <>f__mg$cache0 = new Func<NPath, bool>(NPath.AlwaysTrue);
             }
-            return this.Files(recurse).Where<NPath>(<>f__mg$cache0).Select<NPath, NPath>(new Func<NPath, NPath>(storey, (IntPtr) this.<>m__0)).ToArray<NPath>();
+            return this.Files(recurse).Where<NPath>(<>f__mg$cache0).Select<NPath, NPath>(new Func<NPath, NPath>(storey.<>m__0)).ToArray<NPath>();
         }
 
         private NPath CopyWithDeterminedDestination(NPath absoluteDestination, Func<NPath, bool> fileFilter)
@@ -164,7 +186,7 @@
             }
             if (this.FileExists(""))
             {
-                if (!fileFilter.Invoke(absoluteDestination))
+                if (!fileFilter(absoluteDestination))
                 {
                     return null;
                 }
@@ -188,6 +210,10 @@
         public NPath CreateDirectory()
         {
             this.ThrowIfRelative();
+            if (this.IsRoot)
+            {
+                throw new NotSupportedException("CreateDirectory is not supported on a root level directory because it would be dangerous:" + this.ToString());
+            }
             Directory.CreateDirectory(this.ToString());
             return this;
         }
@@ -208,6 +234,7 @@
         public NPath CreateFile()
         {
             this.ThrowIfRelative();
+            this.ThrowIfRoot();
             this.EnsureParentDirectoryExists();
             File.WriteAllBytes(this.ToString(), new byte[0]);
             return this;
@@ -243,6 +270,10 @@
         public void Delete(DeleteMode deleteMode = 0)
         {
             this.ThrowIfRelative();
+            if (this.IsRoot)
+            {
+                throw new NotSupportedException("Delete is not supported on a root level directory because it would be dangerous:" + this.ToString());
+            }
             if (this.FileExists(""))
             {
                 File.Delete(this.ToString());
@@ -267,6 +298,45 @@
             }
         }
 
+        public NPath DeleteContents()
+        {
+            this.ThrowIfRelative();
+            if (this.IsRoot)
+            {
+                throw new NotSupportedException("DeleteContents is not supported on a root level directory because it would be dangerous:" + this.ToString());
+            }
+            if (this.FileExists(""))
+            {
+                throw new InvalidOperationException("It is not valid to perform this operation on a file");
+            }
+            if (this.DirectoryExists(""))
+            {
+                try
+                {
+                    this.Files(false).Delete();
+                    this.Directories(false).Delete();
+                }
+                catch (IOException)
+                {
+                    if (this.Files(true).Any<NPath>())
+                    {
+                        throw;
+                    }
+                }
+                return this;
+            }
+            return this.EnsureDirectoryExists("");
+        }
+
+        public void DeleteIfExists(DeleteMode deleteMode = 0)
+        {
+            this.ThrowIfRelative();
+            if (this.FileExists("") || this.DirectoryExists(""))
+            {
+                this.Delete(deleteMode);
+            }
+        }
+
         public IEnumerable<NPath> Directories(bool recurse = false) => 
             this.Directories("*", recurse);
 
@@ -274,7 +344,7 @@
         {
             if (<>f__am$cache7 == null)
             {
-                <>f__am$cache7 = new Func<string, NPath>(null, (IntPtr) <Directories>m__7);
+                <>f__am$cache7 = s => new NPath(s);
             }
             return Directory.GetDirectories(this.ToString(), filter, !recurse ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories).Select<string, NPath>(<>f__am$cache7);
         }
@@ -287,6 +357,15 @@
 
         public bool DirectoryExists(string append = "") => 
             this.DirectoryExists(new NPath(append));
+
+        public NPath DirectoryMustExist()
+        {
+            if (!this.DirectoryExists(""))
+            {
+                throw new DirectoryNotFoundException("Expected directory to exist : " + this.ToString());
+            }
+            return this;
+        }
 
         public NPath EnsureDirectoryExists(NPath append)
         {
@@ -363,6 +442,15 @@
         public bool FileExists(string append = "") => 
             this.FileExists(new NPath(append));
 
+        public NPath FileMustExist()
+        {
+            if (!this.FileExists(""))
+            {
+                throw new FileNotFoundException("File was expected to exist : " + this.ToString());
+            }
+            return this;
+        }
+
         public IEnumerable<NPath> Files(bool recurse = false) => 
             this.Files("*", recurse);
 
@@ -370,24 +458,9 @@
         {
             if (<>f__am$cache6 == null)
             {
-                <>f__am$cache6 = new Func<string, NPath>(null, (IntPtr) <Files>m__6);
+                <>f__am$cache6 = s => new NPath(s);
             }
             return Directory.GetFiles(this.ToString(), filter, !recurse ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories).Select<string, NPath>(<>f__am$cache6);
-        }
-
-        public NPath FirstParentMatching(Func<NPath, bool> predicate)
-        {
-            this.ThrowIfRelative();
-            NPath parent = this;
-            while (!predicate.Invoke(parent))
-            {
-                if (parent.IsEmpty())
-                {
-                    return null;
-                }
-                parent = parent.Parent;
-            }
-            return parent;
         }
 
         public override int GetHashCode()
@@ -407,10 +480,10 @@
 
         public bool HasExtension(params string[] extensions)
         {
-            <HasExtension>c__AnonStorey0 storey = new <HasExtension>c__AnonStorey0 {
+            <HasExtension>c__AnonStorey2 storey = new <HasExtension>c__AnonStorey2 {
                 extensionWithDotLower = this.ExtensionWithDot.ToLower()
             };
-            return extensions.Any<string>(new Func<string, bool>(storey, (IntPtr) this.<>m__0));
+            return extensions.Any<string>(new Func<string, bool>(storey.<>m__0));
         }
 
         private static bool HasNonDotDotLastElement(List<string> stack) => 
@@ -427,6 +500,14 @@
             if ((this.IsRelative && !potentialBasePath.IsRelative) || (!this.IsRelative && potentialBasePath.IsRelative))
             {
                 throw new ArgumentException("You can only call IsChildOf with two relative paths, or with two absolute paths");
+            }
+            if (potentialBasePath.IsRoot)
+            {
+                if (this._driveLetter != potentialBasePath._driveLetter)
+                {
+                    return false;
+                }
+                return true;
             }
             if (this.IsEmpty())
             {
@@ -466,33 +547,13 @@
             return CurrentDirectory.Combine(append);
         }
 
-        public NPath MakeDirectoryEmpty()
-        {
-            this.ThrowIfRelative();
-            if (this.FileExists(""))
-            {
-                throw new InvalidOperationException("It is not valid to perform this operation on a file");
-            }
-            if (this.DirectoryExists(""))
-            {
-                try
-                {
-                    this.Delete(DeleteMode.Normal);
-                }
-                catch (IOException)
-                {
-                    if (this.Files(true).Any<NPath>())
-                    {
-                        throw;
-                    }
-                }
-            }
-            return this.EnsureDirectoryExists("");
-        }
-
         public NPath Move(NPath dest)
         {
             this.ThrowIfRelative();
+            if (this.IsRoot)
+            {
+                throw new NotSupportedException("Move is not supported on a root level directory because it would be dangerous:" + this.ToString());
+            }
             if (dest.IsRelative)
             {
                 NPath[] append = new NPath[] { dest };
@@ -520,6 +581,24 @@
         public NPath Move(string dest) => 
             this.Move(new NPath(dest));
 
+        public IEnumerable<NPath> MoveFiles(NPath destination, bool recurse, Func<NPath, bool> fileFilter = null)
+        {
+            <MoveFiles>c__AnonStorey5 storey = new <MoveFiles>c__AnonStorey5 {
+                destination = destination,
+                $this = this
+            };
+            if (this.IsRoot)
+            {
+                throw new NotSupportedException("MoveFiles is not supported on this directory because it would be dangerous:" + this.ToString());
+            }
+            storey.destination.EnsureDirectoryExists("");
+            if ((fileFilter == null) && (<>f__mg$cache1 == null))
+            {
+                <>f__mg$cache1 = new Func<NPath, bool>(NPath.AlwaysTrue);
+            }
+            return this.Files(recurse).Where<NPath>(<>f__mg$cache1).Select<NPath, NPath>(new Func<NPath, NPath>(storey.<>m__0)).ToArray<NPath>();
+        }
+
         public static bool operator ==(NPath a, NPath b)
         {
             if (object.ReferenceEquals(a, b))
@@ -538,17 +617,11 @@
 
         public NPath ParentContaining(NPath needle)
         {
+            <ParentContaining>c__AnonStorey3 storey = new <ParentContaining>c__AnonStorey3 {
+                needle = needle
+            };
             this.ThrowIfRelative();
-            NPath parent = this;
-            while (!parent.Exists(needle))
-            {
-                if (parent.IsEmpty())
-                {
-                    return null;
-                }
-                parent = parent.Parent;
-            }
-            return parent;
+            return this.RecursiveParents.FirstOrDefault<NPath>(new Func<NPath, bool>(storey.<>m__0));
         }
 
         public NPath ParentContaining(string needle) => 
@@ -570,7 +643,7 @@
             List<string> stack = new List<string>();
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<string, bool>(null, (IntPtr) <ParseSplitStringIntoElements>m__1);
+                <>f__am$cache1 = input => input.Length != 0;
             }
             foreach (string str in inputs.Where<string>(<>f__am$cache1))
             {
@@ -605,12 +678,43 @@
 
         public NPath RelativeTo(NPath path)
         {
-            if (!this.IsChildOf(path))
+            if (this.IsChildOf(path))
             {
-                object[] objArray1 = new object[] { "Path.RelativeTo() was invoked with two paths that are unrelated. invoked on: ", this.ToString(), " asked to be made relative to: ", path };
+                return new NPath(this._elements.Skip<string>(path._elements.Length).ToArray<string>(), true, null);
+            }
+            if ((!this.IsRelative && !path.IsRelative) && (this._driveLetter != path._driveLetter))
+            {
+                object[] objArray1 = new object[] { "Path.RelativeTo() was invoked with two paths that are on different volumes. invoked on: ", this.ToString(), " asked to be made relative to: ", path };
                 throw new ArgumentException(string.Concat(objArray1));
             }
-            return new NPath(this._elements.Skip<string>(path._elements.Length).ToArray<string>(), true, null);
+            NPath path2 = null;
+            using (IEnumerator<NPath> enumerator = this.RecursiveParents.GetEnumerator())
+            {
+                while (enumerator.MoveNext())
+                {
+                    <RelativeTo>c__AnonStorey1 storey = new <RelativeTo>c__AnonStorey1 {
+                        parent = enumerator.Current
+                    };
+                    path2 = path.RecursiveParents.FirstOrDefault<NPath>(new Func<NPath, bool>(storey.<>m__0));
+                    if (path2 != null)
+                    {
+                        goto Label_00D6;
+                    }
+                }
+            }
+        Label_00D6:
+            if (path2 == null)
+            {
+                object[] objArray2 = new object[] { "Path.RelativeTo() was unable to find a common parent between ", this.ToString(), " and ", path };
+                throw new ArgumentException(string.Concat(objArray2));
+            }
+            if ((this.IsRelative && path.IsRelative) && path2.IsEmpty())
+            {
+                object[] objArray3 = new object[] { "Path.RelativeTo() was invoked with two relative paths that do not share a common parent.  Invoked on: ", this.ToString(), " asked to be made relative to: ", path };
+                throw new ArgumentException(string.Concat(objArray3));
+            }
+            int count = path.Depth - path2.Depth;
+            return new NPath(Enumerable.Repeat<string>("..", count).Concat<string>(this._elements.Skip<string>(path2.Depth)).ToArray<string>(), true, null);
         }
 
         private static char Slash(SlashMode slashMode)
@@ -637,11 +741,23 @@
             }
         }
 
+        private void ThrowIfRoot()
+        {
+            if (this.IsRoot)
+            {
+                throw new ArgumentException("You are attempting an operation that is not valid on a root level directory");
+            }
+        }
+
         public override string ToString() => 
             this.ToString(SlashMode.Native);
 
         public string ToString(SlashMode slashMode)
         {
+            if (this.IsRoot && string.IsNullOrEmpty(this._driveLetter))
+            {
+                return Slash(slashMode).ToString();
+            }
             if (this._isRelative && (this._elements.Length == 0))
             {
                 return ".";
@@ -691,6 +807,9 @@
         public static NPath CurrentDirectory =>
             new NPath(Directory.GetCurrentDirectory());
 
+        public int Depth =>
+            this._elements.Length;
+
         public IEnumerable<string> Elements =>
             this._elements;
 
@@ -698,6 +817,10 @@
         {
             get
             {
+                if (this.IsRoot)
+                {
+                    throw new ArgumentException("A root directory does not have an extension");
+                }
                 string str = this._elements.Last<string>();
                 int startIndex = str.LastIndexOf(".");
                 if (startIndex < 0)
@@ -708,8 +831,14 @@
             }
         }
 
-        public string FileName =>
-            this._elements.Last<string>();
+        public string FileName
+        {
+            get
+            {
+                this.ThrowIfRoot();
+                return this._elements.Last<string>();
+            }
+        }
 
         public string FileNameWithoutExtension =>
             Path.GetFileNameWithoutExtension(this.FileName);
@@ -722,12 +851,15 @@
                 {
                     return new NPath(Environment.GetEnvironmentVariable("USERPROFILE"));
                 }
-                return new NPath(EnvironmentPortable.GetPersonalFolderPortable());
+                return new NPath(Environment.GetEnvironmentVariable("HOME"));
             }
         }
 
         public bool IsRelative =>
             this._isRelative;
+
+        public bool IsRoot =>
+            ((this._elements.Length == 0) && !this._isRelative);
 
         public NPath Parent
         {
@@ -741,11 +873,90 @@
             }
         }
 
+        public IEnumerable<NPath> RecursiveParents =>
+            new <>c__Iterator0 { 
+                $this=this,
+                $PC=-2
+            };
+
         public static NPath SystemTemp =>
             new NPath(Path.GetTempPath());
 
         [CompilerGenerated]
-        private sealed class <CopyFiles>c__AnonStorey1
+        private sealed class <>c__Iterator0 : IEnumerable, IEnumerable<NPath>, IEnumerator, IDisposable, IEnumerator<NPath>
+        {
+            internal NPath $current;
+            internal bool $disposing;
+            internal int $PC;
+            internal NPath $this;
+            internal NPath <candidate>__0;
+
+            [DebuggerHidden]
+            public void Dispose()
+            {
+                this.$disposing = true;
+                this.$PC = -1;
+            }
+
+            public bool MoveNext()
+            {
+                uint num = (uint) this.$PC;
+                this.$PC = -1;
+                switch (num)
+                {
+                    case 0:
+                        this.<candidate>__0 = this.$this;
+                        break;
+
+                    case 1:
+                        break;
+
+                    default:
+                        goto Label_0083;
+                }
+                if (!this.<candidate>__0.IsEmpty())
+                {
+                    this.<candidate>__0 = this.<candidate>__0.Parent;
+                    this.$current = this.<candidate>__0;
+                    if (!this.$disposing)
+                    {
+                        this.$PC = 1;
+                    }
+                    return true;
+                }
+            Label_0083:
+                return false;
+            }
+
+            [DebuggerHidden]
+            public void Reset()
+            {
+                throw new NotSupportedException();
+            }
+
+            [DebuggerHidden]
+            IEnumerator<NPath> IEnumerable<NPath>.GetEnumerator()
+            {
+                if (Interlocked.CompareExchange(ref this.$PC, 0, -2) == -2)
+                {
+                    return this;
+                }
+                return new NPath.<>c__Iterator0 { $this = this.$this };
+            }
+
+            [DebuggerHidden]
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
+
+            NPath IEnumerator<NPath>.Current =>
+                this.$current;
+
+            object IEnumerator.Current =>
+                this.$current;
+        }
+
+        [CompilerGenerated]
+        private sealed class <CopyFiles>c__AnonStorey4
         {
             internal NPath $this;
             internal NPath destination;
@@ -758,12 +969,43 @@
         }
 
         [CompilerGenerated]
-        private sealed class <HasExtension>c__AnonStorey0
+        private sealed class <HasExtension>c__AnonStorey2
         {
             internal string extensionWithDotLower;
 
             internal bool <>m__0(string e) => 
                 (NPath.WithDot(e).ToLower() == this.extensionWithDotLower);
+        }
+
+        [CompilerGenerated]
+        private sealed class <MoveFiles>c__AnonStorey5
+        {
+            internal NPath $this;
+            internal NPath destination;
+
+            internal NPath <>m__0(NPath file)
+            {
+                NPath[] append = new NPath[] { file.RelativeTo(this.$this) };
+                return file.Move(this.destination.Combine(append));
+            }
+        }
+
+        [CompilerGenerated]
+        private sealed class <ParentContaining>c__AnonStorey3
+        {
+            internal NPath needle;
+
+            internal bool <>m__0(NPath p) => 
+                p.Exists(this.needle);
+        }
+
+        [CompilerGenerated]
+        private sealed class <RelativeTo>c__AnonStorey1
+        {
+            internal NPath parent;
+
+            internal bool <>m__0(NPath otherParent) => 
+                (otherParent == this.parent);
         }
     }
 }

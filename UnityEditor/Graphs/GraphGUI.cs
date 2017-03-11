@@ -30,6 +30,8 @@
         private const int kNodePositionYMax = 250;
         private static readonly GUIContent kTempContent = new GUIContent();
         protected bool m_CenterGraph;
+        protected bool m_CenterGraphOnPosition;
+        protected Vector2 m_CenterGraphPosition;
         protected Vector2? m_contextMenuMouseDownPosition;
         private Vector2 m_DragNodeDistance;
         private Vector2 m_DragStartPoint;
@@ -100,6 +102,14 @@
         public void CenterGraph()
         {
             this.m_CenterGraph = true;
+            this.m_CenterGraphPosition = this.GetCenterPosition();
+        }
+
+        public void CenterGraph(Vector2 center)
+        {
+            this.m_CenterGraph = true;
+            this.m_CenterGraphPosition = center;
+            this.m_CenterGraphOnPosition = true;
         }
 
         public virtual void ClearSelection()
@@ -237,6 +247,7 @@
                         if (GUIUtility.hotControl == controlID)
                         {
                             this.m_ScrollPosition -= current.delta;
+                            this.OnScroll();
                             current.Use();
                             break;
                         }
@@ -493,6 +504,15 @@
             return rect;
         }
 
+        protected virtual Vector2 GetCenterPosition()
+        {
+            if (this.m_CenterGraphOnPosition)
+            {
+                return this.m_CenterGraphPosition;
+            }
+            return new Vector2((this.graph.graphExtents.width / 2f) - (this.m_Host.position.width / 2f), (this.graph.graphExtents.height / 2f) - (this.m_Host.position.height / 2f));
+        }
+
         private static Vector2 GetMidPoint(List<Node> nodes)
         {
             float maxValue = float.MaxValue;
@@ -568,7 +588,7 @@
                                     {
                                         if (current.type == EventType.ExecuteCommand)
                                         {
-                                            this.DeleteNodesAndEdges(this.selection, Enumerable.Select<int, UnityEditor.Graphs.Edge>(this.edgeGUI.edgeSelection, new Func<int, UnityEditor.Graphs.Edge>(this, (IntPtr) this.<HandleMenuEvents>m__0)).ToList<UnityEditor.Graphs.Edge>());
+                                            this.DeleteNodesAndEdges(this.selection, (from i in this.edgeGUI.edgeSelection select this.m_Graph.edges[i]).ToList<UnityEditor.Graphs.Edge>());
                                         }
                                         current.Use();
                                         break;
@@ -577,7 +597,7 @@
 
                                 case 1:
                                     this.CopyNodesToPasteboard();
-                                    this.DeleteNodesAndEdges(this.selection, Enumerable.Select<int, UnityEditor.Graphs.Edge>(this.edgeGUI.edgeSelection, new Func<int, UnityEditor.Graphs.Edge>(this, (IntPtr) this.<HandleMenuEvents>m__1)).ToList<UnityEditor.Graphs.Edge>());
+                                    this.DeleteNodesAndEdges(this.selection, (from i in this.edgeGUI.edgeSelection select this.m_Graph.edges[i]).ToList<UnityEditor.Graphs.Edge>());
                                     current.Use();
                                     break;
 
@@ -719,6 +739,10 @@
         {
         }
 
+        protected virtual void OnScroll()
+        {
+        }
+
         public virtual void OnToolbarGUI()
         {
             GUI.enabled = this.selection.Count > 0;
@@ -845,7 +869,7 @@
             return position;
         }
 
-        public virtual void SyncGraphToUnitySelection()
+        public virtual void SyncGraphToUnitySelection(bool force = false)
         {
         }
 
@@ -860,14 +884,18 @@
 
         private void UpdateScrollPosition()
         {
-            this.m_ScrollPosition.x += this.m_LastGraphExtents.x - this.graph.graphExtents.x;
-            this.m_ScrollPosition.y += this.m_LastGraphExtents.y - this.graph.graphExtents.y;
+            Vector2 scrollPosition = this.m_ScrollPosition;
+            scrollPosition.x += this.m_LastGraphExtents.x - this.graph.graphExtents.x;
+            scrollPosition.y += this.m_LastGraphExtents.y - this.graph.graphExtents.y;
             this.m_LastGraphExtents = this.graph.graphExtents;
             if (this.m_CenterGraph && (Event.current.type == EventType.Layout))
             {
-                this.m_ScrollPosition = new Vector2((this.graph.graphExtents.width / 2f) - (this.m_Host.position.width / 2f), (this.graph.graphExtents.height / 2f) - (this.m_Host.position.height / 2f));
+                scrollPosition = this.GetCenterPosition();
+                this.m_CenterGraphOnPosition = false;
                 this.m_CenterGraph = false;
             }
+            this.m_ScrollPosition = scrollPosition;
+            this.OnScroll();
         }
 
         protected virtual void UpdateUnitySelection()
@@ -928,6 +956,9 @@
                 return kGridMinorColorLight;
             }
         }
+
+        public Vector2 scrollPosition =>
+            this.m_ScrollPosition;
 
         [CompilerGenerated]
         private sealed class <OnGraphGUI>c__AnonStorey0

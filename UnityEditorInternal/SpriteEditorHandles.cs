@@ -11,9 +11,9 @@
         private static Vector2 s_DragStartScreenPosition;
         private static int s_RectSelectionID = GUIUtility.GetPermanentControlID();
 
-        private static Rect GetCurrentRect(bool screenSpace, float textureWidth, float textureHeight, Vector2 startPoint, Vector2 endPoint)
+        private static Rect GetCurrentRect(bool screenSpace, Rect clampArea, Vector2 startPoint, Vector2 endPoint)
         {
-            Rect rect = SpriteEditorUtility.ClampedRect(SpriteEditorUtility.RoundToInt(EditorGUIExt.FromToRect(Handles.s_InverseMatrix.MultiplyPoint((Vector3) startPoint), Handles.s_InverseMatrix.MultiplyPoint((Vector3) endPoint))), new Rect(0f, 0f, textureWidth, textureHeight), false);
+            Rect rect = SpriteEditorUtility.ClampedRect(SpriteEditorUtility.RoundToInt(EditorGUIExt.FromToRect(Handles.inverseMatrix.MultiplyPoint((Vector3) startPoint), Handles.inverseMatrix.MultiplyPoint((Vector3) endPoint))), clampArea, false);
             if (screenSpace)
             {
                 Vector2 vector = Handles.matrix.MultiplyPoint((Vector3) new Vector2(rect.xMin, rect.yMin));
@@ -73,7 +73,7 @@
                     {
                         s_CurrentMousePosition += current.delta;
                         Vector2 vector3 = pos;
-                        Vector3 vector4 = Handles.s_InverseMatrix.MultiplyPoint((Vector3) (s_CurrentMousePosition - s_DragScreenOffset));
+                        Vector3 vector4 = Handles.inverseMatrix.MultiplyPoint((Vector3) (s_CurrentMousePosition - s_DragScreenOffset));
                         pos = new Vector2(vector4.x, vector4.y);
                         Vector2 vector5 = vector3 - pos;
                         if (!Mathf.Approximately(vector5.magnitude, 0f))
@@ -87,7 +87,7 @@
                 case EventType.KeyDown:
                     if ((GUIUtility.hotControl == controlID) && (current.keyCode == KeyCode.Escape))
                     {
-                        pos = Handles.s_InverseMatrix.MultiplyPoint((Vector3) (s_DragStartScreenPosition - s_DragScreenOffset));
+                        pos = Handles.inverseMatrix.MultiplyPoint((Vector3) (s_DragStartScreenPosition - s_DragScreenOffset));
                         GUIUtility.hotControl = 0;
                         GUI.changed = true;
                         current.Use();
@@ -127,7 +127,7 @@
             return ScaleSlider(pos, cursor, position);
         }
 
-        internal static Rect RectCreator(float textureWidth, float textureHeight, GUIStyle rectStyle)
+        internal static Rect RectCreator(Rect textureArea, GUIStyle rectStyle)
         {
             Event current = Event.current;
             Vector2 mousePosition = current.mousePosition;
@@ -139,13 +139,10 @@
                     if (current.button == 0)
                     {
                         GUIUtility.hotControl = controlID;
-                        Rect rect2 = new Rect(0f, 0f, textureWidth, textureHeight);
-                        Vector2 vector2 = Handles.s_InverseMatrix.MultiplyPoint((Vector3) mousePosition);
-                        float a = Mathf.Max(vector2.x, rect2.xMin);
-                        vector2.x = Mathf.Min(a, rect2.xMax);
-                        float introduced9 = Mathf.Max(vector2.y, rect2.yMin);
-                        vector2.y = Mathf.Min(introduced9, rect2.yMax);
-                        s_DragStartScreenPosition = Handles.s_Matrix.MultiplyPoint((Vector3) vector2);
+                        Vector2 vector2 = Handles.inverseMatrix.MultiplyPoint((Vector3) mousePosition);
+                        vector2.x = Mathf.Min(Mathf.Max(vector2.x, textureArea.xMin), textureArea.xMax);
+                        vector2.y = Mathf.Min(Mathf.Max(vector2.y, textureArea.yMin), textureArea.yMax);
+                        s_DragStartScreenPosition = Handles.matrix.MultiplyPoint((Vector3) vector2);
                         s_CurrentMousePosition = mousePosition;
                         current.Use();
                     }
@@ -156,7 +153,7 @@
                     {
                         if (ValidRect(s_DragStartScreenPosition, s_CurrentMousePosition))
                         {
-                            rect = GetCurrentRect(false, textureWidth, textureHeight, s_DragStartScreenPosition, s_CurrentMousePosition);
+                            rect = GetCurrentRect(false, textureArea, s_DragStartScreenPosition, s_CurrentMousePosition);
                             GUI.changed = true;
                             current.Use();
                         }
@@ -190,13 +187,16 @@
                     if ((GUIUtility.hotControl == controlID) && ValidRect(s_DragStartScreenPosition, s_CurrentMousePosition))
                     {
                         SpriteEditorUtility.BeginLines((Color) (Color.green * 1.5f));
-                        SpriteEditorUtility.DrawBox(GetCurrentRect(false, textureWidth, textureHeight, s_DragStartScreenPosition, s_CurrentMousePosition));
+                        SpriteEditorUtility.DrawBox(GetCurrentRect(false, textureArea, s_DragStartScreenPosition, s_CurrentMousePosition));
                         SpriteEditorUtility.EndLines();
                     }
                     return rect;
             }
             return rect;
         }
+
+        internal static Rect RectCreator(float textureWidth, float textureHeight, GUIStyle rectStyle) => 
+            RectCreator(new Rect(0f, 0f, textureWidth, textureHeight), rectStyle);
 
         internal static Vector2 ScaleSlider(Vector2 pos, MouseCursor cursor, Rect cursorRect) => 
             ScaleSlider(GUIUtility.GetControlID("Slider1D".GetHashCode(), FocusType.Keyboard), pos, cursor, cursorRect);
@@ -240,7 +240,7 @@
                     {
                         s_CurrentMousePosition += current.delta;
                         Vector2 vector2 = pos;
-                        pos = Handles.s_InverseMatrix.MultiplyPoint((Vector3) s_CurrentMousePosition);
+                        pos = Handles.inverseMatrix.MultiplyPoint((Vector3) s_CurrentMousePosition);
                         Vector2 vector3 = vector2 - pos;
                         if (!Mathf.Approximately(vector3.magnitude, 0f))
                         {
@@ -253,7 +253,7 @@
                 case EventType.KeyDown:
                     if ((GUIUtility.hotControl == id) && (current.keyCode == KeyCode.Escape))
                     {
-                        pos = Handles.s_InverseMatrix.MultiplyPoint((Vector3) (s_DragStartScreenPosition - s_DragScreenOffset));
+                        pos = Handles.inverseMatrix.MultiplyPoint((Vector3) (s_DragStartScreenPosition - s_DragScreenOffset));
                         GUIUtility.hotControl = 0;
                         GUI.changed = true;
                         current.Use();
@@ -279,7 +279,7 @@
             switch (current.GetTypeForControl(controlID))
             {
                 case EventType.MouseDown:
-                    if (((current.button == 0) && pos.Contains(Handles.s_InverseMatrix.MultiplyPoint((Vector3) Event.current.mousePosition))) && !current.alt)
+                    if (((current.button == 0) && pos.Contains(Handles.inverseMatrix.MultiplyPoint((Vector3) Event.current.mousePosition))) && !current.alt)
                     {
                         HandleSliderRectMouseDown(controlID, current, pos);
                         current.Use();
@@ -305,7 +305,7 @@
                     {
                         s_CurrentMousePosition += current.delta;
                         Vector2 center = pos.center;
-                        pos.center = Handles.s_InverseMatrix.MultiplyPoint((Vector3) (s_CurrentMousePosition - s_DragScreenOffset));
+                        pos.center = Handles.inverseMatrix.MultiplyPoint((Vector3) (s_CurrentMousePosition - s_DragScreenOffset));
                         Vector2 vector2 = center - pos.center;
                         if (!Mathf.Approximately(vector2.magnitude, 0f))
                         {
@@ -318,7 +318,7 @@
                 case EventType.KeyDown:
                     if ((GUIUtility.hotControl == controlID) && (current.keyCode == KeyCode.Escape))
                     {
-                        pos.center = Handles.s_InverseMatrix.MultiplyPoint((Vector3) (s_DragStartScreenPosition - s_DragScreenOffset));
+                        pos.center = Handles.inverseMatrix.MultiplyPoint((Vector3) (s_DragStartScreenPosition - s_DragScreenOffset));
                         GUIUtility.hotControl = 0;
                         GUI.changed = true;
                         current.Use();
@@ -327,8 +327,8 @@
 
                 case EventType.Repaint:
                 {
-                    Vector2 vector3 = Handles.s_InverseMatrix.MultiplyPoint((Vector3) new Vector2(pos.xMin, pos.yMin));
-                    Vector2 vector4 = Handles.s_InverseMatrix.MultiplyPoint((Vector3) new Vector2(pos.xMax, pos.yMax));
+                    Vector2 vector3 = Handles.inverseMatrix.MultiplyPoint((Vector3) new Vector2(pos.xMin, pos.yMin));
+                    Vector2 vector4 = Handles.inverseMatrix.MultiplyPoint((Vector3) new Vector2(pos.xMax, pos.yMax));
                     EditorGUIUtility.AddCursorRect(new Rect(vector3.x, vector3.y, vector4.x - vector3.x, vector4.y - vector3.y), MouseCursor.Arrow, controlID);
                     return pos;
                 }

@@ -15,7 +15,7 @@ public static class EnumerableExtensions
         };
         if (elements.Any<string>())
         {
-            return elements.Aggregate<string>(new Func<string, string, string>(storey, (IntPtr) this.<>m__0));
+            return elements.Aggregate<string>(new Func<string, string, string>(storey.<>m__0));
         }
         return string.Empty;
     }
@@ -61,7 +61,7 @@ public static class EnumerableExtensions
         internal bool $disposing;
         internal IEnumerator<T> $locvar0;
         internal int $PC;
-        internal T <i>__0;
+        internal T <i>__1;
         internal T extra;
         internal IEnumerable<T> inputs;
 
@@ -114,8 +114,8 @@ public static class EnumerableExtensions
             {
                 while (this.$locvar0.MoveNext())
                 {
-                    this.<i>__0 = this.$locvar0.Current;
-                    this.$current = this.<i>__0;
+                    this.<i>__1 = this.$locvar0.Current;
+                    this.$current = this.<i>__1;
                     if (!this.$disposing)
                     {
                         this.$PC = 1;
@@ -183,7 +183,7 @@ public static class EnumerableExtensions
         internal bool $disposing;
         internal IEnumerator<T> $locvar0;
         internal int $PC;
-        internal T <i>__0;
+        internal T <i>__1;
         internal T extra;
         internal IEnumerable<T> inputs;
 
@@ -240,8 +240,8 @@ public static class EnumerableExtensions
             {
                 while (this.$locvar0.MoveNext())
                 {
-                    this.<i>__0 = this.$locvar0.Current;
-                    this.$current = this.<i>__0;
+                    this.<i>__1 = this.$locvar0.Current;
+                    this.$current = this.<i>__1;
                     if (!this.$disposing)
                     {
                         this.$PC = 2;

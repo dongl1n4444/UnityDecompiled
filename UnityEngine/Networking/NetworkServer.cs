@@ -249,6 +249,9 @@
             }
         }
 
+        private static bool CheckForPrefab(GameObject obj) => 
+            ((PrefabUtility.GetPrefabParent(obj) == null) && (PrefabUtility.GetPrefabObject(obj) != null));
+
         private static bool CheckPlayerControllerIdForConnection(NetworkConnection conn, short playerControllerId)
         {
             if (playerControllerId < 0)
@@ -379,7 +382,7 @@
             {
                 UnityEngine.Object.Destroy(uv.gameObject);
             }
-            uv.Reset();
+            uv.MarkForReset();
         }
 
         /// <summary>
@@ -607,6 +610,7 @@
                 }
                 return false;
             }
+            identity.Reset();
             if (!CheckPlayerControllerIdForConnection(conn, playerControllerId))
             {
                 return false;
@@ -916,7 +920,7 @@
         private void OnData(NetworkConnection conn, int receivedSize, int channelId)
         {
             NetworkDetailStats.IncrementStat(NetworkDetailStats.NetworkDirection.Incoming, 0x1d, "msg", 1);
-            conn.TransportRecieve(this.m_SimpleServerSimple.messageBuffer, receivedSize, channelId);
+            conn.TransportReceive(this.m_SimpleServerSimple.messageBuffer, receivedSize, channelId);
         }
 
         private void OnDisconnected(NetworkConnection conn)
@@ -1186,7 +1190,7 @@
         /// <summary>
         /// <para>This sends an array of bytes to a specific player.</para>
         /// </summary>
-        /// <param name="player">The player to send the bytes to.</param>
+        /// <param name="player">The player to send he bytes to.</param>
         /// <param name="buffer">Array of bytes to send.</param>
         /// <param name="numBytes">Size of array.</param>
         /// <param name="channelId">Transport layer channel id to send bytes on.</param>
@@ -1702,17 +1706,23 @@
         /// <param name="obj">Game object with NetworkIdentity to spawn.</param>
         public static void Spawn(GameObject obj)
         {
-            instance.SpawnObject(obj);
+            if (VerifyCanSpawn(obj))
+            {
+                instance.SpawnObject(obj);
+            }
         }
 
         public static void Spawn(GameObject obj, NetworkHash128 assetId)
         {
-            NetworkIdentity identity;
-            if (GetNetworkIdentity(obj, out identity))
+            if (VerifyCanSpawn(obj))
             {
-                identity.SetDynamicAssetId(assetId);
+                NetworkIdentity identity;
+                if (GetNetworkIdentity(obj, out identity))
+                {
+                    identity.SetDynamicAssetId(assetId);
+                }
+                instance.SpawnObject(obj);
             }
-            instance.SpawnObject(obj);
         }
 
         internal void SpawnObject(GameObject obj)
@@ -1736,6 +1746,7 @@
                 }
                 else
                 {
+                    identity.Reset();
                     identity.OnStartServer(false);
                     if (LogFilter.logDebug)
                     {
@@ -1820,6 +1831,11 @@
         /// </returns>
         public static bool SpawnWithClientAuthority(GameObject obj, NetworkConnection conn)
         {
+            if (!conn.isReady)
+            {
+                Debug.LogError("SpawnWithClientAuthority NetworkConnection is not ready!");
+                return false;
+            }
             Spawn(obj);
             NetworkIdentity component = obj.GetComponent<NetworkIdentity>();
             if ((component == null) || !component.isServer)
@@ -1919,6 +1935,17 @@
             {
                 this.CheckForNullObjects();
             }
+        }
+
+        private static bool VerifyCanSpawn(GameObject obj)
+        {
+            if (CheckForPrefab(obj))
+            {
+                object[] args = new object[] { obj.name };
+                Debug.LogErrorFormat("GameObject {0} is a prefab, it can't be spawned. This will cause errors in builds.", args);
+                return false;
+            }
+            return true;
         }
 
         /// <summary>

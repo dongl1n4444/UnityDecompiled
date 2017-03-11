@@ -4,7 +4,7 @@
     using UnityEditorInternal;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(Mesh))]
+    [CustomEditor(typeof(Mesh)), CanEditMultipleObjects]
     internal class ModelInspector : Editor
     {
         private Material m_Material;
@@ -85,7 +85,7 @@
             }
             if (this.m_WireMaterial != null)
             {
-                Object.DestroyImmediate(this.m_WireMaterial, true);
+                UnityEngine.Object.DestroyImmediate(this.m_WireMaterial, true);
             }
         }
 
@@ -188,7 +188,7 @@
             }
         }
 
-        public override Texture2D RenderStaticPreview(string assetPath, Object[] subAssets, int width, int height)
+        public override Texture2D RenderStaticPreview(string assetPath, UnityEngine.Object[] subAssets, int width, int height)
         {
             if (!ShaderUtil.hardwareSupportsRectRenderTexture)
             {

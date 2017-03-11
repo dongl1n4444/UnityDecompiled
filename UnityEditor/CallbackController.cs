@@ -40,7 +40,7 @@
                 this.m_NextCallback = timeSinceStartup + (1f / this.m_CallbacksPerSecond);
                 if (this.m_Callback != null)
                 {
-                    this.m_Callback.Invoke();
+                    this.m_Callback();
                 }
             }
         }

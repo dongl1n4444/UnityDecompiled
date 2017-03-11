@@ -1,9 +1,12 @@
 ﻿namespace UnityEngine.VR.WSA.Input
 {
+    using AOT;
     using System;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Threading;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Provides access to user input from hands, controllers, and system voice commands.</para>
@@ -14,14 +17,19 @@
         private static InternalSourceEventHandler <>f__mg$cache0;
         private static InternalSourceEventHandler m_OnSourceEventHandler;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event SourceEventHandler SourceDetected;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event SourceEventHandler SourceLost;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event SourceEventHandler SourcePressed;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event SourceEventHandler SourceReleased;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event SourceEventHandler SourceUpdated;
 
         static InteractionManager()
@@ -70,10 +78,11 @@
             return 0;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int GetCurrentReading_Internal(InteractionSourceState[] sourceStates);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Initialize(IntPtr internalSourceEventHandler);
+        [MonoPInvokeCallback(typeof(InternalSourceEventHandler))]
         private static void OnSourceEvent(EventType eventType, InteractionSourceState state)
         {
             switch (eventType)
@@ -131,7 +140,7 @@
         /// <summary>
         /// <para>(Read Only) The number of InteractionSourceState snapshots available for reading with InteractionManager.GetCurrentReading.</para>
         /// </summary>
-        public static int numSourceStates { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static int numSourceStates { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         private enum EventType
         {

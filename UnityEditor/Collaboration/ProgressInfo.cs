@@ -6,6 +6,7 @@
     [StructLayout(LayoutKind.Sequential)]
     internal class ProgressInfo
     {
+        private int m_JobId;
         private string m_Title;
         private string m_ExtraInfo;
         private ProgressType m_ProgressType;
@@ -21,6 +22,8 @@
         {
         }
 
+        public int jobId =>
+            this.m_JobId;
         public string title =>
             this.m_Title;
         public string extraInfo =>

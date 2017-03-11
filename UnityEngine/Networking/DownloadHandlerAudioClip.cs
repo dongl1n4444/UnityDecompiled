@@ -4,6 +4,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>A DownloadHandler subclass specialized for downloading audio data for use as AudioClip objects.</para>
@@ -16,11 +17,14 @@
         /// </summary>
         /// <param name="url">The nominal (pre-redirect) URL at which the audio clip is located.</param>
         /// <param name="audioType">Value to set for AudioClip type.</param>
+        [RequiredByNativeCode]
         public DownloadHandlerAudioClip(string url, AudioType audioType)
         {
-            base.InternalCreateAudioClip(url, audioType);
+            this.InternalCreateAudioClip(url, audioType);
         }
 
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal extern void InternalCreateAudioClip(string url, AudioType audioType);
         /// <summary>
         /// <para>Called by DownloadHandler.data. Returns a copy of the downloaded clip data as raw bytes.</para>
         /// </summary>
@@ -35,12 +39,12 @@
             throw new NotSupportedException("String access is not supported for audio clips");
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern byte[] InternalGetData();
         /// <summary>
         /// <para>Returns the downloaded AudioClip, or null. (Read Only)</para>
         /// </summary>
-        public AudioClip audioClip { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public AudioClip audioClip { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
         /// <summary>
         /// <para>Returns the downloaded AudioClip, or null.</para>
         /// </summary>

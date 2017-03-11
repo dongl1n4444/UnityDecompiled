@@ -5,6 +5,7 @@
     using System.IO;
     using System.Linq;
     using System.Runtime.CompilerServices;
+    using System.Text;
     using System.Xml;
     using System.Xml.Linq;
     using System.Xml.XPath;
@@ -31,11 +32,16 @@
             return string.Concat(objArray4);
         }
 
+        public void Create()
+        {
+            this.ReadFromString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\"><plist version=\"1.0\"><dict></dict></plist>");
+        }
+
         private static string GetText(XElement xml)
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<XText, string>(null, (IntPtr) <GetText>m__0);
+                <>f__am$cache0 = x => x.Value;
             }
             return string.Join("", Enumerable.Select<XText, string>(xml.Nodes().OfType<XText>(), <>f__am$cache0).ToArray<string>());
         }
@@ -189,7 +195,8 @@
 
         public void WriteToFile(string path)
         {
-            File.WriteAllText(path, this.WriteToString());
+            Encoding encoding = new UTF8Encoding(false);
+            File.WriteAllText(path, this.WriteToString(), encoding);
         }
 
         public void WriteToStream(TextWriter tw)
@@ -205,7 +212,7 @@
             element2.Add(content);
             XDocument doc = new XDocument();
             doc.Add(element2);
-            return CleanDtdToString(doc);
+            return CleanDtdToString(doc).Replace("\r\n", "\n");
         }
     }
 }

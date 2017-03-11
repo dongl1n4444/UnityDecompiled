@@ -3,7 +3,7 @@
     using System;
 
     /// <summary>
-    /// <para>Describes the type of keyboard.</para>
+    /// <para>Enumeration of the different types of supported touchscreen keyboards.</para>
     /// </summary>
     public enum TouchScreenKeyboardType
     {
@@ -15,7 +15,9 @@
         PhonePad,
         NamePhonePad,
         EmailAddress,
-        NintendoNetworkAccount
+        NintendoNetworkAccount,
+        Social,
+        Search
     }
 }
 

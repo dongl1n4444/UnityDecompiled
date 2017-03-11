@@ -10,6 +10,7 @@
         public static readonly string Disabled;
         public static readonly string AutoDetect;
         public static readonly string Generic;
+        [Obsolete("Asset Server VCS support has been removed.")]
         public static readonly string AssetServer;
         public ExternalVersionControl(string value)
         {

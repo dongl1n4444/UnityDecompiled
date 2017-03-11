@@ -11,8 +11,14 @@
         public override string Architecture =>
             "ARMv7";
 
+        public override string GradleProductFlavor =>
+            "arm7";
+
         public override AndroidTargetDevice TargetDevice =>
             AndroidTargetDevice.ARMv7;
+
+        public override string VisualStudioPlatform =>
+            "ARM";
     }
 }
 

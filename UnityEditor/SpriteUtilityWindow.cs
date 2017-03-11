@@ -3,6 +3,7 @@
     using System;
     using UnityEditorInternal;
     using UnityEngine;
+    using UnityEngine.U2D.Interface;
 
     internal class SpriteUtilityWindow : EditorWindow
     {
@@ -13,34 +14,45 @@
         protected const float k_MinZoomPercentage = 0.9f;
         protected const float k_MouseZoomSpeed = 0.005f;
         protected const float k_ScrollbarMargin = 16f;
+        protected const float k_ToolbarHeight = 17f;
         protected const float k_WheelZoomSpeed = 0.03f;
         protected float m_MipLevel = 0f;
         protected Vector2 m_ScrollPosition = new Vector2();
         protected bool m_ShowAlpha = false;
-        protected Texture2D m_Texture;
-        protected Texture2D m_TextureAlphaOverride;
+        protected Styles m_Styles;
+        protected ITexture2D m_Texture;
+        protected ITexture2D m_TextureAlphaOverride;
         protected Rect m_TextureRect;
         protected Rect m_TextureViewRect;
         protected float m_Zoom = -1f;
-        protected static Styles s_Styles;
 
-        protected void DoAlphaZoomToolbarGUI()
+        protected Rect DoAlphaZoomToolbarGUI(Rect area)
         {
-            this.m_ShowAlpha = GUILayout.Toggle(this.m_ShowAlpha, !this.m_ShowAlpha ? s_Styles.RGBIcon : s_Styles.alphaIcon, "toolbarButton", new GUILayoutOption[0]);
-            GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.MaxWidth(64f) };
-            this.m_Zoom = GUILayout.HorizontalSlider(this.m_Zoom, this.GetMinZoom(), 50f, s_Styles.preSlider, s_Styles.preSliderThumb, options);
             int a = 1;
             if (this.m_Texture != null)
             {
-                a = Mathf.Max(a, TextureUtil.GetMipmapCount(this.m_Texture));
+                a = Mathf.Max(a, TextureUtil.GetMipmapCount((Texture) this.m_Texture));
             }
+            Rect position = new Rect(area.width, 0f, 0f, area.height);
             using (new EditorGUI.DisabledScope(a == 1))
             {
-                GUILayout.Box(s_Styles.smallMip, s_Styles.preLabel, new GUILayoutOption[0]);
-                GUILayoutOption[] optionArray2 = new GUILayoutOption[] { GUILayout.MaxWidth(64f) };
-                this.m_MipLevel = Mathf.Round(GUILayout.HorizontalSlider(this.m_MipLevel, (float) (a - 1), 0f, s_Styles.preSlider, s_Styles.preSliderThumb, optionArray2));
-                GUILayout.Box(s_Styles.largeMip, s_Styles.preLabel, new GUILayoutOption[0]);
+                position.width = this.m_Styles.largeMip.image.width;
+                position.x -= position.width;
+                GUI.Box(position, this.m_Styles.largeMip, this.m_Styles.preLabel);
+                position.width = 60f;
+                position.x -= position.width;
+                this.m_MipLevel = Mathf.Round(GUI.HorizontalSlider(position, this.m_MipLevel, (float) (a - 1), 0f, this.m_Styles.preSlider, this.m_Styles.preSliderThumb));
+                position.width = this.m_Styles.smallMip.image.width;
+                position.x -= position.width;
+                GUI.Box(position, this.m_Styles.smallMip, this.m_Styles.preLabel);
             }
+            position.width = 60f;
+            position.x -= position.width;
+            this.m_Zoom = GUI.HorizontalSlider(position, this.m_Zoom, this.GetMinZoom(), 50f, this.m_Styles.preSlider, this.m_Styles.preSliderThumb);
+            position.width = 32f;
+            position.x -= position.width + 5f;
+            this.m_ShowAlpha = GUI.Toggle(position, this.m_ShowAlpha, !this.m_ShowAlpha ? this.m_Styles.RGBIcon : this.m_Styles.alphaIcon, "toolbarButton");
+            return new Rect(area.x, area.y, position.x, area.height);
         }
 
         protected void DoTextureGUI()
@@ -58,7 +70,7 @@
                 this.HandlePanning();
                 this.DrawScreenspaceBackground();
                 GUIClip.Push(this.m_TextureViewRect, -this.m_ScrollPosition, Vector2.zero, false);
-                if (Event.current.type == EventType.Repaint)
+                if (UnityEngine.Event.current.type == EventType.Repaint)
                 {
                     this.DrawTexturespaceBackground();
                     this.DrawTexture();
@@ -79,37 +91,37 @@
 
         protected void DrawScreenspaceBackground()
         {
-            if (Event.current.type == EventType.Repaint)
+            if (UnityEngine.Event.current.type == EventType.Repaint)
             {
-                s_Styles.preBackground.Draw(this.m_TextureViewRect, false, false, false, false);
+                this.m_Styles.preBackground.Draw(this.m_TextureViewRect, false, false, false, false);
             }
         }
 
         protected void DrawTexture()
         {
             int num = Mathf.Max(this.m_Texture.width, 1);
-            float num2 = Mathf.Min(this.m_MipLevel, (float) (TextureUtil.GetMipmapCount(this.m_Texture) - 1));
+            float num2 = Mathf.Min(this.m_MipLevel, (float) (TextureUtil.GetMipmapCount((Texture) this.m_Texture) - 1));
             float mipMapBias = this.m_Texture.mipMapBias;
-            TextureUtil.SetMipMapBiasNoDirty(this.m_Texture, num2 - this.Log2(((float) num) / this.m_TextureRect.width));
-            FilterMode filterMode = this.m_Texture.filterMode;
-            TextureUtil.SetFilterModeNoDirty(this.m_Texture, FilterMode.Point);
+            TextureUtil.SetMipMapBiasNoDirty((Texture) this.m_Texture, num2 - this.Log2(((float) num) / this.m_TextureRect.width));
+            UnityEngine.FilterMode filterMode = this.m_Texture.filterMode;
+            TextureUtil.SetFilterModeNoDirty((Texture) this.m_Texture, UnityEngine.FilterMode.Point);
             if (this.m_ShowAlpha)
             {
                 if (this.m_TextureAlphaOverride != null)
                 {
-                    EditorGUI.DrawTextureTransparent(this.m_TextureRect, this.m_TextureAlphaOverride);
+                    EditorGUI.DrawTextureTransparent(this.m_TextureRect, (Texture) this.m_TextureAlphaOverride);
                 }
                 else
                 {
-                    EditorGUI.DrawTextureAlpha(this.m_TextureRect, this.m_Texture);
+                    EditorGUI.DrawTextureAlpha(this.m_TextureRect, (Texture) this.m_Texture);
                 }
             }
             else
             {
-                EditorGUI.DrawTextureTransparent(this.m_TextureRect, this.m_Texture);
+                EditorGUI.DrawTextureTransparent(this.m_TextureRect, (Texture) this.m_Texture);
             }
-            TextureUtil.SetMipMapBiasNoDirty(this.m_Texture, mipMapBias);
-            TextureUtil.SetFilterModeNoDirty(this.m_Texture, filterMode);
+            TextureUtil.SetMipMapBiasNoDirty((Texture) this.m_Texture, mipMapBias);
+            TextureUtil.SetFilterModeNoDirty((Texture) this.m_Texture, filterMode);
         }
 
         protected void DrawTexturespaceBackground()
@@ -127,6 +139,19 @@
             SpriteEditorUtility.EndLines();
         }
 
+        internal static void DrawToolBarWidget(ref Rect drawRect, ref Rect toolbarRect, Action<Rect> drawAction)
+        {
+            toolbarRect.width -= drawRect.width;
+            if (toolbarRect.width < 0f)
+            {
+                drawRect.width += toolbarRect.width;
+            }
+            if (drawRect.width > 0f)
+            {
+                drawAction(drawRect);
+            }
+        }
+
         protected float GetMinZoom()
         {
             if (this.m_Texture == null)
@@ -139,17 +164,17 @@
 
         protected void HandlePanning()
         {
-            bool flag = (!Event.current.alt && (Event.current.button > 0)) || (Event.current.alt && (Event.current.button <= 0));
+            bool flag = (!UnityEngine.Event.current.alt && (UnityEngine.Event.current.button > 0)) || (UnityEngine.Event.current.alt && (UnityEngine.Event.current.button <= 0));
             if (flag && (GUIUtility.hotControl == 0))
             {
                 EditorGUIUtility.AddCursorRect(this.m_TextureViewRect, MouseCursor.Pan);
-                if (Event.current.type == EventType.MouseDrag)
+                if (UnityEngine.Event.current.type == EventType.MouseDrag)
                 {
-                    this.m_ScrollPosition -= Event.current.delta;
-                    Event.current.Use();
+                    this.m_ScrollPosition -= UnityEngine.Event.current.delta;
+                    UnityEngine.Event.current.Use();
                 }
             }
-            if ((((Event.current.type == EventType.MouseUp) || (Event.current.type == EventType.MouseDown)) && flag) || (((Event.current.type == EventType.KeyUp) || (Event.current.type == EventType.KeyDown)) && (Event.current.keyCode == KeyCode.LeftAlt)))
+            if ((((UnityEngine.Event.current.type == EventType.MouseUp) || (UnityEngine.Event.current.type == EventType.MouseDown)) && flag) || (((UnityEngine.Event.current.type == EventType.KeyUp) || (UnityEngine.Event.current.type == EventType.KeyDown)) && (UnityEngine.Event.current.keyCode == KeyCode.LeftAlt)))
             {
                 base.Repaint();
             }
@@ -165,18 +190,18 @@
 
         protected void HandleZoom()
         {
-            bool flag = Event.current.alt && (Event.current.button == 1);
+            bool flag = UnityEngine.Event.current.alt && (UnityEngine.Event.current.button == 1);
             if (flag)
             {
                 EditorGUIUtility.AddCursorRect(this.m_TextureViewRect, MouseCursor.Zoom);
             }
-            if ((((Event.current.type == EventType.MouseUp) || (Event.current.type == EventType.MouseDown)) && flag) || (((Event.current.type == EventType.KeyUp) || (Event.current.type == EventType.KeyDown)) && (Event.current.keyCode == KeyCode.LeftAlt)))
+            if ((((UnityEngine.Event.current.type == EventType.MouseUp) || (UnityEngine.Event.current.type == EventType.MouseDown)) && flag) || (((UnityEngine.Event.current.type == EventType.KeyUp) || (UnityEngine.Event.current.type == EventType.KeyDown)) && (UnityEngine.Event.current.keyCode == KeyCode.LeftAlt)))
             {
                 base.Repaint();
             }
-            if ((Event.current.type == EventType.ScrollWheel) || (((Event.current.type == EventType.MouseDrag) && Event.current.alt) && (Event.current.button == 1)))
+            if ((UnityEngine.Event.current.type == EventType.ScrollWheel) || (((UnityEngine.Event.current.type == EventType.MouseDrag) && UnityEngine.Event.current.alt) && (UnityEngine.Event.current.button == 1)))
             {
-                float num = 1f - (Event.current.delta.y * ((Event.current.type != EventType.ScrollWheel) ? -0.005f : 0.03f));
+                float num = 1f - (UnityEngine.Event.current.delta.y * ((UnityEngine.Event.current.type != EventType.ScrollWheel) ? -0.005f : 0.03f));
                 float num2 = this.m_Zoom * num;
                 float num3 = Mathf.Clamp(num2, this.GetMinZoom(), 50f);
                 if (num3 != this.m_Zoom)
@@ -187,23 +212,23 @@
                         num /= num2 / num3;
                     }
                     this.m_ScrollPosition = (Vector2) (this.m_ScrollPosition * num);
-                    float num4 = (Event.current.mousePosition.x / this.m_TextureViewRect.width) - 0.5f;
-                    float num5 = (Event.current.mousePosition.y / this.m_TextureViewRect.height) - 0.5f;
+                    float num4 = (UnityEngine.Event.current.mousePosition.x / this.m_TextureViewRect.width) - 0.5f;
+                    float num5 = (UnityEngine.Event.current.mousePosition.y / this.m_TextureViewRect.height) - 0.5f;
                     float num6 = num4 * (num - 1f);
                     float num7 = num5 * (num - 1f);
                     Rect maxScrollRect = this.maxScrollRect;
                     this.m_ScrollPosition.x += num6 * (maxScrollRect.width / 2f);
                     this.m_ScrollPosition.y += num7 * (maxScrollRect.height / 2f);
-                    Event.current.Use();
+                    UnityEngine.Event.current.Use();
                 }
             }
         }
 
         protected void InitStyles()
         {
-            if (s_Styles == null)
+            if (this.m_Styles == null)
             {
-                s_Styles = new Styles();
+                this.m_Styles = new Styles();
             }
         }
 
@@ -212,26 +237,26 @@
 
         internal override void OnResized()
         {
-            if ((this.m_Texture != null) && (Event.current != null))
+            if ((this.m_Texture != null) && (UnityEngine.Event.current != null))
             {
                 this.HandleZoom();
             }
         }
 
-        protected void SetAlphaTextureOverride(Texture2D alphaTexture)
+        protected void SetAlphaTextureOverride(UnityEngine.Texture2D alphaTexture)
         {
             if (alphaTexture != this.m_TextureAlphaOverride)
             {
-                this.m_TextureAlphaOverride = alphaTexture;
+                this.m_TextureAlphaOverride = new UnityEngine.U2D.Interface.Texture2D(alphaTexture);
                 this.m_Zoom = -1f;
             }
         }
 
-        protected void SetNewTexture(Texture2D texture)
+        protected void SetNewTexture(UnityEngine.Texture2D texture)
         {
             if (texture != this.m_Texture)
             {
-                this.m_Texture = texture;
+                this.m_Texture = new UnityEngine.U2D.Interface.Texture2D(texture);
                 this.m_Zoom = -1f;
                 this.m_TextureAlphaOverride = null;
             }
@@ -287,11 +312,7 @@
             public readonly GUIStyle preSliderThumb = "preSliderThumb";
             public readonly GUIStyle preToolbar = "preToolbar";
             public readonly GUIContent RGBIcon;
-            public static GUIContent s_NoSelectionWarning = EditorGUIUtility.TextContent("No texture or sprite selected");
-            public static GUIContent s_PivotLabel = EditorGUIUtility.TextContent("Pivot");
-            public static GUIContent s_SpriteTessellationDetail = EditorGUIUtility.TextContent("Tessellation Detail");
             public readonly GUIContent smallMip;
-            public static readonly GUIContent[] spriteAlignmentOptions = new GUIContent[] { EditorGUIUtility.TextContent("Center"), EditorGUIUtility.TextContent("Top Left"), EditorGUIUtility.TextContent("Top"), EditorGUIUtility.TextContent("Top Right"), EditorGUIUtility.TextContent("Left"), EditorGUIUtility.TextContent("Right"), EditorGUIUtility.TextContent("Bottom Left"), EditorGUIUtility.TextContent("Bottom"), EditorGUIUtility.TextContent("Bottom Right"), EditorGUIUtility.TextContent("Custom") };
             public readonly GUIStyle toolbar = new GUIStyle(EditorStyles.inspectorBig);
 
             public Styles()

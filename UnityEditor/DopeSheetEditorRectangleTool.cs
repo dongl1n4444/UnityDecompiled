@@ -196,7 +196,7 @@
             }
         }
 
-        private void OnEndMove()
+        internal void OnEndMove()
         {
             this.m_State.EndLiveEdit();
             this.m_IsDragging = false;
@@ -221,7 +221,7 @@
             }
         }
 
-        private void OnMove(Vector2 position)
+        internal void OnMove(Vector2 position)
         {
             Vector2 vector = position - this.m_Previous;
             Matrix4x4 identity = Matrix4x4.identity;
@@ -249,7 +249,7 @@
             }
         }
 
-        private void OnStartMove(Vector2 position, bool rippleTime)
+        internal void OnStartMove(Vector2 position, bool rippleTime)
         {
             Bounds selectionBounds = this.selectionBounds;
             this.m_IsDragging = true;
@@ -295,7 +295,7 @@
             (this.m_IsDragging || this.m_DopeSheetEditor.isDragging);
 
         private Bounds selectionBounds =>
-            this.m_DopeSheetEditor.selectionBounds;
+            this.m_State.selectionBounds;
 
         [StructLayout(LayoutKind.Sequential)]
         private struct ToolLayout

@@ -30,14 +30,6 @@
         public override string GetMarshalingException() => 
             $"il2cpp_codegen_get_marshal_directive_exception("Cannot marshal type '{base._typeRef.FullName}'.")";
 
-        public override void WriteIncludesForFieldDeclaration(CppCodeWriter writer)
-        {
-        }
-
-        public override void WriteIncludesForMarshaling(CppCodeWriter writer)
-        {
-        }
-
         public override void WriteMarshaledTypeForwardDeclaration(CppCodeWriter writer)
         {
             writer.AddForwardDeclaration(base._typeRef);

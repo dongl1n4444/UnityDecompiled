@@ -7,7 +7,7 @@
 
     internal class FlexibleMenu : PopupWindowContent
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private int <selectedIndex>k__BackingField;
         private const float leftMargin = 25f;
         private const float lineHeight = 18f;
@@ -258,7 +258,7 @@
             this.selectedIndex = index;
             if ((this.m_ItemClickedCallback != null) && (index >= 0))
             {
-                this.m_ItemClickedCallback.Invoke(index, this.m_ItemProvider.GetItem(index));
+                this.m_ItemClickedCallback(index, this.m_ItemProvider.GetItem(index));
             }
         }
 

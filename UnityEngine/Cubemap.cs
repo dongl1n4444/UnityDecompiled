@@ -4,6 +4,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Class for handling cube maps, Use this to create or modify existing.</para>
@@ -18,7 +19,12 @@
         /// <param name="mipmap">Should mipmaps be created?</param>
         public Cubemap(int size, TextureFormat format, bool mipmap)
         {
-            Internal_Create(this, size, format, mipmap);
+            Internal_Create(this, size, format, mipmap, IntPtr.Zero);
+        }
+
+        internal Cubemap(int size, TextureFormat format, bool mipmap, IntPtr nativeTex)
+        {
+            Internal_Create(this, size, format, mipmap, nativeTex);
         }
 
         [ExcludeFromDocs]
@@ -41,8 +47,24 @@
         /// </summary>
         /// <param name="updateMipmaps">When set to true, mipmap levels are recalculated.</param>
         /// <param name="makeNoLongerReadable">When set to true, system memory copy of a texture is released.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void Apply([DefaultValue("true")] bool updateMipmaps, [DefaultValue("false")] bool makeNoLongerReadable);
+        /// <summary>
+        /// <para>Creates a Unity cubemap out of externally created native cubemap object.</para>
+        /// </summary>
+        /// <param name="size">The width and height of each face of the cubemap should be the same.</param>
+        /// <param name="format">Format of underlying cubemap object.</param>
+        /// <param name="mipmap">Does the cubemap have mipmaps?</param>
+        /// <param name="nativeTex">Native cubemap texture object.</param>
+        public static Cubemap CreateExternalTexture(int size, TextureFormat format, bool mipmap, IntPtr nativeTex)
+        {
+            if (nativeTex == IntPtr.Zero)
+            {
+                throw new ArgumentException("nativeTex can not be null");
+            }
+            return new Cubemap(size, format, mipmap, nativeTex);
+        }
+
         /// <summary>
         /// <para>Returns pixel color at coordinates (face, x, y).</para>
         /// </summary>
@@ -68,14 +90,14 @@
         /// </summary>
         /// <param name="face">The face from which pixel data is taken.</param>
         /// <param name="miplevel">Mipmap level for the chosen face.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern Color[] GetPixels(CubemapFace face, [DefaultValue("0")] int miplevel);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetPixel(Cubemap self, CubemapFace face, int x, int y, out Color value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SetPixel(Cubemap self, CubemapFace face, int x, int y, ref Color color);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_Create([Writable] Cubemap mono, int size, TextureFormat format, bool mipmap);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void Internal_Create([Writable] Cubemap mono, int size, TextureFormat format, bool mipmap, IntPtr nativeTex);
         /// <summary>
         /// <para>Sets pixel color at coordinates (face, x, y).</para>
         /// </summary>
@@ -101,7 +123,7 @@
         /// <param name="colors">Pixel data for the Cubemap face.</param>
         /// <param name="face">The face to which the new data should be applied.</param>
         /// <param name="miplevel">The mipmap level for the face.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetPixels(Color[] colors, CubemapFace face, [DefaultValue("0")] int miplevel);
         [ExcludeFromDocs]
         public void SmoothEdges()
@@ -114,18 +136,18 @@
         /// <para>Performs smoothing of near edge regions.</para>
         /// </summary>
         /// <param name="smoothRegionWidthInPixels">Pixel distance at edges over which to apply smoothing.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SmoothEdges([DefaultValue("1")] int smoothRegionWidthInPixels);
 
         /// <summary>
         /// <para>The format of the pixel data in the texture (Read Only).</para>
         /// </summary>
-        public TextureFormat format { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public TextureFormat format { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>How many mipmap levels are in this texture (Read Only).</para>
         /// </summary>
-        public int mipmapCount { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int mipmapCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

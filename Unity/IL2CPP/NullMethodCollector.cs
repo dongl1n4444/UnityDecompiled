@@ -5,7 +5,11 @@
 
     public class NullMethodCollector : IMethodCollector
     {
-        public void AddCCWMarshallingFunction(TypeDefinition type)
+        public void AddCCWMarshallingFunction(TypeReference type)
+        {
+        }
+
+        public void AddGuid(TypeReference type)
         {
         }
 

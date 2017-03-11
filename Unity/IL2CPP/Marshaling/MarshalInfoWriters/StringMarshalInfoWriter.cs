@@ -240,7 +240,7 @@
                     {
                         if (<>f__am$cache0 == null)
                         {
-                            <>f__am$cache0 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteMarshalVariableToNative>m__0);
+                            <>f__am$cache0 = f => !f.IsStatic && (f.FieldType.MetadataType == MetadataType.Char);
                         }
                         FieldDefinition field = DefaultMarshalInfoWriter.TypeProvider.SystemString.Fields.Single<FieldDefinition>(<>f__am$cache0);
                         object[] objArray5 = new object[] { destinationVariable, sourceVariable.Load(), DefaultMarshalInfoWriter.Naming.ForFieldAddressGetter(field) };

@@ -11,6 +11,7 @@
     using System.Text;
     using Unity.DataContract;
     using UnityEditor;
+    using UnityEditor.Build;
     using UnityEditor.Hardware;
     using UnityEditor.Utils;
     using UnityEditorInternal;
@@ -25,7 +26,7 @@
         [CompilerGenerated]
         private static Func<Assembly, bool> <>f__am$cache2;
         [CompilerGenerated]
-        private static Func<Assembly, Type> <>f__am$cache3;
+        private static Func<Assembly, System.Type> <>f__am$cache3;
         [CompilerGenerated]
         private static Func<KeyValuePair<string, PackageFileData>, bool> <>f__am$cache4;
         [CompilerGenerated]
@@ -33,9 +34,7 @@
         [CompilerGenerated]
         private static Func<KeyValuePair<string, PackageFileData>, bool> <>f__am$cache6;
         [CompilerGenerated]
-        private static Action <>f__mg$cache0;
-        [CompilerGenerated]
-        private static Func<Assembly, IEnumerable<IPlatformSupportModule>> <>f__mg$cache1;
+        private static Func<Assembly, IEnumerable<IPlatformSupportModule>> <>f__mg$cache0;
         [NonSerialized]
         private static IPlatformSupportModule s_ActivePlatformModule;
         [NonSerialized]
@@ -46,15 +45,6 @@
         private static List<IPlatformSupportModule> s_PlatformModules;
         [NonSerialized]
         private static bool s_PlatformModulesInitialized;
-
-        static ModuleManager()
-        {
-            if (<>f__mg$cache0 == null)
-            {
-                <>f__mg$cache0 = new Action(null, (IntPtr) OnActiveBuildTargetChanged);
-            }
-            EditorUserBuildSettings.activeBuildTargetChanged = (Action) Delegate.Combine(EditorUserBuildSettings.activeBuildTargetChanged, <>f__mg$cache0);
-        }
 
         private static void ChangeActivePlatformModuleTo(string target)
         {
@@ -142,8 +132,8 @@
             return null;
         }
 
-        internal static IBuildPostprocessor GetBuildPostProcessor(BuildTarget target) => 
-            GetBuildPostProcessor(GetTargetStringFromBuildTarget(target));
+        internal static IBuildPostprocessor GetBuildPostProcessor(BuildTargetGroup targetGroup, BuildTarget target) => 
+            GetBuildPostProcessor(GetTargetStringFrom(targetGroup, target));
 
         internal static IBuildWindowExtension GetBuildWindowExtension(string target)
         {
@@ -302,9 +292,16 @@
             {
                 throw new ArgumentException("targetGroup must be valid");
             }
-            if (targetGroup == BuildTargetGroup.Standalone)
+            if (targetGroup != BuildTargetGroup.Facebook)
             {
-                return GetTargetStringFromBuildTarget(target);
+                if (targetGroup == BuildTargetGroup.Standalone)
+                {
+                    return GetTargetStringFromBuildTarget(target);
+                }
+            }
+            else
+            {
+                return "Facebook";
             }
             return GetTargetStringFromBuildTargetGroup(targetGroup);
         }
@@ -360,6 +357,9 @@
                 case BuildTarget.tvOS:
                     return "tvOS";
 
+                case BuildTarget.Switch:
+                    return "Switch";
+
                 case BuildTarget.iOS:
                     return "iOS";
             }
@@ -407,6 +407,12 @@
                 case BuildTargetGroup.tvOS:
                     return "tvOS";
 
+                case BuildTargetGroup.Facebook:
+                    return "Facebook";
+
+                case BuildTargetGroup.Switch:
+                    return "Switch";
+
                 case BuildTargetGroup.iPhone:
                     return "iOS";
 
@@ -448,12 +454,13 @@
 
         internal static bool HaveLicenseForBuildTarget(string targetString)
         {
-            BuildTarget standaloneWindows = BuildTarget.StandaloneWindows;
-            if (!TryParseBuildTarget(targetString, out standaloneWindows))
+            BuildTargetGroup group;
+            BuildTarget target;
+            if (!TryParseBuildTarget(targetString, out group, out target))
             {
                 return false;
             }
-            return BuildPipeline.LicenseCheck(standaloneWindows);
+            return BuildPipeline.LicenseCheck(target);
         }
 
         internal static void Initialize()
@@ -467,20 +474,20 @@
                 }
                 else
                 {
-                    Debug.LogError("Failed to load package manager");
+                    UnityEngine.Debug.LogError("Failed to load package manager");
                 }
             }
         }
 
-        private static bool InitializePackageManager(PackageInfo package)
+        private static bool InitializePackageManager(Unity.DataContract.PackageInfo package)
         {
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<KeyValuePair<string, PackageFileData>, bool>(null, (IntPtr) <InitializePackageManager>m__4);
+                <>f__am$cache4 = x => x.Value.type == PackageFileType.Dll;
             }
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<KeyValuePair<string, PackageFileData>, string>(null, (IntPtr) <InitializePackageManager>m__5);
+                <>f__am$cache5 = x => x.Key;
             }
             string str = Enumerable.Select<KeyValuePair<string, PackageFileData>, string>(Enumerable.Where<KeyValuePair<string, PackageFileData>>(package.files, <>f__am$cache4), <>f__am$cache5).FirstOrDefault<string>();
             if ((str == null) || !File.Exists(Path.Combine(package.basePath, str)))
@@ -491,7 +498,7 @@
             return InitializePackageManager(InternalEditorUtility.LoadAssemblyWrapper(Path.GetFileName(str), Path.Combine(package.basePath, str)), package);
         }
 
-        private static bool InitializePackageManager(Assembly assembly, PackageInfo package)
+        private static bool InitializePackageManager(Assembly assembly, Unity.DataContract.PackageInfo package)
         {
             s_PackageManager = AssemblyHelper.FindImplementors<IPackageManagerModule>(assembly).FirstOrDefault<IPackageManagerModule>();
             if (s_PackageManager == null)
@@ -505,7 +512,7 @@
             }
             else
             {
-                PackageInfo info = new PackageInfo {
+                Unity.DataContract.PackageInfo info = new Unity.DataContract.PackageInfo {
                     basePath = Path.GetDirectoryName(location)
                 };
                 package = info;
@@ -514,30 +521,31 @@
             s_PackageManager.editorInstallPath = EditorApplication.applicationContentsPath;
             s_PackageManager.unityVersion = (string) new PackageVersion(Application.unityVersion);
             s_PackageManager.Initialize();
-            foreach (PackageInfo info2 in s_PackageManager.playbackEngines)
+            foreach (Unity.DataContract.PackageInfo info2 in s_PackageManager.playbackEngines)
             {
-                BuildTarget standaloneWindows = BuildTarget.StandaloneWindows;
-                if (TryParseBuildTarget(info2.name, out standaloneWindows))
+                BuildTargetGroup group;
+                BuildTarget target;
+                if (TryParseBuildTarget(info2.name, out group, out target))
                 {
-                    object[] arg = new object[] { standaloneWindows, info2.version, info2.unityVersion, info2.basePath };
-                    Console.WriteLine("Setting {0} v{1} for Unity v{2} to {3}", arg);
+                    object[] arg = new object[] { target, info2.version, info2.unityVersion, info2.basePath, group };
+                    Console.WriteLine("Setting {4}:{0} v{1} for Unity v{2} to {3}", arg);
                     if (<>f__am$cache6 == null)
                     {
-                        <>f__am$cache6 = new Func<KeyValuePair<string, PackageFileData>, bool>(null, (IntPtr) <InitializePackageManager>m__6);
+                        <>f__am$cache6 = f => f.Value.type == PackageFileType.Dll;
                     }
                     foreach (KeyValuePair<string, PackageFileData> pair in Enumerable.Where<KeyValuePair<string, PackageFileData>>(info2.files, <>f__am$cache6))
                     {
                         if (!File.Exists(Path.Combine(info2.basePath, pair.Key).NormalizePath()))
                         {
                             object[] args = new object[] { info2.basePath, info2.name };
-                            Debug.LogWarningFormat("Missing assembly \t{0} for {1}. Player support may be incomplete.", args);
+                            UnityEngine.Debug.LogWarningFormat("Missing assembly \t{0} for {1}. Player support may be incomplete.", args);
                         }
                         else
                         {
                             InternalEditorUtility.SetupCustomDll(Path.GetFileName(location), location);
                         }
                     }
-                    BuildPipeline.SetPlaybackEngineDirectory(standaloneWindows, BuildOptions.CompressTextures, info2.basePath);
+                    BuildPipeline.SetPlaybackEngineDirectory(target, BuildOptions.CompressTextures, info2.basePath);
                     InternalEditorUtility.SetPlatformPath(info2.basePath);
                     s_PackageManager.LoadPackage(info2);
                 }
@@ -568,7 +576,7 @@
                     EditorUtility.LoadPlatformSupportModuleNativeDllInternal(module.TargetName);
                     module.OnLoad();
                 }
-                OnActiveBuildTargetChanged();
+                OnActiveBuildTargetChanged(BuildTarget.NoTarget, EditorUserBuildSettings.activeBuildTarget);
                 s_PlatformModulesInitialized = true;
             }
         }
@@ -593,13 +601,13 @@
 
         private static void LoadUnityExtensions()
         {
-            foreach (PackageInfo info in s_PackageManager.unityExtensions)
+            foreach (Unity.DataContract.PackageInfo info in s_PackageManager.unityExtensions)
             {
                 object[] arg = new object[] { info.name, info.version, info.unityVersion, info.basePath };
                 Console.WriteLine("Setting {0} v{1} for Unity v{2} to {3}", arg);
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<KeyValuePair<string, PackageFileData>, bool>(null, (IntPtr) <LoadUnityExtensions>m__0);
+                    <>f__am$cache0 = f => f.Value.type == PackageFileType.Dll;
                 }
                 foreach (KeyValuePair<string, PackageFileData> pair in Enumerable.Where<KeyValuePair<string, PackageFileData>>(info.files, <>f__am$cache0))
                 {
@@ -607,7 +615,7 @@
                     if (!File.Exists(path))
                     {
                         object[] args = new object[] { pair.Key, info.name };
-                        Debug.LogWarningFormat("Missing assembly \t{0} for {1}. Extension support may be incomplete.", args);
+                        UnityEngine.Debug.LogWarningFormat("Missing assembly \t{0} for {1}. Extension support may be incomplete.", args);
                     }
                     else
                     {
@@ -627,9 +635,9 @@
             }
         }
 
-        private static void OnActiveBuildTargetChanged()
+        private static void OnActiveBuildTargetChanged(BuildTarget oldTarget, BuildTarget newTarget)
         {
-            ChangeActivePlatformModuleTo(GetTargetStringFromBuildTarget(EditorUserBuildSettings.activeBuildTarget));
+            ChangeActivePlatformModuleTo(GetTargetStringFromBuildTarget(newTarget));
         }
 
         internal static void RegisterAdditionalUnityExtensions()
@@ -652,18 +660,18 @@
             {
                 throw new ArgumentNullException("processAssembly");
             }
-            return Enumerable.Aggregate<Assembly, List<T>>(AppDomain.CurrentDomain.GetAssemblies(), new List<T>(), new Func<List<T>, Assembly, List<T>>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Aggregate<Assembly, List<T>>(AppDomain.CurrentDomain.GetAssemblies(), new List<T>(), new Func<List<T>, Assembly, List<T>>(storey.<>m__0));
         }
 
         private static void RegisterPackageManager()
         {
-            PackageInfo info;
+            Unity.DataContract.PackageInfo info;
             s_EditorModules = new List<IEditorModule>();
             try
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<Assembly, bool>(null, (IntPtr) <RegisterPackageManager>m__1);
+                    <>f__am$cache1 = a => null != a.GetType("Unity.PackageManager.PackageManager");
                 }
                 Assembly assembly = Enumerable.FirstOrDefault<Assembly>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache1);
                 if ((assembly != null) && InitializePackageManager(assembly, null))
@@ -677,13 +685,13 @@
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<Assembly, bool>(null, (IntPtr) <RegisterPackageManager>m__2);
+                <>f__am$cache2 = a => a.GetName().Name == "Unity.Locator";
             }
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<Assembly, Type>(null, (IntPtr) <RegisterPackageManager>m__3);
+                <>f__am$cache3 = a => a.GetType("Unity.PackageManager.Locator");
             }
-            Type type = Enumerable.Select<Assembly, Type>(Enumerable.Where<Assembly>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache2), <>f__am$cache3).FirstOrDefault<Type>();
+            System.Type type = Enumerable.Select<Assembly, System.Type>(Enumerable.Where<Assembly>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache2), <>f__am$cache3).FirstOrDefault<System.Type>();
             try
             {
                 object[] args = new object[2];
@@ -700,7 +708,7 @@
             try
             {
                 string[] textArray2 = new string[] { Application.unityVersion };
-                info = type.InvokeMember("GetPackageManager", BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Static, null, null, textArray2) as PackageInfo;
+                info = type.InvokeMember("GetPackageManager", BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Static, null, null, textArray2) as Unity.DataContract.PackageInfo;
                 if (info == null)
                 {
                     Console.WriteLine("No package manager found!");
@@ -736,11 +744,11 @@
             {
                 Console.WriteLine("Registering platform support modules:");
                 Stopwatch stopwatch = Stopwatch.StartNew();
-                if (<>f__mg$cache1 == null)
+                if (<>f__mg$cache0 == null)
                 {
-                    <>f__mg$cache1 = new Func<Assembly, IEnumerable<IPlatformSupportModule>>(null, (IntPtr) RegisterPlatformSupportModulesFromAssembly);
+                    <>f__mg$cache0 = new Func<Assembly, IEnumerable<IPlatformSupportModule>>(ModuleManager.RegisterPlatformSupportModulesFromAssembly);
                 }
-                s_PlatformModules = RegisterModulesFromLoadedAssemblies<IPlatformSupportModule>(<>f__mg$cache1).ToList<IPlatformSupportModule>();
+                s_PlatformModules = RegisterModulesFromLoadedAssemblies<IPlatformSupportModule>(<>f__mg$cache0).ToList<IPlatformSupportModule>();
                 stopwatch.Stop();
                 Console.WriteLine("Registered platform support modules in: " + stopwatch.Elapsed.TotalSeconds + "s.");
             }
@@ -748,6 +756,12 @@
 
         internal static IEnumerable<IPlatformSupportModule> RegisterPlatformSupportModulesFromAssembly(Assembly assembly) => 
             AssemblyHelper.FindImplementors<IPlatformSupportModule>(assembly);
+
+        internal static bool ShouldShowMultiDisplayOption()
+        {
+            GUIContent[] displayNames = GetDisplayNames(EditorUserBuildSettings.activeBuildTarget.ToString());
+            return (((BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget) == BuildTargetGroup.Standalone) || (BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget) == BuildTargetGroup.WSA)) || (displayNames != null));
+        }
 
         internal static void Shutdown()
         {
@@ -763,23 +777,37 @@
         internal static void ShutdownPlatformSupportModules()
         {
             DeactivateActivePlatformModule();
-            foreach (IPlatformSupportModule module in s_PlatformModules)
+            if (s_PlatformModules != null)
             {
-                module.OnUnload();
+                foreach (IPlatformSupportModule module in s_PlatformModules)
+                {
+                    module.OnUnload();
+                }
             }
         }
 
-        private static bool TryParseBuildTarget(string targetString, out BuildTarget target)
+        private static bool TryParseBuildTarget(string targetString, out BuildTargetGroup buildTargetGroup, out BuildTarget target)
         {
+            buildTargetGroup = BuildTargetGroup.Standalone;
             target = BuildTarget.StandaloneWindows;
             try
             {
-                target = (BuildTarget) Enum.Parse(typeof(BuildTarget), targetString);
+                BuildTargetGroup facebook = BuildTargetGroup.Facebook;
+                if (targetString == facebook.ToString())
+                {
+                    buildTargetGroup = BuildTargetGroup.Facebook;
+                    target = BuildTarget.StandaloneWindows;
+                }
+                else
+                {
+                    target = (BuildTarget) Enum.Parse(typeof(BuildTarget), targetString);
+                    buildTargetGroup = BuildPipeline.GetBuildTargetGroup(target);
+                }
                 return true;
             }
             catch
             {
-                Debug.LogWarning($"Couldn't find build target for {targetString}");
+                UnityEngine.Debug.LogWarning($"Couldn't find build target for {targetString}");
             }
             return false;
         }
@@ -818,6 +846,18 @@
             }
         }
 
+        internal static IEnumerable<IPlatformSupportModule> platformSupportModulesDontRegister
+        {
+            get
+            {
+                if (s_PlatformModules == null)
+                {
+                    return new List<IPlatformSupportModule>();
+                }
+                return s_PlatformModules;
+            }
+        }
+
         [CompilerGenerated]
         private sealed class <RegisterModulesFromLoadedAssemblies>c__AnonStorey0<T>
         {
@@ -827,7 +867,7 @@
             {
                 try
                 {
-                    IEnumerable<T> source = this.processAssembly.Invoke(assembly);
+                    IEnumerable<T> source = this.processAssembly(assembly);
                     if ((source != null) && source.Any<T>())
                     {
                         list.AddRange(source);
@@ -839,6 +879,17 @@
                 }
                 return list;
             }
+        }
+
+        private class BuildTargetChangedHandler : IActiveBuildTargetChanged, IOrderedCallback
+        {
+            public void OnActiveBuildTargetChanged(BuildTarget oldTarget, BuildTarget newTarget)
+            {
+                ModuleManager.OnActiveBuildTargetChanged(oldTarget, newTarget);
+            }
+
+            public int callbackOrder =>
+                0;
         }
     }
 }

@@ -377,22 +377,22 @@
             }
             if ((this.activeSprite != null) && ((this.hasBorder || this.activeSprite.packed) || (this.activeSprite.texture.wrapMode != TextureWrapMode.Repeat)))
             {
-                int num7 = 0;
-                int num8 = 0;
+                long num7 = 0L;
+                long num8 = 0L;
                 if (this.m_FillCenter)
                 {
-                    num7 = (int) Math.Ceiling((double) ((num4 - x) / num));
-                    num8 = (int) Math.Ceiling((double) ((num6 - y) / num2));
-                    int num9 = 0;
+                    num7 = (long) Math.Ceiling((double) ((num4 - x) / num));
+                    num8 = (long) Math.Ceiling((double) ((num6 - y) / num2));
+                    double num9 = 0.0;
                     if (this.hasBorder)
                     {
-                        num9 = ((num7 + 2) * (num8 + 2)) * 4;
+                        num9 = ((num7 + 2.0) * (num8 + 2.0)) * 4.0;
                     }
                     else
                     {
-                        num9 = (num7 * num8) * 4;
+                        num9 = (num7 * num8) * 4.0;
                     }
-                    if (num9 > 0xfde8)
+                    if (num9 > 65000.0)
                     {
                         double num11;
                         Debug.LogError("Too many sprite tiles on Image \"" + base.name + "\". The tile size will be increased. To remove the limit on the number of tiles, convert the Sprite to an Advanced texture, remove the borders, clear the Packing tag and set the Wrap mode to Repeat.", this);
@@ -412,50 +412,50 @@
                             d -= 2.0;
                             num13 -= 2.0;
                         }
-                        num7 = (int) Math.Floor(d);
-                        num8 = (int) Math.Floor(num13);
+                        num7 = (long) Math.Floor(d);
+                        num8 = (long) Math.Floor(num13);
                         num = (num4 - x) / ((float) num7);
                         num2 = (num6 - y) / ((float) num8);
                     }
                 }
                 else if (this.hasBorder)
                 {
-                    num7 = (int) Math.Ceiling((double) ((num4 - x) / num));
-                    num8 = (int) Math.Ceiling((double) ((num6 - y) / num2));
-                    int num14 = (((num8 + num7) + 2) * 2) * 4;
-                    if (num14 > 0xfde8)
+                    num7 = (long) Math.Ceiling((double) ((num4 - x) / num));
+                    num8 = (long) Math.Ceiling((double) ((num6 - y) / num2));
+                    double num14 = (((num8 + num7) + 2.0) * 2.0) * 4.0;
+                    if (num14 > 65000.0)
                     {
                         Debug.LogError("Too many sprite tiles on Image \"" + base.name + "\". The tile size will be increased. To remove the limit on the number of tiles, convert the Sprite to an Advanced texture, remove the borders, clear the Packing tag and set the Wrap mode to Repeat.", this);
                         double num15 = 16250.0;
                         double num16 = ((double) num7) / ((double) num8);
                         double num17 = (num15 - 4.0) / (2.0 * (1.0 + num16));
                         double num18 = num17 * num16;
-                        num7 = (int) Math.Floor(num17);
-                        num8 = (int) Math.Floor(num18);
+                        num7 = (long) Math.Floor(num17);
+                        num8 = (long) Math.Floor(num18);
                         num = (num4 - x) / ((float) num7);
                         num2 = (num6 - y) / ((float) num8);
                     }
                 }
                 else
                 {
-                    num8 = num7 = 0;
+                    num8 = num7 = 0L;
                 }
                 if (this.m_FillCenter)
                 {
-                    for (int i = 0; i < num8; i++)
+                    for (long i = 0L; i < num8; i += 1L)
                     {
                         float num20 = y + (i * num2);
-                        float num21 = y + ((i + 1) * num2);
+                        float num21 = y + ((i + 1L) * num2);
                         if (num21 > num6)
                         {
                             uvMax.y = uvMin.y + (((a.y - uvMin.y) * (num6 - num20)) / (num21 - num20));
                             num21 = num6;
                         }
                         uvMax.x = a.x;
-                        for (int j = 0; j < num7; j++)
+                        for (long j = 0L; j < num7; j += 1L)
                         {
                             float num23 = x + (j * num);
-                            float num24 = x + ((j + 1) * num);
+                            float num24 = x + ((j + 1L) * num);
                             if (num24 > num4)
                             {
                                 uvMax.x = uvMin.x + (((a.x - uvMin.x) * (num4 - num23)) / (num24 - num23));
@@ -468,10 +468,10 @@
                 if (this.hasBorder)
                 {
                     uvMax = a;
-                    for (int k = 0; k < num8; k++)
+                    for (long k = 0L; k < num8; k += 1L)
                     {
                         float num26 = y + (k * num2);
-                        float num27 = y + ((k + 1) * num2);
+                        float num27 = y + ((k + 1L) * num2);
                         if (num27 > num6)
                         {
                             uvMax.y = uvMin.y + (((a.y - uvMin.y) * (num6 - num26)) / (num27 - num26));
@@ -481,10 +481,10 @@
                         AddQuad(toFill, new Vector2(num4, num26) + pixelAdjustedRect.position, new Vector2(pixelAdjustedRect.width, num27) + pixelAdjustedRect.position, this.color, new Vector2(a.x, uvMin.y), new Vector2(outerUV.z, uvMax.y));
                     }
                     uvMax = a;
-                    for (int m = 0; m < num7; m++)
+                    for (long m = 0L; m < num7; m += 1L)
                     {
                         float num29 = x + (m * num);
-                        float num30 = x + ((m + 1) * num);
+                        float num30 = x + ((m + 1L) * num);
                         if (num30 > num4)
                         {
                             uvMax.x = uvMin.x + (((a.x - uvMin.x) * (num4 - num29)) / (num30 - num29));
@@ -509,19 +509,29 @@
             }
         }
 
-        private unsafe Vector4 GetAdjustedBorders(Vector4 border, Rect rect)
+        private unsafe Vector4 GetAdjustedBorders(Vector4 border, Rect adjustedRect)
         {
+            Rect rect = base.rectTransform.rect;
             for (int i = 0; i <= 1; i++)
             {
-                float num2 = border[i] + border[i + 2];
-                if ((rect.size[i] < num2) && (num2 != 0f))
+                float num2;
+                ref Vector4 vectorRef;
+                if (rect.size[i] != 0f)
                 {
-                    ref Vector4 vectorRef;
+                    int num3;
                     int num4;
-                    int num5;
-                    float num3 = rect.size[i] / num2;
-                    (vectorRef = (Vector4) &border)[num4 = i] = vectorRef[num4] * num3;
-                    (vectorRef = (Vector4) &border)[num5 = i + 2] = vectorRef[num5] * num3;
+                    num2 = adjustedRect.size[i] / rect.size[i];
+                    (vectorRef = (Vector4) &border)[num3 = i] = vectorRef[num3] * num2;
+                    (vectorRef = (Vector4) &border)[num4 = i + 2] = vectorRef[num4] * num2;
+                }
+                float num5 = border[i] + border[i + 2];
+                if ((adjustedRect.size[i] < num5) && (num5 != 0f))
+                {
+                    int num6;
+                    int num7;
+                    num2 = adjustedRect.size[i] / num5;
+                    (vectorRef = (Vector4) &border)[num6 = i] = vectorRef[num6] * num2;
+                    (vectorRef = (Vector4) &border)[num7 = i + 2] = vectorRef[num7] * num2;
                 }
             }
             return border;
@@ -1129,7 +1139,7 @@
         }
 
         /// <summary>
-        /// <para>How to display the image.</para>
+        /// <para>How the Image is draw.</para>
         /// </summary>
         public Type type
         {

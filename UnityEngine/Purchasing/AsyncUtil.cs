@@ -7,6 +7,7 @@
     using System.Runtime.CompilerServices;
     using UnityEngine;
 
+    [AddComponentMenu("")]
     internal class AsyncUtil : MonoBehaviour, IAsyncUtil
     {
         [DebuggerHidden]
@@ -66,7 +67,7 @@
                         return true;
 
                     case 1:
-                        this.a.Invoke();
+                        this.a();
                         this.$PC = -1;
                         break;
                 }

@@ -36,7 +36,7 @@
         {
             if (<>f__am$cache7 == null)
             {
-                <>f__am$cache7 = new Func<ILayoutElement, float>(null, (IntPtr) <GetFlexibleHeight>m__7);
+                <>f__am$cache7 = e => e.flexibleHeight;
             }
             return GetLayoutProperty(rect, <>f__am$cache7, 0f);
         }
@@ -63,7 +63,7 @@
         {
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<ILayoutElement, float>(null, (IntPtr) <GetFlexibleWidth>m__3);
+                <>f__am$cache3 = e => e.flexibleWidth;
             }
             return GetLayoutProperty(rect, <>f__am$cache3, 0f);
         }
@@ -93,7 +93,7 @@
                     int layoutPriority = element.layoutPriority;
                     if (layoutPriority >= num3)
                     {
-                        float num6 = property.Invoke(element);
+                        float num6 = property(element);
                         if (num6 >= 0f)
                         {
                             if (layoutPriority > num3)
@@ -123,7 +123,7 @@
         {
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<ILayoutElement, float>(null, (IntPtr) <GetMinHeight>m__4);
+                <>f__am$cache4 = e => e.minHeight;
             }
             return GetLayoutProperty(rect, <>f__am$cache4, 0f);
         }
@@ -150,7 +150,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<ILayoutElement, float>(null, (IntPtr) <GetMinWidth>m__0);
+                <>f__am$cache0 = e => e.minWidth;
             }
             return GetLayoutProperty(rect, <>f__am$cache0, 0f);
         }
@@ -163,11 +163,11 @@
         {
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<ILayoutElement, float>(null, (IntPtr) <GetPreferredHeight>m__5);
+                <>f__am$cache5 = e => e.minHeight;
             }
             if (<>f__am$cache6 == null)
             {
-                <>f__am$cache6 = new Func<ILayoutElement, float>(null, (IntPtr) <GetPreferredHeight>m__6);
+                <>f__am$cache6 = e => e.preferredHeight;
             }
             return Mathf.Max(GetLayoutProperty(rect, <>f__am$cache5, 0f), GetLayoutProperty(rect, <>f__am$cache6, 0f));
         }
@@ -194,11 +194,11 @@
         {
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<ILayoutElement, float>(null, (IntPtr) <GetPreferredWidth>m__1);
+                <>f__am$cache1 = e => e.minWidth;
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<ILayoutElement, float>(null, (IntPtr) <GetPreferredWidth>m__2);
+                <>f__am$cache2 = e => e.preferredWidth;
             }
             return Mathf.Max(GetLayoutProperty(rect, <>f__am$cache1, 0f), GetLayoutProperty(rect, <>f__am$cache2, 0f));
         }

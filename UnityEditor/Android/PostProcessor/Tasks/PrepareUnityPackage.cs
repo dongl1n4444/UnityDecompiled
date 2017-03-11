@@ -1,7 +1,9 @@
 ﻿namespace UnityEditor.Android.PostProcessor.Tasks
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEditor;
     using UnityEditor.Android.PostProcessor;
@@ -12,6 +14,7 @@
         private string _playerPackage;
         private string _stagingArea;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ProgressHandler OnProgress;
 
         public void Execute(PostProcessorContext context)
@@ -43,18 +46,21 @@
         private void PrepareNativeUnityLibs(PostProcessorContext context, string abi)
         {
             string pluginSourceFolder = context.Get<string>("AndroidPluginsPath");
+            bool flag = context.Get<bool>("SourceBuild");
             string[] components = new string[] { this._stagingArea, "libs", abi };
             string to = Paths.Combine(components);
-            string[] textArray2 = new string[] { TasksCommon.GetVariationsDirectory(context), "Libs" };
-            string str3 = Paths.Combine(textArray2);
-            string[] textArray3 = new string[] { this._stagingArea, "libs" };
-            Directory.CreateDirectory(Paths.Combine(textArray3));
-            string[] textArray4 = new string[] { str3, abi };
-            FileUtil.CopyFileOrDirectory(Paths.Combine(textArray4), to);
-            string[] textArray5 = new string[] { pluginSourceFolder, "libs", abi };
-            string str4 = Paths.Combine(textArray5);
-            string[] textArray6 = new string[] { to, "gdbserver" };
-            if (!File.Exists(Paths.Combine(textArray6)) && !PostprocessBuildPlayer.InstallPluginsByExtension(pluginSourceFolder, "gdbserver", string.Empty, to, false))
+            string[] textArray2 = new string[] { this._stagingArea, "libs" };
+            Directory.CreateDirectory(Paths.Combine(textArray2));
+            if (!flag)
+            {
+                string libsDirectory = TasksCommon.GetLibsDirectory(context);
+                string[] textArray3 = new string[] { libsDirectory, abi };
+                FileUtil.CopyFileOrDirectory(Paths.Combine(textArray3), to);
+            }
+            string[] textArray4 = new string[] { pluginSourceFolder, "libs", abi };
+            string str4 = Paths.Combine(textArray4);
+            string[] textArray5 = new string[] { to, "gdbserver" };
+            if (!File.Exists(Paths.Combine(textArray5)) && !PostprocessBuildPlayer.InstallPluginsByExtension(pluginSourceFolder, "gdbserver", string.Empty, to, false))
             {
                 PostprocessBuildPlayer.InstallPluginsByExtension(str4, "gdbserver", string.Empty, to, false);
             }

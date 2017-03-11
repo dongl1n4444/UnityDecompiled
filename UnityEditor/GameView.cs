@@ -3,10 +3,12 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Runtime.InteropServices;
     using UnityEditor.Modules;
     using UnityEditor.SceneManagement;
     using UnityEditorInternal;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     [EditorWindowTitle(title="Game", useTypeNameAsIconName=true)]
     internal class GameView : EditorWindow, IHasCustomMenu, IGameViewSizeMenuUser
@@ -93,23 +95,23 @@
             bool flag = false;
             if ((this.m_TargetTexture != null) && (this.m_CurrentColorSpace != QualitySettings.activeColorSpace))
             {
-                Object.DestroyImmediate(this.m_TargetTexture);
+                UnityEngine.Object.DestroyImmediate(this.m_TargetTexture);
             }
             if (this.m_TargetTexture == null)
             {
                 this.m_CurrentColorSpace = QualitySettings.activeColorSpace;
                 this.m_TargetTexture = new RenderTexture(0, 0, 0x18, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
                 this.m_TargetTexture.name = "GameView RT";
-                this.m_TargetTexture.filterMode = FilterMode.Point;
+                this.m_TargetTexture.filterMode = UnityEngine.FilterMode.Point;
                 this.m_TargetTexture.hideFlags = HideFlags.HideAndDontSave;
+                EditorGUIUtility.SetGUITextureBlitColorspaceSettings(EditorGUIUtility.GUITextureBlitColorspaceMaterial);
             }
-            int num = Mathf.Max(1, QualitySettings.antiAliasing);
-            if (((this.m_TargetTexture.width != width) || (this.m_TargetTexture.height != height)) || (this.m_TargetTexture.antiAliasing != num))
+            if ((this.m_TargetTexture.width != width) || (this.m_TargetTexture.height != height))
             {
                 this.m_TargetTexture.Release();
                 this.m_TargetTexture.width = width;
                 this.m_TargetTexture.height = height;
-                this.m_TargetTexture.antiAliasing = num;
+                this.m_TargetTexture.antiAliasing = 1;
                 flag = true;
                 if (this.m_TargetClamped)
                 {
@@ -166,7 +168,7 @@
                 this.m_SizeChangeID = ScriptableSingleton<GameViewSizes>.instance.GetChangeID();
             }
             GUILayout.BeginHorizontal(EditorStyles.toolbar, new GUILayoutOption[0]);
-            if (this.ShouldShowMultiDisplayOption())
+            if (ModuleManager.ShouldShowMultiDisplayOption())
             {
                 GUILayoutOption[] optionArray1 = new GUILayoutOption[] { GUILayout.Width(80f) };
                 int num = EditorGUILayout.Popup(this.m_TargetDisplay, DisplayUtility.GetDisplayNames(), EditorStyles.toolbarPopup, optionArray1);
@@ -184,7 +186,7 @@
             {
                 GUILayout.FlexibleSpace();
                 Color color = GUI.color;
-                GUI.color *= AnimationMode.animatedPropertyColor;
+                GUI.color *= UnityEditor.AnimationMode.animatedPropertyColor;
                 GUILayout.Label(Styles.frameDebuggerOnContent, EditorStyles.miniLabel, new GUILayoutOption[0]);
                 GUI.color = color;
                 if (Event.current.type == EventType.Repaint)
@@ -209,7 +211,7 @@
             this.m_Stats = GUILayout.Toggle(this.m_Stats, Styles.statsContent, EditorStyles.toolbarButton, new GUILayoutOption[0]);
             Rect position = GUILayoutUtility.GetRect(Styles.gizmosContent, Styles.gizmoButtonStyle);
             Rect rect2 = new Rect(position.xMax - Styles.gizmoButtonStyle.border.right, position.y, (float) Styles.gizmoButtonStyle.border.right, position.height);
-            if (EditorGUI.ButtonMouseDown(rect2, GUIContent.none, FocusType.Passive, GUIStyle.none) && AnnotationWindow.ShowAtPosition(GUILayoutUtility.topLevel.GetLast(), true))
+            if (EditorGUI.DropdownButton(rect2, GUIContent.none, FocusType.Passive, GUIStyle.none) && AnnotationWindow.ShowAtPosition(GUILayoutUtility.topLevel.GetLast(), true))
             {
                 GUIUtility.ExitGUI();
             }
@@ -316,6 +318,12 @@
             return new Vector2(640f, 480f);
         }
 
+        [RequiredByNativeCode]
+        private static void GetMainGameViewTargetSizeNoBox(out Vector2 result)
+        {
+            result = GetMainGameViewTargetSize();
+        }
+
         internal static Vector2 GetSizeOfMainGameView() => 
             GetMainGameViewTargetSize();
 
@@ -343,7 +351,7 @@
             s_GameViews.Remove(this);
             if (this.m_TargetTexture != null)
             {
-                Object.DestroyImmediate(this.m_TargetTexture);
+                UnityEngine.Object.DestroyImmediate(this.m_TargetTexture);
             }
         }
 
@@ -413,7 +421,7 @@
                         this.ClearTargetTexture();
                     }
                     int targetDisplay = 0;
-                    if (this.ShouldShowMultiDisplayOption())
+                    if (ModuleManager.ShouldShowMultiDisplayOption())
                     {
                         targetDisplay = this.m_TargetDisplay;
                     }
@@ -424,7 +432,7 @@
                         GUIUtility.s_EditorScreenPointOffset = vector3;
                         GUI.BeginGroup(this.m_ZoomArea.drawRect);
                         GL.sRGBWrite = this.m_CurrentColorSpace == ColorSpace.Linear;
-                        GUI.DrawTexture(this.deviceFlippedTargetInView, this.m_TargetTexture, ScaleMode.StretchToFill, false);
+                        Graphics.DrawTexture(this.deviceFlippedTargetInView, this.m_TargetTexture, new Rect(0f, 0f, 1f, 1f), 0, 0, 0, 0, GUI.color, EditorGUIUtility.GUITextureBlitColorspaceMaterial);
                         GL.sRGBWrite = false;
                         GUI.EndGroup();
                     }
@@ -479,17 +487,17 @@
             {
                 if (this.m_ZoomArea.scale.y < 1f)
                 {
-                    this.m_TargetTexture.filterMode = FilterMode.Bilinear;
+                    this.m_TargetTexture.filterMode = UnityEngine.FilterMode.Bilinear;
                 }
                 else
                 {
-                    this.m_TargetTexture.filterMode = FilterMode.Point;
+                    this.m_TargetTexture.filterMode = UnityEngine.FilterMode.Point;
                 }
             }
             if (this.m_NoCameraWarning && !EditorGUIUtility.IsDisplayReferencedByCameras(this.m_TargetDisplay))
             {
                 GUI.Label(this.warningPosition, GUIContent.none, EditorStyles.notificationBackground);
-                string str = !this.ShouldShowMultiDisplayOption() ? string.Empty : DisplayUtility.GetDisplayNames()[this.m_TargetDisplay].text;
+                string str = !ModuleManager.ShouldShowMultiDisplayOption() ? string.Empty : DisplayUtility.GetDisplayNames()[this.m_TargetDisplay].text;
                 string t = $"{str}
 No cameras rendering";
                 EditorGUI.DoDropShadowLabel(this.warningPosition, EditorGUIUtility.TempContent(t), EditorStyles.notificationText, 0.3f);
@@ -538,12 +546,6 @@ No cameras rendering";
             Vector2 vector = EditorGUIUtility.PixelsToPoints(targetInPixels);
             Vector2 vector2 = new Vector2(viewInPoints.x / vector.x, viewInPoints.y / vector.y);
             return Mathf.Min(vector2.x, vector2.y);
-        }
-
-        private bool ShouldShowMultiDisplayOption()
-        {
-            GUIContent[] displayNames = ModuleManager.GetDisplayNames(EditorUserBuildSettings.activeBuildTarget.ToString());
-            return ((BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget) == BuildTargetGroup.Standalone) || (displayNames != null));
         }
 
         public void SizeSelectionCallback(int indexClicked, object objectSelected)
@@ -630,7 +632,7 @@ No cameras rendering";
         {
             get
             {
-                if (SystemInfo.usesOpenGLTextureCoords)
+                if (!SystemInfo.graphicsUVStartsAtTop)
                 {
                     return this.targetInView;
                 }
@@ -751,9 +753,9 @@ No cameras rendering";
             public static GUIContent maximizeOnPlayContent = EditorGUIUtility.TextContent("Maximize On Play");
             public static GUIContent muteContent = EditorGUIUtility.TextContent("Mute Audio");
             public static GUIContent noCameraWarningContextMenuContent = EditorGUIUtility.TextContent("Warn if No Cameras Rendering");
-            public static GUIContent renderdocContent = EditorGUIUtility.IconContent("renderdoc", "Capture|Capture the current view and open in RenderDoc");
+            public static GUIContent renderdocContent = EditorGUIUtility.IconContent("renderdoc", "Capture|Capture the current view and open in RenderDoc.");
             public static GUIContent statsContent = EditorGUIUtility.TextContent("Stats");
-            public static GUIContent zoomSliderContent = EditorGUIUtility.TextContent("Scale|Size of the game view on the screen");
+            public static GUIContent zoomSliderContent = EditorGUIUtility.TextContent("Scale|Size of the game view on the screen.");
         }
     }
 }

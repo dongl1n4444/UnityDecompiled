@@ -6,7 +6,7 @@
     using UnityEngine.Scripting;
 
     /// <summary>
-    /// <para>Information about clip being played and blended by the Animator.</para>
+    /// <para>Information about clip been played and blended by the Animator.</para>
     /// </summary>
     [StructLayout(LayoutKind.Sequential), UsedByNativeCode]
     public struct AnimatorClipInfo
@@ -23,7 +23,7 @@
         /// </summary>
         public float weight =>
             this.m_Weight;
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern AnimationClip ClipInstanceToScriptingObject(int instanceID);
     }
 }

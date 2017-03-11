@@ -34,7 +34,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<Resolution, int>(null, (IntPtr) <CameraParameters>m__0);
+                    <>f__am$cache0 = new Func<Resolution, int>(CameraParameters.<CameraParameters>m__0);
                 }
                 Resolution resolution = Enumerable.OrderByDescending<Resolution, int>(PhotoCapture.SupportedResolutions, <>f__am$cache0).First<Resolution>();
                 this.m_CameraResolutionWidth = resolution.width;
@@ -44,12 +44,12 @@
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<Resolution, int>(null, (IntPtr) <CameraParameters>m__1);
+                    <>f__am$cache1 = new Func<Resolution, int>(CameraParameters.<CameraParameters>m__1);
                 }
                 Resolution resolution2 = Enumerable.OrderByDescending<Resolution, int>(VideoCapture.SupportedResolutions, <>f__am$cache1).First<Resolution>();
                 if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache2 = new Func<float, float>(null, (IntPtr) <CameraParameters>m__2);
+                    <>f__am$cache2 = new Func<float, float>(CameraParameters.<CameraParameters>m__2);
                 }
                 float num = Enumerable.OrderByDescending<float, float>(VideoCapture.GetSupportedFrameRatesForResolution(resolution2), <>f__am$cache2).First<float>();
                 this.m_CameraResolutionWidth = resolution2.width;

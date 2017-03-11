@@ -68,7 +68,7 @@
                 this.m_StateMachine.hideFlags = HideFlags.DontSave;
                 AnimatorController.SetAnimatorController(this.m_Animator, this.m_Controller);
                 this.m_Animator.Update(0f);
-                this.m_Controller.OnAnimatorControllerDirty = (Action) Delegate.Combine(this.m_Controller.OnAnimatorControllerDirty, new Action(this, (IntPtr) this.ControllerDirty));
+                this.m_Controller.OnAnimatorControllerDirty = (Action) Delegate.Combine(this.m_Controller.OnAnimatorControllerDirty, new Action(this.ControllerDirty));
                 this.m_ControllerIsDirty = false;
             }
         }
@@ -77,7 +77,7 @@
         {
             if (this.m_Controller != null)
             {
-                this.m_Controller.OnAnimatorControllerDirty = (Action) Delegate.Remove(this.m_Controller.OnAnimatorControllerDirty, new Action(this, (IntPtr) this.ControllerDirty));
+                this.m_Controller.OnAnimatorControllerDirty = (Action) Delegate.Remove(this.m_Controller.OnAnimatorControllerDirty, new Action(this.ControllerDirty));
             }
             UnityEngine.Object.DestroyImmediate(this.m_PreviewInstance);
         }

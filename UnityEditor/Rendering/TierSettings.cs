@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.InteropServices;
     using UnityEngine;
+    using UnityEngine.Rendering;
 
     /// <summary>
     /// <para>Used to set up per-platorm per-shader-hardware-tier graphics settings.</para>
@@ -15,9 +16,9 @@
         /// </summary>
         public ShaderQuality standardShaderQuality;
         /// <summary>
-        /// <para>Allows you to specify whether cascaded shadow maps should be used.</para>
+        /// <para>The CameraHDRMode to use for this tier.</para>
         /// </summary>
-        public bool cascadedShadowMaps;
+        public CameraHDRMode hdrMode;
         /// <summary>
         /// <para>Allows you to specify whether Reflection Probes Box Projection should be used.</para>
         /// </summary>
@@ -27,9 +28,34 @@
         /// </summary>
         public bool reflectionProbeBlending;
         /// <summary>
+        /// <para>Setting this field to true enables HDR rendering for this tier. Setting it to false disables HDR rendering for this tier.
+        /// See Also:</para>
+        /// </summary>
+        public bool hdr;
+        /// <summary>
+        /// <para>Allows you to specify whether Detail Normal Map should be sampled if assigned.</para>
+        /// </summary>
+        public bool detailNormalMap;
+        /// <summary>
+        /// <para>Allows you to specify whether cascaded shadow maps should be used.</para>
+        /// </summary>
+        public bool cascadedShadowMaps;
+        /// <summary>
+        /// <para>Allows you to specify whether Unity should try to use 32-bit shadow maps, where possible.</para>
+        /// </summary>
+        public bool prefer32BitShadowMaps;
+        /// <summary>
+        /// <para>Allows you to specify whether Semitransparent Shadows should be enabled.</para>
+        /// </summary>
+        public bool semitransparentShadows;
+        /// <summary>
         /// <para>The rendering path that should be used.</para>
         /// </summary>
         public RenderingPath renderingPath;
+        /// <summary>
+        /// <para>The RealtimeGICPUUsage to use for this tier.</para>
+        /// </summary>
+        public RealtimeGICPUUsage realtimeGICPUUsage;
     }
 }
 

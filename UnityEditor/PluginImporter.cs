@@ -34,15 +34,19 @@
         /// <summary>
         /// <para>Is plugin compatible with editor.</para>
         /// </summary>
+        public bool GetCompatibleWithEditor() => 
+            this.GetCompatibleWithEditor("", "");
+
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern bool GetCompatibleWithEditor();
+        public extern bool GetCompatibleWithEditor(string buildTargetGroup, string buildTarget);
         /// <summary>
         /// <para>Is plugin compatible with specified platform.</para>
         /// </summary>
         /// <param name="platform">Target platform.</param>
         /// <param name="platformName"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern bool GetCompatibleWithPlatform(string platformName);
+        public bool GetCompatibleWithPlatform(string platformName) => 
+            this.GetCompatibleWithPlatform(BuildPipeline.GetBuildTargetGroupName(BuildPipeline.GetBuildTargetByName(platformName)), platformName);
+
         /// <summary>
         /// <para>Is plugin compatible with specified platform.</para>
         /// </summary>
@@ -50,6 +54,11 @@
         /// <param name="platformName"></param>
         public bool GetCompatibleWithPlatform(BuildTarget platform) => 
             this.GetCompatibleWithPlatform(BuildPipeline.GetBuildTargetName(platform));
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern bool GetCompatibleWithPlatform(string buildTargetGroup, string buildTarget);
+        internal bool GetCompatibleWithPlatform(BuildTargetGroup buildTargetGroup, BuildTarget buildTarget) => 
+            this.GetCompatibleWithPlatform(BuildPipeline.GetBuildTargetGroupName(buildTargetGroup), BuildPipeline.GetBuildTargetName(buildTarget));
 
         /// <summary>
         /// <para>Returns editor specific data for specified key.</para>
@@ -96,7 +105,7 @@
             };
             List<PluginImporter> list = new List<PluginImporter>();
             Dictionary<string, PluginImporter> dictionary = new Dictionary<string, PluginImporter>();
-            PluginImporter[] importerArray = Enumerable.Where<PluginImporter>(GetAllImporters(), new Func<PluginImporter, bool>(storey, (IntPtr) this.<>m__0)).ToArray<PluginImporter>();
+            PluginImporter[] importerArray = Enumerable.Where<PluginImporter>(GetAllImporters(), new Func<PluginImporter, bool>(storey.<>m__0)).ToArray<PluginImporter>();
             IPluginImporterExtension pluginImporterExtension = ModuleManager.GetPluginImporterExtension(storey.platformName);
             if (pluginImporterExtension == null)
             {
@@ -140,6 +149,18 @@
         public static PluginImporter[] GetImporters(BuildTarget platform) => 
             GetImporters(BuildPipeline.GetBuildTargetName(platform));
 
+        public static PluginImporter[] GetImporters(string buildTargetGroup, string buildTarget)
+        {
+            <GetImporters>c__AnonStorey2 storey = new <GetImporters>c__AnonStorey2 {
+                buildTargetGroup = buildTargetGroup,
+                buildTarget = buildTarget
+            };
+            return Enumerable.Where<PluginImporter>(GetAllImporters(), new Func<PluginImporter, bool>(storey.<>m__0)).ToArray<PluginImporter>();
+        }
+
+        public static PluginImporter[] GetImporters(BuildTargetGroup buildTargetGroup, BuildTarget buildTarget) => 
+            GetImporters(BuildPipeline.GetBuildTargetGroupName(buildTargetGroup), BuildPipeline.GetBuildTargetName(buildTarget));
+
         /// <summary>
         /// <para>Identifies whether or not this plugin will be overridden if a plugin of the same name is placed in your project folder.</para>
         /// </summary>
@@ -177,6 +198,15 @@
             return imp.ShouldIncludeInBuild();
         }
 
+        private static bool IsCompatible(PluginImporter imp, string buildTargetGroup, string buildTarget)
+        {
+            if (string.IsNullOrEmpty(imp.assetPath))
+            {
+                return false;
+            }
+            return (imp.GetCompatibleWithPlatform(buildTargetGroup, buildTarget) || imp.GetCompatibleWithAnyPlatform());
+        }
+
         /// <summary>
         /// <para>Set compatiblity with any platform.</para>
         /// </summary>
@@ -189,14 +219,24 @@
         /// <param name="enable">Is plugin compatible with editor.</param>
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void SetCompatibleWithEditor(bool enable);
+        internal void SetCompatibleWithEditor(BuildTargetGroup buildTargetGroup, BuildTarget buildTarget, bool enable)
+        {
+            this.SetCompatibleWithEditorWithBuildTargetsInternal(buildTargetGroup, buildTarget, enable);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern void SetCompatibleWithEditorWithBuildTargetsInternal(BuildTargetGroup buildTargetGroup, BuildTarget buildTarget, bool enable);
         /// <summary>
         /// <para>Set compatiblity with specified platform.</para>
         /// </summary>
         /// <param name="platform">Target platform.</param>
         /// <param name="enable">Is plugin compatible with specified platform.</param>
         /// <param name="platformName">Target platform.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern void SetCompatibleWithPlatform(string platformName, bool enable);
+        public void SetCompatibleWithPlatform(string platformName, bool enable)
+        {
+            this.SetCompatibleWithPlatform(BuildPipeline.GetBuildTargetGroupName(BuildPipeline.GetBuildTargetByName(platformName)), platformName, enable);
+        }
+
         /// <summary>
         /// <para>Set compatiblity with specified platform.</para>
         /// </summary>
@@ -206,6 +246,13 @@
         public void SetCompatibleWithPlatform(BuildTarget platform, bool enable)
         {
             this.SetCompatibleWithPlatform(BuildPipeline.GetBuildTargetName(platform), enable);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern void SetCompatibleWithPlatform(string buildTargetGroup, string buildTarget, bool enable);
+        internal void SetCompatibleWithPlatform(BuildTargetGroup buildTargetGroup, BuildTarget buildTarget, bool enable)
+        {
+            this.SetCompatibleWithPlatform(BuildPipeline.GetBuildTargetGroupName(buildTargetGroup), BuildPipeline.GetBuildTargetName(buildTarget), enable);
         }
 
         /// <summary>
@@ -431,6 +478,16 @@
 
             internal bool <>m__0(PluginImporter imp) => 
                 PluginImporter.IsCompatible(imp, this.platformName);
+        }
+
+        [CompilerGenerated]
+        private sealed class <GetImporters>c__AnonStorey2
+        {
+            internal string buildTarget;
+            internal string buildTargetGroup;
+
+            internal bool <>m__0(PluginImporter imp) => 
+                PluginImporter.IsCompatible(imp, this.buildTargetGroup, this.buildTarget);
         }
     }
 }

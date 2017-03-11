@@ -8,7 +8,7 @@
     [Serializable]
     internal class PersistentCallGroup
     {
-        [SerializeField, FormerlySerializedAs("m_Listeners")]
+        [FormerlySerializedAs("m_Listeners"), SerializeField]
         private List<PersistentCall> m_Calls = new List<PersistentCall>();
 
         public void AddListener()

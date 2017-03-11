@@ -15,11 +15,11 @@
         [CompilerGenerated]
         private static Predicate<MaterialProperty> <>f__am$cache1;
         [CompilerGenerated]
-        private static Func<Object, bool> <>f__am$cache2;
+        private static Func<UnityEngine.Object, bool> <>f__am$cache2;
         [CompilerGenerated]
         private static Predicate<MaterialProperty> <>f__am$cache3;
         [CompilerGenerated]
-        private static Func<Object, bool> <>f__am$cache4;
+        private static Func<UnityEngine.Object, bool> <>f__am$cache4;
         [CompilerGenerated]
         private static Predicate<MaterialProperty> <>f__am$cache5;
         [CompilerGenerated]
@@ -90,9 +90,9 @@
                     list.Remove(property3);
                     if (<>f__am$cache2 == null)
                     {
-                        <>f__am$cache2 = new Func<Object, bool>(null, (IntPtr) <OnInspectorGUI>m__2);
+                        <>f__am$cache2 = t => ((Material) t).shaderKeywords.Contains<string>("EFFECT_BUMP");
                     }
-                    IEnumerable<bool> enumerable = Enumerable.Select<Object, bool>(base.targets, <>f__am$cache2);
+                    IEnumerable<bool> enumerable = Enumerable.Select<UnityEngine.Object, bool>(base.targets, <>f__am$cache2);
                     bool? nullable = this.ToggleShaderProperty(property3, enumerable.First<bool>(), enumerable.Distinct<bool>().Count<bool>() > 1);
                     if (nullable.HasValue)
                     {
@@ -124,9 +124,9 @@
                 }
                 if (<>f__am$cache4 == null)
                 {
-                    <>f__am$cache4 = new Func<Object, bool>(null, (IntPtr) <OnInspectorGUI>m__4);
+                    <>f__am$cache4 = t => ((Material) t).shaderKeywords.Contains<string>("EFFECT_HUE_VARIATION");
                 }
-                IEnumerable<bool> enumerable2 = Enumerable.Select<Object, bool>(base.targets, <>f__am$cache4);
+                IEnumerable<bool> enumerable2 = Enumerable.Select<UnityEngine.Object, bool>(base.targets, <>f__am$cache4);
                 if (<>f__am$cache5 == null)
                 {
                     <>f__am$cache5 = prop => prop.name == "_HueVariation";
@@ -159,7 +159,7 @@
                 if (property6 != null)
                 {
                     list.Remove(property6);
-                    if (Enumerable.Any<SpeedTreeGeometryType>(source, new Func<SpeedTreeGeometryType, bool>(this, (IntPtr) this.<OnInspectorGUI>m__7)))
+                    if (Enumerable.Any<SpeedTreeGeometryType>(source, (Func<SpeedTreeGeometryType, bool>) (t => this.ShouldEnableAlphaTest(t))))
                     {
                         base.ShaderProperty(property6, property6.displayName);
                     }
@@ -171,6 +171,10 @@
                         base.ShaderProperty(property7, property7.displayName);
                     }
                 }
+                EditorGUILayout.Space();
+                EditorGUILayout.Space();
+                base.RenderQueueField();
+                base.EnableInstancingField();
             }
         }
 

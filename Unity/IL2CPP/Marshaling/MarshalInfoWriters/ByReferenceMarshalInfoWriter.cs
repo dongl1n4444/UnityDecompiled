@@ -23,7 +23,7 @@
             this._elementTypeMarshalInfoWriter = MarshalDataCollector.MarshalInfoWriterFor(type.ElementType, marshalType, marshalInfo, false, true, false, null);
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<MarshaledType, MarshaledType>(null, (IntPtr) <ByReferenceMarshalInfoWriter>m__0);
+                <>f__am$cache0 = new Func<MarshaledType, MarshaledType>(ByReferenceMarshalInfoWriter.<ByReferenceMarshalInfoWriter>m__0);
             }
             this._marshaledTypes = this._elementTypeMarshalInfoWriter.MarshaledTypes.Select<MarshaledType, MarshaledType>(<>f__am$cache0).ToArray<MarshaledType>();
         }
@@ -90,7 +90,7 @@
         public override string WriteMarshalEmptyVariableToNative(CppCodeWriter writer, ManagedMarshalValue variableName, IList<MarshaledParameter> methodParameters)
         {
             string str = $"_{variableName.GetNiceName()}_marshaled";
-            if ((((((ByReferenceType) base._typeRef).ElementType.MetadataType == MetadataType.Class) && !(this._elementTypeMarshalInfoWriter is UnmarshalableMarshalInfoWriter)) && (!(this._elementTypeMarshalInfoWriter is SafeHandleMarshalInfoWriter) && !(this._elementTypeMarshalInfoWriter is ComObjectMarshalInfoWriter))) && (!(this._elementTypeMarshalInfoWriter is DelegateMarshalInfoWriter) && !(this._elementTypeMarshalInfoWriter is StringMarshalInfoWriter)))
+            if ((((((ByReferenceType) base._typeRef).ElementType.MetadataType == MetadataType.Class) && !(this._elementTypeMarshalInfoWriter is UnmarshalableMarshalInfoWriter)) && (!(this._elementTypeMarshalInfoWriter is SafeHandleMarshalInfoWriter) && !(this._elementTypeMarshalInfoWriter is ComObjectMarshalInfoWriter))) && ((!(this._elementTypeMarshalInfoWriter is DelegateMarshalInfoWriter) && !(this._elementTypeMarshalInfoWriter is WindowsRuntimeDelegateMarshalInfoWriter)) && !(this._elementTypeMarshalInfoWriter is StringMarshalInfoWriter)))
             {
                 this.WriteNativeVariableDeclarationOfType(writer, str);
                 return str;

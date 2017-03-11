@@ -1,6 +1,7 @@
 ﻿namespace Unity.IL2CPP.GenericsCollection
 {
     using Mono.Cecil;
+    using Mono.Cecil.Cil;
     using System;
     using System.Linq;
     using System.Runtime.InteropServices;
@@ -32,7 +33,14 @@
 
         internal static void ProcessArray(ArrayType inflatedType, InflatedCollectionCollector generics, GenericContext currentContext)
         {
-            generics.Arrays.Add(inflatedType);
+            if (inflatedType.NeedsComCallableWrapper())
+            {
+                GenericContextAwareVisitor.ProcessArray(inflatedType, generics, currentContext);
+            }
+            else
+            {
+                generics.Arrays.Add(inflatedType);
+            }
         }
 
         private void ProcessGenericType(GenericInstanceType inflatedType)
@@ -45,11 +53,18 @@
             bool flag = generics.TypeDeclarations.Add(type);
             if (((mode != CollectionMode.Types) || flag) && ((mode != CollectionMode.MethodsAndTypes) || generics.TypeMethodDeclarations.Add(type)))
             {
-                GenericContext genericContext = new GenericContext(type, contextMethod);
-                type.ElementType.Resolve().Accept(new GenericContextAwareDeclarationOnlyVisitor(generics, genericContext, CollectionMode.Types));
-                foreach (GenericInstanceType type2 in type.GenericArguments.OfType<GenericInstanceType>())
+                if (type.NeedsComCallableWrapper())
                 {
-                    ProcessGenericType(Inflater.InflateType(genericContext, type2), generics, null, mode);
+                    GenericContextAwareVisitor.ProcessGenericType(type, generics, contextMethod);
+                }
+                else
+                {
+                    GenericContext genericContext = new GenericContext(type, contextMethod);
+                    type.ElementType.Resolve().Accept(new GenericContextAwareDeclarationOnlyVisitor(generics, genericContext, CollectionMode.Types));
+                    foreach (GenericInstanceType type2 in type.GenericArguments.OfType<GenericInstanceType>())
+                    {
+                        ProcessGenericType(Inflater.InflateType(genericContext, type2), generics, null, mode);
+                    }
                 }
             }
         }
@@ -84,6 +99,7 @@
                 {
                     this.Visit(definition, context.Parameter(methodDefinition));
                 }
+                VisitMethodBody(methodDefinition, this._genericContext, this._generics);
             }
         }
 
@@ -104,6 +120,49 @@
                     foreach (MethodDefinition definition2 in typeDefinition.Methods)
                     {
                         this.Visit(definition2, context.Member(typeDefinition));
+                    }
+                }
+            }
+        }
+
+        private static void VisitMethodBody(MethodDefinition methodDefinition, GenericContext genericContext, InflatedCollectionCollector generics)
+        {
+            if (methodDefinition.HasBody)
+            {
+                foreach (Instruction instruction in methodDefinition.Body.Instructions)
+                {
+                    MethodReference operand = instruction.Operand as MethodReference;
+                    if (operand != null)
+                    {
+                        GenericInstanceType declaringType = operand.DeclaringType as GenericInstanceType;
+                        GenericInstanceMethod genericInstanceMethod = operand as GenericInstanceMethod;
+                        if ((declaringType != null) || (genericInstanceMethod != null))
+                        {
+                            if (instruction.OpCode.Code == Code.Newobj)
+                            {
+                                if (declaringType != null)
+                                {
+                                    GenericInstanceType item = Inflater.InflateType(genericContext, declaringType);
+                                    if (generics.TypeDeclarations.Add(item))
+                                    {
+                                        GenericContextAwareVisitor.ProcessGenericType(item, generics, genericContext.Method);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                GenericInstanceMethod method2 = (genericInstanceMethod == null) ? null : Inflater.InflateMethod(genericContext, genericInstanceMethod);
+                                if (generics.VisitedMethodBodies.Add(method2))
+                                {
+                                    GenericInstanceType genericInstance = (declaringType == null) ? null : Inflater.InflateType(genericContext, declaringType);
+                                    if (!GenericsUtilities.CheckForMaximumRecursion(genericInstance) && !GenericsUtilities.CheckForMaximumRecursion(method2))
+                                    {
+                                        GenericContext context = new GenericContext(genericInstance, method2);
+                                        VisitMethodBody(operand.Resolve(), context, generics);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

@@ -35,20 +35,29 @@
             this._contextStack.Push(item);
             foreach (InstructionBlock block in this._blocks)
             {
+                Instruction last;
                 <BuildTreeWithExceptionHandlers>c__AnonStorey0 storey = new <BuildTreeWithExceptionHandlers>c__AnonStorey0();
                 if (block.Last.Next == null)
                 {
-                    item = new Context {
-                        Type = ContextType.Block,
-                        Block = block
-                    };
-                    this._contextStack.Peek().Children.Add(item);
-                    break;
+                    if (this._contextStack.Count == 1)
+                    {
+                        item = new Context {
+                            Type = ContextType.Block,
+                            Block = block
+                        };
+                        this._contextStack.Peek().Children.Add(item);
+                        break;
+                    }
+                    storey.firstInstr = block.First;
+                    last = block.Last;
                 }
-                storey.firstInstr = block.First;
-                Instruction next = block.Last.Next;
+                else
+                {
+                    storey.firstInstr = block.First;
+                    last = block.Last.Next;
+                }
                 TryCatchInfo info = this._tryCatchInfos[storey.firstInstr];
-                TryCatchInfo info2 = this._tryCatchInfos[next];
+                TryCatchInfo info2 = this._tryCatchInfos[last];
                 if ((info.CatchStart != 0) && (info.FinallyStart != 0))
                 {
                     throw new NotSupportedException("An instruction cannot start both a catch and a finally block!");
@@ -57,7 +66,7 @@
                 {
                     item = new Context {
                         Type = ContextType.Finally,
-                        Handler = this._methodBody.ExceptionHandlers.Single<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__0))
+                        Handler = this._methodBody.ExceptionHandlers.Single<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey.<>m__0))
                     };
                     this._contextStack.Push(item);
                 }
@@ -65,19 +74,27 @@
                 {
                     item = new Context {
                         Type = ContextType.Fault,
-                        Handler = this._methodBody.ExceptionHandlers.Single<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__1))
+                        Handler = this._methodBody.ExceptionHandlers.Single<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey.<>m__1))
                     };
                     this._contextStack.Push(item);
                 }
-                for (int k = 0; k < info.CatchStart; k++)
+                for (int k = 0; k < info.FilterStart; k++)
+                {
+                    item = new Context {
+                        Type = ContextType.Filter,
+                        Handler = this._methodBody.ExceptionHandlers.Single<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey.<>m__2))
+                    };
+                    this._contextStack.Push(item);
+                }
+                for (int m = 0; m < info.CatchStart; m++)
                 {
                     item = new Context {
                         Type = ContextType.Catch,
-                        Handler = this._methodBody.ExceptionHandlers.Single<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__2))
+                        Handler = this._methodBody.ExceptionHandlers.Single<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey.<>m__3))
                     };
                     this._contextStack.Push(item);
                 }
-                for (int m = 0; m < info.TryStart; m++)
+                for (int n = 0; n < info.TryStart; n++)
                 {
                     item = new Context {
                         Type = ContextType.Try
@@ -89,7 +106,7 @@
                     Block = block
                 };
                 this._contextStack.Peek().Children.Add(item);
-                for (int n = 0; n < info2.FinallyEnd; n++)
+                for (int num7 = 0; num7 < info2.FinallyEnd; num7++)
                 {
                     Context context2 = this._contextStack.Pop();
                     item = new Context {
@@ -99,7 +116,7 @@
                     };
                     this._contextStack.Peek().Children.Add(item);
                 }
-                for (int num7 = 0; num7 < info2.FaultEnd; num7++)
+                for (int num8 = 0; num8 < info2.FaultEnd; num8++)
                 {
                     Context context3 = this._contextStack.Pop();
                     item = new Context {
@@ -109,22 +126,32 @@
                     };
                     this._contextStack.Peek().Children.Add(item);
                 }
-                for (int num8 = 0; num8 < info2.CatchEnd; num8++)
+                for (int num9 = 0; num9 < info2.FilterEnd; num9++)
                 {
                     Context context4 = this._contextStack.Pop();
                     item = new Context {
-                        Type = ContextType.Catch,
+                        Type = ContextType.Filter,
                         Children = context4.Children,
                         Handler = context4.Handler
                     };
                     this._contextStack.Peek().Children.Add(item);
                 }
-                for (int num9 = 0; num9 < info2.TryEnd; num9++)
+                for (int num10 = 0; num10 < info2.CatchEnd; num10++)
                 {
                     Context context5 = this._contextStack.Pop();
                     item = new Context {
+                        Type = ContextType.Catch,
+                        Children = context5.Children,
+                        Handler = context5.Handler
+                    };
+                    this._contextStack.Peek().Children.Add(item);
+                }
+                for (int num11 = 0; num11 < info2.TryEnd; num11++)
+                {
+                    Context context6 = this._contextStack.Pop();
+                    item = new Context {
                         Type = ContextType.Try,
-                        Children = context5.Children
+                        Children = context6.Children
                     };
                     this._contextStack.Peek().Children.Add(item);
                 }
@@ -151,6 +178,7 @@
         {
             switch (context.Type)
             {
+                case ContextType.Filter:
                 case ContextType.Catch:
                 case ContextType.Finally:
                 case ContextType.Fault:
@@ -202,6 +230,9 @@
                 case ContextType.Try:
                     return ExceptionSupport.NodeType.Try;
 
+                case ContextType.Filter:
+                    return ExceptionSupport.NodeType.Filter;
+
                 case ContextType.Catch:
                     return ExceptionSupport.NodeType.Catch;
 
@@ -226,7 +257,10 @@
                 ((h.HandlerType == ExceptionHandlerType.Fault) && (h.HandlerStart == this.firstInstr));
 
             internal bool <>m__2(ExceptionHandler h) => 
-                ((h.HandlerType == ExceptionHandlerType.Catch) && (h.HandlerStart == this.firstInstr));
+                ((h.HandlerType == ExceptionHandlerType.Filter) && (h.FilterStart == this.firstInstr));
+
+            internal bool <>m__3(ExceptionHandler h) => 
+                (((h.HandlerType == ExceptionHandlerType.Catch) || (h.HandlerType == ExceptionHandlerType.Filter)) && (h.HandlerStart == this.firstInstr));
         }
 
         internal class Context
@@ -242,6 +276,7 @@
             Root,
             Block,
             Try,
+            Filter,
             Catch,
             Finally,
             Fault

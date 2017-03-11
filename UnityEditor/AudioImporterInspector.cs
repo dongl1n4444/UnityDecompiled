@@ -8,6 +8,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Threading;
+    using UnityEditor.Build;
     using UnityEngine;
 
     [CanEditMultipleObjects, CustomEditor(typeof(AudioImporter))]
@@ -20,7 +21,6 @@
         public SerializedProperty m_CompSize;
         private SampleSettingProperties m_DefaultSampleSettings;
         public SerializedProperty m_ForceToMono;
-        public SerializedProperty m_LoadInBackground;
         public SerializedProperty m_Normalize;
         public SerializedProperty m_OrigSize;
         public SerializedProperty m_PreloadAudioData;
@@ -167,7 +167,7 @@
                     status.multiSampleRateSetting |= defaultSampleSettings.sampleRateSetting != settings2.sampleRateSetting;
                     status.multiSampleRateOverride |= defaultSampleSettings.sampleRateOverride != settings2.sampleRateOverride;
                     status.multiCompressionFormat |= defaultSampleSettings.compressionFormat != settings2.compressionFormat;
-                    status.multiQuality |= defaultSampleSettings.quality != settings2.quality;
+                    status.multiQuality |= !(defaultSampleSettings.quality == settings2.quality);
                     status.multiConversionMode |= defaultSampleSettings.conversionMode != settings2.conversionMode;
                 }
             }
@@ -249,9 +249,8 @@
                     EditorGUILayout.PropertyField(this.m_Normalize, new GUILayoutOption[0]);
                 }
                 EditorGUI.indentLevel--;
-                EditorGUILayout.PropertyField(this.m_LoadInBackground, new GUILayoutOption[0]);
             }
-            BuildPlayerWindow.BuildPlatform[] platforms = BuildPlayerWindow.GetValidPlatforms().ToArray();
+            BuildPlatform[] platforms = BuildPlatforms.instance.GetValidPlatforms().ToArray();
             GUILayout.Space(10f);
             int index = EditorGUILayout.BeginPlatformGrouping(platforms, GUIContent.Temp("Default"));
             if (index == -1)
@@ -292,7 +291,6 @@
             this.m_ForceToMono = base.serializedObject.FindProperty("m_ForceToMono");
             this.m_Normalize = base.serializedObject.FindProperty("m_Normalize");
             this.m_PreloadAudioData = base.serializedObject.FindProperty("m_PreloadAudioData");
-            this.m_LoadInBackground = base.serializedObject.FindProperty("m_LoadInBackground");
             this.m_OrigSize = base.serializedObject.FindProperty("m_PreviewData.m_OrigSize");
             this.m_CompSize = base.serializedObject.FindProperty("m_PreviewData.m_CompSize");
             this.ResetSettingsFromBackend();
@@ -300,7 +298,7 @@
 
         public override void OnInspectorGUI()
         {
-            base.serializedObject.UpdateIfDirtyOrScript();
+            base.serializedObject.UpdateIfRequiredOrScript();
             bool selectionContainsTrackerFile = false;
             foreach (AudioImporter importer in this.GetAllAudioImporterTargets())
             {
@@ -311,10 +309,10 @@
                     case "s3m":
                     case "xm":
                         selectionContainsTrackerFile = true;
-                        goto Label_00A6;
+                        goto Label_00A7;
                 }
             }
-        Label_00A6:
+        Label_00A7:
             this.OnAudioImporterGUI(selectionContainsTrackerFile);
             int bytes = 0;
             int num2 = 0;
@@ -416,7 +414,7 @@
             }
         }
 
-        private bool ResetSettingsFromBackend()
+        private void ResetSettingsFromBackend()
         {
             if (this.GetAllAudioImporterTargets().Any<AudioImporter>())
             {
@@ -424,8 +422,8 @@
                 this.m_DefaultSampleSettings.settings = importer.defaultSampleSettings;
                 this.m_DefaultSampleSettings.ClearChangedFlags();
                 this.m_SampleSettingOverrides = new Dictionary<BuildTargetGroup, SampleSettingProperties>();
-                List<BuildPlayerWindow.BuildPlatform> validPlatforms = BuildPlayerWindow.GetValidPlatforms();
-                foreach (BuildPlayerWindow.BuildPlatform platform in validPlatforms)
+                List<BuildPlatform> validPlatforms = BuildPlatforms.instance.GetValidPlatforms();
+                foreach (BuildPlatform platform in validPlatforms)
                 {
                     BuildTargetGroup targetGroup = platform.targetGroup;
                     foreach (AudioImporter importer2 in this.GetAllAudioImporterTargets())
@@ -448,7 +446,6 @@
                     }
                 }
             }
-            return true;
         }
 
         internal override void ResetValues()
@@ -459,7 +456,7 @@
 
         private bool SyncSettingsToBackend()
         {
-            BuildPlayerWindow.BuildPlatform[] platformArray = BuildPlayerWindow.GetValidPlatforms().ToArray();
+            BuildPlatform[] platformArray = BuildPlatforms.instance.GetValidPlatforms().ToArray();
             foreach (AudioImporter importer in this.GetAllAudioImporterTargets())
             {
                 AudioImporterSampleSettings defaultSampleSettings = importer.defaultSampleSettings;
@@ -488,7 +485,7 @@
                     defaultSampleSettings.conversionMode = this.m_DefaultSampleSettings.settings.conversionMode;
                 }
                 importer.defaultSampleSettings = defaultSampleSettings;
-                foreach (BuildPlayerWindow.BuildPlatform platform in platformArray)
+                foreach (BuildPlatform platform in platformArray)
                 {
                     BuildTargetGroup targetGroup = platform.targetGroup;
                     if (this.m_SampleSettingOverrides.ContainsKey(targetGroup))
@@ -532,7 +529,7 @@
                 }
             }
             this.m_DefaultSampleSettings.ClearChangedFlags();
-            foreach (BuildPlayerWindow.BuildPlatform platform2 in platformArray)
+            foreach (BuildPlatform platform2 in platformArray)
             {
                 BuildTargetGroup key = platform2.targetGroup;
                 if (this.m_SampleSettingOverrides.ContainsKey(key))
@@ -550,12 +547,12 @@
         {
             internal AudioImporter $current;
             internal bool $disposing;
-            internal Object[] $locvar0;
+            internal UnityEngine.Object[] $locvar0;
             internal int $locvar1;
             internal int $PC;
             internal AudioImporterInspector $this;
-            internal AudioImporter <audioImporter>__1;
-            internal Object <importer>__0;
+            internal AudioImporter <audioImporter>__2;
+            internal UnityEngine.Object <importer>__1;
 
             [DebuggerHidden]
             public void Dispose()
@@ -586,11 +583,11 @@
             Label_00A5:
                 if (this.$locvar1 < this.$locvar0.Length)
                 {
-                    this.<importer>__0 = this.$locvar0[this.$locvar1];
-                    this.<audioImporter>__1 = this.<importer>__0 as AudioImporter;
-                    if (this.<audioImporter>__1 != null)
+                    this.<importer>__1 = this.$locvar0[this.$locvar1];
+                    this.<audioImporter>__2 = this.<importer>__1 as AudioImporter;
+                    if (this.<audioImporter>__2 != null)
                     {
-                        this.$current = this.<audioImporter>__1;
+                        this.$current = this.<audioImporter>__2;
                         if (!this.$disposing)
                         {
                             this.$PC = 1;

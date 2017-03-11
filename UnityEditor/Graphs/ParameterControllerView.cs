@@ -12,6 +12,7 @@
     internal class ParameterControllerView : IAnimatorControllerSubEditor
     {
         private const float kElementHeight = 24f;
+        private const string kParameterSearchControlName = "ParameterSearch";
         private bool m_HadKeyFocusAtMouseDown = false;
         private IAnimatorControllerEditor m_Host;
         protected int m_LastSelectedIndex;
@@ -325,15 +326,18 @@
             {
                 s_Styles = new Styles();
             }
-            Event current = Event.current;
-            if ((current.type == EventType.MouseDown) && rect.Contains(current.mousePosition))
+            if (this.m_ParameterList != null)
             {
-                this.m_HadKeyFocusAtMouseDown = this.m_ParameterList.HasKeyboardControl();
-            }
-            this.KeyboardHandling();
-            if (this.m_Host.animatorController != null)
-            {
-                this.DoParameterList();
+                Event current = Event.current;
+                if ((current.type == EventType.MouseDown) && rect.Contains(current.mousePosition))
+                {
+                    this.m_HadKeyFocusAtMouseDown = this.m_ParameterList.HasKeyboardControl();
+                }
+                this.KeyboardHandling();
+                if (this.m_Host.animatorController != null)
+                {
+                    this.DoParameterList();
+                }
             }
         }
 
@@ -433,19 +437,19 @@
                 using (new EditorGUI.DisabledScope(this.m_Host.animatorController == null))
                 {
                     string[] names = Enum.GetNames(typeof(SearchMode));
-                    int searchMode = this.m_SearchMode;
                     GUI.SetNextControlName("ParameterSearch");
                     if (((Event.current.type == EventType.KeyDown) && (Event.current.keyCode == KeyCode.Escape)) && (GUI.GetNameOfFocusedControl() == "ParameterSearch"))
                     {
                         this.m_Search = "";
-                        this.CreateSearchParameterList(this.m_Search, this.m_SearchMode);
+                        this.m_SearchMode = 0;
+                        this.m_SearchTree = null;
+                        this.m_Host.Repaint();
                     }
                     EditorGUI.BeginChangeCheck();
-                    string str = EditorGUILayout.ToolbarSearchField(this.m_Search, names, ref searchMode, new GUILayoutOption[0]);
+                    string str = EditorGUILayout.ToolbarSearchField(this.m_Search, names, ref this.m_SearchMode, new GUILayoutOption[0]);
                     if (EditorGUI.EndChangeCheck())
                     {
                         this.m_Search = str;
-                        this.m_SearchMode = searchMode;
                         this.CreateSearchParameterList(this.m_Search, this.m_SearchMode);
                     }
                     GUILayout.Space(10f);
@@ -454,6 +458,14 @@
                         Rect position = GUILayoutUtility.GetRect(s_Styles.iconToolbarPlusMore, s_Styles.invisibleButton);
                         if (GUI.Button(position, s_Styles.iconToolbarPlusMore, s_Styles.invisibleButton))
                         {
+                            if (GUI.GetNameOfFocusedControl() == "ParameterSearch")
+                            {
+                                GUIUtility.keyboardControl = 0;
+                            }
+                            this.m_Search = "";
+                            this.m_SearchMode = 0;
+                            this.m_SearchTree = null;
+                            this.m_Host.Repaint();
                             this.OnAddParameter(position);
                         }
                     }

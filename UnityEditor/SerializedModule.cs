@@ -57,8 +57,8 @@
             return property;
         }
 
-        public string GetUniqueModuleName() => 
-            Concat("" + this.m_Object.targetObject.GetInstanceID(), this.m_ModuleName);
+        public string GetUniqueModuleName(UnityEngine.Object o) => 
+            Concat("" + o.GetInstanceID(), this.m_ModuleName);
 
         internal SerializedObject serializedObject =>
             this.m_Object;

@@ -59,7 +59,7 @@
             builder.AppendLine("<linker>");
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<RuntimeClassRegistry.MethodDescription, string>(null, (IntPtr) <GetMethodPreserveBlacklistContents>m__5);
+                <>f__am$cache5 = m => m.assembly;
             }
             IEnumerable<IGrouping<string, RuntimeClassRegistry.MethodDescription>> enumerable = Enumerable.GroupBy<RuntimeClassRegistry.MethodDescription, string>(rcr.GetMethodsToPreserve(), <>f__am$cache5);
             foreach (IGrouping<string, RuntimeClassRegistry.MethodDescription> grouping in enumerable)
@@ -67,7 +67,7 @@
                 builder.AppendLine($"	<assembly fullname="{grouping.Key}">");
                 if (<>f__am$cache6 == null)
                 {
-                    <>f__am$cache6 = new Func<RuntimeClassRegistry.MethodDescription, string>(null, (IntPtr) <GetMethodPreserveBlacklistContents>m__6);
+                    <>f__am$cache6 = m => m.fullTypeName;
                 }
                 IEnumerable<IGrouping<string, RuntimeClassRegistry.MethodDescription>> enumerable2 = Enumerable.GroupBy<RuntimeClassRegistry.MethodDescription, string>(grouping, <>f__am$cache6);
                 foreach (IGrouping<string, RuntimeClassRegistry.MethodDescription> grouping2 in enumerable2)
@@ -97,35 +97,45 @@
                 rcr = rcr,
                 managedDir = managedDir
             };
-            return Enumerable.Select<string, string>(Enumerable.Where<string>(storey.rcr.GetUserAssemblies(), new Func<string, bool>(storey, (IntPtr) this.<>m__0)), new Func<string, string>(storey, (IntPtr) this.<>m__1)).ToList<string>();
+            return Enumerable.Select<string, string>(Enumerable.Where<string>(storey.rcr.GetUserAssemblies(), new Func<string, bool>(storey.<>m__0)), new Func<string, string>(storey.<>m__1)).ToList<string>();
         }
 
         internal static IEnumerable<string> GetUserBlacklistFiles()
         {
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<string, string>(null, (IntPtr) <GetUserBlacklistFiles>m__4);
+                <>f__am$cache4 = s => Path.Combine(Directory.GetCurrentDirectory(), s);
             }
             return Enumerable.Select<string, string>(Directory.GetFiles("Assets", "link.xml", SearchOption.AllDirectories), <>f__am$cache4);
+        }
+
+        public static void InvokeFromBuildPlayer(BuildTarget buildTarget, RuntimeClassRegistry usedClasses)
+        {
+            string[] components = new string[] { "Temp", "StagingArea", "Data" };
+            string str = Paths.Combine(components);
+            BaseIl2CppPlatformProvider platformProvider = new BaseIl2CppPlatformProvider(buildTarget, Path.Combine(str, "Libraries"));
+            StripAssemblies(str, platformProvider, usedClasses);
         }
 
         private static bool RunAssemblyLinker(IEnumerable<string> args, out string @out, out string err, string linkerPath, string workingDirectory)
         {
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<string, string, string>(null, (IntPtr) <RunAssemblyLinker>m__3);
+                <>f__am$cache3 = (buff, s) => buff + " " + s;
             }
             string str = Enumerable.Aggregate<string>(args, <>f__am$cache3);
-            Console.WriteLine("Invoking UnusedByteCodeStripper2 with arguments: " + str);
+            Console.WriteLine("Invoking UnityLinker with arguments: " + str);
             Runner.RunManagedProgram(linkerPath, str, workingDirectory, null, null);
             @out = "";
             err = "";
             return true;
         }
 
-        private static void RunAssemblyStripper(string stagingAreaData, IEnumerable assemblies, string managedAssemblyFolderPath, string[] assembliesToStrip, string[] searchDirs, string monoLinkerPath, IIl2CppPlatformProvider platformProvider, RuntimeClassRegistry rcr, bool developmentBuild)
+        private static void RunAssemblyStripper(string stagingAreaData, IEnumerable assemblies, string managedAssemblyFolderPath, string[] assembliesToStrip, string[] searchDirs, string monoLinkerPath, IIl2CppPlatformProvider platformProvider, RuntimeClassRegistry rcr)
         {
-            bool flag2;
+            bool flag3;
+            BuildTargetGroup buildTargetGroup = BuildPipeline.GetBuildTargetGroup(platformProvider.target);
+            bool flag = PlayerSettings.GetScriptingBackend(buildTargetGroup) == ScriptingImplementation.Mono2x;
             bool doStripping = ((rcr != null) && PlayerSettings.stripEngineCode) && platformProvider.supportsEngineStripping;
             IEnumerable<string> first = Il2CppBlacklistPaths;
             if (rcr != null)
@@ -133,12 +143,28 @@
                 string[] second = new string[] { WriteMethodsToPreserveBlackList(stagingAreaData, rcr), MonoAssemblyStripping.GenerateLinkXmlToPreserveDerivedTypes(stagingAreaData, managedAssemblyFolderPath, rcr) };
                 first = first.Concat<string>(second);
             }
+            if (PlayerSettings.GetApiCompatibilityLevel(buildTargetGroup) == ApiCompatibilityLevel.NET_4_6)
+            {
+                string str3 = Path.Combine(platformProvider.il2CppFolder, "LinkerDescriptors");
+                first = first.Concat<string>(Directory.GetFiles(str3, "*45.xml"));
+            }
+            if (flag)
+            {
+                string str4 = Path.Combine(platformProvider.il2CppFolder, "LinkerDescriptors");
+                first = first.Concat<string>(Directory.GetFiles(str4, "*_mono.xml"));
+                string str5 = Path.Combine(BuildPipeline.GetBuildToolsDirectory(platformProvider.target), "link.xml");
+                if (File.Exists(str5))
+                {
+                    string[] textArray2 = new string[] { str5 };
+                    first = first.Concat<string>(textArray2);
+                }
+            }
             if (!doStripping)
             {
-                foreach (string str3 in Directory.GetFiles(platformProvider.moduleStrippingInformationFolder, "*.xml"))
+                foreach (string str6 in Directory.GetFiles(platformProvider.moduleStrippingInformationFolder, "*.xml"))
                 {
-                    string[] textArray2 = new string[] { str3 };
-                    first = first.Concat<string>(textArray2);
+                    string[] textArray3 = new string[] { str6 };
+                    first = first.Concat<string>(textArray3);
                 }
             }
             string fullPath = Path.GetFullPath(Path.Combine(managedAssemblyFolderPath, "tempStrip"));
@@ -146,54 +172,67 @@
             {
                 string str;
                 string str2;
-                flag2 = false;
+                flag3 = false;
                 if (EditorUtility.DisplayCancelableProgressBar("Building Player", "Stripping assemblies", 0f))
                 {
                     throw new OperationCanceledException();
                 }
-                if (!StripAssembliesTo(assembliesToStrip, searchDirs, fullPath, managedAssemblyFolderPath, out str, out str2, monoLinkerPath, platformProvider, first, developmentBuild))
+                if (!StripAssembliesTo(assembliesToStrip, searchDirs, fullPath, managedAssemblyFolderPath, out str, out str2, monoLinkerPath, platformProvider, first))
                 {
                     object[] objArray1 = new object[] { "Error in stripping assemblies: ", assemblies, ", ", str2 };
                     throw new Exception(string.Concat(objArray1));
                 }
-                string icallSummaryPath = Path.Combine(managedAssemblyFolderPath, "ICallSummary.txt");
-                GenerateInternalCallSummaryFile(icallSummaryPath, managedAssemblyFolderPath, fullPath);
-                if (doStripping)
+                if (platformProvider.supportsEngineStripping)
                 {
-                    HashSet<UnityType> set;
-                    HashSet<string> set2;
-                    CodeStrippingUtils.GenerateDependencies(fullPath, icallSummaryPath, rcr, doStripping, out set, out set2, platformProvider);
-                    flag2 = AddWhiteListsForModules(set2, ref first, platformProvider.moduleStrippingInformationFolder);
+                    string icallSummaryPath = Path.Combine(managedAssemblyFolderPath, "ICallSummary.txt");
+                    GenerateInternalCallSummaryFile(icallSummaryPath, managedAssemblyFolderPath, fullPath);
+                    if (doStripping)
+                    {
+                        HashSet<UnityType> set;
+                        HashSet<string> set2;
+                        CodeStrippingUtils.GenerateDependencies(fullPath, icallSummaryPath, rcr, doStripping, out set, out set2, platformProvider);
+                        flag3 = AddWhiteListsForModules(set2, ref first, platformProvider.moduleStrippingInformationFolder);
+                    }
                 }
             }
-            while (flag2);
+            while (flag3);
             string path = Path.GetFullPath(Path.Combine(managedAssemblyFolderPath, "tempUnstripped"));
-            Directory.CreateDirectory(path);
-            foreach (string str7 in Directory.GetFiles(managedAssemblyFolderPath))
+            if (debugUnstripped)
             {
-                string extension = Path.GetExtension(str7);
-                if (string.Equals(extension, ".dll", StringComparison.InvariantCultureIgnoreCase) || string.Equals(extension, ".mdb", StringComparison.InvariantCultureIgnoreCase))
+                Directory.CreateDirectory(path);
+            }
+            foreach (string str10 in Directory.GetFiles(managedAssemblyFolderPath))
+            {
+                string extension = Path.GetExtension(str10);
+                if ((string.Equals(extension, ".dll", StringComparison.InvariantCultureIgnoreCase) || string.Equals(extension, ".winmd", StringComparison.InvariantCultureIgnoreCase)) || (string.Equals(extension, ".mdb", StringComparison.InvariantCultureIgnoreCase) || string.Equals(extension, ".pdb", StringComparison.InvariantCultureIgnoreCase)))
                 {
-                    File.Move(str7, Path.Combine(path, Path.GetFileName(str7)));
+                    if (debugUnstripped)
+                    {
+                        File.Move(str10, Path.Combine(path, Path.GetFileName(str10)));
+                    }
+                    else
+                    {
+                        File.Delete(str10);
+                    }
                 }
             }
-            foreach (string str9 in Directory.GetFiles(fullPath))
+            foreach (string str12 in Directory.GetFiles(fullPath))
             {
-                File.Move(str9, Path.Combine(managedAssemblyFolderPath, Path.GetFileName(str9)));
+                File.Move(str12, Path.Combine(managedAssemblyFolderPath, Path.GetFileName(str12)));
             }
             Directory.Delete(fullPath);
         }
 
-        internal static void StripAssemblies(string stagingAreaData, IIl2CppPlatformProvider platformProvider, RuntimeClassRegistry rcr, bool developmentBuild)
+        internal static void StripAssemblies(string stagingAreaData, IIl2CppPlatformProvider platformProvider, RuntimeClassRegistry rcr)
         {
             string fullPath = Path.GetFullPath(Path.Combine(stagingAreaData, "Managed"));
             List<string> userAssemblies = GetUserAssemblies(rcr, fullPath);
             string[] assembliesToStrip = userAssemblies.ToArray();
             string[] searchDirs = new string[] { fullPath };
-            RunAssemblyStripper(stagingAreaData, userAssemblies, fullPath, assembliesToStrip, searchDirs, MonoLinker2Path, platformProvider, rcr, developmentBuild);
+            RunAssemblyStripper(stagingAreaData, userAssemblies, fullPath, assembliesToStrip, searchDirs, MonoLinker2Path, platformProvider, rcr);
         }
 
-        private static bool StripAssembliesTo(string[] assemblies, string[] searchDirs, string outputFolder, string workingDirectory, out string output, out string error, string linkerPath, IIl2CppPlatformProvider platformProvider, IEnumerable<string> additionalBlacklist, bool developmentBuild)
+        private static bool StripAssembliesTo(string[] assemblies, string[] searchDirs, string outputFolder, string workingDirectory, out string output, out string error, string linkerPath, IIl2CppPlatformProvider platformProvider, IEnumerable<string> additionalBlacklist)
         {
             <StripAssembliesTo>c__AnonStorey0 storey = new <StripAssembliesTo>c__AnonStorey0 {
                 workingDirectory = workingDirectory
@@ -204,9 +243,9 @@
             }
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Func<string, bool>(null, (IntPtr) File.Exists);
+                <>f__mg$cache0 = new Func<string, bool>(File.Exists);
             }
-            additionalBlacklist = Enumerable.Where<string>(Enumerable.Select<string, string>(additionalBlacklist, new Func<string, string>(storey, (IntPtr) this.<>m__0)), <>f__mg$cache0);
+            additionalBlacklist = Enumerable.Where<string>(Enumerable.Select<string, string>(additionalBlacklist, new Func<string, string>(storey.<>m__0)), <>f__mg$cache0);
             IEnumerable<string> userBlacklistFiles = GetUserBlacklistFiles();
             foreach (string str in userBlacklistFiles)
             {
@@ -214,27 +253,27 @@
             }
             additionalBlacklist = additionalBlacklist.Concat<string>(userBlacklistFiles);
             List<string> args = new List<string> {
-                "--api " + PlayerSettings.apiCompatibilityLevel.ToString(),
+                "--api " + PlayerSettings.GetApiCompatibilityLevel(EditorUserBuildSettings.activeBuildTargetGroup).ToString(),
                 "-out \"" + outputFolder + "\"",
                 "-l none",
                 "-c link",
-                "-b " + developmentBuild,
+                "-b true",
                 "-x \"" + GetModuleWhitelist("Core", platformProvider.moduleStrippingInformationFolder) + "\"",
                 "-f \"" + Path.Combine(platformProvider.il2CppFolder, "LinkerDescriptors") + "\""
             };
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, string>(null, (IntPtr) <StripAssembliesTo>m__0);
+                <>f__am$cache0 = path => "-x \"" + path + "\"";
             }
             args.AddRange(Enumerable.Select<string, string>(additionalBlacklist, <>f__am$cache0));
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<string, string>(null, (IntPtr) <StripAssembliesTo>m__1);
+                <>f__am$cache1 = d => "-d \"" + d + "\"";
             }
             args.AddRange(Enumerable.Select<string, string>(searchDirs, <>f__am$cache1));
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<string, string>(null, (IntPtr) <StripAssembliesTo>m__2);
+                <>f__am$cache2 = assembly => "-a  \"" + Path.GetFullPath(assembly) + "\"";
             }
             args.AddRange(Enumerable.Select<string, string>(assemblies, <>f__am$cache2));
             return RunAssemblyLinker(args, out output, out error, linkerPath, storey.workingDirectory);
@@ -248,20 +287,14 @@
             return path;
         }
 
-        private static string BlacklistPath =>
-            Path.Combine(Path.GetDirectoryName(MonoLinkerPath), "Core.xml");
+        private static bool debugUnstripped =>
+            false;
 
         private static string[] Il2CppBlacklistPaths =>
             new string[] { Path.Combine("..", "platform_native_link.xml") };
 
-        private static string ModulesWhitelistPath =>
-            Path.Combine(Path.GetDirectoryName(MonoLinkerPath), "ModuleStrippingInformation");
-
         private static string MonoLinker2Path =>
-            Path.Combine(MonoInstallationFinder.GetFrameWorksFolder(), "Tools/UnusedByteCodeStripper2/UnusedBytecodeStripper2.exe");
-
-        private static string MonoLinkerPath =>
-            Path.Combine(MonoInstallationFinder.GetFrameWorksFolder(), "Tools/UnusedBytecodeStripper.exe");
+            Path.Combine(MonoInstallationFinder.GetFrameWorksFolder(), "il2cpp/build/UnityLinker.exe");
 
         [CompilerGenerated]
         private sealed class <GetUserAssemblies>c__AnonStorey1

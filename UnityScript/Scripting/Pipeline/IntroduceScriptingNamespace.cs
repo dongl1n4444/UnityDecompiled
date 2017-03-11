@@ -16,7 +16,7 @@
 
         public override void Run()
         {
-            this.get_NameResolutionService().set_GlobalNamespace(new EvaluationContextNamespace(this.get_TypeSystemServices(), this.get_NameResolutionService().get_GlobalNamespace(), this._evaluationContext));
+            this.NameResolutionService.GlobalNamespace = new EvaluationContextNamespace(this.TypeSystemServices, this.NameResolutionService.GlobalNamespace, this._evaluationContext);
         }
     }
 }

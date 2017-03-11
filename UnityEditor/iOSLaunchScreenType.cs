@@ -2,7 +2,10 @@
 {
     using System;
 
-    internal enum iOSLaunchScreenType
+    /// <summary>
+    /// <para>iOS launch screen settings.</para>
+    /// </summary>
+    public enum iOSLaunchScreenType
     {
         Default,
         ImageAndBackgroundRelative,

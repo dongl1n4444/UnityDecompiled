@@ -568,9 +568,9 @@
                     {
                         Matrix4x4 matrixx3 = matrixx * node.GetLocalMatrixAtTime(time);
                         Matrix4x4 inverse = matrixx3.inverse;
-                        Vector3 v = closestRay - zero;
-                        v = inverse.MultiplyVector(v);
-                        rotation = Mathf.Atan2(v.x, v.z) * 57.29578f;
+                        Vector3 vector = closestRay - zero;
+                        vector = inverse.MultiplyVector(vector);
+                        rotation = Mathf.Atan2(vector.x, vector.z) * 57.29578f;
                     }
                 }
                 vector3 = vector4;
@@ -1770,13 +1770,13 @@
                                                 float enter = 0f;
                                                 if (plane2.Raycast(ray2, out enter))
                                                 {
-                                                    Vector3 vector7 = ray2.origin + ((Vector3) (enter * ray2.direction));
+                                                    Vector3 point = ray2.origin + ((Vector3) (enter * ray2.direction));
                                                     if (s_SelectedPoint == 0)
                                                     {
                                                         s_SelectedPoint = 1;
                                                     }
                                                     s_SelectedGroup.Lock();
-                                                    s_SelectedNode.spline.nodes[s_SelectedPoint].point = m.inverse.MultiplyPoint(vector7);
+                                                    s_SelectedNode.spline.nodes[s_SelectedPoint].point = m.inverse.MultiplyPoint(point);
                                                     Vector3 vector8 = s_SelectedNode.spline.nodes[s_SelectedPoint].point - s_SelectedNode.spline.nodes[s_SelectedPoint - 1].point;
                                                     if (vector8.magnitude > 1f)
                                                     {
@@ -1784,7 +1784,7 @@
                                                         s_SelectedPoint++;
                                                         if (s_SelectedPoint >= s_SelectedNode.spline.nodes.Length)
                                                         {
-                                                            s_SelectedNode.spline.AddPoint(m.inverse.MultiplyPoint(vector7), 1.1f);
+                                                            s_SelectedNode.spline.AddPoint(m.inverse.MultiplyPoint(point), 1.1f);
                                                         }
                                                     }
                                                     s_SelectedNode.spline.UpdateTime();
@@ -1843,10 +1843,10 @@
                                                     if (plane.Raycast(mouseRay, out num8))
                                                     {
                                                         position = mouseRay.origin + ((Vector3) (mouseRay.direction * num8));
-                                                        Vector3 vector5 = position - inPoint;
-                                                        vector5 = localToWorldMatrix.inverse.MultiplyVector(vector5);
-                                                        s_SelectedNode.offset = Mathf.Clamp01(vector5.magnitude / treeData.root.rootSpread);
-                                                        baseAngle = Mathf.Atan2(vector5.z, vector5.x) * 57.29578f;
+                                                        Vector3 vector = position - inPoint;
+                                                        vector = localToWorldMatrix.inverse.MultiplyVector(vector);
+                                                        s_SelectedNode.offset = Mathf.Clamp01(vector.magnitude / treeData.root.rootSpread);
+                                                        baseAngle = Mathf.Atan2(vector.z, vector.x) * 57.29578f;
                                                         position = m.MultiplyPoint(Vector3.zero);
                                                     }
                                                     else

@@ -10,7 +10,7 @@
     internal class AudioSourceInspector : Editor
     {
         [CompilerGenerated]
-        private static Func<Object, bool> <>f__am$cache0;
+        private static Func<UnityEngine.Object, bool> <>f__am$cache0;
         [CompilerGenerated]
         private static TargetChoiceHandler.TargetChoiceMenuFunction <>f__mg$cache0;
         private const float EPSILON = 0.0001f;
@@ -43,7 +43,6 @@
         private SerializedProperty m_Mute;
         private SerializedProperty m_OutputAudioMixerGroup;
         private SerializedProperty m_Pan2D;
-        private SerializedProperty m_PanLevel;
         private SerializedProperty m_Pitch;
         private SerializedProperty m_PlayOnAwake;
         private SerializedProperty m_Priority;
@@ -165,7 +164,7 @@
             if (base.targets.Length == 1)
             {
                 AudioSource target = (AudioSource) base.target;
-                AudioListener listener = (AudioListener) Object.FindObjectOfType(typeof(AudioListener));
+                AudioListener listener = (AudioListener) UnityEngine.Object.FindObjectOfType(typeof(AudioListener));
                 if (listener != null)
                 {
                     Vector3 vector = AudioUtil.GetListenerPos() - target.transform.position;
@@ -335,9 +334,11 @@
         }
 
         private List<AudioCurveWrapper> GetShownAudioCurves() => 
-            Enumerable.Where<AudioCurveWrapper>(this.m_AudioCurves, new Func<AudioCurveWrapper, bool>(this, (IntPtr) this.<GetShownAudioCurves>m__1)).ToList<AudioCurveWrapper>();
+            (from f in this.m_AudioCurves
+                where this.m_CurveEditor.GetCurveWrapperFromID(f.id) != null
+                select f).ToList<AudioCurveWrapper>();
 
-        private Vector3 GetSourcePos(Object target)
+        private Vector3 GetSourcePos(UnityEngine.Object target)
         {
             AudioSource source = (AudioSource) target;
             return source?.transform.position;
@@ -520,9 +521,9 @@
             EditorGUILayout.PropertyField(this.m_BypassEffects, new GUILayoutOption[0]);
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<Object, bool>(null, (IntPtr) <OnInspectorGUI>m__0);
+                <>f__am$cache0 = t => (t as AudioSource).outputAudioMixerGroup != null;
             }
-            if (Enumerable.Any<Object>(base.targets, <>f__am$cache0))
+            if (Enumerable.Any<UnityEngine.Object>(base.targets, <>f__am$cache0))
             {
                 using (new EditorGUI.DisabledScope(true))
                 {
@@ -595,7 +596,7 @@
             Handles.color = color;
         }
 
-        private static void SetRolloffToTarget(SerializedProperty property, Object target)
+        private static void SetRolloffToTarget(SerializedProperty property, UnityEngine.Object target)
         {
             property.SetToValueOfTarget(target);
             property.serializedObject.FindProperty("rolloffMode").SetToValueOfTarget(target);

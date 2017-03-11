@@ -23,6 +23,8 @@
         private string[] m_ColumnNames;
         private string m_ColumnSettingsName;
         private ProfilerColumn[] m_ColumnsToShow;
+        private ProfilerDetailedCallsView m_DetailedCallsView;
+        private ProfilerDetailedObjectsView m_DetailedObjectsView;
         private bool m_DetailPane;
         private string m_DetailViewSelectedProperty = string.Empty;
         private int m_DoScroll;
@@ -43,7 +45,7 @@
         private IProfilerWindowController m_Window;
         protected static Styles ms_Styles;
 
-        public ProfilerHierarchyGUI(IProfilerWindowController window, string columnSettingsName, ProfilerColumn[] columnsToShow, string[] columnNames, bool detailPane, ProfilerColumn sort)
+        public ProfilerHierarchyGUI(IProfilerWindowController window, ProfilerHierarchyGUI detailedObjectsView, string columnSettingsName, ProfilerColumn[] columnsToShow, string[] columnNames, bool detailPane, ProfilerColumn sort)
         {
             this.m_Window = window;
             this.m_ColumnNames = columnNames;
@@ -69,6 +71,8 @@
             }
             this.m_SearchResults = new SearchResults();
             this.m_SearchResults.Init(100);
+            this.m_DetailedObjectsView = new ProfilerDetailedObjectsView(detailedObjectsView, this);
+            this.m_DetailedCallsView = new ProfilerDetailedCallsView(this);
             this.m_Window.Repaint();
         }
 
@@ -79,6 +83,18 @@
                 return false;
             }
             return true;
+        }
+
+        public void ClearCaches()
+        {
+            if (this.m_DetailedObjectsView != null)
+            {
+                this.m_DetailedObjectsView.ResetCachedProfilerProperty();
+            }
+            if (this.m_DetailedCallsView != null)
+            {
+                this.m_DetailedCallsView.ResetCachedProfilerProperty();
+            }
         }
 
         private bool ColIsVisible(int index)
@@ -116,7 +132,6 @@
             this.DrawColumnsHeader(searchString);
             this.m_TextScroll = EditorGUILayout.BeginScrollView(this.m_TextScroll, ms_Styles.background, new GUILayoutOption[0]);
             int rowCount = this.DrawProfilingData(property, searchString, controlID);
-            property.Cleanup();
             this.UnselectIfClickedOnEmptyArea(rowCount);
             if (Event.current.type == EventType.Repaint)
             {
@@ -260,7 +275,7 @@
                             if (this.m_DetailViewSelectedProperty != str2)
                             {
                                 this.m_DetailViewSelectedProperty = str2;
-                                Object gameObject = EditorUtility.InstanceIDToObject(property.instanceIDs[0]);
+                                UnityEngine.Object gameObject = EditorUtility.InstanceIDToObject(property.instanceIDs[0]);
                                 if (gameObject is Component)
                                 {
                                     gameObject = ((Component) gameObject).gameObject;
@@ -407,26 +422,30 @@
             }
         }
 
-        public ProfilerProperty GetDetailedProperty(ProfilerProperty property)
+        public ProfilerProperty GetDetailedProperty()
         {
+            ProfilerProperty rootProfilerProperty = this.m_Window.GetRootProfilerProperty(this.sortType);
             bool enterChildren = true;
             string selectedPropertyPath = ProfilerDriver.selectedPropertyPath;
-            while (property.Next(enterChildren))
+            while (rootProfilerProperty.Next(enterChildren))
             {
-                string propertyPath = property.propertyPath;
+                string propertyPath = rootProfilerProperty.propertyPath;
                 if (propertyPath == selectedPropertyPath)
                 {
                     ProfilerProperty property2 = new ProfilerProperty();
-                    property2.InitializeDetailProperty(property);
+                    property2.InitializeDetailProperty(rootProfilerProperty);
                     return property2;
                 }
-                if (property.HasChildren)
+                if (rootProfilerProperty.HasChildren)
                 {
                     enterChildren = this.IsExpanded(propertyPath);
                 }
             }
             return null;
         }
+
+        public ProfilerProperty GetRootProperty() => 
+            this.m_Window.GetRootProfilerProperty(this.sortType);
 
         private GUIStyle GetRowBackgroundStyle(int rowIndex) => 
             (((rowIndex % 2) != 0) ? styles.entryOdd : styles.entryEven);
@@ -553,13 +572,7 @@
                 {
                     num = 0;
                 }
-                ProfilerProperty property = this.m_Window.CreateProperty(this.m_DetailPane);
-                if (this.m_DetailPane)
-                {
-                    ProfilerProperty detailedProperty = this.GetDetailedProperty(property);
-                    property.Cleanup();
-                    property = detailedProperty;
-                }
+                ProfilerProperty property = !this.m_DetailPane ? this.m_Window.GetRootProfilerProperty(this.m_SortType) : this.GetDetailedProperty();
                 if (property != null)
                 {
                     bool enterChildren = true;
@@ -589,7 +602,6 @@
                     {
                         this.m_Window.SetSelectedPropertyPath(property.propertyPath);
                     }
-                    property.Cleanup();
                 }
             }
         }
@@ -624,10 +636,10 @@
         private static void SelectObjectsInHierarchyView(ProfilerProperty property)
         {
             int[] instanceIDs = property.instanceIDs;
-            List<Object> list = new List<Object>();
+            List<UnityEngine.Object> list = new List<UnityEngine.Object>();
             foreach (int num in instanceIDs)
             {
-                Object item = EditorUtility.InstanceIDToObject(num);
+                UnityEngine.Object item = EditorUtility.InstanceIDToObject(num);
                 Component component = item as Component;
                 if (component != null)
                 {
@@ -642,6 +654,12 @@
             {
                 Selection.objects = list.ToArray();
             }
+        }
+
+        public void SelectPath(string path)
+        {
+            this.m_Window.SetSelectedPropertyPath(path);
+            this.FrameSelection();
         }
 
         private void SetColumnVisible(int index, bool enabled)
@@ -749,6 +767,12 @@
                 Event.current.Use();
             }
         }
+
+        public ProfilerDetailedCallsView detailedCallsView =>
+            this.m_DetailedCallsView;
+
+        public ProfilerDetailedObjectsView detailedObjectsView =>
+            this.m_DetailedObjectsView;
 
         public int selectedIndex
         {

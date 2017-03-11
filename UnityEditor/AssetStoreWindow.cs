@@ -36,7 +36,7 @@
 
         public static AssetStoreWindow Init()
         {
-            Type[] desiredDockNextTo = new Type[] { typeof(SceneView) };
+            System.Type[] desiredDockNextTo = new System.Type[] { typeof(SceneView) };
             AssetStoreWindow window = EditorWindow.GetWindow<AssetStoreWindow>(desiredDockNextTo);
             window.SetMinMaxSizes();
             window.Show();
@@ -115,7 +115,7 @@
 
         public void OnDestroy()
         {
-            Object.DestroyImmediate(this.webView);
+            UnityEngine.Object.DestroyImmediate(this.webView);
         }
 
         public void OnDisable()
@@ -154,6 +154,7 @@
             }
             if (Event.current.type == EventType.Repaint)
             {
+                this.webView.SetHostView(base.m_Parent);
                 this.webView.SetSizeAndPosition((int) webViewRect.x, (int) webViewRect.y, (int) webViewRect.width, (int) webViewRect.height);
                 if (this.m_CurrentSkin != EditorGUIUtility.skinIndex)
                 {

@@ -22,6 +22,7 @@
         protected bool m_HasSkinnedMesh;
         private bool m_IsBiped;
         internal static bool s_DirtySelection = false;
+        internal static int s_KeyboardControl = 0;
         internal static int s_SelectedBoneIndex = -1;
         private static Styles s_Styles;
 
@@ -29,10 +30,7 @@
         {
             int[][] numArrayArray1 = new int[9][];
             numArrayArray1[0] = new int[] { -1 };
-            int[] numArray2 = new int[3];
-            numArray2[1] = 7;
-            numArray2[2] = 8;
-            numArrayArray1[1] = numArray2;
+            numArrayArray1[1] = new int[] { 0, 7, 8, 0x36 };
             numArrayArray1[2] = new int[] { 9, 10, 0x15, 0x16, 0x17 };
             numArrayArray1[3] = new int[] { 11, 13, 15, 0x11 };
             numArrayArray1[4] = new int[] { 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 30, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26 };
@@ -64,7 +62,7 @@
                     };
                     if (storey.boneName.Length > 0)
                     {
-                        Transform transform = Enumerable.FirstOrDefault<Transform>(base.modelBones.Keys, new Func<Transform, bool>(storey, (IntPtr) this.<>m__0));
+                        Transform transform = Enumerable.FirstOrDefault<Transform>(base.modelBones.Keys, new Func<Transform, bool>(storey.<>m__0));
                         this.m_Bones[i].bone = transform;
                     }
                     else
@@ -142,7 +140,7 @@
         {
             if (this.m_CurrentTransformEditor != null)
             {
-                Object.DestroyImmediate(this.m_CurrentTransformEditor);
+                UnityEngine.Object.DestroyImmediate(this.m_CurrentTransformEditor);
             }
             base.Disable();
         }
@@ -201,8 +199,8 @@
                                 Rect controlRect = EditorGUILayout.GetControlRect(new GUILayoutOption[0]);
                                 Rect selectRect = controlRect;
                                 selectRect.width -= 15f;
-                                wrapper.HandleClickSelection(selectRect, index);
-                                wrapper.BoneDotGUI(new Rect(controlRect.x + EditorGUI.indent, controlRect.y - 1f, 19f, 19f), index, false, false, base.serializedObject, this);
+                                Rect rect = new Rect(controlRect.x + EditorGUI.indent, controlRect.y - 1f, 19f, 19f);
+                                wrapper.BoneDotGUI(rect, selectRect, index, true, false, true, base.serializedObject, this);
                                 controlRect.xMin += 19f;
                                 Transform key = EditorGUI.ObjectField(controlRect, new GUIContent(humanBoneName), wrapper.bone, typeof(Transform), true) as Transform;
                                 if (key != wrapper.bone)
@@ -301,7 +299,8 @@
             {
                 return BoneState.None;
             }
-            AvatarSetupTool.BoneWrapper wrapper = this.m_Bones[AvatarSetupTool.GetFirstHumanBoneAncestor(this.m_Bones, i)];
+            int firstHumanBoneAncestor = AvatarSetupTool.GetFirstHumanBoneAncestor(this.m_Bones, i);
+            AvatarSetupTool.BoneWrapper wrapper = this.m_Bones[(firstHumanBoneAncestor <= 0) ? 0 : firstHumanBoneAncestor];
             if ((i == 0) && (storey.bone.bone.parent == null))
             {
                 error = storey.bone.messageName + " cannot be the root transform";
@@ -312,6 +311,15 @@
                 error = storey.bone.messageName + " is not a child of " + wrapper.messageName + ".";
                 return BoneState.InvalidHierarchy;
             }
+            if (i == 0x36)
+            {
+                AvatarSetupTool.BoneWrapper wrapper2 = this.m_Bones[8];
+                if (wrapper2.bone == null)
+                {
+                    error = "Chest must be assigned before assigning UpperChest.";
+                    return BoneState.InvalidHierarchy;
+                }
+            }
             if (((i != 0x17) && (wrapper.bone != null)) && (wrapper.bone != storey.bone.bone))
             {
                 Vector3 vector = storey.bone.bone.position - wrapper.bone.position;
@@ -321,7 +329,7 @@
                     return BoneState.BoneLenghtIsZero;
                 }
             }
-            if (Enumerable.Where<AvatarSetupTool.BoneWrapper>(this.m_Bones, new Func<AvatarSetupTool.BoneWrapper, bool>(storey, (IntPtr) this.<>m__0)).Count<AvatarSetupTool.BoneWrapper>() > 1)
+            if (Enumerable.Where<AvatarSetupTool.BoneWrapper>(this.m_Bones, new Func<AvatarSetupTool.BoneWrapper, bool>(storey.<>m__0)).Count<AvatarSetupTool.BoneWrapper>() > 1)
             {
                 error = storey.bone.messageName + " is also assigned to ";
                 bool flag = true;
@@ -373,10 +381,6 @@
         {
             if (base.gameObject != null)
             {
-                if (AvatarSetupTool.sHumanParent.Length != HumanTrait.BoneCount)
-                {
-                    throw new Exception("Avatar's Human parent list is out of sync");
-                }
                 this.m_IsBiped = AvatarBipedMapper.IsBiped(base.gameObject.transform, null);
                 if (this.m_Bones == null)
                 {
@@ -385,7 +389,7 @@
                 this.ValidateMapping();
                 if (this.m_CurrentTransformEditor != null)
                 {
-                    Object.DestroyImmediate(this.m_CurrentTransformEditor);
+                    UnityEngine.Object.DestroyImmediate(this.m_CurrentTransformEditor);
                     this.m_CurrentTransformEditor = null;
                 }
                 this.m_CurrentTransformEditorFoldout = true;
@@ -504,7 +508,7 @@
         {
             if (this.m_CurrentTransformEditor != null)
             {
-                Object.DestroyImmediate(this.m_CurrentTransformEditor);
+                UnityEngine.Object.DestroyImmediate(this.m_CurrentTransformEditor);
             }
             base.OnDestroy();
         }
@@ -520,16 +524,10 @@
                 }
             }
             this.UpdateSelectedBone();
-            if (((Event.current.type == EventType.KeyDown) && ((Event.current.keyCode == KeyCode.Backspace) || (Event.current.keyCode == KeyCode.Delete))) && ((s_SelectedBoneIndex != -1) && (s_SelectedBoneIndex < this.m_Bones.Length)))
+            if (s_KeyboardControl != 0)
             {
-                Undo.RegisterCompleteObjectUndo(this, "Avatar mapping modified");
-                AvatarSetupTool.BoneWrapper wrapper = this.m_Bones[s_SelectedBoneIndex];
-                wrapper.bone = null;
-                wrapper.state = BoneState.None;
-                wrapper.Serialize(base.serializedObject);
-                Selection.activeTransform = null;
-                GUI.changed = true;
-                Event.current.Use();
+                GUIUtility.keyboardControl = s_KeyboardControl;
+                s_KeyboardControl = 0;
             }
             GUILayout.BeginVertical(new GUILayoutOption[0]);
             EditorGUI.BeginChangeCheck();
@@ -558,7 +556,7 @@
             {
                 if ((this.m_CurrentTransformEditor != null) && (this.m_CurrentTransformEditor.target != Selection.activeTransform))
                 {
-                    Object.DestroyImmediate(this.m_CurrentTransformEditor);
+                    UnityEngine.Object.DestroyImmediate(this.m_CurrentTransformEditor);
                 }
                 if (this.m_CurrentTransformEditor == null)
                 {
@@ -573,7 +571,7 @@
             }
             else if (this.m_CurrentTransformEditor != null)
             {
-                Object.DestroyImmediate(this.m_CurrentTransformEditor);
+                UnityEngine.Object.DestroyImmediate(this.m_CurrentTransformEditor);
                 this.m_CurrentTransformEditor = null;
             }
         }

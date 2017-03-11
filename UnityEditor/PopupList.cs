@@ -94,7 +94,7 @@
                 switch (keyCode)
                 {
                     case KeyCode.Backspace:
-                        goto Label_013E;
+                        goto Label_012F;
 
                     case KeyCode.Tab:
                     case KeyCode.Return:
@@ -106,29 +106,29 @@
                             case KeyCode.UpArrow:
                                 this.ChangeSelectedCompletion(-1);
                                 flag3 = true;
-                                goto Label_0183;
+                                goto Label_0174;
 
                             case KeyCode.DownArrow:
                                 this.ChangeSelectedCompletion(1);
                                 flag3 = true;
-                                goto Label_0183;
+                                goto Label_0174;
 
                             case KeyCode.None:
                                 if ((current.character == ' ') || (current.character == ','))
                                 {
                                     flag3 = true;
                                 }
-                                goto Label_0183;
+                                goto Label_0174;
 
                             case KeyCode.Space:
                             case KeyCode.Comma:
                                 break;
 
                             case KeyCode.Delete:
-                                goto Label_013E;
+                                goto Label_012F;
 
                             default:
-                                goto Label_0183;
+                                goto Label_0174;
                         }
                         break;
                 }
@@ -149,10 +149,10 @@
                 }
                 flag3 = true;
             }
-            goto Label_0183;
-        Label_013E:
+            goto Label_0174;
+        Label_012F:
             enableAutoCompletion = false;
-        Label_0183:
+        Label_0174:
             flag5 = false;
             Rect position = new Rect(windowRect.x + 5f, windowRect.y + ((this.m_Gravity != Gravity.Top) ? ((windowRect.height - 16f) - 5f) : 5f), (windowRect.width - 10f) - 14f, 16f);
             GUI.SetNextControlName(s_TextFieldName);
@@ -325,12 +325,12 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<ListElement, string>(null, (IntPtr) <UpdateCompletion>m__0);
+                    <>f__am$cache0 = element => element.text;
                 }
                 IEnumerable<string> source = Enumerable.Select<ListElement, string>(this.m_Data.GetFilteredList(this.m_EnteredText), <>f__am$cache0);
                 if ((this.m_EnteredTextCompletion != "") && this.m_EnteredTextCompletion.StartsWith(this.m_EnteredText, StringComparison.OrdinalIgnoreCase))
                 {
-                    this.m_SelectedCompletionIndex = Enumerable.TakeWhile<string>(source, new Func<string, bool>(this, (IntPtr) this.<UpdateCompletion>m__1)).Count<string>();
+                    this.m_SelectedCompletionIndex = Enumerable.TakeWhile<string>(source, (Func<string, bool>) (element => (element != this.m_EnteredTextCompletion))).Count<string>();
                 }
                 else
                 {
@@ -377,7 +377,7 @@
                 {
                     return this.m_ListElements;
                 }
-                return Enumerable.Where<PopupList.ListElement>(this.m_ListElements, new Func<PopupList.ListElement, bool>(storey, (IntPtr) this.<>m__0));
+                return Enumerable.Where<PopupList.ListElement>(this.m_ListElements, new Func<PopupList.ListElement, bool>(storey.<>m__0));
             }
 
             public void DeselectAll()
@@ -406,7 +406,7 @@
                 {
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<PopupList.ListElement, float>(null, (IntPtr) <GetFilteredList>m__0);
+                        <>f__am$cache0 = element => element.filterScore;
                     }
                     enumerable = Enumerable.OrderByDescending<PopupList.ListElement, float>(enumerable, <>f__am$cache0).Take<PopupList.ListElement>(this.m_MaxCount);
                 }
@@ -414,7 +414,7 @@
                 {
                     if (<>f__am$cache1 == null)
                     {
-                        <>f__am$cache1 = new Func<PopupList.ListElement, string>(null, (IntPtr) <GetFilteredList>m__1);
+                        <>f__am$cache1 = element => element.text.ToLower();
                     }
                     return Enumerable.OrderBy<PopupList.ListElement, string>(enumerable, <>f__am$cache1);
                 }

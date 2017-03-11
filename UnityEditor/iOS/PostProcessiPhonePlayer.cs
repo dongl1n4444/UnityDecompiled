@@ -5,10 +5,14 @@
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Net;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Text.RegularExpressions;
     using UnityEditor;
+    using UnityEditor.BuildReporting;
+    using UnityEditor.Connect;
+    using UnityEditor.CrashReporting;
     using UnityEditor.iOS.Il2Cpp;
     using UnityEditor.iOS.Xcode;
     using UnityEditor.Modules;
@@ -187,7 +191,7 @@
         private static void AddLaunchScreenFilesiPadCustom(ProjectPaths paths, IncludedFileList includedFiles)
         {
             string stringValue = PlayerSettings.FindProperty("iOSLaunchScreeniPadCustomXibPath").stringValue;
-            if (!File.Exists(stringValue))
+            if (!System.IO.File.Exists(stringValue))
             {
                 UnityEngine.Debug.LogWarning("Custom xib file for iPad does not exist");
             }
@@ -226,14 +230,14 @@
             if (type == iOSLaunchScreenType.ImageAndBackgroundRelative)
             {
                 data.iPadRelativeVerticalSize = PlayerSettings.FindProperty("iOSLaunchScreeniPadFillPct").floatValue / 100f;
-                string contents = LaunchScreenUpdater.UpdateStringForBackgroundRelative(File.ReadAllText(paths.LaunchScreeniPadXibRelativeSizeSource()), data, UnityEditor.iOS.DeviceType.iPad);
-                File.WriteAllText(paths.LaunchScreeniPadXibStaging(), contents);
+                string contents = LaunchScreenUpdater.UpdateStringForBackgroundRelative(System.IO.File.ReadAllText(paths.LaunchScreeniPadXibRelativeSizeSource()), data, UnityEditor.iOS.DeviceType.iPad);
+                System.IO.File.WriteAllText(paths.LaunchScreeniPadXibStaging(), contents);
             }
             else
             {
                 data.iPadVerticalSize = PlayerSettings.FindProperty("iOSLaunchScreeniPadSize").floatValue;
-                string str2 = LaunchScreenUpdater.UpdateStringForBackgroundConstant(File.ReadAllText(paths.LaunchScreeniPadXibConstantSizeSource()), data, UnityEditor.iOS.DeviceType.iPad);
-                File.WriteAllText(paths.LaunchScreeniPadXibStaging(), str2);
+                string str2 = LaunchScreenUpdater.UpdateStringForBackgroundConstant(System.IO.File.ReadAllText(paths.LaunchScreeniPadXibConstantSizeSource()), data, UnityEditor.iOS.DeviceType.iPad);
+                System.IO.File.WriteAllText(paths.LaunchScreeniPadXibStaging(), str2);
             }
             includedFiles.Add(null, "LaunchScreen-iPad.xib");
             includedFiles.Add(null, "LaunchScreen-iPad.png");
@@ -242,7 +246,7 @@
         private static void AddLaunchScreenFilesiPhoneCustom(ProjectPaths paths, IncludedFileList includedFiles)
         {
             string stringValue = PlayerSettings.FindProperty("iOSLaunchScreenCustomXibPath").stringValue;
-            if (!File.Exists(stringValue))
+            if (!System.IO.File.Exists(stringValue))
             {
                 UnityEngine.Debug.LogWarning("Custom xib file for iPhone does not exist");
             }
@@ -266,9 +270,9 @@
 
         private static void AddLaunchScreenFilesiPhoneWithBackground(ProjectPaths paths, BuildSettings bs, IncludedFileList includedFiles, iOSLaunchScreenType type)
         {
-            string[] srcFiles = new string[] { paths.LaunchScreeniPhonePortraitOutput(), paths.SplashScreenSharedOutput(), paths.LaunchScreenFallbackSource() };
+            string[] srcFiles = new string[] { paths.LaunchScreeniPhonePortraitOutput(), paths.SplashScreenSharedOutput(), paths.LaunchScreenTransparentSource() };
             bool flag = Utils.InstallFileWithFallbacks(srcFiles, paths.LaunchScreeniPhonePortraitStaging()) == 0;
-            string[] strArray2 = new string[] { paths.LaunchScreeniPhoneLandscapeOutput(), paths.SplashScreenSharedOutput(), paths.LaunchScreenFallbackSource() };
+            string[] strArray2 = new string[] { paths.LaunchScreeniPhoneLandscapeOutput(), paths.SplashScreenSharedOutput(), paths.LaunchScreenTransparentSource() };
             bool flag2 = Utils.InstallFileWithFallbacks(strArray2, paths.LaunchScreeniPhoneLandscapeStaging()) == 0;
             AvailableOrientations availableOrientations = GetAvailableOrientations();
             if (bs.IsIPhoneEnabled())
@@ -300,23 +304,23 @@
             {
                 float num = PlayerSettings.FindProperty("iOSLaunchScreenFillPct").floatValue / 100f;
                 data.iPhonePortraitRelativeHorizontalSize = data.iPhoneLandscapeRelativeVerticalSize = num;
-                string contents = LaunchScreenUpdater.UpdateStringForBackgroundRelative(File.ReadAllText(paths.LaunchScreeniPhoneXibRelativeSizeSource()), data, UnityEditor.iOS.DeviceType.iPhone);
+                string contents = LaunchScreenUpdater.UpdateStringForBackgroundRelative(System.IO.File.ReadAllText(paths.LaunchScreeniPhoneXibRelativeSizeSource()), data, UnityEditor.iOS.DeviceType.iPhone);
                 if (!availableOrientations.portrait && !availableOrientations.portraitUpsideDown)
                 {
                     contents = LaunchScreenUpdater.RemoveiPhonePortraitViewInRelative(contents);
                 }
-                File.WriteAllText(paths.LaunchScreeniPhoneXibStaging(), contents);
+                System.IO.File.WriteAllText(paths.LaunchScreeniPhoneXibStaging(), contents);
             }
             else
             {
                 float floatValue = PlayerSettings.FindProperty("iOSLaunchScreenSize").floatValue;
                 data.iPhonePortraitHorizontalSize = data.iPhoneLandscapeVerticalSize = floatValue;
-                string str2 = LaunchScreenUpdater.UpdateStringForBackgroundConstant(File.ReadAllText(paths.LaunchScreeniPhoneXibConstantSizeSource()), data, UnityEditor.iOS.DeviceType.iPhone);
+                string str2 = LaunchScreenUpdater.UpdateStringForBackgroundConstant(System.IO.File.ReadAllText(paths.LaunchScreeniPhoneXibConstantSizeSource()), data, UnityEditor.iOS.DeviceType.iPhone);
                 if (!availableOrientations.portrait && !availableOrientations.portraitUpsideDown)
                 {
                     str2 = LaunchScreenUpdater.RemoveiPhonePortraitViewInConstant(str2);
                 }
-                File.WriteAllText(paths.LaunchScreeniPhoneXibStaging(), str2);
+                System.IO.File.WriteAllText(paths.LaunchScreeniPhoneXibStaging(), str2);
             }
             includedFiles.Add(null, "LaunchScreen-iPhone.xib");
             includedFiles.Add(null, "LaunchScreen-iPhonePortrait.png");
@@ -338,8 +342,8 @@
                 if (Directory.Exists(importer.assetPath))
                 {
                     Action<string> fileCallback = new Action<string>(storey2.<>m__0);
-                    Func<string, bool> directoryCallback = new Func<string, bool>(storey2, (IntPtr) this.<>m__1);
-                    if (directoryCallback.Invoke(importer.assetPath))
+                    Func<string, bool> directoryCallback = new Func<string, bool>(storey2.<>m__1);
+                    if (directoryCallback(importer.assetPath))
                     {
                         FileUtil.WalkFilesystemRecursively(importer.assetPath, fileCallback, directoryCallback);
                     }
@@ -406,10 +410,10 @@
         private static void AddXcodeDevProjectAdditionalLibs(ProjectPaths paths, IncludedFileList includedFiles)
         {
             string str = "Frameworks/";
-            foreach (string str2 in File.ReadAllLines(paths.DevProjectLibList()))
+            foreach (string str2 in System.IO.File.ReadAllLines(paths.DevProjectLibList()))
             {
                 string relativePath = Utils.GetRelativePath(paths.UnityTree(), str2);
-                if (!File.Exists(str2))
+                if (!System.IO.File.Exists(str2))
                 {
                     UnityEngine.Debug.LogWarning("XCode development project: library does not exist! " + str2);
                 }
@@ -429,7 +433,7 @@
         private static void AddXcodeDevProjectBuildFiles(ProjectPaths paths, IncludedFileList includedFiles)
         {
             string str = "Classes/";
-            foreach (string str2 in File.ReadAllLines(paths.DevProjectFileList()))
+            foreach (string str2 in System.IO.File.ReadAllLines(paths.DevProjectFileList()))
             {
                 string str3;
                 string str4;
@@ -468,7 +472,7 @@
                     relativePath = str3;
                     str6 = Path.Combine(paths.UnityTree(), str3);
                 }
-                if (!File.Exists(str6))
+                if (!System.IO.File.Exists(str6))
                 {
                     UnityEngine.Debug.LogWarning("XCode development project: file does not exist! " + str6);
                 }
@@ -533,18 +537,22 @@
             }
             string[] targetGuids = new string[] { targetGuid, str3 };
             string[] strArray2 = new string[] { targetGuid, str3, str4 };
-            project.RemoveFilesByProjectPathRecursive("Classes/Native");
-            project.RemoveFile(project.FindFileGuidByProjectPath("LaunchScreen-iPad.xib"));
-            project.RemoveFile(project.FindFileGuidByProjectPath("LaunchScreen-iPhone.xib"));
-            project.RemoveFile(project.FindFileGuidByProjectPath("LaunchScreen-iPhonePortrait.png"));
-            project.RemoveFile(project.FindFileGuidByProjectPath("LaunchScreen-iPhoneLandscape.png"));
-            project.RemoveFile(project.FindFileGuidByProjectPath("LaunchScreen-iPad.png"));
-            List<string> groupChildrenFiles = project.GetGroupChildrenFiles("Libraries");
-            foreach (string str6 in groupChildrenFiles)
+            HashSet<string> groupChildrenFilesRefs = project.GetGroupChildrenFilesRefs("Classes/Native");
+            string[] strArray3 = new string[] { "LaunchScreen-iPad.xib", "LaunchScreen-iPhone.xib", "LaunchScreen-iPhonePortrait.png", "LaunchScreen-iPhoneLandscape.png", "LaunchScreen-iPad.png" };
+            HashSet<string> first = new HashSet<string>(groupChildrenFilesRefs.Union<string>(project.GetFileRefsByProjectPaths(strArray3)));
+            HashSet<string> second = new HashSet<string>(includedFiles.GetProjectFilesInPath("Classes/Native").Union<string>(includedFiles.GetProjectFilesByFullPath(new HashSet<string>(strArray3))));
+            HashSet<string> set4 = new HashSet<string>(first.Except<string>(second));
+            HashSet<string> set5 = new HashSet<string>(first.Intersect<string>(second));
+            foreach (string str6 in set4)
             {
-                if (str6.EndsWith(".dll.s"))
+                project.RemoveFile(project.FindFileGuidByProjectPath(str6));
+            }
+            List<string> groupChildrenFiles = project.GetGroupChildrenFiles("Libraries");
+            foreach (string str7 in groupChildrenFiles)
+            {
+                if (str7.EndsWith(".dll.s"))
                 {
-                    project.RemoveFile(project.FindFileGuidByProjectPath("Libraries/" + str6));
+                    project.RemoveFile(project.FindFileGuidByProjectPath("Libraries/" + str7));
                 }
             }
             List<string> list = new List<string>();
@@ -564,9 +572,9 @@
                     }
                     continue;
                 }
-                if (file.shouldAddToProject)
+                string destinationPath = file.destinationPath;
+                if (file.shouldAddToProject && (!second.Contains(destinationPath) || !set5.Contains(destinationPath)))
                 {
-                    string destinationPath = file.destinationPath;
                     if ((bs.symlinkLibraries && (file.symlinkType == SymlinkType.XcodeReference)) && (file.sourcePath != null))
                     {
                         if (ShouldUseRelativeSymlinkForFile(file.sourcePath, paths.installPath))
@@ -596,9 +604,9 @@
                     project.AddFileToBuildWithFlags(targetGuid, fileGuid, file.compileFlags);
                 }
             }
-            foreach (string str10 in frameworks)
+            foreach (string str11 in frameworks)
             {
-                project.AddFrameworkToProject(targetGuid, str10 + ".framework", false);
+                project.AddFrameworkToProject(targetGuid, str11 + ".framework", false);
             }
             if (!frameworks.Contains("GameKit"))
             {
@@ -611,11 +619,11 @@
                     project.RemoveFrameworkFromProject(targetGuid, "GameKit.framework");
                 }
             }
-            if (usedFeatures.replayKit && !bs.IsAppleTVEnabled())
+            if (usedFeatures.replayKit)
             {
                 project.AddFrameworkToProject(targetGuid, "ReplayKit.framework", true);
             }
-            if (!usedFeatures.replayKit || bs.IsAppleTVEnabled())
+            else
             {
                 project.RemoveFrameworkFromProject(targetGuid, "ReplayKit.framework");
             }
@@ -636,14 +644,14 @@
                 project.RemoveFrameworkFromProject(targetGuid, "Metal.framework");
             }
             list.Remove("$(SRCROOT)/Libraries");
-            foreach (string str11 in list)
+            foreach (string str12 in list)
             {
-                project.AddBuildProperty(targetGuids, "LIBRARY_SEARCH_PATHS", str11);
+                project.AddBuildProperty(targetGuids, "LIBRARY_SEARCH_PATHS", str12);
             }
             project.SetBuildProperty(targetGuids, "FRAMEWORK_SEARCH_PATHS", "$(inherited)");
-            foreach (string str12 in list3)
+            foreach (string str13 in list3)
             {
-                project.AddBuildProperty(targetGuids, "FRAMEWORK_SEARCH_PATHS", str12);
+                project.AddBuildProperty(targetGuids, "FRAMEWORK_SEARCH_PATHS", str13);
             }
             project.SetBuildProperty(targetGuids, "ARCHS", GetTargetArchitecture(bs));
             if (bs.IsAppleTVEnabled())
@@ -713,9 +721,9 @@
                 project.SetBuildProperty(targetGuid, "ENABLE_ON_DEMAND_RESOURCES", "YES");
             }
             project.RemoveBuildProperty(targetGuid, "ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS");
-            foreach (string str13 in initialInstallTags)
+            foreach (string str14 in initialInstallTags)
             {
-                project.AddBuildProperty(targetGuid, "ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS", str13);
+                project.AddBuildProperty(targetGuid, "ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS", str14);
             }
             if (bs.installInBuildFolder)
             {
@@ -728,13 +736,13 @@
                     "External/PhysX3/builds/Lib/ios",
                     "PlatformDependent/iPhonePlayer/External/Enlighten/builds/Lib/IOS_LIBSTDCXX-Release"
                 };
-                foreach (string str14 in list4)
+                foreach (string str15 in list4)
                 {
-                    project.AddBuildProperty(targetGuids, "LIBRARY_SEARCH_PATHS", Path.Combine(paths.UnityTree(), str14));
+                    project.AddBuildProperty(targetGuids, "LIBRARY_SEARCH_PATHS", Path.Combine(paths.UnityTree(), str15));
                 }
-                string str15 = Path.Combine(paths.DevProjectInstallPath(), "UnityDevProject.xcodeproj");
-                project.AddExternalProjectDependency(str15, "UnityDevProject.xcodeproj", PBXSourceTree.Absolute);
-                project.AddExternalLibraryDependency(targetGuid, "libUnityDevProject.a", "AA88A7D019101316001E7AB7", str15, "UnityDevProject");
+                string str16 = Path.Combine(paths.DevProjectInstallPath(), "UnityDevProject.xcodeproj");
+                project.AddExternalProjectDependency(str16, "UnityDevProject.xcodeproj", PBXSourceTree.Absolute);
+                project.AddExternalLibraryDependency(targetGuid, "libUnityDevProject.a", "AA88A7D019101316001E7AB7", str16, "UnityDevProject");
             }
             List<string> list6 = new List<string>();
             List<string> list7 = new List<string>();
@@ -753,20 +761,13 @@
             if (bs.UseIl2Cpp())
             {
                 list6.Add("-DINIT_SCRIPTING_BACKEND=1");
+                list6.Add("-fno-strict-overflow");
                 list7.Add("-mno-thumb");
             }
             else
             {
                 list6.Add("-mno-thumb");
                 list7.Add("-DINIT_SCRIPTING_BACKEND=1");
-            }
-            if (usedFeatures.replayKit)
-            {
-                list6.Add("-DUNITY_REPLAY_KIT_USED=1");
-            }
-            else
-            {
-                list7.Add("-DUNITY_REPLAY_KIT_USED=1");
             }
             project.UpdateBuildProperty(targetGuid, "OTHER_CFLAGS", list6.ToArray(), list7.ToArray());
             project.UpdateBuildProperty(targetGuid, "OTHER_LDFLAGS", list8.ToArray(), list9.ToArray());
@@ -781,6 +782,14 @@
             {
                 project.SetBuildProperty(targetGuid, "GCC_ENABLE_CPP_EXCEPTIONS", "NO");
                 project.UpdateBuildProperty(targetGuid, "HEADER_SEARCH_PATHS", null, addValues);
+            }
+            if (bs.nativeCrashReportingEnabled && (bs.symbolsServiceBaseUri != null))
+            {
+                project.AppendShellScriptBuildPhase(targetGuid, "Process symbols", "/bin/sh", "\"$PROJECT_DIR/process_symbols.sh\"");
+                project.SetBuildProperty(strArray2, "UNITY_CLOUD_PROJECT_ID", bs.cloudProjectId);
+                project.SetBuildProperty(strArray2, "USYM_UPLOAD_URL_SOURCE", new Uri(bs.symbolsServiceBaseUri, "url").ToString());
+                project.SetBuildProperty(strArray2, "DEBUG_INFORMATION_FORMAT", "dwarf-with-dsym");
+                project.SetBuildProperty(strArray2, "USYM_UPLOAD_AUTH_TOKEN", GetUsymUploadAuthToken(bs));
             }
             project.WriteToFile(path);
         }
@@ -814,7 +823,7 @@
             ProjectPaths paths = new ProjectPaths {
                 playerPackage = UnityEditor.BuildPipeline.GetPlaybackEngineDirectory(bs.target, BuildOptions.CompressTextures)
             };
-            return File.Exists(GetPlayerLibLocation(paths, bs));
+            return System.IO.File.Exists(GetPlayerLibLocation(paths, bs));
         }
 
         private static void CheckIOSBundleIdentifier(string identifier, BuildSettings bs)
@@ -843,13 +852,13 @@
             {
                 if (str.EndsWith(".mdb"))
                 {
-                    if (!File.Exists(str.Substring(0, str.Length - 4)))
+                    if (!System.IO.File.Exists(str.Substring(0, str.Length - 4)))
                     {
-                        File.Delete(str);
+                        System.IO.File.Delete(str);
                     }
                     else if (!Path.GetFileName(str).StartsWith("Assembly-CSharp") && !Path.GetFileName(str).StartsWith("Assembly-UnityScript"))
                     {
-                        File.Delete(str);
+                        System.IO.File.Delete(str);
                     }
                 }
             }
@@ -858,7 +867,7 @@
         private static string CreateTagNameFromFileName(string filename) => 
             filename;
 
-        private static IncludedFileList CrossCompileManagedDlls(BuildSettings bs, ProjectPaths paths, AssemblyReferenceChecker checker, RuntimeClassRegistry usedClassRegistry)
+        private static IncludedFileList CrossCompileManagedDlls(BuildSettings bs, ProjectPaths paths, AssemblyReferenceChecker checker, RuntimeClassRegistry usedClassRegistry, BuildReport buildReport)
         {
             <CrossCompileManagedDlls>c__AnonStorey0 storey = new <CrossCompileManagedDlls>c__AnonStorey0 {
                 paths = paths,
@@ -875,16 +884,17 @@
                 }
                 bool stripping = (PlayerSettings.strippingLevel > StrippingLevel.Disabled) && (bs.sdkType == SdkType.Device);
                 string file = Path.Combine(storey.paths.LibrariesStaging(), "RegisterMonoModules.cpp");
-                MonoAOTRegistration.WriteCPlusPlusFileForStaticAOTModuleRegistration(bs.target, file, crossCompileOptions, true, PlayerSettings.iOS.targetDevice.ToString(), stripping, storey.usedClassRegistry, checker, storey.paths.stagingAreaDataManaged);
+                iOSIl2CppPlatformProvider platformProvider = new iOSIl2CppPlatformProvider(BuildTarget.iOS, bs.isDevelopmentPlayer, storey.paths.stagingAreaData, buildReport);
+                MonoAOTRegistration.WriteCPlusPlusFileForStaticAOTModuleRegistration(bs.target, file, crossCompileOptions, true, PlayerSettings.iOS.targetDevice.ToString(), stripping, storey.usedClassRegistry, checker, storey.paths.stagingAreaDataManaged, platformProvider);
                 return includedFiles;
             }
             <CrossCompileManagedDlls>c__AnonStorey1 storey2 = new <CrossCompileManagedDlls>c__AnonStorey1 {
                 <>f__ref$0 = storey
             };
             FileUtil.CopyFileOrDirectory(storey.paths.playerPackage + "/il2cpp/ios_il2cpp_link.xml", storey.paths.stagingAreaData + "/platform_native_link.xml");
-            storey2.platformProvider = new iOSIl2CppPlatformProvider(BuildTarget.iOS, bs.isDevelopmentPlayer, storey.paths.stagingAreaData);
+            storey2.platformProvider = new iOSIl2CppPlatformProvider(BuildTarget.iOS, bs.isDevelopmentPlayer, storey.paths.stagingAreaData, bs.buildReport);
             Action<string> modifyOutputBeforeCompile = new Action<string>(storey2.<>m__0);
-            storey.paths.SetInternalIl2cppOutputPath(IL2CPPUtils.RunIl2Cpp("Temp/il2cppOutput", storey.paths.stagingAreaData, storey2.platformProvider, modifyOutputBeforeCompile, storey.usedClassRegistry, bs.isDevelopmentPlayer).GetCppOutputDirectoryInStagingArea());
+            storey.paths.SetInternalIl2cppOutputPath(IL2CPPUtils.RunIl2Cpp("Temp/il2cppOutput", storey.paths.stagingAreaData, storey2.platformProvider, modifyOutputBeforeCompile, storey.usedClassRegistry, false).GetCppOutputDirectoryInStagingArea());
             AddIl2CppOutputFiles(includedFiles, storey.paths.InternalIl2cppOutputPath());
             string dir = storey.paths.stagingAreaDataManaged + "/Resources";
             FileUtil.CreateOrCleanDirectory(dir);
@@ -950,6 +960,10 @@
         {
             AvailableOrientations orientations = new AvailableOrientations();
             UIOrientation defaultInterfaceOrientation = PlayerSettings.defaultInterfaceOrientation;
+            if (PlayerSettings.virtualRealitySupported)
+            {
+                defaultInterfaceOrientation = UIOrientation.LandscapeLeft;
+            }
             bool flag = defaultInterfaceOrientation == UIOrientation.AutoRotation;
             if ((defaultInterfaceOrientation == UIOrientation.Portrait) || (flag && PlayerSettings.allowedAutorotateToPortrait))
             {
@@ -986,6 +1000,15 @@
             return BuildTargetGroup.tvOS;
         }
 
+        private static string GetCrashSubmissionUrl(Uri symbolsServiceBaseUri)
+        {
+            if (symbolsServiceBaseUri != null)
+            {
+                return new Uri(symbolsServiceBaseUri, "symbolicate").ToString();
+            }
+            return string.Empty;
+        }
+
         private static CrossCompileOptions GetCrossCompileOptions(BuildSettings bs)
         {
             CrossCompileOptions @static = CrossCompileOptions.Static;
@@ -1019,7 +1042,7 @@
         {
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Func<string, string, bool>(null, (IntPtr) FileMirroring.CanSkipCopy);
+                <>f__mg$cache0 = new Func<string, string, bool>(FileMirroring.CanSkipCopy);
             }
             return <>f__mg$cache0;
         }
@@ -1160,6 +1183,43 @@
             return (num / 1048576.0);
         }
 
+        private static string GetUsymUploadAuthToken(BuildSettings bs)
+        {
+            string str = string.Empty;
+            try
+            {
+                string usymUploadAuthToken = bs.usymUploadAuthToken;
+                if (!string.IsNullOrEmpty(usymUploadAuthToken))
+                {
+                    return usymUploadAuthToken;
+                }
+                string unityConnectAccessToken = bs.unityConnectAccessToken;
+                if (string.IsNullOrEmpty(unityConnectAccessToken))
+                {
+                    return string.Empty;
+                }
+                Uri requestUri = new Uri(bs.symbolsServiceBaseUri, $"token/{bs.cloudProjectId}");
+                WebRequest request = WebRequest.Create(requestUri);
+                request.Headers.Add("Authorization", $"Bearer {unityConnectAccessToken}");
+                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+                string jsondata = string.Empty;
+                using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+                {
+                    jsondata = reader.ReadToEnd();
+                }
+                JSONValue value2 = JSONParser.SimpleParse(jsondata);
+                if (value2.ContainsKey("AuthToken"))
+                {
+                    str = value2["AuthToken"].AsString();
+                }
+            }
+            catch (Exception exception)
+            {
+                UnityEngine.Debug.LogException(exception);
+            }
+            return str;
+        }
+
         private static void InstallIcons(ProjectPaths paths, BuildSettings bs)
         {
             if (bs.target == BuildTarget.tvOS)
@@ -1188,7 +1248,7 @@
                     }
                 }
             }
-            File.WriteAllText(Path.Combine(paths.IconPathInstall(), "Contents.json"), IconJsonUpdater.CreateJsonString(icons, PlayerSettings.iOS.prerenderedIcon));
+            System.IO.File.WriteAllText(Path.Combine(paths.IconPathInstall(), "Contents.json"), IconJsonUpdater.CreateJsonString(icons, PlayerSettings.iOS.prerenderedIcon));
         }
 
         private static void InstallIconsTVOS(ProjectPaths paths, string iPhoneCompanyName)
@@ -1229,7 +1289,7 @@
                     else if ((file.symlinkType == SymlinkType.None) || !bs.symlinkLibraries)
                     {
                         Directory.CreateDirectory(Path.GetDirectoryName(destinationPath));
-                        if (!File.Exists(sourcePath))
+                        if (!System.IO.File.Exists(sourcePath))
                         {
                             throw new Exception($"The required file: '{sourcePath}' does not exist");
                         }
@@ -1238,7 +1298,7 @@
                     else if (bs.symlinkLibraries && (file.symlinkType == SymlinkType.Symlink))
                     {
                         Directory.CreateDirectory(Path.GetDirectoryName(destinationPath));
-                        File.Delete(destinationPath);
+                        System.IO.File.Delete(destinationPath);
                         if (ShouldUseRelativeSymlinkForFile(sourcePath, destinationPath))
                         {
                             Utils.SymlinkFileRelative(sourcePath, destinationPath);
@@ -1273,7 +1333,7 @@
                     }
                 }
             }
-            File.WriteAllText(Path.Combine(paths.SplashPathInstall(), "Contents.json"), SplashJsonUpdater.CreateJsonString(splashes));
+            System.IO.File.WriteAllText(Path.Combine(paths.SplashPathInstall(), "Contents.json"), SplashJsonUpdater.CreateJsonString(splashes));
         }
 
         private static int IntClamp(int count, int min, int max)
@@ -1380,7 +1440,7 @@
         private static void ModifyIl2CppOutputDirBeforeCompile(ProjectPaths paths, string outputDir, RuntimeClassRegistry classRegistry, string engineDll, IIl2CppPlatformProvider platformProvider)
         {
             string directoryName = Path.GetDirectoryName(Path.GetFullPath(engineDll));
-            File.Copy(Path.Combine(directoryName, "UnityICallRegistration.cpp"), Path.Combine(outputDir, "UnityICallRegistration.cpp"));
+            System.IO.File.Copy(Path.Combine(directoryName, "UnityICallRegistration.cpp"), Path.Combine(outputDir, "UnityICallRegistration.cpp"));
             UnityType[] classesToSkip = new UnityType[] { FindTypeByNameChecked("ClusterInputManager") };
             CodeStrippingUtils.WriteModuleAndClassRegistrationFile(directoryName, Path.Combine(directoryName, "ICallSummary.txt"), outputDir, classRegistry, classesToSkip, platformProvider);
         }
@@ -1402,12 +1462,12 @@
                     for (int i = 0; i < count; i++)
                     {
                         string str2 = string.Format(basePath, i);
-                        if (!File.Exists(str2))
+                        if (!System.IO.File.Exists(str2))
                         {
                             for (int j = 0; j < count; j++)
                             {
                                 string str3 = string.Format(basePath, j);
-                                if (File.Exists(str3))
+                                if (System.IO.File.Exists(str3))
                                 {
                                     str2 = str3;
                                     UnityEngine.Debug.LogWarning($"Not all image layers are defined for '{name}'. Duplicating another layer");
@@ -1425,18 +1485,18 @@
 
         internal static void PostProcess(PostProcessorSettings postProcessorSettings, BuildPostProcessArgs args)
         {
-            BuildSettings bs = SetupBuildSettings(postProcessorSettings, args.target, args.options);
+            BuildSettings bs = SetupBuildSettings(postProcessorSettings, args);
             VerifyBuildSettings(bs);
             ProjectPaths paths = SetupProjectPaths(args, bs.installInBuildFolder);
-            if (bs.appendMode && !File.Exists(paths.PBXProjectInstall()))
+            if (bs.appendMode && !System.IO.File.Exists(paths.PBXProjectInstall()))
             {
                 UnityEngine.Debug.LogWarning("iOS project doesn't seem to exist, can't append, using replace mode.");
                 bs.appendMode = false;
             }
-            PostProcess(bs, paths, args.usedClassRegistry);
+            PostProcess(bs, paths, args.usedClassRegistry, args.report);
         }
 
-        private static void PostProcess(BuildSettings bs, ProjectPaths paths, RuntimeClassRegistry usedClassRegistry)
+        private static void PostProcess(BuildSettings bs, ProjectPaths paths, RuntimeClassRegistry usedClassRegistry, BuildReport buildReport)
         {
             Regex[] ignoreList = new Regex[] { new Regex(@"lib.*\.a"), new Regex(@"\.DS_Store") };
             Utils.CopyRecursiveWithIgnoreList(paths.EditorTrampoline(), paths.StagingTrampoline(), ignoreList);
@@ -1450,11 +1510,16 @@
             string dir = paths.stagingAreaData + "/Managed/mono/2.0";
             FileUtil.CreateOrCleanDirectory(dir);
             FileUtil.CopyFileOrDirectory(etcDirectory + "/2.0/machine.config", dir + "/machine.config");
+            if (bs.nativeCrashReportingEnabled)
+            {
+                FileUtil.CopyFileOrDirectory(Path.Combine(EditorApplication.applicationContentsPath, "Tools/usymtool"), Path.Combine(paths.StagingTrampoline(), "usymtool"));
+                FileUtil.CopyFileOrDirectory(Path.Combine(EditorApplication.applicationContentsPath, "Tools/lzma"), Path.Combine(paths.StagingTrampoline(), "lzma"));
+            }
             AssemblyReferenceChecker checker = new AssemblyReferenceChecker();
             bool collectMethods = true;
             bool ignoreSystemDlls = false;
             checker.CollectReferences(paths.stagingAreaDataManaged, collectMethods, 0f, ignoreSystemDlls);
-            IncludedFileList collection = CrossCompileManagedDlls(bs, paths, checker, usedClassRegistry);
+            IncludedFileList collection = CrossCompileManagedDlls(bs, paths, checker, usedClassRegistry, buildReport);
             includedFiles.AddRange(collection);
             if (ShouldStripByteCodeInManagedDlls(bs))
             {
@@ -1462,7 +1527,7 @@
             }
             UsedFeatures usedFeatures = DetermineUsedFeatures(checker);
             WriteFeaturesRegistrationFile(paths.FeatureRegistrationStaging(), usedFeatures);
-            if (bs.appendMode && File.Exists(paths.PBXProjectInstall()))
+            if (bs.appendMode && System.IO.File.Exists(paths.PBXProjectInstall()))
             {
                 Utils.ReplaceFileOrDirectoryCopy(paths.PBXProjectInstall(), paths.PBXProjectStaging());
             }
@@ -1489,9 +1554,9 @@
                 foreach (string str4 in strArray)
                 {
                     string path = Path.Combine(paths.DataStaging(), str4);
-                    if (File.Exists(path))
+                    if (System.IO.File.Exists(path))
                     {
-                        File.Delete(path);
+                        System.IO.File.Delete(path);
                     }
                     else if (Directory.Exists(path))
                     {
@@ -1531,12 +1596,12 @@
                 AddXcodeDevProjectBuildFiles(paths, list5);
                 BuildXCodeUnityDevProject(paths, list5);
             }
-            if (bs.appendMode && File.Exists(paths.PlistInstall()))
+            if (bs.appendMode && System.IO.File.Exists(paths.PlistInstall()))
             {
                 Utils.ReplaceFileOrDirectoryCopy(paths.PlistInstall(), paths.PlistStaging());
             }
-            string iPhoneLaunchStoryboardName = !File.Exists(paths.LaunchScreeniPhoneXibStaging()) ? null : "LaunchScreen-iPhone";
-            string iPadLaunchStoryboardName = !File.Exists(paths.LaunchScreeniPadXibStaging()) ? null : "LaunchScreen-iPad";
+            string iPhoneLaunchStoryboardName = !System.IO.File.Exists(paths.LaunchScreeniPhoneXibStaging()) ? null : "LaunchScreen-iPhone";
+            string iPadLaunchStoryboardName = !System.IO.File.Exists(paths.LaunchScreeniPadXibStaging()) ? null : "LaunchScreen-iPad";
             UpdateInfoPlist(paths.PlistStaging(), bs, iPhoneLaunchStoryboardName, iPadLaunchStoryboardName);
             if (usedFeatures.camera && string.IsNullOrEmpty(PlayerSettings.iOS.cameraUsageDescription))
             {
@@ -1669,19 +1734,20 @@
             }
         }
 
-        private static BuildSettings SetupBuildSettings(PostProcessorSettings postProcessorSettings, BuildTarget target, BuildOptions options)
+        private static BuildSettings SetupBuildSettings(PostProcessorSettings postProcessorSettings, BuildPostProcessArgs args)
         {
             string targetOSVersionString;
             BuildSettings bs = new BuildSettings {
                 useOnDemandResources = PlayerSettings.iOS.useOnDemandResources,
-                target = target
+                target = args.target,
+                targetGroup = GetBuildTargetGroup(args.target),
+                targetDevice = PlayerSettings.iOS.targetDevice
             };
-            bs.targetGroup = GetBuildTargetGroup(bs.target);
-            bs.targetDevice = PlayerSettings.iOS.targetDevice;
             bs.backend = PlayerSettings.GetScriptingBackend(bs.targetGroup);
+            bs.buildReport = args.report;
             bs.symlinkTrampoline = EditorUserBuildSettings.symlinkTrampoline;
             bs.buildType = EditorUserBuildSettings.iOSBuildConfigType;
-            if (target == BuildTarget.iOS)
+            if (args.target == BuildTarget.iOS)
             {
                 bs.sdkType = (PlayerSettings.iOS.sdkVersion != iOSSdkVersion.DeviceSDK) ? SdkType.Simulator : SdkType.Device;
                 targetOSVersionString = PlayerSettings.iOS.targetOSVersionString;
@@ -1702,29 +1768,47 @@
             {
                 bs.targetOsVersion = postProcessorSettings.MinimumOsVersion;
             }
-            bs.appendMode = (options & BuildOptions.AcceptExternalModificationsToPlayer) != BuildOptions.CompressTextures;
-            bs.isDevelopmentPlayer = (options & BuildOptions.Development) != BuildOptions.CompressTextures;
-            bs.symlinkLibraries = (options & BuildOptions.SymlinkLibraries) != BuildOptions.CompressTextures;
-            bs.installInBuildFolder = (options & BuildOptions.InstallInBuildFolder) != BuildOptions.CompressTextures;
-            bs.allowDebugging = (options & BuildOptions.AllowDebugging) != BuildOptions.CompressTextures;
-            bs.autoRunPlayer = (options & BuildOptions.AutoRunPlayer) != BuildOptions.CompressTextures;
-            if (bs.appendMode && (Application.platform != RuntimePlatform.OSXEditor))
+            bs.appendMode = (args.options & BuildOptions.AcceptExternalModificationsToPlayer) != BuildOptions.CompressTextures;
+            bs.isDevelopmentPlayer = (args.options & BuildOptions.Development) != BuildOptions.CompressTextures;
+            bs.symlinkLibraries = (args.options & BuildOptions.SymlinkLibraries) != BuildOptions.CompressTextures;
+            bs.installInBuildFolder = (args.options & BuildOptions.InstallInBuildFolder) != BuildOptions.CompressTextures;
+            bs.allowDebugging = (args.options & BuildOptions.AllowDebugging) != BuildOptions.CompressTextures;
+            bs.autoRunPlayer = (args.options & BuildOptions.AutoRunPlayer) != BuildOptions.CompressTextures;
+            if ((bs.appendMode && (Application.platform != RuntimePlatform.OSXEditor)) && (Application.platform != RuntimePlatform.WindowsEditor))
             {
-                UnityEngine.Debug.LogWarning("iOS project appending is only supported on OSX, falling back to full build.");
+                UnityEngine.Debug.LogWarning("iOS project appending is only supported on Windows and OSX, falling back to full build.");
                 bs.appendMode = false;
             }
             if (bs.installInBuildFolder)
             {
                 bs.appendMode = false;
             }
-            string bundleIdentifier = PlayerSettings.bundleIdentifier;
-            CheckIOSBundleIdentifier(bundleIdentifier, bs);
-            bs.productName = bundleIdentifier.Substring(bundleIdentifier.LastIndexOf(".") + 1);
-            bs.companyName = bundleIdentifier.Substring(0, bundleIdentifier.LastIndexOf("."));
+            BuildTargetGroup targetGroup = (args.target != BuildTarget.tvOS) ? BuildTargetGroup.iPhone : BuildTargetGroup.tvOS;
+            string applicationIdentifier = PlayerSettings.GetApplicationIdentifier(targetGroup);
+            CheckIOSBundleIdentifier(applicationIdentifier, bs);
+            bs.productName = applicationIdentifier.Substring(applicationIdentifier.LastIndexOf(".") + 1);
+            bs.companyName = applicationIdentifier.Substring(0, applicationIdentifier.LastIndexOf("."));
             bs.appleDeveloperTeamID = PlayerSettings.iOS.appleDeveloperTeamID;
             bs.automaticallySignBuild = PlayerSettings.iOS.appleEnableAutomaticSigning;
             bs.iOSManualProvisioningProfileUUID = PlayerSettings.iOS.iOSManualProvisioningProfileID;
             bs.tvOSManualProvisioningProfileUUID = PlayerSettings.iOS.tvOSManualProvisioningProfileID;
+            bs.cloudProjectId = PlayerSettings.cloudProjectId;
+            if (args.target == BuildTarget.iOS)
+            {
+                bs.buildNumber = PlayerSettings.iOS.buildNumber;
+            }
+            else if (args.target == BuildTarget.tvOS)
+            {
+                bs.buildNumber = PlayerSettings.tvOS.buildNumber;
+            }
+            bs.nativeCrashReportingEnabled = CrashReportingSettings.enabled;
+            string configurationURL = UnityConnect.instance.GetConfigurationURL(CloudConfigUrl.CloudPerfEvents);
+            if (!string.IsNullOrEmpty(configurationURL))
+            {
+                bs.symbolsServiceBaseUri = new Uri(configurationURL);
+            }
+            bs.usymUploadAuthToken = Environment.GetEnvironmentVariable("USYM_UPLOAD_AUTH_TOKEN");
+            bs.unityConnectAccessToken = UnityConnect.instance.GetAccessToken();
             return bs;
         }
 
@@ -1808,7 +1892,7 @@
                 foreach (string str in storey.filesToSymlink)
                 {
                     string path = Path.Combine(destination, Utils.GetRelativePath(source, str));
-                    File.Delete(path);
+                    System.IO.File.Delete(path);
                     Utils.SymlinkFileAbsolute(str, path);
                 }
             }
@@ -1827,7 +1911,11 @@
                 },
                 { 
                     "ENABLE_CUSTOM_CRASH_REPORTER",
-                    PlayerSettings.enableCrashReportAPI
+                    PlayerSettings.enableCrashReportAPI || bs.nativeCrashReportingEnabled
+                },
+                { 
+                    "ENABLE_CRASH_REPORT_SUBMISSION",
+                    bs.nativeCrashReportingEnabled
                 }
             };
             UpdateDefinesInFile(installPath + "/Classes/CrashReporter.h", valuesToUpdate);
@@ -1840,11 +1928,11 @@
             UpdateDefinesInFile(installPath + "/Classes/Unity/InternalProfiler.h", valuesToUpdate);
             valuesToUpdate = new Dictionary<string, bool> {
                 { 
-                    "UNITY_TVOS",
+                    "PLATFORM_TVOS",
                     bs.IsAppleTVEnabled()
                 },
                 { 
-                    "UNITY_IOS",
+                    "PLATFORM_IOS",
                     !bs.IsAppleTVEnabled()
                 },
                 { 
@@ -1854,6 +1942,14 @@
                 { 
                     "UNITY_USES_WEBCAM",
                     usedFeatures.camera
+                },
+                { 
+                    "UNITY_USES_REPLAY_KIT",
+                    usedFeatures.replayKit
+                },
+                { 
+                    "UNITY_DEVELOPER_BUILD",
+                    bs.isDevelopmentPlayer
                 }
             };
             UpdateDefinesInFile(installPath + "/Classes/Preprocessor.h", valuesToUpdate);
@@ -1861,7 +1957,7 @@
 
         private static void UpdateDefinesInFile(string file, Dictionary<string, bool> valuesToUpdate)
         {
-            string[] second = File.ReadAllLines(file);
+            string[] second = System.IO.File.ReadAllLines(file);
             string[] lines = (string[]) second.Clone();
             foreach (KeyValuePair<string, bool> pair in valuesToUpdate)
             {
@@ -1869,18 +1965,18 @@
             }
             if (!lines.SequenceEqual<string>(second))
             {
-                File.WriteAllLines(file, lines);
+                System.IO.File.WriteAllLines(file, lines);
             }
         }
 
         private static void UpdateInfoPlist(string filename, BuildSettings bs, string iPhoneLaunchStoryboardName, string iPadLaunchStoryboardName)
         {
-            string text = File.ReadAllText(filename);
+            string text = System.IO.File.ReadAllText(filename);
             string applicationDisplayName = PlayerSettings.iOS.applicationDisplayName;
             PlistUpdater.CustomData data = new PlistUpdater.CustomData {
                 bundleIdentifier = bs.companyName + ".${PRODUCT_NAME}",
                 bundleVersion = PlayerSettings.bundleVersion,
-                buildNumber = PlayerSettings.iOS.buildNumber,
+                buildNumber = bs.buildNumber,
                 bundleDisplayName = !string.IsNullOrEmpty(applicationDisplayName) ? applicationDisplayName : "${PRODUCT_NAME}",
                 availableIconsList = GetAvailableIconsList(bs),
                 availableOrientationSet = GetAvailableOrientations(),
@@ -1900,7 +1996,9 @@
                 allowHTTP = PlayerSettings.iOS.allowHTTPDownload,
                 supportedURLSchemes = PlayerSettings.iOS.GetURLSchemes().ToList<string>(),
                 tvOSRequireExtendedGameController = PlayerSettings.tvOS.requireExtendedGameController,
-                isAppleTV = bs.IsAppleTVEnabled()
+                isAppleTV = bs.IsAppleTVEnabled(),
+                cloudProjectId = bs.cloudProjectId,
+                crashSubmissionUrl = GetCrashSubmissionUrl(bs.symbolsServiceBaseUri)
             };
             if (!PlayerSettings.GetUseDefaultGraphicsAPIs(bs.target))
             {
@@ -1917,7 +2015,7 @@
                 UnityEngine.Debug.LogException(exception);
                 return;
             }
-            File.WriteAllText(filename, text);
+            System.IO.File.WriteAllText(filename, text);
         }
 
         private static void UpdateInstallLocation(ProjectPaths paths, BuildSettings bs, IncludedFileList includedFiles)
@@ -1987,10 +2085,10 @@
         private static void UpdateXcScheme(ProjectPaths paths, iOSBuildType buildType)
         {
             string path = paths.XcSchemeStaging();
-            if (File.Exists(path))
+            if (System.IO.File.Exists(path))
             {
-                string contents = XcSchemeUpdater.UpdateString(File.ReadAllText(path), buildType);
-                File.WriteAllText(path, contents);
+                string contents = XcSchemeUpdater.UpdateString(System.IO.File.ReadAllText(path), buildType);
+                System.IO.File.WriteAllText(path, contents);
             }
         }
 
@@ -2012,7 +2110,7 @@
                 {
                     bool matchOrientation = screen.matchOrientation;
                     bool flag2 = (screen.isPortrait && (availableOrientations.portrait || availableOrientations.portraitUpsideDown)) || (!screen.isPortrait && (availableOrientations.landscapeLeft || availableOrientations.landscapeRight));
-                    if ((matchOrientation || flag2) && !File.Exists(Path.Combine(paths.SplashScreenOutputFolder(), screen.xcodeFile)))
+                    if ((matchOrientation || flag2) && !System.IO.File.Exists(Path.Combine(paths.SplashScreenOutputFolder(), screen.xcodeFile)))
                     {
                         list.Add(screen.localizedName);
                     }
@@ -2136,11 +2234,18 @@
             public Version targetOsVersion;
             public string productName;
             public string companyName;
+            public string buildNumber;
             public iOSTargetDevice targetDevice;
             public string appleDeveloperTeamID;
             public bool automaticallySignBuild;
             public string iOSManualProvisioningProfileUUID;
             public string tvOSManualProvisioningProfileUUID;
+            public string cloudProjectId;
+            public bool nativeCrashReportingEnabled;
+            public Uri symbolsServiceBaseUri;
+            public string usymUploadAuthToken;
+            public string unityConnectAccessToken;
+            public BuildReport buildReport;
             public bool appendMode;
             public bool isDevelopmentPlayer;
             public bool symlinkLibraries;
@@ -2185,6 +2290,11 @@
 
         private class IncludedFileList : List<PostProcessiPhonePlayer.IncludedFile>
         {
+            [CompilerGenerated]
+            private static Func<PostProcessiPhonePlayer.IncludedFile, bool> <>f__am$cache0;
+            [CompilerGenerated]
+            private static Func<PostProcessiPhonePlayer.IncludedFile, bool> <>f__am$cache1;
+
             public void Add(string srcPath, string dstPath)
             {
                 PostProcessiPhonePlayer.IncludedFile item = new PostProcessiPhonePlayer.IncludedFile {
@@ -2192,6 +2302,42 @@
                     destinationPath = dstPath
                 };
                 base.Add(item);
+            }
+
+            public HashSet<string> GetProjectFilesByFullPath(HashSet<string> fullPaths)
+            {
+                HashSet<string> set = new HashSet<string>();
+                if (<>f__am$cache1 == null)
+                {
+                    <>f__am$cache1 = x => x.shouldAddToProject;
+                }
+                List<PostProcessiPhonePlayer.IncludedFile> list = Enumerable.Where<PostProcessiPhonePlayer.IncludedFile>(this, <>f__am$cache1).ToList<PostProcessiPhonePlayer.IncludedFile>();
+                foreach (PostProcessiPhonePlayer.IncludedFile file in list)
+                {
+                    if (fullPaths.Contains(file.destinationPath))
+                    {
+                        set.Add(file.destinationPath);
+                    }
+                }
+                return set;
+            }
+
+            public HashSet<string> GetProjectFilesInPath(string projectPath)
+            {
+                HashSet<string> set = new HashSet<string>();
+                if (<>f__am$cache0 == null)
+                {
+                    <>f__am$cache0 = x => x.shouldAddToProject;
+                }
+                List<PostProcessiPhonePlayer.IncludedFile> list = Enumerable.Where<PostProcessiPhonePlayer.IncludedFile>(this, <>f__am$cache0).ToList<PostProcessiPhonePlayer.IncludedFile>();
+                foreach (PostProcessiPhonePlayer.IncludedFile file in list)
+                {
+                    if (file.destinationPath.Contains(PBXPath.FixSlashes(projectPath)))
+                    {
+                        set.Add(file.destinationPath);
+                    }
+                }
+                return set;
             }
         }
 
@@ -2312,6 +2458,9 @@
 
             public string LaunchScreeniPhoneXibStaging() => 
                 Path.Combine(this.StagingTrampoline(), "LaunchScreen-iPhone.xib");
+
+            public string LaunchScreenTransparentSource() => 
+                Path.Combine(this.SplashScreenSourceFolder(), "LaunchScreenImage-transparent.png");
 
             public string LibrariesInstall() => 
                 Path.Combine(this.installPath, "Libraries");

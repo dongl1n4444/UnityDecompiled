@@ -4,6 +4,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>AudioMixer asset.</para>
@@ -21,7 +22,7 @@
         /// <returns>
         /// <para>Returns false if the parameter was not found or could not be set.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool ClearFloat(string name);
         /// <summary>
         /// <para>Connected groups in the mixer form a path from the mixer's master group to the leaves. This path has the format "Master GroupChild of Master GroupGrandchild of Master Group", so to find the grandchild group in this example, a valid search string would be for instance "randchi" which would return exactly one group while "hild" or "oup/" would return 2 different groups.</para>
@@ -30,7 +31,7 @@
         /// <returns>
         /// <para>Groups in the mixer whose paths match the specified search path.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern AudioMixerGroup[] FindMatchingGroups(string subPath);
         /// <summary>
         /// <para>The name must be an exact match.</para>
@@ -39,9 +40,9 @@
         /// <returns>
         /// <para>The snapshot identified by the name.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern AudioMixerSnapshot FindSnapshot(string name);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool GetFloat(string name, out float value);
         /// <summary>
         /// <para>Sets the value of the exposed parameter specified. When a parameter is exposed, it is not controlled by mixer snapshots and can therefore only be changed via this function.</para>
@@ -51,7 +52,7 @@
         /// <returns>
         /// <para>Returns false if the exposed parameter was not found or snapshots are currently being edited.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool SetFloat(string name, float value);
         private void TransitionToSnapshot(AudioMixerSnapshot snapshot, float timeToReach)
         {
@@ -73,18 +74,18 @@
         /// <param name="snapshots">The set of snapshots to be mixed.</param>
         /// <param name="weights">The mix weights for the snapshots specified.</param>
         /// <param name="timeToReach">Relative time after which the mixture should be reached from any current state.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void TransitionToSnapshots(AudioMixerSnapshot[] snapshots, float[] weights, float timeToReach);
 
         /// <summary>
         /// <para>Routing target.</para>
         /// </summary>
-        public AudioMixerGroup outputAudioMixerGroup { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public AudioMixerGroup outputAudioMixerGroup { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>How time should progress for this AudioMixer. Used during Snapshot transitions.</para>
         /// </summary>
-        public AudioMixerUpdateMode updateMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public AudioMixerUpdateMode updateMode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
     }
 }
 

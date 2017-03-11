@@ -27,7 +27,7 @@
             }
         }
 
-        public override void OnInspectorGUI(ParticleSystem s)
+        public override void OnInspectorGUI(InitialModuleUI initial)
         {
             if (s_Texts == null)
             {
@@ -35,27 +35,15 @@
             }
             ModuleUI.GUIPopup(s_Texts.mode, this.m_Mode, s_Texts.modes, new GUILayoutOption[0]);
             ModuleUI.GUIMinMaxCurve(s_Texts.velocity, this.m_Curve, new GUILayoutOption[0]);
-            if (this.m_Curve.scalar.floatValue != 0f)
-            {
-                Rigidbody componentInParent = s.GetComponentInParent<Rigidbody>();
-                Rigidbody2D rigidbodyd = s.GetComponentInParent<Rigidbody2D>();
-                if ((componentInParent != null) && !componentInParent.isKinematic)
-                {
-                    EditorGUILayout.HelpBox("Velocity is being driven by RigidBody(" + componentInParent.name + ")", MessageType.Info, true);
-                }
-                else if ((rigidbodyd != null) && (rigidbodyd.bodyType == RigidbodyType2D.Dynamic))
-                {
-                    EditorGUILayout.HelpBox("Velocity is being driven by RigidBody2D(" + componentInParent.name + ")", MessageType.Info, true);
-                }
-            }
         }
 
         public override void UpdateCullingSupportedString(ref string text)
         {
             this.Init();
-            if (!this.m_Curve.SupportsProcedural())
+            string failureReason = string.Empty;
+            if (!this.m_Curve.SupportsProcedural(ref failureReason))
             {
-                text = text + "\n\tInherited velocity curves use too many keys.";
+                text = text + "\nInherit Velocity module curve: " + failureReason;
             }
         }
 

@@ -1,8 +1,9 @@
 ﻿namespace UnityEditor.Android.PostProcessor.Tasks
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
-    using System.Text.RegularExpressions;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEditor;
     using UnityEditor.Android;
@@ -13,78 +14,49 @@
     internal class CheckAndroidSdk : IPostProcessorTask
     {
         private AndroidSDKTools _sdkTools;
+        public const int kMinAndroidSDKBuildToolsVersion = 0x18;
+        public const int kMinAndroidSDKPlatformToolsVersion = 0x17;
+        public const int kMinAndroidSDKPlatformVersion = 0x17;
+        public const int kMinAndroidSDKToolsVersion = 0x18;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ProgressHandler OnProgress;
 
         private static int AskUpdateSdk(string title, string message) => 
-            EditorUtility.DisplayDialogComplex(title, message, "Update Android SDK", "Cancel", "Continue");
+            EditorUtility.DisplayDialogComplex(title, message, "Update Android SDK", "Cancel", "Use Highest Installed");
 
-        private int EnsureSDKComponentVersion(int minVersion, SDKComponentDetector detector)
+        private int EnsureSDKComponentVersion(int minVersion, SDKComponentDetector detector) => 
+            this.EnsureSDKComponentVersion(new Version(minVersion, 0, 0), detector).Major;
+
+        private Version EnsureSDKComponentVersion(Version minVersion, SDKComponentDetector detector)
         {
-            int componentVersion = detector.GetComponentVersion(this._sdkTools, this.OnProgress);
-            while (componentVersion < minVersion)
+            while (!detector.Detect(this._sdkTools, minVersion, this.OnProgress))
             {
-                string title = "Android SDK is outdated";
-                string upgradeMsg = detector.GetUpgradeMsg(componentVersion, minVersion);
                 if (!InternalEditorUtility.inBatchMode)
                 {
-                    switch (AskUpdateSdk(title, upgradeMsg))
+                    string updateMessage = detector.GetUpdateMessage(this._sdkTools, minVersion);
+                    switch (AskUpdateSdk(detector.UpdateTitle, updateMessage))
                     {
                         case 1:
-                            throw new UnityException(upgradeMsg);
+                            throw new UnityException(updateMessage);
 
                         case 2:
-                            return componentVersion;
+                            return detector.Version;
                     }
                 }
-                int num4 = 0x10;
-                while ((componentVersion < minVersion) && (0 < num4--))
+                for (int i = 0; i < 3; i++)
                 {
-                    if (this.OnProgress != null)
+                    if (detector.Update(this._sdkTools, minVersion, this.OnProgress))
                     {
-                        this.OnProgress(this, "Updating Android SDK - Tools and Platform Tools");
+                        return detector.Version;
                     }
-                    this._sdkTools.UpdateSDK(null);
-                    componentVersion = detector.GetComponentVersion(this._sdkTools, this.OnProgress);
+                }
+                if (InternalEditorUtility.inBatchMode)
+                {
+                    throw new UnityException("Failed to update Android SDK.");
                 }
             }
-            return componentVersion;
-        }
-
-        private int EnsureSDKPlatformAPI(string minPlatformName, int minPlatformApiLevel)
-        {
-            if (this.OnProgress != null)
-            {
-                this.OnProgress(this, "Detecting installed platforms");
-            }
-            int topAndroidPlatformAvailable = this._sdkTools.GetTopAndroidPlatformAvailable(null);
-            while (topAndroidPlatformAvailable < minPlatformApiLevel)
-            {
-                string title = "Android SDK is missing required platform api";
-                string message = $"Minimum platform required is {minPlatformName} (API level {minPlatformApiLevel})";
-                if (!InternalEditorUtility.inBatchMode)
-                {
-                    switch (AskUpdateSdk(title, message))
-                    {
-                        case 1:
-                            throw new UnityException(message);
-
-                        case 2:
-                            return topAndroidPlatformAvailable;
-                    }
-                }
-                int num4 = 0x10;
-                while ((topAndroidPlatformAvailable < minPlatformApiLevel) && (0 < num4--))
-                {
-                    if (this.OnProgress != null)
-                    {
-                        this.OnProgress(this, $"Updating Android SDK - {minPlatformName} (API level {minPlatformApiLevel})...");
-                    }
-                    this._sdkTools.InstallPlatform(minPlatformApiLevel, null);
-                    topAndroidPlatformAvailable = this._sdkTools.GetTopAndroidPlatformAvailable(null);
-                }
-            }
-            return topAndroidPlatformAvailable;
+            return detector.Version;
         }
 
         public void Execute(PostProcessorContext context)
@@ -93,32 +65,72 @@
             {
                 this.OnProgress(this, "Checking Android SDK and components");
             }
-            this._sdkTools = AndroidSDKTools.GetInstance();
+            bool flag = context.Get<int>("ProjectType") == 3;
+            this._sdkTools = !flag ? AndroidSDKTools.GetInstance() : VisualStudioAndroidSDKTools.GetInstance();
             if (this._sdkTools == null)
             {
-                CancelPostProcess.AbortBuild("Build failure!", "Unable to locate Android SDK");
+                string message = "Unable to locate Android SDK.";
+                if (flag)
+                {
+                    message = message + "\n- Make sure Visual Studio 2015 Update 3 with Android support for C++ is installed." + "\n- Set Android SDK path in Visual Studio (Tools -> Options -> Cross Platform).";
+                }
+                CancelPostProcess.AbortBuild("Build failure!", message, null);
             }
             context.Set<AndroidSDKTools>("SDKTools", this._sdkTools);
             this.EnsureSDKComponentVersion(0x18, new SDKToolsDetector(this));
-            this.EnsureSDKComponentVersion(0x17, new SDKBuildToolsDetector(this));
             this.EnsureSDKComponentVersion(0x17, new SDKPlatformToolsDetector(this));
-            int num = this.EnsureSDKPlatformAPI("Android 6.0", 0x17);
-            context.Set<int>("PlatformApiLevel", num);
-            int num2 = Math.Max((int) PlayerSettings.Android.minSdkVersion, num);
-            context.Set<int>("TargetSDKVersion", num2);
+            if (PlayerSettings.virtualRealitySupported)
+            {
+                VrSupportChecker.CheckVrMinimumSdkVersions();
+            }
+            int minSdkVersion = (int) PlayerSettings.Android.minSdkVersion;
+            int targetSdkVersion = (int) PlayerSettings.Android.targetSdkVersion;
+            int minVersion = Math.Max(0x17, Math.Max(minSdkVersion, targetSdkVersion));
+            int num4 = this.EnsureSDKComponentVersion(minVersion, new SDKPlatformDetector(this));
+            if (minSdkVersion > num4)
+            {
+                object[] objArray1 = new object[] { "Build set to use Minimum SDK of ", PlayerSettings.Android.minSdkVersion, " but the latest installed SDK on the system is ", num4, ".\nPlease use the Android SDK installation tool to install the minimum required SDK version.\n" };
+                string str2 = string.Concat(objArray1);
+                CancelPostProcess.AbortBuild("Requested minimum Android SDK not installed", str2, null);
+            }
+            if (targetSdkVersion == 0)
+            {
+                targetSdkVersion = num4;
+            }
+            else if (targetSdkVersion < minSdkVersion)
+            {
+                UnityEngine.Debug.LogWarning(string.Concat(new object[] { "Selected target SDK version (", targetSdkVersion, ") is lower than the selected minimum SDK version (", minSdkVersion, ").\n Setting target SDK version to ", minSdkVersion, ".\n" }));
+                targetSdkVersion = minSdkVersion;
+                PlayerSettings.Android.targetSdkVersion = (AndroidSdkVersions) minSdkVersion;
+            }
+            else if (targetSdkVersion > num4)
+            {
+                UnityEngine.Debug.LogWarning(string.Concat(new object[] { "Selected target SDK version (", targetSdkVersion, ") is higher than the latest installed SDK version (", num4, ").\n Setting target SDK version to ", num4, ".\n" }));
+                targetSdkVersion = num4;
+                PlayerSettings.Android.targetSdkVersion = AndroidSdkVersions.AndroidApiLevelAuto;
+            }
+            context.Set<int>("TargetSDKVersion", targetSdkVersion);
+            if (this._sdkTools.IsVisualStudio)
+            {
+                ((VisualStudioAndroidSDKTools) this._sdkTools).SetBuildToolsVersion(targetSdkVersion);
+                this.EnsureSDKComponentVersion(targetSdkVersion, new VisualStudioSDKBuildToolsDetector(this));
+            }
+            else
+            {
+                this.EnsureSDKComponentVersion(0x18, new SDKBuildToolsDetector(this));
+            }
             this._sdkTools.UpdateToolsDirectories();
             this._sdkTools.DumpDiagnostics();
             AndroidJavaTools.DumpDiagnostics();
-            string str = "android.jar";
-            string androidPlatformPath = this._sdkTools.GetAndroidPlatformPath(num);
-            if (androidPlatformPath.Length == 0)
+            string str3 = "android.jar";
+            string androidPlatformPath = this._sdkTools.GetAndroidPlatformPath(targetSdkVersion);
+            if (androidPlatformPath == null)
             {
-                EditorPrefs.SetString("AndroidSdkRoot", "");
-                string message = "Android SDK does not include any platforms! Did you run Android SDK setup to install the platform(s)?\nMinimum platform required for build is Android 5.0 (API level 21)\n";
-                CancelPostProcess.AbortBuild("No platforms found", message);
+                string str5 = "Android SDK does not include your Target SDK of " + targetSdkVersion + ".\nPlease use the Android SDK installation tool to install your target SDK version.\n";
+                CancelPostProcess.AbortBuild("Target Android SDK not installed", str5, null);
             }
-            str = Path.Combine(androidPlatformPath, str);
-            context.Set<string>("AndroidJarPath", str);
+            str3 = Path.Combine(androidPlatformPath, str3);
+            context.Set<string>("AndroidJarPath", str3);
         }
 
         public string Name =>
@@ -126,78 +138,154 @@
 
         private class SDKBuildToolsDetector : CheckAndroidSdk.SDKComponentDetector
         {
-            private IPostProcessorTask _task;
-
-            public SDKBuildToolsDetector(IPostProcessorTask task)
+            public SDKBuildToolsDetector(IPostProcessorTask task) : base(task)
             {
-                this._task = task;
             }
 
-            public override int GetComponentVersion(AndroidSDKTools sdkTools, ProgressHandler onProgress)
-            {
-                if (onProgress != null)
-                {
-                    onProgress(this._task, "Detecting current build tools version");
-                }
-                return int.Parse(Regex.Match(sdkTools.BuildToolsVersion(null), @"\d+").Value);
-            }
+            protected override Version GetVersion(AndroidSDKTools sdkTools) => 
+                sdkTools.BuildToolsVersion(null);
 
-            public override string GetUpgradeMsg(int currentVerion, int minVersion) => 
-                $"SDK Build Tools version {currentVerion} < {minVersion}";
+            protected override string Name =>
+                "SDK Build Tools";
         }
 
         private abstract class SDKComponentDetector
         {
-            protected SDKComponentDetector()
+            private const string kUpdateFailedMessage = "\nMake sure Android SDK path is writable by the Editor.";
+            private const string kVisualStudioUpdateFailedMessage = "\nPath can be changed in Visual Studio (Tools -> Options -> Cross Platform -> C++ -> Android -> Android SDK). Restart the build for changes to take effect.";
+            protected int m_FailCount;
+            protected readonly IPostProcessorTask m_Task;
+            protected System.Version m_Version;
+
+            public SDKComponentDetector(IPostProcessorTask task)
+            {
+                this.m_Task = task;
+                this.m_Version = Utils.DefaultVersion;
+            }
+
+            public bool Detect(AndroidSDKTools sdkTools, System.Version minVersion, ProgressHandler onProgress)
+            {
+                if (onProgress != null)
+                {
+                    onProgress(this.m_Task, $"Detecting current {this.Name} version...");
+                }
+                this.m_Version = this.GetVersion(sdkTools);
+                bool flag = !this.UpdateNeeded(minVersion);
+                this.m_FailCount = !flag ? (this.m_FailCount + 1) : 0;
+                return flag;
+            }
+
+            protected virtual string GetUpdateMessage(System.Version minVersion) => 
+                $"{this.Name} version {this.m_Version} < {minVersion}.";
+
+            public string GetUpdateMessage(AndroidSDKTools sdkTools, System.Version minVersion)
+            {
+                string updateMessage = this.GetUpdateMessage(minVersion);
+                if (this.m_FailCount > 1)
+                {
+                    updateMessage = updateMessage + "\nMake sure Android SDK path is writable by the Editor.";
+                    if (sdkTools.IsVisualStudio)
+                    {
+                        updateMessage = updateMessage + "\nPath can be changed in Visual Studio (Tools -> Options -> Cross Platform -> C++ -> Android -> Android SDK). Restart the build for changes to take effect.";
+                    }
+                }
+                return updateMessage;
+            }
+
+            protected abstract System.Version GetVersion(AndroidSDKTools sdkTools);
+            public virtual bool Update(AndroidSDKTools sdkTools, System.Version minVersion, ProgressHandler onProgress)
+            {
+                if (onProgress != null)
+                {
+                    onProgress(this.m_Task, "Updating Android SDK - Tools, Platform Tools and Build Tools...");
+                }
+                sdkTools.UpdateSDK(null);
+                return this.Detect(sdkTools, minVersion, onProgress);
+            }
+
+            protected virtual bool UpdateNeeded(System.Version minVersion) => 
+                (this.m_Version < minVersion);
+
+            protected abstract string Name { get; }
+
+            public virtual string UpdateTitle =>
+                "Android SDK is outdated";
+
+            public System.Version Version =>
+                this.m_Version;
+        }
+
+        private class SDKPlatformDetector : CheckAndroidSdk.SDKComponentDetector
+        {
+            private readonly string m_MinPlatformName;
+
+            public SDKPlatformDetector(IPostProcessorTask task) : base(task)
             {
             }
 
-            public abstract int GetComponentVersion(AndroidSDKTools sdkTools, ProgressHandler onProgress);
-            public abstract string GetUpgradeMsg(int currentVerion, int minVersion);
+            protected override string GetUpdateMessage(Version minVersion) => 
+                $"Required API level {minVersion.Major}.";
+
+            protected override Version GetVersion(AndroidSDKTools sdkTools)
+            {
+                int topAndroidPlatformAvailable = sdkTools.GetTopAndroidPlatformAvailable(null);
+                return ((topAndroidPlatformAvailable <= 0) ? Utils.DefaultVersion : new Version(topAndroidPlatformAvailable, 0, 0));
+            }
+
+            public override bool Update(AndroidSDKTools sdkTools, Version minVersion, ProgressHandler onProgress)
+            {
+                if (onProgress != null)
+                {
+                    onProgress(base.m_Task, $"Updating Android SDK to API level {minVersion.Major} ...");
+                }
+                sdkTools.InstallPlatform(minVersion.Major, null);
+                return base.Detect(sdkTools, minVersion, onProgress);
+            }
+
+            protected override string Name =>
+                "SDK Platform";
+
+            public override string UpdateTitle =>
+                "Android SDK is missing required platform API";
         }
 
         private class SDKPlatformToolsDetector : CheckAndroidSdk.SDKComponentDetector
         {
-            private IPostProcessorTask _task;
-
-            public SDKPlatformToolsDetector(IPostProcessorTask task)
+            public SDKPlatformToolsDetector(IPostProcessorTask task) : base(task)
             {
-                this._task = task;
             }
 
-            public override int GetComponentVersion(AndroidSDKTools sdkTools, ProgressHandler onProgress)
-            {
-                if (onProgress != null)
-                {
-                    onProgress(this._task, "Detecting current platform tools version");
-                }
-                return int.Parse(Regex.Match(sdkTools.PlatformToolsVersion(null), @"\d+").Value);
-            }
+            protected override Version GetVersion(AndroidSDKTools sdkTools) => 
+                sdkTools.PlatformToolsVersion(null);
 
-            public override string GetUpgradeMsg(int currentVerion, int minVersion) => 
-                $"SDK Platform Tools version {currentVerion} < {minVersion}";
+            protected override string Name =>
+                "SDK Platform Tools";
         }
 
         private class SDKToolsDetector : CheckAndroidSdk.SDKComponentDetector
         {
-            private IPostProcessorTask _task;
-
-            public SDKToolsDetector(IPostProcessorTask task)
+            public SDKToolsDetector(IPostProcessorTask task) : base(task)
             {
-                this._task = task;
             }
 
-            public override int GetComponentVersion(AndroidSDKTools sdkTools, ProgressHandler onProgress)
+            protected override Version GetVersion(AndroidSDKTools sdkTools) => 
+                sdkTools.ToolsVersion(null);
+
+            protected override string Name =>
+                "SDK Tools";
+        }
+
+        private class VisualStudioSDKBuildToolsDetector : CheckAndroidSdk.SDKBuildToolsDetector
+        {
+            public VisualStudioSDKBuildToolsDetector(IPostProcessorTask task) : base(task)
             {
-                if (onProgress != null)
-                {
-                    onProgress(this._task, "Detecting current tools version");
-                }
-                return int.Parse(Regex.Match(sdkTools.ToolsVersion(null), @"\d+").Value);
             }
 
-            public override string GetUpgradeMsg(int currentVerion, int minVersion) => 
-                $"SDK Tools version {currentVerion} < {minVersion}";
+            protected override string GetUpdateMessage(Version minVersion) => 
+                $"{this.Name} version {minVersion} not found.";
+
+            protected override bool UpdateNeeded(Version minVersion) => 
+                (base.m_Version != minVersion);
         }
     }
 }

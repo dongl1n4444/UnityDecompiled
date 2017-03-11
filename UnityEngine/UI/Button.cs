@@ -57,12 +57,13 @@
         {
             if (this.IsActive() && this.IsInteractable())
             {
+                UISystemProfilerApi.AddMarker("Button.onClick", this);
                 this.m_OnClick.Invoke();
             }
         }
 
         /// <summary>
-        /// <para>UnityEvent that is triggered when the button is pressed.</para>
+        /// <para>UnityEvent to be fired when the buttons is pressed.</para>
         /// </summary>
         public ButtonClickedEvent onClick
         {
@@ -81,7 +82,7 @@
             internal bool $disposing;
             internal int $PC;
             internal Button $this;
-            internal float <elapsedTime>__1;
+            internal float <elapsedTime>__0;
             internal float <fadeTime>__0;
 
             [DebuggerHidden]
@@ -99,7 +100,7 @@
                 {
                     case 0:
                         this.<fadeTime>__0 = this.$this.colors.fadeDuration;
-                        this.<elapsedTime>__1 = 0f;
+                        this.<elapsedTime>__0 = 0f;
                         break;
 
                     case 1:
@@ -108,9 +109,9 @@
                     default:
                         goto Label_00A9;
                 }
-                if (this.<elapsedTime>__1 < this.<fadeTime>__0)
+                if (this.<elapsedTime>__0 < this.<fadeTime>__0)
                 {
-                    this.<elapsedTime>__1 += Time.unscaledDeltaTime;
+                    this.<elapsedTime>__0 += Time.unscaledDeltaTime;
                     this.$current = null;
                     if (!this.$disposing)
                     {

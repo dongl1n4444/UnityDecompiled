@@ -36,7 +36,7 @@
                 if (preview == null)
                 {
                     get.m_Preview = preview = ColorPicker.MakeTexture(width, height);
-                    preview.filterMode = FilterMode.Point;
+                    preview.filterMode = UnityEngine.FilterMode.Point;
                 }
                 if ((preview.width != width) || (preview.height != height))
                 {
@@ -77,7 +77,7 @@
         {
             if (this.m_Preview != null)
             {
-                Object.DestroyImmediate(this.m_Preview);
+                UnityEngine.Object.DestroyImmediate(this.m_Preview);
             }
             if (!this.m_Focused)
             {

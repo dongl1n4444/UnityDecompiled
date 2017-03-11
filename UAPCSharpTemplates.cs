@@ -16,7 +16,7 @@ internal static class UAPCSharpTemplates
         bool flag = enableDotNetNative[WSABuildType.Debug];
         bool flag2 = enableDotNetNative[WSABuildType.Release];
         bool flag3 = enableDotNetNative[WSABuildType.Master];
-        string str = "TRACE;NETFX_CORE;WINDOWS_UWP;UNITY_METRO;UNITY_WSA;UNITY_UWP;UNITY_WSA_10_0";
+        string str = "TRACE;NETFX_CORE;WINDOWS_UWP;UNITY_METRO;PLATFORM_METRO;UNITY_WSA;UNITY_UWP;UNITY_WSA_10_0";
         if (VREditor.GetVREnabledOnTargetGroup(BuildTargetGroup.WSA) && (Array.IndexOf<string>(VREditor.GetVREnabledDevicesOnTargetGroup(BuildTargetGroup.WSA), "HoloLens") > -1))
         {
             str = str + ";UNITY_HOLOGRAPHIC";

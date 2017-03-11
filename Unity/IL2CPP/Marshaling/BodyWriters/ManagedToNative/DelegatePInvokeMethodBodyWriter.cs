@@ -43,10 +43,10 @@
 
         protected override void WriteMethodPrologue(CppCodeWriter writer, IRuntimeMetadataAccess metadataAccess)
         {
-            string decoratedName = base._marshaledReturnType.DecoratedName;
-            object[] args = new object[] { decoratedName, InteropMethodBodyWriter.Naming.ForPInvokeFunctionPointerTypedef(), base.FormatParametersForTypedef() };
+            string decoratedName = base.MarshaledReturnType.DecoratedName;
+            object[] args = new object[] { decoratedName, InteropMethodInfo.Naming.ForPInvokeFunctionPointerTypedef(), base.FormatParametersForTypedef() };
             writer.WriteLine("typedef {0} (STDCALL *{1})({2});", args);
-            object[] objArray2 = new object[] { InteropMethodBodyWriter.Naming.ForPInvokeFunctionPointerTypedef(), InteropMethodBodyWriter.Naming.ForPInvokeFunctionPointerVariable(), InteropMethodBodyWriter.Naming.ThisParameterName };
+            object[] objArray2 = new object[] { InteropMethodInfo.Naming.ForPInvokeFunctionPointerTypedef(), InteropMethodInfo.Naming.ForPInvokeFunctionPointerVariable(), InteropMethodInfo.Naming.ThisParameterName };
             writer.WriteLine("{0} {1} = reinterpret_cast<{0}>(((Il2CppDelegate*){2})->method->methodPointer);", objArray2);
             writer.WriteLine();
         }

@@ -9,7 +9,7 @@
         private const float kTopMargin = 7f;
         private IGameViewSizeMenuUser m_GameView;
 
-        public GameViewSizeMenu(IFlexibleMenuItemProvider itemProvider, int selectionIndex, FlexibleMenuModifyItemUI modifyItemUi, IGameViewSizeMenuUser gameView) : base(itemProvider, selectionIndex, modifyItemUi, new Action<int, object>(gameView, (IntPtr) gameView.SizeSelectionCallback))
+        public GameViewSizeMenu(IFlexibleMenuItemProvider itemProvider, int selectionIndex, FlexibleMenuModifyItemUI modifyItemUi, IGameViewSizeMenuUser gameView) : base(itemProvider, selectionIndex, modifyItemUi, new Action<int, object>(gameView.SizeSelectionCallback))
         {
             this.m_GameView = gameView;
         }

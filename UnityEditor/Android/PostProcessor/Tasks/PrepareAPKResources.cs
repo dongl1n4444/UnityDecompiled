@@ -1,7 +1,9 @@
 ﻿namespace UnityEditor.Android.PostProcessor.Tasks
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEditor;
     using UnityEditor.Android.PostProcessor;
@@ -10,6 +12,7 @@
     {
         private string _stagingArea;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ProgressHandler OnProgress;
 
         public void Execute(PostProcessorContext context)
@@ -30,6 +33,7 @@
             AndroidXmlDocument document = new AndroidXmlDocument(Path.Combine(this._stagingArea, "assets/bin/Data/settings.xml"));
             document.PatchStringRes("integer", "splash_mode", num.ToString());
             document.PatchStringRes("bool", "useObb", flag.ToString());
+            document.PatchStringRes("bool", "showSplash", !PlayerSettings.virtualRealitySupported.ToString());
             context.Set<AndroidXmlDocument>("SettingsXml", document);
             document.Save();
         }

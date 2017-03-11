@@ -1,6 +1,7 @@
 ﻿namespace Unity.IL2CPP.GenericsCollection
 {
     using System;
+    using System.Collections.Generic;
     using Unity.IL2CPP;
     using Unity.IL2CPP.IoC;
     using Unity.IL2CPP.IoCServices;
@@ -15,6 +16,7 @@
         public readonly InflatedCollectionForTypeDeclarations TypeDeclarations = new InflatedCollectionForTypeDeclarations(Il2CppTypeCollector);
         public readonly InflatedCollection<GenericInstanceType> TypeMethodDeclarations = new InflatedCollection<GenericInstanceType>(new TypeReferenceEqualityComparer());
         public readonly InflatedCollection<GenericInstanceType> Types = new InflatedCollection<GenericInstanceType>(new TypeReferenceEqualityComparer());
+        public readonly HashSet<MethodReference> VisitedMethodBodies = new HashSet<MethodReference>(new MethodReferenceComparer());
 
         public ReadOnlyInflatedCollectionCollector AsReadOnly() => 
             new ReadOnlyInflatedCollectionCollector(this);

@@ -15,12 +15,16 @@
             if (exceptionObject != null)
             {
                 PrintException("Unhandled Exception: ", exceptionObject);
+                NativeUnhandledExceptionHandler(exceptionObject.GetType().Name, exceptionObject.Message, exceptionObject.StackTrace);
             }
-            NativeUnhandledExceptionHandler();
+            else
+            {
+                NativeUnhandledExceptionHandler(null, null, null);
+            }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
-        private static extern void NativeUnhandledExceptionHandler();
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
+        private static extern void NativeUnhandledExceptionHandler(string managedExceptionType, string managedExceptionMessage, string managedExceptionStack);
         private static void PrintException(string title, Exception e)
         {
             Debug.LogException(e);

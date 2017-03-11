@@ -9,6 +9,7 @@
     using UnityEditor;
     using UnityEngine;
     using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Sprite Packer helpers.</para>
@@ -16,19 +17,19 @@
     public sealed class Packer
     {
         [CompilerGenerated]
-        private static Func<Type, string> <>f__am$cache0;
+        private static Func<System.Type, string> <>f__am$cache0;
         /// <summary>
         /// <para>Name of the default Sprite Packer policy.</para>
         /// </summary>
         public static string kDefaultPolicy = typeof(DefaultPackerPolicy).Name;
         private static string[] m_policies = null;
-        private static Dictionary<string, Type> m_policyTypeCache = null;
+        private static Dictionary<string, System.Type> m_policyTypeCache = null;
         private static string m_selectedPolicy = null;
 
         internal static void ExecuteSelectedPolicy(BuildTarget target, int[] textureImporterInstanceIDs)
         {
             RegenerateList();
-            Type type = m_policyTypeCache[m_selectedPolicy];
+            System.Type type = m_policyTypeCache[m_selectedPolicy];
             (Activator.CreateInstance(type) as IPackerPolicy).OnGroupAtlases(target, new PackerJob(), textureImporterInstanceIDs);
         }
 
@@ -36,14 +37,14 @@
         /// <para>Returns all alpha atlas textures generated for the specified atlas.</para>
         /// </summary>
         /// <param name="atlasName">Name of the atlas.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern Texture2D[] GetAlphaTexturesForAtlas(string atlasName);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void GetAtlasDataForSprite(Sprite sprite, out string atlasName, out Texture2D atlasTexture);
         internal static string GetSelectedPolicyId()
         {
             RegenerateList();
-            Type type = m_policyTypeCache[m_selectedPolicy];
+            System.Type type = m_policyTypeCache[m_selectedPolicy];
             IPackerPolicy policy = Activator.CreateInstance(type) as IPackerPolicy;
             return $"{type.AssemblyQualifiedName}::{policy.GetVersion()}";
         }
@@ -52,7 +53,7 @@
         /// <para>Returns all atlas textures generated for the specified atlas.</para>
         /// </summary>
         /// <param name="atlasName">Atlas name.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern Texture2D[] GetTexturesForAtlas(string atlasName);
         [ExcludeFromDocs]
         public static void RebuildAtlasCacheIfNeeded(BuildTarget target)
@@ -69,20 +70,20 @@
             RebuildAtlasCacheIfNeeded(target, displayProgressBar, normal);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void RebuildAtlasCacheIfNeeded(BuildTarget target, [DefaultValue("false")] bool displayProgressBar, [DefaultValue("Execution.Normal")] Execution execution);
         private static void RegenerateList()
         {
             if (m_policies == null)
             {
-                List<Type> list = new List<Type>();
+                List<System.Type> list = new List<System.Type>();
                 Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
                 foreach (Assembly assembly in assemblies)
                 {
                     try
                     {
-                        Type[] types = assembly.GetTypes();
-                        foreach (Type type in types)
+                        System.Type[] types = assembly.GetTypes();
+                        foreach (System.Type type in types)
                         {
                             if (typeof(IPackerPolicy).IsAssignableFrom(type) && (type != typeof(IPackerPolicy)))
                             {
@@ -97,15 +98,15 @@
                 }
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<Type, string>(null, (IntPtr) <RegenerateList>m__0);
+                    <>f__am$cache0 = t => t.Name;
                 }
-                m_policies = Enumerable.Select<Type, string>(list, <>f__am$cache0).ToArray<string>();
-                m_policyTypeCache = new Dictionary<string, Type>();
-                foreach (Type type2 in list)
+                m_policies = Enumerable.Select<System.Type, string>(list, <>f__am$cache0).ToArray<string>();
+                m_policyTypeCache = new Dictionary<string, System.Type>();
+                foreach (System.Type type2 in list)
                 {
                     if (m_policyTypeCache.ContainsKey(type2.Name))
                     {
-                        Type type3 = m_policyTypeCache[type2.Name];
+                        System.Type type3 = m_policyTypeCache[type2.Name];
                         Debug.LogError($"Duplicate Sprite Packer policies found: {type2.FullName} and {type3.FullName}. Please rename one.");
                     }
                     else
@@ -150,7 +151,7 @@
         /// <summary>
         /// <para>Array of Sprite atlas names found in the current atlas cache.</para>
         /// </summary>
-        public static string[] atlasNames { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static string[] atlasNames { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Available Sprite Packer policies for this project.</para>

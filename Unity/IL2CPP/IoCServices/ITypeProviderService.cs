@@ -1,20 +1,31 @@
 ﻿namespace Unity.IL2CPP.IoCServices
 {
     using Mono.Cecil;
+    using System;
 
     public interface ITypeProviderService
     {
+        TypeDefinition OptionalResolve(string namespaze, string name, AssemblyNameReference assembly);
+
         TypeReference BoolTypeReference { get; }
 
         TypeReference ByteTypeReference { get; }
 
         TypeReference CharTypeReference { get; }
 
+        TypeDefinition ConstantSplittableMapType { get; }
+
         AssemblyDefinition Corlib { get; }
 
         TypeReference DoubleTypeReference { get; }
 
         TypeReference IActivationFactoryTypeReference { get; }
+
+        TypeReference IBindableIterableTypeReference { get; }
+
+        TypeReference IBindableIteratorTypeReference { get; }
+
+        TypeReference IIterableTypeReference { get; }
 
         TypeReference Il2CppComDelegateTypeReference { get; }
 
@@ -27,6 +38,12 @@
         TypeReference Int64TypeReference { get; }
 
         TypeReference IntPtrTypeReference { get; }
+
+        TypeReference IPropertyValueType { get; }
+
+        TypeReference IReferenceType { get; }
+
+        TypeDefinition IStringableType { get; }
 
         TypeReference NativeIntTypeReference { get; }
 
@@ -67,6 +84,8 @@
         TypeDefinition SystemUInt16 { get; }
 
         TypeDefinition SystemUIntPtr { get; }
+
+        TypeDefinition SystemVoid { get; }
 
         TypeReference UInt16TypeReference { get; }
 

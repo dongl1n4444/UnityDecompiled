@@ -5,12 +5,12 @@
     internal enum VisualStudioVersion
     {
         Invalid = 0,
-        VisualStudio15 = 15,
         VisualStudio2008 = 9,
         VisualStudio2010 = 10,
         VisualStudio2012 = 11,
         VisualStudio2013 = 12,
-        VisualStudio2015 = 14
+        VisualStudio2015 = 14,
+        VisualStudio2017 = 15
     }
 }
 

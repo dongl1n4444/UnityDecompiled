@@ -13,6 +13,7 @@
     using UnityEditor.BuildReporting;
     using UnityEditor.Utils;
     using UnityEditorInternal;
+    using UnityEditorInternal.VR;
 
     internal class CodeStrippingUtils
     {
@@ -25,7 +26,7 @@
         private static UnityType[] s_blackListNativeClasses;
         private static Dictionary<UnityType, UnityType> s_blackListNativeClassesDependency;
         private static readonly Dictionary<string, string> s_blackListNativeClassesDependencyNames;
-        private static string[] s_blackListNativeClassNames = new string[] { "PreloadData", "Material", "Cubemap", "Texture3D", "Texture2DArray", "RenderTexture", "Mesh", "Sprite" };
+        private static string[] s_blackListNativeClassNames = new string[] { "Behaviour", "PreloadData", "Material", "Cubemap", "Texture3D", "Texture2DArray", "RenderTexture", "Mesh", "Sprite", "LowerResBlitTexture" };
         private static UnityType s_GameManagerTypeInfo = null;
         private static readonly string[] s_UserAssemblies;
 
@@ -66,24 +67,29 @@
                 }
             }
             AssemblyDefinition definition3 = null;
+            AssemblyDefinition definition4 = null;
             for (int i = 0; i < assemblyFileNames.Length; i++)
             {
                 if (assemblyFileNames[i] == "UnityEngine.dll")
                 {
                     definition3 = assemblyDefinitions[i];
                 }
-            }
-            foreach (AssemblyDefinition definition4 in assemblyDefinitions)
-            {
-                if (definition4 != definition3)
+                if (assemblyFileNames[i] == "UnityEngine.UI.dll")
                 {
-                    foreach (TypeReference reference in definition4.MainModule.GetTypeReferences())
+                    definition4 = assemblyDefinitions[i];
+                }
+            }
+            foreach (AssemblyDefinition definition5 in assemblyDefinitions)
+            {
+                if ((definition5 != definition3) && (definition5 != definition4))
+                {
+                    foreach (TypeReference reference in definition5.MainModule.GetTypeReferences())
                     {
                         if (reference.Namespace.StartsWith("UnityEngine"))
                         {
                             string item = reference.Name;
                             set.Add(item);
-                            if ((strippingInfo != null) && !AssemblyReferenceChecker.IsIgnoredSystemDll(definition4.Name.Name))
+                            if ((strippingInfo != null) && !AssemblyReferenceChecker.IsIgnoredSystemDll(definition5.Name.Name))
                             {
                                 strippingInfo.RegisterDependency(item, "Required by Scripts");
                             }
@@ -98,11 +104,11 @@
         {
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<string, UnityType>(null, (IntPtr) <CollectNativeClassListFromRoots>m__1);
+                <>f__am$cache1 = name => UnityType.FindTypeByName(name);
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<UnityType, bool>(null, (IntPtr) <CollectNativeClassListFromRoots>m__2);
+                <>f__am$cache2 = klass => (klass != null) && (klass.baseClass != null);
             }
             return new HashSet<UnityType>(Enumerable.Where<UnityType>(Enumerable.Select<string, UnityType>(CollectManagedTypeReferencesFromRoots(directory, rootAssemblies, strippingInfo), <>f__am$cache1), <>f__am$cache2));
         }
@@ -235,7 +241,7 @@
             }
             if ((nativeClasses != null) && (strippingInfo != null))
             {
-                InjectCustomDependencies(strippingInfo, nativeClasses);
+                InjectCustomDependencies(platformProvider.target, strippingInfo, nativeClasses, nativeModules);
             }
         }
 
@@ -313,7 +319,7 @@
             <GetAssembliesWithSuffix>c__AnonStorey0 storey = new <GetAssembliesWithSuffix>c__AnonStorey0 {
                 suffix = EditorSettings.Internal_UserGeneratedProjectSuffix
             };
-            return Enumerable.Select<string, string>(s_UserAssemblies, new Func<string, string>(storey, (IntPtr) this.<>m__0)).ToArray<string>();
+            return Enumerable.Select<string, string>(s_UserAssemblies, new Func<string, string>(storey.<>m__0)).ToArray<string>();
         }
 
         public static List<string> GetDependentModules(string moduleXml)
@@ -414,7 +420,7 @@
             return list.ToArray();
         }
 
-        public static void InjectCustomDependencies(StrippingInfo strippingInfo, HashSet<UnityType> nativeClasses)
+        public static void InjectCustomDependencies(BuildTarget target, StrippingInfo strippingInfo, HashSet<UnityType> nativeClasses, HashSet<string> nativeModules)
         {
             UnityType item = UnityType.FindTypeByName("UnityAnalyticsManager");
             if (nativeClasses.Contains(item))
@@ -430,6 +436,30 @@
                     strippingInfo.SetIcon("Required by Unity Analytics (See Services Window)", "class/PlayerSettings");
                 }
             }
+            if (IsVRModuleUsed(target))
+            {
+                nativeModules.Add("VR");
+                strippingInfo.RegisterDependency("VR", "Required by Scripts");
+                strippingInfo.SetIcon("Required because VR is enabled in PlayerSettings", "class/PlayerSettings");
+            }
+        }
+
+        private static bool IsVRModuleUsed(BuildTarget target)
+        {
+            BuildTargetGroup buildTargetGroup = BuildPipeline.GetBuildTargetGroup(target);
+            if (buildTargetGroup != BuildTargetGroup.iPhone)
+            {
+                return false;
+            }
+            if (!PlayerSettings.virtualRealitySupported)
+            {
+                return false;
+            }
+            if (Array.IndexOf<string>(VREditor.GetVREnabledDevicesOnTargetGroup(buildTargetGroup), "cardboard") < 0)
+            {
+                return false;
+            }
+            return true;
         }
 
         private static void WriteModuleAndClassRegistrationFile(string file, HashSet<string> nativeModules, HashSet<UnityType> nativeClasses, HashSet<UnityType> classesToSkip)
@@ -543,7 +573,7 @@
                 {
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<string, UnityType>(null, (IntPtr) <get_BlackListNativeClasses>m__0);
+                        <>f__am$cache0 = typeName => FindTypeByNameChecked(typeName, "code stripping blacklist native class");
                     }
                     s_blackListNativeClasses = Enumerable.Select<string, UnityType>(s_blackListNativeClassNames, <>f__am$cache0).ToArray<UnityType>();
                 }

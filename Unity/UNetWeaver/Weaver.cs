@@ -690,7 +690,7 @@
             }
             else
             {
-                definition = Enumerable.First<ExportedType>(corLib.ExportedTypes, new Func<ExportedType, bool>(storey, (IntPtr) this.<>m__0)).Resolve();
+                definition = Enumerable.First<ExportedType>(corLib.ExportedTypes, new Func<ExportedType, bool>(storey.<>m__0)).Resolve();
             }
             return scriptDef.MainModule.ImportReference(definition);
         }

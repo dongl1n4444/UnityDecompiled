@@ -13,6 +13,7 @@
         [SerializeField]
         private string m_CancelButton = "Cancel";
         private int m_ConsecutiveMoveCount = 0;
+        private GameObject m_CurrentFocusedGameObject;
         [SerializeField, FormerlySerializedAs("m_AllowActivationOnMobileDevice")]
         private bool m_ForceModuleActive;
         [SerializeField]
@@ -59,8 +60,12 @@
             base.ClearSelection();
         }
 
+        [Obsolete("This method is no longer checked, overriding it with return true does nothing!")]
         protected virtual bool ForceAutoSelect() => 
             false;
+
+        protected GameObject GetCurrentFocusedGameObject() => 
+            this.m_CurrentFocusedGameObject;
 
         private Vector2 GetRawMoveVector()
         {
@@ -141,10 +146,7 @@
         {
             PointerInputModule.MouseState mousePointerEventData = this.GetMousePointerEventData(id);
             PointerInputModule.MouseButtonEventData eventData = mousePointerEventData.GetButtonState(PointerEventData.InputButton.Left).eventData;
-            if (this.ForceAutoSelect())
-            {
-                base.eventSystem.SetSelectedGameObject(eventData.buttonData.pointerCurrentRaycast.gameObject, eventData.buttonData);
-            }
+            this.m_CurrentFocusedGameObject = eventData.buttonData.pointerCurrentRaycast.gameObject;
             this.ProcessMousePress(eventData);
             this.ProcessMove(eventData.buttonData);
             this.ProcessDrag(eventData.buttonData);
@@ -258,11 +260,11 @@
         }
 
         /// <summary>
-        /// <para>How should the touch press be processed.</para>
+        /// <para>This method is called by Unity whenever a touch event is processed. Override this method with a custom implementation to process touch events yourself.</para>
         /// </summary>
-        /// <param name="pointerEvent">The data to be passed to the final object.</param>
-        /// <param name="pressed">If the touch was pressed this frame.</param>
-        /// <param name="released">If the touch was released this frame.</param>
+        /// <param name="pointerEvent">Event data relating to the touch event, such as position and ID to be passed to the touch event destination object.</param>
+        /// <param name="pressed">This is true for the first frame of a touch event, and false thereafter. This can therefore be used to determine the instant a touch event occurred.</param>
+        /// <param name="released">This is true only for the last frame of a touch event.</param>
         protected void ProcessTouchPress(PointerEventData pointerEvent, bool pressed, bool released)
         {
             GameObject gameObject = pointerEvent.pointerCurrentRaycast.gameObject;

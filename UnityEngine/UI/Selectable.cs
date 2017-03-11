@@ -319,10 +319,6 @@
         public virtual bool IsInteractable() => 
             (this.m_GroupsAllowInteraction && this.m_Interactable);
 
-        /// <summary>
-        /// <para>Whether the current selectable is being pressed.</para>
-        /// </summary>
-        /// <param name="eventData"></param>
         protected bool IsPressed()
         {
             if (!this.IsActive())
@@ -332,10 +328,6 @@
             return (this.isPointerInside && this.isPointerDown);
         }
 
-        /// <summary>
-        /// <para>Whether the current selectable is being pressed.</para>
-        /// </summary>
-        /// <param name="eventData"></param>
         [Obsolete("Is Pressed no longer requires eventData", false)]
         protected bool IsPressed(BaseEventData eventData) => 
             this.IsPressed();
@@ -558,7 +550,7 @@
 
         private void TriggerAnimation(string triggername)
         {
-            if ((((this.transition == Transition.Animation) && (this.animator != null)) && (this.animator.isActiveAndEnabled && (this.animator.runtimeAnimatorController != null))) && !string.IsNullOrEmpty(triggername))
+            if ((((this.transition == Transition.Animation) && (this.animator != null)) && (this.animator.isActiveAndEnabled && this.animator.hasBoundPlayables)) && !string.IsNullOrEmpty(triggername))
             {
                 this.animator.ResetTrigger(this.m_AnimationTriggers.normalTrigger);
                 this.animator.ResetTrigger(this.m_AnimationTriggers.pressedTrigger);
@@ -664,6 +656,10 @@
                     if ((!this.m_Interactable && (EventSystem.current != null)) && (EventSystem.current.currentSelectedGameObject == base.gameObject))
                     {
                         EventSystem.current.SetSelectedGameObject(null);
+                    }
+                    if (this.m_Interactable)
+                    {
+                        this.UpdateSelectionState(null);
                     }
                     this.OnSetProperty();
                 }

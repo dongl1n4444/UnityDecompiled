@@ -12,7 +12,7 @@
     public class AsyncOperation : YieldInstruction
     {
         internal IntPtr m_Ptr;
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private extern void InternalDestroy();
         ~AsyncOperation()
         {
@@ -22,19 +22,19 @@
         /// <summary>
         /// <para>Has the operation finished? (Read Only)</para>
         /// </summary>
-        public bool isDone { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isDone { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
         /// <summary>
         /// <para>What's the operation's progress. (Read Only)</para>
         /// </summary>
-        public float progress { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public float progress { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
         /// <summary>
         /// <para>Priority lets you tweak in which order async operation calls will be performed.</para>
         /// </summary>
-        public int priority { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int priority { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
         /// <summary>
         /// <para>Allow scenes to be activated as soon as it is ready.</para>
         /// </summary>
-        public bool allowSceneActivation { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool allowSceneActivation { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
     }
 }
 

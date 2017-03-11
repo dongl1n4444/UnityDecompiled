@@ -23,18 +23,17 @@
         private readonly MethodBody _methodBody;
         private readonly CppCodeWriter _writer;
         [CompilerGenerated]
-        private static Func<ExceptionHandler, bool> <>f__am$cache0;
+        private static Func<ExceptionHandler, int> <>f__am$cache0;
         [CompilerGenerated]
         private static Func<ExceptionHandler, int> <>f__am$cache1;
         [CompilerGenerated]
         private static Func<ExceptionHandler, int> <>f__am$cache2;
         [CompilerGenerated]
         private static Func<ExceptionHandler, int> <>f__am$cache3;
-        [CompilerGenerated]
-        private static Func<ExceptionHandler, int> <>f__am$cache4;
         public const string LastUnhandledExceptionName = "__last_unhandled_exception";
         public const string LeaveTargetName = "__leave_target";
         public const string LocalExceptionName = "__exception_local";
+        public const string LocalFilterName = "__filter_local";
         [Inject]
         public static INamingService Naming;
         [Inject]
@@ -44,21 +43,9 @@
         {
             this._writer = writer;
             this._methodBody = methodDefinition.Body;
-            if (<>f__am$cache0 == null)
-            {
-                <>f__am$cache0 = new Func<ExceptionHandler, bool>(null, (IntPtr) <ExceptionSupport>m__0);
-            }
-            if (this._methodBody.ExceptionHandlers.Any<ExceptionHandler>(<>f__am$cache0))
-            {
-                throw new NotSupportedException("Filter exception handlers types are not supported yet!");
-            }
             this.CollectTryCatchInfos(methodDefinition.Body);
             this._flowTree = new TryCatchTreeBuilder(this._methodBody, blocks, this._infos).Build();
         }
-
-        [CompilerGenerated]
-        private static bool <ExceptionSupport>m__0(ExceptionHandler h) => 
-            (h.HandlerType == ExceptionHandlerType.Filter);
 
         internal void AddLeaveTarget(Node finallyNode, Instruction instruction)
         {
@@ -76,28 +63,28 @@
             <BuildTryCatchScopeRecursive>c__AnonStorey3 storey = new <BuildTryCatchScopeRecursive>c__AnonStorey3();
             if (handlers.Count != 0)
             {
+                if (<>f__am$cache1 == null)
+                {
+                    <>f__am$cache1 = h => h.TryStart.Offset;
+                }
+                storey.tryStart = handlers.Min<ExceptionHandler>(<>f__am$cache1);
                 if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache2 = new Func<ExceptionHandler, int>(null, (IntPtr) <BuildTryCatchScopeRecursive>m__2);
+                    <>f__am$cache2 = eh => eh.TryEnd.Offset;
                 }
-                storey.tryStart = handlers.Min<ExceptionHandler>(<>f__am$cache2);
+                storey.tryEnd = handlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey.<>m__0)).Max<ExceptionHandler>(<>f__am$cache2);
                 if (<>f__am$cache3 == null)
                 {
-                    <>f__am$cache3 = new Func<ExceptionHandler, int>(null, (IntPtr) <BuildTryCatchScopeRecursive>m__3);
+                    <>f__am$cache3 = h => h.TryStart.Offset;
                 }
-                storey.tryEnd = handlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__0)).Max<ExceptionHandler>(<>f__am$cache3);
-                if (<>f__am$cache4 == null)
-                {
-                    <>f__am$cache4 = new Func<ExceptionHandler, int>(null, (IntPtr) <BuildTryCatchScopeRecursive>m__4);
-                }
-                List<ExceptionHandler> second = handlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__1)).OrderBy<ExceptionHandler, int>(<>f__am$cache4).ToList<ExceptionHandler>();
-                HashSet<ExceptionHandler> source = new HashSet<ExceptionHandler>(handlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__2)));
+                List<ExceptionHandler> second = handlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey.<>m__1)).OrderBy<ExceptionHandler, int>(<>f__am$cache3).ToList<ExceptionHandler>();
+                HashSet<ExceptionHandler> source = new HashSet<ExceptionHandler>(handlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey.<>m__2)));
                 int num = 0;
                 while ((num < instructions.Count) && (instructions[num].Offset < storey.tryEnd))
                 {
                     num++;
                 }
-                TryCatchInfo local1 = this._infos[instructions.Single<Instruction>(new Func<Instruction, bool>(storey, (IntPtr) this.<>m__3))];
+                TryCatchInfo local1 = this._infos[instructions.Single<Instruction>(new Func<Instruction, bool>(storey.<>m__3))];
                 local1.TryStart++;
                 TryCatchInfo local2 = this._infos[instructions[num]];
                 local2.TryEnd++;
@@ -124,7 +111,20 @@
                         {
                             num3++;
                         }
-                        HashSet<ExceptionHandler> set2 = new HashSet<ExceptionHandler>(handlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey3, (IntPtr) this.<>m__0)));
+                        int num4 = 0;
+                        int num5 = 0;
+                        if (storey2.h.HandlerType == ExceptionHandlerType.Filter)
+                        {
+                            while ((num4 < instructions.Count) && (instructions[num4].Offset < storey2.h.FilterStart.Offset))
+                            {
+                                num4++;
+                            }
+                            while ((num5 < instructions.Count) && (instructions[num5].Offset < storey2.h.HandlerStart.Offset))
+                            {
+                                num5++;
+                            }
+                        }
+                        HashSet<ExceptionHandler> set2 = new HashSet<ExceptionHandler>(handlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey3.<>m__0)));
                         if (storey2.h.HandlerType == ExceptionHandlerType.Catch)
                         {
                             TryCatchInfo local3 = this._infos[instructions[num2]];
@@ -139,12 +139,27 @@
                             TryCatchInfo local6 = this._infos[instructions[num3]];
                             local6.FinallyEnd++;
                         }
-                        else
+                        else if (storey2.h.HandlerType == ExceptionHandlerType.Fault)
                         {
                             TryCatchInfo local7 = this._infos[instructions[num2]];
                             local7.FaultStart++;
                             TryCatchInfo local8 = this._infos[instructions[num3]];
                             local8.FaultEnd++;
+                        }
+                        else
+                        {
+                            if (storey2.h.HandlerType != ExceptionHandlerType.Filter)
+                            {
+                                throw new InvalidOperationException($"Unexpected handler type '{storey2.h.HandlerType}' encountered.");
+                            }
+                            TryCatchInfo local9 = this._infos[instructions[num2]];
+                            local9.CatchStart++;
+                            TryCatchInfo local10 = this._infos[instructions[num3]];
+                            local10.CatchEnd++;
+                            TryCatchInfo local11 = this._infos[instructions[num4]];
+                            local11.FilterStart++;
+                            TryCatchInfo local12 = this._infos[instructions[num2]];
+                            local12.FilterEnd++;
                         }
                         this.BuildTryCatchScopeRecursive(instructions, set2.ToList<ExceptionHandler>());
                         handlers = handlers.Except<ExceptionHandler>(set2).ToArray<ExceptionHandler>();
@@ -160,7 +175,7 @@
                 start = start,
                 end = end
             };
-            return this._methodBody.ExceptionHandlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__0)).ToArray<ExceptionHandler>();
+            return this._methodBody.ExceptionHandlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey.<>m__0)).ToArray<ExceptionHandler>();
         }
 
         private void CollectTryCatchInfos(MethodBody body)
@@ -179,11 +194,11 @@
                 start = start,
                 end = end
             };
-            if (<>f__am$cache1 == null)
+            if (<>f__am$cache0 == null)
             {
-                <>f__am$cache1 = new Func<ExceptionHandler, int>(null, (IntPtr) <EnclosingFinallyHandlerForRange>m__1);
+                <>f__am$cache0 = h => h.TryStart.Offset;
             }
-            return this._methodBody.ExceptionHandlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__0)).OrderByDescending<ExceptionHandler, int>(<>f__am$cache1).FirstOrDefault<ExceptionHandler>();
+            return this._methodBody.ExceptionHandlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey.<>m__0)).OrderByDescending<ExceptionHandler, int>(<>f__am$cache0).FirstOrDefault<ExceptionHandler>();
         }
 
         [DebuggerHidden]
@@ -218,15 +233,29 @@
             valueStack.Push(new StackInfo($"(({Naming.ForVariable(catchType)}){"__exception_local"})", catchType));
         }
 
-        internal void PushExceptionOnStackIfNeeded(Node node, Stack<StackInfo> valueStack, Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver)
+        internal void PushExceptionOnStackIfNeeded(Node node, Stack<StackInfo> valueStack, Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver, TypeDefinition systemException)
         {
             if ((node.Type == NodeType.Catch) && (node.Block != null))
             {
-                PushExceptionOnStack(valueStack, typeResolver.Resolve(node.Handler.CatchType));
+                if (node.Handler.CatchType == null)
+                {
+                }
+                PushExceptionOnStack(valueStack, typeResolver.Resolve(systemException));
             }
-            else if ((node.Parent.Type == NodeType.Catch) && (node.Parent.Children[0] == node))
+            else if ((node.Type == NodeType.Filter) && (node.Block != null))
             {
-                PushExceptionOnStack(valueStack, typeResolver.Resolve(node.Parent.Handler.CatchType));
+                PushExceptionOnStack(valueStack, null);
+            }
+            else if (node.Parent.Type == NodeType.Catch)
+            {
+                if (node.Parent.Children[0] == node)
+                {
+                    PushExceptionOnStack(valueStack, typeResolver.Resolve(node.Parent.Handler.CatchType));
+                }
+            }
+            else if ((node.Parent.Type == NodeType.Filter) && (node.Parent.Handler.FilterStart == node.Start))
+            {
+                PushExceptionOnStack(valueStack, systemException);
             }
         }
 
@@ -460,9 +489,21 @@
                 };
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<ExceptionSupport.Node, ExceptionSupport.Node>(null, (IntPtr) <GetTargetFinallyAndFaultNodesForJump>m__1);
+                    <>f__am$cache1 = delegate (ExceptionSupport.Node n) {
+                        ExceptionSupport.Node faultNode;
+                        ExceptionSupport.Node finallyNode = n.FinallyNode;
+                        if (finallyNode != null)
+                        {
+                            faultNode = finallyNode;
+                        }
+                        else
+                        {
+                            faultNode = n.FaultNode;
+                        }
+                        return faultNode;
+                    };
                 }
-                return this.Root.Walk(new Func<ExceptionSupport.Node, bool>(storey, (IntPtr) this.<>m__0)).Reverse<ExceptionSupport.Node>().Select<ExceptionSupport.Node, ExceptionSupport.Node>(<>f__am$cache1);
+                return this.Root.Walk(new Func<ExceptionSupport.Node, bool>(storey.<>m__0)).Reverse<ExceptionSupport.Node>().Select<ExceptionSupport.Node, ExceptionSupport.Node>(<>f__am$cache1);
             }
 
             internal IEnumerable<ExceptionSupport.Node> GetTargetFinallyNodesForJump(int from, int to)
@@ -473,9 +514,9 @@
                 };
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<ExceptionSupport.Node, ExceptionSupport.Node>(null, (IntPtr) <GetTargetFinallyNodesForJump>m__0);
+                    <>f__am$cache0 = n => n.FinallyNode;
                 }
-                return this.Root.Walk(new Func<ExceptionSupport.Node, bool>(storey, (IntPtr) this.<>m__0)).Reverse<ExceptionSupport.Node>().Select<ExceptionSupport.Node, ExceptionSupport.Node>(<>f__am$cache0);
+                return this.Root.Walk(new Func<ExceptionSupport.Node, bool>(storey.<>m__0)).Reverse<ExceptionSupport.Node>().Select<ExceptionSupport.Node, ExceptionSupport.Node>(<>f__am$cache0);
             }
 
             private static bool IsTargetFaultNodeForJump(ExceptionSupport.Node node, int from, int to)
@@ -608,6 +649,23 @@
                 }
             }
 
+            internal ExceptionSupport.Node[] FilterNodes
+            {
+                get
+                {
+                    if (this._type != ExceptionSupport.NodeType.Try)
+                    {
+                        throw new NotSupportedException("Cannot find the related finally handler for a non-try block");
+                    }
+                    List<ExceptionSupport.Node> list = new List<ExceptionSupport.Node>();
+                    for (ExceptionSupport.Node node = this.NextSibling; (node != null) && (node.Type == ExceptionSupport.NodeType.Filter); node = node.NextSibling)
+                    {
+                        list.Add(node);
+                    }
+                    return list.ToArray();
+                }
+            }
+
             internal ExceptionSupport.Node FinallyNode
             {
                 get
@@ -644,6 +702,10 @@
                         {
                             return true;
                         }
+                        if (parent.Type == ExceptionSupport.NodeType.Filter)
+                        {
+                            return false;
+                        }
                         if (parent.Type == ExceptionSupport.NodeType.Finally)
                         {
                             return false;
@@ -673,6 +735,10 @@
                         {
                             return false;
                         }
+                        if (parent.Type == ExceptionSupport.NodeType.Filter)
+                        {
+                            return false;
+                        }
                         if (parent.Type == ExceptionSupport.NodeType.Finally)
                         {
                             return false;
@@ -695,6 +761,10 @@
                     {
                         parent = parent.Parent;
                         if (parent.Type == ExceptionSupport.NodeType.Try)
+                        {
+                            return false;
+                        }
+                        if (parent.Type == ExceptionSupport.NodeType.Filter)
                         {
                             return false;
                         }
@@ -728,6 +798,10 @@
                             return true;
                         }
                         if (parent.Type == ExceptionSupport.NodeType.Catch)
+                        {
+                            return false;
+                        }
+                        if (parent.Type == ExceptionSupport.NodeType.Filter)
                         {
                             return false;
                         }
@@ -813,7 +887,7 @@
             {
                 get
                 {
-                    if (((this._type != ExceptionSupport.NodeType.Catch) && (this._type != ExceptionSupport.NodeType.Finally)) && (this._type != ExceptionSupport.NodeType.Fault))
+                    if (((this._type != ExceptionSupport.NodeType.Catch) && (this._type != ExceptionSupport.NodeType.Filter)) && ((this._type != ExceptionSupport.NodeType.Finally) && (this._type != ExceptionSupport.NodeType.Fault)))
                     {
                         throw new NotSupportedException("Cannot find the related try node for a non-handler block");
                     }
@@ -903,7 +977,7 @@
                     if (this.<queue>__0.Count > 0)
                     {
                         this.<current>__1 = this.<queue>__0.Dequeue();
-                        if (this.filter.Invoke(this.<current>__1))
+                        if (this.filter(this.<current>__1))
                         {
                             this.$current = this.<current>__1;
                             if (!this.$disposing)
@@ -954,6 +1028,7 @@
         {
             Try,
             Catch,
+            Filter,
             Finally,
             Block,
             Root,

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Runtime.CompilerServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Utility functions for working with JSON data.</para>
@@ -19,14 +20,14 @@
         /// <returns>
         /// <para>An instance of the object.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern object FromJson(string json, System.Type type);
         /// <summary>
         /// <para>Overwrite data in an object by reading from its JSON representation.</para>
         /// </summary>
         /// <param name="json">The JSON representation of the object.</param>
         /// <param name="objectToOverwrite">The object that should be overwritten.</param>
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern void FromJsonOverwrite(string json, object objectToOverwrite);
         /// <summary>
         /// <para>Generate a JSON representation of the public fields of an object.</para>
@@ -47,7 +48,7 @@
         /// <returns>
         /// <para>The object's data in JSON format.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern string ToJson(object obj, bool prettyPrint);
     }
 }

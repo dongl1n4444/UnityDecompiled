@@ -152,11 +152,11 @@
         /// <para>ETC2 (GL ES 3.0) 8 bits/pixel compressed RGBA texture format.</para>
         /// </summary>
         ETC2_RGBA8 = 0x2f,
-        [Obsolete("Enum member TextureFormat.PVRTC_2BPP_RGB has been deprecated. Use PVRTC_RGB2 instead (UnityUpgradable) -> PVRTC_RGB2", true), EditorBrowsable(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Enum member TextureFormat.PVRTC_2BPP_RGB has been deprecated. Use PVRTC_RGB2 instead (UnityUpgradable) -> PVRTC_RGB2", true)]
         PVRTC_2BPP_RGB = -127,
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Enum member TextureFormat.PVRTC_2BPP_RGBA has been deprecated. Use PVRTC_RGBA2 instead (UnityUpgradable) -> PVRTC_RGBA2", true)]
         PVRTC_2BPP_RGBA = -127,
-        [Obsolete("Enum member TextureFormat.PVRTC_4BPP_RGB has been deprecated. Use PVRTC_RGB4 instead (UnityUpgradable) -> PVRTC_RGB4", true), EditorBrowsable(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Enum member TextureFormat.PVRTC_4BPP_RGB has been deprecated. Use PVRTC_RGB4 instead (UnityUpgradable) -> PVRTC_RGB4", true)]
         PVRTC_4BPP_RGB = -127,
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Enum member TextureFormat.PVRTC_4BPP_RGBA has been deprecated. Use PVRTC_RGBA4 instead (UnityUpgradable) -> PVRTC_RGBA4", true)]
         PVRTC_4BPP_RGBA = -127,
@@ -192,6 +192,10 @@
         /// <para>A 16 bit color texture format.</para>
         /// </summary>
         RGB565 = 7,
+        /// <summary>
+        /// <para>RGB HDR format, with 9 bit mantissa per channel and a 5 bit shared exponent.</para>
+        /// </summary>
+        RGB9e5Float = 0x16,
         /// <summary>
         /// <para>Color with alpha texture format, 8-bits per channel.</para>
         /// </summary>

@@ -18,9 +18,9 @@
             this.Init();
         }
 
-        private bool CheckIfChild(Object subEmitter)
+        private bool CheckIfChild(UnityEngine.Object subEmitter)
         {
-            ParticleSystem root = base.m_ParticleSystemUI.m_ParticleEffectUI.GetRoot();
+            ParticleSystem root = ParticleSystemEditorUtils.GetRoot(base.m_ParticleSystemUI.m_ParticleSystems[0]);
             if (!IsChild(subEmitter as ParticleSystem, root))
             {
                 string message = $"The assigned sub emitter is not a child of the current root particle system GameObject: '{root.gameObject.name}' and is therefore NOT considered a part of the current effect. Do you want to reparent it?";
@@ -30,10 +30,10 @@
                 }
                 if (EditorUtility.IsPersistent(subEmitter))
                 {
-                    GameObject obj2 = Object.Instantiate(subEmitter) as GameObject;
+                    GameObject obj2 = UnityEngine.Object.Instantiate(subEmitter) as GameObject;
                     if (obj2 != null)
                     {
-                        obj2.transform.parent = base.m_ParticleSystemUI.m_ParticleSystem.transform;
+                        obj2.transform.parent = base.m_ParticleSystemUI.m_ParticleSystems[0].transform;
                         obj2.transform.localPosition = Vector3.zero;
                         obj2.transform.localRotation = Quaternion.identity;
                     }
@@ -43,7 +43,7 @@
                     ParticleSystem system2 = subEmitter as ParticleSystem;
                     if (system2 != null)
                     {
-                        Undo.SetTransformParent(system2.gameObject.transform.transform, base.m_ParticleSystemUI.m_ParticleSystem.transform, "Reparent sub emitter");
+                        Undo.SetTransformParent(system2.gameObject.transform.transform, base.m_ParticleSystemUI.m_ParticleSystems[0].transform, "Reparent sub emitter");
                     }
                 }
             }
@@ -52,14 +52,14 @@
 
         private void CreateSubEmitter(SerializedProperty objectRefProp, int index, SubEmitterType type)
         {
-            GameObject obj2 = base.m_ParticleSystemUI.m_ParticleEffectUI.CreateParticleSystem(base.m_ParticleSystemUI.m_ParticleSystem, type);
+            GameObject obj2 = base.m_ParticleSystemUI.m_ParticleEffectUI.CreateParticleSystem(base.m_ParticleSystemUI.m_ParticleSystems[0], type);
             obj2.name = "SubEmitter" + index;
             objectRefProp.objectReferenceValue = obj2.GetComponent<ParticleSystem>();
         }
 
-        private List<Object> GetSubEmitterProperties()
+        private List<UnityEngine.Object> GetSubEmitterProperties()
         {
-            List<Object> list = new List<Object>();
+            List<UnityEngine.Object> list = new List<UnityEngine.Object>();
             IEnumerator enumerator = this.m_SubEmitters.GetEnumerator();
             while (enumerator.MoveNext())
             {
@@ -86,72 +86,86 @@
             return (ParticleSystemEditorUtils.GetRoot(subEmitter) == root);
         }
 
-        public override void OnInspectorGUI(ParticleSystem s)
+        public override void OnInspectorGUI(InitialModuleUI initial)
         {
             if (s_Texts == null)
             {
                 s_Texts = new Texts();
             }
-            List<Object> subEmitterProperties = this.GetSubEmitterProperties();
-            GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-            GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.ExpandWidth(true) };
-            GUILayout.Label("", ParticleSystemStyles.Get().label, options);
-            GUILayoutOption[] optionArray2 = new GUILayoutOption[] { GUILayout.Width(120f) };
-            GUILayout.Label(s_Texts.inherit, ParticleSystemStyles.Get().label, optionArray2);
-            GUILayout.EndHorizontal();
-            for (int i = 0; i < this.m_SubEmitters.arraySize; i++)
+            if (base.m_ParticleSystemUI.multiEdit)
             {
-                this.ShowSubEmitter(i);
+                EditorGUILayout.HelpBox("Sub Emitter editing is only available when editing a single Particle System", MessageType.Info, true);
             }
-            List<Object> list2 = this.GetSubEmitterProperties();
-            for (int j = 0; j < Mathf.Min(subEmitterProperties.Count, list2.Count); j++)
+            else
             {
-                if (subEmitterProperties[j] != list2[j])
+                List<UnityEngine.Object> subEmitterProperties = this.GetSubEmitterProperties();
+                GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Height(16f) };
+                GUILayout.BeginHorizontal(options);
+                GUILayoutOption[] optionArray2 = new GUILayoutOption[] { GUILayout.ExpandWidth(true) };
+                GUILayout.Label("", ParticleSystemStyles.Get().label, optionArray2);
+                GUILayoutOption[] optionArray3 = new GUILayoutOption[] { GUILayout.Width(120f) };
+                GUILayout.Label(s_Texts.inherit, ParticleSystemStyles.Get().label, optionArray3);
+                GUILayout.EndHorizontal();
+                for (int i = 0; i < this.m_SubEmitters.arraySize; i++)
                 {
-                    if (this.m_CheckObjectIndex == -1)
+                    this.ShowSubEmitter(i);
+                }
+                List<UnityEngine.Object> list2 = this.GetSubEmitterProperties();
+                for (int j = 0; j < Mathf.Min(subEmitterProperties.Count, list2.Count); j++)
+                {
+                    if (subEmitterProperties[j] != list2[j])
                     {
-                        EditorApplication.update = (EditorApplication.CallbackFunction) Delegate.Combine(EditorApplication.update, new EditorApplication.CallbackFunction(this.Update));
+                        if (this.m_CheckObjectIndex == -1)
+                        {
+                            EditorApplication.update = (EditorApplication.CallbackFunction) Delegate.Combine(EditorApplication.update, new EditorApplication.CallbackFunction(this.Update));
+                        }
+                        this.m_CheckObjectIndex = j;
                     }
-                    this.m_CheckObjectIndex = j;
                 }
             }
         }
 
         private void ShowSubEmitter(int index)
         {
-            GUILayout.BeginHorizontal(new GUILayoutOption[0]);
+            GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Height(16f) };
+            GUILayout.BeginHorizontal(options);
             SerializedProperty arrayElementAtIndex = this.m_SubEmitters.GetArrayElementAtIndex(index);
             SerializedProperty objectProp = arrayElementAtIndex.FindPropertyRelative("emitter");
             SerializedProperty intProp = arrayElementAtIndex.FindPropertyRelative("type");
             SerializedProperty property4 = arrayElementAtIndex.FindPropertyRelative("properties");
             GUILayoutOption[] layoutOptions = new GUILayoutOption[] { GUILayout.MaxWidth(80f) };
             ModuleUI.GUIPopup(GUIContent.none, intProp, s_Texts.subEmitterTypeTexts, layoutOptions);
-            GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(4f) };
-            GUILayout.Label("", ParticleSystemStyles.Get().label, options);
+            GUILayoutOption[] optionArray3 = new GUILayoutOption[] { GUILayout.Width(4f) };
+            GUILayout.Label("", ParticleSystemStyles.Get().label, optionArray3);
             ModuleUI.GUIObject(GUIContent.none, objectProp, new GUILayoutOption[0]);
+            GUIStyle style = new GUIStyle("OL Plus");
             if (objectProp.objectReferenceValue == null)
             {
-                GUILayoutOption[] optionArray3 = new GUILayoutOption[] { GUILayout.Width(8f) };
-                GUILayout.Label("", ParticleSystemStyles.Get().label, optionArray3);
-                GUILayoutOption[] optionArray4 = new GUILayoutOption[] { GUILayout.Width(16f) };
-                if (GUILayout.Button(GUIContent.none, ParticleSystemStyles.Get().plus, optionArray4))
+                GUILayoutOption[] optionArray4 = new GUILayoutOption[] { GUILayout.Width(8f) };
+                GUILayout.Label("", ParticleSystemStyles.Get().label, optionArray4);
+                GUILayoutOption[] optionArray5 = new GUILayoutOption[] { GUILayout.Width(16f), GUILayout.Height(style.fixedHeight) };
+                GUILayout.BeginVertical(optionArray5);
+                GUILayout.FlexibleSpace();
+                if (GUILayout.Button(GUIContent.none, ParticleSystemStyles.Get().plus, new GUILayoutOption[0]))
                 {
                     this.CreateSubEmitter(objectProp, index, (SubEmitterType) intProp.intValue);
                 }
+                GUILayout.FlexibleSpace();
+                GUILayout.EndVertical();
             }
             else
             {
-                GUILayoutOption[] optionArray5 = new GUILayoutOption[] { GUILayout.Width(24f) };
-                GUILayout.Label("", ParticleSystemStyles.Get().label, optionArray5);
+                GUILayoutOption[] optionArray6 = new GUILayoutOption[] { GUILayout.Width(24f) };
+                GUILayout.Label("", ParticleSystemStyles.Get().label, optionArray6);
             }
-            GUILayoutOption[] optionArray6 = new GUILayoutOption[] { GUILayout.Width(100f) };
-            property4.intValue = ModuleUI.GUIMask(GUIContent.none, property4.intValue, s_Texts.propertyStrings, optionArray6);
-            GUILayoutOption[] optionArray7 = new GUILayoutOption[] { GUILayout.Width(8f) };
-            GUILayout.Label("", ParticleSystemStyles.Get().label, optionArray7);
+            GUILayoutOption[] optionArray7 = new GUILayoutOption[] { GUILayout.Width(100f) };
+            ModuleUI.GUIMask(GUIContent.none, property4, s_Texts.propertyStrings, optionArray7);
+            GUILayoutOption[] optionArray8 = new GUILayoutOption[] { GUILayout.Width(8f) };
+            GUILayout.Label("", ParticleSystemStyles.Get().label, optionArray8);
             if (index == 0)
             {
-                GUILayoutOption[] optionArray8 = new GUILayoutOption[] { GUILayout.Width(16f) };
-                if (GUILayout.Button(GUIContent.none, new GUIStyle("OL Plus"), optionArray8))
+                GUILayoutOption[] optionArray9 = new GUILayoutOption[] { GUILayout.Width(16f) };
+                if (GUILayout.Button(GUIContent.none, style, optionArray9))
                 {
                     this.m_SubEmitters.InsertArrayElementAtIndex(this.m_SubEmitters.arraySize);
                     this.m_SubEmitters.GetArrayElementAtIndex(this.m_SubEmitters.arraySize - 1).FindPropertyRelative("emitter").objectReferenceValue = null;
@@ -159,8 +173,8 @@
             }
             else
             {
-                GUILayoutOption[] optionArray9 = new GUILayoutOption[] { GUILayout.Width(16f) };
-                if (GUILayout.Button(GUIContent.none, new GUIStyle("OL Minus"), optionArray9))
+                GUILayoutOption[] optionArray10 = new GUILayoutOption[] { GUILayout.Width(16f) };
+                if (GUILayout.Button(GUIContent.none, new GUIStyle("OL Minus"), optionArray10))
                 {
                     this.m_SubEmitters.DeleteArrayElementAtIndex(index);
                 }
@@ -173,7 +187,7 @@
             if ((this.m_CheckObjectIndex >= 0) && !ObjectSelector.isVisible)
             {
                 SerializedProperty property2 = this.m_SubEmitters.GetArrayElementAtIndex(this.m_CheckObjectIndex).FindPropertyRelative("emitter");
-                Object objectReferenceValue = property2.objectReferenceValue;
+                UnityEngine.Object objectReferenceValue = property2.objectReferenceValue;
                 ParticleSystem subEmitter = objectReferenceValue as ParticleSystem;
                 if (subEmitter != null)
                 {
@@ -190,7 +204,7 @@
                         }
                         else
                         {
-                            string message = $"'{subEmitter.gameObject.name}' could not be assigned as subemitter on '{base.m_ParticleSystemUI.m_ParticleSystem.gameObject.name}' due to circular referencing!
+                            string message = $"'{subEmitter.gameObject.name}' could not be assigned as subemitter on '{base.m_ParticleSystemUI.m_ParticleSystems[0].gameObject.name}' due to circular referencing!
 Backtrace: {str} 
 
 Reference will be removed.";
@@ -216,7 +230,7 @@ Reference will be removed.";
 
         public override void UpdateCullingSupportedString(ref string text)
         {
-            text = text + "\n\tSub Emitters are enabled.";
+            text = text + "\nSub Emitters module is enabled.";
         }
 
         private bool ValidateSubemitter(ParticleSystem subEmitter)
@@ -225,7 +239,7 @@ Reference will be removed.";
             {
                 return false;
             }
-            ParticleSystem root = base.m_ParticleSystemUI.m_ParticleEffectUI.GetRoot();
+            ParticleSystem root = ParticleSystemEditorUtils.GetRoot(base.m_ParticleSystemUI.m_ParticleSystems[0]);
             if (root.gameObject.activeInHierarchy && !subEmitter.gameObject.activeInHierarchy)
             {
                 string message = string.Format("The assigned sub emitter is part of a prefab and can therefore not be assigned.", new object[0]);

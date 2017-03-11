@@ -36,7 +36,7 @@
         private Layout m_LayoutStripsOnTop;
         private AudioMixersTreeView m_MixersTree;
         [SerializeField]
-        private TreeViewState m_MixersTreeState;
+        private TreeViewStateWithAssetUtility m_MixersTreeState;
         private int m_RepaintCounter = 2;
         [SerializeField]
         private SectionType[] m_SectionOrder = new SectionType[] { SectionType.MixerTree };
@@ -124,7 +124,7 @@
 
         public static void Create()
         {
-            Type[] desiredDockNextTo = new Type[] { typeof(ProjectBrowser) };
+            System.Type[] desiredDockNextTo = new System.Type[] { typeof(ProjectBrowser) };
             AudioMixerWindow window = EditorWindow.GetWindow<AudioMixerWindow>(desiredDockNextTo);
             if (window.m_Pos.width < 400f)
             {
@@ -204,7 +204,7 @@
                     Color backgroundColor = GUI.backgroundColor;
                     if (AudioSettings.editingInPlaymode)
                     {
-                        GUI.backgroundColor = AnimationMode.animatedPropertyColor;
+                        GUI.backgroundColor = UnityEditor.AnimationMode.animatedPropertyColor;
                     }
                     EditorGUI.BeginChangeCheck();
                     AudioSettings.editingInPlaymode = GUILayout.Toggle(AudioSettings.editingInPlaymode, s_GuiContents.editSnapShots, EditorStyles.toolbarButton, new GUILayoutOption[0]);
@@ -325,9 +325,9 @@
                 this.m_GroupTree = new AudioMixerGroupTreeView(this, this.m_AudioGroupTreeState);
                 if (this.m_MixersTreeState == null)
                 {
-                    this.m_MixersTreeState = new TreeViewState();
+                    this.m_MixersTreeState = new TreeViewStateWithAssetUtility();
                 }
-                this.m_MixersTree = new AudioMixersTreeView(this, this.m_MixersTreeState, new Func<List<AudioMixerController>>(this, (IntPtr) this.GetAllControllers));
+                this.m_MixersTree = new AudioMixersTreeView(this, this.m_MixersTreeState, new Func<List<AudioMixerController>>(this.GetAllControllers));
                 if (this.m_ViewsState == null)
                 {
                     this.m_ViewsState = new ReorderableListWithRenameAndScrollView.State();
@@ -698,21 +698,21 @@
                 {
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <OnPostprocessAllAssets>m__0);
+                        <>f__am$cache0 = val => val.EndsWith(".mixer");
                     }
                     if (<>f__am$cache1 == null)
                     {
-                        <>f__am$cache1 = new Func<string, bool>(null, (IntPtr) <OnPostprocessAllAssets>m__1);
+                        <>f__am$cache1 = val => val.EndsWith(".mixer");
                     }
                     bool flag = Enumerable.Any<string>(importedAssets, <>f__am$cache0) | Enumerable.Any<string>(deletedAssets, <>f__am$cache1);
                     if (<>f__am$cache2 == null)
                     {
-                        <>f__am$cache2 = new Func<string, bool>(null, (IntPtr) <OnPostprocessAllAssets>m__2);
+                        <>f__am$cache2 = val => val.EndsWith(".mixer");
                     }
                     flag |= Enumerable.Any<string>(movedAssets, <>f__am$cache2);
                     if (<>f__am$cache3 == null)
                     {
-                        <>f__am$cache3 = new Func<string, bool>(null, (IntPtr) <OnPostprocessAllAssets>m__3);
+                        <>f__am$cache3 = val => val.EndsWith(".mixer");
                     }
                     if (flag | Enumerable.Any<string>(movedFromPath, <>f__am$cache3))
                     {

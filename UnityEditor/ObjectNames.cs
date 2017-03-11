@@ -4,6 +4,7 @@
     using System.IO;
     using System.Runtime.CompilerServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Helper class for constructing displayable names for objects.</para>
@@ -14,25 +15,25 @@
         /// <para>Class name of an object.</para>
         /// </summary>
         /// <param name="obj"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern string GetClassName(Object obj);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern string GetClassName(UnityEngine.Object obj);
         /// <summary>
         /// <para>Drag and drop title for an object.</para>
         /// </summary>
         /// <param name="obj"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern string GetDragAndDropTitle(Object obj);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern string GetDragAndDropTitle(UnityEngine.Object obj);
         /// <summary>
         /// <para>Inspector title for an object.</para>
         /// </summary>
         /// <param name="obj"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern string GetInspectorTitle(Object obj);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern string GetInspectorTitle(UnityEngine.Object obj);
         [Obsolete("Please use GetInspectorTitle instead")]
-        public static string GetPropertyEditorTitle(Object obj) => 
+        public static string GetPropertyEditorTitle(UnityEngine.Object obj) => 
             GetInspectorTitle(obj);
 
-        internal static string GetTypeName(Object obj)
+        internal static string GetTypeName(UnityEngine.Object obj)
         {
             if (obj == null)
             {
@@ -51,7 +52,7 @@
             {
                 return "Folder";
             }
-            if (obj.GetType() == typeof(Object))
+            if (obj.GetType() == typeof(UnityEngine.Object))
             {
                 return (Path.GetExtension(path) + " File");
             }
@@ -68,7 +69,7 @@
         /// <returns>
         /// <para>A name not found in the list of pre-existing names.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetUniqueName(string[] existingNames, string name);
         [Obsolete("Please use NicifyVariableName instead")]
         public static string MangleVariableName(string name) => 
@@ -78,16 +79,16 @@
         /// <para>Make a displayable name for a variable.</para>
         /// </summary>
         /// <param name="name"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string NicifyVariableName(string name);
         /// <summary>
         /// <para>Sets the name of an Object.</para>
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="name"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void SetNameSmart(Object obj, string name);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern void SetNameSmart(UnityEngine.Object obj, string name);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void SetNameSmartWithInstanceID(int instanceID, string name);
     }
 }

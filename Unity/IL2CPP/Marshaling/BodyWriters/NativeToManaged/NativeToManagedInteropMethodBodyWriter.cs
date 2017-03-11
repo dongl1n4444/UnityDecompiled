@@ -8,7 +8,7 @@
     using Unity.IL2CPP.Marshaling.BodyWriters;
     using Unity.IL2CPP.Metadata;
 
-    internal abstract class NativeToManagedInteropMethodBodyWriter : InteropMethodBodyWriter
+    public abstract class NativeToManagedInteropMethodBodyWriter : InteropMethodBodyWriter
     {
         protected readonly MethodReference _managedMethod;
 
@@ -17,17 +17,26 @@
             this._managedMethod = managedMethod;
         }
 
-        protected string GetMethodCallExpression(IRuntimeMetadataAccess metadataAccess, string thisArgument, IEnumerable<string> localVariableNames)
+        protected string GetMethodCallExpression(IRuntimeMetadataAccess metadataAccess, string thisArgument, string[] localVariableNames)
+        {
+            MethodCallType methodCallType = !this._managedMethod.DeclaringType.IsInterface() ? MethodCallType.Normal : MethodCallType.Virtual;
+            return this.GetMethodCallExpression(metadataAccess, thisArgument, this._managedMethod, methodCallType, localVariableNames);
+        }
+
+        protected string GetMethodCallExpression(IRuntimeMetadataAccess metadataAccess, string thisVariableName, MethodReference method, MethodCallType methodCallType, params string[] args)
         {
             List<string> argumentArray = new List<string> {
-                thisArgument
+                thisVariableName
             };
-            argumentArray.AddRange(localVariableNames);
-            if (MethodSignatureWriter.NeedsHiddenMethodInfo(this._managedMethod, MethodCallType.Normal, false))
+            if (args.Length > 0)
             {
-                argumentArray.Add(metadataAccess.HiddenMethodInfo(this._managedMethod));
+                argumentArray.AddRange(args);
             }
-            return ("::" + MethodBodyWriter.GetMethodCallExpression(this._managedMethod, this._managedMethod, this._managedMethod, base._typeResolver, MethodCallType.Normal, metadataAccess, new VTableBuilder(), argumentArray, false, null));
+            if (MethodSignatureWriter.NeedsHiddenMethodInfo(method, methodCallType, false))
+            {
+                argumentArray.Add(metadataAccess.HiddenMethodInfo(method));
+            }
+            return MethodBodyWriter.GetMethodCallExpression(this._managedMethod, method, method, base._typeResolver, methodCallType, metadataAccess, new VTableBuilder(), argumentArray, false, null);
         }
 
         protected override void WriteMethodPrologue(CppCodeWriter writer, IRuntimeMetadataAccess metadataAccess)
@@ -38,10 +47,10 @@
 
         protected sealed override void WriteReturnStatement(CppCodeWriter writer, string unmarshaledReturnValueVariableName, IRuntimeMetadataAccess metadataAccess)
         {
-            MarshaledType[] marshaledTypes = base.MarshalInfoWriterFor(this.GetMethodReturnType()).MarshaledTypes;
+            MarshaledType[] marshaledTypes = base.MarshalInfoWriterFor(base.GetMethodReturnType()).MarshaledTypes;
             for (int i = 0; i < (marshaledTypes.Length - 1); i++)
             {
-                object[] args = new object[] { InteropMethodBodyWriter.Naming.ForComInterfaceReturnParameterName(), unmarshaledReturnValueVariableName, marshaledTypes[i].VariableName };
+                object[] args = new object[] { InteropMethodInfo.Naming.ForComInterfaceReturnParameterName(), unmarshaledReturnValueVariableName, marshaledTypes[i].VariableName };
                 writer.WriteLine("*{0}{2} = {1}{2};", args);
             }
             this.WriteReturnStatementEpilogue(writer, unmarshaledReturnValueVariableName);

@@ -8,7 +8,6 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Text;
-    using Unity.IL2CPP.Com;
     using Unity.IL2CPP.ILPreProcessor;
     using Unity.IL2CPP.IoC;
     using Unity.IL2CPP.IoCServices;
@@ -62,19 +61,24 @@
         {
             stringBuilder.Clear();
             string str = new string('\t', indentationLevel);
+            bool flag = false;
             for (int i = 0; i < rank; i++)
             {
-                string length = BoundVariableNameFor(i);
-                if (i != 0)
+                if ((i != 0) || emitArrayBoundsCheck)
                 {
-                    stringBuilder.Append(str);
-                }
-                object[] args = new object[] { Naming.ForArrayIndexType(), length, i, Environment.NewLine };
-                stringBuilder.AppendFormat("{0} {1} = bounds[{2}].length;{3}", args);
-                if (emitArrayBoundsCheck)
-                {
-                    char ch = (char) (0x69 + i);
-                    stringBuilder.AppendFormat("{0}{1}{2}", str, Emit.MultiDimensionalArrayBoundsCheck(length, ch.ToString()), Environment.NewLine);
+                    string length = BoundVariableNameFor(i);
+                    if (flag)
+                    {
+                        stringBuilder.Append(str);
+                    }
+                    object[] args = new object[] { Naming.ForArrayIndexType(), length, i, Environment.NewLine };
+                    stringBuilder.AppendFormat("{0} {1} = bounds[{2}].length;{3}", args);
+                    if (emitArrayBoundsCheck)
+                    {
+                        char ch = (char) (0x69 + i);
+                        stringBuilder.AppendFormat("{0}{1}{2}", str, Emit.MultiDimensionalArrayBoundsCheck(length, ch.ToString()), Environment.NewLine);
+                    }
+                    flag = true;
                 }
             }
             return stringBuilder.ToString();
@@ -159,17 +163,17 @@
                             MethodDefinition[] definitionArray1 = new MethodDefinition[3];
                             if (<>f__am$cache2 == null)
                             {
-                                <>f__am$cache2 = new Func<MethodDefinition, bool>(null, (IntPtr) <CollectIncludes>m__2);
+                                <>f__am$cache2 = m => m.Name == "Invoke";
                             }
                             definitionArray1[0] = typeDefinition.Methods.Single<MethodDefinition>(<>f__am$cache2);
                             if (<>f__am$cache3 == null)
                             {
-                                <>f__am$cache3 = new Func<MethodDefinition, bool>(null, (IntPtr) <CollectIncludes>m__3);
+                                <>f__am$cache3 = m => m.Name == "BeginInvoke";
                             }
                             definitionArray1[1] = typeDefinition.Methods.Single<MethodDefinition>(<>f__am$cache3);
                             if (<>f__am$cache4 == null)
                             {
-                                <>f__am$cache4 = new Func<MethodDefinition, bool>(null, (IntPtr) <CollectIncludes>m__4);
+                                <>f__am$cache4 = m => m.Name == "EndInvoke";
                             }
                             definitionArray1[2] = typeDefinition.Methods.Single<MethodDefinition>(<>f__am$cache4);
                             definitionArray = definitionArray1;
@@ -179,7 +183,7 @@
                             MethodDefinition[] definitionArray3 = new MethodDefinition[1];
                             if (<>f__am$cache5 == null)
                             {
-                                <>f__am$cache5 = new Func<MethodDefinition, bool>(null, (IntPtr) <CollectIncludes>m__5);
+                                <>f__am$cache5 = m => m.Name == "Invoke";
                             }
                             definitionArray3[0] = typeDefinition.Methods.Single<MethodDefinition>(<>f__am$cache5);
                             definitionArray = definitionArray3;
@@ -232,7 +236,7 @@
             return !field.IsStatic;
         }
 
-        private string GetBaseTypeDeclaration(TypeReference type)
+        private static string GetBaseTypeDeclaration(TypeReference type)
         {
             if (type.IsArray)
             {
@@ -266,7 +270,7 @@
             {
                 return new List<ComFieldWriteInstruction>();
             }
-            TypeReference[] referenceArray = (fieldType != FieldType.Static) ? typeDefinition.ImplementedComOrWindowsRuntimeInterfaces().ToArray<TypeReference>() : typeDefinition.GetAllFactoryTypes().ToArray<TypeReference>();
+            TypeReference[] referenceArray = (fieldType != FieldType.Static) ? type.ImplementedComOrWindowsRuntimeInterfaces().ToArray<TypeReference>() : type.GetAllFactoryTypes().ToArray<TypeReference>();
             List<ComFieldWriteInstruction> list2 = new List<ComFieldWriteInstruction>(referenceArray.Length);
             Unity.IL2CPP.ILPreProcessor.TypeResolver resolver = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(type);
             bool flag = false;
@@ -292,7 +296,7 @@
             };
             List<FieldWriteInstruction> list = new List<FieldWriteInstruction>();
             Unity.IL2CPP.ILPreProcessor.TypeResolver resolver = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(type);
-            foreach (FieldDefinition definition in typeDefinition.Fields.Where<FieldDefinition>(new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0)))
+            foreach (FieldDefinition definition in typeDefinition.Fields.Where<FieldDefinition>(new Func<FieldDefinition, bool>(storey.<>m__0)))
             {
                 string str;
                 FieldReference reference;
@@ -320,7 +324,7 @@
             {
                 return true;
             }
-            if ((layoutMode == LayoutMode.Managed) && !MarshalingUtils.IsBlittable(typeDefinition, null, MarshalType.PInvoke))
+            if ((layoutMode == LayoutMode.Managed) && !MarshalingUtils.IsBlittable(typeDefinition, null, MarshalType.PInvoke, false))
             {
                 return false;
             }
@@ -336,7 +340,7 @@
         internal static bool NeedsPadding(TypeDefinition typeDefinition) => 
             (typeDefinition.ClassSize > 0);
 
-        private static void WriteAccessSpecifier(CppCodeWriter writer, string accessSpecifier)
+        private static void WriteAccessSpecifier(CodeWriter writer, string accessSpecifier)
         {
             writer.Dedent(1);
             object[] args = new object[] { accessSpecifier };
@@ -344,7 +348,7 @@
             writer.Indent(1);
         }
 
-        private static void WriteArrayAccessors(CppCodeWriter writer, TypeReference elementType, string elementTypeName, bool emitArrayBoundsCheck)
+        private static void WriteArrayAccessors(CodeWriter writer, TypeReference elementType, string elementTypeName, bool emitArrayBoundsCheck)
         {
             object[] args = new object[] { elementTypeName, Naming.ForArrayItemGetter(emitArrayBoundsCheck), Naming.ForArrayIndexType(), Naming.ForArrayIndexName(), Naming.ForArrayItems() };
             writer.WriteLine("inline {0} {1}({2} {3}) const", args);
@@ -382,7 +386,7 @@
             }
         }
 
-        private static void WriteArrayAccessorsForMultiDimensionalArray(CppCodeWriter writer, int rank, TypeReference elementType, string elementTypeName, bool emitArrayBoundsCheck)
+        private static void WriteArrayAccessorsForMultiDimensionalArray(CodeWriter writer, int rank, TypeReference elementType, string elementTypeName, bool emitArrayBoundsCheck)
         {
             StringBuilder stringBuilder = new StringBuilder();
             string str = BuildArrayIndexParameters(stringBuilder, rank);
@@ -418,7 +422,7 @@
             }
         }
 
-        private static void WriteArrayFieldsWithAccessors(CppCodeWriter writer, ArrayType arrayType)
+        private static void WriteArrayFieldsWithAccessors(CodeWriter writer, ArrayType arrayType)
         {
             TypeReference elementType = arrayType.ElementType;
             string elementTypeName = Naming.ForVariable(elementType);
@@ -436,33 +440,19 @@
             }
         }
 
-        public void WriteArrayTypeDefinition(TypeReference type, CppCodeWriter writer)
+        public static void WriteArrayTypeDefinition(ArrayType type, CodeWriter writer)
         {
-            if (!(type is ArrayType))
-            {
-                throw new ArgumentException("ArrayType expected", "type");
-            }
             ErrorInformation.CurrentlyProcessing.Type = type.Resolve();
             if (CodeGenOptions.EnableErrorMessageTest)
             {
                 ErrorTypeAndMethod.ThrowIfIsErrorType(type.Resolve());
             }
             writer.WriteCommentedLine(type.FullName);
-            object[] args = new object[] { Naming.ForTypeNameOnly(type), this.GetBaseTypeDeclaration(type) };
+            object[] args = new object[] { Naming.ForTypeNameOnly(type), GetBaseTypeDeclaration(type) };
             writer.WriteLine("struct {0} {1}", args);
             writer.BeginBlock();
-            WriteArrayFieldsWithAccessors(writer, (ArrayType) type);
+            WriteArrayFieldsWithAccessors(writer, type);
             writer.EndBlock(true);
-        }
-
-        private static void WriteCLSID(CppCodeWriter writer, TypeDefinition type)
-        {
-            if (type.IsImport && !type.IsWindowsRuntimeProjection())
-            {
-                WriteAccessSpecifier(writer, "public");
-                writer.WriteLine("static const Il2CppGuid CLSID;");
-                writer.WriteLine();
-            }
         }
 
         private static void WriteComFieldGetters(CppCodeWriter writer, TypeReference declaringType, List<ComFieldWriteInstruction> fieldWriteInstructions)
@@ -498,7 +488,7 @@
                             string left = string.Format($"const il2cpp_hresult_t {Naming.ForInteropHResultVariable()}", new object[0]);
                             string right = string.Format($"{str4}->QueryInterface({str}::IID, reinterpret_cast<void**>(&{str3}))", new object[0]);
                             writer.WriteStatement(Emit.Assign(left, right));
-                            writer.WriteStatement(Emit.Call("il2cpp_codegen_com_raise_exception_if_failed", Naming.ForInteropHResultVariable()));
+                            writer.WriteStatement(Emit.Call("il2cpp_codegen_com_raise_exception_if_failed", Naming.ForInteropHResultVariable(), !interfaceType.IsComInterface() ? "false" : "true"));
                         }
                         writer.WriteLine();
                         writer.WriteLine($"if (il2cpp_codegen_atomic_compare_exchange_pointer<{str}>({Naming.AddressOf(str2)}, {str3}, {Naming.Null}) != {Naming.Null})");
@@ -635,15 +625,27 @@
             WriteComFieldGetters(writer, type, comFieldWriteInstructions);
         }
 
+        private static void WriteGuid(CppCodeWriter writer, TypeReference type, IInteropDataCollector interopDataCollector)
+        {
+            if (type.HasCLSID() || type.HasIID())
+            {
+                WriteAccessSpecifier(writer, "public");
+                string str = !type.HasCLSID() ? "IID" : "CLSID";
+                writer.WriteLine($"static const Il2CppGuid {str};");
+                writer.WriteLine();
+                interopDataCollector.AddGuid(type);
+            }
+        }
+
         private static void WriteNativeStructDefinitions(TypeReference type, CppCodeWriter writer)
         {
-            foreach (MarshalType type2 in MarshalingUtils.GetMarshalTypesForMarshaledType(type.Resolve()))
+            foreach (MarshalType type2 in MarshalingUtils.GetMarshalTypesForMarshaledType(type))
             {
                 MarshalDataCollector.MarshalInfoWriterFor(type, type2, null, false, false, false, null).WriteNativeStructDefinition(writer);
             }
         }
 
-        public void WriteTypeDefinitionFor(TypeReference type, CppCodeWriter writer)
+        public void WriteTypeDefinitionFor(TypeReference type, CppCodeWriter writer, IInteropDataCollector interopDataCollector)
         {
             TypeDefinition typeDefinition = type.Resolve();
             this.CollectIncludes(writer, type, typeDefinition);
@@ -680,10 +682,10 @@
                 }
                 else
                 {
-                    object[] objArray2 = new object[] { str, Naming.ForTypeNameOnly(type), this.GetBaseTypeDeclaration(type) };
+                    object[] objArray2 = new object[] { str, Naming.ForTypeNameOnly(type), GetBaseTypeDeclaration(type) };
                     writer.WriteLine("struct {0} {1} {2}", objArray2);
                     writer.BeginBlock();
-                    WriteCLSID(writer, typeDefinition);
+                    WriteGuid(writer, type, interopDataCollector);
                     WriteFieldsWithAccessors(writer, type, NeedsPackingForManaged(typeDefinition), FieldType.Instance);
                     writer.EndBlock(true);
                 }
@@ -693,7 +695,7 @@
                 }
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteTypeDefinitionFor>m__0);
+                    <>f__am$cache0 = f => f.IsNormalStatic();
                 }
                 if (typeDefinition.Fields.Any<FieldDefinition>(<>f__am$cache0) || typeDefinition.StoresNonFieldsInStaticFields())
                 {
@@ -706,7 +708,7 @@
                 }
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteTypeDefinitionFor>m__1);
+                    <>f__am$cache1 = f => f.IsThreadStatic();
                 }
                 if (typeDefinition.Fields.Any<FieldDefinition>(<>f__am$cache1))
                 {
@@ -720,10 +722,6 @@
                 writer.WriteLine();
                 writer.WriteClangWarningEnables();
                 WriteNativeStructDefinitions(type, writer);
-                if (typeDefinition.NeedsComCallableWrapper())
-                {
-                    new CCWWriter(typeDefinition).WriteTypeDefinition(writer);
-                }
             }
         }
 

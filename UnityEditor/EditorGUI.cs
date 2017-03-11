@@ -12,6 +12,7 @@
     using UnityEditorInternal;
     using UnityEngine;
     using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>These work pretty much like the normal GUI functions - and also have matching implementations in EditorGUILayout.</para>
@@ -73,6 +74,7 @@
         internal const float kSliderMinW = 60f;
         internal const float kSpacing = 5f;
         internal const float kSpacingSubLabel = 2f;
+        internal static EditorGUIUtility.SkinnedColor kSplitLineSkinnedColor = new EditorGUIUtility.SkinnedColor(new Color(0.6f, 0.6f, 0.6f, 1.333f), new Color(0.12f, 0.12f, 0.12f, 1.333f));
         internal const float kStructHeaderLineHeight = 16f;
         internal const int kVerticalSpacingMultiField = 0;
         internal const int kWindowToolbarHeight = 0x11;
@@ -80,7 +82,6 @@
         internal static readonly string s_AllowedCharactersForFloat = "inftynaeINFTYNAE0123456789.,-*/+%^()";
         internal static readonly string s_AllowedCharactersForInt = "0123456789-*/+%^()";
         private static int s_ArraySizeFieldHash = "ArraySizeField".GetHashCode();
-        private static int s_ButtonMouseDownHash = "ButtonMouseDown".GetHashCode();
         private static Stack<bool> s_ChangedStack = new Stack<bool>();
         internal static readonly GUIContent s_ClipingPlanesLabel = EditorGUIUtility.TextContent("Clipping Planes");
         internal static bool s_CollectingToolTips;
@@ -98,6 +99,7 @@
         private static double s_DragStartValue = 0.0;
         internal static bool s_DragToPosition = true;
         private static int s_DragUpdatedOverID = 0;
+        private static int s_DropdownButtonHash = "DropdownButton".GetHashCode();
         private static Stack<bool> s_EnabledStack = new Stack<bool>();
         private static int s_FloatFieldHash = "EditorTextField".GetHashCode();
         private static double s_FoldoutDestTime;
@@ -261,7 +263,7 @@
             showMixedValue = property.hasMultipleDifferentValues;
             if (property.isAnimated)
             {
-                Color animatedPropertyColor = AnimationMode.animatedPropertyColor;
+                Color animatedPropertyColor = UnityEditor.AnimationMode.animatedPropertyColor;
                 animatedPropertyColor.a *= GUI.color.a;
                 GUI.color = animatedPropertyColor;
             }
@@ -355,46 +357,6 @@
             return GUI.Button(position, content, style);
         }
 
-        internal static bool ButtonMouseDown(int id, Rect position, GUIContent content, GUIStyle style)
-        {
-            Event current = Event.current;
-            switch (current.type)
-            {
-                case EventType.Repaint:
-                    if (showMixedValue)
-                    {
-                        BeginHandleMixedValueContentColor();
-                        style.Draw(position, s_MixedValueContent, id, false);
-                        EndHandleMixedValueContentColor();
-                    }
-                    else
-                    {
-                        style.Draw(position, content, id, false);
-                    }
-                    break;
-
-                case EventType.MouseDown:
-                    if (position.Contains(current.mousePosition) && (current.button == 0))
-                    {
-                        Event.current.Use();
-                        return true;
-                    }
-                    break;
-
-                case EventType.KeyDown:
-                    if ((GUIUtility.keyboardControl == id) && (current.character == ' '))
-                    {
-                        Event.current.Use();
-                        return true;
-                    }
-                    break;
-            }
-            return false;
-        }
-
-        internal static bool ButtonMouseDown(Rect position, GUIContent content, FocusType focusType, GUIStyle style) => 
-            ButtonMouseDown(GUIUtility.GetControlID(s_ButtonMouseDownHash, focusType, position), position, content, style);
-
         internal static bool ButtonWithDropdownList(string buttonName, string[] buttonNames, GenericMenu.MenuFunction2 callback, params GUILayoutOption[] options) => 
             ButtonWithDropdownList(EditorGUIUtility.TempContent(buttonName), buttonNames, callback, options);
 
@@ -422,7 +384,7 @@
             bool flag;
             if (mouseDownButton)
             {
-                flag = ButtonMouseDown(rect, GUIContent.Temp(guiContent.text, guiContent.tooltip), FocusType.Passive, style);
+                flag = DropdownButton(rect, GUIContent.Temp(guiContent.text, guiContent.tooltip), FocusType.Passive, style);
             }
             else
             {
@@ -461,7 +423,7 @@
         private static long CalculateIntDragSensitivity(long value) => 
             ((long) Math.Max((double) 1.0, (double) (Math.Pow(Math.Abs((double) value), 0.5) * 0.029999999329447746)));
 
-        internal static bool CheckForCrossSceneReferencing(Object obj1, Object obj2)
+        internal static bool CheckForCrossSceneReferencing(UnityEngine.Object obj1, UnityEngine.Object obj2)
         {
             GameObject gameObjectFromObject = GetGameObjectFromObject(obj1);
             if (gameObjectFromObject == null)
@@ -833,13 +795,13 @@
                     case EventType.DragPerform:
                         if (position.Contains(event2.mousePosition) && GUI.enabled)
                         {
-                            Object[] objectReferences = DragAndDrop.objectReferences;
-                            Object[] references = new Object[1];
+                            UnityEngine.Object[] objectReferences = DragAndDrop.objectReferences;
+                            UnityEngine.Object[] references = new UnityEngine.Object[1];
                             bool flag6 = false;
-                            foreach (Object obj2 in objectReferences)
+                            foreach (UnityEngine.Object obj2 in objectReferences)
                             {
                                 references[0] = obj2;
-                                Object obj3 = ValidateObjectFieldAssignment(references, null, property);
+                                UnityEngine.Object obj3 = ValidateObjectFieldAssignment(references, null, property);
                                 if (obj3 != null)
                                 {
                                     DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
@@ -877,7 +839,7 @@
                         {
                             property.longValue = num;
                         }
-                        goto Label_04CB;
+                        goto Label_04CC;
                     }
                     case SerializedPropertyType.Boolean:
                     {
@@ -887,7 +849,7 @@
                         {
                             property.boolValue = flag3;
                         }
-                        goto Label_04CB;
+                        goto Label_04CC;
                     }
                     case SerializedPropertyType.Float:
                     {
@@ -897,7 +859,7 @@
                         {
                             property.doubleValue = num2;
                         }
-                        goto Label_04CB;
+                        goto Label_04CC;
                     }
                     case SerializedPropertyType.String:
                     {
@@ -907,7 +869,7 @@
                         {
                             property.stringValue = str;
                         }
-                        goto Label_04CB;
+                        goto Label_04CC;
                     }
                     case SerializedPropertyType.Color:
                     {
@@ -917,35 +879,35 @@
                         {
                             property.colorValue = color;
                         }
-                        goto Label_04CB;
+                        goto Label_04CC;
                     }
                     case SerializedPropertyType.ObjectReference:
                         ObjectFieldInternal(position, property, null, label, EditorStyles.objectField);
-                        goto Label_04CB;
+                        goto Label_04CC;
 
                     case SerializedPropertyType.LayerMask:
                         LayerMaskField(position, property, label);
-                        goto Label_04CB;
+                        goto Label_04CC;
 
                     case SerializedPropertyType.Enum:
                         Popup(position, property, label);
-                        goto Label_04CB;
+                        goto Label_04CC;
 
                     case SerializedPropertyType.Vector2:
                         Vector2Field(position, property, label);
-                        goto Label_04CB;
+                        goto Label_04CC;
 
                     case SerializedPropertyType.Vector3:
                         Vector3Field(position, property, label);
-                        goto Label_04CB;
+                        goto Label_04CC;
 
                     case SerializedPropertyType.Vector4:
                         Vector4Field(position, property, label);
-                        goto Label_04CB;
+                        goto Label_04CC;
 
                     case SerializedPropertyType.Rect:
                         RectField(position, property, label);
-                        goto Label_04CB;
+                        goto Label_04CC;
 
                     case SerializedPropertyType.ArraySize:
                     {
@@ -955,7 +917,7 @@
                         {
                             property.intValue = num3;
                         }
-                        goto Label_04CB;
+                        goto Label_04CC;
                     }
                     case SerializedPropertyType.Character:
                     {
@@ -978,28 +940,28 @@
                     {
                         int id = GUIUtility.GetControlID(s_CurveHash, FocusType.Keyboard, position);
                         DoCurveField(PrefixLabel(position, id, label), id, null, kCurveColor, new Rect(), property);
-                        goto Label_04CB;
+                        goto Label_04CC;
                     }
                     case SerializedPropertyType.Bounds:
                         BoundsField(position, property, label);
-                        goto Label_04CB;
+                        goto Label_04CC;
 
                     case SerializedPropertyType.Gradient:
                     {
                         int num5 = GUIUtility.GetControlID(s_CurveHash, FocusType.Keyboard, position);
-                        DoGradientField(PrefixLabel(position, num5, label), num5, null, property);
-                        goto Label_04CB;
+                        DoGradientField(PrefixLabel(position, num5, label), num5, null, property, false);
+                        goto Label_04CC;
                     }
                     default:
                     {
                         int num6 = GUIUtility.GetControlID(s_GenericField, FocusType.Keyboard, position);
                         PrefixLabel(position, num6, label);
-                        goto Label_04CB;
+                        goto Label_04CC;
                     }
                 }
                 GUI.changed |= changed;
             }
-        Label_04CB:
+        Label_04CC:
             EndProperty();
             return foldout;
         }
@@ -1345,13 +1307,6 @@
             return DelayedTextField(position, label, text, textField);
         }
 
-        [ExcludeFromDocs]
-        public static string DelayedTextField(Rect position, int controlId, GUIContent label, string text)
-        {
-            GUIStyle textField = EditorStyles.textField;
-            return DelayedTextField(position, controlId, label, text, textField);
-        }
-
         /// <summary>
         /// <para>Make a delayed text field.</para>
         /// </summary>
@@ -1364,6 +1319,13 @@
         /// </returns>
         public static string DelayedTextField(Rect position, string label, string text, [DefaultValue("EditorStyles.textField")] GUIStyle style) => 
             DelayedTextField(position, EditorGUIUtility.TempContent(label), text, style);
+
+        [ExcludeFromDocs]
+        public static string DelayedTextField(Rect position, GUIContent label, int controlId, string text)
+        {
+            GUIStyle textField = EditorStyles.textField;
+            return DelayedTextField(position, label, controlId, text, textField);
+        }
 
         /// <summary>
         /// <para>Make a delayed text field.</para>
@@ -1381,7 +1343,7 @@
             return DelayedTextFieldInternal(position, id, label, text, null, style);
         }
 
-        public static string DelayedTextField(Rect position, int controlId, GUIContent label, string text, [DefaultValue("EditorStyles.textField")] GUIStyle style) => 
+        public static string DelayedTextField(Rect position, GUIContent label, int controlId, string text, [DefaultValue("EditorStyles.textField")] GUIStyle style) => 
             DelayedTextFieldInternal(position, controlId, label, text, null, style);
 
         internal static string DelayedTextFieldDropDown(Rect position, string text, string[] dropDownElement) => 
@@ -1812,7 +1774,7 @@
                         property.animationCurveValue = CurveEditorWindow.curve;
                         if (property.hasMultipleDifferentValues)
                         {
-                            Debug.LogError("AnimationCurve SerializedProperty hasMultipleDifferentValues is true after writing.");
+                            UnityEngine.Debug.LogError("AnimationCurve SerializedProperty hasMultipleDifferentValues is true after writing.");
                         }
                     }
                     return CurveEditorWindow.curve;
@@ -1831,7 +1793,7 @@
             return value;
         }
 
-        internal static Object DoDropField(Rect position, int id, Type objType, ObjectFieldValidator validator, bool allowSceneObjects, GUIStyle style)
+        internal static UnityEngine.Object DoDropField(Rect position, int id, System.Type objType, ObjectFieldValidator validator, bool allowSceneObjects, GUIStyle style)
         {
             if (validator == null)
             {
@@ -1856,8 +1818,8 @@
                 case EventType.DragPerform:
                     if (position.Contains(Event.current.mousePosition) && GUI.enabled)
                     {
-                        Object[] objectReferences = DragAndDrop.objectReferences;
-                        Object target = validator(objectReferences, objType, null);
+                        UnityEngine.Object[] objectReferences = DragAndDrop.objectReferences;
+                        UnityEngine.Object target = validator(objectReferences, objType, null);
                         if ((target != null) && (!allowSceneObjects && !EditorUtility.IsPersistent(target)))
                         {
                             target = null;
@@ -1900,7 +1862,7 @@
 
         private static Enum DoEnumMaskField(Rect position, GUIContent label, Enum enumValue, GUIStyle style, out int changedFlags, out bool changedToValue)
         {
-            Type type = enumValue.GetType();
+            System.Type type = enumValue.GetType();
             if (!type.IsEnum)
             {
                 throw new Exception("parameter _enum must be of type System.Enum");
@@ -1908,7 +1870,7 @@
             int controlID = GUIUtility.GetControlID(s_MaskField, FocusType.Keyboard, position);
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<string, string>(null, (IntPtr) <DoEnumMaskField>m__4);
+                <>f__am$cache4 = x => ObjectNames.NicifyVariableName(x);
             }
             string[] flagNames = Enumerable.Select<string, string>(Enum.GetNames(enumValue.GetType()), <>f__am$cache4).ToArray<string>();
             int num2 = MaskFieldGUI.DoMaskField(PrefixLabel(position, controlID, label), controlID, Convert.ToInt32(enumValue), flagNames, style, out changedFlags, out changedToValue);
@@ -1926,7 +1888,7 @@
             return MathUtils.ClampToFloat(doubleVal);
         }
 
-        internal static Gradient DoGradientField(Rect position, int id, Gradient value, SerializedProperty property)
+        internal static Gradient DoGradientField(Rect position, int id, Gradient value, SerializedProperty property, bool hdr)
         {
             Event current = Event.current;
             EventType typeForControl = current.GetTypeForControl(id);
@@ -1937,7 +1899,7 @@
                     {
                         Event.current.Use();
                         Gradient newGradient = (property == null) ? value : property.gradientValue;
-                        GradientPicker.Show(newGradient);
+                        GradientPicker.Show(newGradient, hdr);
                         GUIUtility.ExitGUI();
                     }
                     return value;
@@ -1991,7 +1953,7 @@
                                     s_GradientID = id;
                                     GUIUtility.keyboardControl = id;
                                     Gradient gradient = (property == null) ? value : property.gradientValue;
-                                    GradientPicker.Show(gradient);
+                                    GradientPicker.Show(gradient, hdr);
                                     GUIUtility.ExitGUI();
                                     return value;
                                 }
@@ -2042,7 +2004,7 @@
             return color;
         }
 
-        internal static void DoInspectorTitlebar(Rect position, int id, bool foldout, Object[] targetObjs, GUIStyle baseStyle)
+        internal static void DoInspectorTitlebar(Rect position, int id, bool foldout, UnityEngine.Object[] targetObjs, GUIStyle baseStyle)
         {
             GUIStyle inspectorTitlebarText = EditorStyles.inspectorTitlebarText;
             GUIStyle iconButton = EditorStyles.iconButton;
@@ -2053,7 +2015,7 @@
                 xMax = rect2.xMin - 2f
             };
             int num = -1;
-            foreach (Object obj2 in targetObjs)
+            foreach (UnityEngine.Object obj2 in targetObjs)
             {
                 int objectEnabled = EditorUtility.GetObjectEnabled(obj2);
                 if (num == -1)
@@ -2067,7 +2029,7 @@
             }
             if (num != -1)
             {
-                bool flag = AnimationMode.IsPropertyAnimated(targetObjs[0], "m_Enabled");
+                bool flag = UnityEditor.AnimationMode.IsPropertyAnimated(targetObjs[0], "m_Enabled");
                 bool flag2 = num != 0;
                 showMixedValue = num == -2;
                 Rect rect4 = rect;
@@ -2076,7 +2038,7 @@
                 Color color = GUI.color;
                 if (flag)
                 {
-                    GUI.color = AnimationMode.animatedPropertyColor;
+                    GUI.color = UnityEditor.AnimationMode.animatedPropertyColor;
                 }
                 int num4 = GUIUtility.GetControlID(s_TitlebarHash, FocusType.Keyboard, position);
                 flag2 = EditorGUIInternal.DoToggleForward(rect4, num4, flag2, GUIContent.none, EditorStyles.toggle);
@@ -2087,7 +2049,7 @@
                 if (EndChangeCheck())
                 {
                     Undo.RecordObjects(targetObjs, (!flag2 ? "Disable" : "Enable") + " Component" + ((targetObjs.Length <= 1) ? "" : "s"));
-                    foreach (Object obj3 in targetObjs)
+                    foreach (UnityEngine.Object obj3 in targetObjs)
                     {
                         EditorUtility.SetObjectEnabled(obj3, flag2);
                     }
@@ -2101,14 +2063,10 @@
                 rect3.xMax = rect5.xMin - 2f;
             }
             Event current = Event.current;
-            Texture2D i = null;
             if (current.type == EventType.Repaint)
             {
-                i = AssetPreview.GetMiniThumbnail(targetObjs[0]);
-            }
-            if ((ButtonMouseDown(rect, EditorGUIUtility.TempContent(i), FocusType.Passive, GUIStyle.none) && (targetObjs[0] is MonoScript)) && IconSelector.ShowAtPosition(targetObjs[0], rect, true))
-            {
-                GUIUtility.ExitGUI();
+                Texture2D miniThumbnail = AssetPreview.GetMiniThumbnail(targetObjs[0]);
+                GUIStyle.none.Draw(rect, EditorGUIUtility.TempContent(miniThumbnail), false, false, false, false);
             }
             switch (current.type)
             {
@@ -2324,10 +2282,10 @@
             }
         }
 
-        internal static Object DoObjectField(Rect position, Rect dropRect, int id, Object obj, Type objType, SerializedProperty property, ObjectFieldValidator validator, bool allowSceneObjects) => 
+        internal static UnityEngine.Object DoObjectField(Rect position, Rect dropRect, int id, UnityEngine.Object obj, System.Type objType, SerializedProperty property, ObjectFieldValidator validator, bool allowSceneObjects) => 
             DoObjectField(position, dropRect, id, obj, objType, property, validator, allowSceneObjects, EditorStyles.objectField);
 
-        internal static Object DoObjectField(Rect position, Rect dropRect, int id, Object obj, Type objType, SerializedProperty property, ObjectFieldValidator validator, bool allowSceneObjects, GUIStyle style)
+        internal static UnityEngine.Object DoObjectField(Rect position, Rect dropRect, int id, UnityEngine.Object obj, System.Type objType, SerializedProperty property, ObjectFieldValidator validator, bool allowSceneObjects, GUIStyle style)
         {
             Rect rect;
             if (validator == null)
@@ -2348,7 +2306,7 @@
             ObjectFieldVisualType iconAndText = ObjectFieldVisualType.IconAndText;
             if ((flag && (position.height <= 18f)) && (position.width <= 32f))
             {
-                iconAndText = ObjectFieldVisualType.MiniPreivew;
+                iconAndText = ObjectFieldVisualType.MiniPreview;
             }
             else if (flag && (position.height > 16f))
             {
@@ -2403,7 +2361,7 @@
                             obj = property.objectReferenceValue;
                             if (obj != null)
                             {
-                                Object[] references = new Object[] { obj };
+                                UnityEngine.Object[] references = new UnityEngine.Object[] { obj };
                                 if (EditorSceneManager.preventCrossSceneReferences && CheckForCrossSceneReferencing(obj, property.serializedObject.targetObject))
                                 {
                                     if (!EditorApplication.isPlaying)
@@ -2442,7 +2400,7 @@
                             DrawObjectFieldLargeThumb(position, id, obj, content);
                             break;
 
-                        case ObjectFieldVisualType.MiniPreivew:
+                        case ObjectFieldVisualType.MiniPreview:
                             DrawObjectFieldMiniThumb(position, id, obj, content);
                             break;
 
@@ -2455,8 +2413,8 @@
                 case EventType.DragPerform:
                     if (dropRect.Contains(Event.current.mousePosition) && GUI.enabled)
                     {
-                        Object[] objectReferences = DragAndDrop.objectReferences;
-                        Object target = validator(objectReferences, objType, property);
+                        UnityEngine.Object[] objectReferences = DragAndDrop.objectReferences;
+                        UnityEngine.Object target = validator(objectReferences, objType, property);
                         if ((target != null) && (!allowSceneObjects && !EditorUtility.IsPersistent(target)))
                         {
                             target = null;
@@ -2494,8 +2452,8 @@
                     {
                         break;
                     }
-                    Object[] objArray2 = new Object[] { ObjectSelector.GetCurrentObject() };
-                    Object obj4 = validator(objArray2, objType, property);
+                    UnityEngine.Object[] objArray2 = new UnityEngine.Object[] { ObjectSelector.GetCurrentObject() };
+                    UnityEngine.Object obj4 = validator(objArray2, objType, property);
                     if (property != null)
                     {
                         property.objectReferenceValue = obj4;
@@ -2517,23 +2475,20 @@
                         switch (iconAndText)
                         {
                             case ObjectFieldVisualType.IconAndText:
+                            case ObjectFieldVisualType.MiniPreview:
                                 rect = new Rect(position.xMax - 15f, position.y, 15f, position.height);
-                                goto Label_02DA;
+                                goto Label_02AE;
 
                             case ObjectFieldVisualType.LargePreview:
                                 rect = new Rect(position.xMax - 36f, position.yMax - 14f, 36f, 14f);
-                                goto Label_02DA;
-
-                            case ObjectFieldVisualType.MiniPreivew:
-                                rect = new Rect(position.xMax - 15f, position.y, 15f, position.height);
-                                goto Label_02DA;
+                                goto Label_02AE;
                         }
                         throw new ArgumentOutOfRangeException();
                     }
                     break;
             }
-            goto Label_06B6;
-        Label_02DA:
+            goto Label_061D;
+        Label_02AE:
             EditorGUIUtility.editingTextField = false;
             if (rect.Contains(Event.current.mousePosition))
             {
@@ -2548,56 +2503,45 @@
             }
             else
             {
-                Object gameObject = (property == null) ? obj : property.objectReferenceValue;
-                Component component = gameObject as Component;
+                UnityEngine.Object targetObject = (property == null) ? obj : property.objectReferenceValue;
+                Component component = targetObject as Component;
                 if (component != null)
                 {
-                    gameObject = component.gameObject;
+                    targetObject = component.gameObject;
                 }
                 if (showMixedValue)
                 {
-                    gameObject = null;
+                    targetObject = null;
                 }
                 if (Event.current.clickCount == 1)
                 {
                     GUIUtility.keyboardControl = id;
-                    if (gameObject != null)
-                    {
-                        bool flag2 = current.shift || current.control;
-                        if (!flag2)
-                        {
-                            EditorGUIUtility.PingObject(gameObject);
-                        }
-                        if (flag2 && (gameObject is Texture))
-                        {
-                            PopupWindowWithoutFocus.Show(new RectOffset(6, 3, 0, 3).Add(position), new ObjectPreviewPopup(gameObject), new PopupLocationHelper.PopupLocation[] { PopupLocationHelper.PopupLocation.Left });
-                        }
-                    }
+                    PingObjectOrShowPreviewOnClick(targetObject, position);
                     current.Use();
                 }
                 else if (Event.current.clickCount == 2)
                 {
-                    if (gameObject != null)
+                    if (targetObject != null)
                     {
-                        AssetDatabase.OpenAsset(gameObject);
+                        AssetDatabase.OpenAsset(targetObject);
                         GUIUtility.ExitGUI();
                     }
                     current.Use();
                 }
             }
-        Label_06B6:
+        Label_061D:
             EditorGUIUtility.SetIconSize(iconSize);
             return obj;
         }
 
-        internal static bool DoObjectFoldout(bool foldout, Rect interactionRect, Rect renderRect, Object[] targetObjs, int id)
+        internal static bool DoObjectFoldout(bool foldout, Rect interactionRect, Rect renderRect, UnityEngine.Object[] targetObjs, int id)
         {
             foldout = DoObjectMouseInteraction(foldout, interactionRect, targetObjs, id);
             DoObjectFoldoutInternal(foldout, interactionRect, renderRect, targetObjs, id);
             return foldout;
         }
 
-        private static void DoObjectFoldoutInternal(bool foldout, Rect interactionRect, Rect renderRect, Object[] targetObjs, int id)
+        private static void DoObjectFoldoutInternal(bool foldout, Rect interactionRect, Rect renderRect, UnityEngine.Object[] targetObjs, int id)
         {
             bool enabled = GUI.enabled;
             GUI.enabled = true;
@@ -2609,7 +2553,7 @@
             GUI.enabled = enabled;
         }
 
-        internal static bool DoObjectMouseInteraction(bool foldout, Rect interactionRect, Object[] targetObjs, int id)
+        internal static bool DoObjectMouseInteraction(bool foldout, Rect interactionRect, UnityEngine.Object[] targetObjs, int id)
         {
             bool enabled = GUI.enabled;
             GUI.enabled = true;
@@ -2620,7 +2564,7 @@
                 case EventType.MouseDown:
                     if (interactionRect.Contains(current.mousePosition))
                     {
-                        if ((current.button != 1) || (targetObjs[0] == null))
+                        if ((current.button != 1) || !IsValidForContextMenu(targetObjs[0]))
                         {
                             if ((current.button == 0) && ((Application.platform != RuntimePlatform.OSXEditor) || !current.control))
                             {
@@ -2725,7 +2669,7 @@
                     break;
 
                 default:
-                    if ((typeForControl == EventType.ContextClick) && (interactionRect.Contains(current.mousePosition) && (targetObjs[0] != null)))
+                    if ((typeForControl == EventType.ContextClick) && (interactionRect.Contains(current.mousePosition) && IsValidForContextMenu(targetObjs[0])))
                     {
                         EditorUtility.DisplayObjectContextMenu(new Rect(current.mousePosition.x, current.mousePosition.y, 0f, 0f), targetObjs, 0);
                         current.Use();
@@ -2861,9 +2805,17 @@
                 }
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = e => Debug.Log(((SerializedProperty) e).propertyPath);
+                    <>f__am$cache0 = e => UnityEngine.Debug.Log(((SerializedProperty) e).propertyPath);
                 }
                 menu.AddItem(EditorGUIUtility.TextContent("Print Property Path"), false, <>f__am$cache0, property2);
+            }
+            if (EditorApplication.contextualPropertyMenu != null)
+            {
+                if (menu.GetItemCount() > 0)
+                {
+                    menu.AddSeparator("");
+                }
+                EditorApplication.contextualPropertyMenu(menu, property);
             }
             Event.current.Use();
             if (menu.GetItemCount() != 0)
@@ -2899,8 +2851,13 @@
         private static float DoSlider(Rect position, Rect dragZonePosition, int id, float value, float left, float right, string formatString) => 
             DoSlider(position, dragZonePosition, id, value, left, right, formatString, 1f);
 
-        private static float DoSlider(Rect position, Rect dragZonePosition, int id, float value, float left, float right, string formatString, float power)
+        private static float DoSlider(Rect position, Rect dragZonePosition, int id, float value, float left, float right, string formatString, float power) => 
+            DoSlider(position, dragZonePosition, id, value, left, right, formatString, power, GUI.skin.horizontalSlider, GUI.skin.horizontalSliderThumb, null);
+
+        private static float DoSlider(Rect position, Rect dragZonePosition, int id, float value, float left, float right, string formatString, float power, GUIStyle sliderStyle, GUIStyle thumbStyle, Texture2D sliderBackground)
         {
+            left = Mathf.Clamp(left, float.MinValue, float.MaxValue);
+            right = Mathf.Clamp(right, float.MinValue, float.MaxValue);
             float width = position.width;
             if (width >= (65f + EditorGUIUtility.fieldWidth))
             {
@@ -2920,17 +2877,22 @@
                     value = PowPreserveSign(value, 1f / power);
                 }
                 Rect rect = new Rect(position.x, position.y, num2, position.height);
-                value = GUI.Slider(rect, value, 0f, start, end, GUI.skin.horizontalSlider, !showMixedValue ? GUI.skin.horizontalSliderThumb : "SliderMixed", true, num3);
+                if ((sliderBackground != null) && (Event.current.type == EventType.Repaint))
+                {
+                    Graphics.DrawTexture(sliderStyle.overflow.Add(rect), sliderBackground, new Rect(0.5f / ((float) sliderBackground.width), 0.5f / ((float) sliderBackground.height), 1f - (1f / ((float) sliderBackground.width)), 1f - (1f / ((float) sliderBackground.height))), 0, 0, 0, 0, Color.grey);
+                }
+                value = GUI.Slider(rect, value, 0f, start, end, sliderStyle, !showMixedValue ? thumbStyle : "SliderMixed", true, num3);
                 if (power != 1f)
                 {
                     value = PowPreserveSign(value, power);
+                    value = Mathf.Clamp(value, Mathf.Min(left, right), Mathf.Max(left, right));
                 }
                 if (EditorGUIUtility.sliderLabels.HasLabels())
                 {
                     Color color = GUI.color;
                     GUI.color *= new Color(1f, 1f, 1f, 0.5f);
-                    Rect rect2 = new Rect(rect.x, rect.y + 10f, rect.width, rect.height);
-                    DoTwoLabels(rect2, EditorGUIUtility.sliderLabels.leftLabel, EditorGUIUtility.sliderLabels.rightLabel, EditorStyles.miniLabel);
+                    Rect rect3 = new Rect(rect.x, rect.y + 10f, rect.width, rect.height);
+                    DoTwoLabels(rect3, EditorGUIUtility.sliderLabels.leftLabel, EditorGUIUtility.sliderLabels.rightLabel, EditorStyles.miniLabel);
                     GUI.color = color;
                     EditorGUIUtility.sliderLabels.SetLabels(null, null);
                 }
@@ -3064,12 +3026,12 @@
                         GUIUtility.hotControl = id;
                         current.Use();
                     }
-                    goto Label_09C0;
+                    goto Label_09B5;
 
                 case EventType.MouseUp:
                     if (GUIUtility.hotControl != id)
                     {
-                        goto Label_09C0;
+                        goto Label_09B5;
                     }
                     if (!s_Dragged || !s_DragToPosition)
                     {
@@ -3116,7 +3078,7 @@
                         s_Dragged = true;
                         current.Use();
                     }
-                    goto Label_09C0;
+                    goto Label_09B5;
 
                 case EventType.KeyDown:
                     if (GUIUtility.keyboardControl == id)
@@ -3156,10 +3118,10 @@
                                         {
                                             editor.Insert(character);
                                             flag = true;
-                                            goto Label_09C0;
+                                            goto Label_09B5;
                                         }
                                         current.Use();
-                                        goto Label_09C0;
+                                        goto Label_09B5;
                                 }
                                 if ((character == '\t') || (current.keyCode == KeyCode.Tab))
                                 {
@@ -3179,7 +3141,7 @@
                                     {
                                         case '\x0019':
                                         case '\x001b':
-                                            goto Label_09C0;
+                                            goto Label_09B5;
                                     }
                                     if (editor.IsEditingControl(id))
                                     {
@@ -3207,7 +3169,7 @@
                             flag = true;
                         }
                     }
-                    goto Label_09C0;
+                    goto Label_09B5;
 
                 case EventType.Repaint:
                     string str5;
@@ -3244,7 +3206,7 @@
                     {
                         editor.DrawCursor(str5);
                     }
-                    goto Label_09C0;
+                    goto Label_09B5;
 
                 default:
                     switch (typeForControl)
@@ -3270,6 +3232,7 @@
                                         break;
 
                                     case "SelectAll":
+                                    case "Delete":
                                         current.Use();
                                         break;
 
@@ -3277,13 +3240,9 @@
                                         editor.text = text;
                                         current.Use();
                                         break;
-
-                                    case "Delete":
-                                        current.Use();
-                                        break;
                                 }
                             }
-                            goto Label_09C0;
+                            goto Label_09B5;
 
                         case EventType.ExecuteCommand:
                             if (GUIUtility.keyboardControl == id)
@@ -3335,10 +3294,10 @@
                                         break;
                                 }
                             }
-                            goto Label_09C0;
+                            goto Label_09B5;
 
                         case EventType.DragExited:
-                            goto Label_09C0;
+                            goto Label_09B5;
 
                         case EventType.ContextClick:
                             if (position.Contains(current.mousePosition))
@@ -3352,10 +3311,10 @@
                                 ShowTextEditorPopupMenu();
                                 Event.current.Use();
                             }
-                            goto Label_09C0;
+                            goto Label_09B5;
 
                         default:
-                            goto Label_09C0;
+                            goto Label_09B5;
                     }
                     break;
             }
@@ -3368,7 +3327,7 @@
                 GUIUtility.hotControl = 0;
                 current.Use();
             }
-        Label_09C0:
+        Label_09B5:
             if (GUIUtility.keyboardControl == id)
             {
                 GUIUtility.textFieldInput = true;
@@ -3618,6 +3577,11 @@
             return position;
         }
 
+        internal static void DrawDelimiterLine(Rect rect)
+        {
+            DrawRect(rect, kSplitLineSkinnedColor.color);
+        }
+
         internal static void DrawLabelShadow(Rect position, GUIContent content, GUIStyle style, float shadowOpa)
         {
             Color color = GUI.color;
@@ -3650,7 +3614,7 @@
             GUI.backgroundColor = backgroundColor;
         }
 
-        private static void DrawObjectFieldLargeThumb(Rect position, int id, Object obj, GUIContent content)
+        private static void DrawObjectFieldLargeThumb(Rect position, int id, UnityEngine.Object obj, GUIContent content)
         {
             GUIStyle objectFieldThumb = EditorStyles.objectFieldThumb;
             objectFieldThumb.Draw(position, GUIContent.none, id, DragAndDrop.activeControlID == id);
@@ -3704,7 +3668,7 @@
             (objectFieldThumb.name + "Overlay2").Draw(position, EditorGUIUtility.TempContent("Select"), id);
         }
 
-        private static void DrawObjectFieldMiniThumb(Rect position, int id, Object obj, GUIContent content)
+        private static void DrawObjectFieldMiniThumb(Rect position, int id, UnityEngine.Object obj, GUIContent content)
         {
             GUIStyle objectFieldMiniThumb = EditorStyles.objectFieldMiniThumb;
             position.width = 32f;
@@ -3730,6 +3694,20 @@
                 {
                     GUI.Label(rect, GUIContent.Temp(string.Empty, "Ctrl + Click to show preview"));
                 }
+            }
+        }
+
+        internal static void DrawOutline(Rect rect, float size, Color color)
+        {
+            if (Event.current.type == EventType.Repaint)
+            {
+                Color color2 = GUI.color;
+                GUI.color *= color;
+                GUI.DrawTexture(new Rect(rect.x, rect.y, rect.width, size), EditorGUIUtility.whiteTexture);
+                GUI.DrawTexture(new Rect(rect.x, rect.yMax - size, rect.width, size), EditorGUIUtility.whiteTexture);
+                GUI.DrawTexture(new Rect(rect.x, rect.y + 1f, size, rect.height - (2f * size)), EditorGUIUtility.whiteTexture);
+                GUI.DrawTexture(new Rect(rect.xMax - size, rect.y + 1f, size, rect.height - (2f * size)), EditorGUIUtility.whiteTexture);
+                GUI.color = color2;
             }
         }
 
@@ -3925,7 +3903,7 @@
         {
             if ((imageAspect == 0f) && (image == null))
             {
-                Debug.LogError("Please specify an image or a imageAspect");
+                UnityEngine.Debug.LogError("Please specify an image or a imageAspect");
             }
             else
             {
@@ -3948,6 +3926,69 @@
             GUI.CalculateScaledTextureRects(position, scaleMode, imageAspect, ref outScreenRect, ref outSourceRect);
             GUI.DrawTextureWithTexCoords(outScreenRect, transparentCheckerTexture, new Rect((outScreenRect.width * -0.5f) / ((float) transparentCheckerTexture.width), (outScreenRect.height * -0.5f) / ((float) transparentCheckerTexture.height), outScreenRect.width / ((float) transparentCheckerTexture.width), outScreenRect.height / ((float) transparentCheckerTexture.height)), false);
         }
+
+        /// <summary>
+        /// <para>Make a button that reacts to mouse down, for displaying your own dropdown content.</para>
+        /// </summary>
+        /// <param name="position">Rectangle on the screen to use for the button.</param>
+        /// <param name="content">Text, image and tooltip for this button.</param>
+        /// <param name="focusType">Whether the button should be selectable by keyboard or not.</param>
+        /// <param name="style">Optional style to use.</param>
+        /// <returns>
+        /// <para>true when the user clicks the button.</para>
+        /// </returns>
+        public static bool DropdownButton(Rect position, GUIContent content, FocusType focusType) => 
+            DropdownButton(position, content, focusType, "MiniPullDown");
+
+        internal static bool DropdownButton(int id, Rect position, GUIContent content, GUIStyle style)
+        {
+            Event current = Event.current;
+            switch (current.type)
+            {
+                case EventType.Repaint:
+                    if (showMixedValue)
+                    {
+                        BeginHandleMixedValueContentColor();
+                        style.Draw(position, s_MixedValueContent, id, false);
+                        EndHandleMixedValueContentColor();
+                    }
+                    else
+                    {
+                        style.Draw(position, content, id, false);
+                    }
+                    break;
+
+                case EventType.MouseDown:
+                    if (position.Contains(current.mousePosition) && (current.button == 0))
+                    {
+                        Event.current.Use();
+                        return true;
+                    }
+                    break;
+
+                case EventType.KeyDown:
+                    if ((GUIUtility.keyboardControl == id) && (current.character == ' '))
+                    {
+                        Event.current.Use();
+                        return true;
+                    }
+                    break;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// <para>Make a button that reacts to mouse down, for displaying your own dropdown content.</para>
+        /// </summary>
+        /// <param name="position">Rectangle on the screen to use for the button.</param>
+        /// <param name="content">Text, image and tooltip for this button.</param>
+        /// <param name="focusType">Whether the button should be selectable by keyboard or not.</param>
+        /// <param name="style">Optional style to use.</param>
+        /// <returns>
+        /// <para>true when the user clicks the button.</para>
+        /// </returns>
+        public static bool DropdownButton(Rect position, GUIContent content, FocusType focusType, GUIStyle style) => 
+            DropdownButton(GUIUtility.GetControlID(s_DropdownButtonHash, focusType, position), position, content, style);
 
         /// <summary>
         /// <para>Draws a label with a drop shadow.</para>
@@ -4080,7 +4121,7 @@
             }
         }
 
-        private static Enum EnumFlagsToInt(Type type, int value) => 
+        private static Enum EnumFlagsToInt(System.Type type, int value) => 
             (Enum.Parse(type, value.ToString()) as Enum);
 
         /// <summary>
@@ -4181,14 +4222,14 @@
 
         internal static Enum EnumMaskFieldInternal(Rect position, Enum enumValue, GUIStyle style)
         {
-            Type type = enumValue.GetType();
+            System.Type type = enumValue.GetType();
             if (!type.IsEnum)
             {
                 throw new Exception("parameter _enum must be of type System.Enum");
             }
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<string, string>(null, (IntPtr) <EnumMaskFieldInternal>m__3);
+                <>f__am$cache3 = x => ObjectNames.NicifyVariableName(x);
             }
             string[] flagNames = Enumerable.Select<string, string>(Enum.GetNames(enumValue.GetType()), <>f__am$cache3).ToArray<string>();
             int num = MaskFieldGUI.DoMaskField(IndentedRect(position), GUIUtility.GetControlID(s_MaskField, FocusType.Keyboard, position), Convert.ToInt32(enumValue), flagNames, style);
@@ -4197,7 +4238,7 @@
 
         internal static Enum EnumMaskFieldInternal(Rect position, GUIContent label, Enum enumValue, GUIStyle style)
         {
-            Type type = enumValue.GetType();
+            System.Type type = enumValue.GetType();
             if (!type.IsEnum)
             {
                 throw new Exception("parameter _enum must be of type System.Enum");
@@ -4207,7 +4248,7 @@
             position.xMax = rect.x;
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<string, string>(null, (IntPtr) <EnumMaskFieldInternal>m__2);
+                <>f__am$cache2 = x => ObjectNames.NicifyVariableName(x);
             }
             string[] flagNames = Enumerable.Select<string, string>(Enum.GetNames(enumValue.GetType()), <>f__am$cache2).ToArray<string>();
             int num2 = MaskFieldGUI.DoMaskField(rect, id, Convert.ToInt32(enumValue), flagNames, style);
@@ -4377,7 +4418,7 @@
 
         private static Enum EnumPopupInternal(Rect position, GUIContent label, Enum selected, GUIStyle style)
         {
-            Type enumType = selected.GetType();
+            System.Type enumType = selected.GetType();
             if (!enumType.IsEnum)
             {
                 throw new Exception("parameter _enum must be of type System.Enum");
@@ -4387,7 +4428,7 @@
             int index = Array.IndexOf<Enum>(array, selected);
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<string, string>(null, (IntPtr) <EnumPopupInternal>m__1);
+                <>f__am$cache1 = x => ObjectNames.NicifyVariableName(x);
             }
             index = Popup(position, label, index, EditorGUIUtility.TempContent(Enumerable.Select<string, string>(names, <>f__am$cache1).ToArray<string>()), style);
             if ((index < 0) || (index >= names.Length))
@@ -4726,7 +4767,7 @@
             return foldout;
         }
 
-        internal static bool FoldoutTitlebar(Rect position, GUIContent label, bool foldout)
+        internal static bool FoldoutTitlebar(Rect position, GUIContent label, bool foldout, bool skipIconSpacing)
         {
             int controlID = GUIUtility.GetControlID(s_TitlebarHash, FocusType.Keyboard, position);
             if (Event.current.type == EventType.Repaint)
@@ -4734,7 +4775,7 @@
                 GUIStyle inspectorTitlebar = EditorStyles.inspectorTitlebar;
                 GUIStyle inspectorTitlebarText = EditorStyles.inspectorTitlebarText;
                 GUIStyle style3 = EditorStyles.foldout;
-                Rect rect = new Rect(((position.x + inspectorTitlebar.padding.left) + 2f) + 16f, position.y + inspectorTitlebar.padding.top, 200f, 16f);
+                Rect rect = new Rect(((position.x + inspectorTitlebar.padding.left) + 2f) + (!skipIconSpacing ? ((float) 0x10) : ((float) 0)), position.y + inspectorTitlebar.padding.top, 200f, 16f);
                 inspectorTitlebar.Draw(position, GUIContent.none, controlID, foldout);
                 style3.Draw(GetInspectorTitleBarObjectFoldoutRenderRect(position), GUIContent.none, controlID, foldout);
                 position = inspectorTitlebar.padding.Remove(position);
@@ -4751,7 +4792,7 @@
             {
                 t = group.GetGameViewSize(selectedIndex).displayText;
             }
-            if (ButtonMouseDown(buttonRect, GUIContent.Temp(t), FocusType.Passive, guiStyle))
+            if (DropdownButton(buttonRect, GUIContent.Temp(t), FocusType.Passive, guiStyle))
             {
                 GameViewSizesMenuItemProvider itemProvider = new GameViewSizesMenuItemProvider(groupType);
                 GameViewSizeMenu windowContent = new GameViewSizeMenu(itemProvider, selectedIndex, new GameViewSizesMenuModifyItemUI(), gameView);
@@ -4759,7 +4800,7 @@
             }
         }
 
-        internal static GameObject GetGameObjectFromObject(Object obj)
+        internal static GameObject GetGameObjectFromObject(UnityEngine.Object obj)
         {
             GameObject gameObject = obj as GameObject;
             if ((gameObject == null) && (obj is Component))
@@ -4785,7 +4826,6 @@
                     case TextureUsageMode.LightmapDoubleLDR:
                         return lightmapDoubleLDRMaterial;
 
-                    case TextureUsageMode.NormalmapPlain:
                     case TextureUsageMode.NormalmapDXT5nm:
                         return normalmapMaterial;
                 }
@@ -4872,17 +4912,11 @@
             return GetPropertyHeight(property.propertyType, label);
         }
 
-        internal static Gradient GradientField(Rect position, SerializedProperty gradient)
-        {
-            int id = GUIUtility.GetControlID(s_GradientHash, FocusType.Keyboard, position);
-            return DoGradientField(position, id, null, gradient);
-        }
+        internal static Gradient GradientField(Rect position, SerializedProperty gradient) => 
+            GradientField(position, gradient, false);
 
-        internal static Gradient GradientField(Rect position, Gradient gradient)
-        {
-            int id = GUIUtility.GetControlID(s_GradientHash, FocusType.Keyboard, position);
-            return DoGradientField(position, id, gradient, null);
-        }
+        internal static Gradient GradientField(Rect position, Gradient gradient) => 
+            GradientField(position, gradient, false);
 
         internal static Gradient GradientField(string label, Rect position, SerializedProperty property) => 
             GradientField(EditorGUIUtility.TempContent(label), position, property);
@@ -4893,13 +4927,25 @@
         internal static Gradient GradientField(GUIContent label, Rect position, SerializedProperty property)
         {
             int id = GUIUtility.GetControlID(s_GradientHash, FocusType.Keyboard, position);
-            return DoGradientField(PrefixLabel(position, id, label), id, null, property);
+            return DoGradientField(PrefixLabel(position, id, label), id, null, property, false);
         }
 
         internal static Gradient GradientField(GUIContent label, Rect position, Gradient gradient)
         {
             int id = GUIUtility.GetControlID(s_GradientHash, FocusType.Keyboard, position);
-            return DoGradientField(PrefixLabel(position, id, label), id, gradient, null);
+            return DoGradientField(PrefixLabel(position, id, label), id, gradient, null, false);
+        }
+
+        internal static Gradient GradientField(Rect position, SerializedProperty gradient, bool hdr)
+        {
+            int id = GUIUtility.GetControlID(s_GradientHash, FocusType.Keyboard, position);
+            return DoGradientField(position, id, null, gradient, hdr);
+        }
+
+        internal static Gradient GradientField(Rect position, Gradient gradient, bool hdr)
+        {
+            int id = GUIUtility.GetControlID(s_GradientHash, FocusType.Keyboard, position);
+            return DoGradientField(position, id, gradient, null, hdr);
         }
 
         /// <summary>
@@ -4987,9 +5033,9 @@
             }
         }
 
-        private static Object HandleTextureToSprite(Texture2D tex)
+        private static UnityEngine.Object HandleTextureToSprite(Texture2D tex)
         {
-            Object[] objArray = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(tex));
+            UnityEngine.Object[] objArray = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(tex));
             for (int i = 0; i < objArray.Length; i++)
             {
                 if (objArray[i].GetType() == typeof(Sprite))
@@ -5016,8 +5062,14 @@
             return property.hasVisibleChildren;
         }
 
-        internal static float HeightResizer(Rect position, float height, float minHeight, float maxHeight) => 
-            Resizer.Resize(position, height, minHeight, maxHeight, false);
+        internal static float HeightResizer(Rect position, float height, float minHeight, float maxHeight)
+        {
+            bool flag;
+            return Resizer.Resize(position, height, minHeight, maxHeight, false, out flag);
+        }
+
+        internal static float HeightResizer(Rect position, float height, float minHeight, float maxHeight, out bool hasControl) => 
+            Resizer.Resize(position, height, minHeight, maxHeight, false, out hasControl);
 
         /// <summary>
         /// <para>Make a help box with a message to the user.</para>
@@ -5030,7 +5082,7 @@
             GUI.Label(position, EditorGUIUtility.TempContent(message, EditorGUIUtility.GetHelpIcon(type)), EditorStyles.helpBox);
         }
 
-        internal static bool HelpIconButton(Rect position, Object obj)
+        internal static bool HelpIconButton(Rect position, UnityEngine.Object obj)
         {
             bool flag = Unsupported.IsDeveloperBuild();
             bool defaultToMonoBehaviour = !flag || obj.GetType().Assembly.ToString().StartsWith("Assembly-");
@@ -5117,7 +5169,7 @@ This warning only shows up in development builds.";
             return new Rect(source.x + indent, source.y, source.width - indent, source.height);
         }
 
-        public static void InspectorTitlebar(Rect position, Object[] targetObjs)
+        public static void InspectorTitlebar(Rect position, UnityEngine.Object[] targetObjs)
         {
             GUIStyle none = GUIStyle.none;
             int id = GUIUtility.GetControlID(s_TitlebarHash, FocusType.Keyboard, position);
@@ -5135,9 +5187,9 @@ This warning only shows up in development builds.";
         /// <returns>
         /// <para>The foldout state selected by the user.</para>
         /// </returns>
-        public static bool InspectorTitlebar(Rect position, bool foldout, Object targetObj, bool expandable)
+        public static bool InspectorTitlebar(Rect position, bool foldout, UnityEngine.Object targetObj, bool expandable)
         {
-            Object[] targetObjs = new Object[] { targetObj };
+            UnityEngine.Object[] targetObjs = new UnityEngine.Object[] { targetObj };
             return InspectorTitlebar(position, foldout, targetObjs, expandable);
         }
 
@@ -5152,7 +5204,7 @@ This warning only shows up in development builds.";
         /// <returns>
         /// <para>The foldout state selected by the user.</para>
         /// </returns>
-        public static bool InspectorTitlebar(Rect position, bool foldout, Object[] targetObjs, bool expandable)
+        public static bool InspectorTitlebar(Rect position, bool foldout, UnityEngine.Object[] targetObjs, bool expandable)
         {
             GUIStyle inspectorTitlebar = EditorStyles.inspectorTitlebar;
             int id = GUIUtility.GetControlID(s_TitlebarHash, FocusType.Keyboard, position);
@@ -5565,8 +5617,19 @@ This warning only shows up in development builds.";
             return Mathf.RoundToInt(DoSlider(PrefixLabel(position, id, label), EditorGUIUtility.DragZoneRect(position), id, (float) value, (float) leftValue, (float) rightValue, kIntFieldFormatString));
         }
 
+        [RequiredByNativeCode]
         internal static bool IsEditingTextField() => 
             RecycledTextEditor.s_ActuallyEditing;
+
+        private static bool IsValidForContextMenu(UnityEngine.Object target)
+        {
+            if (target == null)
+            {
+                return false;
+            }
+            bool flag2 = target == null;
+            return ((flag2 && ((target is MonoBehaviour) || (target is ScriptableObject))) || !flag2);
+        }
 
         internal static Event KeyEventField(Rect position, Event evt) => 
             DoKeyEventField(position, evt, GUI.skin.textField);
@@ -5880,7 +5943,7 @@ This warning only shows up in development builds.";
         }
 
         /// <summary>
-        /// <para>Make a text field for entering long integers.</para>
+        /// <para>Make a text field for entering integers.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the long field.</param>
         /// <param name="label">Optional label to display in front of the long field.</param>
@@ -5900,7 +5963,7 @@ This warning only shows up in development builds.";
             LongFieldInternal(position, value, style);
 
         /// <summary>
-        /// <para>Make a text field for entering long integers.</para>
+        /// <para>Make a text field for entering integers.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the long field.</param>
         /// <param name="label">Optional label to display in front of the long field.</param>
@@ -5917,7 +5980,7 @@ This warning only shows up in development builds.";
         }
 
         /// <summary>
-        /// <para>Make a text field for entering long integers.</para>
+        /// <para>Make a text field for entering integers.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the long field.</param>
         /// <param name="label">Optional label to display in front of the long field.</param>
@@ -5934,7 +5997,7 @@ This warning only shows up in development builds.";
         }
 
         /// <summary>
-        /// <para>Make a text field for entering long integers.</para>
+        /// <para>Make a text field for entering integers.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the long field.</param>
         /// <param name="label">Optional label to display in front of the long field.</param>
@@ -5947,7 +6010,7 @@ This warning only shows up in development builds.";
             LongField(position, EditorGUIUtility.TempContent(label), value, style);
 
         /// <summary>
-        /// <para>Make a text field for entering long integers.</para>
+        /// <para>Make a text field for entering integers.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the long field.</param>
         /// <param name="label">Optional label to display in front of the long field.</param>
@@ -6095,7 +6158,7 @@ This warning only shows up in development builds.";
             return MaskFieldGUI.DoMaskField(position, id, mask, displayedOptions, optionValues, style);
         }
 
-        internal static Object MiniThumbnailObjectField(Rect position, GUIContent label, Object obj, Type objType, ObjectFieldValidator validator)
+        internal static UnityEngine.Object MiniThumbnailObjectField(Rect position, GUIContent label, UnityEngine.Object obj, System.Type objType, ObjectFieldValidator validator)
         {
             Rect rect;
             Rect rect2;
@@ -6319,7 +6382,7 @@ This warning only shows up in development builds.";
         /// <param name="property">The object reference property the field shows.</param>
         /// <param name="objType">The type of the objects that can be assigned.</param>
         /// <param name="label">Optional label to display in front of the field. Pass GUIContent.none to hide the label.</param>
-        public static void ObjectField(Rect position, SerializedProperty property, Type objType)
+        public static void ObjectField(Rect position, SerializedProperty property, System.Type objType)
         {
             ObjectField(position, property, objType, null, EditorStyles.objectField);
         }
@@ -6348,7 +6411,7 @@ This warning only shows up in development builds.";
         /// <para>The object that has been set by the user.</para>
         /// </returns>
         [Obsolete("Check the docs for the usage of the new parameter 'allowSceneObjects'.")]
-        public static Object ObjectField(Rect position, Object obj, Type objType)
+        public static UnityEngine.Object ObjectField(Rect position, UnityEngine.Object obj, System.Type objType)
         {
             int id = GUIUtility.GetControlID(s_ObjectFieldHash, FocusType.Keyboard, position);
             return DoObjectField(position, position, id, obj, objType, null, null, true);
@@ -6366,7 +6429,7 @@ This warning only shows up in development builds.";
         /// <para>The object that has been set by the user.</para>
         /// </returns>
         [Obsolete("Check the docs for the usage of the new parameter 'allowSceneObjects'.")]
-        public static Object ObjectField(Rect position, string label, Object obj, Type objType) => 
+        public static UnityEngine.Object ObjectField(Rect position, string label, UnityEngine.Object obj, System.Type objType) => 
             ObjectField(position, EditorGUIUtility.TempContent(label), obj, objType, true);
 
         /// <summary>
@@ -6376,7 +6439,7 @@ This warning only shows up in development builds.";
         /// <param name="property">The object reference property the field shows.</param>
         /// <param name="objType">The type of the objects that can be assigned.</param>
         /// <param name="label">Optional label to display in front of the field. Pass GUIContent.none to hide the label.</param>
-        public static void ObjectField(Rect position, SerializedProperty property, Type objType, GUIContent label)
+        public static void ObjectField(Rect position, SerializedProperty property, System.Type objType, GUIContent label)
         {
             ObjectField(position, property, objType, label, EditorStyles.objectField);
         }
@@ -6393,7 +6456,7 @@ This warning only shows up in development builds.";
         /// <para>The object that has been set by the user.</para>
         /// </returns>
         [Obsolete("Check the docs for the usage of the new parameter 'allowSceneObjects'.")]
-        public static Object ObjectField(Rect position, GUIContent label, Object obj, Type objType) => 
+        public static UnityEngine.Object ObjectField(Rect position, GUIContent label, UnityEngine.Object obj, System.Type objType) => 
             ObjectField(position, label, obj, objType, true);
 
         /// <summary>
@@ -6407,7 +6470,7 @@ This warning only shows up in development builds.";
         /// <returns>
         /// <para>The object that has been set by the user.</para>
         /// </returns>
-        public static Object ObjectField(Rect position, Object obj, Type objType, bool allowSceneObjects)
+        public static UnityEngine.Object ObjectField(Rect position, UnityEngine.Object obj, System.Type objType, bool allowSceneObjects)
         {
             int id = GUIUtility.GetControlID(s_ObjectFieldHash, FocusType.Keyboard, position);
             return DoObjectField(IndentedRect(position), IndentedRect(position), id, obj, objType, null, null, allowSceneObjects);
@@ -6424,10 +6487,10 @@ This warning only shows up in development builds.";
         /// <returns>
         /// <para>The object that has been set by the user.</para>
         /// </returns>
-        public static Object ObjectField(Rect position, string label, Object obj, Type objType, bool allowSceneObjects) => 
+        public static UnityEngine.Object ObjectField(Rect position, string label, UnityEngine.Object obj, System.Type objType, bool allowSceneObjects) => 
             ObjectField(position, EditorGUIUtility.TempContent(label), obj, objType, allowSceneObjects);
 
-        internal static void ObjectField(Rect position, SerializedProperty property, Type objType, GUIContent label, GUIStyle style)
+        internal static void ObjectField(Rect position, SerializedProperty property, System.Type objType, GUIContent label, GUIStyle style)
         {
             label = BeginProperty(position, label, property);
             ObjectFieldInternal(position, property, objType, label, style);
@@ -6445,7 +6508,7 @@ This warning only shows up in development builds.";
         /// <returns>
         /// <para>The object that has been set by the user.</para>
         /// </returns>
-        public static Object ObjectField(Rect position, GUIContent label, Object obj, Type objType, bool allowSceneObjects)
+        public static UnityEngine.Object ObjectField(Rect position, GUIContent label, UnityEngine.Object obj, System.Type objType, bool allowSceneObjects)
         {
             int id = GUIUtility.GetControlID(s_ObjectFieldHash, FocusType.Keyboard, position);
             position = PrefixLabel(position, id, label);
@@ -6458,14 +6521,14 @@ This warning only shows up in development builds.";
             return DoObjectField(position, position, id, obj, objType, null, null, allowSceneObjects);
         }
 
-        private static void ObjectFieldInternal(Rect position, SerializedProperty property, Type objType, GUIContent label, GUIStyle style)
+        private static void ObjectFieldInternal(Rect position, SerializedProperty property, System.Type objType, GUIContent label, GUIStyle style)
         {
             int id = GUIUtility.GetControlID(s_PPtrHash, FocusType.Keyboard, position);
             position = PrefixLabel(position, id, label);
             bool allowSceneObjects = false;
             if (property != null)
             {
-                Object targetObject = property.serializedObject.targetObject;
+                UnityEngine.Object targetObject = property.serializedObject.targetObject;
                 if ((targetObject != null) && !EditorUtility.IsPersistent(targetObject))
                 {
                     allowSceneObjects = true;
@@ -6474,7 +6537,7 @@ This warning only shows up in development builds.";
             DoObjectField(position, position, id, null, null, property, null, allowSceneObjects, style);
         }
 
-        internal static void ObjectIconDropDown(Rect position, Object[] targets, bool showLabelIcons, Texture2D nullIcon, SerializedProperty iconProperty)
+        internal static void ObjectIconDropDown(Rect position, UnityEngine.Object[] targets, bool showLabelIcons, Texture2D nullIcon, SerializedProperty iconProperty)
         {
             if (s_IconTextureInactive == null)
             {
@@ -6521,7 +6584,7 @@ This warning only shows up in development builds.";
                     GUIStyle.none.Draw(new Rect(x, rect.yMax - (rect.height * 0.2f), 13f, 8f), s_IconDropDown, false, false, false, false);
                 }
             }
-            if ((ButtonMouseDown(position, GUIContent.none, FocusType.Passive, GUIStyle.none) && ValidTargetForIconSelection(targets)) && IconSelector.ShowAtPosition(targets[0], position, showLabelIcons))
+            if ((DropdownButton(position, GUIContent.none, FocusType.Passive, GUIStyle.none) && ValidTargetForIconSelection(targets)) && IconSelector.ShowAtPosition(targets[0], position, showLabelIcons))
             {
                 GUIUtility.ExitGUI();
             }
@@ -6632,6 +6695,22 @@ This warning only shows up in development builds.";
             bool flag;
             int id = GUIUtility.GetControlID(s_PasswordFieldHash, FocusType.Keyboard, position);
             return DoTextField(s_RecycledEditor, id, PrefixLabel(position, id, label), password, style, null, out flag, false, false, true);
+        }
+
+        internal static void PingObjectOrShowPreviewOnClick(UnityEngine.Object targetObject, Rect position)
+        {
+            if (targetObject != null)
+            {
+                Event current = Event.current;
+                if (!(current.shift || current.control))
+                {
+                    EditorGUIUtility.PingObject(targetObject);
+                }
+                else if (targetObject is Texture)
+                {
+                    PopupWindowWithoutFocus.Show(new RectOffset(6, 3, 0, 3).Add(position), new ObjectPreviewPopup(targetObject), new PopupLocationHelper.PopupLocation[] { PopupLocationHelper.PopupLocation.Left });
+                }
+            }
         }
 
         /// <summary>
@@ -7053,6 +7132,7 @@ This warning only shows up in development builds.";
                 return text;
             }
             int id = GUIUtility.GetControlID(s_TextAreaHash, FocusType.Keyboard, position);
+            position = IndentedRect(position);
             float height = style.CalcHeight(GUIContent.Temp(text), position.width);
             Rect rect = new Rect(0f, 0f, position.width, height);
             Vector2 contentOffset = style.contentOffset;
@@ -7084,7 +7164,7 @@ This warning only shows up in development builds.";
                 }
             }
             EventType type = Event.current.type;
-            string str2 = DoTextField(s_RecycledEditor, id, IndentedRect(position), text, style, null, out flag, false, true, false);
+            string str2 = DoTextField(s_RecycledEditor, id, position, text, style, null, out flag, false, true, false);
             if (type != Event.current.type)
             {
                 scrollPosition = s_RecycledEditor.scrollOffset;
@@ -7230,7 +7310,7 @@ This warning only shows up in development builds.";
             if (Unsupported.IsDeveloperBuild())
             {
                 Color backgroundColor = GUI.backgroundColor;
-                GUI.backgroundColor = new Color(Random.value, Random.value, Random.value, 1f);
+                GUI.backgroundColor = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1f);
                 Texture2D background = EditorStyles.radioButton.normal.background;
                 Vector2 position = new Vector2((float) background.width, (float) background.height);
                 GUI.Label(new Rect(Vector2.zero, EditorGUIUtility.PixelsToPoints(position)), string.Empty, EditorStyles.radioButton);
@@ -7354,6 +7434,26 @@ This warning only shows up in development builds.";
         /// </returns>
         public static float Slider(Rect position, GUIContent label, float value, float leftValue, float rightValue) => 
             PowerSlider(position, label, value, leftValue, rightValue, 1f);
+
+        internal static float SliderWithTexture(Rect position, GUIContent label, float sliderValue, float leftValue, float rightValue, float power, GUIStyle sliderStyle, GUIStyle thumbStyle, Texture2D sliderBackground)
+        {
+            int id = GUIUtility.GetControlID(s_SliderHash, FocusType.Keyboard, position);
+            Rect rect = PrefixLabel(position, id, label);
+            Rect dragZonePosition = !LabelHasContent(label) ? new Rect() : EditorGUIUtility.DragZoneRect(position);
+            return DoSlider(rect, dragZonePosition, id, sliderValue, leftValue, rightValue, kFloatFieldFormatString, power, sliderStyle, thumbStyle, sliderBackground);
+        }
+
+        internal static void SliderWithTexture(Rect position, GUIContent label, SerializedProperty property, float leftValue, float rightValue, float power, GUIStyle sliderStyle, GUIStyle thumbStyle, Texture2D sliderBackground)
+        {
+            label = BeginProperty(position, label, property);
+            BeginChangeCheck();
+            float num = SliderWithTexture(position, label, property.floatValue, leftValue, rightValue, power, sliderStyle, thumbStyle, sliderBackground);
+            if (EndChangeCheck())
+            {
+                property.floatValue = num;
+            }
+            EndProperty();
+        }
 
         internal static void SortingLayerField(Rect position, GUIContent label, SerializedProperty layerID, GUIStyle style, GUIStyle labelStyle)
         {
@@ -7758,6 +7858,13 @@ This warning only shows up in development builds.";
             return text;
         }
 
+        internal static string TextFieldInternal(int id, Rect position, string text, GUIStyle style)
+        {
+            bool flag;
+            text = DoTextField(s_RecycledEditor, id, IndentedRect(position), text, style, null, out flag, false, false, false);
+            return text;
+        }
+
         internal static string TextFieldInternal(Rect position, GUIContent label, string text, GUIStyle style)
         {
             bool flag;
@@ -7996,7 +8103,7 @@ This warning only shows up in development builds.";
             return text;
         }
 
-        internal static Object ValidateObjectFieldAssignment(Object[] references, Type objType, SerializedProperty property)
+        internal static UnityEngine.Object ValidateObjectFieldAssignment(UnityEngine.Object[] references, System.Type objType, SerializedProperty property)
         {
             if (references.Length > 0)
             {
@@ -8016,7 +8123,12 @@ This warning only shows up in development builds.";
                         }
                         return references[0];
                     }
-                    if ((((property.type == "PPtr<Sprite>") || (property.type == "PPtr<$Sprite>")) || (property.type == "vector")) && (flag2 && flag))
+                    string type = property.type;
+                    if (property.type == "vector")
+                    {
+                        type = property.arrayElementType;
+                    }
+                    if (((type == "PPtr<Sprite>") || (type == "PPtr<$Sprite>")) && (flag2 && flag))
                     {
                         return SpriteUtility.TextureToSprite(references[0] as Texture2D);
                     }
@@ -8027,7 +8139,7 @@ This warning only shows up in development builds.";
                     {
                         references = ((GameObject) references[0]).GetComponents(typeof(Component));
                     }
-                    foreach (Object obj4 in references)
+                    foreach (UnityEngine.Object obj4 in references)
                     {
                         if ((obj4 != null) && objType.IsAssignableFrom(obj4.GetType()))
                         {
@@ -8039,7 +8151,7 @@ This warning only shows up in development builds.";
             return null;
         }
 
-        private static bool ValidTargetForIconSelection(Object[] targets) => 
+        private static bool ValidTargetForIconSelection(UnityEngine.Object[] targets) => 
             (((targets[0] is MonoScript) || (targets[0] is GameObject)) && (targets.Length == 1));
 
         private static Vector2 Vector2Field(Rect position, Vector2 value)
@@ -8201,8 +8313,14 @@ This warning only shows up in development builds.";
             return value;
         }
 
-        internal static float WidthResizer(Rect position, float width, float minWidth, float maxWidth) => 
-            Resizer.Resize(position, width, minWidth, maxWidth, true);
+        internal static float WidthResizer(Rect position, float width, float minWidth, float maxWidth)
+        {
+            bool flag;
+            return Resizer.Resize(position, width, minWidth, maxWidth, true, out flag);
+        }
+
+        internal static float WidthResizer(Rect position, float width, float minWidth, float maxWidth, out bool hasControl) => 
+            Resizer.Resize(position, width, minWidth, maxWidth, true, out hasControl);
 
         /// <summary>
         /// <para>Is the platform-dependent "action" modifier key held down? (Read Only)</para>
@@ -8465,9 +8583,9 @@ This warning only shows up in development builds.";
 
         internal sealed class GUIContents
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private static GUIContent <helpIcon>k__BackingField;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private static GUIContent <titleSettingsIcon>k__BackingField;
 
             static GUIContents()
@@ -8706,7 +8824,7 @@ This warning only shows up in development builds.";
                     knobMaterial.name = "Knob Material";
                     if (knobMaterial.mainTexture == null)
                     {
-                        Debug.Log("Did not find 'KnobCShape'");
+                        UnityEngine.Debug.Log("Did not find 'KnobCShape'");
                     }
                 }
             }
@@ -8811,13 +8929,13 @@ This warning only shows up in development builds.";
             }
         }
 
-        internal delegate Object ObjectFieldValidator(Object[] references, Type objType, SerializedProperty property);
+        internal delegate UnityEngine.Object ObjectFieldValidator(UnityEngine.Object[] references, System.Type objType, SerializedProperty property);
 
         internal enum ObjectFieldVisualType
         {
             IconAndText,
             LargePreview,
-            MiniPreivew
+            MiniPreview
         }
 
         internal sealed class PopupCallbackInfo
@@ -8841,7 +8959,7 @@ This warning only shows up in development builds.";
                 {
                     if (instance == null)
                     {
-                        Debug.LogError("Popup menu has no instance");
+                        UnityEngine.Debug.LogError("Popup menu has no instance");
                         return selected;
                     }
                     if (instance.m_ControlID == controlID)
@@ -8884,7 +9002,7 @@ This warning only shows up in development builds.";
                 }
                 else
                 {
-                    Debug.LogError("BUG: We don't have a receiver set up, please report");
+                    UnityEngine.Debug.LogError("BUG: We don't have a receiver set up, please report");
                 }
             }
         }
@@ -8894,7 +9012,7 @@ This warning only shows up in development builds.";
         /// </summary>
         public class PropertyScope : GUI.Scope
         {
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private GUIContent <content>k__BackingField;
 
             /// <summary>
@@ -8966,7 +9084,7 @@ This warning only shows up in development builds.";
             private static Vector2 s_MouseDeltaReaderStartPos;
             private static float s_StartSize;
 
-            internal static float Resize(Rect position, float size, float minSize, float maxSize, bool horizontal)
+            internal static float Resize(Rect position, float size, float minSize, float maxSize, bool horizontal, out bool hasControl)
             {
                 int controlID = GUIUtility.GetControlID(EditorGUI.s_MouseDeltaReaderHash, FocusType.Passive, position);
                 Event current = Event.current;
@@ -8981,7 +9099,7 @@ This warning only shows up in development builds.";
                             s_StartSize = size;
                             current.Use();
                         }
-                        return size;
+                        break;
 
                     case EventType.MouseUp:
                         if ((GUIUtility.hotControl == controlID) && (current.button == 0))
@@ -8989,37 +9107,32 @@ This warning only shows up in development builds.";
                             GUIUtility.hotControl = 0;
                             current.Use();
                         }
-                        return size;
-
-                    case EventType.MouseMove:
-                    case EventType.KeyDown:
-                    case EventType.KeyUp:
-                    case EventType.ScrollWheel:
-                        return size;
+                        break;
 
                     case EventType.MouseDrag:
-                    {
-                        if (GUIUtility.hotControl != controlID)
+                        if (GUIUtility.hotControl == controlID)
                         {
-                            return size;
+                            current.Use();
+                            Vector2 vector = GUIClip.Unclip(current.mousePosition);
+                            float num2 = !horizontal ? (vector - s_MouseDeltaReaderStartPos).y : (vector - s_MouseDeltaReaderStartPos).x;
+                            float num3 = s_StartSize + num2;
+                            if ((num3 < minSize) || (num3 > maxSize))
+                            {
+                                size = Mathf.Clamp(num3, minSize, maxSize);
+                                break;
+                            }
+                            size = num3;
                         }
-                        current.Use();
-                        Vector2 vector = GUIClip.Unclip(current.mousePosition);
-                        float num2 = !horizontal ? (vector - s_MouseDeltaReaderStartPos).y : (vector - s_MouseDeltaReaderStartPos).x;
-                        float num3 = s_StartSize + num2;
-                        if ((num3 < minSize) || (num3 > maxSize))
-                        {
-                            return size;
-                        }
-                        return num3;
-                    }
+                        break;
+
                     case EventType.Repaint:
                     {
                         MouseCursor mouse = !horizontal ? MouseCursor.SplitResizeUpDown : MouseCursor.SplitResizeLeftRight;
                         EditorGUIUtility.AddCursorRect(position, mouse, controlID);
-                        return size;
+                        break;
                     }
                 }
+                hasControl = GUIUtility.hotControl == controlID;
                 return size;
             }
         }

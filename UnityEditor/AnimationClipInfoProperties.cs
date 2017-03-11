@@ -1,7 +1,6 @@
 ﻿namespace UnityEditor
 {
     using System;
-    using UnityEditor.Animations;
     using UnityEngine;
 
     internal class AnimationClipInfoProperties

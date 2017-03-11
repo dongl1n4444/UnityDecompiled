@@ -60,6 +60,10 @@
                     ScriptingLanguage.None
                 },
                 { 
+                    "hlsl",
+                    ScriptingLanguage.None
+                },
+                { 
                     "glslinc",
                     ScriptingLanguage.None
                 }
@@ -105,7 +109,7 @@
 
         private static void DumpIsland(MonoIsland island)
         {
-            Console.WriteLine("{0} ({1})", island._output, island._classlib_profile);
+            Console.WriteLine("{0} ({1})", island._output, island._api_compatibility_level);
             Console.WriteLine("Files: ");
             Console.WriteLine(string.Join("\n", island._files));
             Console.WriteLine("References: ");
@@ -139,7 +143,7 @@
 
         private string GetProjectEntries(IEnumerable<MonoIsland> islands)
         {
-            IEnumerable<string> source = Enumerable.Select<MonoIsland, string>(islands, new Func<MonoIsland, string>(this, (IntPtr) this.<GetProjectEntries>m__2));
+            IEnumerable<string> source = from i in islands select string.Format(DefaultSynchronizationSettings.SolutionProjectEntryTemplate, new object[] { this.SolutionGuid(i), this._projectName, Path.GetFileName(this.ProjectFile(i)), this.ProjectGuid(i._output) });
             return string.Join(WindowsNewline, source.ToArray<string>());
         }
 
@@ -399,7 +403,7 @@
             <RelevantIslandsForMode>c__AnonStorey0 storey = new <RelevantIslandsForMode>c__AnonStorey0 {
                 mode = mode
             };
-            return Enumerable.Where<MonoIsland>(islands, new Func<MonoIsland, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Where<MonoIsland>(islands, new Func<MonoIsland, bool>(storey.<>m__0));
         }
 
         private static ScriptingLanguage ScriptingLanguageFor(string extension)
@@ -433,8 +437,8 @@
         internal string SolutionFile() => 
             Path.Combine(this._projectDirectory, $"{this._projectName}.sln");
 
-        private string SolutionGuid() => 
-            SolutionGuidGenerator.GuidForSolution(this._projectName);
+        private string SolutionGuid(MonoIsland island) => 
+            SolutionGuidGenerator.GuidForSolution(this._projectName, island.GetExtensionOfSourceFiles());
 
         private string SolutionText(IEnumerable<MonoIsland> islands, Mode mode)
         {
@@ -447,7 +451,7 @@
             }
             IEnumerable<MonoIsland> enumerable = RelevantIslandsForMode(islands, mode);
             string projectEntries = this.GetProjectEntries(enumerable);
-            string str4 = string.Join(WindowsNewline, Enumerable.Select<MonoIsland, string>(enumerable, new Func<MonoIsland, string>(this, (IntPtr) this.<SolutionText>m__1)).ToArray<string>());
+            string str4 = string.Join(WindowsNewline, (from i in enumerable select this.GetProjectActiveConfigurations(this.ProjectGuid(i._output))).ToArray<string>());
             return string.Format(this._settings.SolutionTemplate, new object[] { str, str2, projectEntries, str4, this.ReadExistingMonoDevelopSolutionProperties() });
         }
 
@@ -458,7 +462,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<MonoIsland, bool>(null, (IntPtr) <Sync>m__0);
+                    <>f__am$cache0 = i => 0 < i._files.Length;
                 }
                 IEnumerable<MonoIsland> islands = Enumerable.Where<MonoIsland>(InternalEditorUtility.GetMonoIslands(), <>f__am$cache0);
                 string otherAssetsProjectPart = this.GenerateAllAssetProjectPart();
@@ -486,7 +490,7 @@
         public bool SyncIfNeeded(IEnumerable<string> affectedFiles)
         {
             this.SetupProjectSupportedExtensions();
-            if (this.SolutionExists() && Enumerable.Any<string>(affectedFiles, new Func<string, bool>(this, (IntPtr) this.ShouldFileBePartOfSolution)))
+            if (this.SolutionExists() && Enumerable.Any<string>(affectedFiles, new Func<string, bool>(this.ShouldFileBePartOfSolution)))
             {
                 this.Sync();
                 return true;

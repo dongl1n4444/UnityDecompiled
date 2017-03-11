@@ -27,7 +27,7 @@ internal class ManifestUAP : ManifestWSA
     protected override XElement CreateDependenciesElement()
     {
         Version version = new Version(10, 0, 0x2800, 0);
-        object[] content = new object[] { new XAttribute("Name", "Windows.Universal"), new XAttribute("MinVersion", version), new XAttribute("MaxVersionTested", MetroVisualStudioSolutionHelper.GetUWPSDKVersion()) };
+        object[] content = new object[] { new XAttribute("Name", "Windows.Universal"), new XAttribute("MinVersion", version), new XAttribute("MaxVersionTested", Utility.GetDesiredUWPSDKString()) };
         return new XElement((XName) (this.DefaultNamespace + "Dependencies"), new XElement((XName) (this.DefaultNamespace + "TargetDeviceFamily"), content));
     }
 

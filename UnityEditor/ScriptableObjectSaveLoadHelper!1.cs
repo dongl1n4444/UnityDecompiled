@@ -38,7 +38,7 @@
             filePath = this.AppendFileExtensionIfNeeded(filePath);
             if (!string.IsNullOrEmpty(filePath))
             {
-                Object[] objArray = InternalEditorUtility.LoadSerializedFileAndForget(filePath);
+                UnityEngine.Object[] objArray = InternalEditorUtility.LoadSerializedFileAndForget(filePath);
                 if ((objArray != null) && (objArray.Length > 0))
                 {
                     return (objArray[0] as T);
@@ -51,11 +51,11 @@
         {
             if (t == null)
             {
-                Debug.LogError("Cannot save scriptableObject: its null!");
+                UnityEngine.Debug.LogError("Cannot save scriptableObject: its null!");
             }
             else if (string.IsNullOrEmpty(filePath))
             {
-                Debug.LogError("Invalid path: '" + filePath + "'");
+                UnityEngine.Debug.LogError("Invalid path: '" + filePath + "'");
             }
             else
             {
@@ -71,7 +71,7 @@
         }
 
         public override string ToString() => 
-            string.Format("{0}, {1}, {2}", this.fileExtensionWithoutDot, this.saveType);
+            $"{this.fileExtensionWithoutDot}, {this.saveType}";
 
         public string fileExtensionWithoutDot { get; private set; }
 

@@ -23,7 +23,7 @@
         /// </summary>
         public int alignment;
         /// <summary>
-        /// <para>The pivot point of the Sprite, relative to its bounding rectangle.</para>
+        /// <para>Pivot point of the Sprite usually specified in values within range of (0 - 1). (0,0 at bottom left and 1,1 top right)</para>
         /// </summary>
         public Vector2 pivot;
         /// <summary>

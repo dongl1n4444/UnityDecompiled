@@ -23,7 +23,6 @@
         int GetGenericParameterConstraintsStartIndex(GenericParameter genericParameter);
         int GetGenericParameterIndex(GenericParameter genericParameter);
         ReadOnlyCollection<GenericParameter> GetGenericParameters();
-        int GetGuidIndex(TypeDefinition type);
         ReadOnlyCollection<KeyValuePair<int, int>> GetInterfaceOffsets();
         int GetInterfaceOffsetsStartIndex(TypeDefinition type);
         ReadOnlyCollection<int> GetInterfaces();
@@ -47,7 +46,6 @@
         int GetStringIndex(string str);
         int GetTypeInfoIndex(TypeDefinition type);
         ReadOnlyCollection<TypeDefinition> GetTypeInfos();
-        ReadOnlyCollection<TypeDefinition> GetTypesWithGuids();
         ReadOnlyCollection<uint> GetVTableMethods();
         int GetVTableMethodsStartIndex(TypeDefinition type);
     }

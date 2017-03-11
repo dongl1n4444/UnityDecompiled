@@ -10,7 +10,7 @@
     using Unity.IL2CPP.Marshaling;
     using Unity.IL2CPP.Marshaling.MarshalInfoWriters;
 
-    internal abstract class InteropMarshaler
+    public abstract class InteropMarshaler
     {
         protected readonly MarshalType _marshalType;
         protected readonly Unity.IL2CPP.ILPreProcessor.TypeResolver _typeResolver;

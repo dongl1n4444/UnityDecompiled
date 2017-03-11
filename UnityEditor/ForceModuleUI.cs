@@ -33,7 +33,7 @@
             }
         }
 
-        public override void OnInspectorGUI(ParticleSystem s)
+        public override void OnInspectorGUI(InitialModuleUI initial)
         {
             if (s_Texts == null)
             {
@@ -51,13 +51,24 @@
         public override void UpdateCullingSupportedString(ref string text)
         {
             this.Init();
-            if ((!this.m_X.SupportsProcedural() || !this.m_Y.SupportsProcedural()) || !this.m_Z.SupportsProcedural())
+            string failureReason = string.Empty;
+            if (!this.m_X.SupportsProcedural(ref failureReason))
             {
-                text = text + "\n\tLifetime force curves use too many keys.";
+                text = text + "\nForce over Lifetime module curve X: " + failureReason;
+            }
+            failureReason = string.Empty;
+            if (!this.m_Y.SupportsProcedural(ref failureReason))
+            {
+                text = text + "\nForce over Lifetime module curve Y: " + failureReason;
+            }
+            failureReason = string.Empty;
+            if (!this.m_Z.SupportsProcedural(ref failureReason))
+            {
+                text = text + "\nForce over Lifetime module curve Z: " + failureReason;
             }
             if (this.m_RandomizePerFrame.boolValue)
             {
-                text = text + "\n\tLifetime force curves use random per frame.";
+                text = text + "\nRandomize is enabled in the Force over Lifetime module.";
             }
         }
 

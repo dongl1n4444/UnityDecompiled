@@ -56,7 +56,7 @@
             internal sealed class $ : GenericGeneratorEnumerator<Node>, IEnumerator
             {
                 internal Property $$172$286;
-                internal Attribute $$173$288;
+                internal Boo.Lang.Compiler.Ast.Attribute $$173$288;
                 internal ReturnStatement $$174$289;
                 internal Block $$175$290;
                 internal Method $$176$291;
@@ -98,38 +98,38 @@
                             if (this.$$match$7$280 is MacroStatement)
                             {
                                 MacroStatement statement1 = this.$$match$8$281 = this.$$match$7$280;
-                                if (((1 != 0) && (this.$$match$8$281.get_Name() == "deferred")) && ((1 == this.$$match$8$281.get_Arguments().Count) && (this.$$match$8$281.get_Arguments().get_Item(0) is BinaryExpression)))
+                                if (((1 != 0) && (this.$$match$8$281.Name == "deferred")) && ((1 == this.$$match$8$281.Arguments.Count) && (this.$$match$8$281.Arguments[0] is BinaryExpression)))
                                 {
-                                    BinaryExpression expression1 = this.$$match$9$282 = (BinaryExpression) this.$$match$8$281.get_Arguments().get_Item(0);
-                                    if (((1 != 0) && (this.$$match$9$282.get_Operator() == 15)) && (this.$$match$9$282.get_Left() is ReferenceExpression))
+                                    BinaryExpression expression1 = this.$$match$9$282 = (BinaryExpression) this.$$match$8$281.Arguments[0];
+                                    if (((1 != 0) && (this.$$match$9$282.Operator == BinaryOperatorType.Assign)) && (this.$$match$9$282.Left is ReferenceExpression))
                                     {
-                                        ReferenceExpression expression5 = this.$$match$10$283 = this.$$match$9$282.get_Left();
+                                        ReferenceExpression expression5 = this.$$match$10$283 = (ReferenceExpression) this.$$match$9$282.Left;
                                         if (1 != 0)
                                         {
-                                            string text1 = this.$name$284 = this.$$match$10$283.get_Name();
+                                            string text1 = this.$name$284 = this.$$match$10$283.Name;
                                             if (1 != 0)
                                             {
-                                                Expression expression6 = this.$initializer$285 = this.$$match$9$282.get_Right();
+                                                Expression expression6 = this.$initializer$285 = this.$$match$9$282.Right;
                                                 if (1 != 0)
                                                 {
                                                     Property property1 = this.$$172$286 = new Property();
-                                                    this.$$172$286.set_Name(this.$name$284);
+                                                    string text2 = this.$$172$286.Name = this.$name$284;
                                                     this.$p$287 = this.$$172$286;
                                                     Method method1 = this.$$176$291 = new Method(LexicalInfo.Empty);
-                                                    this.$$176$291.set_Name("get");
-                                                    Attribute[] attributeArray1 = new Attribute[1];
-                                                    Attribute attribute1 = this.$$173$288 = new Attribute(LexicalInfo.Empty);
-                                                    this.$$173$288.set_Name("Boo.Lang.Useful.Attributes.OnceAttribute");
-                                                    attributeArray1[0] = this.$$173$288;
-                                                    this.$$176$291.set_Attributes(AttributeCollection.FromArray(attributeArray1));
+                                                    string text3 = this.$$176$291.Name = "get";
+                                                    Boo.Lang.Compiler.Ast.Attribute[] items = new Boo.Lang.Compiler.Ast.Attribute[1];
+                                                    Boo.Lang.Compiler.Ast.Attribute attribute1 = this.$$173$288 = new Boo.Lang.Compiler.Ast.Attribute(LexicalInfo.Empty);
+                                                    string text4 = this.$$173$288.Name = "Boo.Lang.Useful.Attributes.OnceAttribute";
+                                                    items[0] = this.$$173$288;
+                                                    AttributeCollection collection1 = this.$$176$291.Attributes = AttributeCollection.FromArray(items);
                                                     Block block1 = this.$$175$290 = new Block(LexicalInfo.Empty);
                                                     Statement[] statementArray1 = new Statement[1];
                                                     ReturnStatement statement3 = this.$$174$289 = new ReturnStatement(LexicalInfo.Empty);
-                                                    this.$$174$289.set_Expression(Expression.Lift(this.$initializer$285));
+                                                    Expression expression7 = this.$$174$289.Expression = Expression.Lift(this.$initializer$285);
                                                     statementArray1[0] = Statement.Lift(this.$$174$289);
-                                                    this.$$175$290.set_Statements(StatementCollection.FromArray(statementArray1));
-                                                    this.$$176$291.set_Body(this.$$175$290);
-                                                    this.$p$287.set_Getter(this.$$176$291);
+                                                    StatementCollection collection2 = this.$$175$290.Statements = StatementCollection.FromArray(statementArray1);
+                                                    Block block3 = this.$$176$291.Body = this.$$175$290;
+                                                    this.$p$287.Getter = this.$$176$291;
                                                     break;
                                                 }
                                             }

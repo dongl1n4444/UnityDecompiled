@@ -9,10 +9,7 @@
 
     public class GenericsCollector
     {
-        [CompilerGenerated]
-        private static Func<AssemblyDefinition, InflatedCollectionCollector> <>f__mg$cache0;
-
-        public static InflatedCollectionCollector Collect(TypeDefinition type)
+        public static InflatedCollectionCollector Collect(IInteropDataCollector interopDataCollector, TypeDefinition type)
         {
             InflatedCollectionCollector generics = new InflatedCollectionCollector();
             GenericContextFreeVisitor visitor = new GenericContextFreeVisitor(generics);
@@ -20,22 +17,21 @@
             return generics;
         }
 
-        public static InflatedCollectionCollector Collect(IEnumerable<AssemblyDefinition> assemblies)
+        public static InflatedCollectionCollector Collect(IInteropDataCollector interopDataCollector, IEnumerable<AssemblyDefinition> assemblies)
         {
-            if (<>f__mg$cache0 == null)
-            {
-                <>f__mg$cache0 = new Func<AssemblyDefinition, InflatedCollectionCollector>(null, (IntPtr) CollectPerAssembly);
-            }
-            return MergeCollections(ParallelHelper.Select<AssemblyDefinition, InflatedCollectionCollector>(assemblies, <>f__mg$cache0, true, false));
+            <Collect>c__AnonStorey0 storey = new <Collect>c__AnonStorey0 {
+                interopDataCollector = interopDataCollector
+            };
+            return MergeCollections(ParallelHelper.Select<AssemblyDefinition, InflatedCollectionCollector>(assemblies, new Func<AssemblyDefinition, InflatedCollectionCollector>(storey.<>m__0), true, false));
         }
 
-        public static void Collect(InflatedCollectionCollector generics, GenericInstanceType type)
+        public static void Collect(InflatedCollectionCollector generics, IInteropDataCollector interopDataCollector, GenericInstanceType type)
         {
             GenericContextFreeVisitor visitor = new GenericContextFreeVisitor(generics);
             type.Accept(visitor);
         }
 
-        private static InflatedCollectionCollector CollectPerAssembly(AssemblyDefinition assembly)
+        private static InflatedCollectionCollector CollectPerAssembly(IInteropDataCollector interopDataCollector, AssemblyDefinition assembly)
         {
             InflatedCollectionCollector generics = new InflatedCollectionCollector();
             GenericContextFreeVisitor visitor = new GenericContextFreeVisitor(generics);
@@ -74,6 +70,15 @@
                 }
             }
             return collector;
+        }
+
+        [CompilerGenerated]
+        private sealed class <Collect>c__AnonStorey0
+        {
+            internal IInteropDataCollector interopDataCollector;
+
+            internal InflatedCollectionCollector <>m__0(AssemblyDefinition assembly) => 
+                GenericsCollector.CollectPerAssembly(this.interopDataCollector, assembly);
         }
     }
 }

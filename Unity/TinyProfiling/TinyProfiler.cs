@@ -68,7 +68,7 @@
             <GetTimeForSection>c__AnonStorey0 storey = new <GetTimeForSection>c__AnonStorey0 {
                 sectionLabel = sectionLabel
             };
-            TimedSection section = ts_sections.Where<TimedSection>(new Func<TimedSection, bool>(storey, (IntPtr) this.<>m__0)).FirstOrDefault<TimedSection>();
+            TimedSection section = ts_sections.Where<TimedSection>(new Func<TimedSection, bool>(storey.<>m__0)).FirstOrDefault<TimedSection>();
             if (section.Duration == 0.0)
             {
                 throw new ArgumentException("TimedSection is not valid, or hasn't been closed.");

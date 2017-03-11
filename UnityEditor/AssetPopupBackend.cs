@@ -3,7 +3,6 @@
     using System;
     using System.Linq;
     using System.Runtime.CompilerServices;
-    using UnityEditorInternal;
     using UnityEngine;
 
     internal class AssetPopupBackend
@@ -17,12 +16,12 @@
         [CompilerGenerated]
         private static GenericMenu.MenuFunction2 <>f__mg$cache3;
 
-        public static void AssetPopup<T>(SerializedProperty serializedProperty, GUIContent label, string fileExtension) where T: Object, new()
+        public static void AssetPopup<T>(SerializedProperty serializedProperty, GUIContent label, string fileExtension) where T: UnityEngine.Object, new()
         {
             AssetPopup<T>(serializedProperty, label, fileExtension, "Default");
         }
 
-        public static void AssetPopup<T>(SerializedProperty serializedProperty, GUIContent label, string fileExtension, string defaultFieldName) where T: Object, new()
+        public static void AssetPopup<T>(SerializedProperty serializedProperty, GUIContent label, string fileExtension, string defaultFieldName) where T: UnityEngine.Object, new()
         {
             GUIContent mixedValueContent;
             Rect rect;
@@ -57,12 +56,12 @@
             property.m_SerializedObject.ApplyModifiedProperties();
         }
 
-        private static void ShowAssetsPopupMenu<T>(Rect buttonRect, string typeName, SerializedProperty serializedProperty, string fileExtension) where T: Object, new()
+        private static void ShowAssetsPopupMenu<T>(Rect buttonRect, string typeName, SerializedProperty serializedProperty, string fileExtension) where T: UnityEngine.Object, new()
         {
             ShowAssetsPopupMenu<T>(buttonRect, typeName, serializedProperty, fileExtension, "Default");
         }
 
-        private static void ShowAssetsPopupMenu<T>(Rect buttonRect, string typeName, SerializedProperty serializedProperty, string fileExtension, string defaultFieldName) where T: Object, new()
+        private static void ShowAssetsPopupMenu<T>(Rect buttonRect, string typeName, SerializedProperty serializedProperty, string fileExtension, string defaultFieldName) where T: UnityEngine.Object, new()
         {
             <ShowAssetsPopupMenu>c__AnonStorey1<T> storey = new <ShowAssetsPopupMenu>c__AnonStorey1<T> {
                 typeName = typeName,
@@ -72,7 +71,8 @@
             GenericMenu menu = new GenericMenu();
             int num = (storey.serializedProperty.objectReferenceValue == null) ? 0 : storey.serializedProperty.objectReferenceValue.GetInstanceID();
             bool flag = false;
-            int classID = BaseObjectTools.StringToClassID(storey.typeName);
+            UnityType type = UnityType.FindTypeByName(storey.typeName);
+            int classID = (type == null) ? 0 : type.persistentTypeID;
             BuiltinResource[] builtinResourceList = null;
             if (classID > 0)
             {
@@ -91,7 +91,7 @@
                         }
                         object[] userData = new object[] { storey2.resource.m_InstanceID, storey.serializedProperty };
                         menu.AddItem(new GUIContent(storey2.resource.m_Name), storey2.resource.m_InstanceID == num, <>f__mg$cache0, userData);
-                        builtinResourceList = Enumerable.Where<BuiltinResource>(builtinResourceList, new Func<BuiltinResource, bool>(storey2, (IntPtr) this.<>m__0)).ToArray<BuiltinResource>();
+                        builtinResourceList = Enumerable.Where<BuiltinResource>(builtinResourceList, new Func<BuiltinResource, bool>(storey2.<>m__0)).ToArray<BuiltinResource>();
                         flag = true;
                         break;
                     }
@@ -139,7 +139,7 @@
         }
 
         [CompilerGenerated]
-        private sealed class <ShowAssetsPopupMenu>c__AnonStorey0<T> where T: Object, new()
+        private sealed class <ShowAssetsPopupMenu>c__AnonStorey0<T> where T: UnityEngine.Object, new()
         {
             internal BuiltinResource resource;
 
@@ -148,7 +148,7 @@
         }
 
         [CompilerGenerated]
-        private sealed class <ShowAssetsPopupMenu>c__AnonStorey1<T> where T: Object, new()
+        private sealed class <ShowAssetsPopupMenu>c__AnonStorey1<T> where T: UnityEngine.Object, new()
         {
             internal string fileExtension;
             internal SerializedProperty serializedProperty;

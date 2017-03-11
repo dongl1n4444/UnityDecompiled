@@ -9,27 +9,24 @@
         private const string kPkgRevision = "Pkg.Revision";
         private const string kPropertiesFileName = "source.properties";
 
-        public static string GetComponentVersion(string directory)
+        public static Version GetComponentVersion(string directory)
         {
+            string str2;
             string path = Path.Combine(directory, "source.properties");
-            if (File.Exists(path))
+            if (!File.Exists(path))
             {
-                string input = "";
-                try
-                {
-                    input = File.ReadAllText(path);
-                }
-                catch (Exception)
-                {
-                    return "0";
-                }
-                Match match = new Regex($"^{"Pkg.Revision"}\s*=\s*([\d.]+).*$", RegexOptions.Multiline).Match(input);
-                if (match.Success)
-                {
-                    return match.Groups[1].Value;
-                }
+                return Utils.DefaultVersion;
             }
-            return "0";
+            try
+            {
+                str2 = File.ReadAllText(path);
+            }
+            catch
+            {
+                return Utils.DefaultVersion;
+            }
+            Match match = new Regex($"^{"Pkg.Revision"}\s*=\s*([\d.]+).*$", RegexOptions.Multiline).Match(str2);
+            return (!match.Success ? Utils.DefaultVersion : Utils.ParseVersion(match.Groups[1].Value));
         }
     }
 }

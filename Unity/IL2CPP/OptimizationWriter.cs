@@ -22,7 +22,7 @@
                 object[] args = new object[1];
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<string, string, string>(null, (IntPtr) <OptimizationWriter>m__0);
+                    <>f__am$cache0 = new Func<string, string, string>(OptimizationWriter.<OptimizationWriter>m__0);
                 }
                 args[0] = this._platformsWithOptimizationsDisabled.Aggregate<string>(<>f__am$cache0);
                 this._writer.WriteLine("#if {0}", args);
@@ -42,7 +42,7 @@
                 object[] args = new object[1];
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<string, string, string>(null, (IntPtr) <Dispose>m__1);
+                    <>f__am$cache1 = (x, y) => x + " || " + y;
                 }
                 args[0] = this._platformsWithOptimizationsDisabled.Aggregate<string>(<>f__am$cache1);
                 this._writer.WriteLine("#if {0}", args);

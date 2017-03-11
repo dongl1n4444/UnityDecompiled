@@ -25,7 +25,7 @@
             }
         }
 
-        public override void OnInspectorGUI(ParticleSystem s)
+        public override void OnInspectorGUI(InitialModuleUI initial)
         {
             if (s_Texts == null)
             {
@@ -36,7 +36,7 @@
 
         public override void UpdateCullingSupportedString(ref string text)
         {
-            text = text + "\n\tExternal Forces is enabled.";
+            text = text + "\nExternal Forces module is enabled.";
         }
 
         private class Texts

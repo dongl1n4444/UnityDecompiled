@@ -28,6 +28,7 @@
         internal static Texture2D iconWarnSmall;
         private int m_ActiveInstanceID = 0;
         private string m_ActiveText = "";
+        private AttachProfilerUI m_AttachProfilerUI;
         private bool m_DevBuild;
         private ListViewState m_ListView;
         private const int m_RowHeight = 0x20;
@@ -43,6 +44,7 @@
             int[] minSizes = new int[] { 0x20, 0x20 };
             this.spl = new SplitterState(relativeSizes, minSizes, null);
             this.ms_LVHeight = 0;
+            this.m_AttachProfilerUI = new AttachProfilerUI();
             base.position = new Rect(200f, 200f, 800f, 400f);
             this.m_ListView = new ListViewState(0, 0x20);
         }
@@ -304,7 +306,7 @@
                 GUIUtility.keyboardControl = 0;
             }
             int count = LogEntries.GetCount();
-            if ((this.m_ListView.totalRows != count) && (this.m_ListView.scrollPos.y >= ((this.m_ListView.rowHeight * this.m_ListView.totalRows) - this.ms_LVHeight)))
+            if (((this.m_ListView.totalRows != count) && (this.m_ListView.totalRows > 0)) && (this.m_ListView.scrollPos.y >= ((this.m_ListView.rowHeight * this.m_ListView.totalRows) - this.ms_LVHeight)))
             {
                 this.m_ListView.scrollPos.y = (count * 0x20) - this.ms_LVHeight;
             }
@@ -318,6 +320,7 @@
             }
             SetFlag(ConsoleFlags.ClearOnPlay, GUILayout.Toggle(HasFlag(ConsoleFlags.ClearOnPlay), "Clear on Play", Constants.MiniButtonMiddle, new GUILayoutOption[0]));
             SetFlag(ConsoleFlags.ErrorPause, GUILayout.Toggle(HasFlag(ConsoleFlags.ErrorPause), "Error Pause", Constants.MiniButtonRight, new GUILayoutOption[0]));
+            this.m_AttachProfilerUI.OnGUILayout(this);
             EditorGUILayout.Space();
             if (this.m_DevBuild)
             {

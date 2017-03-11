@@ -27,6 +27,10 @@
 
         public static bool ArrayEquals<T>(T[] lhs, T[] rhs)
         {
+            if ((lhs == null) || (rhs == null))
+            {
+                return (lhs == rhs);
+            }
             if (lhs.Length != rhs.Length)
             {
                 return false;
@@ -34,6 +38,26 @@
             for (int i = 0; i < lhs.Length; i++)
             {
                 if (!lhs[i].Equals(rhs[i]))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public static bool ArrayReferenceEquals<T>(T[] lhs, T[] rhs)
+        {
+            if ((lhs == null) || (rhs == null))
+            {
+                return (lhs == rhs);
+            }
+            if (lhs.Length != rhs.Length)
+            {
+                return false;
+            }
+            for (int i = 0; i < lhs.Length; i++)
+            {
+                if (!object.ReferenceEquals(lhs[i], rhs[i]))
                 {
                     return false;
                 }

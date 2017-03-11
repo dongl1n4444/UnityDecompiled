@@ -71,9 +71,29 @@
                         diagnosticSwitch.persistentValue = (uint) EditorGUI.IntField(position, label, (int) ((uint) diagnosticSwitch.persistentValue));
                     }
                 }
+                else if (diagnosticSwitch.value is int)
+                {
+                    int leftValue = (int) diagnosticSwitch.minValue;
+                    int rightValue = (int) diagnosticSwitch.maxValue;
+                    if ((((rightValue - leftValue) <= 10L) && ((rightValue - leftValue) > 0)) && ((leftValue < 0x7fffffff) && (rightValue < 0x7fffffff)))
+                    {
+                        diagnosticSwitch.persistentValue = EditorGUI.IntSlider(position, label, (int) diagnosticSwitch.persistentValue, leftValue, rightValue);
+                    }
+                    else
+                    {
+                        diagnosticSwitch.persistentValue = EditorGUI.IntField(position, label, (int) diagnosticSwitch.persistentValue);
+                    }
+                }
                 else if (diagnosticSwitch.value is string)
                 {
                     diagnosticSwitch.persistentValue = EditorGUI.TextField(position, label, (string) diagnosticSwitch.persistentValue);
+                }
+                else
+                {
+                    GUIStyle style = new GUIStyle {
+                        normal = { textColor = Color.red }
+                    };
+                    EditorGUI.LabelField(position, label, new GUIContent("Unsupported type: " + diagnosticSwitch.value.GetType().Name), style);
                 }
             }
             if (EditorGUI.EndChangeCheck())

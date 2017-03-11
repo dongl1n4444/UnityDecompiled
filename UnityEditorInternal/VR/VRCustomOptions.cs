@@ -8,35 +8,66 @@
 
     internal abstract class VRCustomOptions
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <IsExpanded>k__BackingField;
-        private SerializedProperty settings;
+        private SerializedProperty editorSettings;
+        private SerializedProperty playerSettings;
 
         protected VRCustomOptions()
         {
         }
 
-        public abstract void Draw(Rect rect);
+        public abstract Rect Draw(Rect rect);
         internal SerializedProperty FindPropertyAssert(string name)
         {
             SerializedProperty property = null;
-            if (this.settings == null)
+            if ((this.editorSettings == null) && (this.playerSettings == null))
             {
-                Debug.LogError("No existing VR settings. Failed to find:" + name);
+                UnityEngine.Debug.LogError("No existing VR settings. Failed to find:" + name);
                 return property;
             }
-            property = this.settings.FindPropertyRelative(name);
-            if (property == null)
+            bool flag = false;
+            if (this.editorSettings != null)
             {
-                Debug.LogError("Failed to find:" + name);
+                property = this.editorSettings.FindPropertyRelative(name);
+                if (property != null)
+                {
+                    flag = true;
+                }
+            }
+            if (!flag && (this.playerSettings != null))
+            {
+                property = this.playerSettings.FindPropertyRelative(name);
+                if (property != null)
+                {
+                    flag = true;
+                }
+            }
+            if (!flag)
+            {
+                UnityEngine.Debug.LogError("Failed to find property:" + name);
             }
             return property;
         }
 
         public abstract float GetHeight();
-        public virtual void Initialize(SerializedProperty vrEditorSettings)
+        public virtual void Initialize(SerializedObject settings)
         {
-            this.settings = vrEditorSettings;
+            this.Initialize(settings, "");
+        }
+
+        public virtual void Initialize(SerializedObject settings, string propertyName)
+        {
+            this.editorSettings = settings.FindProperty("vrEditorSettings");
+            if ((this.editorSettings != null) && !string.IsNullOrEmpty(propertyName))
+            {
+                this.editorSettings = this.editorSettings.FindPropertyRelative(propertyName);
+            }
+            this.playerSettings = settings.FindProperty("vrSettings");
+            if ((this.playerSettings != null) && !string.IsNullOrEmpty(propertyName))
+            {
+                this.playerSettings = this.playerSettings.FindPropertyRelative(propertyName);
+            }
         }
 
         public bool IsExpanded { get; set; }

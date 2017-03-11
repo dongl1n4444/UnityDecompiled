@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using UnityEditor;
+using UnityEditor.Scripting.Compilers;
 using UnityEditor.Utils;
 using UnityEditorInternal;
 
@@ -18,6 +20,7 @@ internal static class Utility
     [CompilerGenerated]
     private static Dictionary<string, int> <>f__switch$map1;
     private static string frameworkPath;
+    private const FileAttributes INVALID_FILE_ATTRIBUTES = -1;
     private static int kProcessTerminateFlag = 1;
     private static int kQueryInformationLimitedFlag = 0x1000;
     private static readonly Regex packageNameRegex = new Regex(@"^[A-Za-z0-9\.\-]{2,49}[A-Za-z0-9\-]$", RegexOptions.CultureInvariant | RegexOptions.Compiled);
@@ -36,46 +39,160 @@ internal static class Utility
 
     public static void CopyDirectoryContents(string sourceDirectory, string destinationDirectory, bool recursive = false)
     {
-        if (!Directory.Exists(destinationDirectory))
+        <CopyDirectoryContents>c__AnonStorey0 storey = new <CopyDirectoryContents>c__AnonStorey0 {
+            recursive = recursive,
+            sourceDirectory = sourceDirectory,
+            destinationDirectory = destinationDirectory
+        };
+        storey.sourceDirectory = Path.GetFullPath(storey.sourceDirectory);
+        storey.destinationDirectory = Path.GetFullPath(storey.destinationDirectory);
+        using (new ProfilerBlock("Utility.CopyDirectoryContents"))
         {
-            Directory.CreateDirectory(destinationDirectory);
-        }
-        foreach (string str in Directory.GetFiles(sourceDirectory))
-        {
-            File.Copy(str, Path.Combine(destinationDirectory, Path.GetFileName(str)), true);
-        }
-        if (recursive)
-        {
-            foreach (string str2 in Directory.GetDirectories(sourceDirectory))
-            {
-                CopyDirectoryContents(str2, Path.Combine(destinationDirectory, Path.GetFileName(str2)), true);
-            }
+            CreateDirectory(storey.destinationDirectory);
+            EnumerateDirectoryRecursive(storey.sourceDirectory, new Func<string, FileAttributes, bool>(storey.<>m__0));
         }
     }
 
+    public static void CopyFile(string sourceFile, string destinationFile)
+    {
+        FileAttributes fileAttributesW = GetFileAttributesW(destinationFile);
+        if ((fileAttributesW != -1) && (((fileAttributesW & FileAttributes.ReadOnly) != 0) || ((fileAttributesW & FileAttributes.Hidden) != 0)))
+        {
+            SetFileAttributesW(destinationFile, (fileAttributesW & ~FileAttributes.ReadOnly) & ~FileAttributes.Hidden);
+        }
+        if (!CopyFileW(sourceFile, destinationFile, false))
+        {
+            ThrowWin32IOException(Marshal.GetLastWin32Error(), $"Failed to copy {sourceFile} to {destinationFile}");
+        }
+    }
+
+    [DllImport("Kernel32.dll", SetLastError=true, ExactSpelling=true)]
+    private static extern bool CopyFileW([MarshalAs(UnmanagedType.LPWStr)] string lpExistingFileName, [MarshalAs(UnmanagedType.LPWStr)] string lpNewFileName, bool bFailIfExists);
     public static void CreateDirectory(string path)
     {
-        Directory.CreateDirectory(path);
-        while (!Directory.Exists(path))
+        if (!DirectoryExists(path))
         {
-            Thread.Sleep(0);
+            string directoryName = Path.GetDirectoryName(path);
+            if (!string.IsNullOrEmpty(directoryName))
+            {
+                CreateDirectory(directoryName);
+            }
+            if (!CreateDirectoryW(path, IntPtr.Zero))
+            {
+                ThrowWin32IOException(Marshal.GetLastWin32Error(), "Failed to create directory at " + path);
+            }
         }
     }
 
-    public static void DeleteDirectory(string path)
+    [DllImport("Kernel32.dll", SetLastError=true, ExactSpelling=true)]
+    private static extern bool CreateDirectoryW([MarshalAs(UnmanagedType.LPWStr)] string lpFileName, IntPtr lpSecurityAttributes);
+    public static void DeleteDirectoryRecursive(string path)
     {
-        if (Directory.Exists(path))
+        <DeleteDirectoryRecursive>c__AnonStorey3 storey = new <DeleteDirectoryRecursive>c__AnonStorey3 {
+            path = path
+        };
+        using (new ProfilerBlock("Utility.DeleteDirectoryRecursive"))
         {
-            Directory.Delete(path, true);
-            while (Directory.Exists(path))
+            if (EnumerateDirectoryRecursive(storey.path, new Func<string, FileAttributes, bool>(storey.<>m__0)) && !RemoveDirectoryW(storey.path))
             {
-                Thread.Sleep(0);
+                ThrowWin32IOException(Marshal.GetLastWin32Error(), "Failed to delete " + storey.path);
             }
         }
+    }
+
+    public static void DeleteFileAccountingForReadOnly(string path)
+    {
+        FileInfo info = new FileInfo(path);
+        if (info.Exists)
+        {
+            info.Attributes &= ~FileAttributes.ReadOnly;
+            info.Delete();
+        }
+    }
+
+    [DllImport("Kernel32.dll", SetLastError=true, ExactSpelling=true)]
+    private static extern bool DeleteFileW([MarshalAs(UnmanagedType.LPWStr)] string lpFileName);
+    public static bool DirectoryExists(string path)
+    {
+        FileAttributes fileAttributesW = GetFileAttributesW(path);
+        if (fileAttributesW == -1)
+        {
+            return false;
+        }
+        return ((fileAttributesW & FileAttributes.Directory) != 0);
+    }
+
+    private static unsafe bool EnumerateDirectoryRecursive(string path, Func<string, FileAttributes, bool> onFileEnumerated)
+    {
+        Win32FindData data;
+        string lpFileName = (path[path.Length - 1] != '\\') ? (path + @"\*") : (path + '*');
+        using (FindHandle handle = FindFirstFileExW(lpFileName, FindInfoLevel.Basic, (void*) &data, FindSearchOperation.NameMatch, IntPtr.Zero, FindAdditionalFlags.LargeFetch))
+        {
+            if (!handle.IsValid())
+            {
+                int errorCode = Marshal.GetLastWin32Error();
+                switch (errorCode)
+                {
+                    case 2:
+                    case 3:
+                        return false;
+                }
+                ThrowWin32IOException(errorCode, "Failed to enumerate " + path);
+            }
+            while ((((data.cFileName.FixedElementField == '\0') || ((data.cFileName.FixedElementField == '.') && (&data.cFileName.FixedElementField[1] == '\0'))) || ((((data.cFileName.FixedElementField == '.') && (&data.cFileName.FixedElementField[1] == '.')) && (&data.cFileName.FixedElementField[2] == '\0')) || onFileEnumerated(new string(&data.cFileName.FixedElementField), data.dwFileAttributes))) && FindNextFileW(handle, (void*) &data))
+            {
+            }
+        }
+        return true;
     }
 
     [DllImport("Psapi.dll")]
     private static extern bool EnumProcesses([In, Out, MarshalAs(UnmanagedType.LPArray, ArraySubType=UnmanagedType.U4)] uint[] processIds, uint arraySizeBytes, [MarshalAs(UnmanagedType.U4)] out uint bytesCopied);
+    [DllImport("Kernel32.dll", SetLastError=true, ExactSpelling=true)]
+    private static extern bool FindClose(FindHandle hFindFile);
+    [DllImport("Kernel32.dll", SetLastError=true, ExactSpelling=true)]
+    private static extern unsafe FindHandle FindFirstFileExW([MarshalAs(UnmanagedType.LPWStr)] string lpFileName, FindInfoLevel fInfoLevelId, void* lpFindFileData, FindSearchOperation fSearchOp, IntPtr lpSearchFilter, FindAdditionalFlags additionalFlags);
+    [DllImport("Kernel32.dll", SetLastError=true, ExactSpelling=true)]
+    private static extern unsafe bool FindNextFileW(FindHandle hFindFile, void* lpFindFileData);
+    internal static Version GetDesiredUWPSDK()
+    {
+        Version[] source = UWPReferences.GetInstalledSDKVersions().ToArray<Version>();
+        if (source.Length == 0)
+        {
+            return new Version(10, 0, 0x2800, 0);
+        }
+        Version version2 = source.Max<Version>();
+        string wsaUWPSDK = EditorUserBuildSettings.wsaUWPSDK;
+        if (!string.IsNullOrEmpty(wsaUWPSDK))
+        {
+            foreach (Version version3 in source)
+            {
+                if (version3.ToString() == wsaUWPSDK)
+                {
+                    return version3;
+                }
+            }
+        }
+        return version2;
+    }
+
+    public static string GetDesiredUWPSDKString()
+    {
+        Version desiredUWPSDK = GetDesiredUWPSDK();
+        string str = desiredUWPSDK.ToString();
+        if (desiredUWPSDK.Build == -1)
+        {
+            str = str + ".0";
+        }
+        if (desiredUWPSDK.Revision == -1)
+        {
+            str = str + ".0";
+        }
+        return str;
+    }
+
+    [DllImport("Kernel32.dll", SetLastError=true, ExactSpelling=true)]
+    private static extern FileAttributes GetFileAttributesW([MarshalAs(UnmanagedType.LPWStr)] string lpFileName);
     public static string GetFrameworkPath()
     {
         if (frameworkPath == null)
@@ -83,10 +200,10 @@ internal static class Utility
             string[] strArray = new string[] { @"HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Microsoft\VisualStudio\SxS\VC7", @"HKEY_CURRENT_USER\SOFTWARE\Wow6432Node\Microsoft\Microsoft\VisualStudio\SxS\VC7", @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft\VisualStudio\SxS\VC7", @"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Microsoft\VisualStudio\SxS\VC7" };
             foreach (string str in strArray)
             {
-                string str2 = RegistryUtil.GetRegistryStringValue32(str, "FrameworkDir32", null);
+                string str2 = RegistryUtil.GetRegistryStringValue(str, "FrameworkDir32", null, RegistryView._32);
                 if (!string.IsNullOrEmpty(str2))
                 {
-                    string str3 = RegistryUtil.GetRegistryStringValue32(str, "FrameworkVer32", null);
+                    string str3 = RegistryUtil.GetRegistryStringValue(str, "FrameworkVer32", null, RegistryView._32);
                     if (!string.IsNullOrEmpty(str3))
                     {
                         frameworkPath = Path.Combine(str2, str3);
@@ -262,19 +379,24 @@ internal static class Utility
         {
             return "14.0";
         }
-        if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("VS120COMNTOOLS")))
+        if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("VS120COMNTOOLS")))
         {
-            return "12.0";
+            throw new Exception("Failed to locate env variables VS140COMNTOOLS or VS120COMNTOOLS.");
         }
-        if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("VS110COMNTOOLS")))
-        {
-            throw new Exception("Failed to locate env variables VS140COMNTOOLS, VS120COMNTOOLS or VS110COMNTOOLS.");
-        }
-        return "11.0";
+        return "12.0";
     }
 
     public static bool HasExtension(string path, string extension) => 
         string.Equals(Path.GetExtension(path), extension, StringComparison.InvariantCultureIgnoreCase);
+
+    public static bool IsDirectoryEmpty(string path)
+    {
+        <IsDirectoryEmpty>c__AnonStorey1 storey = new <IsDirectoryEmpty>c__AnonStorey1 {
+            hasAnyFiles = false
+        };
+        EnumerateDirectoryRecursive(path, new Func<string, FileAttributes, bool>(storey.<>m__0));
+        return !storey.hasAnyFiles;
+    }
 
     private static bool IsValidPackageName(string value)
     {
@@ -402,7 +524,7 @@ internal static class Utility
                     int capacity = 0x400;
                     StringBuilder lpExeName = new StringBuilder(capacity);
                     QueryFullProcessImageName(hProcess, 0, lpExeName, ref capacity);
-                    if (shouldKill.Invoke(lpExeName.ToString()))
+                    if (shouldKill(lpExeName.ToString()))
                     {
                         TerminateProcess(hProcess, 0);
                     }
@@ -414,34 +536,65 @@ internal static class Utility
 
     public static void MoveDirectory(string source, string destination, Func<string, bool> shouldOverwriteFile = null)
     {
-        if (!Directory.Exists(destination))
+        using (new ProfilerBlock("Utility.MoveDirectory"))
         {
-            Directory.CreateDirectory(destination);
-        }
-        foreach (string str in Directory.GetFiles(source))
-        {
-            string path = Path.Combine(destination, Path.GetFileName(str));
-            if (File.Exists(path))
+            if (string.IsNullOrEmpty(source))
             {
-                if ((shouldOverwriteFile != null) && !shouldOverwriteFile.Invoke(path))
-                {
-                    continue;
-                }
-                File.Delete(path);
+                throw new ArgumentException("source cannot be null or empty", "source");
             }
-            File.Move(str, path);
+            if (string.IsNullOrEmpty(destination))
+            {
+                throw new ArgumentException("destination cannot be null or empty", "destination");
+            }
+            string str = Path.GetPathRoot(source).ToLower();
+            string str2 = Path.GetPathRoot(destination).ToLower();
+            if (str == str2)
+            {
+                bool flag = DirectoryExists(destination);
+                if (!flag || IsDirectoryEmpty(destination))
+                {
+                    if (flag)
+                    {
+                        RemoveDirectoryW(destination);
+                    }
+                    else
+                    {
+                        CreateDirectory(Path.GetDirectoryName(destination));
+                    }
+                    if (!MoveFileExW(source, destination, MoveFileExFlags.NONE))
+                    {
+                        ThrowWin32IOException(Marshal.GetLastWin32Error(), $"Failed to move {source} to {destination}.");
+                    }
+                    return;
+                }
+            }
+            using (new ProfilerBlock("Utility.MoveDirectorySlowPath"))
+            {
+                MoveDirectorySlowPath(source, destination, shouldOverwriteFile);
+            }
         }
-        foreach (string str3 in Directory.GetDirectories(source))
-        {
-            MoveDirectory(str3, Path.Combine(destination, Path.GetFileName(str3)), shouldOverwriteFile);
-        }
-        Directory.Delete(source, true);
     }
 
+    private static void MoveDirectorySlowPath(string source, string destination, Func<string, bool> shouldOverwriteFile)
+    {
+        <MoveDirectorySlowPath>c__AnonStorey2 storey = new <MoveDirectorySlowPath>c__AnonStorey2 {
+            source = source,
+            destination = destination,
+            shouldOverwriteFile = shouldOverwriteFile
+        };
+        CreateDirectory(storey.destination);
+        EnumerateDirectoryRecursive(storey.source, new Func<string, FileAttributes, bool>(storey.<>m__0));
+        RemoveDirectoryW(storey.source);
+    }
+
+    [DllImport("kernel32.dll", SetLastError=true)]
+    private static extern bool MoveFileExW([MarshalAs(UnmanagedType.LPWStr)] string source, [MarshalAs(UnmanagedType.LPWStr)] string destination, MoveFileExFlags flags);
     [DllImport("kernel32.dll")]
     private static extern IntPtr OpenProcess(int dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, int dwProcessId);
     [DllImport("kernel32.dll", SetLastError=true)]
     private static extern bool QueryFullProcessImageName([In] IntPtr hProcess, [In] int dwFlags, [Out] StringBuilder lpExeName, ref int lpdwSize);
+    [DllImport("Kernel32.dll", SetLastError=true, ExactSpelling=true)]
+    private static extern bool RemoveDirectoryW([MarshalAs(UnmanagedType.LPWStr)] string lpFileName);
     public static int RunAndWait(string fileName, string arguments, out string result, IDictionary<string, string> environmentVariables = null)
     {
         ProcessStartInfo si = new ProcessStartInfo(fileName, arguments) {
@@ -465,9 +618,17 @@ internal static class Utility
         }
     }
 
+    [DllImport("Kernel32.dll", SetLastError=true, ExactSpelling=true)]
+    private static extern bool SetFileAttributesW([MarshalAs(UnmanagedType.LPWStr)] string lpFileName, FileAttributes dwFileAttributes);
     [return: MarshalAs(UnmanagedType.Bool)]
     [DllImport("kernel32.dll", SetLastError=true)]
     private static extern bool TerminateProcess(IntPtr hProcess, uint uExitCode);
+    private static void ThrowWin32IOException(int errorCode, string message)
+    {
+        string str = new Win32Exception(errorCode).Message;
+        throw new IOException($"{message}: {str}");
+    }
+
     public static string TryValidatePackageName(string value)
     {
         if ((value == null) || (value.Length < 3))
@@ -509,5 +670,185 @@ internal static class Utility
 
     public static string AssemblyUnityScriptName =>
         ("Assembly-UnityScript" + EditorSettings.Internal_UserGeneratedProjectSuffix);
+
+    [CompilerGenerated]
+    private sealed class <CopyDirectoryContents>c__AnonStorey0
+    {
+        internal string destinationDirectory;
+        internal bool recursive;
+        internal string sourceDirectory;
+
+        internal bool <>m__0(string fileName, FileAttributes fileAttributes)
+        {
+            if ((fileAttributes & FileAttributes.Directory) != 0)
+            {
+                if (this.recursive)
+                {
+                    Utility.CopyDirectoryContents(Path.Combine(this.sourceDirectory, fileName), Path.Combine(this.destinationDirectory, fileName), this.recursive);
+                }
+            }
+            else
+            {
+                Utility.CopyFile(Path.Combine(this.sourceDirectory, fileName), Path.Combine(this.destinationDirectory, fileName));
+            }
+            return true;
+        }
+    }
+
+    [CompilerGenerated]
+    private sealed class <DeleteDirectoryRecursive>c__AnonStorey3
+    {
+        internal string path;
+
+        internal bool <>m__0(string fileName, FileAttributes fileAttributes)
+        {
+            string path = Path.Combine(this.path, fileName);
+            if ((fileAttributes & FileAttributes.Directory) != 0)
+            {
+                Utility.DeleteDirectoryRecursive(path);
+            }
+            else
+            {
+                if ((fileAttributes & FileAttributes.ReadOnly) != 0)
+                {
+                    Utility.SetFileAttributesW(path, fileAttributes & ~FileAttributes.ReadOnly);
+                }
+                if (!Utility.DeleteFileW(path))
+                {
+                    Utility.ThrowWin32IOException(Marshal.GetLastWin32Error(), "Failed to delete " + path);
+                }
+            }
+            return true;
+        }
+    }
+
+    [CompilerGenerated]
+    private sealed class <IsDirectoryEmpty>c__AnonStorey1
+    {
+        internal bool hasAnyFiles;
+
+        internal bool <>m__0(string fileName, FileAttributes fileAttributes)
+        {
+            this.hasAnyFiles = true;
+            return false;
+        }
+    }
+
+    [CompilerGenerated]
+    private sealed class <MoveDirectorySlowPath>c__AnonStorey2
+    {
+        internal string destination;
+        internal Func<string, bool> shouldOverwriteFile;
+        internal string source;
+
+        internal bool <>m__0(string fileName, FileAttributes fileAttributes)
+        {
+            string source = Path.Combine(this.source, fileName);
+            string destination = Path.Combine(this.destination, fileName);
+            if ((fileAttributes & FileAttributes.Directory) != 0)
+            {
+                Utility.MoveDirectory(source, destination, this.shouldOverwriteFile);
+                return true;
+            }
+            FileAttributes fileAttributesW = Utility.GetFileAttributesW(destination);
+            if (fileAttributesW == -1)
+            {
+                if (!Utility.MoveFileExW(source, destination, Utility.MoveFileExFlags.COPY_ALLOWED))
+                {
+                    Utility.ThrowWin32IOException(Marshal.GetLastWin32Error(), $"Failed to move {source} to {destination}");
+                }
+            }
+            else if ((this.shouldOverwriteFile == null) || this.shouldOverwriteFile(destination))
+            {
+                if ((fileAttributesW & FileAttributes.ReadOnly) != 0)
+                {
+                    Utility.SetFileAttributesW(destination, fileAttributesW & ~FileAttributes.ReadOnly);
+                }
+                if (!Utility.MoveFileExW(source, destination, Utility.MoveFileExFlags.COPY_ALLOWED | Utility.MoveFileExFlags.REPLACE_EXISTING))
+                {
+                    Utility.ThrowWin32IOException(Marshal.GetLastWin32Error(), $"Failed to move {source} to {destination}");
+                }
+            }
+            return true;
+        }
+    }
+
+    [Flags]
+    private enum FindAdditionalFlags
+    {
+        None,
+        CaseSensitive,
+        LargeFetch
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct FindHandle : IDisposable
+    {
+        private IntPtr value;
+        public bool IsValid() => 
+            (this.value.ToPointer() != -1);
+
+        public void Dispose()
+        {
+            if (this.IsValid())
+            {
+                Utility.FindClose(this);
+            }
+        }
+    }
+
+    private enum FindInfoLevel
+    {
+        Standard,
+        Basic,
+        MaxInfoLevel
+    }
+
+    private enum FindSearchOperation
+    {
+        NameMatch,
+        LimitToDirectories,
+        LimitToDevices
+    }
+
+    [Flags]
+    private enum MoveFileExFlags
+    {
+        COPY_ALLOWED = 2,
+        CREATE_HARDLINK = 0x10,
+        DELAY_UNTIL_REBOOT = 4,
+        FAIL_IF_NOT_TRACKABLE = 0x20,
+        NONE = 0,
+        REPLACE_EXISTING = 1,
+        WRITE_THROUGH = 8
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct Win32FindData
+    {
+        public FileAttributes dwFileAttributes;
+        public System.Runtime.InteropServices.ComTypes.FILETIME ftCreationTime;
+        public System.Runtime.InteropServices.ComTypes.FILETIME ftLastAccessTime;
+        public System.Runtime.InteropServices.ComTypes.FILETIME ftLastWriteTime;
+        public uint nFileSizeHigh;
+        public uint nFileSizeLow;
+        public uint dwReserved0;
+        public uint dwReserved1;
+        [FixedBuffer(typeof(char), 260)]
+        public <cFileName>__FixedBuffer0 cFileName;
+        [FixedBuffer(typeof(char), 14)]
+        public <cAlternateFileName>__FixedBuffer1 cAlternateFileName;
+        [StructLayout(LayoutKind.Sequential, Size=0x1c), UnsafeValueType, CompilerGenerated]
+        public struct <cAlternateFileName>__FixedBuffer1
+        {
+            public char FixedElementField;
+        }
+
+        [StructLayout(LayoutKind.Sequential, Size=520), UnsafeValueType, CompilerGenerated]
+        public struct <cFileName>__FixedBuffer0
+        {
+            public char FixedElementField;
+        }
+    }
 }
 

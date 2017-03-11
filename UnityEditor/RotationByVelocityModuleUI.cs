@@ -25,28 +25,28 @@
                 {
                     s_Texts = new Texts();
                 }
-                this.m_X = new SerializedMinMaxCurve(this, s_Texts.x, "x", ModuleUI.kUseSignedRange);
-                this.m_Y = new SerializedMinMaxCurve(this, s_Texts.y, "y", ModuleUI.kUseSignedRange);
+                this.m_SeparateAxes = base.GetProperty("separateAxes");
+                this.m_Range = base.GetProperty("range");
+                this.m_X = new SerializedMinMaxCurve(this, s_Texts.x, "x", ModuleUI.kUseSignedRange, false, this.m_SeparateAxes.boolValue);
+                this.m_Y = new SerializedMinMaxCurve(this, s_Texts.y, "y", ModuleUI.kUseSignedRange, false, this.m_SeparateAxes.boolValue);
                 this.m_Z = new SerializedMinMaxCurve(this, s_Texts.z, "curve", ModuleUI.kUseSignedRange);
                 this.m_X.m_RemapValue = 57.29578f;
                 this.m_Y.m_RemapValue = 57.29578f;
                 this.m_Z.m_RemapValue = 57.29578f;
-                this.m_SeparateAxes = base.GetProperty("separateAxes");
-                this.m_Range = base.GetProperty("range");
             }
         }
 
-        public override void OnInspectorGUI(ParticleSystem s)
+        public override void OnInspectorGUI(InitialModuleUI initial)
         {
             if (s_Texts == null)
             {
                 s_Texts = new Texts();
             }
             EditorGUI.BeginChangeCheck();
-            bool flag = ModuleUI.GUIToggle(s_Texts.separateAxes, this.m_SeparateAxes, new GUILayoutOption[0]);
+            bool addToCurveEditor = ModuleUI.GUIToggle(s_Texts.separateAxes, this.m_SeparateAxes, new GUILayoutOption[0]);
             if (EditorGUI.EndChangeCheck())
             {
-                if (flag)
+                if (addToCurveEditor)
                 {
                     this.m_Z.RemoveCurveFromEditor();
                 }
@@ -57,11 +57,13 @@
                     this.m_Z.RemoveCurveFromEditor();
                 }
             }
+            if (!this.m_Z.stateHasMultipleDifferentValues)
+            {
+                this.m_X.SetMinMaxState(this.m_Z.state, addToCurveEditor);
+                this.m_Y.SetMinMaxState(this.m_Z.state, addToCurveEditor);
+            }
             MinMaxCurveState state = this.m_Z.state;
-            this.m_Y.state = state;
-            this.m_X.state = state;
-            MinMaxCurveState state2 = this.m_Z.state;
-            if (flag)
+            if (addToCurveEditor)
             {
                 this.m_Z.m_DisplayName = s_Texts.z;
                 base.GUITripleMinMaxCurve(GUIContent.none, s_Texts.x, this.m_X, s_Texts.y, this.m_Y, s_Texts.z, this.m_Z, null, new GUILayoutOption[0]);
@@ -71,7 +73,7 @@
                 this.m_Z.m_DisplayName = s_Texts.rotation;
                 ModuleUI.GUIMinMaxCurve(s_Texts.rotation, this.m_Z, new GUILayoutOption[0]);
             }
-            using (new EditorGUI.DisabledScope((state2 == MinMaxCurveState.k_Scalar) || (state2 == MinMaxCurveState.k_TwoScalars)))
+            using (new EditorGUI.DisabledScope((state == MinMaxCurveState.k_Scalar) || (state == MinMaxCurveState.k_TwoScalars)))
             {
                 ModuleUI.GUIMinMaxRange(s_Texts.velocityRange, this.m_Range, new GUILayoutOption[0]);
             }
@@ -79,7 +81,7 @@
 
         public override void UpdateCullingSupportedString(ref string text)
         {
-            text = text + "\n\tRotation by Speed is enabled.";
+            text = text + "\nRotation by Speed module is enabled.";
         }
 
         private class Texts

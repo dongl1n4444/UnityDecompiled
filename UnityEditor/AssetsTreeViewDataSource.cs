@@ -12,7 +12,7 @@
 
     internal class AssetsTreeViewDataSource : LazyTreeViewDataSource
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <foldersFirst>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <foldersOnly>k__BackingField;
@@ -41,7 +41,7 @@
             property.Reset();
             if (!property.Find(this.m_RootInstanceID, null))
             {
-                Debug.LogError("Root Asset with id " + this.m_RootInstanceID + " not found!!");
+                UnityEngine.Debug.LogError("Root Asset with id " + this.m_RootInstanceID + " not found!!");
             }
             int minDepth = property.depth + (!base.showRootItem ? 1 : 0);
             int[] expanded = base.expandedIDs.ToArray();
@@ -120,7 +120,7 @@
         }
 
         protected CreateAssetUtility GetCreateAssetUtility() => 
-            base.m_TreeView.state.createAssetUtility;
+            ((TreeViewStateWithAssetUtility) base.m_TreeView.state).createAssetUtility;
 
         public int GetInsertAfterItemIDForNewItem(string newName, TreeViewItem parentItem, bool isCreatingNewFolder, bool foldersFirst)
         {
@@ -177,11 +177,11 @@
             TreeViewItem item = this.FindItem(id);
             if (item != null)
             {
-                Debug.LogError(string.Concat(new object[] { "Cannot insert fake Item because id is not unique ", id, " Item already there: ", item.displayName }));
+                UnityEngine.Debug.LogError(string.Concat(new object[] { "Cannot insert fake Item because id is not unique ", id, " Item already there: ", item.displayName }));
             }
             else if (this.FindItem(parentID) == null)
             {
-                Debug.LogError("No parent Item found");
+                UnityEngine.Debug.LogError("No parent Item found");
             }
             else
             {

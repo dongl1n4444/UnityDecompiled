@@ -207,7 +207,7 @@
             string[] strArray = new string[] { ".cpp", ".h", ".c" };
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <RefreshProperties>m__0);
+                <>f__am$cache0 = ext => string.Equals(Path.GetExtension(_originalPluginPath), ext, StringComparison.InvariantCultureIgnoreCase);
             }
             _isCppFile = Enumerable.Any<string>(strArray, <>f__am$cache0);
             base.RefreshProperties(inspector);

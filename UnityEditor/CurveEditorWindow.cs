@@ -18,29 +18,56 @@
         internal static Styles ms_Styles;
         private static CurveEditorWindow s_SharedCurveEditor;
 
-        private static Keyframe[] CopyAndScaleCurveKeys(Keyframe[] orgKeys, Rect rect, bool realToNormalized)
+        private static Keyframe[] CopyAndScaleCurveKeys(Keyframe[] orgKeys, Rect rect, NormalizationMode normalization)
         {
-            if (((rect.width == 0f) || (rect.height == 0f)) || (float.IsInfinity(rect.width) || float.IsInfinity(rect.height)))
+            Keyframe[] array = new Keyframe[orgKeys.Length];
+            orgKeys.CopyTo(array, 0);
+            if (normalization != NormalizationMode.None)
             {
-                Debug.LogError("CopyAndScaleCurve: Invalid scale: " + rect);
-                return orgKeys;
-            }
-            Keyframe[] keyframeArray2 = new Keyframe[orgKeys.Length];
-            if (realToNormalized)
-            {
-                for (int j = 0; j < keyframeArray2.Length; j++)
+                if (((rect.width == 0f) || (rect.height == 0f)) || (float.IsInfinity(rect.width) || float.IsInfinity(rect.height)))
                 {
-                    keyframeArray2[j].time = (orgKeys[j].time - rect.xMin) / rect.width;
-                    keyframeArray2[j].value = (orgKeys[j].value - rect.yMin) / rect.height;
+                    Debug.LogError("CopyAndScaleCurve: Invalid scale: " + rect);
+                    return array;
                 }
-                return keyframeArray2;
+                float num = rect.height / rect.width;
+                if (normalization != NormalizationMode.Normalize)
+                {
+                    if (normalization == NormalizationMode.Denormalize)
+                    {
+                        for (int i = 0; i < array.Length; i++)
+                        {
+                            array[i].time = (orgKeys[i].time * rect.width) + rect.xMin;
+                            array[i].value = (orgKeys[i].value * rect.height) + rect.yMin;
+                            if (!float.IsInfinity(orgKeys[i].inTangent))
+                            {
+                                array[i].inTangent = orgKeys[i].inTangent * num;
+                            }
+                            if (!float.IsInfinity(orgKeys[i].outTangent))
+                            {
+                                array[i].outTangent = orgKeys[i].outTangent * num;
+                            }
+                        }
+                        return array;
+                    }
+                }
+                else
+                {
+                    for (int j = 0; j < array.Length; j++)
+                    {
+                        array[j].time = (orgKeys[j].time - rect.xMin) / rect.width;
+                        array[j].value = (orgKeys[j].value - rect.yMin) / rect.height;
+                        if (!float.IsInfinity(orgKeys[j].inTangent))
+                        {
+                            array[j].inTangent = orgKeys[j].inTangent / num;
+                        }
+                        if (!float.IsInfinity(orgKeys[j].outTangent))
+                        {
+                            array[j].outTangent = orgKeys[j].outTangent / num;
+                        }
+                    }
+                }
             }
-            for (int i = 0; i < keyframeArray2.Length; i++)
-            {
-                keyframeArray2[i].time = (orgKeys[i].time * rect.width) + rect.xMin;
-                keyframeArray2[i].value = (orgKeys[i].value * rect.height) + rect.yMin;
-            }
-            return keyframeArray2;
+            return array;
         }
 
         private void DoUpdateCurve(bool exitGUI)
@@ -80,6 +107,9 @@
             wrapper.renderer.SetWrap(this.m_Curve.preWrapMode, this.m_Curve.postWrapMode);
             return new CurveWrapper[] { wrapper };
         }
+
+        private Keyframe[] GetDenormalizedKeys(Keyframe[] sourceKeys) => 
+            this.NormalizeKeys(sourceKeys, NormalizationMode.Denormalize);
 
         internal static Keyframe[] GetEaseInKeys()
         {
@@ -125,26 +155,16 @@
 
         internal static Keyframe[] GetLinearKeys()
         {
-            Keyframe[] keyframeArray = new Keyframe[] { new Keyframe(0f, 0f, 1f, 1f), new Keyframe(1f, 1f, 1f, 1f) };
-            for (int i = 0; i < 2; i++)
-            {
-                AnimationUtility.SetKeyBroken(ref keyframeArray[i], false);
-                AnimationUtility.SetKeyLeftTangentMode(ref keyframeArray[i], AnimationUtility.TangentMode.Auto);
-                AnimationUtility.SetKeyRightTangentMode(ref keyframeArray[i], AnimationUtility.TangentMode.Auto);
-            }
-            return keyframeArray;
+            Keyframe[] keys = new Keyframe[] { new Keyframe(0f, 0f, 1f, 1f), new Keyframe(1f, 1f, 1f, 1f) };
+            SetSmoothEditable(ref keys);
+            return keys;
         }
 
         internal static Keyframe[] GetLinearMirrorKeys()
         {
-            Keyframe[] keyframeArray = new Keyframe[] { new Keyframe(0f, 1f, -1f, -1f), new Keyframe(1f, 0f, -1f, -1f) };
-            for (int i = 0; i < 2; i++)
-            {
-                AnimationUtility.SetKeyBroken(ref keyframeArray[i], false);
-                AnimationUtility.SetKeyLeftTangentMode(ref keyframeArray[i], AnimationUtility.TangentMode.Auto);
-                AnimationUtility.SetKeyRightTangentMode(ref keyframeArray[i], AnimationUtility.TangentMode.Auto);
-            }
-            return keyframeArray;
+            Keyframe[] keys = new Keyframe[] { new Keyframe(0f, 1f, -1f, -1f), new Keyframe(1f, 0f, -1f, -1f) };
+            SetSmoothEditable(ref keys);
+            return keys;
         }
 
         private bool GetNormalizationRect(out Rect normalizationRect)
@@ -157,6 +177,9 @@
             normalizationRect = new Rect(this.m_CurveEditor.settings.hRangeMin, this.m_CurveEditor.settings.vRangeMin, this.m_CurveEditor.settings.hRangeMax - this.m_CurveEditor.settings.hRangeMin, this.m_CurveEditor.settings.vRangeMax - this.m_CurveEditor.settings.vRangeMin);
             return true;
         }
+
+        private Keyframe[] GetNormalizedKeys(Keyframe[] sourceKeys) => 
+            this.NormalizeKeys(sourceKeys, NormalizationMode.Normalize);
 
         private void Init(CurveEditorSettings settings)
         {
@@ -192,17 +215,8 @@
             if (this.m_CurvePresets == null)
             {
                 Action<AnimationCurve> presetSelectedCallback = delegate (AnimationCurve presetCurve) {
-                    Rect rect;
                     this.ValidateCurveLibraryTypeAndScale();
-                    if (this.GetNormalizationRect(out rect))
-                    {
-                        bool realToNormalized = false;
-                        this.m_Curve.keys = CopyAndScaleCurveKeys(presetCurve.keys, rect, realToNormalized);
-                    }
-                    else
-                    {
-                        this.m_Curve.keys = presetCurve.keys;
-                    }
+                    this.m_Curve.keys = this.GetDenormalizedKeys(presetCurve.keys);
                     this.m_Curve.postWrapMode = presetCurve.postWrapMode;
                     this.m_Curve.preWrapMode = presetCurve.preWrapMode;
                     this.m_CurveEditor.SelectNone();
@@ -213,6 +227,16 @@
                 this.m_CurvePresets = new CurvePresetsContentsForPopupWindow(animCurve, this.curveLibraryType, presetSelectedCallback);
                 this.m_CurvePresets.InitIfNeeded();
             }
+        }
+
+        private Keyframe[] NormalizeKeys(Keyframe[] sourceKeys, NormalizationMode normalization)
+        {
+            Rect rect;
+            if (!this.GetNormalizationRect(out rect))
+            {
+                normalization = NormalizationMode.None;
+            }
+            return CopyAndScaleCurveKeys(sourceKeys, rect, normalization);
         }
 
         private void OnDestroy()
@@ -270,7 +294,7 @@
                     if (GUI.Button(position, this.m_GUIContent, ms_Styles.curveSwatch))
                     {
                         AnimationCurve preset = currentLib.GetPreset(i) as AnimationCurve;
-                        this.m_Curve.keys = preset.keys;
+                        this.m_Curve.keys = this.GetDenormalizedKeys(preset.keys);
                         this.m_Curve.postWrapMode = preset.postWrapMode;
                         this.m_Curve.preWrapMode = preset.preWrapMode;
                         this.m_CurveEditor.SelectNone();
@@ -301,7 +325,7 @@
 
         private void PresetDropDown(Rect rect)
         {
-            if (EditorGUI.ButtonMouseDown(rect, EditorGUI.GUIContents.titleSettingsIcon, FocusType.Passive, EditorStyles.inspectorTitlebarText) && (this.m_Curve != null))
+            if (EditorGUI.DropdownButton(rect, EditorGUI.GUIContents.titleSettingsIcon, FocusType.Passive, EditorStyles.inspectorTitlebarText) && (this.m_Curve != null))
             {
                 if (this.m_CurvePresets == null)
                 {
@@ -309,20 +333,11 @@
                 }
                 else
                 {
-                    Rect rect2;
                     this.ValidateCurveLibraryTypeAndScale();
-                    AnimationCurve curve = new AnimationCurve();
-                    if (this.GetNormalizationRect(out rect2))
-                    {
-                        bool realToNormalized = true;
-                        curve.keys = CopyAndScaleCurveKeys(this.m_Curve.keys, rect2, realToNormalized);
-                    }
-                    else
-                    {
-                        curve = new AnimationCurve(this.m_Curve.keys);
-                    }
-                    curve.postWrapMode = this.m_Curve.postWrapMode;
-                    curve.preWrapMode = this.m_Curve.preWrapMode;
+                    AnimationCurve curve = new AnimationCurve(this.GetNormalizedKeys(this.m_Curve.keys)) {
+                        postWrapMode = this.m_Curve.postWrapMode,
+                        preWrapMode = this.m_Curve.preWrapMode
+                    };
                     this.m_CurvePresets.curveToSaveAsPreset = curve;
                     PopupWindow.Show(rect, this.m_CurvePresets);
                 }
@@ -459,6 +474,13 @@
 
         public static bool visible =>
             (s_SharedCurveEditor != null);
+
+        private enum NormalizationMode
+        {
+            None,
+            Normalize,
+            Denormalize
+        }
 
         internal class Styles
         {

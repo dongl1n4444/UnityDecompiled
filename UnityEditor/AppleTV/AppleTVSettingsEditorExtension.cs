@@ -21,8 +21,10 @@
         private static ReorderableIconLayerList.ChangedCallbackDelegate <>f__am$cache3;
         private SerializedProperty m_AppleDeveloperTeamID;
         private SerializedProperty m_AppleEnableAutomaticSigning;
+        private SerializedProperty m_ApplicationBundleVersion;
         private GUIContent m_AutomaticSigningGUIContent = EditorGUIUtility.TextContent("Automatically Sign|Check this to allow Xcode to Automatically sign your build.");
         private ReorderableIconLayerList m_LargeIconsLayers;
+        private PlayerSettingsEditor m_SettingsEditor;
         private ReorderableIconLayerList m_SmallIconsLayers;
         private GUIContent m_TeamIDGUIContent = EditorGUIUtility.TextContent("Automatic Signing Team ID|Developers can retrieve their Team ID by visiting the Apple Developer site under Account > Membership.");
         private ReorderableIconLayerList m_TopShelfImageLayers;
@@ -74,11 +76,15 @@
 
         public override void IdentificationSectionGUI()
         {
+            PlayerSettingsEditor.ShowApplicationIdentifierUI(this.m_SettingsEditor.serializedObject, BuildTargetGroup.tvOS, "Bundle Identifier", "Changed tvOS bundleIdentifier");
+            EditorGUILayout.PropertyField(this.m_ApplicationBundleVersion, EditorGUIUtility.TextContent("Version*"), new GUILayoutOption[0]);
+            PlayerSettingsEditor.ShowBuildNumberUI(this.m_SettingsEditor.serializedObject, BuildTargetGroup.tvOS, "Build", "Changed tvOS build number");
             ProvisioningProfileGUI.ShowUIWithDefaults(iOSEditorPrefKeys.kDefaulttvOSProvisioningProfileUUID, this.m_AppleEnableAutomaticSigning, this.m_AutomaticSigningGUIContent, this.m_tvOSManualSigningProvisioningProfileID, this.m_tvosManualSigningGUIContent, this.m_AppleDeveloperTeamID, this.m_TeamIDGUIContent);
         }
 
         public override void OnEnable(PlayerSettingsEditor editor)
         {
+            this.m_ApplicationBundleVersion = editor.FindPropertyAssert("bundleVersion");
             this.splashScreenProperties = new SerializedProperty[splashScreenTypes.Length];
             for (int i = 0; i < splashScreenTypes.Length; i++)
             {
@@ -124,6 +130,7 @@
             this.m_tvOSManualSigningProvisioningProfileID = editor.FindPropertyAssert("tvOSManualSigningProvisioningProfileID");
             this.m_AppleEnableAutomaticSigning = editor.FindPropertyAssert("appleEnableAutomaticSigning");
             this.m_AppleDeveloperTeamID = editor.FindPropertyAssert("appleDeveloperTeamID");
+            this.m_SettingsEditor = editor;
         }
 
         public override void SplashSectionGUI()

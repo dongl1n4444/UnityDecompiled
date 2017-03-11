@@ -5,7 +5,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.CompilerServices;
-    using Unity.IL2CPP.GenericsCollection;
     using Unity.IL2CPP.IoC;
     using Unity.IL2CPP.IoCServices;
     using Unity.IL2CPP.Metadata;
@@ -29,29 +28,29 @@
             this._writer = writer;
         }
 
-        public TableInfo Write(InflatedCollectionCollector generics, MethodTables methodTables, IMethodCollectorResults methodCollector)
+        public TableInfo Write(MethodTables methodTables, IMethodCollectorResults methodCollector)
         {
             IncludeWriter.WriteRegistrationIncludes(this._writer);
-            WriteIncludesFor(this._writer, generics);
+            WriteIncludesFor(this._writer);
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<KeyValuePair<string, int>, int>(null, (IntPtr) <Write>m__0);
+                <>f__am$cache0 = value => value.Value;
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<KeyValuePair<string, int>, string>(null, (IntPtr) <Write>m__1);
+                <>f__am$cache1 = m => string.Concat(new object[] { m.Key, "/* ", m.Value, "*/" });
             }
             string[] values = methodTables.MethodPointers.OrderBy<KeyValuePair<string, int>, int>(<>f__am$cache0).Select<KeyValuePair<string, int>, string>(<>f__am$cache1).ToArray<string>();
             this._writer.WriteArrayInitializer("extern const Il2CppMethodPointer", "g_Il2CppGenericMethodPointers", values, false);
             return new TableInfo(values.Length, "extern const Il2CppMethodPointer", "g_Il2CppGenericMethodPointers");
         }
 
-        private static void WriteIncludesFor(CppCodeWriter writer, InflatedCollectionCollector generics)
+        private static void WriteIncludesFor(CppCodeWriter writer)
         {
             HashSet<string> set = new HashSet<string>();
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<MethodReference, bool>(null, (IntPtr) <WriteIncludesFor>m__2);
+                <>f__am$cache2 = m => !m.HasGenericParameters && !m.ContainsGenericParameters();
             }
             foreach (MethodReference reference in GenericMethodsCollection.Items.Keys.Where<MethodReference>(<>f__am$cache2))
             {

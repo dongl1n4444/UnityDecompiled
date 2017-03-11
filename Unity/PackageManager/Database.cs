@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Threading;
@@ -36,8 +37,10 @@
         private IEnumerable<IvyModule> packagesNewOrUpdated = Enumerable.Empty<IvyModule>();
         private ILookup<string, IvyModule> remotePackagesByName;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event Action<IvyModule[]> OnUpdateAvailable;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event Action<IvyModule[]> OnUpdateLocal;
 
         public IEnumerable<IvyModule> AllVersionsOfPackage(string packageName)
@@ -70,7 +73,7 @@
             {
                 if (<>f__am$cache4 == null)
                 {
-                    <>f__am$cache4 = new Func<IGrouping<string, IvyModule>, IEnumerable<IvyModule>>(null, (IntPtr) <RefreshLocalPackages>m__4);
+                    <>f__am$cache4 = x => x;
                 }
                 IvyModule[] moduleArray2 = Enumerable.SelectMany<IGrouping<string, IvyModule>, IvyModule>(this.localPackagesByName, <>f__am$cache4).ToArray<IvyModule>();
                 for (int i = 0; i < moduleArray2.Length; i++)
@@ -78,20 +81,20 @@
                     <RefreshLocalPackages>c__AnonStorey0 storey = new <RefreshLocalPackages>c__AnonStorey0 {
                         old = moduleArray2[i]
                     };
-                    Enumerable.Any<IvyModule>(packages, new Func<IvyModule, bool>(storey, (IntPtr) this.<>m__0));
+                    Enumerable.Any<IvyModule>(packages, new Func<IvyModule, bool>(storey.<>m__0));
                 }
             }
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<IvyModule, bool>(null, (IntPtr) <RefreshLocalPackages>m__5);
+                <>f__am$cache5 = x => x.UnityVersion.IsCompatibleWith(Settings.unityVersion);
             }
             if (<>f__am$cache6 == null)
             {
-                <>f__am$cache6 = new Func<IvyModule, PackageVersion>(null, (IntPtr) <RefreshLocalPackages>m__6);
+                <>f__am$cache6 = p => p.Version;
             }
             if (<>f__am$cache7 == null)
             {
-                <>f__am$cache7 = new Func<IvyModule, string>(null, (IntPtr) <RefreshLocalPackages>m__7);
+                <>f__am$cache7 = p => p.Name;
             }
             this.localPackagesByName = Enumerable.ToLookup<IvyModule, string>(Enumerable.OrderByDescending<IvyModule, PackageVersion>(Enumerable.Where<IvyModule>(packages, <>f__am$cache5), <>f__am$cache6), <>f__am$cache7);
             this.RefreshNewPackages();
@@ -107,9 +110,12 @@
             {
                 if (<>f__am$cache8 == null)
                 {
-                    <>f__am$cache8 = new Func<IGrouping<string, IvyModule>, IvyModule>(null, (IntPtr) <RefreshNewPackages>m__8);
+                    <>f__am$cache8 = g => g.First<IvyModule>();
                 }
-                this.packagesNewOrUpdated = Enumerable.Where<IvyModule>(Enumerable.Select<IGrouping<string, IvyModule>, IvyModule>(this.remotePackagesByName, <>f__am$cache8), new Func<IvyModule, bool>(this, (IntPtr) this.<RefreshNewPackages>m__9));
+                this.packagesNewOrUpdated = Enumerable.Where<IvyModule>(Enumerable.Select<IGrouping<string, IvyModule>, IvyModule>(this.remotePackagesByName, <>f__am$cache8), delegate (IvyModule e) {
+                    IvyModule module = this.localPackagesByName[e.Name].FirstOrDefault<IvyModule>();
+                    return (module == null) || (e.Version > module.Version);
+                });
                 if (this.OnUpdateAvailable != null)
                 {
                     this.OnUpdateAvailable(this.packagesNewOrUpdated.ToArray<IvyModule>());
@@ -121,15 +127,15 @@
         {
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<IvyModule, bool>(null, (IntPtr) <RefreshRemotePackages>m__1);
+                <>f__am$cache1 = x => x.UnityVersion.IsCompatibleWith(Settings.unityVersion);
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<IvyModule, PackageVersion>(null, (IntPtr) <RefreshRemotePackages>m__2);
+                <>f__am$cache2 = p => p.Version;
             }
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<IvyModule, string>(null, (IntPtr) <RefreshRemotePackages>m__3);
+                <>f__am$cache3 = p => p.Name;
             }
             this.remotePackagesByName = Enumerable.ToLookup<IvyModule, string>(Enumerable.OrderByDescending<IvyModule, PackageVersion>(Enumerable.Where<IvyModule>(packages, <>f__am$cache1), <>f__am$cache2), <>f__am$cache3);
             this.RefreshNewPackages();
@@ -140,7 +146,7 @@
             <SelectPackage>c__AnonStorey3 storey = new <SelectPackage>c__AnonStorey3 {
                 package = package
             };
-            IGrouping<string, IvyModule> grouping = Enumerable.FirstOrDefault<IGrouping<string, IvyModule>>(this.localPackagesByName, new Func<IGrouping<string, IvyModule>, bool>(storey, (IntPtr) this.<>m__0));
+            IGrouping<string, IvyModule> grouping = Enumerable.FirstOrDefault<IGrouping<string, IvyModule>>(this.localPackagesByName, new Func<IGrouping<string, IvyModule>, bool>(storey.<>m__0));
             if (grouping != null)
             {
                 foreach (IvyModule module in grouping)
@@ -155,7 +161,7 @@
             <SelectPackage>c__AnonStorey4 storey = new <SelectPackage>c__AnonStorey4 {
                 module = module
             };
-            IGrouping<string, IvyModule> grouping = Enumerable.FirstOrDefault<IGrouping<string, IvyModule>>(this.localPackagesByName, new Func<IGrouping<string, IvyModule>, bool>(storey, (IntPtr) this.<>m__0));
+            IGrouping<string, IvyModule> grouping = Enumerable.FirstOrDefault<IGrouping<string, IvyModule>>(this.localPackagesByName, new Func<IGrouping<string, IvyModule>, bool>(storey.<>m__0));
             if (grouping != null)
             {
                 foreach (IvyModule module2 in grouping)
@@ -170,10 +176,10 @@
             <UpdatePackageState>c__AnonStorey1 storey = new <UpdatePackageState>c__AnonStorey1 {
                 package = package
             };
-            IGrouping<string, IvyModule> grouping = Enumerable.FirstOrDefault<IGrouping<string, IvyModule>>(this.localPackagesByName, new Func<IGrouping<string, IvyModule>, bool>(storey, (IntPtr) this.<>m__0));
+            IGrouping<string, IvyModule> grouping = Enumerable.FirstOrDefault<IGrouping<string, IvyModule>>(this.localPackagesByName, new Func<IGrouping<string, IvyModule>, bool>(storey.<>m__0));
             if (grouping != null)
             {
-                Enumerable.Any<IvyModule>(grouping, new Func<IvyModule, bool>(storey, (IntPtr) this.<>m__1));
+                Enumerable.Any<IvyModule>(grouping, new Func<IvyModule, bool>(storey.<>m__1));
             }
         }
 
@@ -182,10 +188,10 @@
             <UpdatePackageState>c__AnonStorey2 storey = new <UpdatePackageState>c__AnonStorey2 {
                 package = package
             };
-            IGrouping<string, IvyModule> grouping = Enumerable.FirstOrDefault<IGrouping<string, IvyModule>>(this.localPackagesByName, new Func<IGrouping<string, IvyModule>, bool>(storey, (IntPtr) this.<>m__0));
+            IGrouping<string, IvyModule> grouping = Enumerable.FirstOrDefault<IGrouping<string, IvyModule>>(this.localPackagesByName, new Func<IGrouping<string, IvyModule>, bool>(storey.<>m__0));
             if (grouping != null)
             {
-                Enumerable.Any<IvyModule>(grouping, new Func<IvyModule, bool>(storey, (IntPtr) this.<>m__1));
+                Enumerable.Any<IvyModule>(grouping, new Func<IvyModule, bool>(storey.<>m__1));
             }
         }
 
@@ -199,7 +205,16 @@
                 }
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<IGrouping<string, IvyModule>, IvyModule>(null, (IntPtr) <get_NewestLocalPackages>m__0);
+                    <>f__am$cache0 = delegate (IGrouping<string, IvyModule> g) {
+                        if (<>f__am$cache9 == null)
+                        {
+                            <>f__am$cache9 = h => h.Selected;
+                        }
+                        if (Enumerable.Any<IvyModule>(g, <>f__am$cache9))
+                        {
+                        }
+                        return (<>f__am$cacheA != null) ? g.First<IvyModule>() : Enumerable.First<IvyModule>(g, <>f__am$cacheA);
+                    };
                 }
                 return Enumerable.Select<IGrouping<string, IvyModule>, IvyModule>(this.localPackagesByName, <>f__am$cache0);
             }

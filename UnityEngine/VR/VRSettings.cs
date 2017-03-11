@@ -2,6 +2,7 @@
 {
     using System;
     using System.Runtime.CompilerServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Global VR related settings.</para>
@@ -24,28 +25,28 @@
         /// </summary>
         /// <param name="deviceName">Name of the device from VRSettings.supportedDevices.</param>
         /// <param name="prioritizedDeviceNameList">Prioritized list of device names from VRSettings.supportedDevices.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void LoadDeviceByName(string[] prioritizedDeviceNameList);
 
         /// <summary>
         /// <para>Globally enables or disables VR for the application.</para>
         /// </summary>
-        public static bool enabled { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static bool enabled { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The current height of an eye texture for the loaded device.</para>
         /// </summary>
-        public static int eyeTextureHeight { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static int eyeTextureHeight { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The current width of an eye texture for the loaded device.</para>
         /// </summary>
-        public static int eyeTextureWidth { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static int eyeTextureWidth { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Read-only value that can be used to determine if the VR device is active.</para>
         /// </summary>
-        public static bool isDeviceActive { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool isDeviceActive { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Type of VR device that is currently in use.</para>
@@ -74,12 +75,17 @@
         /// <summary>
         /// <para>Type of VR device that is currently loaded.</para>
         /// </summary>
-        public static string loadedDeviceName { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static string loadedDeviceName { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        /// <summary>
+        /// <para>A scale applied to the standard occulsion mask for each platform.</para>
+        /// </summary>
+        public static float occlusionMaskScale { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Controls the texel:pixel ratio before lens correction, trading performance for sharpness.</para>
         /// </summary>
-        public static float renderScale { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static float renderScale { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Controls the texel:pixel ratio before lens correction, trading performance for sharpness.</para>
@@ -98,17 +104,17 @@
             }
         }
 
-        internal static float renderViewportScaleInternal { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        internal static float renderViewportScaleInternal { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Mirror what is shown on the device to the main display, if possible.</para>
         /// </summary>
-        public static bool showDeviceView { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static bool showDeviceView { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Returns a list of supported VR devices that were included at build time.</para>
         /// </summary>
-        public static string[] supportedDevices { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static string[] supportedDevices { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

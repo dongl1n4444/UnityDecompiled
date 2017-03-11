@@ -269,7 +269,7 @@
 
         private void ShowMatchMakerInfo()
         {
-            if (this.m_Manager.matchMaker != null)
+            if ((this.m_Manager != null) && (this.m_Manager.matchMaker != null))
             {
                 this.m_ShowMatchMaker = EditorGUILayout.Foldout(this.m_ShowMatchMaker, this.m_ShowMatchMakerLabel);
                 if (this.m_ShowMatchMaker)

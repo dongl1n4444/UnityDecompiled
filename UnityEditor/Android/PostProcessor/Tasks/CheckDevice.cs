@@ -2,7 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEditor;
     using UnityEditor.Android;
@@ -12,6 +14,7 @@
 
     internal class CheckDevice : IPostProcessorTask
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ProgressHandler OnProgress;
 
         public void Execute(PostProcessorContext context)
@@ -42,7 +45,7 @@
             {
                 string message = $"No Android devices found.{(Application.platform != RuntimePlatform.WindowsEditor) ? "" : " If you are sure that device is attached then it might be USB driver problem, for details please check Android SDK Setup section in Unity manual."}
 ";
-                CancelPostProcess.AbortBuild("Couldn't find Android device", message);
+                CancelPostProcess.AbortBuild("Couldn't find Android device", message, null);
             }
             AndroidDevice device2 = new AndroidDevice(list[0]);
             int num = Convert.ToInt32(device2.Properties["ro.build.version.sdk"]);
@@ -50,7 +53,7 @@
             {
                 string str2 = (("Device: " + device2.Describe() + "\n") + "The connected device is not running Android OS 2.3 or later.") + " Unity Android does not support earlier versions of the Android OS;" + " please upgrade your device to a later OS version.";
                 Selection.activeObject = Unsupported.GetSerializedAssetInterfaceSingleton("PlayerSettings");
-                CancelPostProcess.AbortBuild("Device software is not supported", str2);
+                CancelPostProcess.AbortBuild("Device software is not supported", str2, null);
             }
             int num2 = 0;
             try
@@ -61,7 +64,7 @@
             {
                 num2 = -1;
             }
-            int num3 = 0xf0000;
+            int num3 = 0;
             GraphicsDeviceType[] graphicsAPIs = PlayerSettings.GetGraphicsAPIs(platform);
             if (graphicsAPIs.Contains<GraphicsDeviceType>(GraphicsDeviceType.OpenGLES3))
             {
@@ -86,7 +89,7 @@
                     str3 = "The connected device does not support Vulkan.";
                     str3 = str3 + " Please select OpenGLES under Player Settings instead.";
                 }
-                if (((num2 >= 0) && (num2 < num3)) || (PlayerSettings.openGLRequireES31AEP && !flag))
+                else if (((num2 >= 0) && (num2 < num3)) || (((num3 == 0x30001) && PlayerSettings.openGLRequireES31AEP) && !flag))
                 {
                     str3 = "The connected device is not compatible with the selected OpenGLES version.";
                     str3 = str3 + " Please select a lower OpenGLES version under Player Settings instead.";
@@ -94,7 +97,7 @@
                 if (str3 != null)
                 {
                     Selection.activeObject = Unsupported.GetSerializedAssetInterfaceSingleton("PlayerSettings");
-                    CancelPostProcess.AbortBuild("Device hardware is not supported", str3);
+                    CancelPostProcess.AbortBuild("Device hardware is not supported", str3, null);
                 }
             }
             if ((targetDevice == AndroidTargetDevice.x86) && device2.Properties["ro.product.cpu.abi"].Equals("armeabi-v7a"))
@@ -102,7 +105,7 @@
                 string str4 = "You are trying to install x86 APK to ARM device. ";
                 str4 = str4 + "Please select FAT or ARM as device filter under Player Settings, or connect a x86 device.";
                 Selection.activeObject = Unsupported.GetSerializedAssetInterfaceSingleton("PlayerSettings");
-                CancelPostProcess.AbortBuild("Device hardware is not supported", str4);
+                CancelPostProcess.AbortBuild("Device hardware is not supported", str4, null);
             }
             string str5 = device2.Properties["ro.product.manufacturer"];
             string str6 = device2.Properties["ro.product.model"];

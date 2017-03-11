@@ -53,7 +53,7 @@
             args[0] = Environment.NewLine;
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, string, string>(null, (IntPtr) <ReportAPIUpdaterCrash>m__0);
+                <>f__am$cache0 = (acc, curr) => acc + Environment.NewLine + "\t" + curr;
             }
             args[1] = Enumerable.Aggregate<string, string>(errorOutput, "", <>f__am$cache0);
             Debug.LogErrorFormat("Failed to run script updater.{0}Please, report a bug to Unity with these details{0}{1}", args);
@@ -63,7 +63,7 @@
         {
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<string, string, string>(null, (IntPtr) <ReportAPIUpdaterFailure>m__1);
+                <>f__am$cache1 = (acc, curr) => acc + Environment.NewLine + "\t" + curr;
             }
             ScriptUpdatingManager.ReportGroupedAPIUpdaterFailure($"APIUpdater encountered some issues and was not able to finish.{Environment.NewLine}{Enumerable.Aggregate<string, string>(errorOutput, "", <>f__am$cache1)}");
         }
@@ -93,7 +93,7 @@
                 task.Wait();
                 if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache2 = new Func<Asset, bool>(null, (IntPtr) <UpdateFilesInVCIfNeeded>m__2);
+                    <>f__am$cache2 = a => (a.state & Asset.States.ReadOnly) == Asset.States.ReadOnly;
                 }
                 IEnumerable<Asset> source = Enumerable.Where<Asset>(task.assetList, <>f__am$cache2);
                 if (!task.success || source.Any<Asset>())
@@ -101,11 +101,11 @@
                     object[] args = new object[1];
                     if (<>f__am$cache3 == null)
                     {
-                        <>f__am$cache3 = new Func<Asset, string>(null, (IntPtr) <UpdateFilesInVCIfNeeded>m__3);
+                        <>f__am$cache3 = a => string.Concat(new object[] { a.fullName, " (", a.state, ")" });
                     }
                     if (<>f__am$cache4 == null)
                     {
-                        <>f__am$cache4 = new Func<string, string, string>(null, (IntPtr) <UpdateFilesInVCIfNeeded>m__4);
+                        <>f__am$cache4 = (acc, curr) => acc + Environment.NewLine + "\t" + curr;
                     }
                     args[0] = Enumerable.Aggregate<string>(Enumerable.Select<Asset, string>(source, <>f__am$cache3), <>f__am$cache4);
                     Debug.LogErrorFormat("[API Updater] Files cannot be updated (failed to check out): {0}", args);

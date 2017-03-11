@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.CompilerServices;
+    using Unity.IL2CPP;
     using Unity.IL2CPP.Common.CFG;
     using Unity.IL2CPP.ILPreProcessor;
     using Unity.IL2CPP.IoC;
@@ -98,9 +99,9 @@
             };
             if (<>f__am$cache10 == null)
             {
-                <>f__am$cache10 = new Func<KeyValuePair<InstructionBlock, StackState>, InstructionBlock>(null, (IntPtr) <BlockFor>m__10);
+                <>f__am$cache10 = s => s.Key;
             }
-            InstructionBlock block = stackStates.Where<KeyValuePair<InstructionBlock, StackState>>(new Func<KeyValuePair<InstructionBlock, StackState>, bool>(storey, (IntPtr) this.<>m__0)).Select<KeyValuePair<InstructionBlock, StackState>, InstructionBlock>(<>f__am$cache10).FirstOrDefault<InstructionBlock>();
+            InstructionBlock block = stackStates.Where<KeyValuePair<InstructionBlock, StackState>>(new Func<KeyValuePair<InstructionBlock, StackState>, bool>(storey.<>m__0)).Select<KeyValuePair<InstructionBlock, StackState>, InstructionBlock>(<>f__am$cache10).FirstOrDefault<InstructionBlock>();
             if (block == null)
             {
                 throw new ArgumentException("invalid Entry", "entry");
@@ -113,7 +114,7 @@
             List<GlobalVariable> list = new List<GlobalVariable>();
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<KeyValuePair<InstructionBlock, StackState>, bool>(null, (IntPtr) <ComputeGlobalVariables>m__0);
+                <>f__am$cache0 = e => !e.Value.IsEmpty;
             }
             using (IEnumerator<KeyValuePair<InstructionBlock, StackState>> enumerator = this._ins.Where<KeyValuePair<InstructionBlock, StackState>>(<>f__am$cache0).GetEnumerator())
             {
@@ -127,7 +128,7 @@
                         <>f__ref$1 = storey,
                         index = 0
                     };
-                    list.AddRange(storey.entry.Value.Entries.Select<Entry, GlobalVariable>(new Func<Entry, GlobalVariable>(storey2, (IntPtr) this.<>m__0)));
+                    list.AddRange(storey.entry.Value.Entries.Select<Entry, GlobalVariable>(new Func<Entry, GlobalVariable>(storey2.<>m__0)));
                 }
             }
             return list.ToArray();
@@ -137,7 +138,7 @@
         {
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<TypeReference, bool>(null, (IntPtr) <ComputeType>m__1);
+                <>f__am$cache1 = t => t.ContainsGenericParameters();
             }
             if (entry.Types.Any<TypeReference>(<>f__am$cache1))
             {
@@ -149,7 +150,7 @@
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<TypeReference, bool>(null, (IntPtr) <ComputeType>m__2);
+                <>f__am$cache2 = t => t.IsValueType();
             }
             if (entry.Types.Any<TypeReference>(<>f__am$cache2))
             {
@@ -160,13 +161,13 @@
                 }
                 if (<>f__am$cache3 == null)
                 {
-                    <>f__am$cache3 = new Func<TypeReference, bool>(null, (IntPtr) <ComputeType>m__3);
+                    <>f__am$cache3 = t => t.Resolve().IsEnum;
                 }
                 if (entry.Types.All<TypeReference>(<>f__am$cache3))
                 {
                     if (<>f__am$cache4 == null)
                     {
-                        <>f__am$cache4 = new Func<TypeReference, TypeReference>(null, (IntPtr) <ComputeType>m__4);
+                        <>f__am$cache4 = t => t.Resolve().GetUnderlyingEnumType();
                     }
                     widestValueType = StackAnalysisUtils.GetWidestValueType(entry.Types.Select<TypeReference, TypeReference>(<>f__am$cache4));
                     if (widestValueType != null)
@@ -176,19 +177,19 @@
                 }
                 if (<>f__am$cache5 == null)
                 {
-                    <>f__am$cache5 = new Func<TypeReference, bool>(null, (IntPtr) <ComputeType>m__5);
+                    <>f__am$cache5 = t => t.IsValueType() || (t.MetadataType == MetadataType.Var);
                 }
                 if (entry.Types.All<TypeReference>(<>f__am$cache5))
                 {
                     if (<>f__am$cache6 == null)
                     {
-                        <>f__am$cache6 = new Func<TypeReference, bool>(null, (IntPtr) <ComputeType>m__6);
+                        <>f__am$cache6 = t => t.MetadataType == MetadataType.Var;
                     }
                     return entry.Types.Single<TypeReference>(<>f__am$cache6);
                 }
                 if (<>f__am$cache7 == null)
                 {
-                    <>f__am$cache7 = new Func<TypeReference, bool>(null, (IntPtr) <ComputeType>m__7);
+                    <>f__am$cache7 = t => t.IsSameType(TypeProvider.NativeUIntTypeReference);
                 }
                 if (entry.Types.Any<TypeReference>(<>f__am$cache7))
                 {
@@ -196,7 +197,7 @@
                 }
                 if (<>f__am$cache8 == null)
                 {
-                    <>f__am$cache8 = new Func<TypeReference, bool>(null, (IntPtr) <ComputeType>m__8);
+                    <>f__am$cache8 = t => t.IsSameType(TypeProvider.NativeIntTypeReference);
                 }
                 if (!entry.Types.Any<TypeReference>(<>f__am$cache8))
                 {
@@ -206,7 +207,7 @@
             }
             if (<>f__am$cache9 == null)
             {
-                <>f__am$cache9 = new Func<TypeReference, bool>(null, (IntPtr) <ComputeType>m__9);
+                <>f__am$cache9 = t => t.IsSameType(TypeProvider.NativeIntTypeReference) || t.IsPointer;
             }
             if (entry.Types.All<TypeReference>(<>f__am$cache9))
             {
@@ -214,7 +215,7 @@
             }
             if (<>f__am$cacheA == null)
             {
-                <>f__am$cacheA = new Func<TypeReference, bool>(null, (IntPtr) <ComputeType>m__A);
+                <>f__am$cacheA = t => t.IsSameType(TypeProvider.NativeUIntTypeReference) || t.IsPointer;
             }
             if (entry.Types.All<TypeReference>(<>f__am$cacheA))
             {
@@ -222,17 +223,17 @@
             }
             if (<>f__am$cacheB == null)
             {
-                <>f__am$cacheB = new Func<TypeReference, TypeDefinition>(null, (IntPtr) <ComputeType>m__B);
+                <>f__am$cacheB = t => t.Resolve();
             }
             if (<>f__am$cacheC == null)
             {
-                <>f__am$cacheC = new Func<TypeDefinition, bool>(null, (IntPtr) <ComputeType>m__C);
+                <>f__am$cacheC = res => (res != null) && res.IsInterface;
             }
             if (entry.Types.Select<TypeReference, TypeDefinition>(<>f__am$cacheB).Any<TypeDefinition>(<>f__am$cacheC))
             {
                 if (<>f__am$cacheD == null)
                 {
-                    <>f__am$cacheD = new Func<TypeReference, bool>(null, (IntPtr) <ComputeType>m__D);
+                    <>f__am$cacheD = t => t.Resolve().IsInterface;
                 }
                 return entry.Types.First<TypeReference>(<>f__am$cacheD);
             }
@@ -240,7 +241,7 @@
             {
                 if (<>f__am$cacheE == null)
                 {
-                    <>f__am$cacheE = new Func<TypeReference, bool>(null, (IntPtr) <ComputeType>m__E);
+                    <>f__am$cacheE = t => t.MetadataType != MetadataType.Object;
                 }
                 TypeReference reference3 = entry.Types.FirstOrDefault<TypeReference>(<>f__am$cacheE);
                 if (reference3 != null)
@@ -251,7 +252,7 @@
             }
             if (<>f__am$cacheF == null)
             {
-                <>f__am$cacheF = new Func<TypeReference, bool>(null, (IntPtr) <ComputeType>m__F);
+                <>f__am$cacheF = t => t.MetadataType == MetadataType.Object;
             }
             TypeReference reference4 = entry.Types.FirstOrDefault<TypeReference>(<>f__am$cacheF);
             if (reference4 != null)
@@ -272,7 +273,7 @@
             <GlobalsForBlock>c__AnonStorey0 storey = new <GlobalsForBlock>c__AnonStorey0 {
                 blockIndex = blockIndex
             };
-            return this.Globals.Where<GlobalVariable>(new Func<GlobalVariable, bool>(storey, (IntPtr) this.<>m__0)).ToArray<GlobalVariable>();
+            return this.Globals.Where<GlobalVariable>(new Func<GlobalVariable, bool>(storey.<>m__0)).ToArray<GlobalVariable>();
         }
 
         private GlobalVariable GlobaVariableFor(Dictionary<InstructionBlock, StackState> stackStates, Entry entry)
@@ -296,7 +297,7 @@
         }
 
         public GlobalVariable[] InputVariablesFor(InstructionBlock block) => 
-            this.InputStackStateFor(block).Entries.Select<Entry, GlobalVariable>(new Func<Entry, GlobalVariable>(this, (IntPtr) this.GlobalInputVariableFor)).ToArray<GlobalVariable>();
+            this.InputStackStateFor(block).Entries.Select<Entry, GlobalVariable>(new Func<Entry, GlobalVariable>(this.GlobalInputVariableFor)).ToArray<GlobalVariable>();
 
         public StackState OutputStackStateFor(InstructionBlock block)
         {
@@ -309,7 +310,7 @@
         }
 
         public GlobalVariable[] OutputVariablesFor(InstructionBlock block) => 
-            this.OutputStackStateFor(block).Entries.Select<Entry, GlobalVariable>(new Func<Entry, GlobalVariable>(this, (IntPtr) this.GlobalOutputVariableFor)).ToArray<GlobalVariable>();
+            this.OutputStackStateFor(block).Entries.Select<Entry, GlobalVariable>(new Func<Entry, GlobalVariable>(this.GlobalOutputVariableFor)).ToArray<GlobalVariable>();
 
         private static int StackIndexFor(IDictionary<InstructionBlock, StackState> stackStates, Entry entry, InstructionBlock block)
         {

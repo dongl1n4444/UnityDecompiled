@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Stores platform specifics settings of a TextureImporter.</para>
@@ -31,7 +32,7 @@
         /// <para>Copy parameters into another TextureImporterPlatformSettings object.</para>
         /// </summary>
         /// <param name="target">TextureImporterPlatformSettings object to copy settings to.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void CopyTo(TextureImporterPlatformSettings target);
 
         /// <summary>

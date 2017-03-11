@@ -2,7 +2,6 @@
 {
     using System;
     using System.Runtime.InteropServices;
-    using UnityEditor.Animations;
     using UnityEngine;
 
     /// <summary>
@@ -15,7 +14,7 @@
         private string m_Name;
         private float m_FirstFrame;
         private float m_LastFrame;
-        private int m_WrapMode;
+        private WrapMode m_WrapMode;
         private int m_Loop;
         private float m_OrientationOffsetY;
         private float m_Level;
@@ -93,10 +92,10 @@
         public WrapMode wrapMode
         {
             get => 
-                ((WrapMode) this.m_WrapMode);
+                this.m_WrapMode;
             set
             {
-                this.m_WrapMode = (int) value;
+                this.m_WrapMode = value;
             }
         }
         /// <summary>

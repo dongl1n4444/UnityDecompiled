@@ -39,10 +39,13 @@
         private Action<Task> taskStarting;
         protected bool transient;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event TaskFinishedHandler OnFinish;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event TaskProgressHandler OnProgress;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event TaskStartedHandler OnStart;
 
         protected Task()
@@ -233,7 +236,7 @@
         {
             if (this.taskFinishing != null)
             {
-                this.taskFinishing.Invoke(this, success);
+                this.taskFinishing(this, success);
             }
             this.InvokeOnFinish(this, success);
         }
@@ -242,7 +245,7 @@
         {
             if (this.taskRunning != null)
             {
-                return this.taskRunning.Invoke(this);
+                return this.taskRunning(this);
             }
             return true;
         }

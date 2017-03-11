@@ -122,7 +122,7 @@
             GUILayout.BeginArea(new Rect(0f, 0f, kWindowSize.x, kWindowSize.y));
             if (Unity.PackageManager.PackageManager.Instance == null)
             {
-                GUILayout.Box(new GUIContent("Package Manager Unavailable"), Styles.debugBox, new GUILayoutOption[0]);
+                GUILayout.Box(new GUIContent("Package Manager Unavailable"), Unity.PackageManager.UI.Styles.debugBox, new GUILayoutOption[0]);
             }
             else
             {
@@ -146,8 +146,8 @@
 
         public void ReadPreferences()
         {
-            this.m_Repo = Settings.repoType;
-            this.m_RepoUrl = Settings.baseRepoUrl;
+            this.m_Repo = Unity.PackageManager.Settings.repoType;
+            this.m_RepoUrl = Unity.PackageManager.Settings.baseRepoUrl;
         }
 
         public static void ShowPackageManagerWindow()
@@ -160,8 +160,8 @@
 
         public void WritePreferences()
         {
-            this.m_RepoUrl = Settings.SelectRepo(this.m_Repo, this.m_RepoUrl);
-            Settings.CacheAllSettings();
+            this.m_RepoUrl = Unity.PackageManager.Settings.SelectRepo(this.m_Repo, this.m_RepoUrl);
+            Unity.PackageManager.Settings.CacheAllSettings();
         }
     }
 }

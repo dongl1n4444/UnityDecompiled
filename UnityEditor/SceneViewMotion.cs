@@ -13,7 +13,7 @@
         private static PrefKey kFPSLeft = new PrefKey("View/FPS Strafe Left", "a");
         private static PrefKey kFPSRight = new PrefKey("View/FPS Strafe Right", "d");
         private static PrefKey kFPSUp = new PrefKey("View/FPS Strafe Up", "e");
-        private static bool s_Dragged = false;
+        private static MotionState s_CurrentState;
         private static float s_FlySpeed = 0f;
         private static TimeHelper s_FPSTiming = new TimeHelper();
         private static Vector3 s_Motion;
@@ -131,7 +131,7 @@
             Event current = Event.current;
             int controlID = s_ViewToolID;
             EventType typeForControl = current.GetTypeForControl(controlID);
-            if ((view != null) && (Tools.s_LockedViewTool == ViewTool.FPS))
+            if ((view != null) && (Tools.s_LockedViewTool == UnityEditor.ViewTool.FPS))
             {
                 view.FixNegativeSize();
             }
@@ -171,6 +171,12 @@
                     }
                     break;
                 }
+                case EventType.Used:
+                    if ((GUIUtility.hotControl != controlID) && (s_CurrentState != MotionState.kInactive))
+                    {
+                        ResetDragState();
+                    }
+                    break;
             }
         }
 
@@ -198,9 +204,10 @@
         {
             if ((Event.current.keyCode == KeyCode.Escape) && (GUIUtility.hotControl == s_ViewToolID))
             {
+                GUIUtility.hotControl = 0;
                 ResetDragState();
             }
-            if (Tools.s_LockedViewTool == ViewTool.FPS)
+            if (Tools.s_LockedViewTool == UnityEditor.ViewTool.FPS)
             {
                 Event current = Event.current;
                 Vector3 vector = s_Motion;
@@ -249,35 +256,20 @@
 
         private static void HandleKeyUp()
         {
-            if (Tools.s_LockedViewTool == ViewTool.FPS)
+            if (Tools.s_LockedViewTool == UnityEditor.ViewTool.FPS)
             {
                 Event current = Event.current;
-                if (current.keyCode == kFPSForward.keyCode)
+                if ((current.keyCode == kFPSForward.keyCode) || (current.keyCode == kFPSBack.keyCode))
                 {
                     s_Motion.z = 0f;
                     current.Use();
                 }
-                else if (current.keyCode == kFPSBack.keyCode)
-                {
-                    s_Motion.z = 0f;
-                    current.Use();
-                }
-                else if (current.keyCode == kFPSLeft.keyCode)
+                else if ((current.keyCode == kFPSLeft.keyCode) || (current.keyCode == kFPSRight.keyCode))
                 {
                     s_Motion.x = 0f;
                     current.Use();
                 }
-                else if (current.keyCode == kFPSRight.keyCode)
-                {
-                    s_Motion.x = 0f;
-                    current.Use();
-                }
-                else if (current.keyCode == kFPSUp.keyCode)
-                {
-                    s_Motion.y = 0f;
-                    current.Use();
-                }
-                else if (current.keyCode == kFPSDown.keyCode)
+                else if ((current.keyCode == kFPSUp.keyCode) || (current.keyCode == kFPSDown.keyCode))
                 {
                     s_Motion.y = 0f;
                     current.Use();
@@ -287,10 +279,10 @@
 
         private static void HandleMouseDown(SceneView view, int id, int button)
         {
-            s_Dragged = false;
+            s_CurrentState = MotionState.kInactive;
             if (Tools.viewToolActive)
             {
-                ViewTool viewTool = Tools.viewTool;
+                UnityEditor.ViewTool viewTool = Tools.viewTool;
                 if (Tools.s_LockedViewTool != viewTool)
                 {
                     Event current = Event.current;
@@ -309,6 +301,7 @@
                     }
                     EditorGUIUtility.SetWantsMouseJumping(1);
                     current.Use();
+                    s_CurrentState = MotionState.kActive;
                     GUIUtility.ExitGUI();
                 }
             }
@@ -316,7 +309,7 @@
 
         private static void HandleMouseDrag(SceneView view, int id)
         {
-            s_Dragged = true;
+            s_CurrentState = MotionState.kDragging;
             if (GUIUtility.hotControl != id)
             {
                 return;
@@ -324,7 +317,7 @@
             Event current = Event.current;
             switch (Tools.s_LockedViewTool)
             {
-                case ViewTool.Orbit:
+                case UnityEditor.ViewTool.Orbit:
                     if (!view.in2DMode && !view.isRotationLocked)
                     {
                         OrbitCameraBehavior(view);
@@ -332,7 +325,7 @@
                     }
                     goto Label_031E;
 
-                case ViewTool.Pan:
+                case UnityEditor.ViewTool.Pan:
                 {
                     view.viewIsLockedToObject = false;
                     view.FixNegativeSize();
@@ -346,7 +339,7 @@
                     view.pivot += vector7;
                     goto Label_031E;
                 }
-                case ViewTool.Zoom:
+                case UnityEditor.ViewTool.Zoom:
                 {
                     float num = HandleUtility.niceMouseDeltaZoom * (!current.shift ? ((float) 3) : ((float) 9));
                     if (!view.orthographic)
@@ -367,7 +360,7 @@
                     }
                     goto Label_031E;
                 }
-                case ViewTool.FPS:
+                case UnityEditor.ViewTool.FPS:
                 {
                     if (view.in2DMode || view.isRotationLocked)
                     {
@@ -401,8 +394,8 @@
             if (GUIUtility.hotControl == id)
             {
                 RaycastHit hit;
-                ResetDragState();
-                if (((button == 2) && !s_Dragged) && RaycastWorld(Event.current.mousePosition, out hit))
+                GUIUtility.hotControl = 0;
+                if (((button == 2) && (s_CurrentState != MotionState.kDragging)) && RaycastWorld(Event.current.mousePosition, out hit))
                 {
                     Vector3 vector = view.pivot - ((Vector3) ((view.rotation * Vector3.forward) * view.cameraDistance));
                     float size = view.size;
@@ -412,6 +405,7 @@
                     }
                     view.LookAt(hit.point, view.rotation, size);
                 }
+                ResetDragState();
                 Event.current.Use();
             }
         }
@@ -507,8 +501,8 @@
 
         private static void ResetDragState()
         {
-            GUIUtility.hotControl = 0;
-            Tools.s_LockedViewTool = ViewTool.None;
+            s_CurrentState = MotionState.kInactive;
+            Tools.s_LockedViewTool = UnityEditor.ViewTool.None;
             Tools.s_ButtonDown = -1;
             s_Motion = Vector3.zero;
             if (Toolbar.get != null)
@@ -521,6 +515,13 @@
         public static void ResetMotion()
         {
             s_Motion = Vector3.zero;
+        }
+
+        private enum MotionState
+        {
+            kInactive,
+            kActive,
+            kDragging
         }
     }
 }

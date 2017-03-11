@@ -36,7 +36,7 @@
 
             internal JSONValue GetAssetText(string assetPath)
             {
-                Object obj2 = AssetDatabase.LoadAssetAtPath(assetPath, typeof(Object));
+                UnityEngine.Object obj2 = AssetDatabase.LoadAssetAtPath(assetPath, typeof(UnityEngine.Object));
                 if (obj2 == null)
                 {
                     throw new RestRequestException(HttpStatusCode.BadRequest, "AssetNotFound");

@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>The plugin class describes a version control plugin and which configuratin options it has.</para>
@@ -16,17 +17,17 @@
         {
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public extern void Dispose();
 
-        public static Plugin[] availablePlugins { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static Plugin[] availablePlugins { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Configuration fields of the plugin.</para>
         /// </summary>
-        public ConfigField[] configFields { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public ConfigField[] configFields { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public string name { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public string name { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

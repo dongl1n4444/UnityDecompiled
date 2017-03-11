@@ -8,6 +8,7 @@
     using System.Text;
     using Unity.DataContract;
     using Unity.PackageManager;
+    using Unity.PackageManager.Ivy;
     using UnityEngine;
 
     [Serializable]
@@ -62,7 +63,7 @@
                 StringBuilder builder = new StringBuilder();
                 if (<>f__am$cache3 == null)
                 {
-                    <>f__am$cache3 = new Func<PackageInfo, PackageVersion>(null, (IntPtr) <DoReleaseNotes>m__4);
+                    <>f__am$cache3 = p => p.version;
                 }
                 foreach (PackageInfo info in Enumerable.OrderByDescending<PackageInfo, PackageVersion>(this.packageCache[this.package.packageName], <>f__am$cache3))
                 {
@@ -80,11 +81,11 @@
                 version = version,
                 $this = this
             };
-            if (!Enumerable.Any<DownloaderState>(this.downloaderStates, new Func<DownloaderState, bool>(storey, (IntPtr) this.<>m__0)))
+            if (!Enumerable.Any<DownloaderState>(this.downloaderStates, new Func<DownloaderState, bool>(storey.<>m__0)))
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<KeyValuePair<string, PackageFileData>, bool>(null, (IntPtr) <DownloadReleaseNotes>m__1);
+                    <>f__am$cache1 = x => x.Value.type == PackageFileType.ReleaseNotes;
                 }
                 KeyValuePair<string, PackageFileData> pair = Enumerable.FirstOrDefault<KeyValuePair<string, PackageFileData>>(this.m_Package.files, <>f__am$cache1);
                 if (pair.Key != null)
@@ -104,7 +105,7 @@
         }
 
         private bool IsDownloadingNotes() => 
-            Enumerable.Any<DownloaderState>(this.downloaderStates, new Func<DownloaderState, bool>(this, (IntPtr) this.<IsDownloadingNotes>m__3));
+            Enumerable.Any<DownloaderState>(this.downloaderStates, (Func<DownloaderState, bool>) (x => (x.package.packageName == this.package.packageName)));
 
         public void OnGUI()
         {
@@ -134,7 +135,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<IvyModule, PackageInfo>(null, (IntPtr) <UpdateReleaseNotes>m__0);
+                    <>f__am$cache0 = m => m.ToPackageInfo();
                 }
                 foreach (PackageInfo info in Enumerable.Select<IvyModule, PackageInfo>(Unity.PackageManager.PackageManager.Database.AllVersionsOfPackage(this.m_Package.packageName), <>f__am$cache0))
                 {
@@ -181,7 +182,7 @@
                 if (File.Exists(result))
                 {
                     File.Copy(result, Path.Combine(Settings.installLocation, Path.GetFileName(result)), true);
-                    if (Enumerable.First<InfoView.DownloaderState>(this.$this.downloaderStates, new Func<InfoView.DownloaderState, bool>(storey, (IntPtr) this.<>m__0)).package == this.version)
+                    if (Enumerable.First<InfoView.DownloaderState>(this.$this.downloaderStates, new Func<InfoView.DownloaderState, bool>(storey.<>m__0)).package == this.version)
                     {
                         this.version.Refresh();
                     }

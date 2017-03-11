@@ -9,14 +9,14 @@
     {
         public static Texture2D LoadTextureFromApplicationContents(string path)
         {
-            Texture2D textured = new Texture2D(2, 2);
+            Texture2D tex = new Texture2D(2, 2);
             path = Path.Combine(Path.Combine(Path.Combine(Path.Combine(EditorApplication.applicationContentsPath, "Resources"), "Collab"), "overlays"), path);
             try
             {
                 FileStream stream = File.OpenRead(path);
                 byte[] buffer = new byte[stream.Length];
                 stream.Read(buffer, 0, (int) stream.Length);
-                if (!textured.LoadImage(buffer))
+                if (!tex.LoadImage(buffer))
                 {
                     return null;
                 }
@@ -26,7 +26,7 @@
                 Debug.LogWarning("Collab Overlay Texture load fail, path: " + path);
                 return null;
             }
-            return textured;
+            return tex;
         }
     }
 }

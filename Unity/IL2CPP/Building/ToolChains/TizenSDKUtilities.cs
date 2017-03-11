@@ -4,62 +4,100 @@
     using System;
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
-    using Unity.IL2CPP.Common;
+    using Unity.IL2CPP.Building;
 
     public class TizenSDKUtilities
     {
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private static NPath <SDKDirectory>k__BackingField;
-        private const string CompilerVersion = "arm-linux-gnueabi-gcc-4.6";
-        private const string CurrentSDKVersion = "tizen-2.4.0";
+        private string <CurrentArch>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private NPath <TizenSdkRootDir>k__BackingField;
+        private string CompilerVersion = "llvm-3.6";
+        private const string CurrentSDKVersion = "tizen-2.4.0r1";
         private const string Platform = "tizen-2.4";
-        private const string Rootstrap = "mobile-2.4-device.core";
+        private string Rootstrap = "";
 
-        static TizenSDKUtilities()
+        public TizenSDKUtilities(NPath sdkRootPath, Architecture architecture)
         {
-            if (PlatformUtils.IsLinux())
+            if (!sdkRootPath.Exists(""))
             {
-                SDKDirectory = new NPath(NPath.HomeDirectory + "/tizen-2.4.0-linux");
+                throw new ArgumentException("Tizen Studio path does not exist: " + sdkRootPath);
+            }
+            this.TizenSdkRootDir = sdkRootPath;
+            if (architecture is ARMv7Architecture)
+            {
+                this.CurrentArch = "arm";
+                this.Rootstrap = "mobile-2.4-device.core";
+            }
+            else if (architecture is x86Architecture)
+            {
+                this.CurrentArch = "i386";
+                this.Rootstrap = "mobile-2.4-emulator.core";
+            }
+            else if (architecture is ARM64Architecture)
+            {
+                this.CurrentArch = "aarch64";
+                this.Rootstrap = "mobile-3.0-device64.core";
             }
             else
             {
-                if (!PlatformUtils.IsOSX())
+                if (!(architecture is x64Architecture))
                 {
-                    throw new NotSupportedException("Building Tizen on Windows is not supported.");
+                    throw new NotSupportedException("Unknown architecture: " + architecture);
                 }
-                SDKDirectory = new NPath(NPath.HomeDirectory + "/tizen-2.4.0-macosx");
+                this.CurrentArch = "x86_64";
+                this.Rootstrap = "mobile-3.0-emulator64.core";
             }
         }
 
-        public static string GetCompilerPrefix()
+        public string GetCompilerPrefix()
         {
-            string[] append = new string[] { "tools", "arm-linux-gnueabi-gcc-4.6", "bin", "arm-linux-gnueabi-" };
-            return SDKDirectory.Combine(append).ToString();
+            string[] append = new string[] { "tools", this.CompilerVersion, "bin", "clang" };
+            return this.TizenSdkRootDir.Combine(append).ToString();
         }
 
-        public static NPath GetLinkerPath()
+        public NPath GetLinkerPath()
         {
-            string[] append = new string[] { "tools", "arm-linux-gnueabi-gcc-4.6", "bin", "arm-linux-gnueabi-g++" };
-            return SDKDirectory.Combine(append);
+            string[] append = new string[] { "tools", this.CompilerVersion, "bin", "clang++" };
+            return this.TizenSdkRootDir.Combine(append);
         }
 
-        public static string GetSysroot()
+        public string GetSysroot()
         {
-            string[] append = new string[] { "platforms", "tizen-2.4", "mobile", "rootstraps", "mobile-2.4-device.core" };
-            return SDKDirectory.Combine(append).ToString();
+            string[] append = new string[] { "platforms", "tizen-2.4", "mobile", "rootstraps", this.Rootstrap };
+            return this.TizenSdkRootDir.Combine(append).ToString();
         }
 
-        protected static NPath SDKDirectory
+        public string GetTargetFlags()
         {
-            [CompilerGenerated]
-            get => 
-                <SDKDirectory>k__BackingField;
-            [CompilerGenerated]
-            set
+            if (this.CurrentArch == "arm")
             {
-                <SDKDirectory>k__BackingField = value;
+                return "-march=armv7-a -mfpu=neon -mfloat-abi=softfp -mtune=cortex-a9";
             }
+            if (this.CurrentArch == "i386")
+            {
+                return "-march=i686 -msse2 -mfpmath=sse";
+            }
+            return "";
         }
+
+        public string GetToolchainFlags()
+        {
+            string[] textArray1 = new string[7];
+            textArray1[0] = "-target ";
+            textArray1[1] = this.CurrentArch;
+            textArray1[2] = "-tizen-linux-gnueabi -gcc-toolchain ";
+            string[] append = new string[] { "tools", this.CurrentArch + "-linux-gnueabi-gcc-4.9" };
+            textArray1[3] = this.TizenSdkRootDir.Combine(append).ToString();
+            textArray1[4] = " -ccc-gcc-name ";
+            textArray1[5] = this.CurrentArch;
+            textArray1[6] = "-linux-gnueabi-g++";
+            return string.Concat(textArray1);
+        }
+
+        protected string CurrentArch { get; set; }
+
+        public NPath TizenSdkRootDir { get; private set; }
     }
 }
 

@@ -20,32 +20,32 @@
         private static Func<TypeDefinition, bool> <>f__am$cache1;
         [Inject]
         public static ITypeProviderService TypeProvider;
+        [Inject]
+        public static IWindowsRuntimeProjections WindowsRuntimeProjections;
 
         private static DefaultMarshalInfoWriter CreateMarshalInfoWriter(TypeReference type, MarshalType marshalType, MarshalInfo marshalInfo, bool useUnicodeCharSet, bool forByReferenceType, bool forFieldMarshaling, HashSet<TypeReference> typesForRecursiveFields)
         {
             <CreateMarshalInfoWriter>c__AnonStorey0 storey = new <CreateMarshalInfoWriter>c__AnonStorey0 {
                 typesForRecursiveFields = typesForRecursiveFields,
                 type = type,
-                marshalType = marshalType
+                marshalType = marshalType,
+                useUnicodeCharSet = useUnicodeCharSet
             };
+            storey.useUnicodeCharSet |= (storey.type.Resolve().Attributes & (TypeAttributes.AnsiClass | TypeAttributes.UnicodeClass)) != TypeAttributes.AnsiClass;
             if ((storey.type.MetadataType == MetadataType.String) || MarshalingUtils.IsStringBuilder(storey.type))
             {
-                return new StringMarshalInfoWriter(storey.type, storey.marshalType, marshalInfo, useUnicodeCharSet, forByReferenceType, forFieldMarshaling);
+                return new StringMarshalInfoWriter(storey.type, storey.marshalType, marshalInfo, storey.useUnicodeCharSet, forByReferenceType, forFieldMarshaling);
             }
             if (storey.type.Resolve().IsDelegate() && (!(storey.type is TypeSpecification) || (storey.type is GenericInstanceType)))
             {
                 if (storey.marshalType == MarshalType.WindowsRuntime)
                 {
-                    if (storey.type is GenericInstanceType)
-                    {
-                        return new UnmarshalableMarshalInfoWriter(storey.type);
-                    }
                     return new WindowsRuntimeDelegateMarshalInfoWriter(storey.type);
                 }
                 return new DelegateMarshalInfoWriter(storey.type);
             }
             storey.nativeType = (marshalInfo == null) ? null : new NativeType?(marshalInfo.NativeType);
-            if ((storey.type.MetadataType == MetadataType.ValueType) && MarshalingUtils.IsBlittable(storey.type, storey.nativeType, storey.marshalType))
+            if ((storey.type.MetadataType == MetadataType.ValueType) && MarshalingUtils.IsBlittable(storey.type, storey.nativeType, storey.marshalType, storey.useUnicodeCharSet))
             {
                 if ((!forByReferenceType && !forFieldMarshaling) && ((marshalInfo != null) && (marshalInfo.NativeType == NativeType.LPStruct)))
                 {
@@ -65,7 +65,7 @@
             if (type2 != null)
             {
                 TypeReference elementType = type2.ElementType;
-                if (MarshalingUtils.IsBlittable(elementType, storey.nativeType, storey.marshalType) && (elementType.IsValueType() || storey.type.IsPointer))
+                if (MarshalingUtils.IsBlittable(elementType, storey.nativeType, storey.marshalType, storey.useUnicodeCharSet) && (elementType.IsValueType() || storey.type.IsPointer))
                 {
                     return new BlittableByReferenceMarshalInfoWriter(type2, storey.marshalType, marshalInfo);
                 }
@@ -92,7 +92,7 @@
                         return new FixedArrayMarshalInfoWriter(type3, storey.marshalType, marshalInfo);
                     }
                 }
-                if ((!forByReferenceType && !forFieldMarshaling) && MarshalingUtils.IsBlittable(reference2, nativeType, storey.marshalType))
+                if ((!forByReferenceType && !forFieldMarshaling) && MarshalingUtils.IsBlittable(reference2, nativeType, storey.marshalType, storey.useUnicodeCharSet))
                 {
                     return new PinnedArrayMarshalInfoWriter(type3, storey.marshalType, marshalInfo);
                 }
@@ -128,11 +128,42 @@
                 }
             }
             storey.typeDefinition = storey.type.Resolve();
-            if (((storey.marshalType == MarshalType.WindowsRuntime) && storey.typeDefinition.IsWindowsRuntime) && (!(storey.type is TypeSpecification) && (storey.type.MetadataType == MetadataType.Class)))
+            if (storey.marshalType == MarshalType.WindowsRuntime)
             {
-                return new ComObjectMarshalInfoWriter(storey.type.Resolve(), storey.marshalType, marshalInfo);
+                if (Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(storey.typeDefinition, TypeProvider.SystemException, TypeComparisonMode.Exact))
+                {
+                    return new ExceptionMarshalInfoWriter(storey.typeDefinition);
+                }
+                GenericInstanceType type5 = storey.type as GenericInstanceType;
+                if (type5 != null)
+                {
+                    if ((TypeProvider.IReferenceType != null) && storey.type.IsNullable())
+                    {
+                        TypeReference reference3 = type5.GenericArguments[0];
+                        if (reference3.CanBoxToWindowsRuntime())
+                        {
+                            return new WindowsRuntimeNullableMarshalInfoWriter(storey.type);
+                        }
+                    }
+                }
+                else if (((storey.typeDefinition.MetadataType == MetadataType.Class) && !(storey.type is TypeSpecification)) && storey.typeDefinition.IsWindowsRuntime)
+                {
+                    return new ComObjectMarshalInfoWriter(storey.typeDefinition, storey.marshalType, marshalInfo);
+                }
+                TypeReference reference4 = WindowsRuntimeProjections.ProjectToWindowsRuntime(storey.type);
+                if ((reference4 != storey.type) && reference4.IsComOrWindowsRuntimeInterface())
+                {
+                    if (storey.typeDefinition.IsInterface)
+                    {
+                        return new ComObjectMarshalInfoWriter(storey.type, storey.marshalType, marshalInfo);
+                    }
+                    if ((storey.typeDefinition.IsValueType && (type5 != null)) && ((storey.typeDefinition.Namespace == "System.Collections.Generic") && (storey.typeDefinition.Name == "KeyValuePair`2")))
+                    {
+                        return new KeyValuePairMarshalInfoWriter(type5);
+                    }
+                }
             }
-            if (HasCustomMarshalingMethods(storey.type, storey.nativeType, storey.marshalType))
+            if (HasCustomMarshalingMethods(storey.type, storey.nativeType, storey.marshalType, storey.useUnicodeCharSet))
             {
                 if (storey.typesForRecursiveFields == null)
                 {
@@ -140,9 +171,9 @@
                 }
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<TypeDefinition, IEnumerable<FieldDefinition>>(null, (IntPtr) <CreateMarshalInfoWriter>m__0);
+                    <>f__am$cache0 = t => MarshalingUtils.NonStaticFieldsOf(t);
                 }
-                FieldDefinition faultyField = storey.typeDefinition.GetTypeHierarchy().SelectMany<TypeDefinition, FieldDefinition>(<>f__am$cache0).FirstOrDefault<FieldDefinition>(new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0));
+                FieldDefinition faultyField = storey.typeDefinition.GetTypeHierarchy().SelectMany<TypeDefinition, FieldDefinition>(<>f__am$cache0).FirstOrDefault<FieldDefinition>(new Func<FieldDefinition, bool>(storey.<>m__0));
                 if (faultyField != null)
                 {
                     return new TypeDefinitionWithUnsupportedFieldMarshalInfoWriter(storey.typeDefinition, storey.marshalType, faultyField);
@@ -158,7 +189,7 @@
             return ((fieldType != null) && new Unity.IL2CPP.Common.TypeReferenceEqualityComparer().Equals(fieldType.ElementType, typeRef));
         }
 
-        private static bool HasCustomMarshalingMethods(TypeReference type, NativeType? nativeType, MarshalType marshalType)
+        private static bool HasCustomMarshalingMethods(TypeReference type, NativeType? nativeType, MarshalType marshalType, bool useUnicodeCharSet)
         {
             if ((type.MetadataType != MetadataType.ValueType) && (type.MetadataType != MetadataType.Class))
             {
@@ -173,13 +204,17 @@
             {
                 return false;
             }
-            if ((definition.MetadataType == MetadataType.ValueType) && MarshalingUtils.IsBlittable(definition, nativeType, marshalType))
+            if ((definition.MetadataType == MetadataType.ValueType) && MarshalingUtils.IsBlittable(definition, nativeType, marshalType, useUnicodeCharSet))
+            {
+                return false;
+            }
+            if ((marshalType == MarshalType.WindowsRuntime) && (definition.MetadataType != MetadataType.ValueType))
             {
                 return false;
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<TypeDefinition, bool>(null, (IntPtr) <HasCustomMarshalingMethods>m__1);
+                <>f__am$cache1 = t => (t.IsSpecialSystemBaseType() || t.IsSequentialLayout) || t.IsExplicitLayout;
             }
             return definition.GetTypeHierarchy().All<TypeDefinition>(<>f__am$cache1);
         }
@@ -205,6 +240,7 @@
             internal TypeReference type;
             internal TypeDefinition typeDefinition;
             internal HashSet<TypeReference> typesForRecursiveFields;
+            internal bool useUnicodeCharSet;
 
             internal bool <>m__0(FieldDefinition field)
             {
@@ -223,7 +259,7 @@
                     if (field.FieldType.IsArray && ((field.MarshalInfo == null) || (field.MarshalInfo.NativeType == NativeType.Array)))
                     {
                         TypeReference elementType = ((ArrayType) field.FieldType).ElementType;
-                        bool flag2 = (elementType.MetadataType == MetadataType.ValueType) && MarshalingUtils.IsBlittable(this.type, this.nativeType, this.marshalType);
+                        bool flag2 = (elementType.MetadataType == MetadataType.ValueType) && MarshalingUtils.IsBlittable(this.type, this.nativeType, this.marshalType, this.useUnicodeCharSet);
                         if ((!elementType.IsPrimitive && !elementType.IsPointer) && (!elementType.IsEnum() && !flag2))
                         {
                             return true;

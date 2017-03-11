@@ -15,6 +15,8 @@
         public static bool DumpRuntimeStats = false;
         [HelpDetails("Enables generation of null checks", null)]
         public static bool EmitNullChecks = false;
+        [HideFromHelp]
+        public static bool EmitSourceMapping = false;
         [HelpDetails("Enables generation of array bounds checks", null)]
         public static bool EnableArrayBoundsCheck = false;
         [HideFromHelp]
@@ -29,8 +31,6 @@
         public static bool EnableStacktrace = false;
         [HelpDetails("Enables conversion statistics", null)]
         public static bool EnableStats = false;
-        [HideFromHelp]
-        public static bool EnableSymbolLoading = false;
         [HideFromHelp]
         public static bool ForceSerial = false;
         [HideFromHelp]
@@ -47,7 +47,6 @@
             EnableArrayBoundsCheck = false;
             EnableErrorMessageTest = false;
             EnableDivideByZeroCheck = false;
-            EnableSymbolLoading = false;
             EnablePrimitiveValueTypeGenericSharing = false;
             Dotnetprofile = DotNetProfile.Net20;
             ProfilerOptions = Unity.IL2CPP.ProfilerOptions.MethodEnterExit;
@@ -55,6 +54,7 @@
             DumpRuntimeStats = false;
             ForceSerial = Unity.IL2CPP.ParallelHelper.ForceSerialByDefault;
             ForceSerialBetaOnly = false;
+            EmitSourceMapping = false;
         }
 
         public static bool EmitComments =>

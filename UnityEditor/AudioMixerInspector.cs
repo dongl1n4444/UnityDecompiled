@@ -4,7 +4,7 @@
     using UnityEngine;
     using UnityEngine.Audio;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(AudioMixer))]
+    [CustomEditor(typeof(AudioMixer)), CanEditMultipleObjects]
     internal class AudioMixerInspector : Editor
     {
         public override void OnInspectorGUI()

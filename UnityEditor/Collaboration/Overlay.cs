@@ -2,11 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
+    using UnityEditor;
     using UnityEngine;
 
     internal class Overlay
     {
-        private static readonly Dictionary<Collab.CollabStates, Texture2D> s_Overlays = new Dictionary<Collab.CollabStates, Texture2D>();
+        private static double OverlaySizeOnLargeIcon = 0.35;
+        private static double OverlaySizeOnSmallIcon = 0.6;
+        private static readonly Dictionary<Collab.CollabStates, GUIContent> s_Overlays = new Dictionary<Collab.CollabStates, GUIContent>();
 
         protected static bool AreOverlaysLoaded()
         {
@@ -14,9 +17,9 @@
             {
                 return false;
             }
-            foreach (Texture2D textured in s_Overlays.Values)
+            foreach (GUIContent content in s_Overlays.Values)
             {
-                if (textured == null)
+                if (content == null)
                 {
                     return false;
                 }
@@ -26,10 +29,23 @@
 
         protected static void DrawOverlayElement(Collab.CollabStates singleState, Rect itemRect)
         {
-            Texture2D textured;
-            if (s_Overlays.TryGetValue(singleState, out textured) && (textured != null))
+            GUIContent content;
+            if (s_Overlays.TryGetValue(singleState, out content))
             {
-                GUI.DrawTexture(itemRect, textured);
+                Texture image = content.image;
+                if (image != null)
+                {
+                    Rect position = itemRect;
+                    double overlaySizeOnLargeIcon = OverlaySizeOnLargeIcon;
+                    if (position.width <= 24f)
+                    {
+                        overlaySizeOnLargeIcon = OverlaySizeOnSmallIcon;
+                    }
+                    position.width = Convert.ToInt32(Math.Ceiling((double) (position.width * overlaySizeOnLargeIcon)));
+                    position.height = Convert.ToInt32(Math.Ceiling((double) (position.height * overlaySizeOnLargeIcon)));
+                    position.x += itemRect.width - position.width;
+                    GUI.DrawTexture(position, image, ScaleMode.ScaleToFit);
+                }
             }
         }
 
@@ -63,14 +79,17 @@
         protected static void LoadOverlays()
         {
             s_Overlays.Clear();
-            s_Overlays.Add(Collab.CollabStates.kCollabConflicted, TextureUtility.LoadTextureFromApplicationContents("conflict.png"));
-            s_Overlays.Add(Collab.CollabStates.kCollabNone | Collab.CollabStates.kCollabPendingMerge, TextureUtility.LoadTextureFromApplicationContents("conflict.png"));
-            s_Overlays.Add(Collab.CollabStates.kCollabChanges, TextureUtility.LoadTextureFromApplicationContents("changes.png"));
-            s_Overlays.Add(Collab.CollabStates.kCollabCheckedOutLocal | Collab.CollabStates.kCollabMovedLocal, TextureUtility.LoadTextureFromApplicationContents("modif-local.png"));
-            s_Overlays.Add(Collab.CollabStates.kCollabAddedLocal, TextureUtility.LoadTextureFromApplicationContents("added-local.png"));
-            s_Overlays.Add(Collab.CollabStates.kCollabCheckedOutLocal, TextureUtility.LoadTextureFromApplicationContents("modif-local.png"));
-            s_Overlays.Add(Collab.CollabStates.kCollabDeletedLocal, TextureUtility.LoadTextureFromApplicationContents("deleted-local.png"));
-            s_Overlays.Add(Collab.CollabStates.kCollabMovedLocal, TextureUtility.LoadTextureFromApplicationContents("modif-local.png"));
+            s_Overlays.Add(Collab.CollabStates.kCollabIgnored, EditorGUIUtility.IconContent("CollabExclude Icon"));
+            s_Overlays.Add(Collab.CollabStates.kCollabConflicted, EditorGUIUtility.IconContent("CollabConflict Icon"));
+            s_Overlays.Add(Collab.CollabStates.kCollabNone | Collab.CollabStates.kCollabPendingMerge, EditorGUIUtility.IconContent("CollabConflict Icon"));
+            s_Overlays.Add(Collab.CollabStates.kCollabMovedLocal, EditorGUIUtility.IconContent("CollabMoved Icon"));
+            s_Overlays.Add(Collab.CollabStates.kCollabCheckedOutLocal | Collab.CollabStates.kCollabMovedLocal, EditorGUIUtility.IconContent("CollabMoved Icon"));
+            s_Overlays.Add(Collab.CollabStates.kCollabCheckedOutLocal, EditorGUIUtility.IconContent("CollabEdit Icon"));
+            s_Overlays.Add(Collab.CollabStates.kCollabAddedLocal, EditorGUIUtility.IconContent("CollabCreate Icon"));
+            s_Overlays.Add(Collab.CollabStates.kCollabDeletedLocal, EditorGUIUtility.IconContent("CollabDeleted Icon"));
+            s_Overlays.Add(Collab.CollabStates.KCollabContentConflicted, EditorGUIUtility.IconContent("CollabChangesConflict Icon"));
+            s_Overlays.Add(Collab.CollabStates.KCollabContentChanged, EditorGUIUtility.IconContent("CollabChanges Icon"));
+            s_Overlays.Add(Collab.CollabStates.KCollabContentDeleted, EditorGUIUtility.IconContent("CollabChangesDeleted Icon"));
         }
     }
 }

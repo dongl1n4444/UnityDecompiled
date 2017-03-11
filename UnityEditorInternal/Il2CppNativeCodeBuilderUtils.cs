@@ -6,16 +6,23 @@
 
     public static class Il2CppNativeCodeBuilderUtils
     {
-        public static IEnumerable<string> AddBuilderArguments(Il2CppNativeCodeBuilder builder, string outputRelativePath, IEnumerable<string> includeRelativePaths)
+        public static IEnumerable<string> AddBuilderArguments(Il2CppNativeCodeBuilder builder, string outputRelativePath, IEnumerable<string> includeRelativePaths, bool debugBuild)
         {
             List<string> list = new List<string> {
                 "--compile-cpp",
                 "--libil2cpp-static",
                 FormatArgument("platform", builder.CompilerPlatform),
-                FormatArgument("architecture", builder.CompilerArchitecture),
-                FormatArgument("configuration", "Release"),
-                FormatArgument("outputpath", builder.ConvertOutputFileToFullPath(outputRelativePath))
+                FormatArgument("architecture", builder.CompilerArchitecture)
             };
+            if (debugBuild)
+            {
+                list.Add(FormatArgument("configuration", "Debug"));
+            }
+            else
+            {
+                list.Add(FormatArgument("configuration", "Release"));
+            }
+            list.Add(FormatArgument("outputpath", builder.ConvertOutputFileToFullPath(outputRelativePath)));
             if (!string.IsNullOrEmpty(builder.CacheDirectory))
             {
                 list.Add(FormatArgument("cachedirectory", CacheDirectoryPathFor(builder.CacheDirectory)));
@@ -62,8 +69,11 @@
         private static string EditorVersionFilenameFor(string editorVersion) => 
             $"il2cpp_cache {editorVersion}";
 
+        private static string EscapeEmbeddedQuotes(string value) => 
+            value.Replace("\"", "\\\"");
+
         private static string FormatArgument(string name, string value) => 
-            $"--{name}="{value}"";
+            $"--{name}="{EscapeEmbeddedQuotes(value)}"";
 
         public static string ObjectFilePathInCacheDirectoryFor(string builderCacheDirectory) => 
             CacheDirectoryPathFor(builderCacheDirectory);

@@ -20,8 +20,13 @@
         public string ForMethodDeclarations(TypeReference type) => 
             $"{this.BaseFileName(type)}MethodDeclarations.h";
 
-        public string ForModule(ModuleDefinition module) => 
-            Path.GetFileNameWithoutExtension(module.FullyQualifiedName);
+        public string ForModule(ModuleDefinition module)
+        {
+            if (module.FileName == null)
+            {
+            }
+            return Path.GetFileNameWithoutExtension(module.Name);
+        }
 
         public string ForTypeDefinition(TypeReference type) => 
             $"{this.BaseFileName(type)}.h";

@@ -213,7 +213,7 @@
                     Help.ShowHelpForObject(this.m_SerializedTransition.targetObject);
                 }
                 Rect position = new Rect(r.width - 18f, r.y + 5f, 14f, 14f);
-                if (EditorGUI.ButtonMouseDown(position, EditorGUI.GUIContents.titleSettingsIcon, FocusType.Passive, EditorStyles.inspectorTitlebarText))
+                if (EditorGUI.DropdownButton(position, EditorGUI.GUIContents.titleSettingsIcon, FocusType.Passive, EditorStyles.inspectorTitlebarText))
                 {
                     EditorUtility.DisplayObjectContextMenu(position, this.m_SerializedTransition.targetObject, 0);
                 }
@@ -298,7 +298,7 @@
         {
             if (this.m_Controller != null)
             {
-                this.m_Controller.OnAnimatorControllerDirty = (Action) Delegate.Remove(this.m_Controller.OnAnimatorControllerDirty, new Action(this, (IntPtr) this.ControllerDirty));
+                this.m_Controller.OnAnimatorControllerDirty = (Action) Delegate.Remove(this.m_Controller.OnAnimatorControllerDirty, new Action(this.ControllerDirty));
             }
         }
 
@@ -319,7 +319,7 @@
             if (this.m_Controller != null)
             {
                 this.m_LayerIndex = AnimatorControllerTool.tool.selectedLayerIndex;
-                this.m_Controller.OnAnimatorControllerDirty = (Action) Delegate.Combine(this.m_Controller.OnAnimatorControllerDirty, new Action(this, (IntPtr) this.ControllerDirty));
+                this.m_Controller.OnAnimatorControllerDirty = (Action) Delegate.Combine(this.m_Controller.OnAnimatorControllerDirty, new Action(this.ControllerDirty));
             }
             if (m_intModes == null)
             {

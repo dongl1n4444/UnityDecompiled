@@ -17,18 +17,20 @@
     internal class ObjectListArea
     {
         [CompilerGenerated]
-        private static Predicate<AssetStoreGroup> <>f__am$cache0;
+        private static Func<KeyValuePair<string, int>, string> <>f__am$cache0;
+        [CompilerGenerated]
+        private static Predicate<AssetStoreGroup> <>f__am$cache1;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <allowBuiltinResources>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <allowDeselection>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <allowDragging>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <allowFindNextShortcut>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private bool <allowFocusRendering>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private bool <allowFocusRendering>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <allowMultiSelect>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <allowRenaming>k__BackingField;
@@ -130,7 +132,7 @@
             }
             else
             {
-                Debug.LogError("Failed to insert new asset into list");
+                UnityEngine.Debug.LogError("Failed to insert new asset into list");
             }
             this.Repaint();
         }
@@ -168,7 +170,7 @@
                         Vector2 vector = this.m_Ping.m_PingStyle.CalcSize(content);
                         this.m_Ping.m_ContentRect.width = (vector.x + num2) + 16f;
                         this.m_Ping.m_ContentRect.height = vector.y;
-                        this.m_LeftPaddingForPinging = !storey.hierarchyProperty.isMainRepresentation ? 0x1c : 0x10;
+                        this.m_LeftPaddingForPinging = !storey.hierarchyProperty.isMainRepresentation ? 0x1c : 13;
                         storey2.res = this.m_LocalAssets.LookupByInstanceID(instanceID);
                         this.m_Ping.m_ContentDraw = new Action<Rect>(storey2.<>m__0);
                     }
@@ -497,6 +499,15 @@
             return str;
         }
 
+        public string[] GetCurrentVisibleNames()
+        {
+            if (<>f__am$cache0 == null)
+            {
+                <>f__am$cache0 = x => x.Key;
+            }
+            return Enumerable.Select<KeyValuePair<string, int>, string>(this.m_LocalAssets.GetVisibleNameAndInstanceIDs(), <>f__am$cache0).ToArray<string>();
+        }
+
         protected Texture GetIconByInstanceID(int instanceID)
         {
             Texture cachedIcon = null;
@@ -594,7 +605,7 @@
             {
                 if (this.m_KeyboardInputCallback != null)
                 {
-                    this.m_KeyboardInputCallback.Invoke();
+                    this.m_KeyboardInputCallback();
                 }
                 if (Event.current.type == EventType.KeyDown)
                 {
@@ -693,11 +704,11 @@
             this.SetupData(false);
             if (!this.IsObjectSelector() && !this.m_QueryInProgress)
             {
-                if (<>f__am$cache0 == null)
+                if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache0 = g => g.NeedItems;
+                    <>f__am$cache1 = g => g.NeedItems;
                 }
-                if (this.m_StoreAssets.Exists(<>f__am$cache0) || this.m_RequeryAssetStore)
+                if (this.m_StoreAssets.Exists(<>f__am$cache1) || this.m_RequeryAssetStore)
                 {
                     this.QueryAssetStore();
                 }
@@ -1006,7 +1017,7 @@
                     }
                     if (this.m_GotKeyboardFocus != null)
                     {
-                        this.m_GotKeyboardFocus.Invoke();
+                        this.m_GotKeyboardFocus();
                     }
                 }
             }
@@ -1178,7 +1189,7 @@
         {
             if (this.m_RepaintWantedCallback != null)
             {
-                this.m_RepaintWantedCallback.Invoke();
+                this.m_RepaintWantedCallback();
             }
         }
 
@@ -1530,7 +1541,7 @@
                 {
                     if (ObjectListArea.s_Debug)
                     {
-                        Debug.LogError("Error performing Asset Store search: " + results.error);
+                        UnityEngine.Debug.LogError("Error performing Asset Store search: " + results.error);
                     }
                     else
                     {
@@ -1542,7 +1553,7 @@
                     this.$this.Repaint();
                     if (this.$this.assetStoreSearchEnded != null)
                     {
-                        this.$this.assetStoreSearchEnded.Invoke();
+                        this.$this.assetStoreSearchEnded();
                     }
                 }
                 else
@@ -1600,7 +1611,7 @@
                     this.$this.Repaint();
                     if (this.$this.assetStoreSearchEnded != null)
                     {
-                        this.$this.assetStoreSearchEnded.Invoke();
+                        this.$this.assetStoreSearchEnded();
                     }
                 }
             }
@@ -1626,7 +1637,7 @@
 
         private class AssetStoreGroup : ObjectListArea.Group
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private bool <NeedsRepaint>k__BackingField;
             public const int kDefaultRowsShown = 3;
             public const int kDefaultRowsShownListMode = 10;
@@ -2047,8 +2058,8 @@
                 if (icon != null)
                 {
                     int width = icon.width;
-                    FilterMode filterMode = icon.filterMode;
-                    icon.filterMode = FilterMode.Point;
+                    UnityEngine.FilterMode filterMode = icon.filterMode;
+                    icon.filterMode = UnityEngine.FilterMode.Point;
                     GUI.DrawTexture(new Rect(position.x + ((((int) position.width) - width) / 2), position.y + ((((int) position.height) - width) / 2), (float) width, (float) width), icon, ScaleMode.ScaleToFit);
                     icon.filterMode = filterMode;
                 }
@@ -2098,7 +2109,7 @@
                 return list.ToArray();
             }
 
-            private Object[] GetSelectedReferences() => 
+            private UnityEngine.Object[] GetSelectedReferences() => 
                 Selection.objects;
 
             protected virtual void HandleUnusedDragEvents(float yOffset)
@@ -2148,7 +2159,7 @@
         private class LocalGroup : ObjectListArea.Group
         {
             private const float k_IconWidth = 16f;
-            public const int k_ListModeLeftPadding = 0x10;
+            public const int k_ListModeLeftPadding = 13;
             public const int k_ListModeLeftPaddingForSubAssets = 0x1c;
             public const int k_ListModeVersionControlOverlayPadding = 14;
             private const float k_SpaceBetweenIconAndText = 2f;
@@ -2297,7 +2308,7 @@
                     float num = 0f;
                     if (base.m_Owner.drawLocalAssetHeader != null)
                     {
-                        num = base.m_Owner.drawLocalAssetHeader.Invoke(rect) + 10f;
+                        num = base.m_Owner.drawLocalAssetHeader(rect) + 10f;
                     }
                     rect.x += num;
                     rect.width -= num;
@@ -2325,7 +2336,7 @@
                 {
                     Rect drawRect = rect;
                     drawRect.width = num + 16f;
-                    if (CollabAccess.Instance.IsServiceEnabled() && Collab.instance.GetCollabInfo().whitelisted)
+                    if (CollabAccess.Instance.IsServiceEnabled())
                     {
                         CollabProjectHook.OnProjectWindowItemIconOverlay(filterItem.guid, drawRect);
                     }
@@ -2632,7 +2643,7 @@
                         }
                         if ((filterItem != null) && filterItem.isMainRepresentation)
                         {
-                            if (CollabAccess.Instance.IsServiceEnabled() && Collab.instance.GetCollabInfo().whitelisted)
+                            if (CollabAccess.Instance.IsServiceEnabled())
                             {
                                 CollabProjectHook.OnProjectWindowItemIconOverlay(filterItem.guid, position);
                             }
@@ -3089,26 +3100,26 @@
                 return index;
             }
 
-            private void InitBuiltinAssetType(Type type)
+            private void InitBuiltinAssetType(System.Type type)
             {
                 if (type == null)
                 {
-                    Debug.LogWarning("ObjectSelector::InitBuiltinAssetType: type is null!");
+                    UnityEngine.Debug.LogWarning("ObjectSelector::InitBuiltinAssetType: type is null!");
                 }
                 else
                 {
-                    string classString = type.ToString().Substring(type.Namespace.ToString().Length + 1);
-                    int classID = BaseObjectTools.StringToClassID(classString);
-                    if (classID < 0)
+                    string name = type.ToString().Substring(type.Namespace.ToString().Length + 1);
+                    UnityType type2 = UnityType.FindTypeByName(name);
+                    if (type2 == null)
                     {
-                        Debug.LogWarning("ObjectSelector::InitBuiltinAssetType: class '" + classString + "' not found");
+                        UnityEngine.Debug.LogWarning("ObjectSelector::InitBuiltinAssetType: class '" + name + "' not found");
                     }
                     else
                     {
-                        BuiltinResource[] builtinResourceList = EditorGUIUtility.GetBuiltinResourceList(classID);
+                        BuiltinResource[] builtinResourceList = EditorGUIUtility.GetBuiltinResourceList(type2.persistentTypeID);
                         if (builtinResourceList != null)
                         {
-                            this.m_BuiltinResourceMap.Add(classString, builtinResourceList);
+                            this.m_BuiltinResourceMap.Add(name, builtinResourceList);
                         }
                     }
                 }
@@ -3257,7 +3268,7 @@
                     }
                     message = message + "\n";
                 }
-                Debug.Log(message);
+                UnityEngine.Debug.Log(message);
             }
 
             private void RefreshBuiltinResourceList(SearchFilter searchFilter)
@@ -3278,22 +3289,25 @@
                         List<int> list2 = new List<int>();
                         foreach (string str in searchFilter.classNames)
                         {
-                            int item = BaseObjectTools.StringToClassIDCaseInsensitive(str);
-                            if (item >= 0)
+                            UnityType type = UnityType.FindTypeByNameCaseInsensitive(str);
+                            if (type != null)
                             {
-                                list2.Add(item);
+                                list2.Add(type.persistentTypeID);
                             }
                         }
                         if (list2.Count > 0)
                         {
                             foreach (KeyValuePair<string, BuiltinResource[]> pair in this.m_BuiltinResourceMap)
                             {
-                                int classID = BaseObjectTools.StringToClassID(pair.Key);
-                                foreach (int num4 in list2)
+                                UnityType type2 = UnityType.FindTypeByName(pair.Key);
+                                if (type2 != null)
                                 {
-                                    if (BaseObjectTools.IsDerivedFromClassID(classID, num4))
+                                    foreach (int num2 in list2)
                                     {
-                                        list.AddRange(pair.Value);
+                                        if (type2.IsDerivedFrom(UnityType.FindTypeByPersistentTypeID(num2)))
+                                        {
+                                            list.AddRange(pair.Value);
+                                        }
                                     }
                                 }
                             }

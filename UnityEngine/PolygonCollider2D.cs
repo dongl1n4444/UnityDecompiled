@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Collider for 2D physics representing an arbitrary polygon defined by its vertices.</para>
@@ -36,35 +37,43 @@
         }
 
         /// <summary>
-        /// <para>Get a path from the polygon by its index.</para>
+        /// <para>Gets a path from the Collider by its index.</para>
         /// </summary>
         /// <param name="index">The index of the path to retrieve.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        /// <returns>
+        /// <para>An ordered array of the vertices or points in the selected path.</para>
+        /// </returns>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern Vector2[] GetPath(int index);
         /// <summary>
         /// <para>Return the total number of points in the polygon in all paths.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern int GetTotalPointCount();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_CreatePrimitive(PolygonCollider2D self, int sides, ref Vector2 scale, ref Vector2 offset);
         /// <summary>
         /// <para>Define a path by its constituent points.</para>
         /// </summary>
         /// <param name="index">Index of the path to set.</param>
         /// <param name="points">Points that define the path.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetPath(int index, Vector2[] points);
+
+        /// <summary>
+        /// <para>Determines whether the PolygonCollider2D's shape is automatically updated based on a SpriteRenderer's tiling properties.</para>
+        /// </summary>
+        public bool autoTiling { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The number of paths in the polygon.</para>
         /// </summary>
-        public int pathCount { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int pathCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Corner points that define the collider's shape in local space.</para>
         /// </summary>
-        public Vector2[] points { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public Vector2[] points { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
     }
 }
 

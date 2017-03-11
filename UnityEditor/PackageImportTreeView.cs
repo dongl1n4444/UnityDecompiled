@@ -56,7 +56,7 @@
         {
             if ((folder.item != null) && !folder.item.isFolder)
             {
-                Debug.LogError("Should be a folder item!");
+                UnityEngine.Debug.LogError("Should be a folder item!");
             }
             if (!folder.hasChildren)
             {
@@ -343,7 +343,7 @@
 
         private class PackageImportTreeViewGUI : TreeViewGUI
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private int <showPreviewForID>k__BackingField;
             public Action<PackageImportTreeView.PackageImportTreeViewItem> itemWasToggled;
             protected float k_FoldoutWidth;
@@ -363,7 +363,7 @@
             private void DoIconAndText(TreeViewItem item, Rect contentRect, bool selected, bool focused)
             {
                 EditorGUIUtility.SetIconSize(new Vector2(base.k_IconWidth, base.k_IconWidth));
-                GUIStyle lineStyle = TreeViewGUI.s_Styles.lineStyle;
+                GUIStyle lineStyle = TreeViewGUI.Styles.lineStyle;
                 lineStyle.padding.left = 0;
                 if (Event.current.type == EventType.Repaint)
                 {
@@ -440,7 +440,7 @@
                 bool flag = Event.current.type == EventType.Repaint;
                 if (selected && flag)
                 {
-                    TreeViewGUI.s_Styles.selectionStyle.Draw(rowRect, false, false, true, focused);
+                    TreeViewGUI.Styles.selectionStyle.Draw(rowRect, false, false, true, focused);
                 }
                 bool flag2 = item != null;
                 bool flag3 = (item == null) || item.isFolder;
@@ -516,8 +516,8 @@
             internal static class Constants
             {
                 public static GUIContent badgeChange = EditorGUIUtility.IconContent("playLoopOff", "|This file is new or has changed.");
-                public static GUIContent badgeDelete = EditorGUIUtility.IconContent("AS Badge Delete", "|These files will be deleted!");
-                public static GUIContent badgeNew = EditorGUIUtility.IconContent("AS Badge New", "|This is a new Asset");
+                public static GUIContent badgeDelete = EditorGUIUtility.IconContent("PackageBadgeDelete", "|These files will be deleted!");
+                public static GUIContent badgeNew = EditorGUIUtility.IconContent("PackageBadgeNew", "|This is a new Asset");
                 public static GUIContent badgeWarn = EditorGUIUtility.IconContent("console.warnicon", "|Warning: File exists in project, but with different GUID. Will override existing asset which may be undesired.");
                 public static Texture2D folderIcon = EditorGUIUtility.FindTexture(EditorResourcesUtility.folderIconName);
                 public static GUIStyle paddinglessStyle = new GUIStyle();

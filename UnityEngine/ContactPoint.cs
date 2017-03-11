@@ -41,7 +41,7 @@
         /// </summary>
         public float separation =>
             this.m_Separation;
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Collider ColliderFromInstanceId(int instanceID);
     }
 }

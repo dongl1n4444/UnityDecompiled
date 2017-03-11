@@ -5,6 +5,7 @@
     using System.Runtime.CompilerServices;
     using UnityEditorInternal;
     using UnityEngine;
+    using UnityEngine.Profiling;
 
     [EditorWindowTitle(title="Animation", useTypeNameAsIconName=true)]
     internal class AnimationWindow : EditorWindow
@@ -13,38 +14,71 @@
         private AnimEditor m_AnimEditor;
         private GUIStyle m_LockButtonStyle;
         [SerializeField]
-        private AnimationWindowPolicy m_Policy;
+        private bool m_Locked = false;
         private static List<AnimationWindow> s_AnimationWindows = new List<AnimationWindow>();
 
-        public void EditAnimationClip(AnimationClip animationClip, Object sourceObject)
+        public bool EditAnimationClip(AnimationClip animationClip)
+        {
+            if (this.state.linkedWithSequencer)
+            {
+                return false;
+            }
+            return this.EditAnimationClipInternal(animationClip, null, null);
+        }
+
+        private bool EditAnimationClipInternal(AnimationClip animationClip, UnityEngine.Object sourceObject, IAnimationWindowControl controlInterface)
         {
             AnimationClipSelectionItem selectedItem = AnimationClipSelectionItem.Create(animationClip, sourceObject);
             if (this.ShouldUpdateSelection(selectedItem))
             {
-                this.m_AnimEditor.state.recording = false;
                 this.m_AnimEditor.selectedItem = selectedItem;
+                this.m_AnimEditor.overrideControlInterface = controlInterface;
             }
             else
             {
-                Object.DestroyImmediate(selectedItem);
+                UnityEngine.Object.DestroyImmediate(selectedItem);
+                return false;
             }
+            return true;
         }
 
-        public void EditGameObject(GameObject gameObject)
+        public bool EditGameObject(GameObject gameObject)
         {
-            if (!EditorUtility.IsPersistent(gameObject) && ((gameObject.hideFlags & HideFlags.NotEditable) == HideFlags.None))
+            if (this.state.linkedWithSequencer)
             {
-                GameObjectSelectionItem selectedItem = GameObjectSelectionItem.Create(gameObject);
-                if (this.ShouldUpdateSelection(selectedItem))
-                {
-                    this.m_AnimEditor.state.recording = false;
-                    this.m_AnimEditor.selectedItem = selectedItem;
-                }
-                else
-                {
-                    Object.DestroyImmediate(selectedItem);
-                }
+                return false;
             }
+            return this.EditGameObjectInternal(gameObject, null);
+        }
+
+        private bool EditGameObjectInternal(GameObject gameObject, IAnimationWindowControl controlInterface)
+        {
+            if (!EditorUtility.IsPersistent(gameObject))
+            {
+                if ((gameObject.hideFlags & HideFlags.NotEditable) != HideFlags.None)
+                {
+                    return false;
+                }
+                GameObjectSelectionItem selectedItem = GameObjectSelectionItem.Create(gameObject);
+                if (this.ShouldUpdateGameObjectSelection(selectedItem))
+                {
+                    this.m_AnimEditor.selectedItem = selectedItem;
+                    this.m_AnimEditor.overrideControlInterface = controlInterface;
+                    return true;
+                }
+                UnityEngine.Object.DestroyImmediate(selectedItem);
+            }
+            return false;
+        }
+
+        public bool EditSequencerClip(AnimationClip animationClip, UnityEngine.Object sourceObject, IAnimationWindowControl controlInterface)
+        {
+            if (this.EditAnimationClipInternal(animationClip, sourceObject, controlInterface))
+            {
+                this.state.linkedWithSequencer = true;
+                return true;
+            }
+            return false;
         }
 
         public void ForceRefresh()
@@ -65,13 +99,14 @@
 
         public void OnDestroy()
         {
-            Object.DestroyImmediate(this.m_AnimEditor);
+            UnityEngine.Object.DestroyImmediate(this.m_AnimEditor);
         }
 
         public void OnDisable()
         {
             s_AnimationWindows.Remove(this);
             this.m_AnimEditor.OnDisable();
+            Undo.undoRedoPerformed = (Undo.UndoRedoCallback) Delegate.Remove(Undo.undoRedoPerformed, new Undo.UndoRedoCallback(this.UndoRedoPerformed));
         }
 
         public void OnEnable()
@@ -84,6 +119,7 @@
             s_AnimationWindows.Add(this);
             base.titleContent = base.GetLocalizedTitleContent();
             this.OnSelectionChange();
+            Undo.undoRedoPerformed = (Undo.UndoRedoCallback) Delegate.Combine(Undo.undoRedoPerformed, new Undo.UndoRedoCallback(this.UndoRedoPerformed));
         }
 
         public void OnFocus()
@@ -93,8 +129,9 @@
 
         public void OnGUI()
         {
-            this.SynchronizePolicy();
+            Profiler.BeginSample("AnimationWindow.OnGUI");
             this.m_AnimEditor.OnAnimEditorGUI(this, base.position);
+            Profiler.EndSample();
         }
 
         public void OnLostFocus()
@@ -119,30 +156,16 @@
                     AnimationClip activeObject = Selection.activeObject as AnimationClip;
                     if (activeObject != null)
                     {
-                        this.EditAnimationClip(activeObject, null);
+                        this.EditAnimationClip(activeObject);
                     }
                 }
             }
         }
 
-        private bool ShouldUpdateSelection(AnimationClipSelectionItem selectedItem)
+        private bool ShouldUpdateGameObjectSelection(GameObjectSelectionItem selectedItem)
         {
-            if (this.m_AnimEditor.locked)
-            {
-                return false;
-            }
-            AnimationWindowSelectionItem item = this.m_AnimEditor.selectedItem;
-            if (item != null)
-            {
-                return (selectedItem.GetRefreshHash() != item.GetRefreshHash());
-            }
-            return true;
-        }
-
-        private bool ShouldUpdateSelection(GameObjectSelectionItem selectedItem)
-        {
-            <ShouldUpdateSelection>c__AnonStorey0 storey = new <ShouldUpdateSelection>c__AnonStorey0();
-            if (this.m_AnimEditor.locked)
+            <ShouldUpdateGameObjectSelection>c__AnonStorey0 storey = new <ShouldUpdateGameObjectSelection>c__AnonStorey0();
+            if (this.m_Locked)
             {
                 return false;
             }
@@ -157,16 +180,34 @@
             return true;
         }
 
+        private bool ShouldUpdateSelection(AnimationWindowSelectionItem selectedItem)
+        {
+            if (this.m_Locked)
+            {
+                return false;
+            }
+            AnimationWindowSelectionItem item = this.m_AnimEditor.selectedItem;
+            if (item != null)
+            {
+                return (selectedItem.GetRefreshHash() != item.GetRefreshHash());
+            }
+            return true;
+        }
+
         protected virtual void ShowButton(Rect r)
         {
             if (this.m_LockButtonStyle == null)
             {
                 this.m_LockButtonStyle = "IN LockButton";
             }
+            if (this.m_AnimEditor.stateDisabled)
+            {
+                this.m_Locked = false;
+            }
             EditorGUI.BeginChangeCheck();
             using (new EditorGUI.DisabledScope(this.m_AnimEditor.stateDisabled))
             {
-                this.m_AnimEditor.locked = GUI.Toggle(r, this.m_AnimEditor.locked, GUIContent.none, this.m_LockButtonStyle);
+                this.m_Locked = GUI.Toggle(r, this.m_Locked, GUIContent.none, this.m_LockButtonStyle);
             }
             if (EditorGUI.EndChangeCheck())
             {
@@ -174,31 +215,18 @@
             }
         }
 
-        private void SynchronizePolicy()
+        private void UndoRedoPerformed()
         {
-            if (this.m_AnimEditor != null)
+            base.Repaint();
+        }
+
+        public void UnlinkSequencer()
+        {
+            if (this.state.linkedWithSequencer)
             {
-                if (this.m_Policy == null)
-                {
-                    this.m_Policy = new AnimationWindowPolicy();
-                }
-                if (this.m_Policy.unitialized)
-                {
-                    this.m_Policy.SynchronizeFrameRate = delegate (ref float frameRate) {
-                        AnimationWindowSelectionItem selectedItem = this.m_AnimEditor.selectedItem;
-                        if ((selectedItem != null) && (selectedItem.animationClip != null))
-                        {
-                            frameRate = selectedItem.animationClip.frameRate;
-                        }
-                        else
-                        {
-                            frameRate = 60f;
-                        }
-                        return true;
-                    };
-                    this.m_Policy.unitialized = false;
-                }
-                this.m_AnimEditor.policy = this.m_Policy;
+                this.state.linkedWithSequencer = false;
+                this.EditAnimationClip(null);
+                this.OnSelectionChange();
             }
         }
 
@@ -220,7 +248,7 @@
         }
 
         [CompilerGenerated]
-        private sealed class <ShouldUpdateSelection>c__AnonStorey0
+        private sealed class <ShouldUpdateGameObjectSelection>c__AnonStorey0
         {
             internal AnimationWindowSelectionItem currentlySelectedItem;
 

@@ -5,6 +5,8 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine;
+    using UnityEngine.Internal;
+    using UnityEngine.Rendering;
     using UnityEngine.Scripting;
 
     /// <summary>
@@ -15,6 +17,7 @@
         internal static Transform[] ignoreRaySnapObjects = null;
         private const float kHandleSize = 80f;
         internal const float kPickDistance = 5f;
+        internal static PickClosestGameObjectFunc pickClosestGameObjectDelegate;
         private static Vector3[] points = new Vector3[] { Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero };
         internal static float s_CustomPickDistance = 5f;
         private static Material s_HandleDottedWireMaterial;
@@ -59,15 +62,33 @@
             AddControl(controlId, 5f);
         }
 
+        [ExcludeFromDocs]
         internal static void ApplyDottedWireMaterial()
         {
+            CompareFunction always = CompareFunction.Always;
+            ApplyDottedWireMaterial(always);
+        }
+
+        internal static void ApplyDottedWireMaterial([DefaultValue("UnityEngine.Rendering.CompareFunction.Always")] CompareFunction zTest)
+        {
+            Material handleDottedWireMaterial = HandleUtility.handleDottedWireMaterial;
+            handleDottedWireMaterial.SetInt("_HandleZTest", (int) zTest);
             handleDottedWireMaterial.SetPass(0);
             int textureIndex = (Camera.current == null) ? s_HandleDottedWireTextureIndex2D : s_HandleDottedWireTextureIndex;
             Internal_SetHandleWireTextureIndex(textureIndex);
         }
 
+        [ExcludeFromDocs]
         internal static void ApplyWireMaterial()
         {
+            CompareFunction always = CompareFunction.Always;
+            ApplyWireMaterial(always);
+        }
+
+        internal static void ApplyWireMaterial([DefaultValue("UnityEngine.Rendering.CompareFunction.Always")] CompareFunction zTest)
+        {
+            Material handleWireMaterial = HandleUtility.handleWireMaterial;
+            handleWireMaterial.SetInt("_HandleZTest", (int) zTest);
             handleWireMaterial.SetPass(0);
             int textureIndex = (Camera.current == null) ? s_HandleWireTextureIndex2D : s_HandleWireTextureIndex;
             Internal_SetHandleWireTextureIndex(textureIndex);
@@ -84,6 +105,7 @@
             }
             Handles.lighting = true;
             Handles.color = Color.white;
+            Handles.zTest = CompareFunction.Always;
             s_CustomPickDistance = 5f;
             Handles.Internal_SetCurrentCamera(null);
             EditorGUI.s_DelayedTextEditor.BeginGUI();
@@ -129,8 +151,6 @@
         internal static float CalcRayPlaceOffset(Transform[] objects, Vector3 normal) => 
             INTERNAL_CALL_CalcRayPlaceOffset(objects, ref normal);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool CameraNeedsToRenderIntoRT(Camera camera);
         /// <summary>
         /// <para>Get the point on an arc (in 3D space) which is closest to the current mouse position.</para>
         /// </summary>
@@ -142,7 +162,7 @@
         public static Vector3 ClosestPointToArc(Vector3 center, Vector3 normal, Vector3 from, float angle, float radius)
         {
             Vector3[] dest = new Vector3[60];
-            Handles.SetDiscSectionPoints(dest, 60, center, normal, from, angle, radius);
+            Handles.SetDiscSectionPoints(dest, center, normal, from, angle, radius);
             return ClosestPointToPolyLine(dest);
         }
 
@@ -267,7 +287,7 @@
         public static float DistanceToArc(Vector3 center, Vector3 normal, Vector3 from, float angle, float radius)
         {
             Vector3[] dest = new Vector3[60];
-            Handles.SetDiscSectionPoints(dest, 60, center, normal, from, angle, radius);
+            Handles.SetDiscSectionPoints(dest, center, normal, from, angle, radius);
             return DistanceToPolyLine(dest);
         }
 
@@ -436,13 +456,7 @@
         [RequiredByNativeCode]
         private static void EndHandles()
         {
-            EventType type = Event.current.type;
-            if (type != EventType.Layout)
-            {
-                GUIUtility.s_HasKeyboardFocus = false;
-                GUIUtility.s_EditorScreenPointOffset = Vector2.zero;
-            }
-            EditorGUI.s_DelayedTextEditor.EndGUI(type);
+            EditorGUI.s_DelayedTextEditor.EndGUI(Event.current.type);
         }
 
         internal static bool FindNearestVertex(Vector2 guiPoint, Transform[] objectsToSearch, out Vector3 vertex)
@@ -512,6 +526,17 @@
         }
 
         /// <summary>
+        /// <para>Converts a 2D GUI position to screen pixel coordinates.</para>
+        /// </summary>
+        /// <param name="guiPoint"></param>
+        public static Vector2 GUIPointToScreenPixelCoordinate(Vector2 guiPoint)
+        {
+            Vector2 vector2 = EditorGUIUtility.PointsToPixels(GUIClip.Unclip(guiPoint));
+            vector2.y = Screen.height - vector2.y;
+            return vector2;
+        }
+
+        /// <summary>
         /// <para>Convert 2D GUI position to a world space ray.</para>
         /// </summary>
         /// <param name="position"></param>
@@ -522,9 +547,8 @@
                 Debug.LogError("Unable to convert GUI point to world ray if a camera has not been set up!");
                 return new Ray(Vector3.zero, Vector3.forward);
             }
-            Vector2 vector2 = EditorGUIUtility.PointsToPixels(GUIClip.Unclip(position));
-            vector2.y = Screen.height - vector2.y;
-            return Camera.current.ScreenPointToRay((Vector3) new Vector2(vector2.x, vector2.y));
+            Vector2 vector = GUIPointToScreenPixelCoordinate(position);
+            return Camera.current.ScreenPointToRay((Vector3) vector);
         }
 
         private static void InitHandleMaterials()
@@ -542,17 +566,17 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern float INTERNAL_CALL_CalcRayPlaceOffset(Transform[] objects, ref Vector3 normal);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern float INTERNAL_CALL_DistancePointBezier(ref Vector3 point, ref Vector3 startPosition, ref Vector3 endPosition, ref Vector3 startTangent, ref Vector3 endTangent);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool INTERNAL_CALL_Internal_FindNearestVertex(Camera cam, ref Vector2 screenPoint, Transform[] objectsToSearch, Transform[] ignoreObjects, out Vector3 vertex);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern GameObject INTERNAL_CALL_Internal_PickClosestGO(Camera cam, int layers, ref Vector2 position, GameObject[] ignore, GameObject[] filter, out int materialIndex);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern GameObject[] INTERNAL_CALL_Internal_PickRectObjects(Camera cam, ref Rect rect, bool selectPrefabRoots);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool INTERNAL_CALL_IntersectRayMesh(ref Ray ray, Mesh mesh, ref Matrix4x4 matrix, out RaycastHit hit);
         private static bool Internal_FindNearestVertex(Camera cam, Vector2 screenPoint, Transform[] objectsToSearch, Transform[] ignoreObjects, out Vector3 vertex) => 
             INTERNAL_CALL_Internal_FindNearestVertex(cam, ref screenPoint, objectsToSearch, ignoreObjects, out vertex);
@@ -563,15 +587,15 @@
         internal static GameObject[] Internal_PickRectObjects(Camera cam, Rect rect, bool selectPrefabRoots) => 
             INTERNAL_CALL_Internal_PickRectObjects(cam, ref rect, selectPrefabRoots);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_Repaint();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_SetHandleWireTextureIndex(int textureIndex);
         internal static bool IntersectRayMesh(Ray ray, Mesh mesh, Matrix4x4 matrix, out RaycastHit hit) => 
             INTERNAL_CALL_IntersectRayMesh(ref ray, mesh, ref matrix, out hit);
 
         public static GameObject PickGameObject(Vector2 position, out int materialIndex) => 
-            PickGameObject(position, null, out materialIndex);
+            PickGameObjectDelegated(position, null, null, out materialIndex);
 
         /// <summary>
         /// <para>Pick game object closest to specified position.</para>
@@ -583,27 +607,17 @@
             PickGameObject(position, selectPrefabRoot, null);
 
         public static GameObject PickGameObject(Vector2 position, GameObject[] ignore, out int materialIndex) => 
-            PickGameObject(position, ignore, null, out materialIndex);
+            PickGameObjectDelegated(position, ignore, null, out materialIndex);
 
         public static GameObject PickGameObject(Vector2 position, bool selectPrefabRoot, GameObject[] ignore) => 
             PickGameObject(position, selectPrefabRoot, ignore, null);
-
-        internal static GameObject PickGameObject(Vector2 position, GameObject[] ignore, GameObject[] filter, out int materialIndex)
-        {
-            Camera current = Camera.current;
-            int cullingMask = current.cullingMask;
-            position = GUIClip.Unclip(position);
-            position = EditorGUIUtility.PointsToPixels(position);
-            position.y = (Screen.height - position.y) - current.pixelRect.yMin;
-            return Internal_PickClosestGO(current, cullingMask, position, ignore, filter, out materialIndex);
-        }
 
         internal static GameObject PickGameObject(Vector2 position, bool selectPrefabRoot, GameObject[] ignore, GameObject[] filter)
         {
             GameObject obj6;
             int num;
             GameObject obj3;
-            GameObject go = PickGameObject(position, ignore, filter, out num);
+            GameObject go = PickGameObjectDelegated(position, ignore, filter, out num);
             if ((go == null) || !selectPrefabRoot)
             {
                 return go;
@@ -628,6 +642,26 @@
                 return go;
             }
             return obj3;
+        }
+
+        internal static GameObject PickGameObjectDelegated(Vector2 position, GameObject[] ignore, GameObject[] filter, out int materialIndex)
+        {
+            Camera current = Camera.current;
+            int cullingMask = current.cullingMask;
+            position = GUIClip.Unclip(position);
+            position = EditorGUIUtility.PointsToPixels(position);
+            position.y = (Screen.height - position.y) - current.pixelRect.yMin;
+            materialIndex = -1;
+            GameObject obj2 = null;
+            if (pickClosestGameObjectDelegate != null)
+            {
+                obj2 = pickClosestGameObjectDelegate(current, cullingMask, position, ignore, filter, out materialIndex);
+            }
+            if (obj2 == null)
+            {
+                obj2 = Internal_PickClosestGO(current, cullingMask, position, ignore, filter, out materialIndex);
+            }
+            return obj2;
         }
 
         /// <summary>
@@ -949,6 +983,8 @@
                 return ((introduced7 * vector.magnitude) * acceleration);
             }
         }
+
+        internal delegate GameObject PickClosestGameObjectFunc(Camera cam, int layers, Vector2 position, GameObject[] ignore, GameObject[] filter, out int materialIndex);
 
         private sealed class SavedCamera
         {

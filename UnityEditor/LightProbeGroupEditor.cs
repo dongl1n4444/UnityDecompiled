@@ -14,7 +14,7 @@
     {
         [CompilerGenerated]
         private static Func<int, int> <>f__am$cache0;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <drawTetrahedra>k__BackingField;
         private static readonly Color kCloudColor = new Color(0.7843137f, 0.7843137f, 0.07843138f, 0.85f);
         private static readonly Color kSelectedCloudColor = new Color(0.3f, 0.6f, 1f, 1f);
@@ -41,7 +41,7 @@
 
         public void AddProbe(Vector3 position)
         {
-            Object[] objectsToUndo = new Object[] { this.m_Group, this.m_SerializedSelectedProbes };
+            UnityEngine.Object[] objectsToUndo = new UnityEngine.Object[] { this.m_Group, this.m_SerializedSelectedProbes };
             Undo.RegisterCompleteObjectUndo(objectsToUndo, "Add Probe");
             this.m_SourcePositions.Add(position);
             this.SelectProbe(this.m_SourcePositions.Count - 1);
@@ -69,7 +69,7 @@
             IEnumerable<Vector3> enumerable = this.SelectedProbePositions();
             XmlSerializer serializer = new XmlSerializer(typeof(Vector3[]));
             StringWriter writer = new StringWriter();
-            serializer.Serialize((TextWriter) writer, Enumerable.Select<Vector3, Vector3>(enumerable, new Func<Vector3, Vector3>(this, (IntPtr) this.<CopySelectedProbes>m__1)).ToArray<Vector3>());
+            serializer.Serialize((TextWriter) writer, (from pos in enumerable select this.m_Group.transform.TransformPoint(pos)).ToArray<Vector3>());
             writer.Close();
             GUIUtility.systemCopyBuffer = writer.ToString();
         }
@@ -84,7 +84,7 @@
         {
             if ((Event.current.type == EventType.Repaint) && (SceneView.lastActiveSceneView != null))
             {
-                LightmapVisualization.DrawTetrahedra(this.m_ShouldRecalculateTetrahedra, SceneView.lastActiveSceneView.camera.transform.position);
+                LightProbeVisualization.DrawTetrahedra(this.m_ShouldRecalculateTetrahedra, SceneView.lastActiveSceneView.camera.transform.position);
                 this.m_ShouldRecalculateTetrahedra = false;
             }
         }
@@ -93,7 +93,7 @@
         {
             if (this.m_Selection.Count != 0)
             {
-                Object[] objectsToUndo = new Object[] { this.m_Group, this.m_SerializedSelectedProbes };
+                UnityEngine.Object[] objectsToUndo = new UnityEngine.Object[] { this.m_Group, this.m_SerializedSelectedProbes };
                 Undo.RegisterCompleteObjectUndo(objectsToUndo, "Duplicate Probes");
                 foreach (Vector3 vector in this.SelectedProbePositions())
                 {
@@ -259,7 +259,7 @@
                 bool flag4 = Event.current.type == EventType.MouseUp;
                 if (this.m_Editing && PointEditor.SelectPoints(this, transform, ref this.m_Selection, firstSelect))
                 {
-                    Object[] objectsToUndo = new Object[] { this.m_Group, this.m_SerializedSelectedProbes };
+                    UnityEngine.Object[] objectsToUndo = new UnityEngine.Object[] { this.m_Group, this.m_SerializedSelectedProbes };
                     Undo.RegisterCompleteObjectUndo(objectsToUndo, "Select Probes");
                 }
                 if (((Event.current.type == EventType.ValidateCommand) || (Event.current.type == EventType.ExecuteCommand)) && (Event.current.commandName == "Paste"))
@@ -284,14 +284,14 @@
                     this.HandleEditMenuHotKeyCommands();
                     if (this.m_Editing && PointEditor.MovePoints(this, transform, this.m_Selection))
                     {
-                        Object[] objArray2 = new Object[] { this.m_Group, this.m_SerializedSelectedProbes };
+                        UnityEngine.Object[] objArray2 = new UnityEngine.Object[] { this.m_Group, this.m_SerializedSelectedProbes };
                         Undo.RegisterCompleteObjectUndo(objArray2, "Move Probes");
-                        if (LightmapVisualization.dynamicUpdateLightProbes)
+                        if (LightProbeVisualization.dynamicUpdateLightProbes)
                         {
                             this.MarkTetrahedraDirty();
                         }
                     }
-                    if ((this.m_Editing && flag4) && !LightmapVisualization.dynamicUpdateLightProbes)
+                    if ((this.m_Editing && flag4) && !LightProbeVisualization.dynamicUpdateLightProbes)
                     {
                         this.MarkTetrahedraDirty();
                     }
@@ -312,7 +312,7 @@
                 {
                     return false;
                 }
-                Object[] objectsToUndo = new Object[] { this.m_Group, this.m_SerializedSelectedProbes };
+                UnityEngine.Object[] objectsToUndo = new UnityEngine.Object[] { this.m_Group, this.m_SerializedSelectedProbes };
                 Undo.RegisterCompleteObjectUndo(objectsToUndo, "Paste Probes");
                 int count = this.m_SourcePositions.Count;
                 foreach (Vector3 vector in vectorArray)
@@ -349,11 +349,11 @@
         {
             if (this.m_Selection.Count != 0)
             {
-                Object[] objectsToUndo = new Object[] { this.m_Group, this.m_SerializedSelectedProbes };
+                UnityEngine.Object[] objectsToUndo = new UnityEngine.Object[] { this.m_Group, this.m_SerializedSelectedProbes };
                 Undo.RegisterCompleteObjectUndo(objectsToUndo, "Delete Probes");
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<int, int>(null, (IntPtr) <RemoveSelectedProbes>m__2);
+                    <>f__am$cache0 = x => x;
                 }
                 IOrderedEnumerable<int> enumerable = Enumerable.OrderByDescending<int, int>(this.m_Selection, <>f__am$cache0);
                 foreach (int num2 in enumerable)
@@ -376,7 +376,7 @@
         }
 
         private IEnumerable<Vector3> SelectedProbePositions() => 
-            Enumerable.Select<int, Vector3>(this.m_Selection, new Func<int, Vector3>(this, (IntPtr) this.<SelectedProbePositions>m__0)).ToList<Vector3>();
+            (from t in this.m_Selection select this.m_SourcePositions[t]).ToList<Vector3>();
 
         private void SelectProbe(int i)
         {
@@ -401,7 +401,7 @@
 
         public static void TetrahedralizeSceneProbes(out Vector3[] positions, out int[] indices)
         {
-            LightProbeGroup[] groupArray = Object.FindObjectsOfType(typeof(LightProbeGroup)) as LightProbeGroup[];
+            LightProbeGroup[] groupArray = UnityEngine.Object.FindObjectsOfType(typeof(LightProbeGroup)) as LightProbeGroup[];
             if (groupArray == null)
             {
                 positions = new Vector3[0];

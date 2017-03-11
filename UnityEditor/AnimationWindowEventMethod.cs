@@ -7,7 +7,7 @@
     internal struct AnimationWindowEventMethod
     {
         public string name;
-        public Type parameterType;
+        public System.Type parameterType;
     }
 }
 

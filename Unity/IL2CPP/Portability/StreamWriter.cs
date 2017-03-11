@@ -10,6 +10,10 @@
         {
         }
 
+        public StreamWriter(string path, bool append) : base(path, append)
+        {
+        }
+
         public StreamWriter(string path, Encoding encoding) : base(path, false, encoding)
         {
         }

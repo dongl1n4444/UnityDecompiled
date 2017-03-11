@@ -93,7 +93,7 @@
         {
             if (obj != null)
             {
-                Type baseType = obj.GetType();
+                System.Type baseType = obj.GetType();
                 MethodInfo method = null;
                 while (baseType != null)
                 {
@@ -108,8 +108,8 @@
             return null;
         }
 
-        protected Type[] GetPaneTypes() => 
-            new Type[] { typeof(SceneView), typeof(GameView), typeof(InspectorWindow), typeof(SceneHierarchyWindow), typeof(ProjectBrowser), typeof(ProfilerWindow), typeof(AnimationWindow) };
+        protected System.Type[] GetPaneTypes() => 
+            new System.Type[] { typeof(SceneView), typeof(GameView), typeof(InspectorWindow), typeof(SceneHierarchyWindow), typeof(ProjectBrowser), typeof(ProfilerWindow), typeof(AnimationWindow) };
 
         protected void Invoke(string methodName)
         {
@@ -159,7 +159,10 @@
                     EndOffsetArea();
                     EditorGUIUtility.ResetGUIState();
                     base.DoWindowDecorationEnd();
-                    GUI.Box(onGUIPosition, GUIContent.none, style);
+                    if (Event.current.type == EventType.Repaint)
+                    {
+                        style.Draw(onGUIPosition, GUIContent.none, 0);
+                    }
                 }
             }
         }
@@ -168,7 +171,7 @@
         {
             if (this.m_ActualView != null)
             {
-                Object.DestroyImmediate(this.m_ActualView, true);
+                UnityEngine.Object.DestroyImmediate(this.m_ActualView, true);
             }
             base.OnDestroy();
         }
@@ -178,7 +181,7 @@
             this.Invoke("OnDidOpenScene");
         }
 
-        private void OnDisable()
+        public void OnDisable()
         {
             this.DeregisterSelectedPane(false);
         }
@@ -216,7 +219,7 @@
             }
             this.Invoke("OnGUI");
             EditorGUIUtility.ResetGUIState();
-            if ((this.m_ActualView.m_FadeoutTime != 0f) && (Event.current.type == EventType.Repaint))
+            if (((this.m_ActualView != null) && (this.m_ActualView.m_FadeoutTime != 0f)) && (Event.current.type == EventType.Repaint))
             {
                 this.m_ActualView.DrawNotification();
             }
@@ -291,6 +294,7 @@
                 {
                     Debug.LogError(exception.InnerException.GetType().Name + ":" + exception.InnerException.Message);
                 }
+                this.UpdateViewMargins(this.m_ActualView);
             }
         }
 
@@ -304,13 +308,28 @@
             this.Invoke("Update");
         }
 
-        protected override void SetPosition(Rect newPos)
+        protected virtual void SetActualViewPosition(Rect newPos)
         {
-            base.SetPosition(newPos);
             if (this.m_ActualView != null)
             {
                 this.m_ActualView.m_Pos = newPos;
+                this.UpdateViewMargins(this.m_ActualView);
                 this.m_ActualView.OnResized();
+            }
+        }
+
+        protected override void SetPosition(Rect newPos)
+        {
+            base.SetPosition(newPos);
+            this.SetActualViewPosition(newPos);
+        }
+
+        protected override void SetWindow(ContainerWindow win)
+        {
+            base.SetWindow(win);
+            if (this.m_ActualView != null)
+            {
+                this.UpdateViewMargins(this.m_ActualView);
             }
         }
 
@@ -318,7 +337,7 @@
         {
             GUIStyle style = "PaneOptions";
             Rect position = new Rect((base.position.width - style.fixedWidth) - 4f, Mathf.Floor((this.background.margin.top + 20) - style.fixedHeight), style.fixedWidth, style.fixedHeight);
-            if (EditorGUI.ButtonMouseDown(position, GUIContent.none, FocusType.Passive, "PaneOptions"))
+            if (EditorGUI.DropdownButton(position, GUIContent.none, FocusType.Passive, "PaneOptions"))
             {
                 this.PopupGenericMenu(this.m_ActualView, position);
             }
@@ -328,6 +347,10 @@
                 object[] parameters = new object[] { new Rect((base.position.width - style.fixedWidth) - 20f, Mathf.Floor((float) (this.background.margin.top + 4)), 16f, 16f) };
                 paneMethod.Invoke(this.m_ActualView, parameters);
             }
+        }
+
+        protected virtual void UpdateViewMargins(EditorWindow view)
+        {
         }
 
         internal EditorWindow actualView

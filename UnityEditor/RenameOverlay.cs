@@ -55,7 +55,7 @@
             this.m_ClientGUIView = GUIView.current;
             if (delay > 0f)
             {
-                this.m_DelayedCallback = new DelayedCallback(new Action(this, (IntPtr) this.BeginRenameInternalCallback), (double) delay);
+                this.m_DelayedCallback = new DelayedCallback(new Action(this.BeginRenameInternalCallback), (double) delay);
             }
             else
             {
@@ -158,6 +158,7 @@
 
         public void EndRename(bool acceptChanges)
         {
+            EditorGUIUtility.editingTextField = false;
             if (this.m_IsRenaming)
             {
                 Undo.undoRedoPerformed = (Undo.UndoRedoCallback) Delegate.Remove(Undo.undoRedoPerformed, new Undo.UndoRedoCallback(this.UndoRedoWasPerformed));

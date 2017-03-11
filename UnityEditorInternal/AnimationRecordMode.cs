@@ -10,13 +10,13 @@
 
         public AnimationRecordMode()
         {
-            AnimationMode.animationModeChangedCallback = (AnimationMode.AnimationModeChangedCallback) Delegate.Combine(AnimationMode.animationModeChangedCallback, new AnimationMode.AnimationModeChangedCallback(this.StateChangedCallback));
+            UnityEditor.AnimationMode.animationModeChangedCallback = (UnityEditor.AnimationMode.AnimationModeChangedCallback) Delegate.Combine(UnityEditor.AnimationMode.animationModeChangedCallback, new UnityEditor.AnimationMode.AnimationModeChangedCallback(this.StateChangedCallback));
         }
 
         public void Dispose()
         {
             this.enable = false;
-            AnimationMode.animationModeChangedCallback = (AnimationMode.AnimationModeChangedCallback) Delegate.Remove(AnimationMode.animationModeChangedCallback, new AnimationMode.AnimationModeChangedCallback(this.StateChangedCallback));
+            UnityEditor.AnimationMode.animationModeChangedCallback = (UnityEditor.AnimationMode.AnimationModeChangedCallback) Delegate.Remove(UnityEditor.AnimationMode.animationModeChangedCallback, new UnityEditor.AnimationMode.AnimationModeChangedCallback(this.StateChangedCallback));
         }
 
         private void StateChangedCallback(bool newValue)
@@ -27,14 +27,8 @@
             }
         }
 
-        public bool canEnable
-        {
-            get
-            {
-                bool flag = AnimationMode.InAnimationMode();
-                return (!flag || (this.m_Recording && flag));
-            }
-        }
+        public bool canEnable =>
+            (!UnityEditor.AnimationMode.InAnimationMode() || this.m_Recording);
 
         public bool enable
         {
@@ -42,7 +36,7 @@
             {
                 if (this.m_Recording)
                 {
-                    this.m_Recording = AnimationMode.InAnimationMode();
+                    this.m_Recording = UnityEditor.AnimationMode.InAnimationMode();
                 }
                 return this.m_Recording;
             }
@@ -50,10 +44,10 @@
             {
                 if (value)
                 {
-                    if (!AnimationMode.InAnimationMode())
+                    if (!UnityEditor.AnimationMode.InAnimationMode())
                     {
                         this.m_IgnoreCallback = true;
-                        AnimationMode.StartAnimationMode();
+                        UnityEditor.AnimationMode.StartAnimationMode();
                         this.m_IgnoreCallback = false;
                         this.m_Recording = true;
                     }
@@ -61,7 +55,7 @@
                 else if (this.m_Recording)
                 {
                     this.m_IgnoreCallback = true;
-                    AnimationMode.StopAnimationMode();
+                    UnityEditor.AnimationMode.StopAnimationMode();
                     this.m_IgnoreCallback = false;
                     this.m_Recording = false;
                 }

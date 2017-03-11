@@ -15,12 +15,12 @@
     {
         private AssemblyDefinition assembly_;
         private List<ClassInfo> classes_;
-        private TypeResolver typeResolver;
+        private Unity.SerializationLogic.TypeResolver typeResolver;
 
         public AssemblyTypeInfoGenerator(string assembly, string[] searchDirs)
         {
             this.classes_ = new List<ClassInfo>();
-            this.typeResolver = new TypeResolver(null);
+            this.typeResolver = new Unity.SerializationLogic.TypeResolver(null);
             ReaderParameters parameters = new ReaderParameters {
                 AssemblyResolver = AssemblyResolver.WithSearchDirs(searchDirs)
             };
@@ -30,7 +30,7 @@
         public AssemblyTypeInfoGenerator(string assembly, IAssemblyResolver resolver)
         {
             this.classes_ = new List<ClassInfo>();
-            this.typeResolver = new TypeResolver(null);
+            this.typeResolver = new Unity.SerializationLogic.TypeResolver(null);
             ReaderParameters parameters = new ReaderParameters {
                 AssemblyResolver = resolver
             };
@@ -65,7 +65,7 @@
                 typeRef = typeRef,
                 $this = this
             };
-            if (!Enumerable.Any<ClassInfo>(this.classes_, new Func<ClassInfo, bool>(storey, (IntPtr) this.<>m__0)))
+            if (!Enumerable.Any<ClassInfo>(this.classes_, new Func<ClassInfo, bool>(storey.<>m__0)))
             {
                 TypeDefinition definition;
                 try
@@ -202,7 +202,7 @@
                 $this = this
             };
             GenericInstanceType type = new GenericInstanceType(genericClass);
-            foreach (TypeReference reference in Enumerable.Select<TypeReference, TypeReference>(arguments, new Func<TypeReference, TypeReference>(storey, (IntPtr) this.<>m__0)))
+            foreach (TypeReference reference in Enumerable.Select<TypeReference, TypeReference>(arguments, new Func<TypeReference, TypeReference>(storey.<>m__0)))
             {
                 type.GenericArguments.Add(reference);
             }

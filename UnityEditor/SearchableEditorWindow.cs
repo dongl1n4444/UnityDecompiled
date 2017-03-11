@@ -82,40 +82,16 @@
             searchableWindows.Add(this);
         }
 
-        [MenuItem("Assets/Find References In Scene", false, 0x19)]
+        [UnityEditor.MenuItem("Assets/Find References In Scene", false, 0x19)]
         private static void OnSearchForReferences()
         {
-            string str;
-            int activeInstanceID = Selection.activeInstanceID;
-            string str2 = AssetDatabase.GetAssetPath(activeInstanceID).Substring(7);
-            if (str2.IndexOf(' ') != -1)
-            {
-                str2 = '"' + str2 + '"';
-            }
-            if (AssetDatabase.IsMainAsset(activeInstanceID))
-            {
-                str = "ref:" + str2;
-            }
-            else
-            {
-                object[] objArray1 = new object[] { "ref:", activeInstanceID, ":", str2 };
-                str = string.Concat(objArray1);
-            }
-            foreach (SearchableEditorWindow window in searchableWindows)
-            {
-                if (window.m_HierarchyType == HierarchyType.GameObjects)
-                {
-                    window.SetSearchFilter(str, SearchMode.All, false);
-                    window.m_HasSearchFilterFocus = true;
-                    window.Repaint();
-                }
-            }
+            SearchForReferencesToInstanceID(Selection.activeInstanceID);
         }
 
-        [MenuItem("Assets/Find References In Scene", true)]
+        [UnityEditor.MenuItem("Assets/Find References In Scene", true)]
         private static bool OnSearchForReferencesValidate()
         {
-            Object activeObject = Selection.activeObject;
+            UnityEngine.Object activeObject = Selection.activeObject;
             return (((activeObject != null) && AssetDatabase.Contains(activeObject)) && !Directory.Exists(AssetDatabase.GetAssetPath(activeObject)));
         }
 
@@ -160,6 +136,34 @@
                 this.SetSearchFilter(searchFilter, (SearchMode) searchMode, true);
                 Event.current.Use();
                 this.m_HasSearchFilterFocus = false;
+            }
+        }
+
+        internal static void SearchForReferencesToInstanceID(int instanceID)
+        {
+            string str;
+            string str2 = AssetDatabase.GetAssetPath(instanceID).Substring(7);
+            if (str2.IndexOf(' ') != -1)
+            {
+                str2 = '"' + str2 + '"';
+            }
+            if (AssetDatabase.IsMainAsset(instanceID))
+            {
+                str = "ref:" + str2;
+            }
+            else
+            {
+                object[] objArray1 = new object[] { "ref:", instanceID, ":", str2 };
+                str = string.Concat(objArray1);
+            }
+            foreach (SearchableEditorWindow window in searchableWindows)
+            {
+                if (window.m_HierarchyType == HierarchyType.GameObjects)
+                {
+                    window.SetSearchFilter(str, SearchMode.All, false);
+                    window.m_HasSearchFilterFocus = true;
+                    window.Repaint();
+                }
             }
         }
 

@@ -1058,7 +1058,7 @@
             /// </summary>
             public NetworkInstanceId netId;
             /// <summary>
-            /// <para>The playerControllerId of the player GameObject.</para>
+            /// <para>The playerControllerId of the player object.</para>
             /// </summary>
             public short playerControllerId;
             /// <summary>

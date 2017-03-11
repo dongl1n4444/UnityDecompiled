@@ -13,11 +13,11 @@
 
         public static void ReplaceOptional(this CompilerPipeline pipeline, Type optionalPipelineStepType, ICompilerStep step)
         {
-            int num = pipeline.Find(optionalPipelineStepType);
-            if (num >= 0)
+            int index = pipeline.Find(optionalPipelineStepType);
+            if (index >= 0)
             {
-                pipeline.RemoveAt(num);
-                pipeline.Insert(num - 1, step);
+                pipeline.RemoveAt(index);
+                pipeline.Insert(index - 1, step);
             }
         }
     }

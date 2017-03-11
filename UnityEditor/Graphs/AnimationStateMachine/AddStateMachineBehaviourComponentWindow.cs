@@ -471,7 +471,7 @@
                 <ClassExists>c__AnonStorey0 storey = new <ClassExists>c__AnonStorey0 {
                     className = className
                 };
-                return Enumerable.Any<Assembly>(AppDomain.CurrentDomain.GetAssemblies(), new Func<Assembly, bool>(storey, (IntPtr) this.<>m__0));
+                return Enumerable.Any<Assembly>(AppDomain.CurrentDomain.GetAssemblies(), new Func<Assembly, bool>(storey.<>m__0));
             }
 
             private bool ClassNameIsInvalid() => 

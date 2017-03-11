@@ -48,7 +48,7 @@
                     if (data != null)
                     {
                         DragAndDrop.PrepareStartDrag();
-                        DragAndDrop.objectReferences = new Object[0];
+                        DragAndDrop.objectReferences = new UnityEngine.Object[0];
                         DragAndDrop.paths = null;
                         DragAndDrop.SetGenericData("CustomDragData", data);
                         DragAndDrop.StartDrag(columnViewElements[listView.row].name);

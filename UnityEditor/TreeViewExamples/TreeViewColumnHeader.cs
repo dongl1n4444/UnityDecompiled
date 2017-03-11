@@ -10,11 +10,11 @@
     {
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Action<int, Rect> <columnRenderer>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private float[] <columnWidths>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private float <dragWidth>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private float <minColumnWidth>k__BackingField;
 
         public TreeViewColumnHeader()
@@ -39,7 +39,7 @@
                 }
                 if (this.columnRenderer != null)
                 {
-                    this.columnRenderer.Invoke(i, rect2);
+                    this.columnRenderer(i, rect2);
                 }
                 if (Event.current.type == EventType.Repaint)
                 {

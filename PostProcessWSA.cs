@@ -10,6 +10,7 @@ using UnityEditor;
 using UnityEditor.Modules;
 using UnityEditor.Scripting.Compilers;
 using UnityEditor.Utils;
+using UnityEditor.WSA;
 using UnityEngine;
 
 internal abstract class PostProcessWSA : PostProcessWinRT
@@ -268,7 +269,7 @@ internal abstract class PostProcessWSA : PostProcessWinRT
             }
         }
         creator.CreateSolutionFileFrom();
-        MetroVisualStudioSolutionHelper.WriteUnityCommonProps(Path.Combine(base.InstallPath, "UnityCommon.props"), base.PlayerPackage, base.InstallPath, base.SourceBuild);
+        MetroVisualStudioSolutionHelper.WriteUnityCommonProps(Path.Combine(base.InstallPath, "UnityCommon.props"), base.PlayerPackage, base.InstallPath, base.SourceBuild, EditorUserBuildSettings.wsaGenerateReferenceProjects);
         if (!base.SourceBuild)
         {
             this.CopyUnityTools();
@@ -331,7 +332,7 @@ internal abstract class PostProcessWSA : PostProcessWinRT
     }
 
     protected override string GetPlatformAssemblyPath() => 
-        MicrosoftCSharpCompiler.GetPlatformAssemblyPath(base._sdk);
+        MetroCompilationExtension.GetWindowsWinmdPath(base._sdk);
 
     protected string GetPlayerFilesSourceDirectory(string path)
     {
@@ -378,10 +379,6 @@ internal abstract class PostProcessWSA : PostProcessWinRT
         base.StagingArea;
 
     protected abstract Version GetToolsVersion();
-    public override void RunAssemblyConverter()
-    {
-    }
-
     protected virtual Dictionary<WSASDK, LibraryCollection> TEMP_GetLibraryCollections() => 
         new Dictionary<WSASDK, LibraryCollection>(1) { { 
             base._sdk,

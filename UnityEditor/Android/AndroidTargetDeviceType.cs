@@ -13,7 +13,11 @@
 
         public abstract string Architecture { get; }
 
+        public abstract string GradleProductFlavor { get; }
+
         public abstract AndroidTargetDevice TargetDevice { get; }
+
+        public abstract string VisualStudioPlatform { get; }
     }
 }
 

@@ -19,6 +19,14 @@
         /// <para>Y component of the vector.</para>
         /// </summary>
         public float y;
+        private static readonly Vector2 zeroVector;
+        private static readonly Vector2 oneVector;
+        private static readonly Vector2 upVector;
+        private static readonly Vector2 downVector;
+        private static readonly Vector2 leftVector;
+        private static readonly Vector2 rightVector;
+        private static readonly Vector2 positiveInfinityVector;
+        private static readonly Vector2 negativeInfinityVector;
         public const float kEpsilon = 1E-05f;
         /// <summary>
         /// <para>Constructs a new vector with given x, y components.</para>
@@ -183,6 +191,10 @@
         public override int GetHashCode() => 
             (this.x.GetHashCode() ^ (this.y.GetHashCode() << 2));
 
+        /// <summary>
+        /// <para>Returns true if the given vector is exactly equal to this vector.</para>
+        /// </summary>
+        /// <param name="other"></param>
         public override bool Equals(object other)
         {
             if (!(other is Vector2))
@@ -220,12 +232,26 @@
         public float sqrMagnitude =>
             ((this.x * this.x) + (this.y * this.y));
         /// <summary>
-        /// <para>Returns the angle in degrees between from and to.</para>
+        /// <para>Returns the unsigned angle in degrees between from and to.</para>
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
+        /// <param name="from">The vector from which the angular difference is measured.</param>
+        /// <param name="to">The vector to which the angular difference is measured.</param>
         public static float Angle(Vector2 from, Vector2 to) => 
             (Mathf.Acos(Mathf.Clamp(Dot(from.normalized, to.normalized), -1f, 1f)) * 57.29578f);
+
+        /// <summary>
+        /// <para>Returns the signed angle in degrees between from and to.</para>
+        /// </summary>
+        /// <param name="from">The vector from which the angular difference is measured.</param>
+        /// <param name="to">The vector to which the angular difference is measured.</param>
+        public static float SignedAngle(Vector2 from, Vector2 to)
+        {
+            Vector2 normalized = from.normalized;
+            Vector2 rhs = to.normalized;
+            float num = Mathf.Acos(Mathf.Clamp(Dot(normalized, rhs), -1f, 1f)) * 57.29578f;
+            float num2 = Mathf.Sign((normalized.x * rhs.y) - (normalized.y * rhs.x));
+            return (num * num2);
+        }
 
         /// <summary>
         /// <para>Returns the distance between a and b.</para>
@@ -320,11 +346,8 @@
             return (vector.sqrMagnitude < 9.999999E-11f);
         }
 
-        public static bool operator !=(Vector2 lhs, Vector2 rhs)
-        {
-            Vector2 vector = lhs - rhs;
-            return (vector.sqrMagnitude >= 9.999999E-11f);
-        }
+        public static bool operator !=(Vector2 lhs, Vector2 rhs) => 
+            !(lhs == rhs);
 
         public static implicit operator Vector2(Vector3 v) => 
             new Vector2(v.x, v.y);
@@ -336,32 +359,53 @@
         /// <para>Shorthand for writing Vector2(0, 0).</para>
         /// </summary>
         public static Vector2 zero =>
-            new Vector2(0f, 0f);
+            zeroVector;
         /// <summary>
         /// <para>Shorthand for writing Vector2(1, 1).</para>
         /// </summary>
         public static Vector2 one =>
-            new Vector2(1f, 1f);
+            oneVector;
         /// <summary>
         /// <para>Shorthand for writing Vector2(0, 1).</para>
         /// </summary>
         public static Vector2 up =>
-            new Vector2(0f, 1f);
+            upVector;
         /// <summary>
         /// <para>Shorthand for writing Vector2(0, -1).</para>
         /// </summary>
         public static Vector2 down =>
-            new Vector2(0f, -1f);
+            downVector;
         /// <summary>
         /// <para>Shorthand for writing Vector2(-1, 0).</para>
         /// </summary>
         public static Vector2 left =>
-            new Vector2(-1f, 0f);
+            leftVector;
         /// <summary>
         /// <para>Shorthand for writing Vector2(1, 0).</para>
         /// </summary>
         public static Vector2 right =>
-            new Vector2(1f, 0f);
+            rightVector;
+        /// <summary>
+        /// <para>Shorthand for writing Vector2(float.PositiveInfinity, float.PositiveInfinity).</para>
+        /// </summary>
+        public static Vector2 positiveInfinity =>
+            positiveInfinityVector;
+        /// <summary>
+        /// <para>Shorthand for writing Vector2(float.NegativeInfinity, float.NegativeInfinity).</para>
+        /// </summary>
+        public static Vector2 negativeInfinity =>
+            negativeInfinityVector;
+        static Vector2()
+        {
+            zeroVector = new Vector2(0f, 0f);
+            oneVector = new Vector2(1f, 1f);
+            upVector = new Vector2(0f, 1f);
+            downVector = new Vector2(0f, -1f);
+            leftVector = new Vector2(-1f, 0f);
+            rightVector = new Vector2(1f, 0f);
+            positiveInfinityVector = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
+            negativeInfinityVector = new Vector2(float.NegativeInfinity, float.NegativeInfinity);
+        }
     }
 }
 

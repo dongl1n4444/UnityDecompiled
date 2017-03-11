@@ -107,7 +107,7 @@
             }
         }
 
-        [MenuItem("Edit/Snap Settings...")]
+        [UnityEditor.MenuItem("Edit/Snap Settings...")]
         private static void ShowSnapSettings()
         {
             EditorWindow.GetWindowWithRect<SnapSettings>(new Rect(100f, 100f, 230f, 130f), true, "Snap settings");

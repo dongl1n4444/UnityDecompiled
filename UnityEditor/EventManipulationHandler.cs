@@ -1,12 +1,21 @@
 ﻿namespace UnityEditor
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
     using UnityEngine;
 
     internal class EventManipulationHandler
     {
-        private AnimationWindowEvent m_Event = null;
+        [CompilerGenerated]
+        private static Func<bool, bool> <>f__am$cache0;
+        [CompilerGenerated]
+        private static Func<bool, bool> <>f__am$cache1;
+        [CompilerGenerated]
+        private static Predicate<bool> <>f__am$cache2;
         private Rect[] m_EventRects = new Rect[0];
+        private AnimationWindowEvent[] m_Events;
         private static AnimationEvent[] m_EventsAtMouseDown;
         private bool[] m_EventsSelected;
         private static float[] m_EventTimes;
@@ -47,7 +56,7 @@
             }
         }
 
-        private bool DeleteEvents(ref AnimationEvent[] eventList, bool[] deleteIndices)
+        public bool DeleteEvents(ref AnimationEvent[] eventList, bool[] deleteIndices)
         {
             bool flag = false;
             for (int i = eventList.Length - 1; i >= 0; i--)
@@ -61,7 +70,7 @@
             if (flag)
             {
                 this.m_EventsSelected = new bool[eventList.Length];
-                this.m_Event = null;
+                this.m_Events = null;
             }
             return flag;
         }
@@ -69,9 +78,9 @@
         public void Draw(Rect window)
         {
             EditorGUI.indentLevel++;
-            if (this.m_Event != null)
+            if ((this.m_Events != null) && (this.m_Events.Length > 0))
             {
-                AnimationWindowEventInspector.OnEditAnimationEvent(this.m_Event);
+                AnimationWindowEventInspector.OnEditAnimationEvents(this.m_Events);
             }
             else
             {
@@ -91,17 +100,47 @@
             }
         }
 
+        public void EditEvents(AnimationClipInfoProperties clipInfo, bool[] selectedIndices)
+        {
+            List<AnimationWindowEvent> list = new List<AnimationWindowEvent>();
+            for (int i = 0; i < selectedIndices.Length; i++)
+            {
+                if (selectedIndices[i])
+                {
+                    list.Add(AnimationWindowEvent.Edit(clipInfo, i));
+                }
+            }
+            this.m_Events = list.ToArray();
+        }
+
         public void EventLineContextMenuAdd(object obj)
         {
-            EventModificationContextMenuObjet objet = (EventModificationContextMenuObjet) obj;
-            objet.m_Info.AddEvent(objet.m_Time);
-            this.SelectEvent(objet.m_Info.GetEvents(), objet.m_Info.GetEventCount() - 1, objet.m_Info);
+            EventModificationContextMenuObject obj2 = (EventModificationContextMenuObject) obj;
+            obj2.m_Info.AddEvent(obj2.m_Time);
+            this.SelectEvent(obj2.m_Info.GetEvents(), obj2.m_Info.GetEventCount() - 1, obj2.m_Info);
         }
 
         public void EventLineContextMenuDelete(object obj)
         {
-            EventModificationContextMenuObjet objet = (EventModificationContextMenuObjet) obj;
-            objet.m_Info.RemoveEvent(objet.m_Index);
+            EventModificationContextMenuObject obj2 = (EventModificationContextMenuObject) obj;
+            if (<>f__am$cache2 == null)
+            {
+                <>f__am$cache2 = selected => selected;
+            }
+            if (Array.Exists<bool>(obj2.m_Selected, <>f__am$cache2))
+            {
+                for (int i = obj2.m_Selected.Length - 1; i >= 0; i--)
+                {
+                    if (obj2.m_Selected[i])
+                    {
+                        obj2.m_Info.RemoveEvent(i);
+                    }
+                }
+            }
+            else if (obj2.m_Index >= 0)
+            {
+                obj2.m_Info.RemoveEvent(obj2.m_Index);
+            }
         }
 
         public bool HandleEventManipulation(Rect rect, ref AnimationEvent[] events, AnimationClipInfoProperties clipInfo)
@@ -147,16 +186,21 @@
             if (((this.m_EventsSelected == null) || (this.m_EventsSelected.Length != events.Length)) || (this.m_EventsSelected.Length == 0))
             {
                 this.m_EventsSelected = new bool[events.Length];
-                this.m_Event = null;
+                this.m_Events = null;
             }
             Vector2 zero = Vector2.zero;
             switch (EditorGUIExt.MultiSelection(rect, positions, new GUIContent(image), hitPositions, ref this.m_EventsSelected, null, out num8, out zero, out num9, out num10, GUIStyle.none))
             {
                 case HighLevelEvent.ContextClick:
                 {
+                    if (<>f__am$cache0 == null)
+                    {
+                        <>f__am$cache0 = selected => selected;
+                    }
+                    int num15 = Enumerable.Count<bool>(this.m_EventsSelected, <>f__am$cache0);
                     GenericMenu menu = new GenericMenu();
-                    menu.AddItem(new GUIContent("Add Animation Event"), false, new GenericMenu.MenuFunction2(this.EventLineContextMenuAdd), new EventModificationContextMenuObjet(clipInfo, events[num8].time, num8));
-                    menu.AddItem(new GUIContent("Delete Animation Event"), false, new GenericMenu.MenuFunction2(this.EventLineContextMenuDelete), new EventModificationContextMenuObjet(clipInfo, events[num8].time, num8));
+                    menu.AddItem(new GUIContent("Add Animation Event"), false, new GenericMenu.MenuFunction2(this.EventLineContextMenuAdd), new EventModificationContextMenuObject(clipInfo, events[num8].time, num8, this.m_EventsSelected));
+                    menu.AddItem(new GUIContent((num15 <= 1) ? "Delete Animation Event" : "Delete Animation Events"), false, new GenericMenu.MenuFunction2(this.EventLineContextMenuDelete), new EventModificationContextMenuObject(clipInfo, events[num8].time, num8, this.m_EventsSelected));
                     menu.ShowAsContext();
                     this.m_InstantTooltipText = null;
                     break;
@@ -202,8 +246,26 @@
                     break;
 
                 case HighLevelEvent.SelectionChanged:
-                    this.m_Event = (num8 < 0) ? null : AnimationWindowEvent.Edit(clipInfo, num8);
+                    this.EditEvents(clipInfo, this.m_EventsSelected);
                     break;
+            }
+            if ((Event.current.type == EventType.ContextClick) && rect.Contains(Event.current.mousePosition))
+            {
+                Event.current.Use();
+                if (<>f__am$cache1 == null)
+                {
+                    <>f__am$cache1 = selected => selected;
+                }
+                int num16 = Enumerable.Count<bool>(this.m_EventsSelected, <>f__am$cache1);
+                float time = Mathf.Max(this.m_Timeline.PixelToTime(Event.current.mousePosition.x, rect), 0f);
+                GenericMenu menu2 = new GenericMenu();
+                menu2.AddItem(new GUIContent("Add Animation Event"), false, new GenericMenu.MenuFunction2(this.EventLineContextMenuAdd), new EventModificationContextMenuObject(clipInfo, time, -1, this.m_EventsSelected));
+                if (num16 > 0)
+                {
+                    menu2.AddItem(new GUIContent((num16 <= 1) ? "Delete Animation Event" : "Delete Animation Events"), false, new GenericMenu.MenuFunction2(this.EventLineContextMenuDelete), new EventModificationContextMenuObject(clipInfo, time, -1, this.m_EventsSelected));
+                }
+                menu2.ShowAsContext();
+                this.m_InstantTooltipText = null;
             }
             this.CheckRectsOnMouseMove(rect, events, hitPositions);
             return flag;
@@ -213,28 +275,33 @@
         {
             this.m_EventsSelected = new bool[events.Length];
             this.m_EventsSelected[index] = true;
-            this.m_Event = AnimationWindowEvent.Edit(clipInfo, index);
+            this.EditEvents(clipInfo, this.m_EventsSelected);
         }
 
-        public void UpdateEvent(AnimationClipInfoProperties info)
+        public void UpdateEvents(AnimationClipInfoProperties clipInfo)
         {
-            if (this.m_Event != null)
+            if (this.m_Events != null)
             {
-                this.m_Event.clipInfo = info;
+                foreach (AnimationWindowEvent event2 in this.m_Events)
+                {
+                    event2.clipInfo = clipInfo;
+                }
             }
         }
 
-        private class EventModificationContextMenuObjet
+        private class EventModificationContextMenuObject
         {
             public int m_Index;
             public AnimationClipInfoProperties m_Info;
+            public bool[] m_Selected;
             public float m_Time;
 
-            public EventModificationContextMenuObjet(AnimationClipInfoProperties info, float time, int index)
+            public EventModificationContextMenuObject(AnimationClipInfoProperties info, float time, int index, bool[] selected)
             {
                 this.m_Info = info;
                 this.m_Time = time;
                 this.m_Index = index;
+                this.m_Selected = selected;
             }
         }
     }

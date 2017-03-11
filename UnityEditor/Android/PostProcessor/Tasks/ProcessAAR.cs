@@ -1,7 +1,9 @@
 ﻿namespace UnityEditor.Android.PostProcessor.Tasks
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEditor;
     using UnityEditor.Android;
@@ -9,6 +11,7 @@
 
     internal class ProcessAAR : IPostProcessorTask
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ProgressHandler OnProgress;
 
         public void Execute(PostProcessorContext context)
@@ -29,7 +32,7 @@
                 string str7 = Path.Combine(path, fileNameWithoutExtension);
                 if (Directory.Exists(str7))
                 {
-                    CancelPostProcess.AbortBuild("Build failure", "Plugin conflict detected for file " + fileName);
+                    CancelPostProcess.AbortBuild("Build failure", "Plugin conflict detected for file " + fileName, null);
                 }
                 Directory.CreateDirectory(str7);
                 TasksCommon.Exec(AndroidJavaTools.jarPath, "xf \"" + str4 + "\"", str7, "Error unpacking file " + fileName, 0);

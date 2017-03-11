@@ -3,10 +3,12 @@
     using System;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Parent class for joints to connect Rigidbody2D objects.</para>
     /// </summary>
+    [RequireComponent(typeof(Transform), typeof(Rigidbody2D))]
     public class Joint2D : Behaviour
     {
         /// <summary>
@@ -19,7 +21,7 @@
         public Vector2 GetReactionForce(float timeStep)
         {
             Vector2 vector;
-            Joint2D_CUSTOM_INTERNAL_GetReactionForce(this, timeStep, out vector);
+            Internal_GetReactionForce(this, timeStep, out vector);
             return vector;
         }
 
@@ -33,20 +35,20 @@
         public float GetReactionTorque(float timeStep) => 
             INTERNAL_CALL_GetReactionTorque(this, timeStep);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern float INTERNAL_CALL_GetReactionTorque(Joint2D self, float timeStep);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Joint2D_CUSTOM_INTERNAL_GetReactionForce(Joint2D joint, float timeStep, out Vector2 value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void Internal_GetReactionForce(Joint2D joint, float timeStep, out Vector2 value);
 
         /// <summary>
         /// <para>The force that needs to be applied for this joint to break.</para>
         /// </summary>
-        public float breakForce { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float breakForce { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The torque that needs to be applied for this joint to break.</para>
         /// </summary>
-        public float breakTorque { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float breakTorque { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Can the joint collide with the other Rigidbody2D object to which it is attached?</para>
@@ -65,12 +67,12 @@
         /// <summary>
         /// <para>The Rigidbody2D object to which the other end of the joint is attached (ie, the object without the joint component).</para>
         /// </summary>
-        public Rigidbody2D connectedBody { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public Rigidbody2D connectedBody { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Should the two rigid bodies connected with this joint collide with each other?</para>
         /// </summary>
-        public bool enableCollision { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool enableCollision { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Gets the reaction force of the joint.</para>

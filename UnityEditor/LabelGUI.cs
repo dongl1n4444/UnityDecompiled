@@ -16,10 +16,10 @@
         private PopupList.InputData m_AssetLabels;
         private string m_ChangedLabel;
         private bool m_ChangeWasAdd = false;
-        private HashSet<Object> m_CurrentAssetsSet;
+        private HashSet<UnityEngine.Object> m_CurrentAssetsSet;
         private bool m_CurrentChanged = false;
         private bool m_IgnoreNextAssetLabelsChangedCall = false;
-        private static Action<Object> s_AssetLabelsForObjectChangedDelegates;
+        private static Action<UnityEngine.Object> s_AssetLabelsForObjectChangedDelegates;
         private static int s_MaxShownLabels = 10;
 
         public void AssetLabelListCallback(PopupList.ListElement element)
@@ -33,7 +33,7 @@
             InspectorWindow.RepaintAllInspectors();
         }
 
-        public void AssetLabelsChangedForObject(Object asset)
+        public void AssetLabelsChangedForObject(UnityEngine.Object asset)
         {
             if ((!this.m_IgnoreNextAssetLabelsChangedCall && (this.m_CurrentAssetsSet != null)) && this.m_CurrentAssetsSet.Contains(asset))
             {
@@ -51,13 +51,13 @@
             Event current = Event.current;
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<PopupList.ListElement, string>(null, (IntPtr) <DrawLabelList>m__0);
+                <>f__am$cache0 = i => i.text.ToLower();
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<PopupList.ListElement, GUIContent>(null, (IntPtr) <DrawLabelList>m__1);
+                <>f__am$cache1 = i => i.m_Content;
             }
-            foreach (GUIContent content in Enumerable.Select<PopupList.ListElement, GUIContent>(Enumerable.OrderBy<PopupList.ListElement, string>(Enumerable.Where<PopupList.ListElement>(this.m_AssetLabels.m_ListElements, new Func<PopupList.ListElement, bool>(storey, (IntPtr) this.<>m__0)), <>f__am$cache0), <>f__am$cache1).Take<GUIContent>(s_MaxShownLabels))
+            foreach (GUIContent content in Enumerable.Select<PopupList.ListElement, GUIContent>(Enumerable.OrderBy<PopupList.ListElement, string>(Enumerable.Where<PopupList.ListElement>(this.m_AssetLabels.m_ListElements, new Func<PopupList.ListElement, bool>(storey.<>m__0)), <>f__am$cache0), <>f__am$cache1).Take<GUIContent>(s_MaxShownLabels))
             {
                 Rect position = GUILayoutUtility.GetRect(content, style);
                 if ((Event.current.type == EventType.Repaint) && (position.xMax >= xMax))
@@ -74,12 +74,12 @@
             }
         }
 
-        private void GetLabelsForAssets(Object[] assets, out List<string> all, out List<string> partial)
+        private void GetLabelsForAssets(UnityEngine.Object[] assets, out List<string> all, out List<string> partial)
         {
             all = new List<string>();
             partial = new List<string>();
             Dictionary<string, int> dictionary = new Dictionary<string, int>();
-            foreach (Object obj2 in assets)
+            foreach (UnityEngine.Object obj2 in assets)
             {
                 string[] labels = AssetDatabase.GetLabels(obj2);
                 foreach (string str in labels)
@@ -93,9 +93,9 @@
             }
         }
 
-        public void InitLabelCache(Object[] assets)
+        public void InitLabelCache(UnityEngine.Object[] assets)
         {
-            HashSet<Object> other = new HashSet<Object>(assets);
+            HashSet<UnityEngine.Object> other = new HashSet<UnityEngine.Object>(assets);
             if ((this.m_CurrentAssetsSet == null) || !this.m_CurrentAssetsSet.SetEquals(other))
             {
                 List<string> list;
@@ -122,8 +122,8 @@
                         {
                             element.filterScore = storey.pair.Value;
                         }
-                        element.selected = Enumerable.Any<string>(list, new Func<string, bool>(storey, (IntPtr) this.<>m__0));
-                        element.partiallySelected = Enumerable.Any<string>(list2, new Func<string, bool>(storey, (IntPtr) this.<>m__1));
+                        element.selected = Enumerable.Any<string>(list, new Func<string, bool>(storey.<>m__0));
+                        element.partiallySelected = Enumerable.Any<string>(list2, new Func<string, bool>(storey.<>m__1));
                     }
                 }
             }
@@ -139,18 +139,18 @@
 
         public void OnDisable()
         {
-            s_AssetLabelsForObjectChangedDelegates = (Action<Object>) Delegate.Remove(s_AssetLabelsForObjectChangedDelegates, new Action<Object>(this.AssetLabelsChangedForObject));
+            s_AssetLabelsForObjectChangedDelegates = (Action<UnityEngine.Object>) Delegate.Remove(s_AssetLabelsForObjectChangedDelegates, new Action<UnityEngine.Object>(this.AssetLabelsChangedForObject));
             EditorApplication.projectWindowChanged = (EditorApplication.CallbackFunction) Delegate.Remove(EditorApplication.projectWindowChanged, new EditorApplication.CallbackFunction(this.InvalidateLabels));
             this.SaveLabels();
         }
 
         public void OnEnable()
         {
-            s_AssetLabelsForObjectChangedDelegates = (Action<Object>) Delegate.Combine(s_AssetLabelsForObjectChangedDelegates, new Action<Object>(this.AssetLabelsChangedForObject));
+            s_AssetLabelsForObjectChangedDelegates = (Action<UnityEngine.Object>) Delegate.Combine(s_AssetLabelsForObjectChangedDelegates, new Action<UnityEngine.Object>(this.AssetLabelsChangedForObject));
             EditorApplication.projectWindowChanged = (EditorApplication.CallbackFunction) Delegate.Combine(EditorApplication.projectWindowChanged, new EditorApplication.CallbackFunction(this.InvalidateLabels));
         }
 
-        public void OnLabelGUI(Object[] assets)
+        public void OnLabelGUI(UnityEngine.Object[] assets)
         {
             this.InitLabelCache(assets);
             float minWidth = 1f;
@@ -169,7 +169,7 @@
             GUILayout.FlexibleSpace();
             Rect position = GUILayoutUtility.GetRect(assetLabelIcon.fixedWidth, assetLabelIcon.fixedWidth, (float) (assetLabelIcon.fixedHeight + num4), (float) (assetLabelIcon.fixedHeight + num4));
             position.x = rect.xMax + assetLabelIcon.margin.left;
-            if (EditorGUI.ButtonMouseDown(position, GUIContent.none, FocusType.Passive, assetLabelIcon))
+            if (EditorGUI.DropdownButton(position, GUIContent.none, FocusType.Passive, assetLabelIcon))
             {
                 PopupWindow.Show(position, new PopupList(this.m_AssetLabels), null, ShowMode.PopupMenuWithKeyboardFocus);
             }
@@ -186,7 +186,7 @@
             if ((this.m_CurrentChanged && (this.m_AssetLabels != null)) && (this.m_CurrentAssetsSet != null))
             {
                 bool flag = false;
-                foreach (Object obj2 in this.m_CurrentAssetsSet)
+                foreach (UnityEngine.Object obj2 in this.m_CurrentAssetsSet)
                 {
                     bool flag2 = false;
                     List<string> list = AssetDatabase.GetLabels(obj2).ToList<string>();

@@ -437,7 +437,7 @@
             {
                 return 0;
             }
-            return NetworkTransport.GetCurrentRtt(this.m_ClientId, this.m_ClientConnectionId, out num2);
+            return NetworkTransport.GetCurrentRTT(this.m_ClientId, this.m_ClientConnectionId, out num2);
         }
 
         public void GetStatsIn(out int numMsgs, out int numBytes)
@@ -1026,7 +1026,7 @@
                     {
                         NetworkDetailStats.IncrementStat(NetworkDetailStats.NetworkDirection.Incoming, 0x1d, "msg", 1);
                         this.m_MsgReader.SeekZero();
-                        this.m_Connection.TransportRecieve(this.m_MsgBuffer, num3, num2);
+                        this.m_Connection.TransportReceive(this.m_MsgBuffer, num3, num2);
                         break;
                     }
                     this.GenerateDataError(num4);

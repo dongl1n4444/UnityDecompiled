@@ -69,7 +69,7 @@
             }
         }
 
-        public void OnPreviewSettings(Object[] targets)
+        public void OnPreviewSettings(UnityEngine.Object[] targets)
         {
             if (ShaderUtil.hardwareSupportsRectRenderTexture)
             {

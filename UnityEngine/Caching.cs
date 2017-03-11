@@ -2,6 +2,7 @@
 {
     using System;
     using System.Runtime.CompilerServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>The Caching class lets you manage cached AssetBundles, downloaded using WWW.LoadFromCacheOrDownload.</para>
@@ -55,7 +56,7 @@
         /// <param name="size"></param>
         /// <param name="signature"></param>
         /// <param name="expiration"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool Authorize(string name, string domain, long size, int expiration, string signature);
         /// <summary>
         /// <para>Delete all AssetBundle and Procedural Material content that has been cached by the current application.</para>
@@ -63,21 +64,21 @@
         /// <returns>
         /// <para>True when cache cleaning succeeded, false if cache was in use.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool CleanCache();
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("this API is not for public use.")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("this API is not for public use."), GeneratedByOldBindingsGenerator]
         public static extern bool CleanNamedCache(string name);
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("This function is obsolete and has no effect.")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("This function is obsolete and has no effect."), GeneratedByOldBindingsGenerator]
         public static extern bool DeleteFromCache(string url);
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("This function is obsolete and will always return -1. Use IsVersionCached instead.")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("This function is obsolete and will always return -1. Use IsVersionCached instead."), GeneratedByOldBindingsGenerator]
         public static extern int GetVersionFromCache(string url);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool INTERNAL_CALL_IsVersionCached(string url, ref Hash128 hash);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool INTERNAL_CALL_MarkAsUsed(string url, ref Hash128 hash);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_ResetNoBackupFlag(string url, ref Hash128 hash);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SetNoBackupFlag(string url, ref Hash128 hash);
         /// <summary>
         /// <para>Checks if an AssetBundle is cached.</para>
@@ -133,46 +134,46 @@
         /// <summary>
         /// <para>Controls compression of cache data. Enabled by default.</para>
         /// </summary>
-        public static bool compressionEnabled { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static bool compressionEnabled { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Is Caching enabled?</para>
         /// </summary>
-        public static bool enabled { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static bool enabled { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The number of seconds that an AssetBundle may remain unused in the cache before it is automatically deleted.</para>
         /// </summary>
-        public static int expirationDelay { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static int expirationDelay { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         [Obsolete("this API is not for public use.")]
-        public static CacheIndex[] index { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static CacheIndex[] index { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The total number of bytes that can potentially be allocated for caching.</para>
         /// </summary>
-        public static long maximumAvailableDiskSpace { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static long maximumAvailableDiskSpace { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Is caching ready?</para>
         /// </summary>
-        public static bool ready { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool ready { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         [Obsolete("Please use Caching.spaceFree instead")]
-        public static int spaceAvailable { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static int spaceAvailable { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The number of currently unused bytes in the cache.</para>
         /// </summary>
-        public static long spaceFree { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static long spaceFree { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Used disk space in bytes.</para>
         /// </summary>
-        public static long spaceOccupied { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static long spaceOccupied { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         [Obsolete("Please use Caching.spaceOccupied instead")]
-        public static int spaceUsed { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static int spaceUsed { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

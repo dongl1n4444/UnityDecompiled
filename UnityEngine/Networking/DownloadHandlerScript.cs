@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>An abstract base class for user-created scripting-driven DownloadHandler implementations.</para>
@@ -32,7 +33,7 @@
             this.InternalSetPreallocatedBuffer(preallocatedBuffer);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void InternalSetPreallocatedBuffer(byte[] buffer);
     }
 }

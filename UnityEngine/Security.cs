@@ -8,7 +8,7 @@
     using UnityEngine.Scripting;
 
     /// <summary>
-    /// <para>Webplayer security related class. Not supported from 5.4.0 onwards.</para>
+    /// <para>Webplayer security related class. Note supported from 5.4.0.</para>
     /// </summary>
     public sealed class Security
     {

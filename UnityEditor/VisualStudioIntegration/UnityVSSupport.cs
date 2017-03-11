@@ -34,7 +34,7 @@
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<Assembly, bool>(null, (IntPtr) <CalculateAboutWindowLabel>m__1);
+                <>f__am$cache1 = a => a.Location == s_UnityVSBridgeToLoad;
             }
             Assembly assembly = Enumerable.FirstOrDefault<Assembly>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache1);
             if (assembly == null)
@@ -91,7 +91,7 @@
                         vsVersion = "2015";
                         break;
 
-                    case VisualStudioVersion.VisualStudio15:
+                    case VisualStudioVersion.VisualStudio2017:
                         vsVersion = "15.0";
                         break;
                 }
@@ -181,7 +181,7 @@
                 vsVersion = VisualStudioVersion.Invalid;
                 return false;
             }
-            KeyValuePair<VisualStudioVersion, string>[] pairArray = Enumerable.Where<KeyValuePair<VisualStudioVersion, string>>(SyncVS.InstalledVisualStudios, new Func<KeyValuePair<VisualStudioVersion, string>, bool>(storey, (IntPtr) this.<>m__0)).ToArray<KeyValuePair<VisualStudioVersion, string>>();
+            KeyValuePair<VisualStudioVersion, VisualStudioPath[]>[] pairArray = Enumerable.Where<KeyValuePair<VisualStudioVersion, VisualStudioPath[]>>(SyncVS.InstalledVisualStudios, new Func<KeyValuePair<VisualStudioVersion, VisualStudioPath[]>, bool>(storey.<>m__0)).ToArray<KeyValuePair<VisualStudioVersion, VisualStudioPath[]>>();
             if (pairArray.Length > 0)
             {
                 vsVersion = pairArray[0].Key;
@@ -244,7 +244,7 @@
                     return true;
 
                 case 15:
-                    vsVersion = VisualStudioVersion.VisualStudio15;
+                    vsVersion = VisualStudioVersion.VisualStudio2017;
                     return true;
             }
             vsVersion = VisualStudioVersion.Invalid;
@@ -256,8 +256,11 @@
         {
             internal string externalEditor;
 
-            internal bool <>m__0(KeyValuePair<VisualStudioVersion, string> kvp) => 
-                Paths.AreEqual(kvp.Value, this.externalEditor, true);
+            internal bool <>m__0(KeyValuePair<VisualStudioVersion, VisualStudioPath[]> kvp) => 
+                Enumerable.Any<VisualStudioPath>(kvp.Value, (Func<VisualStudioPath, bool>) (v => Paths.AreEqual(v.Path, this.externalEditor, true)));
+
+            internal bool <>m__1(VisualStudioPath v) => 
+                Paths.AreEqual(v.Path, this.externalEditor, true);
         }
     }
 }

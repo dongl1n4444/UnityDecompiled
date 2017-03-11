@@ -29,6 +29,7 @@
         /// <para>W component of the Quaternion. Don't modify this directly unless you know quaternions inside out.</para>
         /// </summary>
         public float w;
+        private static readonly Quaternion identityQuaternion;
         public const float kEpsilon = 1E-06f;
         /// <summary>
         /// <para>Constructs new Quaternion with given x,y,z,w components.</para>
@@ -58,7 +59,7 @@
             return quaternion;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_AngleAxis(float angle, ref Vector3 axis, out Quaternion value);
         public void ToAngleAxis(out float angle, out Vector3 axis)
         {
@@ -78,7 +79,7 @@
             return quaternion;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_FromToRotation(ref Vector3 fromDirection, ref Vector3 toDirection, out Quaternion value);
         /// <summary>
         /// <para>Creates a rotation which rotates from fromDirection to toDirection.</para>
@@ -116,7 +117,7 @@
             return quaternion;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_LookRotation(ref Vector3 forward, ref Vector3 upwards, out Quaternion value);
         /// <summary>
         /// <para>Spherically interpolates between a and b by t. The parameter t is clamped to the range [0, 1].</para>
@@ -131,7 +132,7 @@
             return quaternion;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Slerp(ref Quaternion a, ref Quaternion b, float t, out Quaternion value);
         /// <summary>
         /// <para>Spherically interpolates between a and b by t. The parameter t is not clamped.</para>
@@ -146,7 +147,7 @@
             return quaternion;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SlerpUnclamped(ref Quaternion a, ref Quaternion b, float t, out Quaternion value);
         /// <summary>
         /// <para>Interpolates between a and b by t and normalizes the result afterwards. The parameter t is clamped to the range [0, 1].</para>
@@ -161,7 +162,7 @@
             return quaternion;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Lerp(ref Quaternion a, ref Quaternion b, float t, out Quaternion value);
         /// <summary>
         /// <para>Interpolates between a and b by t and normalizes the result afterwards. The parameter t is not clamped.</para>
@@ -176,7 +177,7 @@
             return quaternion;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_LerpUnclamped(ref Quaternion a, ref Quaternion b, float t, out Quaternion value);
         /// <summary>
         /// <para>Rotates a rotation from towards to.</para>
@@ -206,7 +207,7 @@
             return quaternion;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Inverse(ref Quaternion rotation, out Quaternion value);
         /// <summary>
         /// <para>Returns the euler angle representation of the rotation.</para>
@@ -243,7 +244,7 @@
             return vector;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_ToEulerRad(ref Quaternion rotation, out Vector3 value);
         private static Quaternion Internal_FromEulerRad(Vector3 euler)
         {
@@ -252,14 +253,14 @@
             return quaternion;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_FromEulerRad(ref Vector3 euler, out Quaternion value);
         private static void Internal_ToAxisAngleRad(Quaternion q, out Vector3 axis, out float angle)
         {
             INTERNAL_CALL_Internal_ToAxisAngleRad(ref q, out axis, out angle);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_ToAxisAngleRad(ref Quaternion q, out Vector3 axis, out float angle);
         [Obsolete("Use Quaternion.Euler instead. This function was deprecated because it uses radians instead of degrees")]
         public static Quaternion EulerRotation(float x, float y, float z) => 
@@ -327,7 +328,7 @@
             return quaternion;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_AxisAngle(ref Vector3 axis, float angle, out Quaternion value);
         [Obsolete("Use Quaternion.AngleAxis instead. This function was deprecated because it uses radians instead of degrees")]
         public void SetAxisAngle(Vector3 axis, float angle)
@@ -383,23 +384,23 @@
         /// <summary>
         /// <para>Set x, y, z and w components of an existing Quaternion.</para>
         /// </summary>
-        /// <param name="new_x"></param>
-        /// <param name="new_y"></param>
-        /// <param name="new_z"></param>
-        /// <param name="new_w"></param>
-        public void Set(float new_x, float new_y, float new_z, float new_w)
+        /// <param name="newX"></param>
+        /// <param name="newY"></param>
+        /// <param name="newZ"></param>
+        /// <param name="newW"></param>
+        public void Set(float newX, float newY, float newZ, float newW)
         {
-            this.x = new_x;
-            this.y = new_y;
-            this.z = new_z;
-            this.w = new_w;
+            this.x = newX;
+            this.y = newY;
+            this.z = newZ;
+            this.w = newW;
         }
 
         /// <summary>
         /// <para>The identity rotation (Read Only).</para>
         /// </summary>
         public static Quaternion identity =>
-            new Quaternion(0f, 0f, 0f, 1f);
+            identityQuaternion;
         public static Quaternion operator *(Quaternion lhs, Quaternion rhs) => 
             new Quaternion((((lhs.w * rhs.x) + (lhs.x * rhs.w)) + (lhs.y * rhs.z)) - (lhs.z * rhs.y), (((lhs.w * rhs.y) + (lhs.y * rhs.w)) + (lhs.z * rhs.x)) - (lhs.x * rhs.z), (((lhs.w * rhs.z) + (lhs.z * rhs.w)) + (lhs.x * rhs.y)) - (lhs.y * rhs.x), (((lhs.w * rhs.w) - (lhs.x * rhs.x)) - (lhs.y * rhs.y)) - (lhs.z * rhs.z));
 
@@ -428,7 +429,7 @@
             (Dot(lhs, rhs) > 0.999999f);
 
         public static bool operator !=(Quaternion lhs, Quaternion rhs) => 
-            (Dot(lhs, rhs) <= 0.999999f);
+            !(lhs == rhs);
 
         /// <summary>
         /// <para>The dot product between two rotations.</para>
@@ -531,6 +532,11 @@
         {
             object[] args = new object[] { this.x.ToString(format), this.y.ToString(format), this.z.ToString(format), this.w.ToString(format) };
             return UnityString.Format("({0}, {1}, {2}, {3})", args);
+        }
+
+        static Quaternion()
+        {
+            identityQuaternion = new Quaternion(0f, 0f, 0f, 1f);
         }
     }
 }

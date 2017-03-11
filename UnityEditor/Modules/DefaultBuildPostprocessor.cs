@@ -12,9 +12,6 @@
         public virtual string GetExtension(BuildTarget target, BuildOptions options) => 
             string.Empty;
 
-        public virtual string GetScriptLayoutFileFromBuild(BuildOptions options, string installPath, string fileName) => 
-            string.Empty;
-
         public virtual void LaunchPlayer(BuildLaunchPlayerArgs args)
         {
             throw new NotSupportedException();
@@ -39,7 +36,7 @@
             false;
 
         public virtual bool SupportsScriptsOnlyBuild() => 
-            false;
+            true;
     }
 }
 

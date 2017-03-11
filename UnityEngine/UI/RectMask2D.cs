@@ -108,7 +108,8 @@
             }
             bool validRect = true;
             Rect rect = Clipping.FindCullAndClipWorldRect(this.m_Clippers, out validRect);
-            if ((rect != this.m_LastClipRectCanvasSpace) || this.m_ForceClip)
+            bool flag2 = rect != this.m_LastClipRectCanvasSpace;
+            if (flag2 || this.m_ForceClip)
             {
                 foreach (IClippable clippable in this.m_ClipTargets)
                 {
@@ -119,7 +120,11 @@
             }
             foreach (IClippable clippable2 in this.m_ClipTargets)
             {
-                clippable2.Cull(this.m_LastClipRectCanvasSpace, this.m_LastValidClipRect);
+                MaskableGraphic graphic = clippable2 as MaskableGraphic;
+                if (((graphic == null) || graphic.canvasRenderer.hasMoved) || flag2)
+                {
+                    clippable2.Cull(this.m_LastClipRectCanvasSpace, this.m_LastValidClipRect);
+                }
             }
         }
 

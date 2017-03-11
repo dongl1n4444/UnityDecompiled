@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
-    using UnityEditor.Collaboration;
     using UnityEditor.Hardware;
     using UnityEditor.VersionControl;
     using UnityEditor.Web;
@@ -20,12 +19,12 @@
         private DevDevice[] remoteDeviceList;
         private PopupElement[] remoteDevicePopupList;
         private PopupElement[] remoteJoystickSourceList = new PopupElement[] { new PopupElement("Remote"), new PopupElement("Local") };
-        private PopupElement[] remoteResolutionList = new PopupElement[] { new PopupElement("Normal"), new PopupElement("Downsize") };
+        private PopupElement[] remoteResolutionList = new PopupElement[] { new PopupElement("Downsize"), new PopupElement("Normal") };
         private string[] semanticMergePopupList = new string[] { "Off", "Premerge", "Ask" };
         private PopupElement[] serializationPopupList = new PopupElement[] { new PopupElement("Mixed"), new PopupElement("Force Binary"), new PopupElement("Force Text") };
         private PopupElement[] spritePackerPaddingPowerPopupList = new PopupElement[] { new PopupElement("1"), new PopupElement("2"), new PopupElement("3") };
         private PopupElement[] spritePackerPopupList = new PopupElement[] { new PopupElement("Disabled"), new PopupElement("Enabled For Builds"), new PopupElement("Always Enabled") };
-        private PopupElement[] vcDefaultPopupList = new PopupElement[] { new PopupElement(ExternalVersionControl.Disabled), new PopupElement(ExternalVersionControl.Generic), new PopupElement(ExternalVersionControl.AssetServer, true) };
+        private PopupElement[] vcDefaultPopupList = new PopupElement[] { new PopupElement(ExternalVersionControl.Disabled), new PopupElement(ExternalVersionControl.Generic) };
         private PopupElement[] vcPopupList = null;
 
         private void BuildRemoteDeviceList()
@@ -57,7 +56,7 @@
         private void CreatePopupMenu(string title, GUIContent content, PopupElement[] elements, int selectedIndex, GenericMenu.MenuFunction2 func)
         {
             Rect position = EditorGUI.PrefixLabel(GUILayoutUtility.GetRect(content, EditorStyles.popup), 0, new GUIContent(title));
-            if (EditorGUI.ButtonMouseDown(position, content, FocusType.Passive, EditorStyles.popup))
+            if (EditorGUI.DropdownButton(position, content, FocusType.Passive, EditorStyles.popup))
             {
                 this.DoPopup(position, elements, selectedIndex, func);
             }
@@ -219,7 +218,7 @@
             bool enabled = GUI.enabled;
             this.ShowUnityRemoteGUI(enabled);
             GUILayout.Space(10f);
-            bool flag2 = Collab.instance.GetCollabInfo().whitelisted && CollabAccess.Instance.IsServiceEnabled();
+            bool flag2 = CollabAccess.Instance.IsServiceEnabled();
             using (new EditorGUI.DisabledScope(!flag2))
             {
                 GUI.enabled = !flag2;
@@ -237,12 +236,7 @@
                 <OnInspectorGUI>c__AnonStorey0 storey = new <OnInspectorGUI>c__AnonStorey0();
                 GUI.enabled = true;
                 bool flag3 = false;
-                if (EditorSettings.externalVersionControl == ExternalVersionControl.AssetServer)
-                {
-                    EditorUserSettings.SetConfigValue("vcUsername", EditorGUILayout.TextField("User", EditorUserSettings.GetConfigValue("vcUsername"), new GUILayoutOption[0]));
-                    EditorUserSettings.SetConfigValue("vcPassword", EditorGUILayout.PasswordField("Password", EditorUserSettings.GetConfigValue("vcPassword"), new GUILayoutOption[0]));
-                }
-                else if ((EditorSettings.externalVersionControl != ExternalVersionControl.Generic) && (EditorSettings.externalVersionControl != ExternalVersionControl.Disabled))
+                if ((EditorSettings.externalVersionControl != ExternalVersionControl.Generic) && (EditorSettings.externalVersionControl != ExternalVersionControl.Disabled))
                 {
                     ConfigField[] activeConfigFields = Provider.GetActiveConfigFields();
                     flag3 = true;
@@ -415,21 +409,9 @@
                 EditorSettings.externalVersionControl = element.id;
                 Provider.UpdateSettings();
                 AssetDatabase.Refresh();
-                if (externalVersionControl != element.id)
+                if ((externalVersionControl != element.id) && ((element.content.text == ExternalVersionControl.Disabled) || (element.content.text == ExternalVersionControl.Generic)))
                 {
-                    if (((element.content.text == ExternalVersionControl.AssetServer) || (element.content.text == ExternalVersionControl.Disabled)) || (element.content.text == ExternalVersionControl.Generic))
-                    {
-                        WindowPending.CloseAllWindows();
-                    }
-                    else
-                    {
-                        ASMainWindow[] windowArray = Resources.FindObjectsOfTypeAll(typeof(ASMainWindow)) as ASMainWindow[];
-                        ASMainWindow window = (windowArray.Length <= 0) ? null : windowArray[0];
-                        if (window != null)
-                        {
-                            window.Close();
-                        }
-                    }
+                    WindowPending.CloseAllWindows();
                 }
             }
         }
@@ -443,28 +425,28 @@
             int index = GetIndexById(this.remoteDeviceList, unityRemoteDevice, 0);
             GUIContent content = new GUIContent(this.remoteDevicePopupList[index].content);
             Rect position = EditorGUI.PrefixLabel(GUILayoutUtility.GetRect(content, EditorStyles.popup), 0, new GUIContent("Device"));
-            if (EditorGUI.ButtonMouseDown(position, content, FocusType.Passive, EditorStyles.popup))
+            if (EditorGUI.DropdownButton(position, content, FocusType.Passive, EditorStyles.popup))
             {
                 this.DoPopup(position, this.remoteDevicePopupList, index, new GenericMenu.MenuFunction2(this.SetUnityRemoteDevice));
             }
             int num2 = GetIndexById(this.remoteCompressionList, EditorSettings.unityRemoteCompression, 0);
             content = new GUIContent(this.remoteCompressionList[num2].content);
             position = EditorGUI.PrefixLabel(GUILayoutUtility.GetRect(content, EditorStyles.popup), 0, new GUIContent("Compression"));
-            if (EditorGUI.ButtonMouseDown(position, content, FocusType.Passive, EditorStyles.popup))
+            if (EditorGUI.DropdownButton(position, content, FocusType.Passive, EditorStyles.popup))
             {
                 this.DoPopup(position, this.remoteCompressionList, num2, new GenericMenu.MenuFunction2(this.SetUnityRemoteCompression));
             }
             int num3 = GetIndexById(this.remoteResolutionList, EditorSettings.unityRemoteResolution, 0);
             content = new GUIContent(this.remoteResolutionList[num3].content);
             position = EditorGUI.PrefixLabel(GUILayoutUtility.GetRect(content, EditorStyles.popup), 0, new GUIContent("Resolution"));
-            if (EditorGUI.ButtonMouseDown(position, content, FocusType.Passive, EditorStyles.popup))
+            if (EditorGUI.DropdownButton(position, content, FocusType.Passive, EditorStyles.popup))
             {
                 this.DoPopup(position, this.remoteResolutionList, num3, new GenericMenu.MenuFunction2(this.SetUnityRemoteResolution));
             }
             int num4 = GetIndexById(this.remoteJoystickSourceList, EditorSettings.unityRemoteJoystickSource, 0);
             content = new GUIContent(this.remoteJoystickSourceList[num4].content);
             position = EditorGUI.PrefixLabel(GUILayoutUtility.GetRect(content, EditorStyles.popup), 0, new GUIContent("Joystick Source"));
-            if (EditorGUI.ButtonMouseDown(position, content, FocusType.Passive, EditorStyles.popup))
+            if (EditorGUI.DropdownButton(position, content, FocusType.Passive, EditorStyles.popup))
             {
                 this.DoPopup(position, this.remoteJoystickSourceList, num4, new GenericMenu.MenuFunction2(this.SetUnityRemoteJoystickSource));
             }
@@ -472,10 +454,10 @@
 
         private bool VersionControlSystemHasGUI()
         {
-            if (!(Collab.instance.GetCollabInfo().whitelisted && CollabAccess.Instance.IsServiceEnabled()))
+            if (!CollabAccess.Instance.IsServiceEnabled())
             {
                 ExternalVersionControl externalVersionControl = EditorSettings.externalVersionControl;
-                return ((((externalVersionControl != ExternalVersionControl.Disabled) && (externalVersionControl != ExternalVersionControl.AutoDetect)) && (externalVersionControl != ExternalVersionControl.AssetServer)) && (externalVersionControl != ExternalVersionControl.Generic));
+                return (((externalVersionControl != ExternalVersionControl.Disabled) && (externalVersionControl != ExternalVersionControl.AutoDetect)) && (externalVersionControl != ExternalVersionControl.Generic));
             }
             return false;
         }

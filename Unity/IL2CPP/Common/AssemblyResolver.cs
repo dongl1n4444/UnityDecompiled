@@ -5,7 +5,7 @@
     using System;
     using System.Collections.Generic;
 
-    public sealed class AssemblyResolver : Unity.IL2CPP.Common.IAssemblyResolver, Mono.Cecil.IAssemblyResolver
+    public sealed class AssemblyResolver : Unity.IL2CPP.Common.IAssemblyResolver, IDisposable, Mono.Cecil.IAssemblyResolver
     {
         private readonly Dictionary<string, AssemblyDefinition> _assemblies;
         private readonly AssemblyLoader _assemblyLoader;
@@ -17,7 +17,7 @@
             this._assemblies = assemblyCache;
         }
 
-        public AssemblyResolver(AssemblyLoader assemblyLoader) : this(new Dictionary<string, AssemblyDefinition>(StringComparer.InvariantCultureIgnoreCase))
+        public AssemblyResolver(AssemblyLoader assemblyLoader) : this(new Dictionary<string, AssemblyDefinition>(StringComparer.OrdinalIgnoreCase))
         {
             this._assemblyLoader = assemblyLoader;
         }
@@ -29,12 +29,28 @@
 
         public void CacheAssembly(AssemblyDefinition assembly)
         {
-            if (this._assemblies.ContainsKey(assembly.Name.Name))
+            this.CacheAssembly(assembly.Name.Name, assembly);
+        }
+
+        public void CacheAssembly(string name, AssemblyDefinition assembly)
+        {
+            if (this._assemblies.ContainsKey(name))
             {
-                throw new Exception(string.Format("Duplicate assembly found. These modules contain assemblies with same names:{0}\t{1}{0}\t{2}", Environment.NewLine, this._assemblies[assembly.Name.Name].MainModule.FullyQualifiedName, assembly.MainModule.FullyQualifiedName));
+                throw new Exception(string.Format("Duplicate assembly found. These modules contain assemblies with same names:{0}\t{1}{0}\t{2}", Environment.NewLine, this._assemblies[name].MainModule.FileName, assembly.MainModule.FileName));
             }
-            this._assemblies.Add(assembly.Name.Name, assembly);
-            this._searchDirectories.Add(assembly.MainModule.FullyQualifiedName.ToNPath().Parent);
+            this._assemblies.Add(name, assembly);
+            if (assembly.MainModule.FileName != null)
+            {
+                this._searchDirectories.Add(assembly.MainModule.FileName.ToNPath().Parent);
+            }
+        }
+
+        public void Dispose()
+        {
+            foreach (AssemblyDefinition definition in this._assemblies.Values)
+            {
+                definition.Dispose();
+            }
         }
 
         public IEnumerable<NPath> GetSearchDirectories() => 

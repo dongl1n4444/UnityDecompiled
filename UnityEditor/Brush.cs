@@ -15,7 +15,7 @@
 
         private void CreatePreviewBrush()
         {
-            Type[] components = new Type[] { typeof(Projector) };
+            System.Type[] components = new System.Type[] { typeof(Projector) };
             GameObject obj2 = EditorUtility.CreateGameObjectWithHideFlags("TerrainInspectorBrushPreview", HideFlags.HideAndDontSave, components);
             this.m_BrushProjector = obj2.GetComponent(typeof(Projector)) as Projector;
             this.m_BrushProjector.enabled = false;
@@ -27,17 +27,16 @@
             Material material = EditorGUIUtility.LoadRequired("SceneView/TerrainBrushMaterial.mat") as Material;
             material.SetTexture("_CutoutTex", (Texture2D) EditorGUIUtility.Load(EditorResourcesUtility.brushesPath + "brush_cutout.png"));
             this.m_BrushProjector.material = material;
-            this.m_BrushProjector.enabled = false;
         }
 
         public void Dispose()
         {
             if (this.m_BrushProjector != null)
             {
-                Object.DestroyImmediate(this.m_BrushProjector.gameObject);
+                UnityEngine.Object.DestroyImmediate(this.m_BrushProjector.gameObject);
                 this.m_BrushProjector = null;
             }
-            Object.DestroyImmediate(this.m_Preview);
+            UnityEngine.Object.DestroyImmediate(this.m_Preview);
             this.m_Preview = null;
         }
 
@@ -53,6 +52,10 @@
 
         public bool Load(Texture2D brushTex, int size)
         {
+            if ((this.m_BrushProjector != null) && (this.m_Preview != null))
+            {
+                this.m_BrushProjector.material.mainTexture = this.m_Preview;
+            }
             if (((this.m_Brush == brushTex) && (size == this.m_Size)) && (this.m_Strength != null))
             {
                 return true;
@@ -79,11 +82,11 @@
                         this.m_Strength[m] = 1f;
                     }
                 }
-                Object.DestroyImmediate(this.m_Preview);
+                UnityEngine.Object.DestroyImmediate(this.m_Preview);
                 this.m_Preview = new Texture2D(this.m_Size, this.m_Size, TextureFormat.RGBA32, false);
                 this.m_Preview.hideFlags = HideFlags.HideAndDontSave;
                 this.m_Preview.wrapMode = TextureWrapMode.Repeat;
-                this.m_Preview.filterMode = FilterMode.Point;
+                this.m_Preview.filterMode = UnityEngine.FilterMode.Point;
                 Color[] colors = new Color[this.m_Size * this.m_Size];
                 for (int i = 0; i < colors.Length; i++)
                 {

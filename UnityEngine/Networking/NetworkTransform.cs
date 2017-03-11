@@ -55,6 +55,8 @@
         private Vector3 m_TargetSyncVelocity;
         [SerializeField]
         private TransformSyncMode m_TransformSyncMode = TransformSyncMode.SyncNone;
+        [SerializeField]
+        private float m_VelocityThreshold = 0.0001f;
 
         private void Awake()
         {
@@ -68,6 +70,23 @@
             {
                 this.m_LocalTransformWriter = new NetworkWriter();
             }
+        }
+
+        private bool CheckVelocityChanged()
+        {
+            TransformSyncMode transformSyncMode = this.transformSyncMode;
+            if (transformSyncMode != TransformSyncMode.SyncRigidbody2D)
+            {
+                if (transformSyncMode != TransformSyncMode.SyncRigidbody3D)
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return (((this.m_RigidBody2D != null) && (this.m_VelocityThreshold > 0f)) && (Mathf.Abs((float) (this.m_RigidBody2D.velocity.sqrMagnitude - this.m_PrevVelocity)) >= this.m_VelocityThreshold));
+            }
+            return (((this.m_RigidBody3D != null) && (this.m_VelocityThreshold > 0f)) && (Mathf.Abs((float) (this.m_RigidBody3D.velocity.sqrMagnitude - this.m_PrevVelocity)) >= this.m_VelocityThreshold));
         }
 
         private void FixedUpdate()
@@ -108,7 +127,7 @@
             if (((base.syncVarDirtyBits == 0) && NetworkServer.active) && (base.isServer && (this.GetNetworkSendInterval() != 0f)))
             {
                 Vector3 vector = base.transform.position - this.m_PrevPosition;
-                if ((vector.magnitude >= this.movementTheshold) || (Quaternion.Angle(this.m_PrevRotation, base.transform.rotation) >= this.movementTheshold))
+                if (((vector.magnitude >= this.movementTheshold) || (Quaternion.Angle(this.m_PrevRotation, base.transform.rotation) >= this.movementTheshold)) || this.CheckVelocityChanged())
                 {
                     base.SetDirtyBit(1);
                 }
@@ -394,6 +413,10 @@
             {
                 this.m_MovementTheshold = 0f;
             }
+            if (this.m_VelocityThreshold < 0f)
+            {
+                this.m_VelocityThreshold = 0f;
+            }
             if (this.m_SnapThreshold < 0f)
             {
                 this.m_SnapThreshold = 0.01f;
@@ -481,6 +504,7 @@
 
         private void SerializeMode2D(NetworkWriter writer)
         {
+            this.VerifySerializeComponentExists();
             if (base.isServer && (this.m_LastClientSyncTime != 0f))
             {
                 writer.Write((Vector2) this.m_TargetSyncPosition);
@@ -520,6 +544,7 @@
 
         private void SerializeMode3D(NetworkWriter writer)
         {
+            this.VerifySerializeComponentExists();
             if (base.isServer && (this.m_LastClientSyncTime != 0f))
             {
                 writer.Write(this.m_TargetSyncPosition);
@@ -549,6 +574,7 @@
 
         private void SerializeModeCharacterController(NetworkWriter writer)
         {
+            this.VerifySerializeComponentExists();
             if (base.isServer && (this.m_LastClientSyncTime != 0f))
             {
                 writer.Write(this.m_TargetSyncPosition);
@@ -1108,6 +1134,42 @@
             }
         }
 
+        private void VerifySerializeComponentExists()
+        {
+            bool flag = false;
+            System.Type type = null;
+            switch (this.transformSyncMode)
+            {
+                case TransformSyncMode.SyncCharacterController:
+                    if (this.m_CharacterController == null)
+                    {
+                        flag = true;
+                        type = typeof(CharacterController);
+                    }
+                    break;
+
+                case TransformSyncMode.SyncRigidbody2D:
+                    if (this.m_RigidBody2D == null)
+                    {
+                        flag = true;
+                        type = typeof(Rigidbody2D);
+                    }
+                    break;
+
+                case TransformSyncMode.SyncRigidbody3D:
+                    if (this.m_RigidBody3D == null)
+                    {
+                        flag = true;
+                        type = typeof(Rigidbody);
+                    }
+                    break;
+            }
+            if (flag && (type != null))
+            {
+                throw new InvalidOperationException($"transformSyncMode set to {this.transformSyncMode} but no {type.Name} component was found, did you call NetworkServer.Spawn on a prefab?");
+            }
+        }
+
         private static void WriteAngle(NetworkWriter writer, float angle, CompressionSyncMode compression)
         {
             if (compression != CompressionSyncMode.None)
@@ -1325,6 +1387,19 @@
             set
             {
                 this.m_TransformSyncMode = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>The minimum velocity difference that will be synchronized over the network.</para>
+        /// </summary>
+        public float velocityThreshold
+        {
+            get => 
+                this.m_VelocityThreshold;
+            set
+            {
+                this.m_VelocityThreshold = value;
             }
         }
 

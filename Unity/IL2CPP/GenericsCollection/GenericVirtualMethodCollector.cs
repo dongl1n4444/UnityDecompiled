@@ -24,16 +24,16 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<GenericInstanceMethod, bool>(null, (IntPtr) <Collect>m__0);
+                <>f__am$cache0 = m => m.Resolve().IsVirtual;
             }
             GenericInstanceMethod[] methodArray = generics.Methods.Items.Where<GenericInstanceMethod>(<>f__am$cache0).ToArray<GenericInstanceMethod>();
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<TypeDefinition, bool>(null, (IntPtr) <Collect>m__1);
+                <>f__am$cache1 = t => !t.HasGenericParameters;
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<TypeReference, bool>(null, (IntPtr) <Collect>m__2);
+                <>f__am$cache2 = t => TypeImplementsGenericVirtualMethods(t.Resolve());
             }
             TypeReference[] referenceArray = types.Where<TypeDefinition>(<>f__am$cache1).Concat<TypeReference>(generics.Types.Items).Where<TypeReference>(<>f__am$cache2).ToArray<TypeReference>();
             foreach (TypeReference reference in referenceArray)

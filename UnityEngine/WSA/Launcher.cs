@@ -3,15 +3,16 @@
     using System;
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Class which is capable of launching user's default app for file type or a protocol. See also PlayerSettings where you can specify file or URI associations.</para>
     /// </summary>
     public sealed class Launcher
     {
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void InternalLaunchFileWithPicker(string fileExtension);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void InternalLaunchUri(string uri, bool showWarning);
         /// <summary>
         /// <para>Launches the default app associated with specified file.</para>
@@ -19,7 +20,7 @@
         /// <param name="folder">Folder type where the file is located.</param>
         /// <param name="relativeFilePath">Relative file path inside the specified folder.</param>
         /// <param name="showWarning">Shows user a warning that application will be switched.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void LaunchFile(Folder folder, string relativeFilePath, bool showWarning);
         /// <summary>
         /// <para>Opens a dialog for picking the file.</para>

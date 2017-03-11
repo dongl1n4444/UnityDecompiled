@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections;
+    using UnityEditorInternal;
     using UnityEngine;
 
     internal class LightingWindowLightmapPreviewTab
@@ -11,12 +12,20 @@
         private int m_SelectedLightmap = -1;
         private static Styles s_Styles;
 
-        private static void Header(Rect rect, float maxLightmaps)
+        private static void DrawHeader(Rect rect, bool showdrawDirectionalityHeader, bool showShadowMaskHeader, float maxLightmaps)
         {
             rect.width /= maxLightmaps;
             EditorGUI.DropShadowLabel(rect, "Intensity");
             rect.x += rect.width;
-            EditorGUI.DropShadowLabel(rect, "Directionality");
+            if (showdrawDirectionalityHeader)
+            {
+                EditorGUI.DropShadowLabel(rect, "Directionality");
+                rect.x += rect.width;
+            }
+            if (showShadowMaskHeader)
+            {
+                EditorGUI.DropShadowLabel(rect, "Shadowmask");
+            }
         }
 
         private Texture2D LightmapField(Texture2D lightmap, int index)
@@ -41,33 +50,67 @@
             GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Height(r.height) };
             this.m_ScrollPositionLightmaps = EditorGUILayout.BeginScrollView(this.m_ScrollPositionLightmaps, options);
             int lightmapIndex = 0;
-            float maxLightmaps = 2f;
-            Header(GUILayoutUtility.GetRect(r.width, r.width, (float) 20f, (float) 20f), maxLightmaps);
+            bool showdrawDirectionalityHeader = false;
+            bool showShadowMaskHeader = false;
             foreach (LightmapData data in LightmapSettings.lightmaps)
             {
-                if ((data.lightmapLight == null) && (data.lightmapDir == null))
+                if (data.lightmapDir != null)
+                {
+                    showdrawDirectionalityHeader = true;
+                }
+                if (data.shadowMask != null)
+                {
+                    showShadowMaskHeader = true;
+                }
+            }
+            float maxLightmaps = 1f;
+            if (showdrawDirectionalityHeader)
+            {
+                maxLightmaps++;
+            }
+            if (showShadowMaskHeader)
+            {
+                maxLightmaps++;
+            }
+            DrawHeader(GUILayoutUtility.GetRect(r.width, r.width, (float) 20f, (float) 20f), showdrawDirectionalityHeader, showShadowMaskHeader, maxLightmaps);
+            foreach (LightmapData data2 in LightmapSettings.lightmaps)
+            {
+                if (((data2.lightmapColor == null) && (data2.lightmapDir == null)) && (data2.shadowMask == null))
                 {
                     lightmapIndex++;
                 }
                 else
                 {
-                    int num4 = (data.lightmapLight == null) ? -1 : Math.Max(data.lightmapLight.width, data.lightmapLight.height);
-                    int num5 = (data.lightmapDir == null) ? -1 : Math.Max(data.lightmapDir.width, data.lightmapDir.height);
-                    Texture2D textured = (num4 <= num5) ? data.lightmapDir : data.lightmapLight;
-                    GUILayoutOption[] optionArray2 = new GUILayoutOption[2];
-                    optionArray2[0] = GUILayout.MaxWidth(r.width);
-                    int[] values = new int[] { textured.height };
-                    optionArray2[1] = GUILayout.MaxHeight((float) Mathf.Min(values));
-                    GUILayoutOption[] optionArray = optionArray2;
-                    Rect aspectRect = GUILayoutUtility.GetAspectRect(maxLightmaps, optionArray);
-                    aspectRect.width -= 5f;
-                    aspectRect.width /= maxLightmaps;
-                    EditorGUI.DrawPreviewTexture(aspectRect, data.lightmapLight);
-                    this.MenuSelectLightmapUsers(aspectRect, lightmapIndex);
-                    if (data.lightmapDir != null)
+                    Texture2D textured;
+                    int num5 = (data2.lightmapColor == null) ? -1 : Math.Max(data2.lightmapColor.width, data2.lightmapColor.height);
+                    int num6 = (data2.lightmapDir == null) ? -1 : Math.Max(data2.lightmapDir.width, data2.lightmapDir.height);
+                    int num7 = (data2.shadowMask == null) ? -1 : Math.Max(data2.shadowMask.width, data2.shadowMask.height);
+                    if (num5 > num6)
                     {
-                        aspectRect.x += aspectRect.width + 5f;
-                        EditorGUI.DrawPreviewTexture(aspectRect, data.lightmapDir);
+                        textured = (num5 <= num7) ? data2.shadowMask : data2.lightmapColor;
+                    }
+                    else
+                    {
+                        textured = (num6 <= num7) ? data2.shadowMask : data2.lightmapDir;
+                    }
+                    GUILayoutOption[] optionArray = new GUILayoutOption[] { GUILayout.MaxWidth(r.width), GUILayout.MaxHeight((float) textured.height) };
+                    Rect aspectRect = GUILayoutUtility.GetAspectRect(maxLightmaps, optionArray);
+                    float num8 = 5f;
+                    aspectRect.width /= maxLightmaps;
+                    aspectRect.width -= num8;
+                    aspectRect.x += num8 / 2f;
+                    EditorGUI.DrawPreviewTexture(aspectRect, data2.lightmapColor);
+                    this.MenuSelectLightmapUsers(aspectRect, lightmapIndex);
+                    if (data2.lightmapDir != null)
+                    {
+                        aspectRect.x += aspectRect.width + num8;
+                        EditorGUI.DrawPreviewTexture(aspectRect, data2.lightmapDir);
+                        this.MenuSelectLightmapUsers(aspectRect, lightmapIndex);
+                    }
+                    if (data2.shadowMask != null)
+                    {
+                        aspectRect.x += aspectRect.width + num8;
+                        EditorGUI.DrawPreviewTexture(aspectRect, data2.shadowMask);
                         this.MenuSelectLightmapUsers(aspectRect, lightmapIndex);
                     }
                     GUILayout.Space(10f);
@@ -95,15 +138,62 @@
             this.m_ScrollPositionMaps = GUILayout.BeginScrollView(this.m_ScrollPositionMaps, new GUILayoutOption[0]);
             using (new EditorGUI.DisabledScope(true))
             {
+                bool flag = false;
+                bool flag2 = false;
+                foreach (LightmapData data in lightmaps)
+                {
+                    if (data.lightmapDir != null)
+                    {
+                        flag = true;
+                    }
+                    if (data.shadowMask != null)
+                    {
+                        flag2 = true;
+                    }
+                }
                 for (int i = 0; i < lightmaps.Length; i++)
                 {
                     GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-                    GUILayout.FlexibleSpace();
-                    GUILayout.Label(i.ToString(), new GUILayoutOption[0]);
                     GUILayout.Space(5f);
-                    lightmaps[i].lightmapLight = this.LightmapField(lightmaps[i].lightmapLight, i);
-                    GUILayout.Space(10f);
-                    lightmaps[i].lightmapDir = this.LightmapField(lightmaps[i].lightmapDir, i);
+                    lightmaps[i].lightmapColor = this.LightmapField(lightmaps[i].lightmapColor, i);
+                    if (flag)
+                    {
+                        GUILayout.Space(10f);
+                        lightmaps[i].lightmapDir = this.LightmapField(lightmaps[i].lightmapDir, i);
+                    }
+                    if (flag2)
+                    {
+                        GUILayout.Space(10f);
+                        lightmaps[i].shadowMask = this.LightmapField(lightmaps[i].shadowMask, i);
+                    }
+                    GUILayout.Space(5f);
+                    LightmapConvergence lightmapConvergence = Lightmapping.GetLightmapConvergence(i);
+                    GUILayout.BeginVertical(new GUILayoutOption[0]);
+                    GUILayout.Label("Index: " + i, EditorStyles.miniBoldLabel, new GUILayoutOption[0]);
+                    if (lightmapConvergence.IsValid())
+                    {
+                        GUILayout.Label("Occupied: " + InternalEditorUtility.CountToString((ulong) lightmapConvergence.occupiedTexelCount), EditorStyles.miniLabel, new GUILayoutOption[0]);
+                        object[] objArray1 = new object[] { "Direct: ", lightmapConvergence.minDirectSamples, " / ", lightmapConvergence.maxDirectSamples, " / ", lightmapConvergence.avgDirectSamples, "|min / max / avg samples per texel" };
+                        GUILayout.Label(EditorGUIUtility.TextContent(string.Concat(objArray1)), EditorStyles.miniLabel, new GUILayoutOption[0]);
+                        object[] objArray2 = new object[] { "GI: ", lightmapConvergence.minGISamples, " / ", lightmapConvergence.maxGISamples, " / ", lightmapConvergence.avgGISamples, "|min / max / avg samples per texel" };
+                        GUILayout.Label(EditorGUIUtility.TextContent(string.Concat(objArray2)), EditorStyles.miniLabel, new GUILayoutOption[0]);
+                    }
+                    else
+                    {
+                        GUILayout.Label("Occupied: N/A", EditorStyles.miniLabel, new GUILayoutOption[0]);
+                        GUILayout.Label("Direct: N/A", EditorStyles.miniLabel, new GUILayoutOption[0]);
+                        GUILayout.Label("GI: N/A", EditorStyles.miniLabel, new GUILayoutOption[0]);
+                    }
+                    float lightmapBakePerformance = Lightmapping.GetLightmapBakePerformance(i);
+                    if (lightmapBakePerformance >= 0.0)
+                    {
+                        GUILayout.Label(lightmapBakePerformance.ToString("0.00") + " mrays/sec", EditorStyles.miniLabel, new GUILayoutOption[0]);
+                    }
+                    else
+                    {
+                        GUILayout.Label("N/A mrays/sec", EditorStyles.miniLabel, new GUILayoutOption[0]);
+                    }
+                    GUILayout.EndVertical();
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
                 }
@@ -126,7 +216,7 @@
         {
             int num = (int) userData;
             ArrayList list = new ArrayList();
-            MeshRenderer[] rendererArray = Object.FindObjectsOfType(typeof(MeshRenderer)) as MeshRenderer[];
+            MeshRenderer[] rendererArray = UnityEngine.Object.FindObjectsOfType(typeof(MeshRenderer)) as MeshRenderer[];
             foreach (MeshRenderer renderer in rendererArray)
             {
                 if ((renderer != null) && (renderer.lightmapIndex == num))
@@ -134,7 +224,7 @@
                     list.Add(renderer.gameObject);
                 }
             }
-            Terrain[] terrainArray = Object.FindObjectsOfType(typeof(Terrain)) as Terrain[];
+            Terrain[] terrainArray = UnityEngine.Object.FindObjectsOfType(typeof(Terrain)) as Terrain[];
             foreach (Terrain terrain in terrainArray)
             {
                 if ((terrain != null) && (terrain.lightmapIndex == num))
@@ -142,7 +232,7 @@
                     list.Add(terrain.gameObject);
                 }
             }
-            Selection.objects = list.ToArray(typeof(Object)) as Object[];
+            Selection.objects = list.ToArray(typeof(UnityEngine.Object)) as UnityEngine.Object[];
         }
 
         public void UpdateLightmapSelection()

@@ -24,27 +24,27 @@
                 {
                     s_Texts = new Texts();
                 }
-                this.m_X = new SerializedMinMaxCurve(this, s_Texts.x, "x", ModuleUI.kUseSignedRange);
-                this.m_Y = new SerializedMinMaxCurve(this, s_Texts.y, "y", ModuleUI.kUseSignedRange);
+                this.m_SeparateAxes = base.GetProperty("separateAxes");
+                this.m_X = new SerializedMinMaxCurve(this, s_Texts.x, "x", ModuleUI.kUseSignedRange, false, this.m_SeparateAxes.boolValue);
+                this.m_Y = new SerializedMinMaxCurve(this, s_Texts.y, "y", ModuleUI.kUseSignedRange, false, this.m_SeparateAxes.boolValue);
                 this.m_Z = new SerializedMinMaxCurve(this, s_Texts.z, "curve", ModuleUI.kUseSignedRange);
                 this.m_X.m_RemapValue = 57.29578f;
                 this.m_Y.m_RemapValue = 57.29578f;
                 this.m_Z.m_RemapValue = 57.29578f;
-                this.m_SeparateAxes = base.GetProperty("separateAxes");
             }
         }
 
-        public override void OnInspectorGUI(ParticleSystem s)
+        public override void OnInspectorGUI(InitialModuleUI initial)
         {
             if (s_Texts == null)
             {
                 s_Texts = new Texts();
             }
             EditorGUI.BeginChangeCheck();
-            bool flag = ModuleUI.GUIToggle(s_Texts.separateAxes, this.m_SeparateAxes, new GUILayoutOption[0]);
+            bool addToCurveEditor = ModuleUI.GUIToggle(s_Texts.separateAxes, this.m_SeparateAxes, new GUILayoutOption[0]);
             if (EditorGUI.EndChangeCheck())
             {
-                if (flag)
+                if (addToCurveEditor)
                 {
                     this.m_Z.RemoveCurveFromEditor();
                 }
@@ -55,10 +55,12 @@
                     this.m_Z.RemoveCurveFromEditor();
                 }
             }
-            MinMaxCurveState state = this.m_Z.state;
-            this.m_Y.state = state;
-            this.m_X.state = state;
-            if (flag)
+            if (!this.m_Z.stateHasMultipleDifferentValues)
+            {
+                this.m_X.SetMinMaxState(this.m_Z.state, addToCurveEditor);
+                this.m_Y.SetMinMaxState(this.m_Z.state, addToCurveEditor);
+            }
+            if (addToCurveEditor)
             {
                 this.m_Z.m_DisplayName = s_Texts.z;
                 base.GUITripleMinMaxCurve(GUIContent.none, s_Texts.x, this.m_X, s_Texts.y, this.m_Y, s_Texts.z, this.m_Z, null, new GUILayoutOption[0]);
@@ -73,9 +75,20 @@
         public override void UpdateCullingSupportedString(ref string text)
         {
             this.Init();
-            if ((!this.m_X.SupportsProcedural() || !this.m_Y.SupportsProcedural()) || !this.m_Z.SupportsProcedural())
+            string failureReason = string.Empty;
+            if (!this.m_X.SupportsProcedural(ref failureReason))
             {
-                text = text + "\n\tLifetime rotation curve uses too many keys.";
+                text = text + "\nRotation over Lifetime module curve X: " + failureReason;
+            }
+            failureReason = string.Empty;
+            if (!this.m_Y.SupportsProcedural(ref failureReason))
+            {
+                text = text + "\nRotation over Lifetime module curve Y: " + failureReason;
+            }
+            failureReason = string.Empty;
+            if (!this.m_Z.SupportsProcedural(ref failureReason))
+            {
+                text = text + "\nRotation over Lifetime module curve Z: " + failureReason;
             }
         }
 

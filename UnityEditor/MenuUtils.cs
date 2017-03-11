@@ -10,7 +10,7 @@
         [CompilerGenerated]
         private static GenericMenu.MenuFunction2 <>f__mg$cache0;
 
-        public static void ExtractMenuItemWithPath(string menuString, GenericMenu menu, string replacementMenuString, Object[] temporaryContext, int userData, Action<string, Object[], int> onBeforeExecuteCallback, Action<string, Object[], int> onAfterExecuteCallback)
+        public static void ExtractMenuItemWithPath(string menuString, GenericMenu menu, string replacementMenuString, UnityEngine.Object[] temporaryContext, int userData, Action<string, UnityEngine.Object[], int> onBeforeExecuteCallback, Action<string, UnityEngine.Object[], int> onAfterExecuteCallback)
         {
             MenuCallbackObject obj2 = new MenuCallbackObject {
                 menuItemPath = menuString,
@@ -26,7 +26,7 @@
             menu.AddItem(new GUIContent(replacementMenuString), false, <>f__mg$cache0, obj2);
         }
 
-        public static void ExtractSubMenuWithPath(string path, GenericMenu menu, string replacementPath, Object[] temporaryContext)
+        public static void ExtractSubMenuWithPath(string path, GenericMenu menu, string replacementPath, UnityEngine.Object[] temporaryContext)
         {
             HashSet<string> set = new HashSet<string>(Unsupported.GetSubmenus(path));
             foreach (string str in Unsupported.GetSubmenusIncludingSeparators(path))
@@ -44,7 +44,7 @@
             MenuCallbackObject obj2 = callbackObject as MenuCallbackObject;
             if (obj2.onBeforeExecuteCallback != null)
             {
-                obj2.onBeforeExecuteCallback.Invoke(obj2.menuItemPath, obj2.temporaryContext, obj2.userData);
+                obj2.onBeforeExecuteCallback(obj2.menuItemPath, obj2.temporaryContext, obj2.userData);
             }
             if (obj2.temporaryContext != null)
             {
@@ -56,16 +56,16 @@
             }
             if (obj2.onAfterExecuteCallback != null)
             {
-                obj2.onAfterExecuteCallback.Invoke(obj2.menuItemPath, obj2.temporaryContext, obj2.userData);
+                obj2.onAfterExecuteCallback(obj2.menuItemPath, obj2.temporaryContext, obj2.userData);
             }
         }
 
         private class MenuCallbackObject
         {
             public string menuItemPath;
-            public Action<string, Object[], int> onAfterExecuteCallback;
-            public Action<string, Object[], int> onBeforeExecuteCallback;
-            public Object[] temporaryContext;
+            public Action<string, UnityEngine.Object[], int> onAfterExecuteCallback;
+            public Action<string, UnityEngine.Object[], int> onBeforeExecuteCallback;
+            public UnityEngine.Object[] temporaryContext;
             public int userData;
         }
     }

@@ -5,11 +5,11 @@
     using NiceIO;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using Unity.IL2CPP.Common;
-    using Unity.IL2CPP.GenericsCollection;
     using Unity.IL2CPP.ILPreProcessor;
     using Unity.IL2CPP.IoC;
     using Unity.IL2CPP.IoCServices;
@@ -37,17 +37,19 @@
         [CompilerGenerated]
         private static Func<TableInfo, IEnumerable<string>> <>f__am$cache6;
         [CompilerGenerated]
-        private static Func<TableInfo, bool> <>f__am$cache7;
+        private static Func<MethodDefinition, bool> <>f__am$cache7;
         [CompilerGenerated]
-        private static Func<TableInfo, string> <>f__am$cache8;
+        private static Func<TableInfo, bool> <>f__am$cache8;
         [CompilerGenerated]
-        private static Func<TypeDefinition, int, string> <>f__am$cache9;
+        private static Func<TableInfo, string> <>f__am$cache9;
         [CompilerGenerated]
-        private static Func<string, string> <>f__am$cacheA;
+        private static Func<TypeDefinition, int, string> <>f__am$cacheA;
         [CompilerGenerated]
-        private static Func<FieldDefinition, bool> <>f__am$cacheB;
+        private static Func<string, string> <>f__am$cacheB;
         [CompilerGenerated]
         private static Func<FieldDefinition, bool> <>f__am$cacheC;
+        [CompilerGenerated]
+        private static Func<FieldDefinition, bool> <>f__am$cacheD;
         [CompilerGenerated]
         private static Func<FieldDefinition, string> <>f__mg$cache0;
         [CompilerGenerated]
@@ -73,6 +75,8 @@
         public static ITypeProviderService TypeProvider;
         [Inject]
         public static IVirtualCallCollectorService VirtualCallCollector;
+        [Inject]
+        public static IWindowsRuntimeProjections WindowsRuntimeProjections;
 
         private static void AddStreamAndRecordHeader(string name, Stream headerStream, Stream dataStream, Stream stream)
         {
@@ -85,7 +89,7 @@
                 throw new ArgumentException($"Stream is not aligned to minimum alignment of {4}", "stream");
             }
             StatsService.RecordMetadataStream(name, stream.Position);
-            headerStream.WriteLongAsInt(0x100L + dataStream.Position);
+            headerStream.WriteLongAsInt(0x108L + dataStream.Position);
             headerStream.WriteLongAsInt(stream.Position);
             stream.Seek(0L, SeekOrigin.Begin);
             stream.CopyTo(dataStream);
@@ -153,6 +157,15 @@
             return type;
         }
 
+        private static MethodDefinition FirstNotStrippedMethodOf(TypeDefinition type)
+        {
+            if (<>f__am$cache7 == null)
+            {
+                <>f__am$cache7 = m => !m.IsStripped();
+            }
+            return type.Methods.First<MethodDefinition>(<>f__am$cache7);
+        }
+
         private static string FormatMethodTableEntry(MethodReference m, Dictionary<string, int> pointers)
         {
             int num;
@@ -177,6 +190,9 @@
             }
             return $"sizeof ({Naming.ForType(type)}){(!type.IsValueType() ? string.Empty : "+ sizeof (Il2CppObject)")}";
         }
+
+        private static bool IsAvailableAndNotStripped(MethodDefinition method) => 
+            ((method != null) && !method.IsStripped());
 
         private static string OffsetOf(FieldDefinition field)
         {
@@ -205,16 +221,16 @@
             object[] args = new object[4];
             args[0] = !type.HasGenericParameters ? InstanceSizeFor(type) : "0";
             args[1] = !type.HasGenericParameters ? writer.NativeSize : "0";
-            if (!type.HasGenericParameters && (<>f__am$cacheB == null))
-            {
-                <>f__am$cacheB = new Func<FieldDefinition, bool>(null, (IntPtr) <Sizes>m__B);
-            }
-            args[2] = (!type.Fields.Any<FieldDefinition>(<>f__am$cacheB) && !type.StoresNonFieldsInStaticFields()) ? "0" : $"sizeof({Naming.ForStaticFieldsStruct(type)})";
             if (!type.HasGenericParameters && (<>f__am$cacheC == null))
             {
-                <>f__am$cacheC = new Func<FieldDefinition, bool>(null, (IntPtr) <Sizes>m__C);
+                <>f__am$cacheC = f => f.IsNormalStatic();
             }
-            args[3] = !type.Fields.Any<FieldDefinition>(<>f__am$cacheC) ? "0" : $"sizeof({Naming.ForThreadFieldsStruct(type)})";
+            args[2] = (!type.Fields.Any<FieldDefinition>(<>f__am$cacheC) && !type.StoresNonFieldsInStaticFields()) ? "0" : $"sizeof({Naming.ForStaticFieldsStruct(type)})";
+            if (!type.HasGenericParameters && (<>f__am$cacheD == null))
+            {
+                <>f__am$cacheD = f => f.IsThreadStatic();
+            }
+            args[3] = !type.Fields.Any<FieldDefinition>(<>f__am$cacheD) ? "0" : $"sizeof({Naming.ForThreadFieldsStruct(type)})";
             return string.Format("{0}, {1}, {2}, {3}", args);
         }
 
@@ -225,31 +241,31 @@
         {
             if (<>f__mg$cache1 == null)
             {
-                <>f__mg$cache1 = new Func<TypeReference, bool>(null, (IntPtr) TypeDoesNotExceedMaximumRecursion);
+                <>f__mg$cache1 = new Func<TypeReference, bool>(MetadataCacheWriter.TypeDoesNotExceedMaximumRecursion);
             }
             return types.All<TypeReference>(<>f__mg$cache1);
         }
 
         public static TableInfo WriteFieldTable(CppCodeWriter writer, List<TableInfo> fieldTableInfos)
         {
-            if (<>f__am$cache7 == null)
+            if (<>f__am$cache8 == null)
             {
-                <>f__am$cache7 = new Func<TableInfo, bool>(null, (IntPtr) <WriteFieldTable>m__7);
+                <>f__am$cache8 = item => item.Count > 0;
             }
-            foreach (TableInfo info in fieldTableInfos.Where<TableInfo>(<>f__am$cache7).ToArray<TableInfo>())
+            foreach (TableInfo info in fieldTableInfos.Where<TableInfo>(<>f__am$cache8).ToArray<TableInfo>())
             {
                 object[] args = new object[] { info.Name, info.Count };
                 writer.WriteLine("extern const int32_t {0}[{1}];", args);
             }
             IncludeWriter.WriteRegistrationIncludes(writer);
-            if (<>f__am$cache8 == null)
+            if (<>f__am$cache9 == null)
             {
-                <>f__am$cache8 = new Func<TableInfo, string>(null, (IntPtr) <WriteFieldTable>m__8);
+                <>f__am$cache9 = table => (table.Count <= 0) ? Naming.Null : table.Name;
             }
-            return MetadataWriter.WriteTable<TableInfo>(writer, "extern const int32_t*", "g_FieldOffsetTable", fieldTableInfos, <>f__am$cache8);
+            return MetadataWriter.WriteTable<TableInfo>(writer, "extern const int32_t*", "g_FieldOffsetTable", fieldTableInfos, <>f__am$cache9);
         }
 
-        public static void WriteMetadata(NPath outputDir, NPath dataFolder, InflatedCollectionCollector generics, TypeDefinition[] allTypeDefinitions, ICollection<AssemblyDefinition> usedAssemblies, MethodTables methodTables, IMetadataCollection metadataCollector, AttributeCollection attributeCollection, VTableBuilder vTableBuilder, IMethodCollectorResults methodCollector, UnresolvedVirtualsTablesInfo virtualCallTables)
+        public static void WriteMetadata(NPath outputDir, NPath dataFolder, TypeDefinition[] allTypeDefinitions, ICollection<AssemblyDefinition> usedAssemblies, MethodTables methodTables, IMetadataCollection metadataCollector, AttributeCollection attributeCollection, VTableBuilder vTableBuilder, IMethodCollectorResults methodCollector, IInteropDataCollectorResults interopDataCollector, UnresolvedVirtualsTablesInfo virtualCallTables)
         {
             TableInfo info;
             <WriteMetadata>c__AnonStorey0 storey = new <WriteMetadata>c__AnonStorey0 {
@@ -257,6 +273,7 @@
                 metadataCollector = metadataCollector,
                 attributeCollection = attributeCollection,
                 methodCollector = methodCollector,
+                interopDataCollector = interopDataCollector,
                 vTableBuilder = vTableBuilder,
                 virtualCallTables = virtualCallTables
             };
@@ -270,11 +287,11 @@
             }
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<KeyValuePair<FieldReference, uint>, uint>(null, (IntPtr) <WriteMetadata>m__0);
+                <>f__am$cache0 = item => item.Value;
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<KeyValuePair<FieldReference, uint>, KeyValuePair<int, int>>(null, (IntPtr) <WriteMetadata>m__1);
+                <>f__am$cache1 = item => new KeyValuePair<int, int>(Il2CppTypeCollector.GetIndex(item.Key.DeclaringType, 0), Naming.GetFieldIndex(item.Key, false));
             }
             storey.fieldRefs = FieldReferenceCollector.Fields.OrderBy<KeyValuePair<FieldReference, uint>, uint>(<>f__am$cache0).Select<KeyValuePair<FieldReference, uint>, KeyValuePair<int, int>>(<>f__am$cache1).ToArray<KeyValuePair<int, int>>();
             using (TinyProfiler.Section("GenericClasses", ""))
@@ -283,11 +300,11 @@
                 {
                     if (<>f__am$cache2 == null)
                     {
-                        <>f__am$cache2 = new Func<KeyValuePair<Il2CppTypeData, int>, bool>(null, (IntPtr) <WriteMetadata>m__2);
+                        <>f__am$cache2 = t => t.Key.Type.IsGenericInstance;
                     }
                     if (<>f__am$cache3 == null)
                     {
-                        <>f__am$cache3 = new Func<KeyValuePair<Il2CppTypeData, int>, TypeReference>(null, (IntPtr) <WriteMetadata>m__3);
+                        <>f__am$cache3 = t => t.Key.Type;
                     }
                     TypeReference[] items = Il2CppTypeCollectorReader.Items.Where<KeyValuePair<Il2CppTypeData, int>>(<>f__am$cache2).Select<KeyValuePair<Il2CppTypeData, int>, TypeReference>(<>f__am$cache3).Distinct<TypeReference>(new Unity.IL2CPP.Common.TypeReferenceEqualityComparer()).ToArray<TypeReference>();
                     foreach (TypeReference reference in items)
@@ -296,7 +313,7 @@
                     }
                     if (<>f__am$cache4 == null)
                     {
-                        <>f__am$cache4 = new Func<TypeReference, string>(null, (IntPtr) <WriteMetadata>m__4);
+                        <>f__am$cache4 = t => "&" + Naming.ForGenericClass(t);
                     }
                     source.Add(MetadataWriter.WriteTable<TypeReference>(writer3, "extern Il2CppGenericClass* const", "s_Il2CppGenericTypes", items, <>f__am$cache4));
                 }
@@ -315,10 +332,10 @@
                 {
                     if (<>f__am$cache5 == null)
                     {
-                        <>f__am$cache5 = new Func<MethodReference, bool>(null, (IntPtr) <WriteMetadata>m__5);
+                        <>f__am$cache5 = m => (!m.HasGenericParameters && !m.ContainsGenericParameters()) && TypeDoesNotExceedMaximumRecursion(m.DeclaringType);
                     }
                     MethodReference[] referenceArray3 = Il2CppGenericMethodCollector.Items.Keys.Where<MethodReference>(<>f__am$cache5).ToArray<MethodReference>();
-                    source.Add(MetadataWriter.WriteTable<MethodReference>(writer5, "extern const Il2CppGenericMethodFunctionsDefinitions", "s_Il2CppGenericMethodFunctions", referenceArray3, new Func<MethodReference, string>(storey, (IntPtr) this.<>m__0)));
+                    source.Add(MetadataWriter.WriteTable<MethodReference>(writer5, "extern const Il2CppGenericMethodFunctionsDefinitions", "s_Il2CppGenericMethodFunctions", referenceArray3, new Func<MethodReference, string>(storey.<>m__0)));
                 }
             }
             using (TinyProfiler.Section("Il2CppTypes", ""))
@@ -357,7 +374,7 @@
                                 writer9.WriteLine("extern const Il2CppTypeDefinitionSizes g_typeDefinitionSize{0} = {{ {1} }};", args);
                                 if (<>f__mg$cache0 == null)
                                 {
-                                    <>f__mg$cache0 = new Func<FieldDefinition, string>(null, (IntPtr) OffsetOf);
+                                    <>f__mg$cache0 = new Func<FieldDefinition, string>(MetadataCacheWriter.OffsetOf);
                                 }
                                 fieldTableInfos.Add(MetadataWriter.WriteTable<FieldDefinition>(writer9, "extern const int32_t", "g_FieldOffsetTable" + num3, definition.Fields, <>f__mg$cache0));
                                 num3++;
@@ -384,7 +401,7 @@
                     }
                     if (<>f__am$cache6 == null)
                     {
-                        <>f__am$cache6 = new Func<TableInfo, IEnumerable<string>>(null, (IntPtr) <WriteMetadata>m__6);
+                        <>f__am$cache6 = table => new string[] { table.Count.ToString(CultureInfo.InvariantCulture), table.Name };
                     }
                     writer10.WriteStructInitializer("extern const Il2CppMetadataRegistration", "g_MetadataRegistration", source.SelectMany<TableInfo, string>(<>f__am$cache6));
                 }
@@ -441,8 +458,9 @@
                         WriteMetadataToStream("Attribute Types", stream2, stream3, new Action<MemoryStream>(storey.<>m__1B));
                         WriteMetadataToStream("Unresolved Virtual Call Parameter Types", stream2, stream3, new Action<MemoryStream>(storey.<>m__1C));
                         WriteMetadataToStream("Unresolved Virtual Call Parameter Ranges", stream2, stream3, new Action<MemoryStream>(storey.<>m__1D));
+                        WriteMetadataToStream("Windows Runtime type names", stream2, stream3, new Action<MemoryStream>(storey.<>m__1E));
                         stream.WriteUInt(0xfab11baf);
-                        stream.WriteInt(0x16);
+                        stream.WriteInt(0x17);
                         stream2.Seek(0L, SeekOrigin.Begin);
                         stream2.CopyTo(stream);
                         stream3.Seek(0L, SeekOrigin.Begin);
@@ -466,30 +484,30 @@
 
         public static TableInfo WriteTypeDefinitionSizesTable(CppCodeWriter writer, IMetadataCollection metadataCollector, AttributeCollection attributeCollection)
         {
-            if (<>f__am$cache9 == null)
+            if (<>f__am$cacheA == null)
             {
-                <>f__am$cache9 = new Func<TypeDefinition, int, string>(null, (IntPtr) <WriteTypeDefinitionSizesTable>m__9);
+                <>f__am$cacheA = (type, index) => "g_typeDefinitionSize" + index;
             }
-            string[] items = metadataCollector.GetTypeInfos().Select<TypeDefinition, string>(<>f__am$cache9).ToArray<string>();
+            string[] items = metadataCollector.GetTypeInfos().Select<TypeDefinition, string>(<>f__am$cacheA).ToArray<string>();
             foreach (string str in items)
             {
                 object[] args = new object[] { str };
                 writer.WriteLine("extern const Il2CppTypeDefinitionSizes {0};", args);
             }
-            if (<>f__am$cacheA == null)
+            if (<>f__am$cacheB == null)
             {
-                <>f__am$cacheA = new Func<string, string>(null, (IntPtr) <WriteTypeDefinitionSizesTable>m__A);
+                <>f__am$cacheB = varName => Naming.AddressOf(varName);
             }
-            return MetadataWriter.WriteTable<string>(writer, "extern const Il2CppTypeDefinitionSizes*", "g_Il2CppTypeDefinitionSizesTable", items, <>f__am$cacheA);
+            return MetadataWriter.WriteTable<string>(writer, "extern const Il2CppTypeDefinitionSizes*", "g_Il2CppTypeDefinitionSizesTable", items, <>f__am$cacheB);
         }
 
         [CompilerGenerated]
         private sealed class <WriteMetadata>c__AnonStorey0
         {
             private static Func<MethodDefinition, bool> <>f__am$cache0;
-            private static Func<MethodDefinition, bool> <>f__am$cache1;
             internal AttributeCollection attributeCollection;
             internal KeyValuePair<int, int>[] fieldRefs;
+            internal IInteropDataCollectorResults interopDataCollector;
             internal IMetadataCollection metadataCollector;
             internal IMethodCollectorResults methodCollector;
             internal MethodTables methodTables;
@@ -531,7 +549,7 @@
                 {
                     int count = 0;
                     int num2 = 0;
-                    if (!definition.IsInterface || definition.IsComOrWindowsRuntimeType())
+                    if ((!definition.IsInterface || definition.IsComOrWindowsRuntimeType()) || (MetadataCacheWriter.WindowsRuntimeProjections.GetNativeToManagedAdapterClassFor(definition) != null))
                     {
                         VTable table = this.vTableBuilder.VTableFor(definition, null);
                         count = table.Slots.Count;
@@ -546,7 +564,7 @@
                     {
                         if (<>f__am$cache0 == null)
                         {
-                            <>f__am$cache0 = new Func<MethodDefinition, bool>(null, (IntPtr) <>m__1E);
+                            <>f__am$cache0 = m => !m.IsStripped();
                         }
                         MethodDefinition[] definitionArray = definition.Methods.Where<MethodDefinition>(<>f__am$cache0).ToArray<MethodDefinition>();
                         length = definitionArray.Length;
@@ -566,13 +584,6 @@
                     stream.WriteInt(this.metadataCollector.GetRGCTXEntriesStartIndex(definition));
                     stream.WriteInt(this.metadataCollector.GetRGCTXEntriesCount(definition));
                     stream.WriteInt(this.metadataCollector.GetGenericContainerIndex(definition));
-                    if (definition.IsDelegate())
-                    {
-                    }
-                    stream.WriteInt((<>f__am$cache1 != null) ? -1 : this.methodCollector.GetWrapperForDelegateFromManagedToNativedIndex(definition.Methods.Single<MethodDefinition>(<>f__am$cache1)));
-                    stream.WriteInt(this.methodCollector.GetTypeMarshalingFunctionsIndex(definition));
-                    stream.WriteInt(this.methodCollector.GetCCWMarshalingFunctionIndex(definition));
-                    stream.WriteInt(this.metadataCollector.GetGuidIndex(definition));
                     stream.WriteUInt((uint) definition.Attributes);
                     stream.WriteInt(!definition.HasFields ? -1 : this.metadataCollector.GetFieldIndex(definition.Fields[0]));
                     stream.WriteInt(methodIndex);
@@ -596,7 +607,7 @@
                     num5 |= ((definition.HasFinalizer() == null) ? 0 : 1) << 2;
                     num5 |= ((definition.HasStaticConstructor() == null) ? 0 : 1) << 3;
                     NativeType? nativeType = null;
-                    num5 |= ((MarshalingUtils.IsBlittable(definition, nativeType, 0) == null) ? 0 : 1) << 4;
+                    num5 |= ((MarshalingUtils.IsBlittable(definition, nativeType, 0, 0) == null) ? 0 : 1) << 4;
                     num5 |= ((definition.IsComOrWindowsRuntimeType() == null) ? 0 : 1) << 5;
                     int packingSize = TypeDefinitionWriter.FieldLayoutPackingSizeFor(definition);
                     if (packingSize != -1)
@@ -621,7 +632,10 @@
             {
                 foreach (ModuleDefinition definition in this.metadataCollector.GetModules())
                 {
-                    stream.WriteInt(this.metadataCollector.GetStringIndex(Path.GetFileName(definition.FullyQualifiedName)));
+                    if (definition.FileName == null)
+                    {
+                    }
+                    stream.WriteInt(this.metadataCollector.GetStringIndex(Path.GetFileName(definition.Name)));
                     stream.WriteInt(this.metadataCollector.GetAssemblyIndex(definition.Assembly));
                     stream.WriteInt(this.metadataCollector.GetTypeInfoIndex(definition.Types[0]));
                     stream.WriteInt(definition.GetAllTypes().Count<TypeDefinition>());
@@ -728,11 +742,17 @@
                 }
             }
 
-            private static bool <>m__1E(MethodDefinition m) => 
-                !m.IsStripped();
+            internal void <>m__1E(MemoryStream stream)
+            {
+                foreach (Tuple<TypeReference, string> tuple in this.interopDataCollector.GetWindowsRuntimeTypesWithNames())
+                {
+                    stream.WriteInt(this.metadataCollector.GetStringIndex(tuple.Item2));
+                    stream.WriteInt(MetadataCacheWriter.Il2CppTypeCollector.GetIndex(tuple.Item1, 0));
+                }
+            }
 
             private static bool <>m__1F(MethodDefinition m) => 
-                (m.Name == "Invoke");
+                !m.IsStripped();
 
             internal void <>m__2(MemoryStream stream)
             {
@@ -740,9 +760,9 @@
                 {
                     stream.WriteInt(this.metadataCollector.GetStringIndex(definition.Name));
                     stream.WriteInt(MetadataCacheWriter.Il2CppTypeCollector.GetIndex(definition.EventType, 0));
-                    stream.WriteInt((definition.AddMethod == null) ? -1 : (this.metadataCollector.GetMethodIndex(definition.AddMethod) - this.metadataCollector.GetMethodIndex(definition.DeclaringType.Methods[0])));
-                    stream.WriteInt((definition.RemoveMethod == null) ? -1 : (this.metadataCollector.GetMethodIndex(definition.RemoveMethod) - this.metadataCollector.GetMethodIndex(definition.DeclaringType.Methods[0])));
-                    stream.WriteInt((definition.InvokeMethod == null) ? -1 : (this.metadataCollector.GetMethodIndex(definition.InvokeMethod) - this.metadataCollector.GetMethodIndex(definition.DeclaringType.Methods[0])));
+                    stream.WriteInt(!MetadataCacheWriter.IsAvailableAndNotStripped(definition.AddMethod) ? -1 : (this.metadataCollector.GetMethodIndex(definition.AddMethod) - this.metadataCollector.GetMethodIndex(MetadataCacheWriter.FirstNotStrippedMethodOf(definition.DeclaringType))));
+                    stream.WriteInt(!MetadataCacheWriter.IsAvailableAndNotStripped(definition.RemoveMethod) ? -1 : (this.metadataCollector.GetMethodIndex(definition.RemoveMethod) - this.metadataCollector.GetMethodIndex(MetadataCacheWriter.FirstNotStrippedMethodOf(definition.DeclaringType))));
+                    stream.WriteInt(!MetadataCacheWriter.IsAvailableAndNotStripped(definition.InvokeMethod) ? -1 : (this.metadataCollector.GetMethodIndex(definition.InvokeMethod) - this.metadataCollector.GetMethodIndex(MetadataCacheWriter.FirstNotStrippedMethodOf(definition.DeclaringType))));
                     stream.WriteInt((int) this.attributeCollection.GetIndex(definition));
                     stream.WriteUInt(definition.MetadataToken.ToUInt32());
                 }
@@ -753,8 +773,8 @@
                 foreach (PropertyDefinition definition in this.metadataCollector.GetProperties())
                 {
                     stream.WriteInt(this.metadataCollector.GetStringIndex(definition.Name));
-                    stream.WriteInt((definition.GetMethod == null) ? -1 : (this.metadataCollector.GetMethodIndex(definition.GetMethod) - this.metadataCollector.GetMethodIndex(definition.DeclaringType.Methods[0])));
-                    stream.WriteInt((definition.SetMethod == null) ? -1 : (this.metadataCollector.GetMethodIndex(definition.SetMethod) - this.metadataCollector.GetMethodIndex(definition.DeclaringType.Methods[0])));
+                    stream.WriteInt(!MetadataCacheWriter.IsAvailableAndNotStripped(definition.GetMethod) ? -1 : (this.metadataCollector.GetMethodIndex(definition.GetMethod) - this.metadataCollector.GetMethodIndex(MetadataCacheWriter.FirstNotStrippedMethodOf(definition.DeclaringType))));
+                    stream.WriteInt(!MetadataCacheWriter.IsAvailableAndNotStripped(definition.SetMethod) ? -1 : (this.metadataCollector.GetMethodIndex(definition.SetMethod) - this.metadataCollector.GetMethodIndex(MetadataCacheWriter.FirstNotStrippedMethodOf(definition.DeclaringType))));
                     stream.WriteInt((int) definition.Attributes);
                     stream.WriteInt((int) this.attributeCollection.GetIndex(definition));
                     stream.WriteUInt(definition.MetadataToken.ToUInt32());
@@ -773,7 +793,7 @@
                     stream.WriteInt(this.metadataCollector.GetGenericContainerIndex(definition));
                     stream.WriteInt(this.methodCollector.GetMethodIndex(definition));
                     stream.WriteInt(MetadataCacheWriter.RuntimeInvokerCollectorReader.GetIndex(definition));
-                    stream.WriteInt(this.methodCollector.GetReversePInvokeWrapperIndex(definition));
+                    stream.WriteInt(this.interopDataCollector.GetReversePInvokeWrapperIndex(definition));
                     stream.WriteInt(this.metadataCollector.GetRGCTXEntriesStartIndex(definition));
                     stream.WriteInt(this.metadataCollector.GetRGCTXEntriesCount(definition));
                     stream.WriteUInt(definition.MetadataToken.ToUInt32());

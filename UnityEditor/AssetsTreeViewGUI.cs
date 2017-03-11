@@ -2,7 +2,6 @@
 {
     using System;
     using UnityEditor.Collaboration;
-    using UnityEditor.Connect;
     using UnityEditor.IMGUI.Controls;
     using UnityEditor.ProjectWindowCallback;
     using UnityEditor.VersionControl;
@@ -17,7 +16,7 @@
 
         public AssetsTreeViewGUI(TreeViewController treeView) : base(treeView)
         {
-            base.iconOverlayGUI = (Action<TreeViewItem, Rect>) Delegate.Combine(base.iconOverlayGUI, new Action<TreeViewItem, Rect>(this, (IntPtr) this.OnIconOverlayGUI));
+            base.iconOverlayGUI = (Action<TreeViewItem, Rect>) Delegate.Combine(base.iconOverlayGUI, new Action<TreeViewItem, Rect>(this.OnIconOverlayGUI));
             base.k_TopRowMargin = 4f;
         }
 
@@ -50,7 +49,7 @@
         }
 
         protected CreateAssetUtility GetCreateAssetUtility() => 
-            base.m_TreeView.state.createAssetUtility;
+            ((TreeViewStateWithAssetUtility) base.m_TreeView.state).createAssetUtility;
 
         protected override Texture GetIconForItem(TreeViewItem item)
         {
@@ -79,7 +78,7 @@
 
         private void OnIconOverlayGUI(TreeViewItem item, Rect overlayRect)
         {
-            if (((UnityConnect.instance.userInfo.whitelisted && Collab.instance.collabInfo.whitelisted) && CollabAccess.Instance.IsServiceEnabled()) && AssetDatabase.IsMainAsset(item.id))
+            if (CollabAccess.Instance.IsServiceEnabled() && AssetDatabase.IsMainAsset(item.id))
             {
                 CollabProjectHook.OnProjectWindowItemIconOverlay(AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(item.id)), overlayRect);
             }

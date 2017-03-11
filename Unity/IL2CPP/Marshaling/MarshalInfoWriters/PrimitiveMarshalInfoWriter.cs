@@ -186,7 +186,7 @@
             <GetIntPtrValueSetterName>c__AnonStorey1 storey = new <GetIntPtrValueSetterName>c__AnonStorey1 {
                 fieldManagedName = (base._typeRef.MetadataType != MetadataType.IntPtr) ? DefaultMarshalInfoWriter.Naming.UIntPtrPointerField : DefaultMarshalInfoWriter.Naming.IntPtrValueField
             };
-            return DefaultMarshalInfoWriter.Naming.ForFieldSetter(base._typeRef.Resolve().Fields.First<FieldDefinition>(new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0)));
+            return DefaultMarshalInfoWriter.Naming.ForFieldSetter(base._typeRef.Resolve().Fields.First<FieldDefinition>(new Func<FieldDefinition, bool>(storey.<>m__0)));
         }
 
         private static string MarshalVariantBoolFromNative(string variableName) => 
@@ -263,7 +263,7 @@
                 <WriteMarshalVariableToNative>c__AnonStorey0 storey = new <WriteMarshalVariableToNative>c__AnonStorey0 {
                     fieldManagedName = (base._typeRef.MetadataType != MetadataType.IntPtr) ? DefaultMarshalInfoWriter.Naming.UIntPtrPointerField : DefaultMarshalInfoWriter.Naming.IntPtrValueField
                 };
-                string str = DefaultMarshalInfoWriter.Naming.ForFieldGetter(base._typeRef.Resolve().Fields.First<FieldDefinition>(new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0)));
+                string str = DefaultMarshalInfoWriter.Naming.ForFieldGetter(base._typeRef.Resolve().Fields.First<FieldDefinition>(new Func<FieldDefinition, bool>(storey.<>m__0)));
                 if (this._marshaledTypeName == "intptr_t")
                 {
                     return $"reinterpret_cast<intptr_t>(({sourceVariable.Load()}).{str}())";

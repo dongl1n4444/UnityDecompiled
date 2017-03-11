@@ -38,7 +38,7 @@
                     string[] paths = new string[] { this.m_PostProcessArgs.playerPackage, "Variations", this.VariationNameFor(target) };
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <CopyVariationFolderIntoStagingArea>m__0);
+                        <>f__am$cache0 = f => true;
                     }
                     FileUtil.CopyDirectoryFiltered(FileUtil.CombinePaths(paths), base.StagingArea, true, <>f__am$cache0, true);
                     this.RenameStagingAreaFile("LinuxPlayer", Path.ChangeExtension("LinuxPlayer", ArchitecturePostFixFor(target)));
@@ -58,11 +58,6 @@
 
         protected override IIl2CppPlatformProvider GetPlatformProvider(BuildTarget target) => 
             new LinuxStandaloneIl2CppPlatformProvider(target, base.DataFolder, base.Development);
-
-        public string GetScriptLayoutFileFromBuild(BuildOptions options, string installPath, string fileName)
-        {
-            throw new NotImplementedException(kScriptsOnlyError);
-        }
 
         protected override string GetVariationName() => 
             this.VariationNameFor(base.Target);
@@ -125,7 +120,7 @@
                 BuildTarget[] targetArray1 = new BuildTarget[] { BuildTarget.StandaloneLinux, BuildTarget.StandaloneLinux64 };
                 if (<>f__mg$cache0 == null)
                 {
-                    <>f__mg$cache0 = new Func<BuildTarget, string>(null, (IntPtr) ArchitecturePostFixFor);
+                    <>f__mg$cache0 = new Func<BuildTarget, string>(LinuxDesktopStandalonePostProcessor.ArchitecturePostFixFor);
                 }
                 foreach (string str in Enumerable.Select<BuildTarget, string>(targetArray1, <>f__mg$cache0))
                 {

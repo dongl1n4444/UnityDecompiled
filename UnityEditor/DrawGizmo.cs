@@ -7,7 +7,7 @@
     /// </summary>
     public sealed class DrawGizmo : Attribute
     {
-        public Type drawnType;
+        public System.Type drawnType;
         public GizmoType drawOptions;
 
         /// <summary>
@@ -24,7 +24,7 @@
         /// </summary>
         /// <param name="gizmo">Flags to denote when the gizmo should be drawn.</param>
         /// <param name="drawnGizmoType">Type of object for which the gizmo should be drawn.</param>
-        public DrawGizmo(GizmoType gizmo, Type drawnGizmoType)
+        public DrawGizmo(GizmoType gizmo, System.Type drawnGizmoType)
         {
             this.drawnType = drawnGizmoType;
             this.drawOptions = gizmo;

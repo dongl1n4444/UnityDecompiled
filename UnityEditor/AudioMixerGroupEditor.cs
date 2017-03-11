@@ -11,7 +11,7 @@
         private AudioMixerEffectView m_EffectView = null;
         private readonly TickTimerHelper m_Ticker = new TickTimerHelper(0.05);
 
-        [MenuItem("CONTEXT/AudioMixerGroupController/Copy all effect settings to all snapshots")]
+        [UnityEditor.MenuItem("CONTEXT/AudioMixerGroupController/Copy all effect settings to all snapshots")]
         private static void CopyAllEffectToSnapshots(MenuCommand command)
         {
             AudioMixerGroupController context = command.context as AudioMixerGroupController;
@@ -55,7 +55,7 @@
             this.m_EffectView.OnGUI(target);
         }
 
-        [MenuItem("CONTEXT/AudioMixerGroupController/Toggle CPU usage display (only available on first editor instance)")]
+        [UnityEditor.MenuItem("CONTEXT/AudioMixerGroupController/Toggle CPU usage display (only available on first editor instance)")]
         private static void ShowCPUUsage(MenuCommand command)
         {
             bool @bool = EditorPrefs.GetBool(kPrefKeyForShowCpuUsage, false);

@@ -19,11 +19,12 @@
         {
             if (this.eventCamera != null)
             {
-                Ray r = this.eventCamera.ScreenPointToRay((Vector3) eventData.position);
-                float f = this.eventCamera.farClipPlane - this.eventCamera.nearClipPlane;
+                Ray ray;
+                float num;
+                base.ComputeRayAndDistance(eventData, out ray, out num);
                 if (ReflectionMethodsCache.Singleton.getRayIntersectionAll != null)
                 {
-                    RaycastHit2D[] hitdArray = ReflectionMethodsCache.Singleton.getRayIntersectionAll(r, f, base.finalEventMask);
+                    RaycastHit2D[] hitdArray = ReflectionMethodsCache.Singleton.getRayIntersectionAll(ray, num, base.finalEventMask);
                     if (hitdArray.Length != 0)
                     {
                         int index = 0;

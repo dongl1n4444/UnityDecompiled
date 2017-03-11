@@ -55,8 +55,8 @@
 
         private static void DoWriteAllAssets()
         {
-            Object[] objArray = Resources.FindObjectsOfTypeAll(typeof(Object));
-            foreach (Object obj2 in objArray)
+            UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(UnityEngine.Object));
+            foreach (UnityEngine.Object obj2 in objArray)
             {
                 if (AssetDatabase.Contains(obj2))
                 {

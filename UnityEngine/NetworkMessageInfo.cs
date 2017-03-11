@@ -39,7 +39,7 @@
                 return NetworkView.Find(this.m_ViewID);
             }
         }
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern NetworkView NullNetworkView();
     }
 }

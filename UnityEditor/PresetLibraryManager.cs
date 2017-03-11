@@ -141,7 +141,7 @@
             {
                 foreach (ScriptableObject obj2 in this.m_LoadedLibraries)
                 {
-                    Object.DestroyImmediate(obj2);
+                    UnityEngine.Object.DestroyImmediate(obj2);
                 }
                 this.m_LoadedLibraries.Clear();
                 this.m_LoadedLibraryIDs.Clear();

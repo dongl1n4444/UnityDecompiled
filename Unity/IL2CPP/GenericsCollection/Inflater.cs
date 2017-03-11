@@ -91,10 +91,15 @@
             {
                 return new ArrayType(InflateType(context, type2.ElementType), type2.Rank);
             }
-            PointerType type3 = typeReference as PointerType;
+            ByReferenceType type3 = typeReference as ByReferenceType;
             if (type3 != null)
             {
-                return new PointerType(InflateType(context, type3.ElementType));
+                return new ByReferenceType(InflateType(context, type3.ElementType));
+            }
+            PointerType type4 = typeReference as PointerType;
+            if (type4 != null)
+            {
+                return new PointerType(InflateType(context, type4.ElementType));
             }
             return typeReference.Resolve();
         }

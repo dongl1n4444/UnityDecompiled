@@ -15,6 +15,7 @@
         public int m_ImageHeight = 20;
         public int m_ImageWidth = 20;
         private ReorderableList m_List = new ReorderableList(new List<Texture2D>(), typeof(Texture2D));
+        public int maxItems = 5;
         public int minItems = 1;
         public ChangedCallbackDelegate onChangedCallback = null;
 
@@ -25,6 +26,7 @@
             this.m_List.onReorderCallback = new ReorderableList.ReorderCallbackDelegate(this.OnChange);
             this.m_List.drawElementCallback = new ReorderableList.ElementCallbackDelegate(this.OnElementDraw);
             this.m_List.drawHeaderCallback = new ReorderableList.HeaderCallbackDelegate(this.OnHeaderDraw);
+            this.m_List.onCanAddCallback = new ReorderableList.CanAddCallbackDelegate(this.OnCanAdd);
             this.m_List.onCanRemoveCallback = new ReorderableList.CanRemoveCallbackDelegate(this.OnCanRemove);
             this.UpdateElementHeight();
         }
@@ -40,6 +42,9 @@
             this.m_List.index = this.textures.Count - 1;
             this.OnChange(list);
         }
+
+        private bool OnCanAdd(ReorderableList list) => 
+            (list.count < this.maxItems);
 
         private bool OnCanRemove(ReorderableList list)
         {

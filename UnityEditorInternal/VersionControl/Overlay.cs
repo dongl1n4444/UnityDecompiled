@@ -51,7 +51,7 @@
             if ((asset != null) && (Event.current.type == EventType.Repaint))
             {
                 string externalVersionControl = EditorSettings.externalVersionControl;
-                if ((((externalVersionControl != ExternalVersionControl.Disabled) && (externalVersionControl != ExternalVersionControl.AutoDetect)) && (externalVersionControl != ExternalVersionControl.Generic)) && (externalVersionControl != ExternalVersionControl.AssetServer))
+                if (((externalVersionControl != ExternalVersionControl.Disabled) && (externalVersionControl != ExternalVersionControl.AutoDetect)) && (externalVersionControl != ExternalVersionControl.Generic))
                 {
                     DrawOverlays(asset, null, itemRect);
                 }
@@ -76,7 +76,7 @@
             if (((asset != null) && (metaAsset != null)) && (Event.current.type == EventType.Repaint))
             {
                 string externalVersionControl = EditorSettings.externalVersionControl;
-                if ((((externalVersionControl != ExternalVersionControl.Disabled) && (externalVersionControl != ExternalVersionControl.AutoDetect)) && (externalVersionControl != ExternalVersionControl.Generic)) && (externalVersionControl != ExternalVersionControl.AssetServer))
+                if (((externalVersionControl != ExternalVersionControl.Disabled) && (externalVersionControl != ExternalVersionControl.AutoDetect)) && (externalVersionControl != ExternalVersionControl.Generic))
                 {
                     DrawOverlays(asset, metaAsset, itemRect);
                 }

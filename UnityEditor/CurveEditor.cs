@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
@@ -19,10 +18,7 @@
         private static Func<ChangedCurve, int> <>f__am$cache2;
         [CompilerGenerated]
         private static Func<string, string> <>f__am$cache3;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private bool <editingPoints>k__BackingField;
         public CallbackFunction curvesUpdated;
-        private string focusedPointField;
         public float invSnap;
         private const float kCurveTimeEpsilon = 1E-05f;
         private const float kExactPickDistSqr = 16f;
@@ -35,14 +31,22 @@
         private bool m_BoundsAreDirty;
         private List<SavedCurve> m_CurveBackups;
         private Bounds m_CurveBounds;
+        private Dictionary<int, int> m_CurveIDToIndexMap;
         internal Bounds m_DefaultBounds;
         private Vector2 m_DraggedCoord;
         private CurveWrapper[] m_DraggingCurveOrRegion;
         private CurveWrapper m_DraggingKey;
         private Bounds m_DrawingBounds;
         private List<int> m_DrawOrder;
+        private bool m_EditingPoints;
+        private bool m_EnableCurveGroups;
+        private string m_FocusedPointField;
+        private bool m_InRangeSelection;
         private CurveMenuManager m_MenuManager;
         private Vector2 m_MoveCoord;
+        private float m_NewTime;
+        private float m_NewValue;
+        private Vector2 m_PointEditingFieldPosition;
         private CurveControlPointRenderer m_PointRenderer;
         private Vector2 m_PreviousDrawPointCenter;
         private CurveEditorRectangleTool m_RectangleTool;
@@ -50,16 +54,16 @@
         [SerializeField]
         private CurveEditorSelection m_Selection;
         private Bounds m_SelectionBounds;
+        private bool m_SelectionBoundsAreDirty;
         private CurveEditorSettings m_Settings;
         private Color m_TangentColor;
-        internal Styles ms_Styles;
-        private Vector2 pointEditingFieldPosition;
+        private bool m_TimeWasEdited;
+        private bool m_ValueWasEdited;
         private List<CurveSelection> preCurveDragSelection;
         private Vector2 s_EndMouseDragPosition;
         private PickMode s_PickMode;
         private List<CurveSelection> s_SelectionBackup;
         private static int s_SelectKeyHash = "SelectKeys".GetHashCode();
-        private float s_StartClickedTime;
         private Vector2 s_StartKeyDragPosition;
         private Vector2 s_StartMouseDragPosition;
         private static int s_TangentControlIDHash = "s_TangentControlIDHash".GetHashCode();
@@ -67,8 +71,6 @@
         private float s_TimeRangeSelectionEnd;
         private float s_TimeRangeSelectionStart;
         public ICurveEditorState state;
-        private bool timeWasEdited;
-        private bool valueWasEdited;
 
         public CurveEditor(Rect rect, CurveWrapper[] curves, bool minimalGUI) : base(minimalGUI)
         {
@@ -78,14 +80,17 @@
             this.m_TangentColor = new Color(1f, 1f, 1f, 0.5f);
             this.invSnap = 0f;
             this.preCurveDragSelection = null;
+            this.m_InRangeSelection = false;
             this.s_TimeRangeSelectionActive = false;
             this.m_BoundsAreDirty = true;
+            this.m_SelectionBoundsAreDirty = true;
+            this.m_EnableCurveGroups = false;
             this.m_SelectionBounds = new Bounds(Vector3.zero, Vector3.zero);
             this.m_CurveBounds = new Bounds(Vector3.zero, Vector3.zero);
             this.m_DrawingBounds = new Bounds(Vector3.zero, Vector3.zero);
             this.m_DraggingKey = null;
             this.m_AxisLabelFormat = "n1";
-            this.focusedPointField = null;
+            this.m_FocusedPointField = null;
             this.m_DraggingCurveOrRegion = null;
             base.rect = rect;
             this.animationCurves = curves;
@@ -171,16 +176,17 @@
             CurveSelection selection2 = new CurveSelection(cw.id, keyIndex);
             cw.selected = CurveWrapper.SelectionMode.Selected;
             cw.changed = true;
-            if (this.syncTimeDuringDrag)
-            {
-                this.activeTime = key.time + cw.timeOffset;
-            }
             return selection2;
         }
 
         internal void AddSelection(CurveSelection curveSelection)
         {
             this.selectedCurves.Add(curveSelection);
+            if (!this.m_InRangeSelection)
+            {
+                this.selectedCurves.Sort();
+            }
+            this.InvalidateSelectionBounds();
         }
 
         protected void ApplySettings()
@@ -195,6 +201,11 @@
             base.hSlider = this.settings.hSlider;
             base.vSlider = this.settings.vSlider;
             this.RecalculateBounds();
+        }
+
+        internal void BeginRangeSelection()
+        {
+            this.m_InRangeSelection = true;
         }
 
         public void BeginTimeRangeSelection(float time, bool addToSelection)
@@ -245,6 +256,7 @@
         internal void ClearSelection()
         {
             this.selectedCurves.Clear();
+            this.InvalidateSelectionBounds();
         }
 
         private void CreateKeyFromClick(object obj)
@@ -407,9 +419,9 @@
                 }
             }
             list2.Sort();
-            Vector3 v = new Vector3(0f, maxCurve.renderer.EvaluateCurveSlow(0f), 0f);
+            Vector3 point = new Vector3(0f, maxCurve.renderer.EvaluateCurveSlow(0f), 0f);
             Vector3 vector2 = new Vector3(0f, minCurve.renderer.EvaluateCurveSlow(0f), 0f);
-            Vector3 vector3 = this.DrawingToOffsetViewMatrix(maxCurve).MultiplyPoint(v);
+            Vector3 vector3 = this.DrawingToOffsetViewMatrix(maxCurve).MultiplyPoint(point);
             Vector3 vector4 = this.DrawingToOffsetViewMatrix(minCurve).MultiplyPoint(vector2);
             for (int i = 0; i < list2.Count; i++)
             {
@@ -418,7 +430,7 @@
                 Vector3 vector6 = new Vector3(x, minCurve.renderer.EvaluateCurveSlow(x), 0f);
                 Vector3 vector7 = this.DrawingToOffsetViewMatrix(maxCurve).MultiplyPoint(vector5);
                 Vector3 vector8 = this.DrawingToOffsetViewMatrix(minCurve).MultiplyPoint(vector6);
-                if ((v.y >= vector2.y) && (vector5.y >= vector6.y))
+                if ((point.y >= vector2.y) && (vector5.y >= vector6.y))
                 {
                     list.Add(vector3);
                     list.Add(vector8);
@@ -427,7 +439,7 @@
                     list.Add(vector7);
                     list.Add(vector8);
                 }
-                else if ((v.y <= vector2.y) && (vector5.y <= vector6.y))
+                else if ((point.y <= vector2.y) && (vector5.y <= vector6.y))
                 {
                     list.Add(vector4);
                     list.Add(vector7);
@@ -453,7 +465,7 @@
                         Debug.Log("Error: No intersection found! There should be one...");
                     }
                 }
-                v = vector5;
+                point = vector5;
                 vector2 = vector6;
                 vector3 = vector7;
                 vector4 = vector8;
@@ -465,7 +477,7 @@
         {
             if (this.m_PointRenderer == null)
             {
-                this.m_PointRenderer = new CurveControlPointRenderer(this.styles);
+                this.m_PointRenderer = new CurveControlPointRenderer();
             }
             if (this.m_RectangleTool == null)
             {
@@ -520,7 +532,7 @@
                             current.Use();
                             break;
                     }
-                    goto Label_03C0;
+                    goto Label_03BA;
                 }
                 case EventType.ContextClick:
                 {
@@ -567,7 +579,7 @@
                         menu.ShowAsContext();
                         Event.current.Use();
                     }
-                    goto Label_03C0;
+                    goto Label_03BA;
                 }
             }
             if (type == EventType.KeyDown)
@@ -583,27 +595,17 @@
                     current.Use();
                 }
             }
-        Label_03C0:
-            EditorGUI.BeginChangeCheck();
+        Label_03BA:
             GUI.color = color;
             this.m_RectangleTool.HandleOverlayEvents();
             this.DragTangents();
             this.m_RectangleTool.HandleEvents();
             this.EditAxisLabels();
             this.SelectPoints();
-            if (EditorGUI.EndChangeCheck())
-            {
-                this.RecalcSecondarySelection();
-                this.RecalcCurveSelection();
-            }
             EditorGUI.BeginChangeCheck();
             Vector2 vector = this.MovePoints();
             if (EditorGUI.EndChangeCheck() && (this.m_DraggingKey != null))
             {
-                if (this.syncTimeDuringDrag)
-                {
-                    this.activeTime = (vector.x + this.s_StartClickedTime) + this.m_DraggingKey.timeOffset;
-                }
                 this.m_MoveCoord = vector;
             }
             if (current.type == EventType.Repaint)
@@ -902,8 +904,8 @@
                     lhs.y *= vector3.y;
                 }
                 GUIContent content = new GUIContent($"{base.FormatTime(lhs.x, this.invSnap, this.timeFormat)}, {base.FormatValue(lhs.y)}");
-                Vector2 vector4 = this.styles.dragLabel.CalcSize(content);
-                EditorGUI.DoDropShadowLabel(new Rect(vector2.x, vector2.y - vector4.y, vector4.x, vector4.y), content, this.styles.dragLabel, 0.3f);
+                Vector2 vector4 = Styles.dragLabel.CalcSize(content);
+                EditorGUI.DoDropShadowLabel(new Rect(vector2.x, vector2.y - vector4.y, vector4.x, vector4.y), content, Styles.dragLabel, 0.3f);
             }
         }
 
@@ -924,15 +926,18 @@
                         if (curveWrapperFromSelection != null)
                         {
                             AnimationCurve curve = curveWrapperFromSelection.curve;
-                            if (this.IsLeftTangentEditable(selection) && (this.GetKeyframeFromSelection(selection).time != curve.keys[0].time))
+                            if (curve != null)
                             {
-                                Vector2 lhs = this.GetPosition(new CurveSelection(selection.curveID, selection.key, CurveSelection.SelectionType.InTangent));
-                                this.DrawCurveLine(curveWrapperFromSelection, lhs, position);
-                            }
-                            if (this.IsRightTangentEditable(selection) && (this.GetKeyframeFromSelection(selection).time != curve.keys[curve.keys.Length - 1].time))
-                            {
-                                Vector2 rhs = this.GetPosition(new CurveSelection(selection.curveID, selection.key, CurveSelection.SelectionType.OutTangent));
-                                this.DrawCurveLine(curveWrapperFromSelection, position, rhs);
+                                if (this.IsLeftTangentEditable(selection) && (this.GetKeyframeFromSelection(selection).time != curve.keys[0].time))
+                                {
+                                    Vector2 lhs = this.GetPosition(new CurveSelection(selection.curveID, selection.key, CurveSelection.SelectionType.InTangent));
+                                    this.DrawCurveLine(curveWrapperFromSelection, lhs, position);
+                                }
+                                if (this.IsRightTangentEditable(selection) && (this.GetKeyframeFromSelection(selection).time != curve.keys[curve.keys.Length - 1].time))
+                                {
+                                    Vector2 rhs = this.GetPosition(new CurveSelection(selection.curveID, selection.key, CurveSelection.SelectionType.OutTangent));
+                                    this.DrawCurveLine(curveWrapperFromSelection, position, rhs);
+                                }
                             }
                         }
                     }
@@ -988,7 +993,7 @@
 
         private void DrawPoint(Vector2 viewPos, CurveWrapper.SelectionMode selected, MouseCursor mouseCursor)
         {
-            Rect rect = new Rect(Mathf.Floor(viewPos.x) - 4f, Mathf.Floor(viewPos.y) - 4f, (float) this.styles.pointIcon.width, (float) this.styles.pointIcon.height);
+            Rect rect = new Rect(Mathf.Floor(viewPos.x) - 4f, Mathf.Floor(viewPos.y) - 4f, (float) Styles.pointIcon.width, (float) Styles.pointIcon.height);
             Vector2 center = rect.center;
             Vector2 vector2 = center - this.m_PreviousDrawPointCenter;
             if (vector2.magnitude > 8f)
@@ -1113,19 +1118,19 @@
                     {
                         Color contentColor = GUI.contentColor;
                         Keyframe key = curve.keys[0];
-                        WrapMode oldWrap = (curve == null) ? WrapMode.Default : curve.preWrapMode;
-                        oldWrap = this.WrapModeIconPopup(key, oldWrap, -1.5f);
-                        if ((curve != null) && (oldWrap != curve.preWrapMode))
+                        WrapMode preWrapMode = curve.preWrapMode;
+                        preWrapMode = this.WrapModeIconPopup(key, preWrapMode, -1.5f);
+                        if (preWrapMode != curve.preWrapMode)
                         {
-                            curve.preWrapMode = oldWrap;
+                            curve.preWrapMode = preWrapMode;
                             curveWrapperFromID.changed = true;
                         }
                         Keyframe keyframe2 = curve.keys[curve.length - 1];
-                        WrapMode mode2 = (curve == null) ? WrapMode.Default : curve.postWrapMode;
-                        mode2 = this.WrapModeIconPopup(keyframe2, mode2, 0.5f);
-                        if ((curve != null) && (mode2 != curve.postWrapMode))
+                        WrapMode postWrapMode = curve.postWrapMode;
+                        postWrapMode = this.WrapModeIconPopup(keyframe2, postWrapMode, 0.5f);
+                        if (postWrapMode != curve.postWrapMode)
                         {
-                            curve.postWrapMode = mode2;
+                            curve.postWrapMode = postWrapMode;
                             curveWrapperFromID.changed = true;
                         }
                         if (curveWrapperFromID.changed)
@@ -1202,7 +1207,7 @@
                 }
                 string kFloatFieldFormatString = EditorGUI.kFloatFieldFormatString;
                 EditorGUI.kFloatFieldFormatString = this.m_AxisLabelFormat;
-                float y = EditorGUI.FloatField(position, axisUiScalars.y, this.styles.axisLabelNumberField);
+                float y = EditorGUI.FloatField(position, axisUiScalars.y, Styles.axisLabelNumberField);
                 if (axisUiScalars.y != y)
                 {
                     this.SetAxisUiScalars(new Vector2(axisUiScalars.x, y), curvesWithSameParameterSpace);
@@ -1214,23 +1219,25 @@
         private void EditSelectedPoints()
         {
             Event current = Event.current;
-            if (this.editingPoints && !this.hasSelection)
+            if (this.m_EditingPoints && !this.hasSelection)
             {
-                this.editingPoints = false;
+                this.m_EditingPoints = false;
             }
             bool flag = false;
             if (current.type == EventType.KeyDown)
             {
                 if ((current.keyCode == KeyCode.KeypadEnter) || (current.keyCode == KeyCode.Return))
                 {
-                    if (this.hasSelection && !this.editingPoints)
+                    if (this.hasSelection && !this.m_EditingPoints)
                     {
                         this.StartEditingSelectedPoints();
                         current.Use();
                     }
-                    else if (this.editingPoints)
+                    else if (this.m_EditingPoints)
                     {
+                        this.SetSelectedKeyPositions(this.m_NewTime, this.m_NewValue, this.m_TimeWasEdited, this.m_ValueWasEdited);
                         this.FinishEditingPoints();
+                        GUI.changed = true;
                         current.Use();
                     }
                 }
@@ -1239,45 +1246,46 @@
                     flag = true;
                 }
             }
-            if (this.editingPoints)
+            if (this.m_EditingPoints)
             {
-                Vector2 vector = base.DrawingToViewTransformPoint(this.pointEditingFieldPosition);
+                Vector2 vector = base.DrawingToViewTransformPoint(this.m_PointEditingFieldPosition);
                 Rect rect = Rect.MinMaxRect(base.leftmargin, base.topmargin, base.rect.width - base.rightmargin, base.rect.height - base.bottommargin);
                 vector.x = Mathf.Clamp(vector.x, rect.xMin, rect.xMax - 80f);
                 vector.y = Mathf.Clamp(vector.y, rect.yMin, rect.yMax - 36f);
                 EditorGUI.BeginChangeCheck();
                 GUI.SetNextControlName("pointTimeField");
-                float x = this.PointFieldForSelection(new Rect(vector.x, vector.y, 80f, 18f), 1, new Func<CurveSelection, float>(this, (IntPtr) this.<EditSelectedPoints>m__8), new Func<Rect, int, float, float>(this, (IntPtr) this.<EditSelectedPoints>m__9), "time");
+                this.m_NewTime = this.PointFieldForSelection(new Rect(vector.x, vector.y, 80f, 18f), 1, this.m_NewTime, x => this.GetKeyframeFromSelection(x).time, (r, id, time) => base.TimeField(r, id, time, this.invSnap, this.timeFormat), "time");
                 if (EditorGUI.EndChangeCheck())
                 {
-                    this.timeWasEdited = true;
+                    this.m_TimeWasEdited = true;
                 }
                 EditorGUI.BeginChangeCheck();
                 GUI.SetNextControlName("pointValueField");
-                float y = this.PointFieldForSelection(new Rect(vector.x, vector.y + 18f, 80f, 18f), 2, new Func<CurveSelection, float>(this, (IntPtr) this.<EditSelectedPoints>m__A), new Func<Rect, int, float, float>(this, (IntPtr) this.<EditSelectedPoints>m__B), "value");
+                this.m_NewValue = this.PointFieldForSelection(new Rect(vector.x, vector.y + 18f, 80f, 18f), 2, this.m_NewValue, x => this.GetKeyframeFromSelection(x).value, (r, id, value) => base.ValueField(r, id, value), "value");
                 if (EditorGUI.EndChangeCheck())
                 {
-                    this.valueWasEdited = true;
-                }
-                if (this.timeWasEdited || this.valueWasEdited)
-                {
-                    this.SetSelectedKeyPositions(new Vector2(x, y), this.timeWasEdited, this.valueWasEdited);
+                    this.m_ValueWasEdited = true;
                 }
                 if (flag)
                 {
                     this.FinishEditingPoints();
                 }
-                if (this.focusedPointField != null)
+                if (this.m_FocusedPointField != null)
                 {
-                    EditorGUI.FocusTextInControl(this.focusedPointField);
+                    EditorGUI.FocusTextInControl(this.m_FocusedPointField);
                     if (current.type == EventType.Repaint)
                     {
-                        this.focusedPointField = null;
+                        this.m_FocusedPointField = null;
                     }
                 }
-                if ((current.type == EventType.KeyDown) && (current.character == '\t'))
+                if ((current.type == EventType.KeyDown) && ((current.character == '\t') || (current.character == '\x0019')))
                 {
-                    this.focusedPointField = (GUI.GetNameOfFocusedControl() != "pointValueField") ? "pointValueField" : "pointTimeField";
+                    if (this.m_TimeWasEdited || this.m_ValueWasEdited)
+                    {
+                        this.SetSelectedKeyPositions(this.m_NewTime, this.m_NewValue, this.m_TimeWasEdited, this.m_ValueWasEdited);
+                        this.m_PointEditingFieldPosition = this.GetPointEditionFieldPosition();
+                    }
+                    this.m_FocusedPointField = (GUI.GetNameOfFocusedControl() != "pointValueField") ? "pointValueField" : "pointTimeField";
                     current.Use();
                 }
                 if (current.type == EventType.MouseDown)
@@ -1290,6 +1298,12 @@
         public void EndLiveEdit()
         {
             this.m_CurveBackups = null;
+        }
+
+        internal void EndRangeSelection()
+        {
+            this.m_InRangeSelection = false;
+            this.selectedCurves.Sort();
         }
 
         public void EndTimeRangeSelection()
@@ -1349,7 +1363,7 @@
 
         private void FinishEditingPoints()
         {
-            this.editingPoints = false;
+            this.m_EditingPoints = false;
         }
 
         public void FrameClip(bool horizontally, bool vertically)
@@ -1495,38 +1509,24 @@
             return index;
         }
 
-        internal CurveWrapper GetCurveFromID(int curveID)
-        {
-            if (this.m_AnimationCurves != null)
-            {
-                foreach (CurveWrapper wrapper2 in this.m_AnimationCurves)
-                {
-                    if (wrapper2.id == curveID)
-                    {
-                        return wrapper2;
-                    }
-                }
-            }
-            return null;
-        }
-
         internal AnimationCurve GetCurveFromSelection(CurveSelection curveSelection)
         {
             CurveWrapper curveWrapperFromSelection = this.GetCurveWrapperFromSelection(curveSelection);
             return curveWrapperFromSelection?.curve;
         }
 
+        private Rect GetCurveRect(CurveWrapper cw)
+        {
+            Bounds bounds = cw.bounds;
+            return Rect.MinMaxRect(bounds.min.x, bounds.min.y, bounds.max.x, bounds.max.y);
+        }
+
         internal CurveWrapper GetCurveWrapperFromID(int curveID)
         {
-            if (this.m_AnimationCurves != null)
+            int num;
+            if ((this.m_AnimationCurves != null) && this.curveIDToIndexMap.TryGetValue(curveID, out num))
             {
-                foreach (CurveWrapper wrapper2 in this.m_AnimationCurves)
-                {
-                    if (wrapper2.id == curveID)
-                    {
-                        return wrapper2;
-                    }
-                }
+                return this.m_AnimationCurves[num];
             }
             return null;
         }
@@ -1545,6 +1545,15 @@
                 return curveFromSelection[curveSelection.key];
             }
             return new Keyframe();
+        }
+
+        private Vector2 GetPointEditionFieldPosition()
+        {
+            float num = Enumerable.Min<CurveSelection>(this.selectedCurves, (Func<CurveSelection, float>) (x => this.GetKeyframeFromSelection(x).time));
+            float num2 = Enumerable.Max<CurveSelection>(this.selectedCurves, (Func<CurveSelection, float>) (x => this.GetKeyframeFromSelection(x).time));
+            float num3 = Enumerable.Min<CurveSelection>(this.selectedCurves, (Func<CurveSelection, float>) (x => this.GetKeyframeFromSelection(x).value));
+            float num4 = Enumerable.Max<CurveSelection>(this.selectedCurves, (Func<CurveSelection, float>) (x => this.GetKeyframeFromSelection(x).value));
+            return (Vector2) (new Vector2(num + num2, num3 + num4) * 0.5f);
         }
 
         private Vector2 GetPosition(CurveSelection selection)
@@ -1584,6 +1593,16 @@
             }
             curveID = -1;
             return false;
+        }
+
+        private Vector2 GetWorldPoint(CurveWrapper cw, Vector2 point) => 
+            this.OffsetViewToDrawingTransformPoint(cw, point);
+
+        private Rect GetWorldRect(CurveWrapper cw, Rect rect)
+        {
+            Vector2 worldPoint = this.GetWorldPoint(cw, rect.min);
+            Vector2 vector2 = this.GetWorldPoint(cw, rect.max);
+            return Rect.MinMaxRect(worldPoint.x, vector2.y, vector2.x, worldPoint.y);
         }
 
         public void GridGUI()
@@ -1705,11 +1724,11 @@
                                     upperCenter = TextAnchor.UpperLeft;
                                     rect7 = new Rect(vector4.x, (vector4.y - 16f) - this.settings.hTickLabelOffset, 50f, 16f);
                                 }
-                                if (this.styles.labelTickMarksX.alignment != upperCenter)
+                                if (Styles.labelTickMarksX.alignment != upperCenter)
                                 {
-                                    this.styles.labelTickMarksX.alignment = upperCenter;
+                                    Styles.labelTickMarksX.alignment = upperCenter;
                                 }
-                                GUI.Label(rect7, num13.ToString("n" + numberOfDecimalsForMinimumDifference) + this.settings.hTickStyle.unit, this.styles.labelTickMarksX);
+                                GUI.Label(rect7, num13.ToString("n" + numberOfDecimalsForMinimumDifference) + this.settings.hTickStyle.unit, Styles.labelTickMarksX);
                             }
                         }
                     }
@@ -1729,7 +1748,7 @@
                             float num18 = numArray5[numArray5.Length - 1];
                             string text = num17.ToString(format) + this.settings.vTickStyle.unit;
                             string str3 = num18.ToString(format) + this.settings.vTickStyle.unit;
-                            width = Mathf.Max(this.styles.labelTickMarksY.CalcSize(new GUIContent(text)).x, this.styles.labelTickMarksY.CalcSize(new GUIContent(str3)).x) + 6f;
+                            width = Mathf.Max(Styles.labelTickMarksY.CalcSize(new GUIContent(text)).x, Styles.labelTickMarksY.CalcSize(new GUIContent(str3)).x) + 6f;
                         }
                         for (int num19 = 0; num19 < numArray5.Length; num19++)
                         {
@@ -1748,7 +1767,7 @@
                                 {
                                     rect8 = new Rect(0f, vector7.y - 13f, width, 16f);
                                 }
-                                GUI.Label(rect8, num20.ToString(format) + this.settings.vTickStyle.unit, this.styles.labelTickMarksY);
+                                GUI.Label(rect8, num20.ToString(format) + this.settings.vTickStyle.unit, Styles.labelTickMarksY);
                             }
                         }
                     }
@@ -1817,6 +1836,11 @@
         public void InvalidateBounds()
         {
             this.m_BoundsAreDirty = true;
+        }
+
+        public void InvalidateSelectionBounds()
+        {
+            this.m_SelectionBoundsAreDirty = true;
         }
 
         private bool IsCurveSelected(CurveWrapper cw) => 
@@ -1964,7 +1988,7 @@
                 case EventType.MouseDown:
                     if (current.button != 0)
                     {
-                        goto Label_051F;
+                        goto Label_0528;
                     }
                     foreach (CurveSelection selection in this.selectedCurves)
                     {
@@ -1976,6 +2000,7 @@
                             {
                                 Keyframe keyframeFromSelection = this.GetKeyframeFromSelection(selection);
                                 this.SetupKeyOrCurveDragging(new Vector2(keyframeFromSelection.time, keyframeFromSelection.value), curveWrapperFromSelection, controlID, current.mousePosition);
+                                this.m_RectangleTool.OnStartMove(this.s_StartMouseDragPosition, this.m_RectangleTool.rippleTimeClutch);
                                 current.Use();
                                 break;
                             }
@@ -1986,24 +2011,21 @@
                 case EventType.MouseUp:
                     if (GUIUtility.hotControl == controlID)
                     {
-                        if (this.InLiveEdit())
-                        {
-                            this.EndLiveEdit();
-                        }
+                        this.m_RectangleTool.OnEndMove();
                         this.ResetDragging();
                         GUI.changed = true;
                         current.Use();
                     }
-                    goto Label_051F;
+                    goto Label_0528;
 
                 case EventType.MouseDrag:
                 {
                     if (GUIUtility.hotControl != controlID)
                     {
-                        goto Label_051F;
+                        goto Label_0528;
                     }
                     Vector2 lhs = current.mousePosition - this.s_StartMouseDragPosition;
-                    Vector3 zero = Vector3.zero;
+                    Vector2 zero = Vector2.zero;
                     if (current.shift && (this.m_AxisLock == AxisLock.None))
                     {
                         float introduced22 = Mathf.Abs(lhs.x);
@@ -2012,7 +2034,7 @@
                     if (this.m_DraggingCurveOrRegion != null)
                     {
                         lhs.x = 0f;
-                        zero = (Vector3) base.ViewToDrawingTransformVector(lhs);
+                        zero = base.ViewToDrawingTransformVector(lhs);
                         float introduced23 = this.SnapValue(zero.y + this.s_StartKeyDragPosition.y);
                         zero.y = introduced23 - this.s_StartKeyDragPosition.y;
                     }
@@ -2022,7 +2044,7 @@
                         {
                             case AxisLock.None:
                             {
-                                zero = (Vector3) base.ViewToDrawingTransformVector(lhs);
+                                zero = base.ViewToDrawingTransformVector(lhs);
                                 float introduced24 = this.SnapTime(zero.x + this.s_StartKeyDragPosition.x);
                                 zero.x = introduced24 - this.s_StartKeyDragPosition.x;
                                 float introduced25 = this.SnapValue(zero.y + this.s_StartKeyDragPosition.y);
@@ -2032,7 +2054,7 @@
                             case AxisLock.X:
                             {
                                 lhs.y = 0f;
-                                zero = (Vector3) base.ViewToDrawingTransformVector(lhs);
+                                zero = base.ViewToDrawingTransformVector(lhs);
                                 float introduced26 = this.SnapTime(zero.x + this.s_StartKeyDragPosition.x);
                                 zero.x = introduced26 - this.s_StartKeyDragPosition.x;
                                 break;
@@ -2040,18 +2062,14 @@
                             case AxisLock.Y:
                             {
                                 lhs.x = 0f;
-                                zero = (Vector3) base.ViewToDrawingTransformVector(lhs);
+                                zero = base.ViewToDrawingTransformVector(lhs);
                                 float introduced27 = this.SnapValue(zero.y + this.s_StartKeyDragPosition.y);
                                 zero.y = introduced27 - this.s_StartKeyDragPosition.y;
                                 break;
                             }
                         }
                     }
-                    if (!this.InLiveEdit())
-                    {
-                        this.StartLiveEdit();
-                    }
-                    this.TranslateSelectedKeys(zero);
+                    this.m_RectangleTool.OnMove(this.s_StartMouseDragPosition + zero);
                     GUI.changed = true;
                     current.Use();
                     return zero;
@@ -2064,7 +2082,7 @@
                         GUI.changed = true;
                         current.Use();
                     }
-                    goto Label_051F;
+                    goto Label_0528;
 
                 case EventType.Repaint:
                 {
@@ -2080,10 +2098,10 @@
                     {
                         EditorGUIUtility.AddCursorRect(position, MouseCursor.ResizeVertical);
                     }
-                    goto Label_051F;
+                    goto Label_0528;
                 }
                 default:
-                    goto Label_051F;
+                    goto Label_0528;
             }
             if (this.settings.allowDraggingCurvesAndRegions && (this.m_DraggingKey == null))
             {
@@ -2104,10 +2122,11 @@
                     this.selectedCurves = list;
                     this.SetupKeyOrCurveDragging(timeValue, curves[0], controlID, current.mousePosition);
                     this.m_DraggingCurveOrRegion = curves;
+                    this.m_RectangleTool.OnStartMove(this.s_StartMouseDragPosition, false);
                     current.Use();
                 }
             }
-        Label_051F:
+        Label_0528:
             return Vector2.zero;
         }
 
@@ -2124,7 +2143,7 @@
         {
             if (this.m_Selection != null)
             {
-                Object.DestroyImmediate(this.m_Selection);
+                UnityEngine.Object.DestroyImmediate(this.m_Selection);
             }
         }
 
@@ -2172,33 +2191,26 @@
             return -1;
         }
 
-        private float PointFieldForSelection(Rect rect, int customID, Func<CurveSelection, float> memberGetter, Func<Rect, int, float, float> memberSetter, string label)
+        private float PointFieldForSelection(Rect rect, int customID, float value, Func<CurveSelection, float> memberGetter, Func<Rect, int, float, float> fieldCreator, string label)
         {
-            <PointFieldForSelection>c__AnonStoreyA ya = new <PointFieldForSelection>c__AnonStoreyA {
-                memberGetter = memberGetter,
-                $this = this
+            <PointFieldForSelection>c__AnonStorey9 storey = new <PointFieldForSelection>c__AnonStorey9 {
+                memberGetter = memberGetter
             };
-            float num = 0f;
-            if (Enumerable.All<CurveSelection>(this.selectedCurves, new Func<CurveSelection, bool>(ya, (IntPtr) this.<>m__0)))
-            {
-                num = ya.memberGetter.Invoke(this.selectedCurves[0]);
-            }
-            else
+            storey.firstSelectedValue = storey.memberGetter(this.selectedCurves[0]);
+            if (!Enumerable.All<CurveSelection>(this.selectedCurves, new Func<CurveSelection, bool>(storey.<>m__0)))
             {
                 EditorGUI.showMixedValue = true;
             }
             Rect position = rect;
             position.x -= position.width;
-            GUIStyle style = GUI.skin.label;
-            style.alignment = TextAnchor.UpperRight;
-            int num2 = GUIUtility.GetControlID(customID, FocusType.Keyboard, rect);
+            int num = GUIUtility.GetControlID(customID, FocusType.Keyboard, rect);
             Color color = GUI.color;
             GUI.color = Color.white;
-            GUI.Label(position, label, style);
-            float num3 = memberSetter.Invoke(rect, num2, num);
+            GUI.Label(position, label, Styles.rightAlignedLabel);
+            value = fieldCreator(rect, num, value);
             GUI.color = color;
             EditorGUI.showMixedValue = false;
-            return num3;
+            return value;
         }
 
         private void RecalcCurveSelection()
@@ -2219,58 +2231,61 @@
 
         private void RecalcSecondarySelection()
         {
-            List<CurveSelection> list = new List<CurveSelection>(this.selectedCurves.Count);
-            foreach (CurveSelection selection in this.selectedCurves)
+            if (this.m_EnableCurveGroups)
             {
-                CurveWrapper curveWrapperFromSelection = this.GetCurveWrapperFromSelection(selection);
-                if (curveWrapperFromSelection != null)
+                List<CurveSelection> list = new List<CurveSelection>(this.selectedCurves.Count);
+                foreach (CurveSelection selection in this.selectedCurves)
                 {
-                    int groupId = curveWrapperFromSelection.groupId;
-                    if ((groupId != -1) && !selection.semiSelected)
+                    CurveWrapper curveWrapperFromSelection = this.GetCurveWrapperFromSelection(selection);
+                    if (curveWrapperFromSelection != null)
                     {
-                        list.Add(selection);
-                        foreach (CurveWrapper wrapper2 in this.m_AnimationCurves)
+                        int groupId = curveWrapperFromSelection.groupId;
+                        if ((groupId != -1) && !selection.semiSelected)
                         {
-                            if ((wrapper2.groupId == groupId) && (wrapper2 != curveWrapperFromSelection))
+                            list.Add(selection);
+                            foreach (CurveWrapper wrapper2 in this.m_AnimationCurves)
                             {
-                                CurveSelection item = new CurveSelection(wrapper2.id, selection.key) {
-                                    semiSelected = true
-                                };
-                                list.Add(item);
+                                if ((wrapper2.groupId == groupId) && (wrapper2 != curveWrapperFromSelection))
+                                {
+                                    CurveSelection item = new CurveSelection(wrapper2.id, selection.key) {
+                                        semiSelected = true
+                                    };
+                                    list.Add(item);
+                                }
                             }
                         }
+                        else
+                        {
+                            list.Add(selection);
+                        }
+                    }
+                }
+                list.Sort();
+                int num3 = 0;
+                while (num3 < (list.Count - 1))
+                {
+                    CurveSelection selection3 = list[num3];
+                    CurveSelection selection4 = list[num3 + 1];
+                    if ((selection3.curveID == selection4.curveID) && (selection3.key == selection4.key))
+                    {
+                        if (!selection3.semiSelected || !selection4.semiSelected)
+                        {
+                            selection3.semiSelected = false;
+                        }
+                        list.RemoveAt(num3 + 1);
                     }
                     else
                     {
-                        list.Add(selection);
+                        num3++;
                     }
                 }
+                this.selectedCurves = list;
             }
-            list.Sort();
-            int num3 = 0;
-            while (num3 < (list.Count - 1))
-            {
-                CurveSelection selection3 = list[num3];
-                CurveSelection selection4 = list[num3 + 1];
-                if ((selection3.curveID == selection4.curveID) && (selection3.key == selection4.key))
-                {
-                    if (!selection3.semiSelected || !selection4.semiSelected)
-                    {
-                        selection3.semiSelected = false;
-                    }
-                    list.RemoveAt(num3 + 1);
-                }
-                else
-                {
-                    num3++;
-                }
-            }
-            this.selectedCurves = list;
         }
 
         private void RecalculateBounds()
         {
-            if (this.m_BoundsAreDirty)
+            if (!this.InLiveEdit() && this.m_BoundsAreDirty)
             {
                 this.m_DrawingBounds = this.m_DefaultBounds;
                 this.m_CurveBounds = this.m_DefaultBounds;
@@ -2284,12 +2299,12 @@
                         {
                             if (!flag)
                             {
-                                this.m_CurveBounds = wrapper.renderer.GetBounds();
+                                this.m_CurveBounds = wrapper.bounds;
                                 flag = true;
                             }
                             else
                             {
-                                this.m_CurveBounds.Encapsulate(wrapper.renderer.GetBounds());
+                                this.m_CurveBounds.Encapsulate(wrapper.bounds);
                             }
                         }
                     }
@@ -2309,27 +2324,33 @@
 
         private void RecalculateSelectionBounds()
         {
-            if (this.hasSelection)
+            if (this.m_SelectionBoundsAreDirty)
             {
-                CurveWrapper curveWrapperFromSelection = this.GetCurveWrapperFromSelection(this.selectedCurves[0]);
-                float num = (curveWrapperFromSelection == null) ? 0f : curveWrapperFromSelection.timeOffset;
-                Keyframe keyframeFromSelection = this.GetKeyframeFromSelection(this.selectedCurves[0]);
-                this.m_SelectionBounds = new Bounds((Vector3) new Vector2(keyframeFromSelection.time + num, keyframeFromSelection.value), (Vector3) Vector2.zero);
-                for (int i = 1; i < this.selectedCurves.Count; i++)
+                if (this.hasSelection)
                 {
-                    Keyframe keyframe2 = this.GetKeyframeFromSelection(this.selectedCurves[i]);
-                    this.m_SelectionBounds.Encapsulate((Vector3) new Vector2(keyframe2.time + num, keyframe2.value));
+                    List<CurveSelection> selectedCurves = this.selectedCurves;
+                    CurveWrapper curveWrapperFromSelection = this.GetCurveWrapperFromSelection(selectedCurves[0]);
+                    float num = (curveWrapperFromSelection == null) ? 0f : curveWrapperFromSelection.timeOffset;
+                    Keyframe keyframeFromSelection = this.GetKeyframeFromSelection(selectedCurves[0]);
+                    this.m_SelectionBounds = new Bounds((Vector3) new Vector2(keyframeFromSelection.time + num, keyframeFromSelection.value), (Vector3) Vector2.zero);
+                    for (int i = 1; i < selectedCurves.Count; i++)
+                    {
+                        keyframeFromSelection = this.GetKeyframeFromSelection(selectedCurves[i]);
+                        this.m_SelectionBounds.Encapsulate((Vector3) new Vector2(keyframeFromSelection.time + num, keyframeFromSelection.value));
+                    }
                 }
-            }
-            else
-            {
-                this.m_SelectionBounds = new Bounds(Vector3.zero, Vector3.zero);
+                else
+                {
+                    this.m_SelectionBounds = new Bounds(Vector3.zero, Vector3.zero);
+                }
+                this.m_SelectionBoundsAreDirty = false;
             }
         }
 
         internal void RemoveSelection(CurveSelection curveSelection)
         {
             this.selectedCurves.Remove(curveSelection);
+            this.InvalidateSelectionBounds();
         }
 
         private void ResetDragging()
@@ -2399,7 +2420,7 @@
                     {
                         if (current.button == 0)
                         {
-                            <SelectPoints>c__AnonStorey8 storey3 = new <SelectPoints>c__AnonStorey8 {
+                            <SelectPoints>c__AnonStorey6 storey3 = new <SelectPoints>c__AnonStorey6 {
                                 selectedPoint = this.FindNearest()
                             };
                             if ((storey3.selectedPoint == null) || storey3.selectedPoint.semiSelected)
@@ -2414,18 +2435,14 @@
                                 GUIUtility.hotControl = controlID;
                                 this.s_EndMouseDragPosition = this.s_StartMouseDragPosition = current.mousePosition;
                                 this.s_PickMode = PickMode.Click;
+                                if (!flag3)
+                                {
+                                    current.Use();
+                                }
                             }
                             else
                             {
                                 this.MoveCurveToFront(storey3.selectedPoint.curveID);
-                                if (this.syncTimeDuringDrag)
-                                {
-                                    CurveWrapper curveWrapperFromSelection = this.GetCurveWrapperFromSelection(storey3.selectedPoint);
-                                    if (curveWrapperFromSelection != null)
-                                    {
-                                        this.activeTime = this.GetKeyframeFromSelection(storey3.selectedPoint).time + curveWrapperFromSelection.timeOffset;
-                                    }
-                                }
                                 Keyframe keyframeFromSelection = this.GetKeyframeFromSelection(storey3.selectedPoint);
                                 this.s_StartKeyDragPosition = new Vector2(keyframeFromSelection.time, keyframeFromSelection.value);
                                 if (shift)
@@ -2452,19 +2469,21 @@
                                     }
                                     else
                                     {
-                                        <SelectPoints>c__AnonStorey9 storey4 = new <SelectPoints>c__AnonStorey9 {
-                                            <>f__ref$8 = storey3,
+                                        this.BeginRangeSelection();
+                                        <SelectPoints>c__AnonStorey7 storey4 = new <SelectPoints>c__AnonStorey7 {
+                                            <>f__ref$6 = storey3,
                                             keyIndex = key
                                         };
                                         while (storey4.keyIndex <= a)
                                         {
-                                            if (!Enumerable.Any<CurveSelection>(this.selectedCurves, new Func<CurveSelection, bool>(storey4, (IntPtr) this.<>m__0)))
+                                            if (!Enumerable.Any<CurveSelection>(this.selectedCurves, new Func<CurveSelection, bool>(storey4.<>m__0)))
                                             {
                                                 CurveSelection curveSelection = new CurveSelection(storey3.selectedPoint.curveID, storey4.keyIndex);
                                                 this.AddSelection(curveSelection);
                                             }
                                             storey4.keyIndex++;
                                         }
+                                        this.EndRangeSelection();
                                     }
                                     Event.current.Use();
                                 }
@@ -2485,13 +2504,14 @@
                                     this.ClearSelection();
                                     this.AddSelection(storey3.selectedPoint);
                                 }
+                                this.RecalcSecondarySelection();
+                                this.RecalcCurveSelection();
                             }
-                            GUI.changed = true;
                             HandleUtility.Repaint();
                         }
                         break;
                     }
-                    <SelectPoints>c__AnonStorey6 storey = new <SelectPoints>c__AnonStorey6 {
+                    <SelectPoints>c__AnonStorey4 storey = new <SelectPoints>c__AnonStorey4 {
                         selectedPoint = this.FindNearest()
                     };
                     if (storey.selectedPoint == null)
@@ -2502,7 +2522,7 @@
                         {
                             foreach (int num4 in list)
                             {
-                                this.GetCurveFromID(num4).changed = true;
+                                this.GetCurveWrapperFromID(num4).changed = true;
                             }
                             GUI.changed = true;
                         }
@@ -2516,19 +2536,21 @@
                         AnimationCurve curveFromSelection = this.GetCurveFromSelection(storey.selectedPoint);
                         if (curveFromSelection != null)
                         {
-                            <SelectPoints>c__AnonStorey7 storey2 = new <SelectPoints>c__AnonStorey7 {
-                                <>f__ref$6 = storey,
+                            this.BeginRangeSelection();
+                            <SelectPoints>c__AnonStorey5 storey2 = new <SelectPoints>c__AnonStorey5 {
+                                <>f__ref$4 = storey,
                                 keyIndex = 0
                             };
                             while (storey2.keyIndex < curveFromSelection.keys.Length)
                             {
-                                if (!Enumerable.Any<CurveSelection>(this.selectedCurves, new Func<CurveSelection, bool>(storey2, (IntPtr) this.<>m__0)))
+                                if (!Enumerable.Any<CurveSelection>(this.selectedCurves, new Func<CurveSelection, bool>(storey2.<>m__0)))
                                 {
                                     CurveSelection selection = new CurveSelection(storey.selectedPoint.curveID, storey2.keyIndex);
                                     this.AddSelection(selection);
                                 }
                                 storey2.keyIndex++;
                             }
+                            this.EndRangeSelection();
                         }
                     }
                     current.Use();
@@ -2537,6 +2559,19 @@
                 case EventType.MouseUp:
                     if (GUIUtility.hotControl == controlID)
                     {
+                        if (this.s_PickMode != PickMode.Click)
+                        {
+                            HashSet<int> set = new HashSet<int>();
+                            for (int j = 0; j < this.selectedCurves.Count; j++)
+                            {
+                                CurveWrapper curveWrapperFromSelection = this.GetCurveWrapperFromSelection(this.selectedCurves[j]);
+                                if (!set.Contains(curveWrapperFromSelection.id))
+                                {
+                                    this.MoveCurveToFront(curveWrapperFromSelection.id);
+                                    set.Add(curveWrapperFromSelection.id);
+                                }
+                            }
+                        }
                         GUIUtility.hotControl = 0;
                         this.s_PickMode = PickMode.None;
                         Event.current.Use();
@@ -2551,24 +2586,33 @@
                         {
                             Rect rect2 = EditorGUIExt.FromToRect(this.s_StartMouseDragPosition, current.mousePosition);
                             List<CurveSelection> list2 = new List<CurveSelection>(this.s_SelectionBackup);
-                            foreach (CurveWrapper wrapper3 in this.m_AnimationCurves)
+                            for (int k = 0; k < this.m_AnimationCurves.Length; k++)
                             {
-                                if (!wrapper3.readOnly && !wrapper3.hidden)
+                                CurveWrapper cw = this.m_AnimationCurves[k];
+                                if (!cw.readOnly && !cw.hidden)
                                 {
-                                    int num9 = 0;
-                                    foreach (Keyframe keyframe3 in wrapper3.curve.keys)
+                                    Rect worldRect = this.GetWorldRect(cw, rect2);
+                                    if (this.GetCurveRect(cw).Overlaps(worldRect))
                                     {
-                                        if (rect2.Contains(this.GetGUIPoint(wrapper3, (Vector3) new Vector2(keyframe3.time, keyframe3.value))))
+                                        int num9 = 0;
+                                        foreach (Keyframe keyframe2 in cw.curve.keys)
                                         {
-                                            list2.Add(new CurveSelection(wrapper3.id, num9));
-                                            this.MoveCurveToFront(wrapper3.id);
+                                            if (worldRect.Contains(new Vector2(keyframe2.time, keyframe2.value)))
+                                            {
+                                                list2.Add(new CurveSelection(cw.id, num9));
+                                            }
+                                            num9++;
                                         }
-                                        num9++;
                                     }
                                 }
                             }
                             this.selectedCurves = list2;
-                            GUI.changed = true;
+                            if (this.s_SelectionBackup.Count > 0)
+                            {
+                                this.selectedCurves.Sort();
+                            }
+                            this.RecalcSecondarySelection();
+                            this.RecalcCurveSelection();
                         }
                         else
                         {
@@ -2620,7 +2664,7 @@
             }
             if (this.s_PickMode == PickMode.Marquee)
             {
-                GUI.Label(EditorGUIExt.FromToRect(this.s_StartMouseDragPosition, this.s_EndMouseDragPosition), GUIContent.none, this.styles.selectionRect);
+                GUI.Label(EditorGUIExt.FromToRect(this.s_StartMouseDragPosition, this.s_EndMouseDragPosition), GUIContent.none, Styles.selectionRect);
             }
         }
 
@@ -2644,23 +2688,27 @@
             }
         }
 
-        internal void SetSelectedKeyPositions(Vector2 newPosition, bool updateTime, bool updateValue)
+        internal void SetSelectedKeyPositions(float newTime, float newValue, bool updateTime, bool updateValue)
         {
             <SetSelectedKeyPositions>c__AnonStorey1 storey = new <SetSelectedKeyPositions>c__AnonStorey1 {
                 updateTime = updateTime,
-                newPosition = newPosition,
+                newTime = newTime,
                 updateValue = updateValue,
+                newValue = newValue,
                 $this = this
             };
-            bool flag = this.InLiveEdit();
-            if (!flag)
+            if (storey.updateTime || storey.updateValue)
             {
-                this.StartLiveEdit();
-            }
-            this.UpdateCurvesFromPoints(new SavedCurve.KeyFrameOperation(storey.<>m__0));
-            if (!flag)
-            {
-                this.EndLiveEdit();
+                bool flag = this.InLiveEdit();
+                if (!flag)
+                {
+                    this.StartLiveEdit();
+                }
+                this.UpdateCurvesFromPoints(new SavedCurve.KeyFrameOperation(storey.<>m__0));
+                if (!flag)
+                {
+                    this.EndLiveEdit();
+                }
             }
         }
 
@@ -2669,12 +2717,7 @@
             this.m_DraggedCoord = timeValue;
             this.m_DraggingKey = cw;
             GUIUtility.hotControl = id;
-            if (this.syncTimeDuringDrag)
-            {
-                this.activeTime = timeValue.x + cw.timeOffset;
-            }
             this.s_StartMouseDragPosition = mousePos;
-            this.s_StartClickedTime = timeValue.x;
         }
 
         private bool ShouldCurveHaveFocus(int indexIntoDrawOrder, CurveWrapper cw1, CurveWrapper cw2)
@@ -2720,20 +2763,31 @@
 
         private void StartEditingSelectedPoints()
         {
-            float num = Enumerable.Min<CurveSelection>(this.selectedCurves, new Func<CurveSelection, float>(this, (IntPtr) this.<StartEditingSelectedPoints>m__4));
-            float num2 = Enumerable.Max<CurveSelection>(this.selectedCurves, new Func<CurveSelection, float>(this, (IntPtr) this.<StartEditingSelectedPoints>m__5));
-            float num3 = Enumerable.Min<CurveSelection>(this.selectedCurves, new Func<CurveSelection, float>(this, (IntPtr) this.<StartEditingSelectedPoints>m__6));
-            float num4 = Enumerable.Max<CurveSelection>(this.selectedCurves, new Func<CurveSelection, float>(this, (IntPtr) this.<StartEditingSelectedPoints>m__7));
-            Vector2 fieldPosition = (Vector2) (new Vector2(num + num2, num3 + num4) * 0.5f);
-            this.StartEditingSelectedPoints(fieldPosition);
+            Vector2 pointEditionFieldPosition = this.GetPointEditionFieldPosition();
+            this.StartEditingSelectedPoints(pointEditionFieldPosition);
         }
 
         private void StartEditingSelectedPoints(Vector2 fieldPosition)
         {
-            this.pointEditingFieldPosition = fieldPosition;
-            this.focusedPointField = "pointValueField";
-            this.timeWasEdited = this.valueWasEdited = false;
-            this.editingPoints = true;
+            <StartEditingSelectedPoints>c__AnonStorey8 storey = new <StartEditingSelectedPoints>c__AnonStorey8 {
+                $this = this
+            };
+            this.m_PointEditingFieldPosition = fieldPosition;
+            this.m_FocusedPointField = "pointValueField";
+            this.m_TimeWasEdited = false;
+            this.m_ValueWasEdited = false;
+            this.m_NewTime = 0f;
+            this.m_NewValue = 0f;
+            storey.keyframe = this.GetKeyframeFromSelection(this.selectedCurves[0]);
+            if (Enumerable.All<CurveSelection>(this.selectedCurves, new Func<CurveSelection, bool>(storey.<>m__0)))
+            {
+                this.m_NewTime = storey.keyframe.time;
+            }
+            if (Enumerable.All<CurveSelection>(this.selectedCurves, new Func<CurveSelection, bool>(storey.<>m__1)))
+            {
+                this.m_NewValue = storey.keyframe.value;
+            }
+            this.m_EditingPoints = true;
         }
 
         private void StartEditingSelectedPointsContext(object fieldPosition)
@@ -2752,7 +2806,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<CurveWrapper, int>(null, (IntPtr) <SyncDrawOrder>m__0);
+                    <>f__am$cache0 = cw => cw.id;
                 }
                 this.m_DrawOrder = Enumerable.Select<CurveWrapper, int>(this.m_AnimationCurves, <>f__am$cache0).ToList<int>();
             }
@@ -2795,7 +2849,7 @@
                     {
                         if (<>f__am$cache1 == null)
                         {
-                            <>f__am$cache1 = new Func<CurveWrapper, int>(null, (IntPtr) <SyncDrawOrder>m__1);
+                            <>f__am$cache1 = cw => cw.id;
                         }
                         this.m_DrawOrder = Enumerable.Select<CurveWrapper, int>(this.m_AnimationCurves, <>f__am$cache1).ToList<int>();
                     }
@@ -2816,7 +2870,10 @@
                     list.Add(selection);
                 }
             }
-            this.selectedCurves = list;
+            if (list.Count != this.selectedCurves.Count)
+            {
+                this.selectedCurves = list;
+            }
             this.InvalidateBounds();
         }
 
@@ -2917,7 +2974,11 @@
 
         private void UndoRedoPerformed()
         {
-            if (!this.settings.undoRedoSelection)
+            if (this.settings.undoRedoSelection)
+            {
+                this.InvalidateSelectionBounds();
+            }
+            else
             {
                 this.SelectNone();
             }
@@ -2939,7 +3000,7 @@
         {
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<ChangedCurve, int>(null, (IntPtr) <UpdateCurves>m__2);
+                <>f__am$cache2 = curve => curve.curveId;
             }
             this.UpdateCurves(new List<int>(Enumerable.Select<ChangedCurve, int>(changedCurves, <>f__am$cache2)), undoText);
         }
@@ -2954,50 +3015,45 @@
                     CurveWrapper curveWrapperFromID = this.GetCurveWrapperFromID(curve.curveId);
                     if (curveWrapperFromID.animationIsEditable)
                     {
-                        List<SavedCurve.SavedKeyFrame> list2 = new List<SavedCurve.SavedKeyFrame>(curve.keys.Count);
+                        SortedList<float, SavedCurve.SavedKeyFrame> list2 = new SortedList<float, SavedCurve.SavedKeyFrame>(SavedCurve.SavedKeyFrameComparer.Instance);
                         foreach (SavedCurve.SavedKeyFrame frame in curve.keys)
                         {
                             if (frame.selected == CurveWrapper.SelectionMode.None)
                             {
-                                <UpdateCurvesFromPoints>c__AnonStorey4 storey = new <UpdateCurvesFromPoints>c__AnonStorey4 {
-                                    newKeyframe = action(frame, curve)
-                                };
-                                list2.RemoveAll(new Predicate<SavedCurve.SavedKeyFrame>(storey.<>m__0));
-                                list2.Add(storey.newKeyframe);
+                                SavedCurve.SavedKeyFrame frame2 = action(frame, curve);
+                                list2[frame2.key.time] = frame2;
                             }
                         }
-                        foreach (SavedCurve.SavedKeyFrame frame2 in curve.keys)
+                        foreach (SavedCurve.SavedKeyFrame frame3 in curve.keys)
                         {
-                            if (frame2.selected != CurveWrapper.SelectionMode.None)
-                            {
-                                <UpdateCurvesFromPoints>c__AnonStorey5 storey2 = new <UpdateCurvesFromPoints>c__AnonStorey5 {
-                                    newKeyframe = action(frame2, curve)
-                                };
-                                list2.RemoveAll(new Predicate<SavedCurve.SavedKeyFrame>(storey2.<>m__0));
-                                list2.Add(storey2.newKeyframe);
-                            }
-                        }
-                        list2.Sort();
-                        Keyframe[] keyframeArray = new Keyframe[list2.Count];
-                        for (int i = 0; i < list2.Count; i++)
-                        {
-                            SavedCurve.SavedKeyFrame frame3 = list2[i];
-                            keyframeArray[i] = frame3.key;
                             if (frame3.selected != CurveWrapper.SelectionMode.None)
                             {
-                                CurveSelection item = new CurveSelection(curve.curveId, i);
-                                if (frame3.selected == CurveWrapper.SelectionMode.SemiSelected)
+                                SavedCurve.SavedKeyFrame frame4 = action(frame3, curve);
+                                list2[frame4.key.time] = frame4;
+                            }
+                        }
+                        int index = 0;
+                        Keyframe[] keyframeArray = new Keyframe[list2.Count];
+                        foreach (KeyValuePair<float, SavedCurve.SavedKeyFrame> pair in list2)
+                        {
+                            SavedCurve.SavedKeyFrame frame5 = pair.Value;
+                            keyframeArray[index] = frame5.key;
+                            if (frame5.selected != CurveWrapper.SelectionMode.None)
+                            {
+                                CurveSelection item = new CurveSelection(curve.curveId, index);
+                                if (frame5.selected == CurveWrapper.SelectionMode.SemiSelected)
                                 {
                                     item.semiSelected = true;
                                 }
                                 list.Add(item);
                             }
+                            index++;
                         }
-                        this.selectedCurves = list;
                         curveWrapperFromID.curve.keys = keyframeArray;
                         curveWrapperFromID.changed = true;
                     }
                 }
+                this.selectedCurves = list;
                 this.UpdateTangentsFromSelection();
             }
         }
@@ -3068,7 +3124,7 @@
 
         private WrapMode WrapModeIconPopup(Keyframe key, WrapMode oldWrap, float hOffset)
         {
-            float width = this.styles.wrapModeMenuIcon.image.width;
+            float width = Styles.wrapModeMenuIcon.image.width;
             Vector3 lhs = new Vector3(key.time, key.value);
             lhs = base.DrawingToViewTransformPoint(lhs);
             Rect position = new Rect(lhs.x + (width * hOffset), lhs.y + base.drawRect.y, width, width);
@@ -3076,7 +3132,7 @@
             Enum[] array = Enum.GetValues(typeof(WrapModeFixedCurve)).Cast<Enum>().ToArray<Enum>();
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<string, string>(null, (IntPtr) <WrapModeIconPopup>m__C);
+                <>f__am$cache3 = x => ObjectNames.NicifyVariableName(x);
             }
             string[] texts = Enumerable.Select<string, string>(Enum.GetNames(typeof(WrapModeFixedCurve)), <>f__am$cache3).ToArray<string>();
             int index = Array.IndexOf<Enum>(array, curve);
@@ -3087,7 +3143,7 @@
             switch (current.type)
             {
                 case EventType.Repaint:
-                    GUIStyle.none.Draw(position, this.styles.wrapModeMenuIcon, controlID, false);
+                    GUIStyle.none.Draw(position, Styles.wrapModeMenuIcon, controlID, false);
                     break;
 
                 case EventType.MouseDown:
@@ -3120,17 +3176,6 @@
             return (WrapMode) array[selectedValueForControl];
         }
 
-        public float activeTime
-        {
-            set
-            {
-                if (this.state != null)
-                {
-                    this.state.currentTime = value;
-                }
-            }
-        }
-
         public CurveWrapper[] animationCurves
         {
             get
@@ -3143,14 +3188,14 @@
             }
             set
             {
-                if (this.m_AnimationCurves == null)
-                {
-                    this.m_AnimationCurves = new CurveWrapper[0];
-                }
                 this.m_AnimationCurves = value;
+                this.curveIDToIndexMap.Clear();
+                this.m_EnableCurveGroups = false;
                 for (int i = 0; i < this.m_AnimationCurves.Length; i++)
                 {
                     this.m_AnimationCurves[i].listIndex = i;
+                    this.curveIDToIndexMap.Add(this.m_AnimationCurves[i].id, i);
+                    this.m_EnableCurveGroups = this.m_EnableCurveGroups || (this.m_AnimationCurves[i].groupId != -1);
                 }
                 this.SyncDrawOrder();
                 this.SyncSelection();
@@ -3167,6 +3212,18 @@
             }
         }
 
+        private Dictionary<int, int> curveIDToIndexMap
+        {
+            get
+            {
+                if (this.m_CurveIDToIndexMap == null)
+                {
+                    this.m_CurveIDToIndexMap = new Dictionary<int, int>();
+                }
+                return this.m_CurveIDToIndexMap;
+            }
+        }
+
         public override Bounds drawingBounds
         {
             get
@@ -3175,8 +3232,6 @@
                 return this.m_DrawingBounds;
             }
         }
-
-        private bool editingPoints { get; set; }
 
         public bool hasSelection =>
             (this.selectedCurves.Count != 0);
@@ -3188,6 +3243,7 @@
             set
             {
                 this.selection.selectedCurves = value;
+                this.InvalidateSelectionBounds();
             }
         }
 
@@ -3227,30 +3283,6 @@
             }
         }
 
-        internal Styles styles
-        {
-            get
-            {
-                if (this.ms_Styles == null)
-                {
-                    this.ms_Styles = new Styles();
-                }
-                return this.ms_Styles;
-            }
-        }
-
-        public bool syncTimeDuringDrag
-        {
-            get
-            {
-                if (this.state != null)
-                {
-                    return this.state.syncTimeDuringDrag;
-                }
-                return true;
-            }
-        }
-
         public Color tangentColor
         {
             get => 
@@ -3274,13 +3306,29 @@
         }
 
         [CompilerGenerated]
-        private sealed class <PointFieldForSelection>c__AnonStoreyA
+        private sealed class <PointFieldForSelection>c__AnonStorey9
         {
-            internal CurveEditor $this;
+            internal float firstSelectedValue;
             internal Func<CurveSelection, float> memberGetter;
 
             internal bool <>m__0(CurveSelection x) => 
-                (this.memberGetter.Invoke(x) == this.memberGetter.Invoke(this.$this.selectedCurves[0]));
+                (this.memberGetter(x) == this.firstSelectedValue);
+        }
+
+        [CompilerGenerated]
+        private sealed class <SelectPoints>c__AnonStorey4
+        {
+            internal CurveSelection selectedPoint;
+        }
+
+        [CompilerGenerated]
+        private sealed class <SelectPoints>c__AnonStorey5
+        {
+            internal CurveEditor.<SelectPoints>c__AnonStorey4 <>f__ref$4;
+            internal int keyIndex;
+
+            internal bool <>m__0(CurveSelection x) => 
+                ((x.curveID == this.<>f__ref$4.selectedPoint.curveID) && (x.key == this.keyIndex));
         }
 
         [CompilerGenerated]
@@ -3300,26 +3348,11 @@
         }
 
         [CompilerGenerated]
-        private sealed class <SelectPoints>c__AnonStorey8
-        {
-            internal CurveSelection selectedPoint;
-        }
-
-        [CompilerGenerated]
-        private sealed class <SelectPoints>c__AnonStorey9
-        {
-            internal CurveEditor.<SelectPoints>c__AnonStorey8 <>f__ref$8;
-            internal int keyIndex;
-
-            internal bool <>m__0(CurveSelection x) => 
-                ((x.curveID == this.<>f__ref$8.selectedPoint.curveID) && (x.key == this.keyIndex));
-        }
-
-        [CompilerGenerated]
         private sealed class <SetSelectedKeyPositions>c__AnonStorey1
         {
             internal CurveEditor $this;
-            internal Vector2 newPosition;
+            internal float newTime;
+            internal float newValue;
             internal bool updateTime;
             internal bool updateValue;
 
@@ -3330,16 +3363,29 @@
                     CurveEditor.SavedCurve.SavedKeyFrame frame = keyframe.Clone();
                     if (this.updateTime)
                     {
-                        frame.key.time = Mathf.Clamp(this.newPosition.x, this.$this.hRangeMin, this.$this.hRangeMax);
+                        frame.key.time = Mathf.Clamp(this.newTime, this.$this.hRangeMin, this.$this.hRangeMax);
                     }
                     if (this.updateValue)
                     {
-                        frame.key.value = this.$this.ClampVerticalValue(this.newPosition.y, curve.curveId);
+                        frame.key.value = this.$this.ClampVerticalValue(this.newValue, curve.curveId);
                     }
                     return frame;
                 }
                 return keyframe;
             }
+        }
+
+        [CompilerGenerated]
+        private sealed class <StartEditingSelectedPoints>c__AnonStorey8
+        {
+            internal CurveEditor $this;
+            internal Keyframe keyframe;
+
+            internal bool <>m__0(CurveSelection x) => 
+                (this.$this.GetKeyframeFromSelection(x).time == this.keyframe.time);
+
+            internal bool <>m__1(CurveSelection x) => 
+                (this.$this.GetKeyframeFromSelection(x).value == this.keyframe.value);
         }
 
         [CompilerGenerated]
@@ -3356,14 +3402,14 @@
                 float time = keyframe.key.time;
                 if (keyframe.selected != CurveWrapper.SelectionMode.None)
                 {
-                    Vector3 v = new Vector3(keyframe.key.time, 0f, 0f);
-                    time = this.matrix.MultiplyPoint3x4(v).x;
+                    Vector3 point = new Vector3(keyframe.key.time, 0f, 0f);
+                    time = this.matrix.MultiplyPoint3x4(point).x;
                     CurveEditor.SavedCurve.SavedKeyFrame frame = keyframe.Clone();
                     frame.key.time = this.$this.SnapTime(Mathf.Clamp(time, this.$this.hRangeMin, this.$this.hRangeMax));
                     if (this.flipX)
                     {
-                        frame.key.inTangent = -keyframe.key.outTangent;
-                        frame.key.outTangent = -keyframe.key.inTangent;
+                        frame.key.inTangent = (keyframe.key.outTangent == float.PositiveInfinity) ? float.PositiveInfinity : -keyframe.key.outTangent;
+                        frame.key.outTangent = (keyframe.key.inTangent == float.PositiveInfinity) ? float.PositiveInfinity : -keyframe.key.inTangent;
                     }
                     return frame;
                 }
@@ -3410,22 +3456,22 @@
                     return keyframe;
                 }
                 CurveEditor.SavedCurve.SavedKeyFrame frame = keyframe.Clone();
-                Vector3 v = new Vector3(frame.key.time, frame.key.value, 0f);
-                v = this.matrix.MultiplyPoint3x4(v);
-                v.x = this.$this.SnapTime(v.x);
-                frame.key.time = Mathf.Clamp(v.x, this.$this.hRangeMin, this.$this.hRangeMax);
+                Vector3 point = new Vector3(frame.key.time, frame.key.value, 0f);
+                point = this.matrix.MultiplyPoint3x4(point);
+                point.x = this.$this.SnapTime(point.x);
+                frame.key.time = Mathf.Clamp(point.x, this.$this.hRangeMin, this.$this.hRangeMax);
                 if (this.flipX)
                 {
-                    frame.key.inTangent = -keyframe.key.outTangent;
-                    frame.key.outTangent = -keyframe.key.inTangent;
+                    frame.key.inTangent = (keyframe.key.outTangent == float.PositiveInfinity) ? float.PositiveInfinity : -keyframe.key.outTangent;
+                    frame.key.outTangent = (keyframe.key.inTangent == float.PositiveInfinity) ? float.PositiveInfinity : -keyframe.key.inTangent;
                 }
                 if (frame.selected == CurveWrapper.SelectionMode.Selected)
                 {
-                    frame.key.value = this.$this.ClampVerticalValue(v.y, curve.curveId);
+                    frame.key.value = this.$this.ClampVerticalValue(point.y, curve.curveId);
                     if (this.flipY)
                     {
-                        frame.key.inTangent = -frame.key.inTangent;
-                        frame.key.outTangent = -frame.key.outTangent;
+                        frame.key.inTangent = (frame.key.inTangent == float.PositiveInfinity) ? float.PositiveInfinity : -frame.key.inTangent;
+                        frame.key.outTangent = (frame.key.outTangent == float.PositiveInfinity) ? float.PositiveInfinity : -frame.key.outTangent;
                     }
                 }
                 return frame;
@@ -3452,24 +3498,6 @@
                 }
                 return keyframe;
             }
-        }
-
-        [CompilerGenerated]
-        private sealed class <UpdateCurvesFromPoints>c__AnonStorey4
-        {
-            internal CurveEditor.SavedCurve.SavedKeyFrame newKeyframe;
-
-            internal bool <>m__0(CurveEditor.SavedCurve.SavedKeyFrame workingKeyframe) => 
-                (Mathf.Abs((float) (workingKeyframe.key.time - this.newKeyframe.key.time)) < 1E-05f);
-        }
-
-        [CompilerGenerated]
-        private sealed class <UpdateCurvesFromPoints>c__AnonStorey5
-        {
-            internal CurveEditor.SavedCurve.SavedKeyFrame newKeyframe;
-
-            internal bool <>m__0(CurveEditor.SavedCurve.SavedKeyFrame workingKeyframe) => 
-                (Mathf.Abs((float) (workingKeyframe.key.time - this.newKeyframe.key.time)) < 1E-05f);
         }
 
         private enum AxisLock
@@ -3515,7 +3543,7 @@
 
             public delegate CurveEditor.SavedCurve.SavedKeyFrame KeyFrameOperation(CurveEditor.SavedCurve.SavedKeyFrame keyframe, CurveEditor.SavedCurve curve);
 
-            public class SavedKeyFrame : IComparable
+            public class SavedKeyFrame
             {
                 public Keyframe key;
                 public CurveWrapper.SelectionMode selected;
@@ -3528,36 +3556,42 @@
 
                 public CurveEditor.SavedCurve.SavedKeyFrame Clone() => 
                     new CurveEditor.SavedCurve.SavedKeyFrame(this.key, this.selected);
+            }
 
-                public int CompareTo(object _other)
+            public class SavedKeyFrameComparer : IComparer<float>
+            {
+                public static CurveEditor.SavedCurve.SavedKeyFrameComparer Instance = new CurveEditor.SavedCurve.SavedKeyFrameComparer();
+
+                public int Compare(float time1, float time2)
                 {
-                    CurveEditor.SavedCurve.SavedKeyFrame frame = (CurveEditor.SavedCurve.SavedKeyFrame) _other;
-                    float num = this.key.time - frame.key.time;
-                    return ((num >= 0f) ? ((num <= 0f) ? 0 : 1) : -1);
+                    float num = time1 - time2;
+                    return ((num >= -1E-05f) ? ((num < 1E-05f) ? 0 : 1) : -1);
                 }
             }
         }
 
-        internal class Styles
+        internal static class Styles
         {
-            public GUIStyle axisLabelNumberField = new GUIStyle(EditorStyles.miniTextField);
-            public GUIStyle dragLabel = "ProfilerBadge";
-            public GUIStyle labelTickMarksX;
-            public GUIStyle labelTickMarksY = "CurveEditorLabelTickMarks";
-            public GUIStyle none = new GUIStyle();
-            public Texture2D pointIcon = EditorGUIUtility.LoadIcon("curvekeyframe");
-            public Texture2D pointIconSelected = EditorGUIUtility.LoadIcon("curvekeyframeselected");
-            public Texture2D pointIconSelectedOverlay = EditorGUIUtility.LoadIcon("curvekeyframeselectedoverlay");
-            public Texture2D pointIconSemiSelectedOverlay = EditorGUIUtility.LoadIcon("curvekeyframesemiselectedoverlay");
-            public GUIStyle selectionRect = "SelectionRect";
-            public GUIContent wrapModeMenuIcon = EditorGUIUtility.IconContent("AnimationWrapModeMenu");
+            public static GUIStyle axisLabelNumberField = new GUIStyle(EditorStyles.miniTextField);
+            public static GUIStyle dragLabel = "ProfilerBadge";
+            public static GUIStyle labelTickMarksX;
+            public static GUIStyle labelTickMarksY = "CurveEditorLabelTickMarks";
+            public static GUIStyle none = new GUIStyle();
+            public static Texture2D pointIcon = EditorGUIUtility.LoadIcon("curvekeyframe");
+            public static Texture2D pointIconSelected = EditorGUIUtility.LoadIcon("curvekeyframeselected");
+            public static Texture2D pointIconSelectedOverlay = EditorGUIUtility.LoadIcon("curvekeyframeselectedoverlay");
+            public static Texture2D pointIconSemiSelectedOverlay = EditorGUIUtility.LoadIcon("curvekeyframesemiselectedoverlay");
+            public static GUIStyle rightAlignedLabel = new GUIStyle(EditorStyles.label);
+            public static GUIStyle selectionRect = "SelectionRect";
+            public static GUIContent wrapModeMenuIcon = EditorGUIUtility.IconContent("AnimationWrapModeMenu");
 
-            public Styles()
+            static Styles()
             {
-                this.axisLabelNumberField.alignment = TextAnchor.UpperRight;
-                this.labelTickMarksY.contentOffset = Vector2.zero;
-                this.labelTickMarksX = new GUIStyle(this.labelTickMarksY);
-                this.labelTickMarksX.clipping = TextClipping.Overflow;
+                axisLabelNumberField.alignment = TextAnchor.UpperRight;
+                labelTickMarksY.contentOffset = Vector2.zero;
+                labelTickMarksX = new GUIStyle(labelTickMarksY);
+                labelTickMarksX.clipping = TextClipping.Overflow;
+                rightAlignedLabel.alignment = TextAnchor.UpperRight;
             }
         }
     }

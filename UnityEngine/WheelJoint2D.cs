@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>The wheel joint allows the simulation of wheels by providing a constraining suspension motion with an optional motor.</para>
@@ -16,26 +17,36 @@
         public float GetMotorTorque(float timeStep) => 
             INTERNAL_CALL_GetMotorTorque(this, timeStep);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern float INTERNAL_CALL_GetMotorTorque(WheelJoint2D self, float timeStep);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_motor(out JointMotor2D value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_suspension(out JointSuspension2D value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_motor(ref JointMotor2D value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_suspension(ref JointSuspension2D value);
 
         /// <summary>
-        /// <para>The current joint speed.</para>
+        /// <para>The current joint angle (in degrees) defined as the relative angle between the two Rigidbody2D that the joint connects to.</para>
         /// </summary>
-        public float jointSpeed { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public float jointAngle { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        /// <summary>
+        /// <para>The current joint linear speed in meters/sec.</para>
+        /// </summary>
+        public float jointLinearSpeed { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        /// <summary>
+        /// <para>The current joint rotational speed in degrees/sec.</para>
+        /// </summary>
+        public float jointSpeed { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The current joint translation.</para>
         /// </summary>
-        public float jointTranslation { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public float jointTranslation { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Parameters for a motor force that is applied automatically to the Rigibody2D along the line.</para>
@@ -74,7 +85,7 @@
         /// <summary>
         /// <para>Should a motor force be applied automatically to the Rigidbody2D?</para>
         /// </summary>
-        public bool useMotor { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool useMotor { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
     }
 }
 

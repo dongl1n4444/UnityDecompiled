@@ -99,7 +99,7 @@
             }
         }
 
-        public Type GetEditorCurveValueType(EditorCurveBinding curveBinding)
+        public System.Type GetEditorCurveValueType(EditorCurveBinding curveBinding)
         {
             if (this.rootGameObject != null)
             {
@@ -177,7 +177,7 @@
             (this.rootGameObject != null);
 
         public virtual bool canRecord =>
-            (this.rootGameObject != null);
+            ((this.rootGameObject != null) && !this.objectIsOptimized);
 
         public virtual bool canSyncSceneSelection =>
             true;
@@ -194,7 +194,7 @@
                 {
                     return false;
                 }
-                if (!AssetDatabase.IsOpenForEdit(this.animationClip))
+                if (!AssetDatabase.IsOpenForEdit(this.animationClip, StatusQueryOptions.UseCachedIfPossible))
                 {
                     return false;
                 }
@@ -267,6 +267,15 @@
             }
         }
 
+        public virtual bool objectIsOptimized
+        {
+            get
+            {
+                Animator animationPlayer = this.animationPlayer as Animator;
+                return (animationPlayer?.isOptimizable && !animationPlayer.hasTransformHierarchy);
+            }
+        }
+
         public virtual bool objectIsPrefab
         {
             get
@@ -301,6 +310,9 @@
                 this.m_ScriptableObject = value;
             }
         }
+
+        public virtual UnityEngine.Object sourceObject =>
+            ((this.gameObject == null) ? ((UnityEngine.Object) this.scriptableObject) : ((UnityEngine.Object) this.gameObject));
 
         public virtual float timeOffset
         {

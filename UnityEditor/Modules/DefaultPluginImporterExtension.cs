@@ -33,8 +33,15 @@
             }
         }
 
-        public virtual string CalculateFinalPluginPath(string platformName, PluginImporter imp) => 
-            Path.GetFileName(imp.assetPath);
+        public virtual string CalculateFinalPluginPath(string platformName, PluginImporter imp)
+        {
+            string platformData = imp.GetPlatformData(platformName, "CPU");
+            if ((!string.IsNullOrEmpty(platformData) && (string.Compare(platformData, "AnyCPU", true) != 0)) && (string.Compare(platformData, "None", true) != 0))
+            {
+                return Path.Combine(platformData, Path.GetFileName(imp.assetPath));
+            }
+            return Path.GetFileName(imp.assetPath);
+        }
 
         public virtual bool CheckFileCollisions(string buildTargetName)
         {
@@ -68,7 +75,7 @@
             if (flag)
             {
                 builder.AppendLine("Please fix plugin settings and try again.");
-                Debug.LogError(builder.ToString());
+                UnityEngine.Debug.LogError(builder.ToString());
             }
             return flag;
         }
@@ -78,7 +85,7 @@
             <GetCompatiblePlugins>c__AnonStorey0 storey = new <GetCompatiblePlugins>c__AnonStorey0 {
                 buildTargetName = buildTargetName
             };
-            PluginImporter[] importerArray = Enumerable.Where<PluginImporter>(PluginImporter.GetAllImporters(), new Func<PluginImporter, bool>(storey, (IntPtr) this.<>m__0)).ToArray<PluginImporter>();
+            PluginImporter[] importerArray = Enumerable.Where<PluginImporter>(PluginImporter.GetAllImporters(), new Func<PluginImporter, bool>(storey.<>m__0)).ToArray<PluginImporter>();
             Dictionary<string, List<PluginImporter>> dictionary = new Dictionary<string, List<PluginImporter>>();
             foreach (PluginImporter importer in importerArray)
             {
@@ -155,16 +162,16 @@
 
         internal class Property
         {
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private object <defaultValue>k__BackingField;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private string <key>k__BackingField;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-            private GUIContent <name>k__BackingField;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            private GUIContent <name>k__BackingField;
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private string <platformName>k__BackingField;
             [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-            private Type <type>k__BackingField;
+            private System.Type <type>k__BackingField;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private object <value>k__BackingField;
 
@@ -218,7 +225,7 @@
                     this.value = this.defaultValue;
                     if (!string.IsNullOrEmpty(platformData))
                     {
-                        Debug.LogWarning(string.Concat(new object[] { "Failed to parse value ('", platformData, "') for ", this.key, ", platform: ", this.platformName, ", type: ", this.type, ". Default value will be set '", this.defaultValue, "'" }));
+                        UnityEngine.Debug.LogWarning(string.Concat(new object[] { "Failed to parse value ('", platformData, "') for ", this.key, ", platform: ", this.platformName, ", type: ", this.type, ". Default value will be set '", this.defaultValue, "'" }));
                     }
                 }
             }
@@ -231,7 +238,7 @@
 
             internal string platformName { get; set; }
 
-            internal Type type { get; set; }
+            internal System.Type type { get; set; }
 
             internal object value { get; set; }
         }

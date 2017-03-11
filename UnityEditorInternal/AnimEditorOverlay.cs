@@ -23,8 +23,9 @@
             if (this.m_PlayHeadCursor == null)
             {
                 this.m_PlayHeadCursor = new TimeCursorManipulator(AnimationWindowStyles.playHead);
-                this.m_PlayHeadCursor.onStartDrag = (AnimationWindowManipulator.OnStartDragDelegate) Delegate.Combine(this.m_PlayHeadCursor.onStartDrag, (manipulator, evt) => (evt.mousePosition.y <= (this.m_Rect.yMin + 20f)) && this.OnDragPlayHead(evt));
+                this.m_PlayHeadCursor.onStartDrag = (AnimationWindowManipulator.OnStartDragDelegate) Delegate.Combine(this.m_PlayHeadCursor.onStartDrag, (manipulator, evt) => (evt.mousePosition.y <= (this.m_Rect.yMin + 20f)) && this.OnStartDragPlayHead(evt));
                 this.m_PlayHeadCursor.onDrag = (AnimationWindowManipulator.OnDragDelegate) Delegate.Combine(this.m_PlayHeadCursor.onDrag, (manipulator, evt) => this.OnDragPlayHead(evt));
+                this.m_PlayHeadCursor.onEndDrag = (AnimationWindowManipulator.OnEndDragDelegate) Delegate.Combine(this.m_PlayHeadCursor.onEndDrag, (manipulator, evt) => this.OnEndDragPlayHead(evt));
             }
         }
 
@@ -46,10 +47,13 @@
 
         private bool OnDragPlayHead(Event evt)
         {
-            this.state.currentTime = this.MousePositionToTime(evt);
-            this.state.recording = true;
-            this.state.playing = false;
-            this.state.ResampleAnimation();
+            this.state.controlInterface.ScrubTime(this.MousePositionToTime(evt));
+            return true;
+        }
+
+        private bool OnEndDragPlayHead(Event evt)
+        {
+            this.state.controlInterface.EndScrubTime();
             return true;
         }
 
@@ -62,6 +66,14 @@
                 this.Initialize();
                 this.m_PlayHeadCursor.OnGUI(this.m_Rect, this.m_Rect.xMin + this.TimeToPixel(this.state.currentTime));
             }
+        }
+
+        private bool OnStartDragPlayHead(Event evt)
+        {
+            this.state.controlInterface.StopPlayback();
+            this.state.controlInterface.StartScrubTime();
+            this.state.controlInterface.ScrubTime(this.MousePositionToTime(evt));
+            return true;
         }
 
         public float TimeToPixel(float time) => 

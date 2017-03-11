@@ -2,6 +2,7 @@
 {
     using System;
     using System.Runtime.CompilerServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Scene and Build Settings related utilities.</para>
@@ -15,7 +16,7 @@
         /// <returns>
         /// <para>Build index.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int GetBuildIndexByScenePath(string scenePath);
         /// <summary>
         /// <para>Get the scene path from a build index.</para>
@@ -24,7 +25,7 @@
         /// <returns>
         /// <para>Scene path (e.g "AssetsScenesScene1.unity").</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetScenePathByBuildIndex(int buildIndex);
     }
 }

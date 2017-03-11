@@ -35,7 +35,7 @@
                 "Bounds"
             };
             TypesThatShouldHaveHadSerializableAttribute = set;
-            serializableStructs = new string[] { "UnityEngine.AnimationCurve", "UnityEngine.Color32", "UnityEngine.Gradient", "UnityEngine.GUIStyle", "UnityEngine.RectOffset", "UnityEngine.Matrix4x4" };
+            serializableStructs = new string[] { "UnityEngine.AnimationCurve", "UnityEngine.Color32", "UnityEngine.Gradient", "UnityEngine.GUIStyle", "UnityEngine.RectOffset", "UnityEngine.Matrix4x4", "UnityEngine.PropertyName" };
         }
 
         public static bool IsColor32(TypeReference type) => 

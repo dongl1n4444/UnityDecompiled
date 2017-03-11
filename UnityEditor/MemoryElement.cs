@@ -13,7 +13,7 @@
         public string name;
         public MemoryElement parent;
         public int totalChildCount;
-        public int totalMemory;
+        public long totalMemory;
 
         public MemoryElement()
         {
@@ -39,7 +39,7 @@
             this.name = n;
             this.expanded = false;
             this.description = "";
-            this.totalMemory = 0;
+            this.totalMemory = 0L;
             this.totalChildCount = 0;
             this.children = new List<MemoryElement>();
             foreach (MemoryElement element in groups)
@@ -55,7 +55,7 @@
             this.expanded = false;
             this.memoryInfo = memInfo;
             this.name = this.memoryInfo.name;
-            this.totalMemory = (memInfo == null) ? 0 : memInfo.memorySize;
+            this.totalMemory = (memInfo == null) ? 0L : memInfo.memorySize;
             this.totalChildCount = 1;
             if (finalize)
             {

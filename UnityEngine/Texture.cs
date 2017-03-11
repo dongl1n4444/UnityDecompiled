@@ -4,13 +4,15 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine.Rendering;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Base class for texture handling. Contains functionality that is common to both Texture2D and RenderTexture classes.</para>
     /// </summary>
+    [UsedByNativeCode]
     public class Texture : UnityEngine.Object
     {
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use GetNativeTexturePtr instead.")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use GetNativeTexturePtr instead."), GeneratedByOldBindingsGenerator]
         public extern int GetNativeTextureID();
         /// <summary>
         /// <para>Retrieve a native (underlying graphics API) pointer to the texture resource.</para>
@@ -25,30 +27,30 @@
             return ptr;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetNativeTexturePtr(Texture self, out IntPtr value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_texelSize(out Vector2 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern TextureDimension Internal_GetDimension(Texture t);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int Internal_GetHeight(Texture t);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int Internal_GetWidth(Texture t);
         /// <summary>
         /// <para>Sets Anisotropic limits.</para>
         /// </summary>
         /// <param name="forcedMin"></param>
         /// <param name="globalMax"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetGlobalAnisotropicFilteringLimits(int forcedMin, int globalMax);
 
         /// <summary>
         /// <para>Anisotropic filtering level of the texture.</para>
         /// </summary>
-        public int anisoLevel { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int anisoLevel { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        public static AnisotropicFiltering anisotropicFiltering { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static AnisotropicFiltering anisotropicFiltering { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Dimensionality (type) of the texture (Read Only).</para>
@@ -66,7 +68,7 @@
         /// <summary>
         /// <para>Filtering mode of the texture.</para>
         /// </summary>
-        public FilterMode filterMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public FilterMode filterMode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Height of the texture in pixels. (Read Only)</para>
@@ -81,12 +83,12 @@
             }
         }
 
-        public static int masterTextureLimit { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static int masterTextureLimit { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Mip map bias of the texture.</para>
         /// </summary>
-        public float mipMapBias { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float mipMapBias { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         public Vector2 texelSize
         {
@@ -112,9 +114,24 @@
         }
 
         /// <summary>
-        /// <para>Wrap mode (Repeat or Clamp) of the texture.</para>
+        /// <para>Texture coordinate wrapping mode.</para>
         /// </summary>
-        public TextureWrapMode wrapMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public TextureWrapMode wrapMode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
+        /// <para>Texture U coordinate wrapping mode.</para>
+        /// </summary>
+        public TextureWrapMode wrapModeU { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
+        /// <para>Texture V coordinate wrapping mode.</para>
+        /// </summary>
+        public TextureWrapMode wrapModeV { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
+        /// <para>Texture W coordinate wrapping mode for Texture3D.</para>
+        /// </summary>
+        public TextureWrapMode wrapModeW { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
     }
 }
 

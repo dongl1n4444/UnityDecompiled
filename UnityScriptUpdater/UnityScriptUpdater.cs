@@ -40,15 +40,18 @@
             throw new Exception("MonoBehaviour not found");
         }
 
-        protected override FixParsedSourceLocations NewParsedSourceLocationFixer(IAPIUpdaterListener listener, Dictionary<string, SourceFile> sources) => 
-            new FixParsedSourceLocations(this.TabSize, sources, listener);
+        protected override BooBasedLanguageTraits GetLanguageTraits() => 
+            UnityScriptLanguageTraits.Instance;
+
+        protected override BooUpdater.FixParsedSourceLocations NewParsedSourceLocationFixer(IAPIUpdaterListener listener, Dictionary<string, SourceFile> sources) => 
+            new UnityScriptUpdater.FixParsedSourceLocations(this.TabSize, sources, listener);
 
         protected override ReplacingAstVisitor[] PostProcessPipeline(ReplacingAstVisitor[] pipeline, BooUpdateContext context)
         {
             Replace(pipeline, typeof(DepricatedComponentPropertyGetterReplacer), new UnityScriptDepricatedComponentPropertyGetterReplacer(context));
             Replace(pipeline, typeof(MemberReferenceRemover), new UnityScriptMemberReferenceRemover(context));
-            Replace(pipeline, typeof(MethodSignatureChanger), new MethodSignatureChanger(context));
-            Replace(pipeline, typeof(StringBasedAddComponentReplacer), new StringBasedAddComponentReplacer(context));
+            Replace(pipeline, typeof(BooUpdater.MethodSignatureChanger), new UnityScriptUpdater.MethodSignatureChanger(context));
+            Replace(pipeline, typeof(BooUpdater.StringBasedAddComponentReplacer), new UnityScriptUpdater.StringBasedAddComponentReplacer(context));
             return pipeline;
         }
 
@@ -67,14 +70,14 @@
         protected override void SetupCompilerParameters(BooUpdateContext context, IEnumerable<string> defines, IEnumerable<string> references)
         {
             base.SetupCompilerParameters(context, defines, references);
-            UnityScriptCompilerParameters parameters = base._compiler.get_Parameters();
+            UnityScriptCompilerParameters parameters = (UnityScriptCompilerParameters) base._compiler.Parameters;
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = () => new CustomTypeInferenceRuleProvider("UnityEngineInternal.TypeInferenceRuleAttribute");
+                <>f__am$cache0 = (ObjectFactory) (() => new CustomTypeInferenceRuleProvider("UnityEngineInternal.TypeInferenceRuleAttribute"));
             }
             parameters.AddToEnvironment(typeof(TypeInferenceRuleProvider), <>f__am$cache0);
             parameters.ScriptMainMethod = "MyMain";
-            List<string> list = new List<string> { 
+            Boo.Lang.List<string> list = new Boo.Lang.List<string> { 
                 "UnityEngine",
                 "UnityEditor",
                 "System.Collections"
@@ -86,8 +89,8 @@
         protected override void SetupCompilerPipeline()
         {
             base.SetupCompilerPipeline();
-            CompilerPipeline pipeline = UnityScriptCompiler.Pipelines.AdjustBooPipeline(base._compiler.get_Parameters().get_Pipeline());
-            base._compiler.get_Parameters().set_Pipeline(pipeline);
+            CompilerPipeline pipeline = UnityScriptCompiler.Pipelines.AdjustBooPipeline(base._compiler.Parameters.Pipeline);
+            base._compiler.Parameters.Pipeline = pipeline;
         }
 
         protected override bool FixExpressionStatements =>

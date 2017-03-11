@@ -20,7 +20,7 @@
             return behaviour.GetType().InvokeMember(name, BindingFlags.InvokeMethod | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance, null, behaviour, args, null, null, null);
         }
 
-        [SecuritySafeCritical, RequiredByNativeCode]
+        [RequiredByNativeCode, SecuritySafeCritical]
         public static void InvokeMoveNext(IEnumerator enumerator, IntPtr returnValueAddress)
         {
             if (returnValueAddress == IntPtr.Zero)

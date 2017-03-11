@@ -137,7 +137,7 @@
         {
             foreach (NetworkIdentity identity in UnityEngine.Object.FindObjectsOfType<NetworkIdentity>())
             {
-                identity.Reset();
+                identity.MarkForReset();
             }
         }
 
@@ -257,7 +257,11 @@
         {
             if ((singleton == null) || (singleton != this))
             {
-                LogFilter.currentLogLevel = (int) this.m_LogLevel;
+                int logLevel = (int) this.m_LogLevel;
+                if (logLevel != -1)
+                {
+                    LogFilter.currentLogLevel = logLevel;
+                }
                 if (this.m_DontDestroyOnLoad)
                 {
                     if (singleton != null)
@@ -363,7 +367,7 @@
             }
             if ((this.m_MigrationManager == null) || !this.m_MigrationManager.LostHostOnClient(netMsg.conn))
             {
-                if (this.m_OfflineScene != "")
+                if (!string.IsNullOrEmpty(this.m_OfflineScene))
                 {
                     this.ClientChangeScene(this.m_OfflineScene, false);
                 }
@@ -1256,7 +1260,7 @@
             }
             this.isNetworkActive = true;
             string name = SceneManager.GetSceneAt(0).name;
-            if (((this.m_OnlineScene != "") && (this.m_OnlineScene != name)) && (this.m_OnlineScene != this.m_OfflineScene))
+            if ((!string.IsNullOrEmpty(this.m_OnlineScene) && (this.m_OnlineScene != name)) && (this.m_OnlineScene != this.m_OfflineScene))
             {
                 this.ServerChangeScene(this.m_OnlineScene);
             }
@@ -1286,7 +1290,7 @@
             }
             this.StopMatchMaker();
             ClientScene.DestroyAllClientObjects();
-            if (this.m_OfflineScene != "")
+            if (!string.IsNullOrEmpty(this.m_OfflineScene))
             {
                 this.ClientChangeScene(this.m_OfflineScene, false);
             }
@@ -1341,7 +1345,7 @@
                 this.isNetworkActive = false;
                 NetworkServer.Shutdown();
                 this.StopMatchMaker();
-                if (this.m_OfflineScene != "")
+                if (!string.IsNullOrEmpty(this.m_OfflineScene))
                 {
                     this.ServerChangeScene(this.m_OfflineScene);
                 }
@@ -1415,7 +1419,7 @@
                 ClientScene.DestroyAllClientObjects();
                 ClientScene.HandleClientDisconnect(this.client.connection);
                 this.client = null;
-                if (this.m_OfflineScene != "")
+                if (!string.IsNullOrEmpty(this.m_OfflineScene))
                 {
                     this.ClientChangeScene(this.m_OfflineScene, false);
                 }

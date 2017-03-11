@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEditor.Modules;
-using UnityEditor.Scripting.Compilers;
+using UnityEditor.WSA;
 
 internal class PostProcessUniversal81 : PostProcessWSA
 {
@@ -123,7 +123,7 @@ internal class PostProcessUniversal81 : PostProcessWSA
     }
 
     protected override string GetResourceCompilerPath() => 
-        Path.Combine(MicrosoftCSharpCompiler.GetWindowsKitDirectory(WSASDK.SDK81), @"bin\x86\rc.exe");
+        Path.Combine(MetroCompilationExtension.GetWindowsKitDirectory(WSASDK.SDK81), @"bin\x86\rc.exe");
 
     protected override string GetTemplateDirectorySource() => 
         base.GetTemplateDirectorySource("Windows81");
@@ -150,21 +150,13 @@ internal class PostProcessUniversal81 : PostProcessWSA
     {
         Directory.CreateDirectory(this._stagingAreaShared);
         Utility.CopyDirectoryContents(base.StagingAreaDataManaged, this._store.StagingAreaDataManaged, false);
-        Utility.CopyDirectoryContents(base.StagingAreaDataManaged, this._phone.StagingAreaDataManaged, false);
-        Directory.Delete(base.StagingAreaDataManaged, true);
+        Utility.MoveDirectory(base.StagingAreaDataManaged, this._phone.StagingAreaDataManaged, null);
         string path = @"Temp\Phone";
         if (Directory.Exists(path))
         {
-            Utility.CopyDirectoryContents(path, this._phone.StagingAreaDataManaged, false);
-            Utility.DeleteDirectory(path);
+            Utility.MoveDirectory(path, this._phone.StagingAreaDataManaged, null);
         }
         base.Process();
-    }
-
-    public override void RunAssemblyConverter()
-    {
-        this._store.RunAssemblyConverter();
-        this._phone.RunAssemblyConverter();
     }
 
     public override void RunReferenceRewriter()

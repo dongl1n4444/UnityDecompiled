@@ -9,33 +9,28 @@
     using System.Runtime.InteropServices;
     using Unity.IL2CPP.Common;
     using Unity.IL2CPP.FileNaming;
-    using Unity.IL2CPP.ILPreProcessor;
     using Unity.IL2CPP.IoC;
     using Unity.IL2CPP.IoCServices;
     using Unity.IL2CPP.Metadata;
 
     public abstract class CppCodeWriter : CodeWriter
     {
+        private readonly HashSet<ArrayType> _arrayTypes;
         private readonly HashSet<TypeReference> _forwardDeclarations;
-        private readonly HashSet<GenericInstanceMethod> _genericInstanceMethods;
         private readonly HashSet<string> _includes;
-        private readonly HashSet<string> _rawForwardDeclarations;
+        private readonly HashSet<MethodReference> _methods;
+        private readonly HashSet<string> _rawMethodForwardDeclarations;
+        private readonly HashSet<string> _rawTypeForwardDeclarations;
+        private readonly HashSet<MethodReference> _sharedMethods;
         private readonly HashSet<string> _writtenExterns;
         private readonly HashSet<string> _writtenInternalPInvokeMethodDeclarations;
         [CompilerGenerated]
-        private static Func<FieldDefinition, bool> <>f__am$cache0;
+        private static Func<object, string> <>f__am$cache0;
         [CompilerGenerated]
-        private static Func<FieldDefinition, bool> <>f__am$cache1;
-        [CompilerGenerated]
-        private static Func<FieldDefinition, TypeReference> <>f__am$cache2;
-        [CompilerGenerated]
-        private static Func<object, string> <>f__am$cache3;
-        [CompilerGenerated]
-        private static Func<object, string> <>f__am$cache4;
-        [CompilerGenerated]
-        private static Func<TypeReference, bool> <>f__mg$cache0;
+        private static Func<object, string> <>f__am$cache1;
         [CompilerGenerated]
         private static Dictionary<string, int> <>f__switch$map0;
+        public bool ErrorOccurred;
         [Inject]
         public static IGenericSharingAnalysisService GenericSharingAnalysis;
         [Inject]
@@ -49,8 +44,11 @@
             this._writtenExterns = new HashSet<string>();
             this._writtenInternalPInvokeMethodDeclarations = new HashSet<string>();
             this._forwardDeclarations = new HashSet<TypeReference>(new Unity.IL2CPP.Common.TypeReferenceEqualityComparer());
-            this._rawForwardDeclarations = new HashSet<string>();
-            this._genericInstanceMethods = new HashSet<GenericInstanceMethod>(new Unity.IL2CPP.Common.MethodReferenceComparer());
+            this._arrayTypes = new HashSet<ArrayType>(new Unity.IL2CPP.Common.TypeReferenceEqualityComparer());
+            this._rawTypeForwardDeclarations = new HashSet<string>();
+            this._rawMethodForwardDeclarations = new HashSet<string>();
+            this._methods = new HashSet<MethodReference>(new Unity.IL2CPP.Common.MethodReferenceComparer());
+            this._sharedMethods = new HashSet<MethodReference>(new Unity.IL2CPP.Common.MethodReferenceComparer());
         }
 
         public void AddCodeGenIncludes()
@@ -74,16 +72,7 @@
             {
                 throw new ArgumentException("Type forward declaration must not be empty.", "declaration");
             }
-            this._rawForwardDeclarations.Add(declaration);
-        }
-
-        public void AddGenericInstanceMethod(GenericInstanceMethod genericInstanceMethod)
-        {
-            if (genericInstanceMethod == null)
-            {
-                throw new ArgumentNullException("genericInstanceMethod");
-            }
-            this._genericInstanceMethods.Add(genericInstanceMethod);
+            this._rawTypeForwardDeclarations.Add(declaration);
         }
 
         public void AddInclude(string path)
@@ -91,11 +80,18 @@
             this._includes.Add($""{path}"");
         }
 
-        public void AddIncludeForMethodDeclarations(TypeReference type)
+        public void AddIncludeForMethodDeclaration(MethodReference method)
         {
-            if (((!type.IsInterface() || type.IsComOrWindowsRuntimeInterface()) && !type.IsArray) && !type.HasGenericParameters)
+            TypeReference declaringType = method.DeclaringType;
+            if (((!declaringType.IsInterface() || declaringType.IsComOrWindowsRuntimeInterface()) && !declaringType.IsArray) && (!declaringType.HasGenericParameters && this._methods.Add(method)))
             {
-                this.AddInclude(FileNameProvider.Instance.ForMethodDeclarations(type));
+                MethodSignatureWriter.RecordIncludes(this, method);
+                if (MethodWriter.GenericSharingAnalysis.CanShareMethod(method))
+                {
+                    MethodReference sharedMethod = MethodWriter.GenericSharingAnalysis.GetSharedMethod(method);
+                    MethodSignatureWriter.RecordIncludes(this, sharedMethod);
+                    this._sharedMethods.Add(sharedMethod);
+                }
             }
         }
 
@@ -106,7 +102,9 @@
             {
                 if (type.IsArray)
                 {
-                    this.AddInclude(FileNameProvider.Instance.ForModule(ArrayUtilities.ModuleDefinitionForElementTypeOf((ArrayType) type)) + "_ArrayTypes.h");
+                    ArrayType item = (ArrayType) type;
+                    this.AddIncludeOrExternForTypeDefinition(item.ElementType);
+                    this._arrayTypes.Add(item);
                 }
                 else
                 {
@@ -187,25 +185,6 @@
             this.AddIncludeForType(type);
         }
 
-        public void AddIncludesForMethodDeclaration(GenericInstanceMethod method)
-        {
-            Unity.IL2CPP.ILPreProcessor.TypeResolver resolver = new Unity.IL2CPP.ILPreProcessor.TypeResolver(method.DeclaringType as GenericInstanceType, method);
-            this.AddIncludeForType(method.DeclaringType);
-            if (method.ReturnType.MetadataType != MetadataType.Void)
-            {
-                this.AddIncludesForTypeReference(resolver.ResolveReturnType(method), false);
-            }
-            foreach (ParameterDefinition definition in method.Parameters)
-            {
-                this.AddIncludesForTypeReference(resolver.ResolveParameterType(method, definition), false);
-            }
-            if (GenericSharingAnalysis.CanShareMethod(method) && !GenericSharingAnalysis.IsSharedMethod(method))
-            {
-                this.AddIncludesForMethodDeclaration((GenericInstanceMethod) GenericSharingAnalysis.GetSharedMethod(method));
-            }
-            this.AddGenericInstanceMethod(method);
-        }
-
         public void AddIncludesForTypeReference(TypeReference typeReference, bool requiresCompleteType = false)
         {
             TypeReference elementType = typeReference;
@@ -258,6 +237,15 @@
                     }
                 }
             }
+        }
+
+        public void AddMethodForwardDeclaration(string declaration)
+        {
+            if (string.IsNullOrEmpty(declaration))
+            {
+                throw new ArgumentException("Method forward declaration must not be empty.", "declaration");
+            }
+            this._rawMethodForwardDeclarations.Add(declaration);
         }
 
         public void AddRawInclude(string path)
@@ -431,65 +419,35 @@
         public static string InitializerStringForPrimitiveType(TypeReference type) => 
             InitializerStringForPrimitiveType(type.MetadataType);
 
-        private static bool IsZeroSizeValueType(TypeReference type)
-        {
-            if (!type.IsValueType())
-            {
-                return false;
-            }
-            if ((type.FullName == "intptr_t") || (type.FullName == "uintptr_t"))
-            {
-                return false;
-            }
-            if (type.IsEnum())
-            {
-                return false;
-            }
-            if (type.IsPrimitive)
-            {
-                return false;
-            }
-            TypeDefinition definition = type.Resolve();
-            if (<>f__am$cache0 == null)
-            {
-                <>f__am$cache0 = new Func<FieldDefinition, bool>(null, (IntPtr) <IsZeroSizeValueType>m__0);
-            }
-            if (definition.Fields.All<FieldDefinition>(<>f__am$cache0))
-            {
-                return true;
-            }
-            if (<>f__am$cache1 == null)
-            {
-                <>f__am$cache1 = new Func<FieldDefinition, bool>(null, (IntPtr) <IsZeroSizeValueType>m__1);
-            }
-            if (<>f__am$cache2 == null)
-            {
-                <>f__am$cache2 = new Func<FieldDefinition, TypeReference>(null, (IntPtr) <IsZeroSizeValueType>m__2);
-            }
-            if (<>f__mg$cache0 == null)
-            {
-                <>f__mg$cache0 = new Func<TypeReference, bool>(null, (IntPtr) IsZeroSizeValueType);
-            }
-            return definition.Fields.Where<FieldDefinition>(<>f__am$cache1).Select<FieldDefinition, TypeReference>(<>f__am$cache2).All<TypeReference>(<>f__mg$cache0);
-        }
-
         public void Write(CppCodeWriter other)
         {
-            foreach (TypeReference reference in other.ForwardDeclarations)
+            foreach (TypeReference reference in other._forwardDeclarations)
             {
-                this.AddForwardDeclaration(reference);
+                this._forwardDeclarations.Add(reference);
             }
-            foreach (string str in other.RawForwardDeclarations)
+            foreach (string str in other._rawTypeForwardDeclarations)
             {
-                this.AddForwardDeclaration(str);
+                this._rawTypeForwardDeclarations.Add(str);
             }
-            foreach (string str2 in other.Includes)
+            foreach (string str2 in other._rawMethodForwardDeclarations)
             {
-                this.AddRawInclude(str2);
+                this._rawMethodForwardDeclarations.Add(str2);
             }
-            foreach (GenericInstanceMethod method in other.GenericInstanceMethods)
+            foreach (string str3 in other._includes)
             {
-                this.AddGenericInstanceMethod(method);
+                this._includes.Add(str3);
+            }
+            foreach (MethodReference reference2 in other._methods)
+            {
+                this._methods.Add(reference2);
+            }
+            foreach (MethodReference reference3 in other._sharedMethods)
+            {
+                this._sharedMethods.Add(reference3);
+            }
+            foreach (ArrayType type in other._arrayTypes)
+            {
+                this._arrayTypes.Add(type);
             }
             base.Writer.Flush();
             other.Writer.Flush();
@@ -503,11 +461,11 @@
 
         public void WriteArrayInitializer(params object[] values)
         {
-            if (<>f__am$cache3 == null)
+            if (<>f__am$cache0 == null)
             {
-                <>f__am$cache3 = new Func<object, string>(null, (IntPtr) <WriteArrayInitializer>m__3);
+                <>f__am$cache0 = v => v.ToString();
             }
-            this.WriteFieldInitializer(values.Select<object, string>(<>f__am$cache3));
+            this.WriteFieldInitializer(values.Select<object, string>(<>f__am$cache0));
         }
 
         public TableInfo WriteArrayInitializer(string type, string variableName, IEnumerable<string> values, bool nullTerminate = true)
@@ -592,7 +550,7 @@
             <WriteIfNotEmpty>c__AnonStorey0 storey = new <WriteIfNotEmpty>c__AnonStorey0 {
                 writeContent = writeContent
             };
-            this.WriteIfNotEmpty<object>(writePrefixIfNotEmpty, new Func<CppCodeWriter, object>(storey, (IntPtr) this.<>m__0), writePostfixIfNotEmpty);
+            this.WriteIfNotEmpty<object>(writePrefixIfNotEmpty, new Func<CppCodeWriter, object>(storey.<>m__0), writePostfixIfNotEmpty);
         }
 
         public T WriteIfNotEmpty<T>(Action<CppCodeWriter> writePrefixIfNotEmpty, Func<CppCodeWriter, T> writeContent, Action<CppCodeWriter> writePostfixIfNotEmpty)
@@ -605,7 +563,7 @@
                     writer.Indent(base.IndentationLevel);
                     writePrefixIfNotEmpty(writer);
                     writer2.Indent(writer.IndentationLevel);
-                    T local = writeContent.Invoke(writer2);
+                    T local = writeContent(writer2);
                     writer2.Dedent(writer.IndentationLevel);
                     writer.Dedent(base.IndentationLevel);
                     writer2.Writer.Flush();
@@ -658,12 +616,12 @@
 
         public void WriteNullTerminatedArrayInitializer(params object[] values)
         {
-            if (<>f__am$cache4 == null)
+            if (<>f__am$cache1 == null)
             {
-                <>f__am$cache4 = new Func<object, string>(null, (IntPtr) <WriteNullTerminatedArrayInitializer>m__4);
+                <>f__am$cache1 = v => v.ToString();
             }
             string[] second = new string[] { "NULL" };
-            this.WriteFieldInitializer(values.Select<object, string>(<>f__am$cache4).Concat<string>(second));
+            this.WriteFieldInitializer(values.Select<object, string>(<>f__am$cache1).Concat<string>(second));
         }
 
         public void WriteStructInitializer(string type, string variableName, IEnumerable<string> values)
@@ -695,26 +653,26 @@
             }
         }
 
-        public void WriteWriteBarrierIfNeeded(TypeReference valueType, string addressExpression, string valueExpression)
-        {
-            if (!valueType.IsValueType() && !valueType.IsPointer)
-            {
-                object[] args = new object[] { addressExpression, valueExpression };
-                base.WriteLine("Il2CppCodeGenWriteBarrier({0}, {1});", args);
-            }
-        }
+        public IEnumerable<ArrayType> ArrayTypes =>
+            this._arrayTypes;
 
         public IEnumerable<TypeReference> ForwardDeclarations =>
             this._forwardDeclarations;
 
-        public IEnumerable<GenericInstanceMethod> GenericInstanceMethods =>
-            this._genericInstanceMethods;
-
         public IEnumerable<string> Includes =>
             this._includes;
 
-        public IEnumerable<string> RawForwardDeclarations =>
-            this._rawForwardDeclarations;
+        public IEnumerable<MethodReference> Methods =>
+            this._methods;
+
+        public IEnumerable<string> RawMethodForwardDeclarations =>
+            this._rawMethodForwardDeclarations;
+
+        public IEnumerable<string> RawTypeForwardDeclarations =>
+            this._rawTypeForwardDeclarations;
+
+        public IEnumerable<MethodReference> SharedMethods =>
+            this._sharedMethods;
 
         public IEnumerable<string> WrittenExterns =>
             this._writtenExterns;

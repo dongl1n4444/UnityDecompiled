@@ -22,9 +22,9 @@
             this.m_NativePtr = nativeCaptureObject;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void CapturePhotoToDisk_Internal(IntPtr photoCaptureObj, string filename, int fileOutputFormat, OnCapturedToDiskCallback onCapturedPhotoToDiskCallback);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void CapturePhotoToMemory_Internal(IntPtr photoCaptureObj, OnCapturedToMemoryCallback onCapturedPhotoToMemoryCallback);
         public static void CreateAsync(bool showHolograms, OnCaptureResourceCreatedCallback onCreatedCallback)
         {
@@ -48,9 +48,9 @@
             GC.SuppressFinalize(this);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Dispose_Internal(IntPtr photoCaptureObj);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern void DisposeThreaded_Internal(IntPtr photoCaptureObj);
         ~PhotoCapture()
         {
@@ -61,7 +61,7 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Resolution[] GetSupportedResolutions_Internal();
         /// <summary>
         /// <para>Provides a COM pointer to the native IVideoDeviceController.</para>
@@ -87,9 +87,9 @@
             return ptr;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetUnsafePointerToVideoDeviceController_Internal(IntPtr photoCaptureObj, out IntPtr value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Instantiate_Internal(bool showHolograms, OnCaptureResourceCreatedCallback onCreatedCallback, out IntPtr value);
         [RequiredByNativeCode]
         private static void InvokeOnCapturedPhotoToDiskDelegate(OnCapturedToDiskCallback callback, long hResult)
@@ -156,7 +156,7 @@
                 hResult = hResult
             };
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void StartPhotoMode_Internal(IntPtr photoCaptureObj, OnPhotoModeStartedCallback onPhotoModeStartedCallback, float hologramOpacity, float frameRate, int cameraResolutionWidth, int cameraResolutionHeight, int pixelFormat);
         public void StartPhotoModeAsync(CameraParameters setupParams, OnPhotoModeStartedCallback onPhotoModeStartedCallback)
         {
@@ -175,7 +175,7 @@
             this.StartPhotoMode_Internal(this.m_NativePtr, onPhotoModeStartedCallback, setupParams.hologramOpacity, setupParams.frameRate, setupParams.cameraResolutionWidth, setupParams.cameraResolutionHeight, (int) setupParams.pixelFormat);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void StopPhotoMode_Internal(IntPtr photoCaptureObj, OnPhotoModeStoppedCallback onPhotoModeStoppedCallback);
         public void StopPhotoModeAsync(OnPhotoModeStoppedCallback onPhotoModeStoppedCallback)
         {

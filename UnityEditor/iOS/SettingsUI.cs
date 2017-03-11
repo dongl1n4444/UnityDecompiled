@@ -43,7 +43,7 @@
                     }
                     else
                     {
-                        num3 = PlayerSettingsEditor.BuildEnumPopup<Architecture>(EditorGUIUtility.TextContent("Architecture"), architecture, kArchitectureOrder, kArchitectureDescriptions);
+                        num3 = PlayerSettingsEditor.BuildEnumPopup<Architecture>(EditorGUIUtility.TextContent("Architecture"), (Architecture) architecture, kArchitectureOrder, kArchitectureDescriptions);
                     }
                 }
                 else

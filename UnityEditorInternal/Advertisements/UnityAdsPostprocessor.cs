@@ -87,7 +87,7 @@
                     Directory.Delete(str5, true);
                 }
             }
-            project.AddFileToBuild(targetGuid, project.AddFile("UnityAdsConfig.h", "Classes/UnityAds/UnityAdsConfig.h"));
+            project.AddFileToBuild(targetGuid, project.AddFile("UnityAdsConfig.h", "Classes/UnityAds/UnityAdsConfig.h", PBXSourceTree.Source));
             project.WriteToFile(path);
         }
 

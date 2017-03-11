@@ -5,7 +5,7 @@
 
     internal class AnimationClipSelectionItem : AnimationWindowSelectionItem
     {
-        public static AnimationClipSelectionItem Create(AnimationClip animationClip, Object sourceObject)
+        public static AnimationClipSelectionItem Create(AnimationClip animationClip, UnityEngine.Object sourceObject)
         {
             AnimationClipSelectionItem item = ScriptableObject.CreateInstance(typeof(AnimationClipSelectionItem)) as AnimationClipSelectionItem;
             item.hideFlags = HideFlags.HideAndDontSave;

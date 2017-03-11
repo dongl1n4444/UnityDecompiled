@@ -1,7 +1,9 @@
 ﻿namespace UnityEditor.Android.PostProcessor.Tasks
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEditor;
     using UnityEditor.Android.PostProcessor;
@@ -9,6 +11,7 @@
 
     internal class Initializer : IPostProcessorTask
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ProgressHandler OnProgress;
 
         public void Execute(PostProcessorContext context)
@@ -25,7 +28,6 @@
             Directory.CreateDirectory(Path.Combine(str, "bin"));
             bool useAPKExpansionFiles = PlayerSettings.Android.useAPKExpansionFiles;
             context.Set<bool>("UseObb", useAPKExpansionFiles);
-            context.Set<int>("GearVRMinSdkVersion", 0x13);
             string path = Path.Combine(BuildPipeline.GetBuildToolsDirectory(target), "fastzip");
             if (!File.Exists(path))
             {
@@ -36,7 +38,7 @@
             context.Set<bool>("UseFastzip", flag2);
             if (PlayerSettings.Android.androidTVCompatibility && !this.IsOrientationAndroidTVCompatible())
             {
-                Debug.LogWarning("The orientation specified is not compatible with Android TV.\nPlease select Landscape or AutoRotation with Landscape enabled orientation, or disable Android TV compatibility in Player Settings.");
+                UnityEngine.Debug.LogWarning("The orientation specified is not compatible with Android TV.\nPlease select Landscape or AutoRotation with Landscape enabled orientation, or disable Android TV compatibility in Player Settings.");
             }
         }
 

@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
-    using UnityEditor.Animations;
+    using System.Runtime.InteropServices;
     using UnityEditorInternal;
     using UnityEngine;
     using UnityEngine.Profiling;
@@ -41,15 +41,18 @@
         private SerializedProperty m_MotionNodeName;
         private SerializedProperty m_PivotNodeName;
         private SerializedProperty m_ResampleCurves;
+        private SerializedProperty m_RigImportErrors;
+        private SerializedProperty m_RigImportWarnings;
         public int m_SelectedClipIndexDoNotUseDirectly = -1;
         private static bool motionNodeFoldout = false;
         private static Styles styles;
 
         private void AddClip(TakeInfo takeInfo)
         {
+            string str = this.MakeUniqueClipName(takeInfo.name);
             this.m_ClipAnimations.InsertArrayElementAtIndex(this.m_ClipAnimations.arraySize);
             AnimationClipInfoProperties animationClipInfoAtIndex = this.GetAnimationClipInfoAtIndex(this.m_ClipAnimations.arraySize - 1);
-            animationClipInfoAtIndex.name = this.MakeUniqueClipName(takeInfo.defaultClipName, -1);
+            animationClipInfoAtIndex.name = str;
             this.SetupTakeNameAndFrames(animationClipInfoAtIndex, takeInfo);
             animationClipInfoAtIndex.wrapMode = 0;
             animationClipInfoAtIndex.loop = false;
@@ -101,14 +104,22 @@
         {
             string stringValue = this.m_AnimationImportErrors.stringValue;
             string message = this.m_AnimationImportWarnings.stringValue;
-            string str3 = this.m_AnimationRetargetingWarnings.stringValue;
+            string str3 = this.m_RigImportWarnings.stringValue;
+            string str4 = this.m_AnimationRetargetingWarnings.stringValue;
             if (stringValue.Length > 0)
             {
-                EditorGUILayout.HelpBox("Error(s) found while importing this animation file. Open \"Import Messages\" foldout below for more details", MessageType.Error);
+                EditorGUILayout.HelpBox("Error(s) found while importing this animation file. Open \"Import Messages\" foldout below for more details.", MessageType.Error);
             }
-            else if (message.Length > 0)
+            else
             {
-                EditorGUILayout.HelpBox("Warning(s) found while importing this animation file. Open \"Import Messages\" foldout below for more details", MessageType.Warning);
+                if (str3.Length > 0)
+                {
+                    EditorGUILayout.HelpBox("Warning(s) found while importing rig in this animation file. Open \"Rig\" tab for more details.", MessageType.Warning);
+                }
+                if (message.Length > 0)
+                {
+                    EditorGUILayout.HelpBox("Warning(s) found while importing this animation file. Open \"Import Messages\" foldout below for more details.", MessageType.Warning);
+                }
             }
             this.AnimationSettings();
             if (!base.serializedObject.isEditingMultipleObjects)
@@ -141,9 +152,9 @@
                         EditorGUILayout.PropertyField(this.m_AnimationDoRetargetingWarnings, styles.GenerateRetargetingWarnings, new GUILayoutOption[0]);
                         if (this.m_AnimationDoRetargetingWarnings.boolValue)
                         {
-                            if (str3.Length > 0)
+                            if (str4.Length > 0)
                             {
-                                EditorGUILayout.HelpBox(str3, MessageType.Info);
+                                EditorGUILayout.HelpBox(str4, MessageType.Info);
                             }
                         }
                         else
@@ -255,7 +266,7 @@
                         int takeIndex = this.m_AnimationClipEditor.takeIndex;
                         if ((takeIndex != -1) && (takeIndex != index))
                         {
-                            selectedClipInfo.name = this.MakeUniqueClipName(array[takeIndex], -1);
+                            selectedClipInfo.name = this.MakeUniqueClipName(array[takeIndex]);
                             this.SetupTakeNameAndFrames(selectedClipInfo, importedTakeInfos[takeIndex]);
                             GUIUtility.keyboardControl = 0;
                             this.SelectClip(this.selectedClipIndex);
@@ -327,17 +338,17 @@
         {
             if (this.m_AnimationClipEditor != null)
             {
-                Object.DestroyImmediate(this.m_AnimationClipEditor);
+                UnityEngine.Object.DestroyImmediate(this.m_AnimationClipEditor);
                 this.m_AnimationClipEditor = null;
             }
             if (this.m_MaskInspector != null)
             {
-                Object.DestroyImmediate(this.m_MaskInspector);
+                UnityEngine.Object.DestroyImmediate(this.m_MaskInspector);
                 this.m_MaskInspector = null;
             }
             if (this.m_Mask != null)
             {
-                Object.DestroyImmediate(this.m_Mask);
+                UnityEngine.Object.DestroyImmediate(this.m_Mask);
                 this.m_Mask = null;
             }
         }
@@ -363,6 +374,28 @@
             GUI.Label(rect, "Start", styles.numberStyle);
             rect.x = rect.xMax;
             GUI.Label(rect, "End", styles.numberStyle);
+        }
+
+        private int FindNextDuplicateNumber(string baseName)
+        {
+            int num = -1;
+            for (int i = 0; i < this.m_ClipAnimations.arraySize; i++)
+            {
+                int num3;
+                AnimationClipInfoProperties animationClipInfoAtIndex = this.GetAnimationClipInfoAtIndex(i);
+                if (this.RemoveDuplicateSuffix(animationClipInfoAtIndex.name, out num3) == baseName)
+                {
+                    if (num == -1)
+                    {
+                        num = 1;
+                    }
+                    if (num3 != -1)
+                    {
+                        num = Math.Max(num, num3 + 1);
+                    }
+                }
+            }
+            return num;
         }
 
         private AnimationClipInfoProperties GetAnimationClipInfoAtIndex(int index) => 
@@ -396,30 +429,17 @@
         private bool IsDeprecatedMultiAnimationRootImport() => 
             ((this.animationType == ModelImporterAnimationType.Legacy) && ((this.legacyGenerateAnimations == ModelImporterGenerateAnimations.InOriginalRoots) || (this.legacyGenerateAnimations == ModelImporterGenerateAnimations.InNodes)));
 
-        private string MakeUniqueClipName(string name, int row)
+        private string MakeUniqueClipName(string name)
         {
-            string str = name;
-            int num = 0;
-            while (true)
+            int num;
+            string baseName = this.RemoveDuplicateSuffix(name, out num);
+            int num2 = this.FindNextDuplicateNumber(baseName);
+            if (num2 != -1)
             {
-                int index = 0;
-                index = 0;
-                while (index < this.m_ClipAnimations.arraySize)
-                {
-                    AnimationClipInfoProperties animationClipInfoAtIndex = this.GetAnimationClipInfoAtIndex(index);
-                    if ((str == animationClipInfoAtIndex.name) && (row != index))
-                    {
-                        str = name + num.ToString();
-                        num++;
-                        break;
-                    }
-                    index++;
-                }
-                if (index == this.m_ClipAnimations.arraySize)
-                {
-                    return str;
-                }
+                object[] objArray1 = new object[] { baseName, " (", num2, ")" };
+                name = string.Concat(objArray1);
             }
+            return name;
         }
 
         public void OnDestroy()
@@ -440,6 +460,8 @@
             this.m_AnimationPositionError = base.serializedObject.FindProperty("m_AnimationPositionError");
             this.m_AnimationScaleError = base.serializedObject.FindProperty("m_AnimationScaleError");
             this.m_AnimationWrapMode = base.serializedObject.FindProperty("m_AnimationWrapMode");
+            this.m_RigImportErrors = base.serializedObject.FindProperty("m_RigImportErrors");
+            this.m_RigImportWarnings = base.serializedObject.FindProperty("m_RigImportWarnings");
             this.m_AnimationImportErrors = base.serializedObject.FindProperty("m_AnimationImportErrors");
             this.m_AnimationImportWarnings = base.serializedObject.FindProperty("m_AnimationImportWarnings");
             this.m_AnimationRetargetingWarnings = base.serializedObject.FindProperty("m_AnimationRetargetingWarnings");
@@ -500,6 +522,10 @@
                     if (base.serializedObject.hasModifiedProperties)
                     {
                         EditorGUILayout.HelpBox("The animations settings can be edited after clicking Apply.", MessageType.Info);
+                    }
+                    else if (this.m_RigImportErrors.stringValue.Length > 0)
+                    {
+                        EditorGUILayout.HelpBox("Error(s) found while importing rig in this animation file. Open \"Rig\" tab for more details.", MessageType.Error);
                     }
                     else
                     {
@@ -562,6 +588,38 @@
             this.RemoveClip(list.index);
             this.UpdateList();
             this.SelectClip(Mathf.Min(list.index, list.count - 1));
+        }
+
+        private string RemoveDuplicateSuffix(string name, out int number)
+        {
+            number = -1;
+            int length = name.Length;
+            if ((length < 4) || (name[length - 1] != ')'))
+            {
+                return name;
+            }
+            int num2 = name.LastIndexOf('(', length - 2);
+            if ((num2 == -1) || (name[num2 - 1] != ' '))
+            {
+                return name;
+            }
+            int num3 = (length - num2) - 2;
+            if (num3 == 0)
+            {
+                return name;
+            }
+            int num4 = 0;
+            while ((num4 < num3) && char.IsDigit(name[(num2 + 1) + num4]))
+            {
+                num4++;
+            }
+            if (num4 != num3)
+            {
+                return name;
+            }
+            string s = name.Substring(num2 + 1, num3);
+            number = int.Parse(s);
+            return name.Substring(0, num2 - 1);
         }
 
         internal override void ResetValues()
@@ -687,7 +745,7 @@
             {
                 if (base.serializedObject.FindProperty("m_ClipAnimations").arraySize != 0)
                 {
-                    Debug.LogError("Transferring default clips failed, target already has clips");
+                    UnityEngine.Debug.LogError("Transferring default clips failed, target already has clips");
                 }
                 base.serializedObject.CopyFromSerializedProperty(this.m_ClipAnimations);
                 this.m_ClipAnimations = base.serializedObject.FindProperty("m_ClipAnimations");

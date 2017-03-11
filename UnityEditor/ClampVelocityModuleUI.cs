@@ -37,7 +37,7 @@
             }
         }
 
-        public override void OnInspectorGUI(ParticleSystem s)
+        public override void OnInspectorGUI(InitialModuleUI initial)
         {
             EditorGUI.BeginChangeCheck();
             bool flag = ModuleUI.GUIToggle(s_Texts.separateAxes, this.m_SeparateAxes, new GUILayoutOption[0]);
@@ -71,7 +71,7 @@
 
         public override void UpdateCullingSupportedString(ref string text)
         {
-            text = text + "\n\tLimit velocity is enabled.";
+            text = text + "\nLimit Velocity over Lifetime module is enabled.";
         }
 
         private class Texts

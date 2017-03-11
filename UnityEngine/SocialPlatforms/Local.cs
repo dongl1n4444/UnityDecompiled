@@ -328,7 +328,7 @@
 
             internal void <>m__0(bool success)
             {
-                this.callback.Invoke(success, null);
+                this.callback(success, null);
             }
         }
     }

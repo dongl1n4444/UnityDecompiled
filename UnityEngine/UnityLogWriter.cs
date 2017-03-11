@@ -4,6 +4,7 @@
     using System.IO;
     using System.Runtime.CompilerServices;
     using System.Text;
+    using UnityEngine.Scripting;
 
     internal sealed class UnityLogWriter : TextWriter
     {
@@ -22,7 +23,7 @@
             WriteStringToUnityLog(s);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern void WriteStringToUnityLog(string s);
 
         public override System.Text.Encoding Encoding =>

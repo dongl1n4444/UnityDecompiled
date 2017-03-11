@@ -21,9 +21,10 @@
     using Unity.IL2CPP.IoCServices;
     using Unity.IL2CPP.Metadata;
     using Unity.IL2CPP.StringLiterals;
+    using Unity.IL2CPP.Symbols;
     using Unity.TinyProfiling;
 
-    public class AssemblyConverter
+    public class AssemblyConverter : IDisposable
     {
         private readonly NPath[] _assemblies;
         private List<AssemblyDefinition> _assembliesOrderedByDependency = new List<AssemblyDefinition>();
@@ -35,6 +36,7 @@
         private readonly InterfaceInvokerCollector _interfaceInvokerCollector = new InterfaceInvokerCollector(false);
         private readonly NPath _outputDir;
         private readonly StringLiteralCollector _stringLiteralCollector = new StringLiteralCollector();
+        private readonly NPath _symbolsFolder;
         private readonly VirtualInvokerCollector _virtualInvokerCollector = new VirtualInvokerCollector(false);
         private readonly VTableBuilder _vTableBuilder = new VTableBuilder();
         [CompilerGenerated]
@@ -49,12 +51,10 @@
         private static Func<AssemblyDefinition, bool> <>f__am$cache4;
         [CompilerGenerated]
         private static Func<AssemblyDefinition, IEnumerable<TypeDefinition>> <>f__am$cache5;
-        [CompilerGenerated]
-        private static Func<string, string> <>f__am$cache6;
-        [CompilerGenerated]
-        private static Func<string, bool> <>f__am$cache7;
         [Inject]
         public static IAssemblyDependencies AssemblyDependencies;
+        [Inject]
+        public static IStatsService StatsService;
         [Inject]
         public static ITypeProviderService TypeProvider;
         [Inject]
@@ -62,50 +62,60 @@
         [Inject]
         public static IVirtualCallCollectorService VirtualCallCollector;
         [Inject]
+        public static IWindowsRuntimeProjections WindowsRuntimeProjections;
+        [Inject]
         public static IWindowsRuntimeProjectionsInitializer WindowsRuntimeProjectionsInitializer;
 
-        protected AssemblyConverter(NPath[] assemblies, NPath outputDir, NPath dataFolder, DotNetProfile dotNetProfile)
+        private AssemblyConverter(NPath[] assemblies, NPath outputDir, NPath dataFolder, NPath symbolsFolder, DotNetProfile dotNetProfile)
         {
             this._assemblies = assemblies;
             this._outputDir = outputDir;
             this._dataFolder = dataFolder;
+            this._symbolsFolder = symbolsFolder;
             this._debuggerSupport = DebuggerSupportFactory.GetDebuggerSupport();
             NPath[] searchDirectories = new NPath[] { assemblies[0].Parent, MonoInstall.SmartProfilePath(dotNetProfile) };
             bool applyWindowsRuntimeProjections = CodeGenOptions.Dotnetprofile == DotNetProfile.Net45;
-            this._assemblyLoader = new AssemblyLoader(searchDirectories, DebuggerOptions.Enabled || CodeGenOptions.EnableSymbolLoading, applyWindowsRuntimeProjections);
+            this._assemblyLoader = new AssemblyLoader(searchDirectories, applyWindowsRuntimeProjections);
         }
 
-        private void AddExtraTypes(InflatedCollectionCollector genericsCollectionCollector)
+        private void AddWindowsRuntimeTypeNames(ReadOnlyInflatedCollectionCollector readOnlyGenericsCollectionCollector, IInteropDataCollector interopDataCollector)
         {
-            ExtraTypesSupport support = new ExtraTypesSupport(genericsCollectionCollector, this._assembliesOrderedByDependency);
-            foreach (string str in BuildExtraTypesList())
+            TypeDefinition definition = TypeProvider.OptionalResolve("System.Collections.Generic", "KeyValuePair`2", TypeProvider.Corlib.Name);
+            foreach (GenericInstanceType type in readOnlyGenericsCollectionCollector.TypeDeclarations)
             {
-                TypeNameParseInfo typeNameInfo = TypeNameParser.Parse(str);
-                if (typeNameInfo == null)
+                TypeDefinition definition2 = type.Resolve();
+                if (definition2 == TypeProvider.IReferenceType)
                 {
-                    Console.WriteLine("WARNING: Cannot parse type name {0} from the extra types list. Skipping.", str);
+                    interopDataCollector.AddWindowsRuntimeTypeWithName(type, type.GetWindowsRuntimeTypeName());
+                    StatsService.RecordWindowsRuntimeBoxedType();
                 }
-                else if (!support.AddType(str, typeNameInfo))
+                else if (definition2 == definition)
                 {
-                    Console.WriteLine("WARNING: Cannot add extra type {0}. Skipping.", str);
+                    TypeReference reference = WindowsRuntimeProjections.ProjectToWindowsRuntime(type);
+                    if (reference.IsComOrWindowsRuntimeInterface())
+                    {
+                        interopDataCollector.AddWindowsRuntimeTypeWithName(type, reference.GetWindowsRuntimeTypeName());
+                    }
                 }
             }
         }
 
         private void Apply()
         {
-            InflatedCollectionCollector collector;
+            ReadOnlyInflatedCollectionCollector collector2;
             TypeDefinition[] definitionArray;
+            InteropDataCollector interopDataCollector = new InteropDataCollector();
             using (TinyProfiler.Section("PreProcessStage", ""))
             {
-                this.PreProcessStage(out collector, out definitionArray);
+                this.PreProcessStage(interopDataCollector, out collector2, out definitionArray);
             }
             MethodCollector methodCollector = new MethodCollector();
             AttributeCollection attributeCollection = new AttributeCollection();
-            MetadataCollector metadataCollection = new MetadataCollector();
+            MetadataCollector methodVerifier = new MetadataCollector(interopDataCollector);
+            SymbolsCollector symbolsCollector = new SymbolsCollector();
             using (TinyProfiler.Section("MetadataCollector", ""))
             {
-                metadataCollection.AddAssemblies(this._assembliesOrderedByDependency);
+                methodVerifier.AddAssemblies(this._assembliesOrderedByDependency);
             }
             using (TinyProfiler.Section("AllAssemblyConversion", ""))
             {
@@ -113,15 +123,16 @@
                 {
                     using (TinyProfiler.Section("Convert", definition.Name.Name))
                     {
-                        this.Convert(definition, collector, attributeCollection, methodCollector, metadataCollection);
+                        this.Convert(definition, collector2, attributeCollection, methodCollector, methodVerifier, interopDataCollector, methodVerifier, symbolsCollector);
                     }
                 }
             }
             methodCollector.Complete();
             using (TinyProfiler.Section("WriteGenerics", ""))
             {
-                this.WriteGenerics(collector.AsReadOnly(), definitionArray, metadataCollection);
+                this.WriteGenerics(collector2, definitionArray, methodVerifier, new NullMethodCollector(), interopDataCollector, methodVerifier, symbolsCollector);
             }
+            interopDataCollector.Complete(methodVerifier);
             using (TinyProfiler.Section("VariousInvokers", ""))
             {
                 this._virtualInvokerCollector.Write(this.GetPathFor("GeneratedVirtualInvokers", "h"));
@@ -129,9 +140,13 @@
                 this._interfaceInvokerCollector.Write(this.GetPathFor("GeneratedInterfaceInvokers", "h"));
                 this._genericInterfaceInvokerCollector.Write(this.GetPathFor("GeneratedGenericInterfaceInvokers", "h"));
             }
+            using (TinyProfiler.Section("Write COM Callable Wrappers", ""))
+            {
+                SourceWriter.WriteComCallableWrappers(this._outputDir, interopDataCollector);
+            }
             using (TinyProfiler.Section("Metadata", "Global"))
             {
-                SourceWriter.WriteCollectedMetadata(collector, this._assembliesOrderedByDependency, this._outputDir, this._dataFolder, metadataCollection, attributeCollection, this._vTableBuilder, methodCollector);
+                SourceWriter.WriteCollectedMetadata(this._assembliesOrderedByDependency, this._outputDir, this._dataFolder, methodVerifier, attributeCollection, this._vTableBuilder, methodCollector, interopDataCollector);
             }
             using (TinyProfiler.Section("Copy Etc", ""))
             {
@@ -144,6 +159,7 @@
                     MonoInstall.TwoSix.ConfigPath.Copy(this._dataFolder);
                 }
             }
+            symbolsCollector.EmitLineMappingFile(this._symbolsFolder);
             this._debuggerSupport.GenerateSupportFilesIfNeeded(this._outputDir);
         }
 
@@ -154,50 +170,9 @@
             {
                 using (TinyProfiler.Section("ApplyDefaultMarshalAsAttributeVisitor in assembly", definition.Name.Name))
                 {
-                    definition.Accept(visitor);
+                    visitor.Process(definition);
                 }
             }
-        }
-
-        private static IEnumerable<string> BuildExtraTypesList()
-        {
-            HashSet<string> set = new HashSet<string>();
-            if (ExtraTypesOptions.Name != null)
-            {
-                foreach (string str in ExtraTypesOptions.Name)
-                {
-                    set.Add(str);
-                }
-            }
-            if (ExtraTypesOptions.File != null)
-            {
-                foreach (string str2 in ExtraTypesOptions.File)
-                {
-                    try
-                    {
-                        if (<>f__am$cache6 == null)
-                        {
-                            <>f__am$cache6 = new Func<string, string>(null, (IntPtr) <BuildExtraTypesList>m__7);
-                        }
-                        if (<>f__am$cache7 == null)
-                        {
-                            <>f__am$cache7 = new Func<string, bool>(null, (IntPtr) <BuildExtraTypesList>m__8);
-                        }
-                        foreach (string str3 in File.ReadAllLines(str2).Select<string, string>(<>f__am$cache6).Where<string>(<>f__am$cache7))
-                        {
-                            if ((!str3.StartsWith(";") && !str3.StartsWith("#")) && !str3.StartsWith("//"))
-                            {
-                                set.Add(str3);
-                            }
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        Console.WriteLine("WARNING: Cannot open extra file list {0}. Skipping.", str2);
-                    }
-                }
-            }
-            return set;
         }
 
         private HashSet<AssemblyDefinition> CollectAssembliesRecursive(IEnumerable<AssemblyDefinition> assemblies)
@@ -207,11 +182,11 @@
             while (source.Count > count)
             {
                 count = source.Count;
-                source.UnionWith(source.ToArray<AssemblyDefinition>().SelectMany<AssemblyDefinition, AssemblyDefinition>(new Func<AssemblyDefinition, IEnumerable<AssemblyDefinition>>(AssemblyDependencies, (IntPtr) AssemblyDependencies.GetReferencedAssembliesFor)));
+                source.UnionWith(source.ToArray<AssemblyDefinition>().SelectMany<AssemblyDefinition, AssemblyDefinition>(new Func<AssemblyDefinition, IEnumerable<AssemblyDefinition>>(AssemblyDependencies.GetReferencedAssembliesFor)));
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<AssemblyDefinition, bool>(null, (IntPtr) <CollectAssembliesRecursive>m__2);
+                <>f__am$cache1 = a => a.Name.Name == "mscorlib";
             }
             if (!source.Any<AssemblyDefinition>(<>f__am$cache1))
             {
@@ -223,7 +198,7 @@
 
         private void CollectAssembliesToConvert()
         {
-            this._assembliesOrderedByDependency = this.CollectAssembliesRecursive(this._assemblies.Select<NPath, AssemblyDefinition>(new Func<NPath, AssemblyDefinition>(this, (IntPtr) this.<CollectAssembliesToConvert>m__1))).ToList<AssemblyDefinition>();
+            this._assembliesOrderedByDependency = this.CollectAssembliesRecursive(from path in this._assemblies select this._assemblyLoader.Load(path.ToString())).ToList<AssemblyDefinition>();
             this._assembliesOrderedByDependency.Sort(new AssemblyDependencyComparer(AssemblyDependencyComparer.MaximumDepthForEachAssembly(this._assembliesOrderedByDependency)));
         }
 
@@ -232,17 +207,20 @@
             new GenericVirtualMethodCollector().Collect(allGenerics, allTypeDefinitions, this._vTableBuilder);
         }
 
-        private void Convert(AssemblyDefinition assemblyDefinition, InflatedCollectionCollector allGenerics, AttributeCollection attributeCollection, MethodCollector methodCollector, IMetadataCollection metadataCollection)
+        private void Convert(AssemblyDefinition assemblyDefinition, ReadOnlyInflatedCollectionCollector allGenerics, AttributeCollection attributeCollection, MethodCollector methodCollector, IMethodVerifier methodVerifier, IInteropDataCollector interopDataCollector, IMetadataCollection metadataCollection, SymbolsCollector symbolsCollector)
         {
             TypeDefinition[] typeList = GetAllTypes(assemblyDefinition.MainModule.Types).ToArray<TypeDefinition>();
-            new SourceWriter(this._vTableBuilder, this._debuggerSupport, this._outputDir).Write(assemblyDefinition, allGenerics, this._outputDir, typeList, attributeCollection, methodCollector, metadataCollection);
+            new SourceWriter(this._vTableBuilder, this._debuggerSupport, this._outputDir).Write(assemblyDefinition, allGenerics, this._outputDir, typeList, attributeCollection, methodCollector, methodVerifier, interopDataCollector, metadataCollection, symbolsCollector);
         }
 
-        public static void ConvertAssemblies(NPath[] assemblies, NPath outputDir, NPath dataFolder)
+        public static void ConvertAssemblies(NPath[] assemblies, NPath outputDir, NPath dataFolder, NPath symbolsFolder)
         {
             try
             {
-                new AssemblyConverter(assemblies, outputDir, dataFolder, CodeGenOptions.Dotnetprofile).Apply();
+                using (AssemblyConverter converter = new AssemblyConverter(assemblies, outputDir, dataFolder, symbolsFolder, CodeGenOptions.Dotnetprofile))
+                {
+                    converter.Apply();
+                }
             }
             catch (Exception exception)
             {
@@ -251,7 +229,7 @@
             }
         }
 
-        public static IEnumerable<NPath> ConvertAssemblies(IEnumerable<string> assemblyDirectories, IEnumerable<NPath> explicitAssemblies, NPath outputDir, NPath dataFolder)
+        public static IEnumerable<NPath> ConvertAssemblies(IEnumerable<string> assemblyDirectories, IEnumerable<NPath> explicitAssemblies, NPath outputDir, NPath dataFolder, NPath symbolsFolder)
         {
             List<NPath> list = new List<NPath>();
             if (assemblyDirectories != null)
@@ -265,8 +243,13 @@
             {
                 list.AddRange(explicitAssemblies);
             }
-            ConvertAssemblies(list.ToArray(), outputDir, dataFolder);
+            ConvertAssemblies(list.ToArray(), outputDir, dataFolder, symbolsFolder);
             return list;
+        }
+
+        public void Dispose()
+        {
+            this._assemblyLoader.Dispose();
         }
 
         [DebuggerHidden]
@@ -280,7 +263,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<NPath, bool>(null, (IntPtr) <GetAssembliesInDirectory>m__0);
+                <>f__am$cache0 = f => f.HasExtension(new string[] { "dll", "exe" });
             }
             return assemblyDirectory.Files(false).Where<NPath>(<>f__am$cache0);
         }
@@ -298,7 +281,7 @@
             {
                 using (TinyProfiler.Section("ModifyCOMAndWindowsRuntimeTypes in assembly", definition.Name.Name))
                 {
-                    definition.Accept(visitor);
+                    visitor.Process(definition);
                 }
             }
         }
@@ -315,15 +298,16 @@
             }
         }
 
-        private void PreProcessStage(out InflatedCollectionCollector genericsCollectionCollector, out TypeDefinition[] allTypeDefinitions)
+        private void PreProcessStage(IInteropDataCollector interopDataCollector, out ReadOnlyInflatedCollectionCollector readOnlyGenericsCollectionCollector, out TypeDefinition[] allTypeDefinitions)
         {
+            InflatedCollectionCollector collector;
             using (TinyProfiler.Section("Collect assemblies to convert", ""))
             {
                 this.CollectAssembliesToConvert();
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<AssemblyDefinition, bool>(null, (IntPtr) <PreProcessStage>m__3);
+                <>f__am$cache2 = ad => ad.Name.Name == "mscorlib";
             }
             AssemblyDefinition mscorlib = this._assembliesOrderedByDependency.Single<AssemblyDefinition>(<>f__am$cache2);
             TypeProviderInitializer.Initialize(mscorlib);
@@ -331,14 +315,14 @@
             this._outputDir.EnsureDirectoryExists("");
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<AssemblyDefinition, bool>(null, (IntPtr) <PreProcessStage>m__4);
+                <>f__am$cache3 = a => (a.MainModule.Kind == ModuleKind.Windows) || (a.MainModule.Kind == ModuleKind.Console);
             }
             AssemblyDefinition[] source = this._assembliesOrderedByDependency.Where<AssemblyDefinition>(<>f__am$cache3).ToArray<AssemblyDefinition>();
             if (source.Length > 0)
             {
                 if (<>f__am$cache4 == null)
                 {
-                    <>f__am$cache4 = new Func<AssemblyDefinition, bool>(null, (IntPtr) <PreProcessStage>m__5);
+                    <>f__am$cache4 = a => a.EntryPoint != null;
                 }
                 AssemblyDefinition local1 = source.FirstOrDefault<AssemblyDefinition>(<>f__am$cache4);
                 if (local1 == null)
@@ -366,9 +350,10 @@
             {
                 this._debuggerSupport.Analyze(definition4);
             }
+            GenericSharingVisitor visitor = new GenericSharingVisitor();
             foreach (AssemblyDefinition definition5 in this._assembliesOrderedByDependency)
             {
-                definition5.Accept(new GenericSharingVisitor());
+                visitor.Collect(definition5);
             }
             using (TinyProfiler.Section("WriteResources", ""))
             {
@@ -404,17 +389,21 @@
             }
             using (TinyProfiler.Section("GenericsCollector.Collect", ""))
             {
-                genericsCollectionCollector = GenericsCollector.Collect(this._assembliesOrderedByDependency);
+                collector = GenericsCollector.Collect(interopDataCollector, this._assembliesOrderedByDependency);
             }
-            this.AddExtraTypes(genericsCollectionCollector);
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<AssemblyDefinition, IEnumerable<TypeDefinition>>(null, (IntPtr) <PreProcessStage>m__6);
+                <>f__am$cache5 = a => a.MainModule.Types;
             }
             allTypeDefinitions = GetAllTypes(this._assembliesOrderedByDependency.SelectMany<AssemblyDefinition, TypeDefinition>(<>f__am$cache5)).ToArray<TypeDefinition>();
             using (TinyProfiler.Section("CollectGenericVirtualMethods.Collect", ""))
             {
-                this.CollectGenericVirtualMethods(genericsCollectionCollector, allTypeDefinitions);
+                this.CollectGenericVirtualMethods(collector, allTypeDefinitions);
+            }
+            readOnlyGenericsCollectionCollector = collector.AsReadOnly();
+            using (TinyProfiler.Section("Add Windows Runtime type names", ""))
+            {
+                this.AddWindowsRuntimeTypeNames(readOnlyGenericsCollectionCollector, interopDataCollector);
             }
         }
 
@@ -436,9 +425,9 @@
             }
         }
 
-        private void WriteGenerics(ReadOnlyInflatedCollectionCollector allGenerics, IEnumerable<TypeDefinition> allTypeDefinitions, IMetadataCollection metadataCollection)
+        private void WriteGenerics(ReadOnlyInflatedCollectionCollector allGenerics, IEnumerable<TypeDefinition> allTypeDefinitions, IMethodVerifier methodVerifier, IMethodCollector methodCollector, IInteropDataCollector interopDataCollector, IMetadataCollection metadataCollection, SymbolsCollector lineNumberCollector)
         {
-            new SourceWriter(this._vTableBuilder, this._debuggerSupport, this._outputDir).WriteGenerics(allGenerics, allTypeDefinitions, metadataCollection);
+            new SourceWriter(this._vTableBuilder, this._debuggerSupport, this._outputDir).WriteGenerics(allGenerics, allTypeDefinitions, methodVerifier, methodCollector, interopDataCollector, metadataCollection, lineNumberCollector);
         }
 
         [CompilerGenerated]
@@ -449,8 +438,8 @@
             internal IEnumerator<TypeDefinition> $locvar0;
             internal IEnumerator<TypeDefinition> $locvar1;
             internal int $PC;
-            internal TypeDefinition <nestedType>__1;
-            internal TypeDefinition <typeDefinition>__0;
+            internal TypeDefinition <nestedType>__2;
+            internal TypeDefinition <typeDefinition>__1;
             internal IEnumerable<TypeDefinition> typeDefinitions;
 
             [DebuggerHidden]
@@ -520,16 +509,16 @@
                     }
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<typeDefinition>__0 = this.$locvar0.Current;
-                        this.$locvar1 = AssemblyConverter.GetAllTypes(this.<typeDefinition>__0.NestedTypes).GetEnumerator();
+                        this.<typeDefinition>__1 = this.$locvar0.Current;
+                        this.$locvar1 = AssemblyConverter.GetAllTypes(this.<typeDefinition>__1.NestedTypes).GetEnumerator();
                         num = 0xfffffffd;
                     Label_0083:
                         try
                         {
                             while (this.$locvar1.MoveNext())
                             {
-                                this.<nestedType>__1 = this.$locvar1.Current;
-                                this.$current = this.<nestedType>__1;
+                                this.<nestedType>__2 = this.$locvar1.Current;
+                                this.$current = this.<nestedType>__2;
                                 if (!this.$disposing)
                                 {
                                     this.$PC = 1;
@@ -548,7 +537,7 @@
                                 this.$locvar1.Dispose();
                             }
                         }
-                        this.$current = this.<typeDefinition>__0;
+                        this.$current = this.<typeDefinition>__1;
                         if (!this.$disposing)
                         {
                             this.$PC = 2;

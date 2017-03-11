@@ -1,11 +1,16 @@
 ﻿namespace UnityEditor
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
     using UnityEngine;
 
-    [CustomEditor(typeof(ParticleSystem))]
+    [CustomEditor(typeof(ParticleSystem)), CanEditMultipleObjects]
     internal class ParticleSystemInspector : Editor, ParticleEffectUIOwner
     {
+        [CompilerGenerated]
+        private static Func<ParticleSystem, bool> <>f__am$cache0;
         private GUIContent closeWindowText = new GUIContent("Close Editor");
         private GUIContent hideWindowText = new GUIContent("Hide Editor");
         private ParticleEffectUI m_ParticleEffectUI;
@@ -22,15 +27,21 @@
             this.m_ParticleEffectUI = null;
         }
 
+        public override void DrawPreview(Rect previewArea)
+        {
+            UnityEngine.Object[] targets = new UnityEngine.Object[] { base.targets[0] };
+            ObjectPreview.DrawPreview(this, previewArea, targets);
+        }
+
         public override GUIContent GetPreviewTitle() => 
             this.m_PreviewTitle;
 
         public override bool HasPreviewGUI() => 
-            (this.ShouldShowInspector() && (Selection.objects.Length == 1));
+            this.ShouldShowInspector();
 
         private void HierarchyOrProjectWindowWasChanged()
         {
-            if (this.ShouldShowInspector())
+            if ((base.target != null) && this.ShouldShowInspector())
             {
                 this.Init(true);
             }
@@ -38,18 +49,23 @@
 
         private void Init(bool forceInit)
         {
-            ParticleSystem target = base.target as ParticleSystem;
-            if (target != null)
+            if (<>f__am$cache0 == null)
             {
-                if (this.m_ParticleEffectUI == null)
-                {
-                    this.m_ParticleEffectUI = new ParticleEffectUI(this);
-                    this.m_ParticleEffectUI.InitializeIfNeeded(target);
-                }
-                else if (forceInit)
-                {
-                    this.m_ParticleEffectUI.InitializeIfNeeded(target);
-                }
+                <>f__am$cache0 = p => p != null;
+            }
+            IEnumerable<ParticleSystem> source = Enumerable.Where<ParticleSystem>(base.targets.OfType<ParticleSystem>(), <>f__am$cache0);
+            if ((source == null) || !source.Any<ParticleSystem>())
+            {
+                this.m_ParticleEffectUI = null;
+            }
+            else if (this.m_ParticleEffectUI == null)
+            {
+                this.m_ParticleEffectUI = new ParticleEffectUI(this);
+                this.m_ParticleEffectUI.InitializeIfNeeded(source);
+            }
+            else if (forceInit)
+            {
+                this.m_ParticleEffectUI.InitializeIfNeeded(source);
             }
         }
 
@@ -108,14 +124,6 @@
         {
         }
 
-        public void OnSceneGUI()
-        {
-            if (this.ShouldShowInspector() && (this.m_ParticleEffectUI != null))
-            {
-                this.m_ParticleEffectUI.OnSceneGUI();
-            }
-        }
-
         public void OnSceneViewGUI(SceneView sceneView)
         {
             if (this.ShouldShowInspector())
@@ -138,55 +146,59 @@
         {
             GUILayout.BeginHorizontal(new GUILayoutOption[0]);
             GUILayout.FlexibleSpace();
-            bool selectedInParticleSystemWindow = this.selectedInParticleSystemWindow;
-            GameObject gameObject = (base.target as ParticleSystem).gameObject;
-            GUIContent hideWindowText = null;
-            ParticleSystemWindow instance = ParticleSystemWindow.GetInstance();
-            if (((instance != null) && instance.IsVisible()) && selectedInParticleSystemWindow)
+            if ((this.m_ParticleEffectUI == null) || !this.m_ParticleEffectUI.multiEdit)
             {
-                if (instance.GetNumTabs() > 1)
-                {
-                    hideWindowText = this.hideWindowText;
-                }
-                else
-                {
-                    hideWindowText = this.closeWindowText;
-                }
-            }
-            else
-            {
-                hideWindowText = this.showWindowText;
-            }
-            GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(110f) };
-            if (GUILayout.Button(hideWindowText, EditorStyles.miniButton, options))
-            {
+                bool selectedInParticleSystemWindow = this.selectedInParticleSystemWindow;
+                GameObject gameObject = (base.target as ParticleSystem).gameObject;
+                GUIContent hideWindowText = null;
+                ParticleSystemWindow instance = ParticleSystemWindow.GetInstance();
                 if (((instance != null) && instance.IsVisible()) && selectedInParticleSystemWindow)
                 {
-                    if (!instance.ShowNextTabIfPossible())
+                    if (instance.GetNumTabs() > 1)
                     {
-                        instance.Close();
-                    }
-                }
-                else
-                {
-                    if (!selectedInParticleSystemWindow)
-                    {
-                        ParticleSystemEditorUtils.lockedParticleSystem = null;
-                        Selection.activeGameObject = gameObject;
-                    }
-                    if (instance != null)
-                    {
-                        if (!selectedInParticleSystemWindow)
-                        {
-                            instance.Clear();
-                        }
-                        instance.Focus();
+                        hideWindowText = this.hideWindowText;
                     }
                     else
                     {
-                        this.Clear();
-                        ParticleSystemWindow.CreateWindow();
-                        GUIUtility.ExitGUI();
+                        hideWindowText = this.closeWindowText;
+                    }
+                }
+                else
+                {
+                    hideWindowText = this.showWindowText;
+                }
+                GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(110f) };
+                if (GUILayout.Button(hideWindowText, EditorStyles.miniButton, options))
+                {
+                    if (((instance != null) && instance.IsVisible()) && selectedInParticleSystemWindow)
+                    {
+                        if (!instance.ShowNextTabIfPossible())
+                        {
+                            instance.Close();
+                        }
+                    }
+                    else
+                    {
+                        if (!selectedInParticleSystemWindow)
+                        {
+                            ParticleSystemEditorUtils.lockedParticleSystem = null;
+                            Selection.activeGameObject = gameObject;
+                        }
+                        if (instance != null)
+                        {
+                            if (!selectedInParticleSystemWindow)
+                            {
+                                instance.Clear();
+                            }
+                            instance.Focus();
+                        }
+                        else
+                        {
+                            this.Clear();
+                            ParticleSystemWindow.CreateWindow();
+                            ParticleSystemWindow.GetInstance().customEditor = this;
+                            GUIUtility.ExitGUI();
+                        }
                     }
                 }
             }
@@ -195,6 +207,7 @@
 
         private void UndoRedoPerformed()
         {
+            this.Init(true);
             if (this.m_ParticleEffectUI != null)
             {
                 this.m_ParticleEffectUI.UndoRedoPerformed();
@@ -203,6 +216,9 @@
 
         public override bool UseDefaultMargins() => 
             false;
+
+        public Editor customEditor =>
+            this;
 
         public static GUIContent playBackTitle
         {

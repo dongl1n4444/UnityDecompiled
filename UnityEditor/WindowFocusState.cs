@@ -22,7 +22,7 @@
             {
                 if (m_Instance == null)
                 {
-                    m_Instance = Object.FindObjectOfType(typeof(WindowFocusState)) as WindowFocusState;
+                    m_Instance = UnityEngine.Object.FindObjectOfType(typeof(WindowFocusState)) as WindowFocusState;
                 }
                 if (m_Instance == null)
                 {

@@ -198,8 +198,20 @@
                 this.m_Objects[i];
             set
             {
-                T local = this.m_Objects[i];
-                bool flag = !local.Equals(value);
+                bool flag = false;
+                if (this.m_Objects[i] == null)
+                {
+                    if (value == null)
+                    {
+                        return;
+                    }
+                    flag = true;
+                }
+                else
+                {
+                    T local = this.m_Objects[i];
+                    flag = !local.Equals(value);
+                }
                 this.m_Objects[i] = value;
                 if (flag)
                 {

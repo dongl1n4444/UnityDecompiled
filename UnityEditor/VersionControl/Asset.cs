@@ -5,6 +5,7 @@
     using System.Text;
     using UnityEditor;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>This class containes information about the version control state of an asset.</para>
@@ -83,14 +84,14 @@
             return builder.ToString();
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public extern void Dispose();
         /// <summary>
         /// <para>Opens the assets in an associated editor.</para>
         /// </summary>
         public void Edit()
         {
-            Object target = this.Load();
+            UnityEngine.Object target = this.Load();
             if (target != null)
             {
                 AssetDatabase.OpenAsset(target);
@@ -102,9 +103,9 @@
             this.Dispose();
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         private extern void InternalCreateFromString(string clientPath);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         public extern bool IsChildOf(Asset other);
         public bool IsOneOfStates(States[] states)
         {
@@ -127,13 +128,13 @@
         /// <summary>
         /// <para>Loads the asset to memory.</para>
         /// </summary>
-        public Object Load()
+        public UnityEngine.Object Load()
         {
             if ((this.state == States.DeletedLocal) || this.isMeta)
             {
                 return null;
             }
-            return AssetDatabase.LoadAssetAtPath(this.path, typeof(Object));
+            return AssetDatabase.LoadAssetAtPath(this.path, typeof(UnityEngine.Object));
         }
 
         internal string StateToString() => 
@@ -192,25 +193,25 @@
         /// <para>Gets the full name of the asset including extension.</para>
         /// </summary>
         [ThreadAndSerializationSafe]
-        public string fullName { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public string fullName { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Returns true if the asset is a folder.</para>
         /// </summary>
         [ThreadAndSerializationSafe]
-        public bool isFolder { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isFolder { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Returns true if the assets is in the current project.</para>
         /// </summary>
         [ThreadAndSerializationSafe]
-        public bool isInCurrentProject { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isInCurrentProject { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Returns true if the instance of the Asset class actually refers to a .meta file.</para>
         /// </summary>
         [ThreadAndSerializationSafe]
-        public bool isMeta { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isMeta { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         internal bool IsUnderVersionControl =>
             ((this.IsState(States.Synced) || this.IsState(States.OutOfSync)) || this.IsState(States.AddedLocal));
@@ -219,19 +220,19 @@
         /// <para>Returns true if the asset is locked by the version control system.</para>
         /// </summary>
         [ThreadAndSerializationSafe]
-        public bool locked { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool locked { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Get the name of the asset.</para>
         /// </summary>
         [ThreadAndSerializationSafe]
-        public string name { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public string name { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Gets the path of the asset.</para>
         /// </summary>
         [ThreadAndSerializationSafe]
-        public string path { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public string path { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         public string prettyPath =>
             this.path;
@@ -240,13 +241,13 @@
         /// <para>Returns true is the asset is read only.</para>
         /// </summary>
         [ThreadAndSerializationSafe]
-        public bool readOnly { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool readOnly { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Gets the version control state of the asset.</para>
         /// </summary>
         [ThreadAndSerializationSafe]
-        public States state { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public States state { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Describes the various version control states an asset can have.</para>

@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(BillboardRenderer))]
+    [CustomEditor(typeof(BillboardRenderer)), CanEditMultipleObjects]
     internal class BillboardRendererInspector : RendererEditorBase
     {
         private string[] m_ExcludedProperties;

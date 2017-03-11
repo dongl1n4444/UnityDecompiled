@@ -7,7 +7,7 @@
     [MeansImplicitUse]
     public sealed class PublicAPIAttribute : Attribute
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <Comment>k__BackingField;
 
         public PublicAPIAttribute()

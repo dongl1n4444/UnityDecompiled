@@ -11,6 +11,7 @@
     using System.Threading;
     using Unity.IL2CPP;
     using Unity.IL2CPP.Building;
+    using Unity.IL2CPP.Building.Statistics;
     using Unity.IL2CPP.Building.ToolChains;
     using Unity.IL2CPP.Common;
     using Unity.TinyProfiling;
@@ -48,8 +49,10 @@
             this._specifiedCompilerFlags = other._specifiedCompilerFlags;
             this._specifiedLinkerFlags = other._specifiedLinkerFlags;
             this._cppToolChain = other._cppToolChain;
+            this._libIL2CPPAsDynamicLibrary = other._libIL2CPPAsDynamicLibrary;
             this._dataFolder = other._dataFolder;
             this._libil2cppCacheDirectory = other._libil2cppCacheDirectory;
+            this._mapFileParser = other._mapFileParser;
         }
 
         public IL2CPPOutputBuildDescription(NPath sourceDirectory, NPath cacheDirectory, NPath outputFile, DotNetProfile dotnetProfile, CppToolChain cppToolChain, NPath dataFolder, bool forceRebuildMapFileParser, bool libil2cppAsDynamicLibrary, IEnumerable<string> additionalDefines = null, IEnumerable<NPath> additionalIncludeDirectories = null, IEnumerable<NPath> staticLibraries = null, IEnumerable<string> specifiedCompilerFlags = null, IEnumerable<string> specifiedLinkerFlags = null, NPath libil2cppCacheDirectory = null, NPath mapFileParser = null)
@@ -121,7 +124,7 @@
             using (TinyProfiler.Section("BuildMapFileParser", ""))
             {
                 NPath cacheDirectory = this._cacheDirectory?.Combine(new string[] { "MapFileParserCache" }).EnsureDirectoryExists("");
-                return CppProgramBuilder.Create(RuntimePlatform.Current, new MapFileParserBuildDescription(cacheDirectory), false, Unity.IL2CPP.Building.Architecture.BestThisMachineCanRun, BuildConfiguration.Release, this.ForceRebuildMapFileParser, false).Build();
+                return CppProgramBuilder.Create(RuntimePlatform.Current, new MapFileParserBuildDescription(cacheDirectory), false, Unity.IL2CPP.Building.Architecture.BestThisMachineCanRun, BuildConfiguration.Release, this.ForceRebuildMapFileParser, false).BuildAndLogStatsForTestRunner();
             }
         }
 
@@ -161,7 +164,8 @@
         {
             NPath[] foldersToGlob = new NPath[] { LibIL2CPPDir };
             string[] append = new string[] { "extra/gc.c" };
-            return SourceFilesIn(foldersToGlob).Append<NPath>(BoehmDir.Combine(append)).Select<NPath, CppCompilationInstruction>(new Func<NPath, CppCompilationInstruction>(this, (IntPtr) this.<LibIL2CPPCompileInstructions>m__0));
+            string[] textArray2 = new string[] { "extra/krait_signal_handler.c" };
+            return (from sourceFile in SourceFilesIn(foldersToGlob).Append<NPath>(BoehmDir.Combine(append)).Append<NPath>(BoehmDir.Combine(textArray2)) select this.CppCompilationInstructionFor(sourceFile, this._libil2cppCacheDirectory));
         }
 
         public override void OnBeforeLink(NPath workingDirectory, IEnumerable<NPath> objectFiles, CppToolChainContext toolChainContext, bool forceRebuild, bool verbose)
@@ -169,7 +173,7 @@
             if (this._libIL2CPPAsDynamicLibrary)
             {
                 LibIL2CPPDynamicLibProgramDescription programBuildDescription = new LibIL2CPPDynamicLibProgramDescription(this.LibIL2CPPCompileInstructions(), this.LibIL2CppDynamicLibraryLocation, this._libil2cppCacheDirectory);
-                new CppProgramBuilder(this._cppToolChain, programBuildDescription, verbose, forceRebuild).Build();
+                new CppProgramBuilder(this._cppToolChain, programBuildDescription, verbose, forceRebuild).BuildAndLogStatsForTestRunner();
             }
         }
 
@@ -190,11 +194,11 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<NPath, IEnumerable<NPath>>(null, (IntPtr) <SourceFilesIn>m__1);
+                <>f__am$cache0 = d => d.Files("*.c*", true);
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<NPath, bool>(null, (IntPtr) <SourceFilesIn>m__2);
+                <>f__am$cache1 = f => f.HasExtension(new string[] { "c", "cpp" });
             }
             return foldersToGlob.SelectMany<NPath, NPath>(<>f__am$cache0).Where<NPath>(<>f__am$cache1);
         }
@@ -303,8 +307,8 @@
             internal IEnumerator<CppCompilationInstruction> $locvar1;
             internal int $PC;
             internal IL2CPPOutputBuildDescription $this;
-            internal CppCompilationInstruction <i>__0;
             internal CppCompilationInstruction <i>__1;
+            internal CppCompilationInstruction <i>__2;
 
             internal CppCompilationInstruction <>m__0(NPath sourceFile) => 
                 this.$this.CppCompilationInstructionFor(sourceFile, this.$this._cacheDirectory);
@@ -355,7 +359,7 @@
                     case 0:
                     {
                         NPath[] foldersToGlob = new NPath[] { this.$this._sourceDirectory };
-                        this.$locvar0 = IL2CPPOutputBuildDescription.SourceFilesIn(foldersToGlob).Select<NPath, CppCompilationInstruction>(new Func<NPath, CppCompilationInstruction>(this, (IntPtr) this.<>m__0)).GetEnumerator();
+                        this.$locvar0 = IL2CPPOutputBuildDescription.SourceFilesIn(foldersToGlob).Select<NPath, CppCompilationInstruction>(new Func<NPath, CppCompilationInstruction>(this.<>m__0)).GetEnumerator();
                         num = 0xfffffffd;
                         break;
                     }
@@ -372,8 +376,8 @@
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<i>__0 = this.$locvar0.Current;
-                        this.$current = this.<i>__0;
+                        this.<i>__1 = this.$locvar0.Current;
+                        this.$current = this.<i>__1;
                         if (!this.$disposing)
                         {
                             this.$PC = 1;
@@ -403,8 +407,8 @@
                 {
                     while (this.$locvar1.MoveNext())
                     {
-                        this.<i>__1 = this.$locvar1.Current;
-                        this.$current = this.<i>__1;
+                        this.<i>__2 = this.$locvar1.Current;
+                        this.$current = this.<i>__2;
                         if (!this.$disposing)
                         {
                             this.$PC = 2;
@@ -537,8 +541,8 @@
             internal IEnumerator<string> $locvar1;
             internal int $PC;
             internal IL2CPPOutputBuildDescription $this;
-            internal string <define>__0;
             internal string <define>__1;
+            internal string <define>__2;
             internal NPath sourceFile;
 
             [DebuggerHidden]
@@ -605,8 +609,8 @@
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<define>__0 = this.$locvar0.Current;
-                        this.$current = this.<define>__0;
+                        this.<define>__1 = this.$locvar0.Current;
+                        this.$current = this.<define>__1;
                         if (!this.$disposing)
                         {
                             this.$PC = 1;
@@ -636,8 +640,8 @@
                 {
                     while (this.$locvar1.MoveNext())
                     {
-                        this.<define>__1 = this.$locvar1.Current;
-                        this.$current = this.<define>__1;
+                        this.<define>__2 = this.$locvar1.Current;
+                        this.$current = this.<define>__2;
                         if (!this.$disposing)
                         {
                             this.$PC = 2;
@@ -904,9 +908,12 @@
                     string[] append = new string[] { "MapFileParser" };
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<NPath, bool>(null, (IntPtr) <get_CppCompileInstructions>m__0);
+                        <>f__am$cache0 = c => !c.Elements.Contains<string>("Tests");
                     }
-                    return CommonPaths.Il2CppRoot.Combine(append).Files("*.cpp", true).Where<NPath>(<>f__am$cache0).Select<NPath, CppCompilationInstruction>(new Func<NPath, CppCompilationInstruction>(this, (IntPtr) this.<get_CppCompileInstructions>m__1));
+                    return (from f in CommonPaths.Il2CppRoot.Combine(append).Files("*.cpp", true).Where<NPath>(<>f__am$cache0) select new CppCompilationInstruction { 
+                        SourceFile = f,
+                        CacheDirectory = this._cacheDirectory
+                    });
                 }
             }
 

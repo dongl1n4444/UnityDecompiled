@@ -5,9 +5,9 @@
     using Unity.IL2CPP.Common;
     using Unity.IL2CPP.ILPreProcessor;
 
-    internal class VirtualMethodResolution
+    public class VirtualMethodResolution
     {
-        internal static bool MethodSignaturesMatch(MethodReference candidate, MethodReference method)
+        public static bool MethodSignaturesMatch(MethodReference candidate, MethodReference method)
         {
             if (candidate.HasThis != method.HasThis)
             {
@@ -16,7 +16,7 @@
             return MethodSignaturesMatchIgnoreStaticness(candidate, method);
         }
 
-        internal static bool MethodSignaturesMatchIgnoreStaticness(MethodReference candidate, MethodReference method)
+        public static bool MethodSignaturesMatchIgnoreStaticness(MethodReference candidate, MethodReference method)
         {
             if (candidate.Parameters.Count != method.Parameters.Count)
             {

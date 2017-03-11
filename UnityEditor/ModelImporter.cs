@@ -3,15 +3,15 @@
     using System;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
-    using UnityEditor.Animations;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Model importer lets you modify import settings from editor scripts.</para>
     /// </summary>
     public class ModelImporter : AssetImporter
     {
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern string CalculateBestFittingPreviewGameObject();
         /// <summary>
         /// <para>Creates a mask that matches the model hierarchy, and applies it to the provided ModelImporterClipAnimation.</para>
@@ -24,7 +24,7 @@
                 AvatarMask mask = new AvatarMask();
                 this.defaultClipAnimations[0].ConfigureMaskFromClip(ref mask);
                 clip.ConfigureClipFromMask(mask);
-                Object.DestroyImmediate(mask);
+                UnityEngine.Object.DestroyImmediate(mask);
             }
             else
             {
@@ -32,97 +32,97 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern AnimationClip GetPreviewAnimationClipForTake(string takeName);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_humanDescription(out HumanDescription value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_humanDescription(ref HumanDescription value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void UpdateSkeletonPose(SkeletonBone[] skeletonBones, SerializedProperty serializedProperty);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void UpdateTransformMask(AvatarMask mask, SerializedProperty serializedProperty);
 
         /// <summary>
         /// <para>Add to imported meshes.</para>
         /// </summary>
-        public bool addCollider { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool addCollider { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Animation compression setting.</para>
         /// </summary>
-        public ModelImporterAnimationCompression animationCompression { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public ModelImporterAnimationCompression animationCompression { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Allowed error of animation position compression.</para>
         /// </summary>
-        public float animationPositionError { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float animationPositionError { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Allowed error of animation rotation compression.</para>
         /// </summary>
-        public float animationRotationError { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float animationRotationError { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Allowed error of animation scale compression.</para>
         /// </summary>
-        public float animationScaleError { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float animationScaleError { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Animator generation mode.</para>
         /// </summary>
-        public ModelImporterAnimationType animationType { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public ModelImporterAnimationType animationType { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The default wrap mode for the generated animation clips.</para>
         /// </summary>
-        public WrapMode animationWrapMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public WrapMode animationWrapMode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Bake Inverse Kinematics (IK) when importing.</para>
         /// </summary>
-        public bool bakeIK { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool bakeIK { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Animation clips to split animation into. See Also: ModelImporterClipAnimation.</para>
         /// </summary>
-        public ModelImporterClipAnimation[] clipAnimations { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public ModelImporterClipAnimation[] clipAnimations { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Generate a list of all default animation clip based on TakeInfo.</para>
         /// </summary>
-        public ModelImporterClipAnimation[] defaultClipAnimations { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public ModelImporterClipAnimation[] defaultClipAnimations { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Animation optimization setting.</para>
         /// </summary>
-        public string[] extraExposedTransformPaths { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public string[] extraExposedTransformPaths { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>File scale factor (if available) or default one. (Read-only).</para>
         /// </summary>
-        public float fileScale { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public float fileScale { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Animation generation options.</para>
         /// </summary>
-        public ModelImporterGenerateAnimations generateAnimations { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public ModelImporterGenerateAnimations generateAnimations { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Material generation options.</para>
         /// </summary>
         [Obsolete("Use importMaterials, materialName and materialSearch instead")]
-        public ModelImporterGenerateMaterials generateMaterials { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public ModelImporterGenerateMaterials generateMaterials { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Generate secondary UV set for lightmapping.</para>
         /// </summary>
-        public bool generateSecondaryUV { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool generateSecondaryUV { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Global scale factor for importing.</para>
         /// </summary>
-        public float globalScale { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float globalScale { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The human description that is used to generate an Avatar during the import process.</para>
@@ -144,105 +144,110 @@
         /// <summary>
         /// <para>Controls how much oversampling is used when importing humanoid animations for retargeting.</para>
         /// </summary>
-        public ModelImporterHumanoidOversampling humanoidOversampling { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public ModelImporterHumanoidOversampling humanoidOversampling { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Import animation from file.</para>
         /// </summary>
-        public bool importAnimation { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool importAnimation { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Controls import of BlendShapes.</para>
         /// </summary>
-        public bool importBlendShapes { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool importBlendShapes { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Generates the list of all imported take.</para>
         /// </summary>
-        public TakeInfo[] importedTakeInfos { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public TakeInfo[] importedTakeInfos { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Import materials from file.</para>
         /// </summary>
-        public bool importMaterials { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool importMaterials { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
-        /// <para>Vertex normal import options.</para>
+        /// <para>Use normals vectors from file.</para>
         /// </summary>
-        public ModelImporterNormals importNormals { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public ModelImporterNormals importNormals { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
-        /// <para>Vertex tangent import options.</para>
+        /// <para>Use tangent vectors from file.</para>
         /// </summary>
-        public ModelImporterTangents importTangents { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public ModelImporterTangents importTangents { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        internal bool isAssetOlderOr42 { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal bool isAssetOlderOr42 { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Is Bake Inverse Kinematics (IK) supported by this importer.</para>
         /// </summary>
-        public bool isBakeIKSupported { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isBakeIKSupported { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Is FileScale was used when importing.</para>
         /// </summary>
-        public bool isFileScaleUsed { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isFileScaleUsed { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Are mesh vertices and indices accessible from script?</para>
         /// </summary>
-        public bool isReadable { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool isReadable { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Is import of tangents supported by this importer.</para>
         /// </summary>
-        public bool isTangentImportSupported { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isTangentImportSupported { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Is useFileUnits supported for this asset.</para>
         /// </summary>
-        public bool isUseFileUnitsSupported { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isUseFileUnitsSupported { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        /// <summary>
+        /// <para>If this is true, any quad faces that exist in the mesh data before it is imported are kept as quads instead of being split into two triangles, for the purposes of tessellation. Set this to false to disable this behavior.</para>
+        /// </summary>
+        public bool keepQuads { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Material naming setting.</para>
         /// </summary>
-        public ModelImporterMaterialName materialName { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public ModelImporterMaterialName materialName { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Existing material search setting.</para>
         /// </summary>
-        public ModelImporterMaterialSearch materialSearch { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public ModelImporterMaterialSearch materialSearch { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Mesh compression setting.</para>
         /// </summary>
-        public ModelImporterMeshCompression meshCompression { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public ModelImporterMeshCompression meshCompression { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The path of the transform used to generation the motion of the animation.</para>
         /// </summary>
-        public string motionNodeName { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public string motionNodeName { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Normals import mode.</para>
         /// </summary>
         [Obsolete("normalImportMode is deprecated. Use importNormals instead")]
-        public ModelImporterTangentSpaceMode normalImportMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public ModelImporterTangentSpaceMode normalImportMode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Smoothing angle (in degrees) for calculating normals.</para>
         /// </summary>
-        public float normalSmoothingAngle { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float normalSmoothingAngle { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Animation optimization setting.</para>
         /// </summary>
-        public bool optimizeGameObjects { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool optimizeGameObjects { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Vertex optimization setting.</para>
         /// </summary>
-        public bool optimizeMesh { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool optimizeMesh { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         [Obsolete("Use animationCompression instead", true)]
         private bool reduceKeyframes
@@ -257,7 +262,7 @@
         /// <summary>
         /// <para>Generates the list of all imported Animations.</para>
         /// </summary>
-        public string[] referencedClips { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public string[] referencedClips { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>If set to false, the importer will not resample curves when possible.
@@ -270,30 +275,30 @@
         /// - This option was introduced in Version 5.3. Prior to this version, Unity's import behaviour was as if this option was always enabled. Therefore enabling the option gives the same behaviour as pre-5.3 animation import.
         /// </para>
         /// </summary>
-        public bool resampleCurves { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool resampleCurves { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         [Obsolete("use resampleCurves instead.")]
-        public bool resampleRotations { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool resampleRotations { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Threshold for angle distortion (in degrees) when generating secondary UV.</para>
         /// </summary>
-        public float secondaryUVAngleDistortion { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float secondaryUVAngleDistortion { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Threshold for area distortion when generating secondary UV.</para>
         /// </summary>
-        public float secondaryUVAreaDistortion { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float secondaryUVAreaDistortion { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Hard angle (in degrees) for generating secondary UV.</para>
         /// </summary>
-        public float secondaryUVHardAngle { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float secondaryUVHardAngle { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Margin to be left between charts when packing secondary UV.</para>
         /// </summary>
-        public float secondaryUVPackMargin { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float secondaryUVPackMargin { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Imports the HumanDescription from the given Avatar.</para>
@@ -322,7 +327,7 @@
             }
         }
 
-        internal Avatar sourceAvatarInternal { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        internal Avatar sourceAvatarInternal { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         [Obsolete("splitAnimations has been deprecated please use clipAnimations instead.", true)]
         public bool splitAnimations
@@ -358,23 +363,28 @@
         /// <summary>
         /// <para>Swap primary and secondary UV channels when importing.</para>
         /// </summary>
-        public bool swapUVChannels { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool swapUVChannels { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Tangents import mode.</para>
         /// </summary>
         [Obsolete("tangentImportMode is deprecated. Use importTangents instead")]
-        public ModelImporterTangentSpaceMode tangentImportMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public ModelImporterTangentSpaceMode tangentImportMode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Generates the list of all imported Transforms.</para>
         /// </summary>
-        public string[] transformPaths { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public string[] transformPaths { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Detect file units and import as 1FileUnit=1UnityUnit, otherwise it will import as 1cm=1UnityUnit.</para>
         /// </summary>
-        public bool useFileUnits { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool useFileUnits { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
+        /// <para>Combine vertices that share the same position in space.</para>
+        /// </summary>
+        public bool weldVertices { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
     }
 }
 

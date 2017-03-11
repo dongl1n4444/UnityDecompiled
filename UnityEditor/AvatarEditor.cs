@@ -249,7 +249,7 @@
 
         private void SelectAsset()
         {
-            Object target;
+            UnityEngine.Object target;
             if (this.m_CameFromImportSettings)
             {
                 target = AssetDatabase.LoadMainAssetAtPath(AssetDatabase.GetAssetPath(base.target));
@@ -316,7 +316,7 @@
             this.ChangeInspectorLock(true);
             this.sceneSetup = EditorSceneManager.GetSceneManagerSetup();
             EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects).name = "Avatar Configuration";
-            this.m_GameObject = Object.Instantiate<GameObject>(this.prefab);
+            this.m_GameObject = UnityEngine.Object.Instantiate<GameObject>(this.prefab);
             if (base.serializedObject.FindProperty("m_OptimizeGameObjects").boolValue)
             {
                 AnimatorUtility.DeoptimizeTransformHierarchy(this.m_GameObject);
@@ -335,7 +335,7 @@
             AvatarSetupTool.BoneWrapper[] humanBones = AvatarSetupTool.GetHumanBones(base.serializedObject, actualBones);
             this.m_ModelBones = AvatarSetupTool.GetModelBones(this.m_GameObject.transform, false, humanBones);
             Selection.activeObject = this.m_GameObject;
-            foreach (SceneHierarchyWindow window in Resources.FindObjectsOfTypeAll(typeof(SceneHierarchyWindow)))
+            foreach (SceneHierarchyWindow window in UnityEngine.Resources.FindObjectsOfTypeAll(typeof(SceneHierarchyWindow)))
             {
                 window.SetExpandedRecursive(this.m_GameObject.GetInstanceID(), true);
             }
@@ -381,11 +381,7 @@
             }
             if (this.m_EditMode == EditMode.Editing)
             {
-                if ((this.m_GameObject == null) || (this.m_ModelBones == null))
-                {
-                    this.SwitchToAssetMode();
-                }
-                else if (EditorApplication.isPlaying)
+                if (((this.m_GameObject == null) || (this.m_ModelBones == null)) || EditorApplication.isPlaying)
                 {
                     this.SwitchToAssetMode();
                 }

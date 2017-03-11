@@ -8,7 +8,9 @@
     public enum TextureWrapMode
     {
         Repeat,
-        Clamp
+        Clamp,
+        Mirror,
+        MirrorOnce
     }
 }
 

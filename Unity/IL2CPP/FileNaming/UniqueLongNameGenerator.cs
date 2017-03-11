@@ -19,7 +19,7 @@
         {
             if (<>f__mg$cache1 == null)
             {
-                <>f__mg$cache1 = new Func<TypeReference, string>(null, (IntPtr) NameFor);
+                <>f__mg$cache1 = new Func<TypeReference, string>(UniqueLongNameGenerator.NameFor);
             }
             return $"{NameFor(type.ElementType)} {("[" + type.GenericArguments.Select<TypeReference, string>(<>f__mg$cache1).AggregateWithComma() + "]")}";
         }
@@ -34,7 +34,7 @@
             }
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Func<TypeReference, string>(null, (IntPtr) NameFor);
+                <>f__mg$cache0 = new Func<TypeReference, string>(UniqueLongNameGenerator.NameFor);
             }
             return (str + "[" + method2.GenericArguments.Select<TypeReference, string>(<>f__mg$cache0).AggregateWithComma() + "]");
         }

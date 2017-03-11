@@ -30,6 +30,8 @@
         [SerializeField]
         private LayerControllerView m_LayerEditor = null;
         [SerializeField]
+        private bool m_LiveLinkFollowTransitions = false;
+        [SerializeField]
         private bool m_MiniTool = false;
         private ParameterControllerView m_ParameterEditor = null;
         [SerializeField]
@@ -37,6 +39,8 @@
         [SerializeField]
         private bool m_SerializedLocked = false;
         protected SplitterState m_VerticalSplitter;
+        [SerializeField]
+        private AnimatorViewPositionCache m_ViewPositions = new AnimatorViewPositionCache();
         private static Styles s_Styles;
         private const int sLayerTab = 0;
         private const int sParameterTab = 1;
@@ -46,11 +50,17 @@
         public UnityEditor.Graphs.AnimationStateMachine.GraphGUI stateMachineGraphGUI;
         public static AnimatorControllerTool tool;
 
-        public void AddBreadCrumb(UnityEngine.Object target)
+        public void AddBreadCrumb(UnityEngine.Object target, bool updateViewPosition)
         {
+            if (updateViewPosition)
+            {
+                this.StoreCurrentViewPosition();
+            }
             this.m_BreadCrumbs.Add(new BreadCrumbElement(target));
-            this.stateMachineGraphGUI.CenterGraph();
-            this.blendTreeGraphGUI.CenterGraph();
+            if (updateViewPosition)
+            {
+                this.CenterOnStoredPosition(target);
+            }
         }
 
         public virtual void AddItemsToMenu(GenericMenu menu)
@@ -104,17 +114,67 @@
             this.m_BreadCrumbs.Clear();
             foreach (AnimatorStateMachine machine in hierarchy)
             {
-                this.AddBreadCrumb(machine);
+                this.AddBreadCrumb(machine, false);
+            }
+            this.CenterView();
+        }
+
+        public void CenterGraph()
+        {
+            if (this.activeGraphGUI != null)
+            {
+                this.activeGraphGUI.CenterGraph();
+            }
+        }
+
+        private void CenterOnPosition(Vector2 centerPosition)
+        {
+            if (this.stateMachineGraphGUI != null)
+            {
+                this.stateMachineGraphGUI.CenterGraph(centerPosition);
+            }
+            if (this.blendTreeGraphGUI != null)
+            {
+                this.blendTreeGraphGUI.CenterGraph(centerPosition);
+            }
+        }
+
+        private void CenterOnStoredPosition(UnityEngine.Object target)
+        {
+            if (this.m_ViewPositions.HasViewPosition(target))
+            {
+                Vector2 viewPosition = this.m_ViewPositions.GetViewPosition(target);
+                this.CenterOnPosition(viewPosition);
+            }
+            else
+            {
+                this.CenterGraph();
+            }
+        }
+
+        public void CenterView()
+        {
+            if (this.m_BreadCrumbs.Count > 0)
+            {
+                this.CenterOnStoredPosition(this.m_BreadCrumbs.Last<BreadCrumbElement>().target);
+            }
+            else
+            {
+                this.CenterGraph();
+            }
+        }
+
+        public void CenterViewOnFocus()
+        {
+            if ((this.liveLink && this.autoLiveLink) && ((this.activeGraphGUI != null) && (this.activeGraphGUI == this.stateMachineGraphGUI)))
+            {
+                this.stateMachineGraphGUI.CenterOnFocus();
             }
         }
 
         private void DetectAnimatorControllerFromSelection()
         {
             AnimatorController activeObject = null;
-            if ((Selection.activeObject == null) && (this.animatorController == null))
-            {
-                this.animatorController = null;
-            }
             if ((Selection.activeObject is AnimatorController) && EditorUtility.IsPersistent(Selection.activeObject))
             {
                 activeObject = Selection.activeObject as AnimatorController;
@@ -122,7 +182,7 @@
             if (Selection.activeGameObject != null)
             {
                 Animator component = Selection.activeGameObject.GetComponent<Animator>();
-                if ((component != null) && !AnimatorController.FindAnimatorControllerPlayable(component, this.animatorController).IsValid())
+                if ((component != null) && (AnimatorController.FindAnimatorControllerPlayable(component, this.animatorController) == null))
                 {
                     AnimatorController effectiveAnimatorController = AnimatorController.GetEffectiveAnimatorController(component);
                     if (effectiveAnimatorController != null)
@@ -131,12 +191,21 @@
                     }
                 }
             }
-            if (((activeObject != null) && (activeObject != this.animatorController)) && !this.IsPreviewController(activeObject))
+            if ((activeObject != null) && (activeObject != this.animatorController))
             {
+                if (this.IsPreviewController(activeObject))
+                {
+                    return;
+                }
                 this.animatorController = activeObject;
                 if (this.animatorController == null)
                 {
+                    return;
                 }
+            }
+            if ((this.animatorController != null) && ((Selection.activeObject is AnimatorStateTransition) || (Selection.activeObject is AnimatorState)))
+            {
+                this.stateMachineGraphGUI.SyncGraphToUnitySelection(true);
             }
         }
 
@@ -145,9 +214,13 @@
             if (Selection.activeGameObject != null)
             {
                 Animator component = Selection.activeGameObject.GetComponent<Animator>();
-                if (((component != null) && ((AnimatorController.GetEffectiveAnimatorController(component) != null) || (component.runtimeAnimatorController != null))) && !AssetDatabase.Contains(Selection.activeGameObject))
+                if (component != null)
                 {
-                    this.m_PreviewAnimator = component;
+                    AnimatorController effectiveAnimatorController = AnimatorController.GetEffectiveAnimatorController(component);
+                    if ((((effectiveAnimatorController != null) || (component.runtimeAnimatorController != null)) && !AssetDatabase.Contains(Selection.activeGameObject)) && (!this.isLocked || (effectiveAnimatorController == this.animatorController)))
+                    {
+                        this.m_PreviewAnimator = component;
+                    }
                 }
             }
         }
@@ -192,7 +265,7 @@
                 BreadCrumbElement element = elementArray[i];
                 if (this.miniTool && (i == 0))
                 {
-                    if (EditorGUILayout.ButtonMouseDown(new GUIContent(element.name), FocusType.Keyboard, EditorStyles.toolbarPopup, new GUILayoutOption[0]))
+                    if (EditorGUILayout.DropdownButton(new GUIContent(element.name), FocusType.Keyboard, EditorStyles.toolbarPopup, new GUILayoutOption[0]))
                     {
                         AnimatorControllerLayer[] layers = this.animatorController.layers;
                         GenericMenu menu = new GenericMenu();
@@ -269,13 +342,13 @@
             <GoToBreadCrumbTarget>c__AnonStorey0 storey = new <GoToBreadCrumbTarget>c__AnonStorey0 {
                 target = target
             };
+            this.StoreCurrentViewPosition();
             int num = this.m_BreadCrumbs.FindIndex(new Predicate<BreadCrumbElement>(storey.<>m__0));
             while (this.m_BreadCrumbs.Count > (num + 1))
             {
                 this.m_BreadCrumbs.RemoveAt(num + 1);
             }
-            this.stateMachineGraphGUI.CenterGraph();
-            this.blendTreeGraphGUI.CenterGraph();
+            this.CenterOnStoredPosition(this.m_BreadCrumbs.Last<BreadCrumbElement>().target);
             this.UpdateStateMachineSelection();
         }
 
@@ -284,8 +357,7 @@
             if (this.m_BreadCrumbs.Count > 1)
             {
                 this.m_BreadCrumbs.RemoveAt(this.m_BreadCrumbs.Count - 1);
-                this.stateMachineGraphGUI.CenterGraph();
-                this.blendTreeGraphGUI.CenterGraph();
+                this.CenterOnStoredPosition(this.m_BreadCrumbs.Last<BreadCrumbElement>().target);
                 this.UpdateStateMachineSelection();
             }
         }
@@ -365,9 +437,17 @@
         public void OnFocus()
         {
             this.Init();
-            this.DetectAnimatorControllerFromSelection();
+            if (!this.isLocked)
+            {
+                this.DetectAnimatorControllerFromSelection();
+            }
             this.DetectPreviewObjectFromSelection();
             this.editor.OnFocus();
+        }
+
+        public void OnGraphScroll()
+        {
+            this.StoreCurrentViewPosition();
         }
 
         public void OnGUI()
@@ -496,15 +576,16 @@
                 BlendTreeInspector.parentBlendTree = null;
                 if (this.m_BreadCrumbs.Count > 0)
                 {
+                    UnityEngine.Object target = this.m_BreadCrumbs.Last<BreadCrumbElement>().target;
                     if (this.m_BreadCrumbs.Last<BreadCrumbElement>().target is AnimatorStateMachine)
                     {
                         this.StateMachineView(screenRect);
                     }
                     if (this.m_BreadCrumbs.Last<BreadCrumbElement>().target is AnimatorState)
                     {
-                        AnimatorState target = this.m_BreadCrumbs.Last<BreadCrumbElement>().target as AnimatorState;
+                        AnimatorState state = this.m_BreadCrumbs.Last<BreadCrumbElement>().target as AnimatorState;
                         this.BlendTreeView(screenRect);
-                        BlendTreeInspector.parentBlendTree = tool.animatorController.GetStateEffectiveMotion(target, tool.selectedLayerIndex) as BlendTree;
+                        BlendTreeInspector.parentBlendTree = tool.animatorController.GetStateEffectiveMotion(state, tool.selectedLayerIndex) as BlendTree;
                     }
                     if (this.m_BreadCrumbs.Last<BreadCrumbElement>().target is BlendTree)
                     {
@@ -562,9 +643,9 @@
             if (!this.isLocked)
             {
                 this.DetectAnimatorControllerFromSelection();
-                this.DetectPreviewObjectFromSelection();
-                base.Repaint();
             }
+            this.DetectPreviewObjectFromSelection();
+            base.Repaint();
         }
 
         public void RebuildGraph()
@@ -576,7 +657,7 @@
             this.stateMachineGraph.RebuildGraph();
             if (graphDirtyCallback != null)
             {
-                graphDirtyCallback.Invoke();
+                graphDirtyCallback();
             }
         }
 
@@ -597,7 +678,7 @@
                     {
                         return;
                     }
-                    this.AddBreadCrumb(target);
+                    this.AddBreadCrumb(target, false);
                     this.stateMachineGraphGUI.ClearSelection();
                     this.blendTreeGraphGUI.ClearSelection();
                 }
@@ -646,11 +727,19 @@
             this.stateMachineGraphGUI.EndGraphGUI();
         }
 
+        private void StoreCurrentViewPosition()
+        {
+            if ((this.m_BreadCrumbs.Count > 0) && (this.activeGraphGUI != null))
+            {
+                this.m_ViewPositions.SetViewPosition(this.m_BreadCrumbs.Last<BreadCrumbElement>().target, this.activeGraphGUI.scrollPosition);
+            }
+        }
+
         public void UndoRedoPerformed()
         {
             this.StateDirty();
-            this.stateMachineGraphGUI.SyncGraphToUnitySelection();
-            this.blendTreeGraphGUI.SyncGraphToUnitySelection();
+            this.stateMachineGraphGUI.SyncGraphToUnitySelection(false);
+            this.blendTreeGraphGUI.SyncGraphToUnitySelection(false);
         }
 
         void IAnimatorControllerEditor.Repaint()
@@ -737,7 +826,7 @@
                         {
                             this.m_PreviewAnimator = null;
                         }
-                        else if (!AnimatorController.FindAnimatorControllerPlayable(this.m_PreviewAnimator, this.m_AnimatorController).IsValid())
+                        else if (AnimatorController.FindAnimatorControllerPlayable(this.m_PreviewAnimator, this.m_AnimatorController) == null)
                         {
                             this.m_PreviewAnimator = null;
                         }
@@ -793,6 +882,9 @@
         public bool liveLink =>
             (((EditorApplication.isPlaying && (this.m_PreviewAnimator != null)) && this.m_PreviewAnimator.enabled) && this.m_PreviewAnimator.gameObject.activeInHierarchy);
 
+        public bool liveLinkFollowTransitions =>
+            this.m_LiveLinkFollowTransitions;
+
         public bool miniTool
         {
             get => 
@@ -829,8 +921,68 @@
         }
 
         [Serializable]
+        private class AnimatorViewPositionCache : ISerializationCallbackReceiver
+        {
+            [SerializeField]
+            private List<UnityEngine.Object> m_KeySerializationHelper = new List<UnityEngine.Object>();
+            [SerializeField]
+            private List<Vector2> m_ValueSerializationHelper = new List<Vector2>();
+            private Dictionary<UnityEngine.Object, Vector2> m_ViewPositions = new Dictionary<UnityEngine.Object, Vector2>();
+
+            public Vector2 GetViewPosition(UnityEngine.Object target)
+            {
+                Vector2 vector;
+                if (!this.m_ViewPositions.TryGetValue(target, out vector))
+                {
+                    this.m_ViewPositions.Add(target, vector);
+                }
+                return vector;
+            }
+
+            public bool HasViewPosition(UnityEngine.Object target) => 
+                this.m_ViewPositions.ContainsKey(target);
+
+            public void OnAfterDeserialize()
+            {
+                this.m_ViewPositions = new Dictionary<UnityEngine.Object, Vector2>();
+                for (int i = 0; i != Math.Min(this.m_KeySerializationHelper.Count, this.m_ValueSerializationHelper.Count); i++)
+                {
+                    if (this.m_KeySerializationHelper[i] != null)
+                    {
+                        this.m_ViewPositions.Add(this.m_KeySerializationHelper[i], this.m_ValueSerializationHelper[i]);
+                    }
+                }
+            }
+
+            public void OnBeforeSerialize()
+            {
+                this.m_KeySerializationHelper.Clear();
+                this.m_ValueSerializationHelper.Clear();
+                foreach (KeyValuePair<UnityEngine.Object, Vector2> pair in this.m_ViewPositions)
+                {
+                    this.m_KeySerializationHelper.Add(pair.Key);
+                    this.m_ValueSerializationHelper.Add(pair.Value);
+                }
+            }
+
+            public void SetViewPosition(UnityEngine.Object target, Vector2 position)
+            {
+                if (!this.m_ViewPositions.ContainsKey(target))
+                {
+                    this.m_ViewPositions.Add(target, position);
+                }
+                else
+                {
+                    this.m_ViewPositions[target] = position;
+                }
+            }
+        }
+
+        [Serializable]
         private class BreadCrumbElement
         {
+            [SerializeField]
+            private Vector2 m_ScrollPosition;
             [SerializeField]
             private UnityEngine.Object m_Target;
 
@@ -841,6 +993,16 @@
 
             public string name =>
                 ((this.m_Target == null) ? "" : this.m_Target.name);
+
+            public Vector2 scrollPosition
+            {
+                get => 
+                    this.m_ScrollPosition;
+                set
+                {
+                    this.m_ScrollPosition = value;
+                }
+            }
 
             public UnityEngine.Object target =>
                 this.m_Target;

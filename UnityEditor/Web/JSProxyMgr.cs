@@ -82,9 +82,9 @@
             {
                 if ((Array.IndexOf<string>(s_IgnoredMethods, info.Name) < 0) && (!info.IsSpecialName || (!info.Name.StartsWith("set_") && !info.Name.StartsWith("get_"))))
                 {
-                    ParameterInfo[] parameters = info.GetParameters();
+                    System.Reflection.ParameterInfo[] parameters = info.GetParameters();
                     ArrayList list3 = new ArrayList();
-                    foreach (ParameterInfo info2 in parameters)
+                    foreach (System.Reflection.ParameterInfo info2 in parameters)
                     {
                         list3.Add(info2.Name);
                     }
@@ -98,8 +98,8 @@
             {
                 list5.Add(new JspmPropertyInfo(info4.Name, info4.GetValue(destinationObject, null)));
             }
-            List<FieldInfo> list6 = destinationObject.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance).ToList<FieldInfo>();
-            foreach (FieldInfo info5 in list6)
+            List<System.Reflection.FieldInfo> list6 = destinationObject.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance).ToList<System.Reflection.FieldInfo>();
+            foreach (System.Reflection.FieldInfo info5 in list6)
             {
                 list5.Add(new JspmPropertyInfo(info5.Name, info5.GetValue(destinationObject)));
             }
@@ -203,7 +203,7 @@
 
         private bool DoOnEventMessage(long messageID, ExecCallback callback, Dictionary<string, object> jsonData, WebView webView)
         {
-            callback(FormatError(messageID, -1002, "errUnknownMethod", "method DoOnEventMessage is depracated"));
+            callback(FormatError(messageID, -1002, "errUnknownMethod", "method DoOnEventMessage is deprecated"));
             return false;
         }
 
@@ -245,7 +245,7 @@
             switch (member.MemberType)
             {
                 case MemberTypes.Field:
-                    return ((FieldInfo) member).GetValue(target);
+                    return ((System.Reflection.FieldInfo) member).GetValue(target);
 
                 case MemberTypes.Property:
                     try
@@ -261,7 +261,7 @@
             throw new ArgumentException("MemberInfo is not of type FieldInfo or PropertyInfo", "member");
         }
 
-        private object InternalParseParam(Type type, object data)
+        private object InternalParseParam(System.Type type, object data)
         {
             if (data == null)
             {
@@ -274,7 +274,7 @@
                 {
                     throw new InvalidOperationException("Not an array " + type.FullName);
                 }
-                Type elementType = type.GetElementType();
+                System.Type elementType = type.GetElementType();
                 ArrayList list2 = new ArrayList();
                 for (int i = 0; i < list.Count; i++)
                 {
@@ -290,14 +290,14 @@
                 {
                     throw new InvalidOperationException("Not a class " + type.FullName);
                 }
-                ConstructorInfo info = type.GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[0], null);
+                ConstructorInfo info = type.GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new System.Type[0], null);
                 if (info == null)
                 {
                     throw new InvalidOperationException("Cannot find a default constructor for " + type.FullName);
                 }
                 object obj4 = info.Invoke(new object[0]);
-                List<FieldInfo> list3 = type.GetFields(BindingFlags.Public | BindingFlags.Instance).ToList<FieldInfo>();
-                foreach (FieldInfo info2 in list3)
+                List<System.Reflection.FieldInfo> list3 = type.GetFields(BindingFlags.Public | BindingFlags.Instance).ToList<System.Reflection.FieldInfo>();
+                foreach (System.Reflection.FieldInfo info2 in list3)
                 {
                     try
                     {
@@ -352,7 +352,7 @@
 
         public object[] ParseParams(MethodInfo method, List<object> data)
         {
-            ParameterInfo[] parameters = method.GetParameters();
+            System.Reflection.ParameterInfo[] parameters = method.GetParameters();
             if (parameters.Length != data.Count)
             {
                 return null;

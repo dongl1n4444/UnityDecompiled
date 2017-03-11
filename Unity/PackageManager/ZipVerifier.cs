@@ -33,21 +33,21 @@
                     while (enumerator.MoveNext())
                     {
                         ZipEntry current = (ZipEntry) enumerator.Current;
-                        if (!current.get_IsDirectory())
+                        if (!current.IsDirectory)
                         {
-                            string str2 = current.get_Name();
-                            if (str2.EndsWith("ivy.xml"))
+                            string name = current.Name;
+                            if (name.EndsWith("ivy.xml"))
                             {
-                                str2 = str2.Replace("ivy.xml", "ivy-waiting-for-unzip-to-end");
-                                str = Path.Combine(this.localPath, Path.GetDirectoryName(str2));
+                                name = name.Replace("ivy.xml", "ivy-waiting-for-unzip-to-end");
+                                str = Path.Combine(this.localPath, Path.GetDirectoryName(name));
                             }
-                            string str3 = Path.Combine(this.localPath, str2);
+                            string str3 = Path.Combine(this.localPath, name);
                             if (!File.Exists(str3))
                             {
                                 Console.WriteLine("ZipVerifier: file doesn't exist: {0}", str3);
                                 return false;
                             }
-                            if (((Environment.OSVersion.Platform == PlatformID.Unix) || (Environment.OSVersion.Platform == PlatformID.MacOSX)) && (current.get_ExternalFileAttributes() != 0))
+                            if (((Environment.OSVersion.Platform == PlatformID.Unix) || (Environment.OSVersion.Platform == PlatformID.MacOSX)) && (current.ExternalFileAttributes != 0))
                             {
                                 Stat stat;
                                 if (Syscall.stat(str3, out stat) != 0)
@@ -55,13 +55,13 @@
                                     Console.WriteLine("ZipVerifier: couldn't stat {0}", str3);
                                     return false;
                                 }
-                                if (((FilePermissions) current.get_ExternalFileAttributes()) != (((FilePermissions) current.get_ExternalFileAttributes()) & stat.st_mode))
+                                if (((FilePermissions) current.ExternalFileAttributes) != (((FilePermissions) current.ExternalFileAttributes) & stat.st_mode))
                                 {
-                                    Console.WriteLine("ZipVerifier: permissions don't match: {0} vs {1}", current.get_ExternalFileAttributes(), stat.st_mode);
+                                    Console.WriteLine("ZipVerifier: permissions don't match: {0} vs {1}", current.ExternalFileAttributes, stat.st_mode);
                                     return false;
                                 }
                             }
-                            this.UpdateProgress(((float) (++num)) / ((float) file.get_Size()));
+                            this.UpdateProgress(((float) (++num)) / ((float) file.Size));
                         }
                     }
                 }

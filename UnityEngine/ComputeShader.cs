@@ -4,6 +4,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Compute Shader asset.</para>
@@ -17,7 +18,7 @@
         /// <param name="threadGroupsX">Number of work groups in the X dimension.</param>
         /// <param name="threadGroupsY">Number of work groups in the Y dimension.</param>
         /// <param name="threadGroupsZ">Number of work groups in the Z dimension.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void Dispatch(int kernelIndex, int threadGroupsX, int threadGroupsY, int threadGroupsZ);
         [ExcludeFromDocs]
         public void DispatchIndirect(int kernelIndex, ComputeBuffer argsBuffer)
@@ -31,7 +32,7 @@
         /// </summary>
         /// <param name="kernelIndex">Which kernel to execute. A single compute shader asset can have multiple kernel entry points.</param>
         /// <param name="argsBuffer">Buffer with dispatch arguments.</param>
-        /// <param name="argsOffset">Byte offset where in the buffer the dispatch arguments are.</param>
+        /// <param name="argsOffset">The byte offset into the buffer, where the draw arguments start.</param>
         public void DispatchIndirect(int kernelIndex, ComputeBuffer argsBuffer, [DefaultValue("0")] uint argsOffset)
         {
             if (argsBuffer == null)
@@ -52,9 +53,9 @@
         /// <returns>
         /// <para>Kernel index, or -1 if not found.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern int FindKernel(string name);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void GetKernelThreadGroupSizes(int kernelIndex, out uint x, out uint y, out uint z);
         /// <summary>
         /// <para>Checks whether a shader contains a given kernel.</para>
@@ -63,15 +64,15 @@
         /// <returns>
         /// <para>True if the kernel is found, false otherwise.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool HasKernel(string name);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SetVector(ComputeShader self, int nameID, ref Vector4 val);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Internal_DispatchIndirect(int kernelIndex, ComputeBuffer argsBuffer, uint argsOffset);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Internal_SetFloats(int nameID, float[] values);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Internal_SetInts(int nameID, int[] values);
         /// <summary>
         /// <para>Set a bool parameter.</para>
@@ -102,7 +103,7 @@
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
         /// <param name="name">Name of the buffer variable in shader code.</param>
         /// <param name="buffer">Buffer to set.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetBuffer(int kernelIndex, int nameID, ComputeBuffer buffer);
         /// <summary>
         /// <para>Sets an input or output compute buffer.</para>
@@ -122,7 +123,7 @@
         /// <param name="name">Variable name in shader code.</param>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
         /// <param name="val">Value to set.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetFloat(int nameID, float val);
         /// <summary>
         /// <para>Set a float parameter.</para>
@@ -163,7 +164,7 @@
         /// <param name="name">Variable name in shader code.</param>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
         /// <param name="val">Value to set.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetInt(int nameID, int val);
         /// <summary>
         /// <para>Set an integer parameter.</para>
@@ -205,7 +206,7 @@
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
         /// <param name="name">Name of the buffer variable in shader code.</param>
         /// <param name="texture">Texture to set.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetTexture(int kernelIndex, int nameID, Texture texture);
         /// <summary>
         /// <para>Set a texture parameter.</para>
@@ -227,7 +228,7 @@
         /// <param name="name">Name of the buffer variable in shader code.</param>
         /// <param name="globalTextureName">Global texture property to assign to shader.</param>
         /// <param name="globalTextureNameID">Property name ID, use Shader.PropertyToID to get it.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetTextureFromGlobal(int kernelIndex, int nameID, int globalTextureNameID);
         /// <summary>
         /// <para>Set a texture parameter from a global texture property.</para>

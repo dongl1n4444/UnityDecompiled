@@ -37,7 +37,7 @@
                         ThrowInvalidJSONException();
                     }
                 }
-                writeResponse.SimpleResponse(HttpStatusCode.Ok, method.Invoke(request, value2).ToString());
+                writeResponse.SimpleResponse(HttpStatusCode.Ok, method(request, value2).ToString());
             }
             catch (JSONTypeException)
             {
@@ -97,17 +97,17 @@
 
         private void InvokeDelete(Request request, string payload, Response writeResponse)
         {
-            CallSafely(request, payload, writeResponse, new Func<Request, JSONValue, JSONValue>(this, (IntPtr) this.HandleDelete));
+            CallSafely(request, payload, writeResponse, new Func<Request, JSONValue, JSONValue>(this.HandleDelete));
         }
 
         private void InvokeGet(Request request, string payload, Response writeResponse)
         {
-            CallSafely(request, payload, writeResponse, new Func<Request, JSONValue, JSONValue>(this, (IntPtr) this.HandleGet));
+            CallSafely(request, payload, writeResponse, new Func<Request, JSONValue, JSONValue>(this.HandleGet));
         }
 
         private void InvokePost(Request request, string payload, Response writeResponse)
         {
-            CallSafely(request, payload, writeResponse, new Func<Request, JSONValue, JSONValue>(this, (IntPtr) this.HandlePost));
+            CallSafely(request, payload, writeResponse, new Func<Request, JSONValue, JSONValue>(this.HandlePost));
         }
 
         private static void RespondWithException(Response writeResponse, RestRequestException rre)
@@ -138,7 +138,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, JSONValue>(null, (IntPtr) <ToJSON>m__0);
+                <>f__am$cache0 = s => new JSONValue(s);
             }
             return new JSONValue(Enumerable.Select<string, JSONValue>(strings, <>f__am$cache0).ToList<JSONValue>());
         }

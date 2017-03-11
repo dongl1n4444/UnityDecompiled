@@ -89,7 +89,7 @@
 
         internal static void OpenAnotherWindow()
         {
-            RemoteGame pane = ScriptableObject.CreateInstance<RemoteGame>();
+            RemoteGame game = ScriptableObject.CreateInstance<RemoteGame>();
             foreach (ContainerWindow window in ContainerWindow.windows)
             {
                 foreach (View view in window.rootView.allChildren)
@@ -99,21 +99,21 @@
                     {
                         if (<>f__am$cache0 == null)
                         {
-                            <>f__am$cache0 = new Func<EditorWindow, bool>(null, (IntPtr) <OpenAnotherWindow>m__0);
+                            <>f__am$cache0 = pane => pane.GetType() == typeof(RemoteGame);
                         }
                         if (Enumerable.Any<EditorWindow>(area.m_Panes, <>f__am$cache0))
                         {
-                            area.AddTab(pane);
+                            area.AddTab(game);
                             break;
                         }
                     }
                 }
             }
-            pane.Show();
+            game.Show();
             if (EditorApplication.isPlaying)
             {
-                pane.id = ScriptableSingleton<NScreenManager>.instance.GetNewId();
-                pane.StartGame();
+                game.id = ScriptableSingleton<NScreenManager>.instance.GetNewId();
+                game.StartGame();
             }
         }
 
@@ -121,7 +121,7 @@
         {
             if (!EditorApplication.isPaused)
             {
-                if ((!EditorApplication.isPlaying && EditorApplication.isPlayingOrWillChangePlaymode) && ((Resources.FindObjectsOfTypeAll<RemoteGame>().Length > 0) && ScriptableSingleton<NScreenManager>.instance.BuildOnPlay))
+                if ((!EditorApplication.isPlaying && EditorApplication.isPlayingOrWillChangePlaymode) && ((UnityEngine.Resources.FindObjectsOfTypeAll<RemoteGame>().Length > 0) && ScriptableSingleton<NScreenManager>.instance.BuildOnPlay))
                 {
                     Build();
                 }
@@ -142,7 +142,7 @@
 
         internal static void RepaintAllGameViews()
         {
-            foreach (RemoteGame game in Resources.FindObjectsOfTypeAll<RemoteGame>())
+            foreach (RemoteGame game in UnityEngine.Resources.FindObjectsOfTypeAll<RemoteGame>())
             {
                 game.Repaint();
                 game.GameViewAspectWasChanged();
@@ -157,7 +157,7 @@
         internal static void StartAll()
         {
             ScriptableSingleton<NScreenManager>.instance.ResetIds();
-            foreach (RemoteGame game in Resources.FindObjectsOfTypeAll<RemoteGame>())
+            foreach (RemoteGame game in UnityEngine.Resources.FindObjectsOfTypeAll<RemoteGame>())
             {
                 game.id = ScriptableSingleton<NScreenManager>.instance.GetNewId();
                 game.StartGame();
@@ -166,7 +166,7 @@
 
         internal static void StopAll()
         {
-            foreach (RemoteGame game in Resources.FindObjectsOfTypeAll<RemoteGame>())
+            foreach (RemoteGame game in UnityEngine.Resources.FindObjectsOfTypeAll<RemoteGame>())
             {
                 game.StopGame();
             }

@@ -1,6 +1,7 @@
 ﻿namespace UnityEngine
 {
     using System;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEngine.Internal;
@@ -9,8 +10,9 @@
     /// <summary>
     /// <para>Accesses remote settings (common for all game instances).</para>
     /// </summary>
-    public sealed class RemoteSettings
+    public static class RemoteSettings
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event UpdatedEventHandler Updated;
 
         [RequiredByNativeCode]
@@ -40,8 +42,13 @@
         /// </summary>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool GetBool(string key, [DefaultValue("false")] bool defaultValue);
+        /// <summary>
+        /// <para>Returns number of keys in remote settings.</para>
+        /// </summary>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern int GetCount();
         /// <summary>
         /// <para>Returns the value corresponding to key in the remote settings if it exists.</para>
         /// </summary>
@@ -59,7 +66,7 @@
         /// </summary>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern float GetFloat(string key, [DefaultValue("0.0F")] float defaultValue);
         /// <summary>
         /// <para>Returns the value corresponding to key in the remote settings if it exists.</para>
@@ -78,8 +85,13 @@
         /// </summary>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int GetInt(string key, [DefaultValue("0")] int defaultValue);
+        /// <summary>
+        /// <para>Returns all the keys in remote settings.</para>
+        /// </summary>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern string[] GetKeys();
         /// <summary>
         /// <para>Returns the value corresponding to key in the remote settings if it exists.</para>
         /// </summary>
@@ -97,13 +109,13 @@
         /// </summary>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetString(string key, [DefaultValue("\"\"")] string defaultValue);
         /// <summary>
         /// <para>Returns true if key exists in the remote settings.</para>
         /// </summary>
         /// <param name="key"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool HasKey(string key);
 
         /// <summary>

@@ -12,7 +12,7 @@
 
     internal class Msvc12Installation : MsvcInstallation
     {
-        public Msvc12Installation(NPath visualStudioDir) : base(new Version(12, 0), visualStudioDir)
+        public Msvc12Installation(NPath visualStudioDir) : base(new Version(12, 0), visualStudioDir, true)
         {
             base.SDKDirectory = WindowsSDKs.GetWindows81SDKDirectory();
         }
@@ -166,7 +166,7 @@
             internal bool $disposing;
             internal int $PC;
             internal Msvc12Installation $this;
-            internal NPath <sdkLibDirectory>__1;
+            internal NPath <sdkLibDirectory>__0;
             internal NPath <vcLibPath>__0;
             internal Architecture architecture;
             internal string sdkSubset;
@@ -189,7 +189,7 @@
                         string[] append = new string[] { "VC", "lib" };
                         this.<vcLibPath>__0 = this.$this.VisualStudioDirectory.Combine(append);
                         string[] textArray2 = new string[] { "lib", "winv6.3", "um" };
-                        this.<sdkLibDirectory>__1 = this.$this.SDKDirectory.Combine(textArray2);
+                        this.<sdkLibDirectory>__0 = this.$this.SDKDirectory.Combine(textArray2);
                         if (this.sdkSubset != null)
                         {
                             string[] textArray3 = new string[] { this.sdkSubset };
@@ -230,7 +230,7 @@
                     case 1:
                     {
                         string[] textArray4 = new string[] { "x86" };
-                        this.$current = this.<sdkLibDirectory>__1.Combine(textArray4);
+                        this.$current = this.<sdkLibDirectory>__0.Combine(textArray4);
                         if (!this.$disposing)
                         {
                             this.$PC = 2;
@@ -246,7 +246,7 @@
                     case 3:
                     {
                         string[] textArray6 = new string[] { "x64" };
-                        this.$current = this.<sdkLibDirectory>__1.Combine(textArray6);
+                        this.$current = this.<sdkLibDirectory>__0.Combine(textArray6);
                         if (!this.$disposing)
                         {
                             this.$PC = 4;
@@ -256,7 +256,7 @@
                     case 5:
                     {
                         string[] textArray8 = new string[] { "arm" };
-                        this.$current = this.<sdkLibDirectory>__1.Combine(textArray8);
+                        this.$current = this.<sdkLibDirectory>__0.Combine(textArray8);
                         if (!this.$disposing)
                         {
                             this.$PC = 6;

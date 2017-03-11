@@ -8,29 +8,29 @@
 
     internal class GenericPresetLibraryInspector<T> where T: ScriptableObject
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private PresetLibraryEditorState.ItemViewMode <itemViewMode>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private float <lineSpacing>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-        private RectOffset <marginsForGrid>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RectOffset <marginsForGrid>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private RectOffset <marginsForList>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private int <maxShowNumPresets>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Vector2 <presetSize>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private Vector2 <presetSize>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <useOnePixelOverlappedGrid>k__BackingField;
         private readonly Action<string> m_EditButtonClickedCallback;
         private readonly VerticalGrid m_Grid;
         private readonly string m_Header;
         private float m_LastRepaintedWidth;
         private readonly ScriptableObjectSaveLoadHelper<T> m_SaveLoadHelper;
-        private readonly Object m_Target;
+        private readonly UnityEngine.Object m_Target;
         private static GUIStyle s_EditButtonStyle;
 
-        public GenericPresetLibraryInspector(Object target, string header, Action<string> editButtonClicked)
+        public GenericPresetLibraryInspector(UnityEngine.Object target, string header, Action<string> editButtonClicked)
         {
             this.m_LastRepaintedWidth = -1f;
             this.m_Target = target;
@@ -69,7 +69,7 @@
                 PresetLibrary library = ScriptableSingleton<PresetLibraryManager>.instance.GetLibrary<T>(this.m_SaveLoadHelper, libraryPath) as PresetLibrary;
                 if (library == null)
                 {
-                    Debug.Log("Could not load preset library '" + libraryPath + "'");
+                    UnityEngine.Debug.Log("Could not load preset library '" + libraryPath + "'");
                 }
                 else
                 {

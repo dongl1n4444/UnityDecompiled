@@ -125,6 +125,8 @@
             this.SetIcon(ModuleName("UNET"), "class/NetworkTransform");
             this.SetIcon(ModuleName("Vehicles"), "class/WheelCollider");
             this.SetIcon(ModuleName("Cloth"), "class/Cloth");
+            this.SetIcon(ModuleName("ImageConversion"), "class/Texture");
+            this.SetIcon(ModuleName("ScreenCapture"), "class/RenderTexture");
         }
 
         public void RegisterDependency(string obj, string depends)

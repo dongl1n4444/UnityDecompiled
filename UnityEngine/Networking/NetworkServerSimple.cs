@@ -345,7 +345,7 @@
         /// <param name="receivedSize">The amount of data received.</param>
         public virtual void OnData(NetworkConnection conn, int receivedSize, int channelId)
         {
-            conn.TransportRecieve(this.m_MsgBuffer, receivedSize, channelId);
+            conn.TransportReceive(this.m_MsgBuffer, receivedSize, channelId);
         }
 
         /// <summary>

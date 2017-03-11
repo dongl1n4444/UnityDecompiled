@@ -10,6 +10,7 @@
     using UnityEditor;
     using UnityEditor.Utils;
     using UnityEditorInternal;
+    using UnityEngine;
     using UnityEngine.Networking;
 
     internal class PostProcessTizenPlayer
@@ -44,15 +45,23 @@
             {
                 writer.WriteLine("\t\t<privilege>http://tizen.org/privilege/appmanager.launch</privilege>");
             }
-            if (checker.HasReferenceToType("UnityEngine.SystemInfo") && (PlayerSettings.Tizen.minOSVersion == TizenOSVersion.Version23))
-            {
-                writer.WriteLine("\t\t<privilege>http://tizen.org/privilege/systemsettings</privilege>");
-            }
             if (checker.HasReferenceToMethod("UnityEngine.Screen::set_sleepTimeout"))
             {
                 writer.WriteLine("\t\t<privilege>http://tizen.org/privilege/display</privilege>");
             }
-            if (((checker.HasReferenceToType("UnityEngine.Networking") || checker.HasReferenceToType("System.Net.Sockets")) || (checker.HasReferenceToType("UnityEngine.Network") || checker.HasReferenceToType("UnityEngine.RPC"))) || (checker.HasReferenceToType("UnityEngine.WWW") || checker.HasReferenceToType(typeof(UnityWebRequest).FullName)))
+            if (((checker.HasReferenceToType("UnityEngine.Networking") || checker.HasReferenceToType("System.Net.Sockets")) || (checker.HasReferenceToType("UnityEngine.Network") || checker.HasReferenceToType("UnityEngine.RPC"))) || (((checker.HasReferenceToType("UnityEngine.WWW") || checker.HasReferenceToType("UnityEngine.Video")) || (checker.HasReferenceToType(typeof(Ping).FullName) || checker.HasReferenceToType(typeof(UnityWebRequest).FullName))) || (EditorUserBuildSettings.allowDebugging || EditorUserBuildSettings.connectProfiler)))
+            {
+                writer.WriteLine("\t\t<privilege>http://tizen.org/privilege/internet</privilege>");
+            }
+            if (checker.HasReferenceToType("UnityEngine.Video"))
+            {
+                writer.WriteLine("\t\t<privilege>http://tizen.org/privilege/mediastorage</privilege>");
+            }
+            if (checker.HasReferenceToType("UnityEngine.Video"))
+            {
+                writer.WriteLine("\t\t<privilege>http://tizen.org/privilege/externalstorage</privilege>");
+            }
+            if (TizenUtilities.ThisIsAUnityTestProject())
             {
                 writer.WriteLine("\t\t<privilege>http://tizen.org/privilege/internet</privilege>");
             }
@@ -73,7 +82,7 @@
             writer.WriteLine("<configuration name=\"build\">");
             writer.WriteLine("<app>");
             writer.WriteLine("<option superClass=\"sbi.gnu.cpp.compiler.option\">");
-            writer.WriteLine("<listOptionValue value=\"mobile-" + str + "-device.core_gcc46.armel.core.app\"/>");
+            writer.WriteLine("<listOptionValue value=\"mobile-" + str + "-device.core_gcc49.armel.core.app\"/>");
             writer.WriteLine("</option>");
             writer.WriteLine("</app>");
             writer.WriteLine("</configuration>");
@@ -202,7 +211,7 @@
             {
                 FileUtil.CopyFileIfExists(playerPackage + "/" + str6 + str5 + "/TizenPlayer", str + "/" + normalizedProductName, true);
                 FileUtil.MoveFileIfExists(str4 + "/Managed/mscorlib.dll", str4 + "/Managed/mono/2.0/mscorlib.dll");
-                progress.Step("Signing & Packaging", EditorGUIUtility.TextContent("Signing application with Tizen...").text);
+                progress.Step("Signing & Packaging", EditorGUIUtility.TextContent("Signing application with Tizen certificate \"" + PlayerSettings.Tizen.signingProfileName + "\"...").text);
                 if (!TizenUtilities.CreateTpkPackage(stagingArea))
                 {
                     TizenUtilities.ShowErrDlgAndThrow("Build Failure!", "Failed to sign and package the application. Check the editor log for more details.");
@@ -211,12 +220,22 @@
                 {
                     userInstallPath = userInstallPath + ".tpk";
                 }
-                string fullPath = Path.GetFullPath(stagingArea + "/build/" + PlayerSettings.bundleIdentifier + "-" + GetValidVersionString() + "-arm.tpk");
+                string fullPath = Path.GetFullPath(stagingArea + "/build/" + PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.Tizen) + "-" + GetValidVersionString() + "-arm.tpk");
                 string str8 = FileUtil.UnityGetFileName(userInstallPath);
-                string path = Path.Combine(FileUtil.UnityGetDirectoryName(userInstallPath), str6);
-                FileUtil.DeleteFileOrDirectory(path);
-                Directory.CreateDirectory(path);
-                FileUtil.MoveFileOrDirectory(fullPath, Path.Combine(path, str8));
+                string str9 = "";
+                if (target == 2)
+                {
+                    str9 = Path.Combine(FileUtil.UnityGetDirectoryName(userInstallPath), str6);
+                }
+                else
+                {
+                    str9 = FileUtil.UnityGetDirectoryName(userInstallPath);
+                }
+                Console.WriteLine("Deleting " + Path.Combine(str9, str8));
+                FileUtil.DeleteFileOrDirectory(Path.Combine(str9, str8));
+                Directory.CreateDirectory(str9);
+                FileUtil.MoveFileOrDirectory(fullPath, Path.Combine(str9, str8));
+                Console.WriteLine("Moving " + fullPath + " to " + Path.Combine(str9, str8));
             }
         }
 
@@ -233,12 +252,35 @@
             Regex regex = new Regex("[^a-zA-Z_-]");
             string normalizedProductName = regex.Replace(productName, "").ToLower();
             string str2 = Path.Combine(playerPackage, "assets");
-            if (!IsValidTizenBundleIdentifier(PlayerSettings.bundleIdentifier))
+            if (!IsValidTizenBundleIdentifier(PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.Tizen)))
             {
                 string message = "Please set the Bundle Identifier in the Player Settings.";
                 message = (message + " The value must follow the convention 'com.YourCompanyName.YourProductName'") + " and can contain alphanumeric characters and underscore." + "\nEach segment must not start with a numeric character or underscore.";
                 Selection.activeObject = Unsupported.GetSerializedAssetInterfaceSingleton("PlayerSettings");
                 TizenUtilities.ShowErrDlgAndThrow("Bundle Identifier has not been set up correctly", message);
+            }
+            string environmentVariable = Environment.GetEnvironmentVariable("TIZEN_RUN_TESTS_ON_EMULATOR");
+            if (environmentVariable == null)
+            {
+            }
+            bool flag3 = int.Parse("0") == 1;
+            if (TizenUtilities.ThisIsAUnityTestProject())
+            {
+                if (flag3)
+                {
+                    PlayerSettings.Tizen.deploymentTargetType = 1;
+                }
+                else
+                {
+                    PlayerSettings.Tizen.deploymentTargetType = 0;
+                }
+            }
+            if (PlayerSettings.Tizen.deploymentTargetType < 0)
+            {
+                string str4 = "Please select a Tizen deployment target.";
+                str4 = str4 + " Press the Discover button in the Publishing section of Player Settings." + " Then select a type of target to get a list of available targets to select.";
+                Selection.activeObject = Unsupported.GetSerializedAssetInterfaceSingleton("PlayerSettings");
+                TizenUtilities.ShowErrDlgAndThrow("Tizen Deployment Target has not been selected.", str4);
             }
             TizenUtilities.PrepareToolPaths();
             TizenUtilities.ValidateSigningProfile(stagingArea);
@@ -251,18 +293,18 @@
             Directory.CreateDirectory(Path.Combine(stagingArea, "setting"));
             string path = Path.Combine(stagingArea, "shared");
             Directory.CreateDirectory(path);
-            string str8 = Path.Combine(path, "res");
-            Directory.CreateDirectory(str8);
-            string destDirName = Path.Combine(str8, "data");
-            string dst = Path.Combine(str8, "app_icon.png");
+            string str9 = Path.Combine(path, "res");
+            Directory.CreateDirectory(str9);
+            string destDirName = Path.Combine(str9, "data");
+            string dst = Path.Combine(str9, "app_icon.png");
             FileUtil.MoveFileIfExists(Path.Combine(stagingArea, "app_icon.png"), dst);
             if (!PlayerSettings.SplashScreen.show)
             {
-                string str11 = Path.Combine(str8, "app_splash.png");
-                FileUtil.MoveFileIfExists(Path.Combine(stagingArea, "app_splash.png"), str11);
-                if (!File.Exists(str11))
+                string str12 = Path.Combine(str9, "app_splash.png");
+                FileUtil.MoveFileIfExists(Path.Combine(stagingArea, "app_splash.png"), str12);
+                if (!File.Exists(str12))
                 {
-                    FileUtil.CopyFileOrDirectory(playerPackage + "/assets/splash.png", str11);
+                    FileUtil.CopyFileOrDirectory(playerPackage + "/assets/splash.png", str12);
                 }
             }
             Directory.CreateDirectory(Path.Combine(path, "trusted"));
@@ -275,12 +317,12 @@
             Directory.CreateDirectory(Path.Combine(destDirName, "Managed/mono/2.0"));
             FileUtil.CopyFileOrDirectory(playerPackage + "/Data/Resources/unity default resources", destDirName + "/unity default resources");
             Directory.CreateDirectory(Path.Combine(stagingArea, "data"));
-            string str14 = Path.Combine(stagingArea, "lib");
-            Directory.CreateDirectory(str14);
+            string str15 = Path.Combine(stagingArea, "lib");
+            Directory.CreateDirectory(str15);
             foreach (PluginImporter importer in PluginImporter.GetImporters(target))
             {
                 string fileName = Path.GetFileName(importer.assetPath);
-                FileUtil.UnityFileCopy(importer.assetPath, Path.Combine(str14, fileName));
+                FileUtil.UnityFileCopy(importer.assetPath, Path.Combine(str15, fileName));
             }
             if (Directory.Exists("Assets/StreamingAssets"))
             {
@@ -290,15 +332,15 @@
             bool collectMethods = true;
             bool ignoreSystemDlls = true;
             string[] components = new string[] { destDirName, "Managed" };
-            string str16 = Paths.Combine(components);
-            checker.CollectReferences(str16, collectMethods, 0f, ignoreSystemDlls);
-            string bundleIdentifier = PlayerSettings.bundleIdentifier;
-            CreateManifest(Path.Combine(stagingArea, "tizen-manifest.xml"), companyName, productName, normalizedProductName, bundleIdentifier, checker);
+            string str17 = Paths.Combine(components);
+            checker.CollectReferences(str17, collectMethods, 0f, ignoreSystemDlls);
+            string applicationIdentifier = PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.Tizen);
+            CreateManifest(Path.Combine(stagingArea, "tizen-manifest.xml"), companyName, productName, normalizedProductName, applicationIdentifier, checker);
             CreateProject(stagingArea);
             PackageTargets(PlayerSettings.Tizen.deploymentTargetType, installPath, playerPackage, stagingArea, developmentPlayer, normalizedProductName);
             if (flag)
             {
-                progress.Step("Installing", EditorGUIUtility.TextContent("Installing application on device...").text);
+                progress.Step("Installing", EditorGUIUtility.TextContent("Installing application on " + TizenUtilities.SelectedDeploymentTarget() + "...").text);
                 if (TizenUtilities.InstallTpkPackage(installPath))
                 {
                     if (developmentPlayer)
@@ -306,8 +348,8 @@
                         progress.Step("Port Forwarding", EditorGUIUtility.TextContent("Setting up profiler tunnel...").text);
                         TizenUtilities.ForwardPort(ProfilerDriver.directConnectionPort, "55000");
                     }
-                    progress.Step("Launching", EditorGUIUtility.TextContent("Launching application on device...").text);
-                    TizenUtilities.LaunchTpkPackage(bundleIdentifier, stagingArea);
+                    progress.Step("Launching", EditorGUIUtility.TextContent("Launching application on " + TizenUtilities.SelectedDeploymentTarget() + "...").text);
+                    TizenUtilities.LaunchTpkPackage(applicationIdentifier, stagingArea);
                 }
             }
         }

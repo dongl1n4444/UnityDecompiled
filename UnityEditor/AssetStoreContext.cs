@@ -9,6 +9,7 @@
     using UnityEditor.Web;
     using UnityEditorInternal;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     [InitializeOnLoad]
     internal sealed class AssetStoreContext
@@ -216,13 +217,13 @@
             return strArray;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string SessionGetString(string key);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool SessionHasString(string key);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SessionRemoveString(string key);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SessionSetString(string key, string value);
         public void SetFloat(string key, float value)
         {

@@ -40,6 +40,9 @@
         public static bool IsAbstractPortable(this Type type) => 
             type.IsAbstract;
 
+        public static bool IsAssignableFromPortable(this Type type, Type other) => 
+            type.IsAssignableFrom(other);
+
         public static bool IsEnumPortable(this Type type) => 
             type.IsEnum;
 

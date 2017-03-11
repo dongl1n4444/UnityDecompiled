@@ -11,16 +11,16 @@
 
         private bool CanBeReachedByArrayDowncast(IArrayType expectedType, IArrayType actualType)
         {
-            bool flag1 = expectedType.get_Rank() == actualType.get_Rank();
+            bool flag1 = expectedType.Rank == actualType.Rank;
             if (!flag1)
             {
                 return flag1;
             }
-            return this.CanBeReachedByDowncast(expectedType.get_ElementType(), actualType.get_ElementType());
+            return this.CanBeReachedByDowncast(expectedType.ElementType, actualType.ElementType);
         }
 
         public override bool CanBeReachedByDowncast(IType expectedType, IType actualType) => 
-            (((!expectedType.get_IsArray() || !actualType.get_IsArray()) || !this.IsDowncastAllowed()) ? base.CanBeReachedByDowncast(expectedType, actualType) : this.CanBeReachedByArrayDowncast((IArrayType) expectedType, (IArrayType) actualType));
+            (((!expectedType.IsArray || !actualType.IsArray) || !this.IsDowncastAllowed()) ? base.CanBeReachedByDowncast(expectedType, actualType) : this.CanBeReachedByArrayDowncast((IArrayType) expectedType, (IArrayType) actualType));
 
         public override bool IsDowncastAllowed()
         {

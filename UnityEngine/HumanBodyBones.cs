@@ -61,6 +61,7 @@
         RightLittleProximal,
         RightLittleIntermediate,
         RightLittleDistal,
+        UpperChest,
         LastBone
     }
 }

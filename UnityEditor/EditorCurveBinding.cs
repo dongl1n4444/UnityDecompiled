@@ -13,7 +13,7 @@
         /// <para>The transform path of the object that is animated.</para>
         /// </summary>
         public string path;
-        private Type m_type;
+        private System.Type m_type;
         /// <summary>
         /// <para>The property of the object that is animated.</para>
         /// </summary>
@@ -45,11 +45,8 @@
         public static bool operator !=(EditorCurveBinding lhs, EditorCurveBinding rhs) => 
             !(lhs == rhs);
 
-        public override int GetHashCode()
-        {
-            object[] objArray1 = new object[] { this.path, ':', this.type.Name, ':', this.propertyName };
-            return string.Concat(objArray1).GetHashCode();
-        }
+        public override int GetHashCode() => 
+            $"{this.path}:{this.type.Name}:{this.propertyName}".GetHashCode();
 
         public override bool Equals(object other)
         {
@@ -61,7 +58,7 @@
             return (this == binding);
         }
 
-        public Type type
+        public System.Type type
         {
             get => 
                 this.m_type;
@@ -72,7 +69,7 @@
                 this.m_ScriptInstanceID = 0;
             }
         }
-        public static EditorCurveBinding FloatCurve(string inPath, Type inType, string inPropertyName) => 
+        public static EditorCurveBinding FloatCurve(string inPath, System.Type inType, string inPropertyName) => 
             new EditorCurveBinding { 
                 path = inPath,
                 type = inType,
@@ -81,7 +78,7 @@
                 m_isPhantom = 0
             };
 
-        public static EditorCurveBinding PPtrCurve(string inPath, Type inType, string inPropertyName) => 
+        public static EditorCurveBinding PPtrCurve(string inPath, System.Type inType, string inPropertyName) => 
             new EditorCurveBinding { 
                 path = inPath,
                 type = inType,

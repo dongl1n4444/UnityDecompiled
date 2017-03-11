@@ -57,6 +57,19 @@
             EmscriptenEnvironmentVariables = dictionary;
         }
 
+        private static string NodeExecutableNameForCurrentPlatform()
+        {
+            if (PlatformUtils.IsWindows())
+            {
+                return "node.exe";
+            }
+            if (!PlatformUtils.IsOSX() && !PlatformUtils.IsLinux())
+            {
+                throw new NotSupportedException("Don't know how to get node executable on current platform!");
+            }
+            return "node";
+        }
+
         public static void ShowWindowsEnvironmentSettings()
         {
             foreach (KeyValuePair<string, string> pair in EmscriptenEnvironmentVariables)
@@ -201,21 +214,27 @@
         {
             get
             {
+                NPath path = BaseLocation.ParentContaining("UnityExtensions");
+                if (path != null)
+                {
+                    string[] textArray1 = new string[] { "Tools", "nodejs", "bin", NodeExecutableNameForCurrentPlatform() };
+                    return path.Combine(textArray1);
+                }
+                if (!UnitySourceCode.Available)
+                {
+                    throw new NotSupportedException("Need Unity to use node");
+                }
                 if (PlatformUtils.IsWindows())
                 {
-                    string[] append = new string[] { "node/node.exe" };
-                    return WindowsEmscriptenSdkRoot.Combine(append);
+                    string[] textArray2 = new string[] { "node/node.exe" };
+                    return WindowsEmscriptenSdkRoot.Combine(textArray2);
                 }
-                if (PlatformUtils.IsOSX())
-                {
-                    string[] textArray2 = new string[] { "node/0.10.18_64bit/bin/node" };
-                    return MacEmscriptenSdkRoot.Combine(textArray2);
-                }
-                if (!PlatformUtils.IsLinux())
+                if (!PlatformUtils.IsOSX())
                 {
                     throw new NotSupportedException("Don't know how to get node path on current platform!");
                 }
-                return new NPath(!File.Exists("/usr/bin/node") ? "nodejs" : "node");
+                string[] append = new string[] { "node/0.10.18_64bit/bin/node" };
+                return MacEmscriptenSdkRoot.Combine(append);
             }
         }
 

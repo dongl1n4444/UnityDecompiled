@@ -56,7 +56,7 @@
         {
             if (!folder.isFolder)
             {
-                Debug.LogError("Should be a folder item!");
+                UnityEngine.Debug.LogError("Should be a folder item!");
             }
             if (!folder.hasChildren)
             {
@@ -291,7 +291,7 @@
 
         private class PackageExportTreeViewGUI : TreeViewGUI
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private int <showPreviewForID>k__BackingField;
             public Action<PackageExportTreeView.PackageExportTreeViewItem> itemWasToggled;
             protected float k_FoldoutWidth;
@@ -311,7 +311,7 @@
             private void DoIconAndText(PackageExportTreeView.PackageExportTreeViewItem item, Rect contentRect, bool selected, bool focused)
             {
                 EditorGUIUtility.SetIconSize(new Vector2(base.k_IconWidth, base.k_IconWidth));
-                GUIStyle lineStyle = TreeViewGUI.s_Styles.lineStyle;
+                GUIStyle lineStyle = TreeViewGUI.Styles.lineStyle;
                 lineStyle.padding.left = 0;
                 if (Event.current.type == EventType.Repaint)
                 {
@@ -364,7 +364,7 @@
                 bool flag = Event.current.type == EventType.Repaint;
                 if (selected && flag)
                 {
-                    TreeViewGUI.s_Styles.selectionStyle.Draw(rowRect, false, false, true, focused);
+                    TreeViewGUI.Styles.selectionStyle.Draw(rowRect, false, false, true, focused);
                 }
                 if (base.m_TreeView.data.IsExpandable(tvItem))
                 {
@@ -408,7 +408,7 @@
 
         private class PackageExportTreeViewItem : TreeViewItem
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private ExportPackageItem <item>k__BackingField;
             private PackageExportTreeView.EnabledState m_EnabledState;
 

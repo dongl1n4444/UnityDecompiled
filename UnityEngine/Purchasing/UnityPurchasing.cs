@@ -22,13 +22,13 @@
         /// </summary>
         public static void ClearTransactionLog()
         {
-            new TransactionLog(Debug.logger, Application.persistentDataPath).Clear();
+            new TransactionLog(Debug.unityLogger, Application.persistentDataPath).Clear();
         }
 
-        internal static void FetchAndMergeProducts(bool useCatalog, HashSet<ProductDefinition> applicationProducts, CloudCatalogManager catalog, Action<HashSet<ProductDefinition>> callback)
+        internal static void FetchAndMergeProducts(bool useCatalog, HashSet<ProductDefinition> localProductSet, CloudCatalogManager catalog, Action<HashSet<ProductDefinition>> callback)
         {
             <FetchAndMergeProducts>c__AnonStorey1 storey = new <FetchAndMergeProducts>c__AnonStorey1 {
-                applicationProducts = applicationProducts,
+                localProductSet = localProductSet,
                 callback = callback
             };
             if (useCatalog)
@@ -37,7 +37,7 @@
             }
             else
             {
-                storey.callback(storey.applicationProducts);
+                storey.callback(storey.localProductSet);
             }
         }
 
@@ -48,7 +48,7 @@
         /// <param name="builder">Unity IAP configuration.</param>
         public static void Initialize(IStoreListener listener, ConfigurationBuilder builder)
         {
-            Initialize(listener, builder, Debug.logger, Application.persistentDataPath, new UnityAnalytics(), InstantiateCatalog(builder.factory.storeName));
+            Initialize(listener, builder, Debug.unityLogger, Application.persistentDataPath, new UnityAnalytics(), InstantiateCatalog(builder.factory.storeName));
         }
 
         internal static void Initialize(IStoreListener listener, ConfigurationBuilder builder, ILogger logger, string persistentDatapath, IUnityAnalytics analytics, CloudCatalogManager catalog)
@@ -77,21 +77,26 @@
             }
             catch (Exception exception)
             {
-                Debug.logger.LogError("Unable to cache IAP catalog", exception);
+                Debug.unityLogger.LogError("Unable to cache IAP catalog", exception);
             }
-            return new CloudCatalogManager(util, cacheFile, Debug.logger, $"{"https://catalog.iap.cloud.unity3d.com"}/{Application.cloudProjectId}", storeName);
+            return new CloudCatalogManager(util, cacheFile, Debug.unityLogger, $"{"https://catalog.iap.cloud.unity3d.com"}/{Application.cloudProjectId}", storeName);
         }
 
         [CompilerGenerated]
         private sealed class <FetchAndMergeProducts>c__AnonStorey1
         {
-            internal HashSet<ProductDefinition> applicationProducts;
             internal Action<HashSet<ProductDefinition>> callback;
+            internal HashSet<ProductDefinition> localProductSet;
 
-            internal void <>m__0(HashSet<ProductDefinition> response)
+            internal void <>m__0(HashSet<ProductDefinition> cloudProducts)
             {
-                response.UnionWith(this.applicationProducts);
-                this.callback(response);
+                HashSet<ProductDefinition> set = new HashSet<ProductDefinition>(this.localProductSet);
+                foreach (ProductDefinition definition in cloudProducts)
+                {
+                    set.Remove(definition);
+                    set.Add(definition);
+                }
+                this.callback(set);
             }
         }
 

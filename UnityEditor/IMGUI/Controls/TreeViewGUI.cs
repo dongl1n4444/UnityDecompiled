@@ -11,13 +11,15 @@
     internal abstract class TreeViewGUI : ITreeViewGUI
     {
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private float <iconLeftPadding>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-        private Action<TreeViewItem, Rect> <iconOverlayGUI>k__BackingField;
+        private float <extraSpaceBeforeIconAndLabel>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private float <iconLeftPadding>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Action<TreeViewItem, Rect> <iconOverlayGUI>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private float <iconRightPadding>k__BackingField;
+        public float customFoldoutYOffset;
         public float extraInsertionMarkerIndent;
-        public float foldoutYOffset;
         public float k_BaseIndent;
         public float k_BottomRowMargin;
         public float k_HalfDropBetweenHeight;
@@ -31,7 +33,6 @@
         protected PingData m_Ping;
         protected TreeViewController m_TreeView;
         protected bool m_UseHorizontalScroll;
-        protected static Styles s_Styles;
 
         public TreeViewGUI(TreeViewController treeView)
         {
@@ -45,7 +46,7 @@
             this.k_TopRowMargin = 0f;
             this.k_BottomRowMargin = 0f;
             this.k_HalfDropBetweenHeight = 4f;
-            this.foldoutYOffset = 0f;
+            this.customFoldoutYOffset = 0f;
             this.extraInsertionMarkerIndent = 0f;
             this.m_TreeView = treeView;
         }
@@ -62,7 +63,7 @@
             this.k_TopRowMargin = 0f;
             this.k_BottomRowMargin = 0f;
             this.k_HalfDropBetweenHeight = 4f;
-            this.foldoutYOffset = 0f;
+            this.customFoldoutYOffset = 0f;
             this.extraInsertionMarkerIndent = 0f;
             this.m_TreeView = treeView;
             this.m_UseHorizontalScroll = useHorizontalScroll;
@@ -80,10 +81,10 @@
                     <>f__ref$1 = storey
                 };
                 this.m_Ping.m_TimeStart = Time.realtimeSinceStartup;
-                this.m_Ping.m_PingStyle = s_Styles.ping;
+                this.m_Ping.m_PingStyle = Styles.ping;
                 GUIContent content = GUIContent.Temp(storey.item.displayName);
                 Vector2 vector = this.m_Ping.m_PingStyle.CalcSize(content);
-                this.m_Ping.m_ContentRect = new Rect(this.GetContentIndent(storey.item), topPixelOfRow, ((this.k_IconWidth + this.k_SpaceBetweenIconAndText) + vector.x) + this.iconTotalPadding, vector.y);
+                this.m_Ping.m_ContentRect = new Rect(this.GetContentIndent(storey.item) + this.extraSpaceBeforeIconAndLabel, topPixelOfRow, ((this.k_IconWidth + this.k_SpaceBetweenIconAndText) + vector.x) + this.iconTotalPadding, vector.y);
                 this.m_Ping.m_AvailableWidth = availableWidth;
                 storey2.row = this.m_TreeView.data.GetRow(storey.item.id);
                 storey2.useBoldFont = storey.item.displayName.Equals("Assets");
@@ -97,7 +98,6 @@
 
         public virtual void BeginRowGUI()
         {
-            this.InitStyles();
             this.m_DraggingInsertionMarkerRect.x = -1f;
             this.SyncFakeItem();
             if (Event.current.type != EventType.Repaint)
@@ -115,8 +115,8 @@
         protected virtual Rect DoFoldout(Rect rect, TreeViewItem item, int row)
         {
             float foldoutIndent = this.GetFoldoutIndent(item);
-            Rect foldoutRect = new Rect(rect.x + foldoutIndent, rect.y + this.foldoutYOffset, s_Styles.foldoutWidth, rect.height);
-            this.FoldoutButton(foldoutRect, item, row, s_Styles.foldout);
+            Rect foldoutRect = new Rect(rect.x + foldoutIndent, this.GetFoldoutYPosition(rect.y), Styles.foldoutWidth, EditorGUIUtility.singleLineHeight);
+            this.FoldoutButton(foldoutRect, item, row, Styles.foldout);
             return foldoutRect;
         }
 
@@ -147,16 +147,16 @@
                 this.DrawItemBackground(rect, row, item, selected, focused);
                 if (selected)
                 {
-                    s_Styles.selectionStyle.Draw(rect, false, false, true, focused);
+                    Styles.selectionStyle.Draw(rect, false, false, true, focused);
                 }
                 if (flag)
                 {
-                    s_Styles.lineStyle.Draw(rect, GUIContent.none, true, true, false, false);
+                    Styles.lineStyle.Draw(rect, GUIContent.none, true, true, false, false);
                 }
                 if ((this.m_TreeView.dragging != null) && (this.m_TreeView.dragging.GetRowMarkerControlID() == itemControlID))
                 {
-                    float y = (!this.m_TreeView.dragging.drawRowMarkerAbove ? rect.yMax : rect.y) - (s_Styles.insertion.fixedHeight * 0.5f);
-                    this.m_DraggingInsertionMarkerRect = new Rect((((rect.x + foldoutIndent) + this.extraInsertionMarkerIndent) + s_Styles.foldoutWidth) + s_Styles.lineStyle.margin.left, y, rect.width - foldoutIndent, rect.height);
+                    float y = (!this.m_TreeView.dragging.drawRowMarkerAbove ? rect.yMax : rect.y) - (Styles.insertion.fixedHeight * 0.5f);
+                    this.m_DraggingInsertionMarkerRect = new Rect((((rect.x + foldoutIndent) + this.extraInsertionMarkerIndent) + Styles.foldoutWidth) + Styles.lineStyle.margin.left, y, rect.width - foldoutIndent, rect.height);
                 }
             }
             this.OnContentGUI(rect, row, item, displayName, selected, focused, useBoldFont, false);
@@ -198,7 +198,7 @@
         {
             if ((this.m_DraggingInsertionMarkerRect.x >= 0f) && (Event.current.type == EventType.Repaint))
             {
-                s_Styles.insertion.Draw(this.m_DraggingInsertionMarkerRect, false, false, false, false);
+                Styles.insertion.Draw(this.m_DraggingInsertionMarkerRect, false, false, false, false);
             }
             if (Event.current.type == EventType.Repaint)
             {
@@ -209,39 +209,18 @@
 
         protected virtual void FoldoutButton(Rect foldoutRect, TreeViewItem item, int row, GUIStyle foldoutStyle)
         {
-            bool flag;
             TreeViewItemExpansionAnimator expansionAnimator = this.m_TreeView.expansionAnimator;
             EditorGUI.BeginChangeCheck();
-            if (expansionAnimator.IsAnimating(item.id))
-            {
-                float num2;
-                Matrix4x4 matrix = GUI.matrix;
-                float num = Mathf.Min((float) 1f, (float) (expansionAnimator.expandedValueNormalized * 2f));
-                if (!expansionAnimator.isExpanding)
-                {
-                    num2 = num * 90f;
-                }
-                else
-                {
-                    num2 = (1f - num) * -90f;
-                }
-                GUIUtility.RotateAroundPivot(num2, foldoutRect.center);
-                bool isExpanding = expansionAnimator.isExpanding;
-                flag = GUI.Toggle(foldoutRect, isExpanding, GUIContent.none, foldoutStyle);
-                GUI.matrix = matrix;
-            }
-            else
-            {
-                flag = GUI.Toggle(foldoutRect, this.m_TreeView.data.IsExpanded(item), GUIContent.none, foldoutStyle);
-            }
+            bool flag2 = !expansionAnimator.IsAnimating(item.id) ? this.m_TreeView.data.IsExpanded(item) : expansionAnimator.isExpanding;
+            bool expand = GUI.Toggle(foldoutRect, flag2, GUIContent.none, foldoutStyle);
             if (EditorGUI.EndChangeCheck())
             {
-                this.m_TreeView.UserInputChangedExpandedState(item, row, flag);
+                this.m_TreeView.UserInputChangedExpandedState(item, row, expand);
             }
         }
 
         public virtual float GetContentIndent(TreeViewItem item) => 
-            (this.GetFoldoutIndent(item) + s_Styles.foldoutWidth);
+            ((this.GetFoldoutIndent(item) + Styles.foldoutWidth) + Styles.lineStyle.margin.left);
 
         public virtual void GetFirstAndLastRowVisible(out int firstRowVisible, out int lastRowVisible)
         {
@@ -274,12 +253,14 @@
             return (this.k_BaseIndent + (item.depth * this.indentWidth));
         }
 
+        private float GetFoldoutYPosition(float rectY) => 
+            (rectY + this.customFoldoutYOffset);
+
         protected virtual Texture GetIconForItem(TreeViewItem item) => 
             item.icon;
 
         protected float GetMaxWidth(IList<TreeViewItem> rows)
         {
-            this.InitStyles();
             float num = 1f;
             foreach (TreeViewItem item in rows)
             {
@@ -291,7 +272,7 @@
                 {
                     num2 += this.k_IconWidth;
                 }
-                s_Styles.lineStyle.CalcMinMaxWidth(GUIContent.Temp(item.displayName), out num3, out num4);
+                Styles.lineStyle.CalcMinMaxWidth(GUIContent.Temp(item.displayName), out num3, out num4);
                 num2 += num4;
                 num2 += this.k_BaseIndent;
                 if (num2 > num)
@@ -313,12 +294,12 @@
 
         public virtual Rect GetRenameRect(Rect rowRect, int row, TreeViewItem item)
         {
-            float num = this.GetContentIndent(item) + s_Styles.lineStyle.margin.left;
+            float num = this.GetContentIndent(item) + this.extraSpaceBeforeIconAndLabel;
             if (this.GetIconForItem(item) != null)
             {
                 num += (this.k_SpaceBetweenIconAndText + this.k_IconWidth) + this.iconTotalPadding;
             }
-            return new Rect(rowRect.x + num, rowRect.y, rowRect.width - num, 16f);
+            return new Rect(rowRect.x + num, rowRect.y, rowRect.width - num, EditorGUIUtility.singleLineHeight);
         }
 
         public virtual Rect GetRowRect(int row, float rowWidth) => 
@@ -329,7 +310,6 @@
 
         public virtual Vector2 GetTotalSize()
         {
-            this.InitStyles();
             float x = 1f;
             if (this.m_UseHorizontalScroll)
             {
@@ -353,14 +333,6 @@
             }
         }
 
-        protected virtual void InitStyles()
-        {
-            if (s_Styles == null)
-            {
-                s_Styles = new Styles();
-            }
-        }
-
         protected virtual bool IsRenaming(int id) => 
             ((this.GetRenameOverlay().IsRenaming() && (this.GetRenameOverlay().userData == id)) && !this.GetRenameOverlay().isWaitingForDelay);
 
@@ -370,12 +342,10 @@
             {
                 if (!isPinging)
                 {
-                    float contentIndent = this.GetContentIndent(item);
-                    rect.x += contentIndent;
-                    rect.width -= contentIndent;
+                    float num = this.GetContentIndent(item) + this.extraSpaceBeforeIconAndLabel;
+                    rect.xMin += num;
                 }
-                GUIStyle style = !useBoldFont ? s_Styles.lineStyle : s_Styles.lineBoldStyle;
-                rect.xMin += style.margin.left;
+                GUIStyle style = !useBoldFont ? Styles.lineStyle : Styles.lineBoldStyle;
                 Rect position = rect;
                 position.width = this.k_IconWidth;
                 position.x += this.iconLeftPadding;
@@ -384,14 +354,18 @@
                 {
                     GUI.DrawTexture(position, iconForItem, ScaleMode.ScaleToFit);
                 }
-                style.padding.left = (iconForItem != null) ? ((int) ((this.k_IconWidth + this.iconTotalPadding) + this.k_SpaceBetweenIconAndText)) : 0;
-                style.Draw(rect, label, false, false, selected, focused);
                 if (this.iconOverlayGUI != null)
                 {
                     Rect rect3 = rect;
                     rect3.width = this.k_IconWidth + this.iconTotalPadding;
-                    this.iconOverlayGUI.Invoke(item, rect3);
+                    this.iconOverlayGUI(item, rect3);
                 }
+                style.padding.left = 0;
+                if (iconForItem != null)
+                {
+                    rect.xMin += (this.k_IconWidth + this.iconTotalPadding) + this.k_SpaceBetweenIconAndText;
+                }
+                style.Draw(rect, label, false, false, selected, focused);
             }
         }
 
@@ -414,6 +388,8 @@
 
         public virtual float bottomRowMargin =>
             this.k_BottomRowMargin;
+
+        public float extraSpaceBeforeIconAndLabel { get; set; }
 
         public float halfDropBetweenHeight =>
             this.k_HalfDropBetweenHeight;
@@ -453,38 +429,39 @@
             internal TreeViewItem item;
         }
 
-        internal class Styles
+        internal static class Styles
         {
-            public GUIContent content = new GUIContent(EditorGUIUtility.FindTexture(EditorResourcesUtility.folderIconName));
-            public GUIStyle foldout = "IN Foldout";
-            public GUIStyle insertion = "PR Insertion";
-            public GUIStyle lineBoldStyle;
-            public GUIStyle lineStyle = new GUIStyle("PR Label");
-            public GUIStyle ping = new GUIStyle("PR Ping");
-            public GUIStyle selectionStyle = new GUIStyle("PR Label");
-            public GUIStyle toolbarButton = "ToolbarButton";
+            public static GUIContent content = new GUIContent(EditorGUIUtility.FindTexture(EditorResourcesUtility.folderIconName));
+            public static GUIStyle foldout = "IN Foldout";
+            public static GUIStyle insertion = new GUIStyle("PR Insertion");
+            public static GUIStyle lineBoldStyle;
+            public static GUIStyle lineStyle = new GUIStyle("PR Label");
+            public static GUIStyle ping = new GUIStyle("PR Ping");
+            public static GUIStyle selectionStyle = new GUIStyle("PR Label");
+            public static GUIStyle toolbarButton = "ToolbarButton";
 
-            public Styles()
+            static Styles()
             {
-                Texture2D background = this.lineStyle.hover.background;
-                this.lineStyle.onNormal.background = background;
-                this.lineStyle.onActive.background = background;
-                this.lineStyle.onFocused.background = background;
-                this.lineStyle.alignment = TextAnchor.MiddleLeft;
-                this.lineStyle.fixedHeight = 0f;
-                this.lineBoldStyle = new GUIStyle(this.lineStyle);
-                this.lineBoldStyle.font = EditorStyles.boldLabel.font;
-                this.lineBoldStyle.fontStyle = EditorStyles.boldLabel.fontStyle;
-                this.ping.padding.left = 0x10;
-                this.ping.padding.right = 0x10;
-                this.ping.fixedHeight = 16f;
-                this.selectionStyle.fixedHeight = 0f;
-                this.selectionStyle.border = new RectOffset();
-                this.insertion.overflow = new RectOffset(4, 0, 0, 0);
+                Texture2D background = lineStyle.hover.background;
+                lineStyle.onNormal.background = background;
+                lineStyle.onActive.background = background;
+                lineStyle.onFocused.background = background;
+                lineStyle.alignment = TextAnchor.UpperLeft;
+                lineStyle.padding.top = 2;
+                lineStyle.fixedHeight = 0f;
+                lineBoldStyle = new GUIStyle(lineStyle);
+                lineBoldStyle.font = EditorStyles.boldLabel.font;
+                lineBoldStyle.fontStyle = EditorStyles.boldLabel.fontStyle;
+                ping.padding.left = 0x10;
+                ping.padding.right = 0x10;
+                ping.fixedHeight = 16f;
+                selectionStyle.fixedHeight = 0f;
+                selectionStyle.border = new RectOffset();
+                insertion.overflow = new RectOffset(4, 0, 0, 0);
             }
 
-            public float foldoutWidth =>
-                TreeViewGUI.s_Styles.foldout.fixedWidth;
+            public static float foldoutWidth =>
+                foldout.fixedWidth;
         }
     }
 }

@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CustomEditor(typeof(AnchoredJoint2D), true), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(AnchoredJoint2D), true)]
     internal class AnchoredJoint2DEditor : Joint2DEditor
     {
         private AnchoredJoint2D anchorJoint2D;

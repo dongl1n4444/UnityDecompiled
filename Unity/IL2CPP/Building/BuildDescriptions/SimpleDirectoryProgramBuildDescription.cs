@@ -9,7 +9,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Threading;
-    using Unity.IL2CPP.Common;
+    using Unity.IL2CPP.Building;
 
     public class SimpleDirectoryProgramBuildDescription : ProgramBuildDescription, IHaveSourceDirectories
     {
@@ -18,12 +18,8 @@
         private readonly NPath _cacheDirectory;
         private readonly NPath _sourceDirectory;
 
-        public SimpleDirectoryProgramBuildDescription(NPath sourceDir, NPath outputFile, string programName, IEnumerable<string> additionalCompilerFlags = null, IEnumerable<string> additionalLinkerFlags = null, NPath rootCacheDirectory = null)
+        public SimpleDirectoryProgramBuildDescription(NPath sourceDir, NPath outputFile, NPath cacheDirectory, IEnumerable<string> additionalCompilerFlags = null, IEnumerable<string> additionalLinkerFlags = null)
         {
-            if (programName == null)
-            {
-                throw new ArgumentNullException("programName");
-            }
             this._sourceDirectory = sourceDir;
             base._outputFile = outputFile;
             if (additionalCompilerFlags == null)
@@ -34,7 +30,7 @@
             {
             }
             this._additionalLinkerFlags = Enumerable.Empty<string>();
-            this._cacheDirectory = (rootCacheDirectory != null) ? rootCacheDirectory.Combine(new string[] { programName }) : TempDir.Il2CppTemporaryDirectoryRoot.Combine(new string[] { programName });
+            this._cacheDirectory = cacheDirectory;
         }
 
         public override IEnumerable<string> AdditionalCompilerFlags =>
@@ -44,7 +40,16 @@
             this._additionalLinkerFlags;
 
         public override IEnumerable<CppCompilationInstruction> CppCompileInstructions =>
-            this._sourceDirectory.Files("*.cpp", false).Select<NPath, CppCompilationInstruction>(new Func<NPath, CppCompilationInstruction>(this, (IntPtr) this.<get_CppCompileInstructions>m__0));
+            this._sourceDirectory.Files("*.cpp", false).Select<NPath, CppCompilationInstruction>(delegate (NPath f) {
+                CppCompilationInstruction instruction = new CppCompilationInstruction {
+                    SourceFile=f,
+                    CompilerFlags=this._additionalCompilerFlags
+                };
+                NPath[] pathArray1 = new NPath[] { this._sourceDirectory };
+                instruction.IncludePaths = pathArray1;
+                instruction.CacheDirectory = this._cacheDirectory;
+                return instruction;
+            });
 
         public override NPath GlobalCacheDirectory =>
             this._cacheDirectory;

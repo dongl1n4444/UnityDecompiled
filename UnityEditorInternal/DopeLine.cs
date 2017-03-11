@@ -17,7 +17,7 @@
         private AnimationWindowCurve[] m_Curves;
         private int m_HierarchyNodeID;
         private List<AnimationWindowKeyframe> m_Keys;
-        public Type objectType;
+        public System.Type objectType;
         public Rect position;
         public bool tallMode;
 
@@ -97,13 +97,13 @@
             }
         }
 
-        public Type valueType
+        public System.Type valueType
         {
             get
             {
                 if (this.m_Curves.Length > 0)
                 {
-                    Type valueType = this.m_Curves[0].valueType;
+                    System.Type valueType = this.m_Curves[0].valueType;
                     for (int i = 1; i < this.m_Curves.Length; i++)
                     {
                         if (this.m_Curves[i].valueType != valueType)

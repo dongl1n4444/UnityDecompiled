@@ -36,7 +36,7 @@
             EmscriptenPaths.SetupDataPath();
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, string>(null, (IntPtr) <GetIncludeFullPaths>m__0);
+                <>f__am$cache0 = source => EmscriptenPaths.dataPath + "/../" + source;
             }
             return Enumerable.Select<string, string>(includePaths, <>f__am$cache0);
         }

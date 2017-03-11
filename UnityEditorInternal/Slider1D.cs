@@ -16,6 +16,7 @@
         internal static Vector3 Do(int id, Vector3 position, Vector3 direction, float size, Handles.CapFunction capFunction, float snap) => 
             Do(id, position, direction, direction, size, capFunction, snap);
 
+        [Obsolete("DrawCapFunction is obsolete. Use the version with CapFunction instead. Example: Change SphereCap to SphereHandleCap.")]
         internal static Vector3 Do(int id, Vector3 position, Vector3 direction, float size, Handles.DrawCapFunction drawFunc, float snap) => 
             Do(id, position, direction, direction, size, drawFunc, snap);
 
@@ -58,8 +59,8 @@
                         s_CurrentMousePosition += current.delta;
                         float num2 = Handles.SnapValue(HandleUtility.CalcLineTranslation(s_StartMousePosition, s_CurrentMousePosition, s_StartPosition, slideDirection), snap);
                         Vector3 vector = Handles.matrix.MultiplyVector(slideDirection);
-                        Vector3 v = Handles.s_Matrix.MultiplyPoint(s_StartPosition) + ((Vector3) (vector * num2));
-                        position = Handles.s_InverseMatrix.MultiplyPoint(v);
+                        Vector3 point = Handles.matrix.MultiplyPoint(s_StartPosition) + ((Vector3) (vector * num2));
+                        position = Handles.inverseMatrix.MultiplyPoint(point);
                         GUI.changed = true;
                         current.Use();
                     }
@@ -92,6 +93,7 @@
             return position;
         }
 
+        [Obsolete("DrawCapFunction is obsolete. Use the version with CapFunction instead. Example: Change SphereCap to SphereHandleCap.")]
         internal static Vector3 Do(int id, Vector3 position, Vector3 handleDirection, Vector3 slideDirection, float size, Handles.DrawCapFunction drawFunc, float snap)
         {
             Event current = Event.current;
@@ -131,8 +133,8 @@
                         s_CurrentMousePosition += current.delta;
                         float num2 = Handles.SnapValue(HandleUtility.CalcLineTranslation(s_StartMousePosition, s_CurrentMousePosition, s_StartPosition, slideDirection), snap);
                         Vector3 vector = Handles.matrix.MultiplyVector(slideDirection);
-                        Vector3 v = Handles.s_Matrix.MultiplyPoint(s_StartPosition) + ((Vector3) (vector * num2));
-                        position = Handles.s_InverseMatrix.MultiplyPoint(v);
+                        Vector3 point = Handles.matrix.MultiplyPoint(s_StartPosition) + ((Vector3) (vector * num2));
+                        position = Handles.inverseMatrix.MultiplyPoint(point);
                         GUI.changed = true;
                         current.Use();
                     }

@@ -3,7 +3,7 @@
     using System;
 
     /// <summary>
-    /// <para>Specify a tooltip for a field in the Inspector window.</para>
+    /// <para>Specify a tooltip for a field.</para>
     /// </summary>
     [AttributeUsage(AttributeTargets.Field, Inherited=true, AllowMultiple=false)]
     public class TooltipAttribute : PropertyAttribute

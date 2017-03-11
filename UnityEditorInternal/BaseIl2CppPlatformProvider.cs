@@ -13,8 +13,8 @@
     internal class BaseIl2CppPlatformProvider : IIl2CppPlatformProvider
     {
         [CompilerGenerated]
-        private static Func<PackageInfo, bool> <>f__am$cache0;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private static Func<Unity.DataContract.PackageInfo, bool> <>f__am$cache0;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <libraryFolder>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private BuildTarget <target>k__BackingField;
@@ -31,18 +31,18 @@
         public virtual INativeCompiler CreateNativeCompiler() => 
             null;
 
-        private static PackageInfo FindIl2CppPackage()
+        private static Unity.DataContract.PackageInfo FindIl2CppPackage()
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<PackageInfo, bool>(null, (IntPtr) <FindIl2CppPackage>m__0);
+                <>f__am$cache0 = e => e.name == "IL2CPP";
             }
-            return Enumerable.FirstOrDefault<PackageInfo>(ModuleManager.packageManager.unityExtensions, <>f__am$cache0);
+            return Enumerable.FirstOrDefault<Unity.DataContract.PackageInfo>(ModuleManager.packageManager.unityExtensions, <>f__am$cache0);
         }
 
         protected string GetFileInPackageOrDefault(string path)
         {
-            PackageInfo info = FindIl2CppPackage();
+            Unity.DataContract.PackageInfo info = FindIl2CppPackage();
             if (info == null)
             {
                 return Path.Combine(this.libraryFolder, path);
@@ -53,7 +53,7 @@
 
         protected string GetFolderInPackageOrDefault(string path)
         {
-            PackageInfo info = FindIl2CppPackage();
+            Unity.DataContract.PackageInfo info = FindIl2CppPackage();
             if (info == null)
             {
                 return Path.Combine(this.libraryFolder, path);
@@ -84,7 +84,7 @@
         {
             get
             {
-                PackageInfo info = FindIl2CppPackage();
+                Unity.DataContract.PackageInfo info = FindIl2CppPackage();
                 if (info == null)
                 {
                     return Path.GetFullPath(Path.Combine(EditorApplication.applicationContentsPath, "il2cpp"));
@@ -100,9 +100,6 @@
 
         public virtual string[] libraryPaths =>
             new string[] { this.GetFileInPackageOrDefault("bdwgc/lib/bdwgc." + this.staticLibraryExtension), this.GetFileInPackageOrDefault("libil2cpp/lib/libil2cpp." + this.staticLibraryExtension) };
-
-        public virtual bool loadSymbols =>
-            false;
 
         public virtual string moduleStrippingInformationFolder =>
             Path.Combine(BuildPipeline.GetPlaybackEngineDirectory(EditorUserBuildSettings.activeBuildTarget, BuildOptions.CompressTextures), "Whitelists");

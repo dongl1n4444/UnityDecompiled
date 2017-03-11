@@ -11,7 +11,6 @@
     using System.Runtime.InteropServices;
     using System.Text;
     using Unity.IL2CPP.Common;
-    using Unity.IL2CPP.ILPreProcessor;
     using Unity.IL2CPP.IoC;
     using Unity.IL2CPP.IoCServices;
 
@@ -29,13 +28,11 @@
         [CompilerGenerated]
         private static Func<string, string, string> <>f__am$cache1;
         [CompilerGenerated]
-        private static Func<MethodDefinition, bool> <>f__am$cache2;
+        private static Action<uint> <>f__am$cache2;
         [CompilerGenerated]
         private static Action<uint> <>f__am$cache3;
         [CompilerGenerated]
         private static Action<uint> <>f__am$cache4;
-        [CompilerGenerated]
-        private static Action<uint> <>f__am$cache5;
         [CompilerGenerated]
         private static Func<TypeReference, uint> <>f__mg$cache0;
         [CompilerGenerated]
@@ -59,48 +56,48 @@
         {
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Func<TypeReference, uint>(null, (IntPtr) SemiUniqueStableTokenGenerator.GenerateFor);
+                <>f__mg$cache0 = new Func<TypeReference, uint>(SemiUniqueStableTokenGenerator.GenerateFor);
+            }
+            if (<>f__am$cache2 == null)
+            {
+                <>f__am$cache2 = new Action<uint>(NamingComponent.<_typeHashCache>m__2);
+            }
+            this._typeHashCache = new HashCodeCache<TypeReference>(<>f__mg$cache0, <>f__am$cache2, new Unity.IL2CPP.Common.TypeReferenceEqualityComparer());
+            if (<>f__mg$cache1 == null)
+            {
+                <>f__mg$cache1 = new Func<MethodReference, uint>(SemiUniqueStableTokenGenerator.GenerateFor);
             }
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Action<uint>(NamingComponent.<_typeHashCache>m__3);
+                <>f__am$cache3 = new Action<uint>(NamingComponent.<_methodHashCache>m__3);
             }
-            this._typeHashCache = new HashCodeCache<TypeReference>(<>f__mg$cache0, <>f__am$cache3, new Unity.IL2CPP.Common.TypeReferenceEqualityComparer());
-            if (<>f__mg$cache1 == null)
+            this._methodHashCache = new HashCodeCache<MethodReference>(<>f__mg$cache1, <>f__am$cache3, new Unity.IL2CPP.Common.MethodReferenceComparer());
+            if (<>f__mg$cache2 == null)
             {
-                <>f__mg$cache1 = new Func<MethodReference, uint>(null, (IntPtr) SemiUniqueStableTokenGenerator.GenerateFor);
+                <>f__mg$cache2 = new Func<string, uint>(SemiUniqueStableTokenGenerator.GenerateFor);
             }
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Action<uint>(NamingComponent.<_methodHashCache>m__4);
+                <>f__am$cache4 = new Action<uint>(NamingComponent.<_stringLiteralHashCache>m__4);
             }
-            this._methodHashCache = new HashCodeCache<MethodReference>(<>f__mg$cache1, <>f__am$cache4, new Unity.IL2CPP.Common.MethodReferenceComparer());
-            if (<>f__mg$cache2 == null)
-            {
-                <>f__mg$cache2 = new Func<string, uint>(null, (IntPtr) SemiUniqueStableTokenGenerator.GenerateFor);
-            }
-            if (<>f__am$cache5 == null)
-            {
-                <>f__am$cache5 = new Action<uint>(NamingComponent.<_stringLiteralHashCache>m__5);
-            }
-            this._stringLiteralHashCache = new HashCodeCache<string>(<>f__mg$cache2, <>f__am$cache5);
+            this._stringLiteralHashCache = new HashCodeCache<string>(<>f__mg$cache2, <>f__am$cache4);
             this.CleanStringBuilder = new StringBuilder();
         }
 
         [CompilerGenerated]
-        private static void <_methodHashCache>m__4(uint notUsed)
+        private static void <_methodHashCache>m__3(uint notUsed)
         {
             StatsService.MethodHashCollisions++;
         }
 
         [CompilerGenerated]
-        private static void <_stringLiteralHashCache>m__5(uint notUsed)
+        private static void <_stringLiteralHashCache>m__4(uint notUsed)
         {
             StatsService.MethodHashCollisions++;
         }
 
         [CompilerGenerated]
-        private static void <_typeHashCache>m__3(uint notUsed)
+        private static void <_typeHashCache>m__2(uint notUsed)
         {
             StatsService.TypeHashCollisions++;
         }
@@ -208,6 +205,12 @@
         public string ForAssemblyScope(AssemblyDefinition assembly, string symbol) => 
             $"{this.ForAssembly(assembly)}_{symbol}";
 
+        public string ForComCallableWrapperClass(TypeReference type) => 
+            (this.ForTypeNameOnly(type) + "_ComCallableWrapper");
+
+        public string ForComCallableWrapperProjectedMethod(MethodReference method) => 
+            (this.ForMethodNameOnly(method) + "_ComCallableWrapperProjectedMethod");
+
         public string ForComInterfaceReturnParameterName() => 
             "comReturnValue";
 
@@ -218,38 +221,7 @@
             this.ForInteropInterfaceVariable(interfaceType);
 
         public string ForCreateComCallableWrapperFunction(TypeReference type) => 
-            (this.ForTypeNameOnly(type) + "_create_ccw");
-
-        public string ForCreateStringMethod(MethodReference method)
-        {
-            if (method.DeclaringType.Name != "String")
-            {
-                throw new Exception("method.DeclaringType.Name != \"String\"");
-            }
-            if (<>f__am$cache2 == null)
-            {
-                <>f__am$cache2 = new Func<MethodDefinition, bool>(null, (IntPtr) <ForCreateStringMethod>m__2);
-            }
-            foreach (MethodDefinition definition in method.DeclaringType.Resolve().Methods.Where<MethodDefinition>(<>f__am$cache2))
-            {
-                if (definition.Parameters.Count == method.Parameters.Count)
-                {
-                    bool flag = false;
-                    for (int i = 0; i < definition.Parameters.Count; i++)
-                    {
-                        if (definition.Parameters[i].ParameterType.FullName != method.Parameters[i].ParameterType.FullName)
-                        {
-                            flag = true;
-                        }
-                    }
-                    if (!flag)
-                    {
-                        return this.ForMethodNameOnly(definition);
-                    }
-                }
-            }
-            throw new Exception($"Can't find proper CreateString : {method.FullName}");
-        }
+            ("CreateComCallableWrapperFor_" + this.ForTypeNameOnly(type));
 
         public string ForCustomAttributesCacheGenerator(AssemblyDefinition assemblyDefinition) => 
             $"{this.ForAssembly(assemblyDefinition)}_CustomAttributesCacheGenerator";
@@ -281,9 +253,9 @@
         public string ForDebugMethodInfoOffsetTable(MethodReference method) => 
             this.ForMethodInfoInternal(method, this.MemberNames.DebugMethodInfoOffsetTable);
 
-        public string ForDebugMethodLocalInfo(VariableDefinition variable, MethodReference method)
+        public string ForDebugMethodLocalInfo(VariableDefinition variable, MethodDefinition method)
         {
-            object[] objArray1 = new object[] { variable.Name, "_", variable.Index, "_DebugLocalInfo" };
+            object[] objArray1 = new object[] { variable.GetName(method), "_", variable.Index, "_DebugLocalInfo" };
             return this.ForMethodInfoInternal(method, string.Concat(objArray1));
         }
 
@@ -417,15 +389,6 @@
             {
                 return str;
             }
-            MethodReference key = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(method.DeclaringType, method).Resolve(method.Resolve());
-            if (this.ForMethodNameOnlyCache.TryGetValue(key, out str))
-            {
-                return str;
-            }
-            if (!Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(key.DeclaringType, method.DeclaringType, TypeComparisonMode.Exact))
-            {
-                return this.ForMethodNameOnly(key);
-            }
             string str3 = this.ForMethodInternal(method);
             this.ForMethodNameOnlyCache[method] = str3;
             return str3;
@@ -462,13 +425,13 @@
                 $this = this
             };
             string str = this.Clean(this.EscapeKeywords(storey.property.Name));
-            if (declaringType.Resolve().Properties.Count<PropertyDefinition>(new Func<PropertyDefinition, bool>(storey, (IntPtr) this.<>m__0)) > 1)
+            if (declaringType.Resolve().Properties.Count<PropertyDefinition>(new Func<PropertyDefinition, bool>(storey.<>m__0)) > 1)
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<string, string, string>(null, (IntPtr) <ForPropertyInfo>m__1);
+                    <>f__am$cache1 = (buff, s) => buff + "_" + s;
                 }
-                str = str + "_" + storey.property.Parameters.Select<ParameterDefinition, string>(new Func<ParameterDefinition, string>(storey, (IntPtr) this.<>m__1)).Aggregate<string>(<>f__am$cache1);
+                str = str + "_" + storey.property.Parameters.Select<ParameterDefinition, string>(new Func<ParameterDefinition, string>(storey.<>m__1)).Aggregate<string>(<>f__am$cache1);
             }
             return this.TypeMember(declaringType, str + "_PropertyInfo");
         }
@@ -660,7 +623,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<FieldDefinition, bool>(null, (IntPtr) <ForVariable>m__0);
+                    <>f__am$cache0 = f => f.Name == "value__";
                 }
                 FieldDefinition definition2 = definition.Fields.Single<FieldDefinition>(<>f__am$cache0);
                 return this.ForVariable(definition2.FieldType);
@@ -693,11 +656,23 @@
         public string ForVariableName(VariableReference variable) => 
             ("V_" + variable.Index);
 
-        public string ForWindowsRuntimeDelegateComCallableWrapperClass(TypeReference delegateType) => 
-            (this.ForTypeNameOnly(delegateType) + "_ComCallableWrapper");
+        public string ForWindowsRuntimeAdapterClass(TypeReference type) => 
+            (this.ForTypeNameOnly(type) + "_Adapter");
+
+        public string ForWindowsRuntimeAdapterTypeName(TypeDefinition fromType, TypeDefinition toType)
+        {
+            string str = (fromType == null) ? "IInspectable" : RemoveBackticks(fromType.Name);
+            string str2 = RemoveBackticks(toType.Name);
+            string str3 = $"{str}To{str2}Adapter";
+            if (toType.HasGenericParameters)
+            {
+                str3 = str3 + "`" + toType.GenericParameters.Count;
+            }
+            return str3;
+        }
 
         public string ForWindowsRuntimeDelegateComCallableWrapperInterface(TypeReference delegateType) => 
-            ("I" + this.ForWindowsRuntimeDelegateComCallableWrapperClass(delegateType));
+            ("I" + this.ForComCallableWrapperClass(delegateType));
 
         public string ForWindowsRuntimeDelegateNativeInvokerMethod(MethodReference invokeMethod) => 
             (this.ForMethod(invokeMethod) + "_NativeInvoker");
@@ -757,7 +732,7 @@
                     int num;
                     if (<>f__switch$map2 == null)
                     {
-                        Dictionary<string, int> dictionary = new Dictionary<string, int>(13) {
+                        Dictionary<string, int> dictionary = new Dictionary<string, int>(14) {
                             { 
                                 "System.Array",
                                 0
@@ -809,6 +784,10 @@
                             { 
                                 "System.Reflection.MonoEvent",
                                 12
+                            },
+                            { 
+                                "System.Guid",
+                                13
                             }
                         };
                         <>f__switch$map2 = dictionary;
@@ -855,6 +834,9 @@
 
                             case 12:
                                 return "MonoEvent_t";
+
+                            case 13:
+                                return "Guid_t";
                         }
                     }
                 }
@@ -884,6 +866,16 @@
 
         private static bool NeedsAsterisk(TypeReference type) => 
             (!UnderlyingType(type).IsValueType() || type.IsByReference);
+
+        private static string RemoveBackticks(string typeName)
+        {
+            int index = typeName.IndexOf('`');
+            if (index != -1)
+            {
+                typeName = typeName.Substring(0, index);
+            }
+            return typeName;
+        }
 
         public TypeReference RemoveModifiers(TypeReference typeReference)
         {

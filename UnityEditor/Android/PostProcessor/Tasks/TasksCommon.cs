@@ -44,6 +44,12 @@
             return Paths.Combine(components);
         }
 
+        public static string GetLibsDirectory(PostProcessorContext context)
+        {
+            string[] components = new string[] { GetVariationsDirectory(context), "Libs" };
+            return Paths.Combine(components);
+        }
+
         public static string GetMD5HashOfEOCD(string fileName)
         {
             long num = 0x10016L;
@@ -59,12 +65,18 @@
             return builder.ToString();
         }
 
-        public static string GetVariationsDirectory(PostProcessorContext context)
+        public static string GetSymbolsDirectory(PostProcessorContext context)
+        {
+            string[] components = new string[] { GetVariationsDirectory(context), "Symbols" };
+            return Paths.Combine(components);
+        }
+
+        private static string GetVariationsDirectory(PostProcessorContext context)
         {
             ScriptingImplementation implementation = context.Get<ScriptingImplementation>("ScriptingBackend");
             string str = context.Get<string>("PlayerPackage");
-            bool flag = context.Get<bool>("DevelopmentPlayer");
-            string[] components = new string[] { str, "Variations", (implementation != ScriptingImplementation.IL2CPP) ? "mono" : "il2cpp", !flag ? "Release" : "Development" };
+            string str2 = context.Get<string>("Variation");
+            string[] components = new string[] { str, "Variations", (implementation != ScriptingImplementation.IL2CPP) ? "mono" : "il2cpp", str2 };
             return Paths.Combine(components);
         }
 

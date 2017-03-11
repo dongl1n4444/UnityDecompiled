@@ -7,6 +7,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEditor.AnimatedValues;
+    using UnityEditor.Build;
     using UnityEditor.Modules;
     using UnityEngine;
     using UnityEngine.Events;
@@ -26,7 +27,7 @@
         private SerializedProperty m_EnableMipMap;
         private SerializedProperty m_FadeOut;
         private SerializedProperty m_FilterMode;
-        private readonly int[] m_FilterModeOptions = ((int[]) Enum.GetValues(typeof(FilterMode)));
+        private readonly int[] m_FilterModeOptions = ((int[]) Enum.GetValues(typeof(UnityEngine.FilterMode)));
         private SerializedProperty m_GenerateCubemap;
         private Dictionary<TextureInspectorGUIElement, GUIMethod> m_GUIElementMethods = new Dictionary<TextureInspectorGUIElement, GUIMethod>();
         private List<TextureInspectorGUIElement> m_GUIElementsDisplayOrder = new List<TextureInspectorGUIElement>();
@@ -47,6 +48,7 @@
         private readonly AnimBool m_ShowCubeMapSettings = new AnimBool();
         private readonly AnimBool m_ShowGenericSpriteSettings = new AnimBool();
         private readonly AnimBool m_ShowMipMapSettings = new AnimBool();
+        private bool m_ShowPerAxisWrapModes = false;
         private SerializedProperty m_SpriteExtrude;
         private SerializedProperty m_SpriteMeshType;
         private SerializedProperty m_SpriteMode;
@@ -59,7 +61,9 @@
         private SerializedProperty m_TextureType;
         private TextureInspectorTypeGUIProperties[] m_TextureTypeGUIElements = new TextureInspectorTypeGUIProperties[Enum.GetValues(typeof(TextureImporterType)).Length];
         private int m_TextureWidth = 0;
-        private SerializedProperty m_WrapMode;
+        private SerializedProperty m_WrapU;
+        private SerializedProperty m_WrapV;
+        private SerializedProperty m_WrapW;
         public static string s_DefaultPlatformName = "DefaultTexturePlatform";
         internal static string[] s_NormalFormatStringsDefault;
         internal static int[] s_NormalFormatsValueAll;
@@ -111,17 +115,20 @@
             foreach (AssetImporter importer in base.targets)
             {
                 Texture tex = AssetDatabase.LoadMainAssetAtPath(importer.assetPath) as Texture;
-                if (this.m_Aniso.intValue != -1)
+                if (tex != null)
                 {
-                    TextureUtil.SetAnisoLevelNoDirty(tex, this.m_Aniso.intValue);
-                }
-                if (this.m_FilterMode.intValue != -1)
-                {
-                    TextureUtil.SetFilterModeNoDirty(tex, (FilterMode) this.m_FilterMode.intValue);
-                }
-                if (this.m_WrapMode.intValue != -1)
-                {
-                    TextureUtil.SetWrapModeNoDirty(tex, (TextureWrapMode) this.m_WrapMode.intValue);
+                    if (this.m_Aniso.intValue != -1)
+                    {
+                        TextureUtil.SetAnisoLevelNoDirty(tex, this.m_Aniso.intValue);
+                    }
+                    if (this.m_FilterMode.intValue != -1)
+                    {
+                        TextureUtil.SetFilterModeNoDirty(tex, (UnityEngine.FilterMode) this.m_FilterMode.intValue);
+                    }
+                    if ((((this.m_WrapU.intValue != -1) || (this.m_WrapV.intValue != -1)) || (this.m_WrapW.intValue != -1)) && ((!this.m_WrapU.hasMultipleDifferentValues && !this.m_WrapV.hasMultipleDifferentValues) && !this.m_WrapW.hasMultipleDifferentValues))
+                    {
+                        TextureUtil.SetWrapModeNoDirty(tex, (TextureWrapMode) this.m_WrapU.intValue, (TextureWrapMode) this.m_WrapV.intValue, (TextureWrapMode) this.m_WrapW.intValue);
+                    }
                 }
             }
             SceneView.RepaintAll();
@@ -129,12 +136,12 @@
 
         public virtual void BuildTargetList()
         {
-            BuildPlayerWindow.BuildPlatform[] buildPlayerValidPlatforms = GetBuildPlayerValidPlatforms();
+            BuildPlatform[] buildPlayerValidPlatforms = GetBuildPlayerValidPlatforms();
             this.m_PlatformSettings = new List<TextureImportPlatformSettings>();
             this.m_PlatformSettings.Add(new TextureImportPlatformSettings(s_DefaultPlatformName, BuildTarget.StandaloneWindows, this));
-            foreach (BuildPlayerWindow.BuildPlatform platform in buildPlayerValidPlatforms)
+            foreach (BuildPlatform platform in buildPlayerValidPlatforms)
             {
-                this.m_PlatformSettings.Add(new TextureImportPlatformSettings(platform.name, platform.DefaultTarget, this));
+                this.m_PlatformSettings.Add(new TextureImportPlatformSettings(platform.name, platform.defaultTarget, this));
             }
         }
 
@@ -187,7 +194,9 @@
             this.m_MipMapFadeDistanceEnd = base.serializedObject.FindProperty("m_MipMapFadeDistanceEnd");
             this.m_Aniso = base.serializedObject.FindProperty("m_TextureSettings.m_Aniso");
             this.m_FilterMode = base.serializedObject.FindProperty("m_TextureSettings.m_FilterMode");
-            this.m_WrapMode = base.serializedObject.FindProperty("m_TextureSettings.m_WrapMode");
+            this.m_WrapU = base.serializedObject.FindProperty("m_TextureSettings.m_WrapU");
+            this.m_WrapV = base.serializedObject.FindProperty("m_TextureSettings.m_WrapV");
+            this.m_WrapW = base.serializedObject.FindProperty("m_TextureSettings.m_WrapW");
             this.m_CubemapConvolution = base.serializedObject.FindProperty("m_CubemapConvolution");
             this.m_SpriteMode = base.serializedObject.FindProperty("m_SpriteMode");
             this.m_SpritePackingTag = base.serializedObject.FindProperty("m_SpritePackingTag");
@@ -237,12 +246,12 @@
             }
         }
 
-        private static bool CountImportersWithAlpha(Object[] importers, out int count)
+        private static bool CountImportersWithAlpha(UnityEngine.Object[] importers, out int count)
         {
             try
             {
                 count = 0;
-                foreach (Object obj2 in importers)
+                foreach (UnityEngine.Object obj2 in importers)
                 {
                     if ((obj2 as TextureImporter).DoesSourceTextureHaveAlpha())
                     {
@@ -258,12 +267,12 @@
             }
         }
 
-        private static bool CountImportersWithHDR(Object[] importers, out int count)
+        private static bool CountImportersWithHDR(UnityEngine.Object[] importers, out int count)
         {
             try
             {
                 count = 0;
-                foreach (Object obj2 in importers)
+                foreach (UnityEngine.Object obj2 in importers)
                 {
                     if ((obj2 as TextureImporter).IsSourceTextureHDR())
                     {
@@ -318,13 +327,13 @@
             }
         }
 
-        private void EnumPopup(SerializedProperty property, Type type, GUIContent label)
+        private void EnumPopup(SerializedProperty property, System.Type type, GUIContent label)
         {
             EditorGUILayout.IntPopup(property, EditorGUIUtility.TempContent(Enum.GetNames(type)), Enum.GetValues(type) as int[], label, new GUILayoutOption[0]);
         }
 
-        public static BuildPlayerWindow.BuildPlatform[] GetBuildPlayerValidPlatforms() => 
-            BuildPlayerWindow.GetValidPlatforms().ToArray();
+        public static BuildPlatform[] GetBuildPlayerValidPlatforms() => 
+            BuildPlatforms.instance.GetValidPlatforms().ToArray();
 
         internal TextureImporterSettings GetSerializedPropertySettings() => 
             this.GetSerializedPropertySettings(new TextureImporterSettings());
@@ -419,13 +428,21 @@
             {
                 settings.spritePivot = this.m_SpritePivot.vector2Value;
             }
-            if (!this.m_WrapMode.hasMultipleDifferentValues)
+            if (!this.m_WrapU.hasMultipleDifferentValues)
             {
-                settings.wrapMode = (TextureWrapMode) this.m_WrapMode.intValue;
+                settings.wrapModeU = (TextureWrapMode) this.m_WrapU.intValue;
+            }
+            if (!this.m_WrapV.hasMultipleDifferentValues)
+            {
+                settings.wrapModeU = (TextureWrapMode) this.m_WrapV.intValue;
+            }
+            if (!this.m_WrapW.hasMultipleDifferentValues)
+            {
+                settings.wrapModeU = (TextureWrapMode) this.m_WrapW.intValue;
             }
             if (!this.m_FilterMode.hasMultipleDifferentValues)
             {
-                settings.filterMode = (FilterMode) this.m_FilterMode.intValue;
+                settings.filterMode = (UnityEngine.FilterMode) this.m_FilterMode.intValue;
             }
             if (!this.m_Aniso.hasMultipleDifferentValues)
             {
@@ -609,7 +626,7 @@
             EditorGUI.showMixedValue = this.m_TextureType.hasMultipleDifferentValues;
             int index = EditorGUILayout.IntPopup(s_Styles.textureTypeTitle, this.m_TextureType.intValue, s_Styles.textureTypeOptions, s_Styles.textureTypeValues, new GUILayoutOption[0]);
             EditorGUI.showMixedValue = false;
-            if (EditorGUI.EndChangeCheck())
+            if (EditorGUI.EndChangeCheck() && (this.m_TextureType.intValue != index))
             {
                 this.m_TextureType.intValue = index;
                 TextureImporterSettings serializedPropertySettings = this.GetSerializedPropertySettings();
@@ -687,7 +704,7 @@
             SelectMainAssets(base.targets);
         }
 
-        public static void SelectMainAssets(Object[] targets)
+        public static void SelectMainAssets(UnityEngine.Object[] targets)
         {
             ArrayList list = new ArrayList();
             foreach (AssetImporter importer in targets)
@@ -698,24 +715,34 @@
                     list.Add(texture);
                 }
             }
-            Selection.objects = list.ToArray(typeof(Object)) as Object[];
+            if (list.Count > 0)
+            {
+                Selection.objects = list.ToArray(typeof(UnityEngine.Object)) as UnityEngine.Object[];
+            }
         }
 
         private void SetCookieMode(CookieMode cm)
         {
+            int num;
             if (cm != CookieMode.Spot)
             {
                 if (cm == CookieMode.Point)
                 {
                     this.m_BorderMipMap.intValue = 0;
-                    this.m_WrapMode.intValue = 1;
+                    num = 1;
+                    this.m_WrapW.intValue = num;
+                    this.m_WrapV.intValue = num;
+                    this.m_WrapU.intValue = num;
                     this.m_GenerateCubemap.intValue = 1;
                     this.m_TextureShape.intValue = 2;
                 }
                 else if (cm == CookieMode.Directional)
                 {
                     this.m_BorderMipMap.intValue = 0;
-                    this.m_WrapMode.intValue = 0;
+                    num = 0;
+                    this.m_WrapW.intValue = num;
+                    this.m_WrapV.intValue = num;
+                    this.m_WrapU.intValue = num;
                     this.m_GenerateCubemap.intValue = 6;
                     this.m_TextureShape.intValue = 1;
                 }
@@ -723,7 +750,10 @@
             else
             {
                 this.m_BorderMipMap.intValue = 1;
-                this.m_WrapMode.intValue = 1;
+                num = 1;
+                this.m_WrapW.intValue = num;
+                this.m_WrapV.intValue = num;
+                this.m_WrapU.intValue = num;
                 this.m_GenerateCubemap.intValue = 6;
                 this.m_TextureShape.intValue = 1;
             }
@@ -752,7 +782,7 @@
             this.m_SpriteExtrude.intValue = (int) settings.spriteExtrude;
             this.m_SpriteMeshType.intValue = (int) settings.spriteMeshType;
             this.m_Alignment.intValue = settings.spriteAlignment;
-            this.m_WrapMode.intValue = (int) settings.wrapMode;
+            this.m_WrapU.intValue = (int) settings.wrapMode;
             this.m_FilterMode.intValue = (int) settings.filterMode;
             this.m_Aniso.intValue = settings.aniso;
             this.m_AlphaIsTransparency.intValue = !settings.alphaIsTransparency ? 0 : 1;
@@ -765,7 +795,7 @@
 
         protected void ShowPlatformSpecificSettings()
         {
-            BuildPlayerWindow.BuildPlatform[] platforms = GetBuildPlayerValidPlatforms().ToArray<BuildPlayerWindow.BuildPlatform>();
+            BuildPlatform[] platforms = GetBuildPlayerValidPlatforms().ToArray<BuildPlatform>();
             GUILayout.Space(10f);
             int index = EditorGUILayout.BeginPlatformGrouping(platforms, s_Styles.defaultPlatform);
             TextureImportPlatformSettings platformSettings = this.m_PlatformSettings[index + 1];
@@ -857,60 +887,49 @@
         private void TextureSettingsGUI()
         {
             EditorGUI.BeginChangeCheck();
-            EditorGUI.BeginChangeCheck();
-            EditorGUI.showMixedValue = this.m_WrapMode.hasMultipleDifferentValues;
-            TextureWrapMode intValue = (TextureWrapMode) this.m_WrapMode.intValue;
-            if (intValue == ~TextureWrapMode.Repeat)
+            bool isVolumeTexture = false;
+            TextureInspector.WrapModePopup(this.m_WrapU, this.m_WrapV, this.m_WrapW, isVolumeTexture, ref this.m_ShowPerAxisWrapModes);
+            if (((this.m_NPOTScale.intValue == 0) && ((this.m_WrapU.intValue == 0) || (this.m_WrapV.intValue == 0))) && !ShaderUtil.hardwareSupportsFullNPOT)
             {
-                intValue = TextureWrapMode.Repeat;
-            }
-            intValue = (TextureWrapMode) EditorGUILayout.EnumPopup(EditorGUIUtility.TempContent("Wrap Mode"), intValue, new GUILayoutOption[0]);
-            EditorGUI.showMixedValue = false;
-            if (EditorGUI.EndChangeCheck())
-            {
-                this.m_WrapMode.intValue = (int) intValue;
-            }
-            if (((this.m_NPOTScale.intValue == 0) && (intValue == TextureWrapMode.Repeat)) && !ShaderUtil.hardwareSupportsFullNPOT)
-            {
-                bool flag = false;
-                foreach (Object obj2 in base.targets)
+                bool flag2 = false;
+                foreach (UnityEngine.Object obj2 in base.targets)
                 {
                     int width = -1;
                     int height = -1;
                     ((TextureImporter) obj2).GetWidthAndHeight(ref width, ref height);
                     if (!Mathf.IsPowerOfTwo(width) || !Mathf.IsPowerOfTwo(height))
                     {
-                        flag = true;
+                        flag2 = true;
                         break;
                     }
                 }
-                if (flag)
+                if (flag2)
                 {
                     EditorGUILayout.HelpBox(EditorGUIUtility.TextContent("Graphics device doesn't support Repeat wrap mode on NPOT textures. Falling back to Clamp.").text, MessageType.Warning, true);
                 }
             }
             EditorGUI.BeginChangeCheck();
             EditorGUI.showMixedValue = this.m_FilterMode.hasMultipleDifferentValues;
-            FilterMode trilinear = (FilterMode) this.m_FilterMode.intValue;
-            if (trilinear == ~FilterMode.Point)
+            UnityEngine.FilterMode intValue = (UnityEngine.FilterMode) this.m_FilterMode.intValue;
+            if (intValue == ~UnityEngine.FilterMode.Point)
             {
                 if ((this.m_FadeOut.intValue > 0) || (this.m_ConvertToNormalMap.intValue > 0))
                 {
-                    trilinear = FilterMode.Trilinear;
+                    intValue = UnityEngine.FilterMode.Trilinear;
                 }
                 else
                 {
-                    trilinear = FilterMode.Bilinear;
+                    intValue = UnityEngine.FilterMode.Bilinear;
                 }
             }
-            trilinear = (FilterMode) EditorGUILayout.IntPopup(s_Styles.filterMode, (int) trilinear, s_Styles.filterModeOptions, this.m_FilterModeOptions, new GUILayoutOption[0]);
+            intValue = (UnityEngine.FilterMode) EditorGUILayout.IntPopup(s_Styles.filterMode, (int) intValue, s_Styles.filterModeOptions, this.m_FilterModeOptions, new GUILayoutOption[0]);
             EditorGUI.showMixedValue = false;
             if (EditorGUI.EndChangeCheck())
             {
-                this.m_FilterMode.intValue = (int) trilinear;
+                this.m_FilterMode.intValue = (int) intValue;
             }
-            bool flag2 = ((this.m_FilterMode.intValue != 0) && (this.m_EnableMipMap.intValue > 0)) && (this.m_TextureShape.intValue != 2);
-            using (new EditorGUI.DisabledScope(!flag2))
+            bool flag3 = ((this.m_FilterMode.intValue != 0) && (this.m_EnableMipMap.intValue > 0)) && (this.m_TextureShape.intValue != 2);
+            using (new EditorGUI.DisabledScope(!flag3))
             {
                 EditorGUI.BeginChangeCheck();
                 EditorGUI.showMixedValue = this.m_Aniso.hasMultipleDifferentValues;
@@ -959,21 +978,21 @@
                 bool flag3 = false;
                 bool flag4 = false;
                 bool flag5 = false;
-                BuildPlayerWindow.BuildPlatform[] buildPlayerValidPlatforms = GetBuildPlayerValidPlatforms();
-                foreach (BuildPlayerWindow.BuildPlatform platform in buildPlayerValidPlatforms)
+                BuildPlatform[] buildPlayerValidPlatforms = GetBuildPlayerValidPlatforms();
+                foreach (BuildPlatform platform in buildPlayerValidPlatforms)
                 {
-                    BuildTarget defaultTarget = platform.DefaultTarget;
+                    BuildTarget defaultTarget = platform.defaultTarget;
                     if (defaultTarget != BuildTarget.iOS)
                     {
                         if (defaultTarget != BuildTarget.Android)
                         {
                             if (defaultTarget == BuildTarget.Tizen)
                             {
-                                goto Label_007C;
+                                goto Label_0073;
                             }
                             if (defaultTarget == BuildTarget.tvOS)
                             {
-                                goto Label_0073;
+                                goto Label_006A;
                             }
                         }
                         else
@@ -984,18 +1003,13 @@
                             flag4 = true;
                             flag5 = true;
                         }
+                        continue;
                     }
-                    else
-                    {
-                        flag2 = true;
-                        flag = true;
-                    }
-                    continue;
-                Label_0073:
+                Label_006A:
                     flag2 = true;
                     flag = true;
                     continue;
-                Label_007C:
+                Label_0073:
                     flag = true;
                 }
                 List<int> list = new List<int>();
@@ -1046,16 +1060,15 @@
                     bool flag3 = false;
                     bool flag4 = false;
                     bool flag5 = false;
-                    BuildPlayerWindow.BuildPlatform[] buildPlayerValidPlatforms = GetBuildPlayerValidPlatforms();
-                    foreach (BuildPlayerWindow.BuildPlatform platform in buildPlayerValidPlatforms)
+                    BuildPlatform[] buildPlayerValidPlatforms = GetBuildPlayerValidPlatforms();
+                    foreach (BuildPlatform platform in buildPlayerValidPlatforms)
                     {
-                        switch (platform.DefaultTarget)
+                        switch (platform.defaultTarget)
                         {
                             case BuildTarget.SamsungTV:
-                            {
-                                flag = true;
-                                continue;
-                            }
+                            case BuildTarget.Tizen:
+                                goto Label_00A3;
+
                             case BuildTarget.tvOS:
                             {
                                 flag2 = true;
@@ -1073,9 +1086,6 @@
                                 flag4 = true;
                                 flag5 = true;
                                 break;
-
-                            case BuildTarget.Tizen:
-                                goto Label_00A3;
                         }
                         continue;
                     Label_00A3:

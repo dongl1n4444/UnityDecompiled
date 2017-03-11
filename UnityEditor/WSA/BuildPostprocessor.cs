@@ -2,16 +2,12 @@
 {
     using System;
     using UnityEditor;
+    using UnityEditor.Build;
     using UnityEditor.Modules;
 
     internal sealed class BuildPostprocessor : DefaultBuildPostprocessor
     {
-        public override void LaunchPlayer(BuildLaunchPlayerArgs args)
-        {
-            ApplicationLauncher.BuildAndRun(args);
-        }
-
-        public override void PostProcess(BuildPostProcessArgs args)
+        private void DoPostProcess(BuildPostProcessArgs args)
         {
             PostProcessWSA swsa;
             WSASDK wsaSDK = EditorUserBuildSettings.wsaSDK;
@@ -44,13 +40,26 @@
             swsa.Process();
         }
 
+        public override void LaunchPlayer(BuildLaunchPlayerArgs args)
+        {
+            ApplicationLauncher.BuildAndRun(args);
+        }
+
+        public override void PostProcess(BuildPostProcessArgs args)
+        {
+            try
+            {
+                this.DoPostProcess(args);
+            }
+            catch (Exception exception)
+            {
+                throw new BuildFailedException(exception);
+            }
+        }
+
         public override string PrepareForBuild(BuildOptions options, BuildTarget target)
         {
-            if (EditorUserBuildSettings.wsaSDK != WSASDK.UWP)
-            {
-                return null;
-            }
-            if (Utility.UseIl2CppScriptingBackend())
+            if ((EditorUserBuildSettings.wsaSDK != WSASDK.UWP) || Utility.UseIl2CppScriptingBackend())
             {
                 return null;
             }

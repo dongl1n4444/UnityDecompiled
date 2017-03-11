@@ -1,7 +1,9 @@
 ﻿namespace UnityEditor.Android.PostProcessor.Tasks
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEditor;
     using UnityEditor.Android.PostProcessor;
@@ -9,6 +11,7 @@
 
     internal class CheckPrerequisites : IPostProcessorTask
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ProgressHandler OnProgress;
 
         private bool ArePasswordsProvided() => 
@@ -16,11 +19,16 @@
 
         private void CheckUnityLibraryForArchitecture(PostProcessorContext context, string arch)
         {
-            string[] components = new string[] { TasksCommon.GetVariationsDirectory(context), "Libs", arch, "libunity.so" };
-            string path = Paths.Combine(components);
-            if (!File.Exists(path))
+            int num = context.Get<int>("ProjectType");
+            bool flag = context.Get<bool>("SourceBuild");
+            if ((num != 3) || !flag)
             {
-                CancelPostProcess.AbortBuild("Unable to package apk", "Unity library missing for the selected architecture '" + arch + " (" + path + ") !");
+                string[] components = new string[] { TasksCommon.GetLibsDirectory(context), arch, "libunity.so" };
+                string path = Paths.Combine(components);
+                if (!File.Exists(path))
+                {
+                    CancelPostProcess.AbortBuild("Unable to package apk", "Unity library missing for the selected architecture '" + arch + " (" + path + ") !", null);
+                }
             }
         }
 
@@ -49,7 +57,7 @@
             this.EnsureUnityLibrariesAreAvailable(context);
             if (!context.Get<bool>("ExportAndroidProject") && !this.ArePasswordsProvided())
             {
-                CancelPostProcess.AbortBuild("Can not sign application", "Unable to sign application; please provide passwords!");
+                CancelPostProcess.AbortBuild("Can not sign application", "Unable to sign application; please provide passwords!", null);
             }
         }
 

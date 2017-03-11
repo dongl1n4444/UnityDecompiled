@@ -2,13 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Threading;
 
     public static class BuildPipeline
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event OnDemandTagsCollectorDelegate collectInitialInstallTags;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event ResourcesCollectorDelegate collectResources;
 
         internal static List<string> CollectInitialInstallTags()

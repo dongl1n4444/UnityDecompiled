@@ -17,16 +17,22 @@
         private static readonly string _hostDirectory;
         private static readonly string _hostDirectoryNativeFolder;
         private readonly NPath _netfxsdkDir;
+        private readonly List<NPath> _sdkBinDirectories;
+        private readonly NPath _sdkUnionMetadataDirectory;
         private readonly string _sdkVersion;
         private static Dictionary<Type, VCPaths> _vcPaths;
         [CompilerGenerated]
-        private static Func<NPath, string> <>f__am$cache0;
+        private static Func<NPath, NPath> <>f__am$cache0;
         [CompilerGenerated]
-        private static Func<ISetupPackageReference, bool> <>f__am$cache1;
+        private static Func<NPath, NPath> <>f__am$cache1;
         [CompilerGenerated]
-        private static Func<ISetupPackageReference, bool> <>f__am$cache2;
+        private static Func<NPath, string> <>f__am$cache2;
         [CompilerGenerated]
         private static Func<ISetupPackageReference, bool> <>f__am$cache3;
+        [CompilerGenerated]
+        private static Func<ISetupPackageReference, bool> <>f__am$cache4;
+        [CompilerGenerated]
+        private static Func<ISetupPackageReference, bool> <>f__am$cache5;
 
         static Msvc15Installation()
         {
@@ -50,8 +56,26 @@
 
         public Msvc15Installation() : base(new Version(15, 0))
         {
+            this._sdkBinDirectories = new List<NPath>();
             base.SDKDirectory = WindowsSDKs.GetWindows10SDKDirectory(out this._sdkVersion);
             this._netfxsdkDir = WindowsSDKs.GetDotNetFrameworkSDKDirectory();
+            if (base.SDKDirectory != null)
+            {
+                string[] append = new string[] { "bin" };
+                NPath item = base.SDKDirectory.Combine(append);
+                string[] textArray2 = new string[] { this._sdkVersion };
+                NPath path2 = item.Combine(textArray2);
+                if (path2.DirectoryExists(""))
+                {
+                    this._sdkBinDirectories.Add(path2);
+                }
+                this._sdkBinDirectories.Add(item);
+                string[] textArray3 = new string[] { "UnionMetadata" };
+                NPath path3 = base.SDKDirectory.Combine(textArray3);
+                string[] textArray4 = new string[] { this._sdkVersion };
+                NPath path4 = path3.Combine(textArray4);
+                this._sdkUnionMetadataDirectory = !path4.DirectoryExists("") ? path3 : path4;
+            }
         }
 
         private static void AddVCToolsForArchitecture(Architecture architecture, VCComponent component, string architectureFolder, Dictionary<Type, VCPaths> vcToolsPaths)
@@ -120,48 +144,34 @@
         {
             ThrowIfArchitectureNotInstalled(architecture);
             List<NPath> source = new List<NPath>();
-            string[] append = new string[] { "bin" };
-            string[] textArray2 = new string[] { "x64" };
-            source.Add(base.SDKDirectory.Combine(append).Combine(textArray2));
-            string[] textArray3 = new string[] { "bin" };
-            string[] textArray4 = new string[] { "x86" };
-            source.Add(base.SDKDirectory.Combine(textArray3).Combine(textArray4));
-            string[] textArray5 = new string[] { _hostDirectoryNativeFolder };
-            source.Add(_vcPaths[architecture.GetType()].ToolsPath.Parent.Combine(textArray5));
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<NPath, string>(null, (IntPtr) <GetPathEnvVariable>m__0);
+                <>f__am$cache0 = d => d.Combine(new string[] { "x64" });
             }
-            return source.Select<NPath, string>(<>f__am$cache0).AggregateWith(";");
+            source.AddRange(this._sdkBinDirectories.Select<NPath, NPath>(<>f__am$cache0));
+            if (<>f__am$cache1 == null)
+            {
+                <>f__am$cache1 = d => d.Combine(new string[] { "x86" });
+            }
+            source.AddRange(this._sdkBinDirectories.Select<NPath, NPath>(<>f__am$cache1));
+            string[] append = new string[] { _hostDirectoryNativeFolder };
+            source.Add(_vcPaths[architecture.GetType()].ToolsPath.Parent.Combine(append));
+            if (<>f__am$cache2 == null)
+            {
+                <>f__am$cache2 = p => p.ToString();
+            }
+            return source.Select<NPath, string>(<>f__am$cache2).AggregateWith(";");
         }
 
         [DebuggerHidden]
         public override IEnumerable<NPath> GetPlatformMetadataReferences() => 
             new <GetPlatformMetadataReferences>c__Iterator0 { $PC = -2 };
 
-        public override NPath GetSDKToolPath(string toolName)
-        {
-            string[] append = new string[] { "bin" };
-            NPath path = base.SDKDirectory.Combine(append);
-            Architecture bestThisMachineCanRun = Architecture.BestThisMachineCanRun;
-            if (bestThisMachineCanRun is x86Architecture)
-            {
-                string[] textArray2 = new string[] { "x86", toolName };
-                return path.Combine(textArray2);
-            }
-            if (!(bestThisMachineCanRun is x64Architecture))
-            {
-                throw new NotSupportedException("Can't find MSVC tool for " + bestThisMachineCanRun);
-            }
-            string[] textArray3 = new string[] { "x64", toolName };
-            return path.Combine(textArray3);
-        }
+        protected override IEnumerable<NPath> GetSDKBinDirectories() => 
+            this._sdkBinDirectories;
 
-        public override NPath GetUnionMetadataDirectory()
-        {
-            string[] append = new string[] { "UnionMetadata" };
-            return base.SDKDirectory.Combine(append);
-        }
+        public override NPath GetUnionMetadataDirectory() => 
+            this._sdkUnionMetadataDirectory;
 
         private static Dictionary<Type, VCPaths> GetVCToolsPaths()
         {
@@ -187,21 +197,21 @@
                                 continue;
                             }
                             ISetupPackageReference[] packages = storey.instance2.GetPackages();
-                            if (<>f__am$cache1 == null)
-                            {
-                                <>f__am$cache1 = new Func<ISetupPackageReference, bool>(null, (IntPtr) <GetVCToolsPaths>m__1);
-                            }
-                            source.AddRange(packages.Where<ISetupPackageReference>(<>f__am$cache1).Select<ISetupPackageReference, VCComponent>(new Func<ISetupPackageReference, VCComponent>(storey, (IntPtr) this.<>m__0)));
-                            if (<>f__am$cache2 == null)
-                            {
-                                <>f__am$cache2 = new Func<ISetupPackageReference, bool>(null, (IntPtr) <GetVCToolsPaths>m__2);
-                            }
-                            list2.AddRange(packages.Where<ISetupPackageReference>(<>f__am$cache2).Select<ISetupPackageReference, VCComponent>(new Func<ISetupPackageReference, VCComponent>(storey, (IntPtr) this.<>m__1)));
                             if (<>f__am$cache3 == null)
                             {
-                                <>f__am$cache3 = new Func<ISetupPackageReference, bool>(null, (IntPtr) <GetVCToolsPaths>m__3);
+                                <>f__am$cache3 = p => p.GetId() == $"Microsoft.VisualCpp.Tools.{_hostDirectory}.TargetX86";
                             }
-                            list3.AddRange(packages.Where<ISetupPackageReference>(<>f__am$cache3).Select<ISetupPackageReference, VCComponent>(new Func<ISetupPackageReference, VCComponent>(storey, (IntPtr) this.<>m__2)));
+                            source.AddRange(packages.Where<ISetupPackageReference>(<>f__am$cache3).Select<ISetupPackageReference, VCComponent>(new Func<ISetupPackageReference, VCComponent>(storey.<>m__0)));
+                            if (<>f__am$cache4 == null)
+                            {
+                                <>f__am$cache4 = p => p.GetId() == $"Microsoft.VisualCpp.Tools.{_hostDirectory}.TargetX64";
+                            }
+                            list2.AddRange(packages.Where<ISetupPackageReference>(<>f__am$cache4).Select<ISetupPackageReference, VCComponent>(new Func<ISetupPackageReference, VCComponent>(storey.<>m__1)));
+                            if (<>f__am$cache5 == null)
+                            {
+                                <>f__am$cache5 = p => p.GetId() == $"Microsoft.VisualCpp.Tools.{_hostDirectory}.TargetARM";
+                            }
+                            list3.AddRange(packages.Where<ISetupPackageReference>(<>f__am$cache5).Select<ISetupPackageReference, VCComponent>(new Func<ISetupPackageReference, VCComponent>(storey.<>m__2)));
                         }
                         catch (Exception exception)
                         {
@@ -406,7 +416,7 @@
             internal int $PC;
             internal Msvc15Installation $this;
             internal NPath <libDirectory>__0;
-            internal NPath <vcLibPath>__1;
+            internal NPath <vcLibPath>__0;
             internal Architecture architecture;
             internal string sdkSubset;
 
@@ -546,8 +556,8 @@
                     default:
                         goto Label_03D9;
                 }
-                this.<vcLibPath>__1 = Msvc15Installation._vcPaths[this.architecture.GetType()].LibPath;
-                this.$current = (this.sdkSubset == null) ? this.<vcLibPath>__1 : this.<vcLibPath>__1.Combine(new string[] { this.sdkSubset });
+                this.<vcLibPath>__0 = Msvc15Installation._vcPaths[this.architecture.GetType()].LibPath;
+                this.$current = (this.sdkSubset == null) ? this.<vcLibPath>__0 : this.<vcLibPath>__0.Combine(new string[] { this.sdkSubset });
                 if (!this.$disposing)
                 {
                     this.$PC = 10;

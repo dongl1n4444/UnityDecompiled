@@ -10,8 +10,9 @@
 
     internal class ModelImporterRigEditor : AssetImporterInspector
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private int <rootIndex>k__BackingField;
+        private static bool importMessageFoldout = false;
         private const float kDeleteWidth = 17f;
         private SerializedProperty m_AnimationCompression;
         private SerializedProperty m_AnimationType;
@@ -26,6 +27,8 @@
         private bool m_IsBiped = false;
         private SerializedProperty m_LegacyGenerateAnimations;
         private SerializedProperty m_OptimizeGameObjects;
+        private SerializedProperty m_RigImportErrors;
+        private SerializedProperty m_RigImportWarnings;
         private GUIContent[] m_RootMotionBoneList;
         private SerializedProperty m_RootMotionBoneName;
         private SerializedProperty m_RootMotionBoneRotation;
@@ -58,23 +61,24 @@
                     destinationArray[j].copyAvatar = this.m_CopyAvatar.boolValue;
                 }
             }
-            base.serializedObject.ApplyModifiedProperties();
+            base.Apply();
             for (int k = 0; k < base.targets.Length; k++)
             {
                 if ((sourceArray[k].usesOwnAvatar && !destinationArray[k].usesOwnAvatar) && !destinationArray[k].copyAvatar)
                 {
                     SerializedObject serializedObject = new SerializedObject(base.targets[k]);
                     AvatarSetupTool.ClearAll(serializedObject);
-                    serializedObject.ApplyModifiedProperties();
+                    serializedObject.ApplyModifiedPropertiesWithoutUndo();
                 }
                 if ((!this.m_CopyAvatar.boolValue && !destinationArray[k].humanoid) && (this.rootIndex > 0))
                 {
                     ModelImporter importer = base.targets[k] as ModelImporter;
                     GameObject original = AssetDatabase.LoadMainAssetAtPath(importer.assetPath) as GameObject;
                     Animator component = original.GetComponent<Animator>();
-                    if ((component != null) && !component.hasTransformHierarchy)
+                    bool flag = (component != null) && !component.hasTransformHierarchy;
+                    if (flag)
                     {
-                        original = Object.Instantiate<GameObject>(original);
+                        original = UnityEngine.Object.Instantiate<GameObject>(original);
                         AnimatorUtility.DeoptimizeTransformHierarchy(original);
                     }
                     Transform transform = original.transform.Find(this.m_RootMotionBoneList[this.rootIndex].text);
@@ -82,7 +86,11 @@
                     {
                         this.m_RootMotionBoneRotation.quaternionValue = transform.rotation;
                     }
-                    new SerializedObject(base.targets[k]).ApplyModifiedProperties();
+                    new SerializedObject(base.targets[k]).ApplyModifiedPropertiesWithoutUndo();
+                    if (flag)
+                    {
+                        UnityEngine.Object.DestroyImmediate(original);
+                    }
                 }
                 if (!sourceArray[k].usesOwnAvatar && destinationArray[k].usesOwnAvatar)
                 {
@@ -97,16 +105,16 @@
                     bool flag2 = (animator2 != null) && !animator2.hasTransformHierarchy;
                     if (flag2)
                     {
-                        obj7 = Object.Instantiate<GameObject>(obj7);
+                        obj7 = UnityEngine.Object.Instantiate<GameObject>(obj7);
                         AnimatorUtility.DeoptimizeTransformHierarchy(obj7);
                     }
                     AvatarSetupTool.AutoSetupOnInstance(obj7, modelImporterSerializedObject);
                     this.m_IsBiped = AvatarBipedMapper.IsBiped(obj7.transform, this.m_BipedMappingReport);
                     if (flag2)
                     {
-                        Object.DestroyImmediate(obj7);
+                        UnityEngine.Object.DestroyImmediate(obj7);
                     }
-                    modelImporterSerializedObject.ApplyModifiedProperties();
+                    modelImporterSerializedObject.ApplyModifiedPropertiesWithoutUndo();
                 }
             }
         }
@@ -226,7 +234,7 @@
                         }
                         else
                         {
-                            Debug.Log("Cannot configure avatar, inspector is locked");
+                            UnityEngine.Debug.Log("Cannot configure avatar, inspector is locked");
                         }
                     }
                 }
@@ -273,7 +281,7 @@
 
         private static bool DoesHumanDescriptionMatch(ModelImporter importer, ModelImporter otherImporter)
         {
-            Object[] objs = new Object[] { importer, otherImporter };
+            UnityEngine.Object[] objs = new UnityEngine.Object[] { importer, otherImporter };
             SerializedObject obj2 = new SerializedObject(objs) {
                 maxArraySizeForMultiEditing = Math.Max(importer.transformPaths.Length, otherImporter.transformPaths.Length)
             };
@@ -390,6 +398,8 @@
             this.m_CopyAvatar = base.serializedObject.FindProperty("m_CopyAvatar");
             this.m_LegacyGenerateAnimations = base.serializedObject.FindProperty("m_LegacyGenerateAnimations");
             this.m_AnimationCompression = base.serializedObject.FindProperty("m_AnimationCompression");
+            this.m_RigImportErrors = base.serializedObject.FindProperty("m_RigImportErrors");
+            this.m_RigImportWarnings = base.serializedObject.FindProperty("m_RigImportWarnings");
             this.m_ExposeTransformEditor.OnEnable(this.singleImporter.transformPaths, base.serializedObject);
             this.m_CanMultiEditTransformList = this.CanMultiEditTransformList();
             this.CheckIfAvatarCopyIsUpToDate();
@@ -407,6 +417,18 @@
             if (styles == null)
             {
                 styles = new Styles();
+            }
+            string stringValue = this.m_RigImportErrors.stringValue;
+            string message = this.m_RigImportWarnings.stringValue;
+            if (stringValue.Length > 0)
+            {
+                EditorGUILayout.Space();
+                EditorGUILayout.HelpBox("Error(s) found while importing rig in this animation file. Open \"Import Messages\" foldout below for more details", MessageType.Error);
+            }
+            else if (message.Length > 0)
+            {
+                EditorGUILayout.Space();
+                EditorGUILayout.HelpBox("Warning(s) found while importing rig in this animation file. Open \"Import Messages\" foldout below for more details", MessageType.Warning);
             }
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.Popup(this.m_AnimationType, styles.AnimationTypeOpt, styles.AnimationType, new GUILayoutOption[0]);
@@ -461,6 +483,22 @@
                     using (new EditorGUI.DisabledScope(!this.m_CanMultiEditTransformList))
                     {
                         this.m_ExposeTransformEditor.OnGUI();
+                    }
+                }
+            }
+            if ((stringValue.Length > 0) || (message.Length > 0))
+            {
+                EditorGUILayout.Space();
+                importMessageFoldout = EditorGUILayout.Foldout(importMessageFoldout, styles.ImportMessages, true);
+                if (importMessageFoldout)
+                {
+                    if (stringValue.Length > 0)
+                    {
+                        EditorGUILayout.HelpBox(stringValue, MessageType.None);
+                    }
+                    else if (message.Length > 0)
+                    {
+                        EditorGUILayout.HelpBox(message, MessageType.None);
                     }
                 }
             }
@@ -592,6 +630,7 @@
             public GUIContent avatarValid = EditorGUIUtility.TextContent("✓");
             public GUIContent configureAvatar = EditorGUIUtility.TextContent("Configure...");
             public GUIStyle helpText = new GUIStyle(EditorStyles.helpBox);
+            public GUIContent ImportMessages = EditorGUIUtility.TextContent("Import Messages");
             public GUIContent RootNode = EditorGUIUtility.TextContent("Root node|Specify the root node used to extract the animation translation.");
             public GUIContent UpdateMuscleDefinitionFromSource = EditorGUIUtility.TextContent("Update|Update the copy of the muscle definition from the source.");
             public GUIContent UpdateReferenceClips = EditorGUIUtility.TextContent("Update reference clips|Click on this button to update all the @convention file referencing this file. Should set all these files to Copy From Other Avatar, set the source Avatar to this one and reimport all these files.");

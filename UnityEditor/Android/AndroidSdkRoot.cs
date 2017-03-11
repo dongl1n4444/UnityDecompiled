@@ -87,8 +87,14 @@
             return "";
         }
 
-        internal static bool IsSdkDir(string path) => 
-            ((Directory.Exists(Path.Combine(path, "platform-tools")) || File.Exists(Path.Combine(Path.Combine(path, "tools"), "android"))) || File.Exists(Path.Combine(Path.Combine(path, "tools"), "android.bat")));
+        internal static bool IsSdkDir(string path)
+        {
+            if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
+            {
+                return false;
+            }
+            return ((Directory.Exists(Path.Combine(path, "platform-tools")) || File.Exists(Path.Combine(Path.Combine(path, "tools"), "android"))) || File.Exists(Path.Combine(Path.Combine(path, "tools"), "android.bat")));
+        }
 
         public static string DownloadUrl =>
             "https://developer.android.com/sdk/index.html#Other";

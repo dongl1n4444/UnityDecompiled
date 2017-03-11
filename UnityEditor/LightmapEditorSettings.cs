@@ -5,33 +5,42 @@
     using System.Runtime.InteropServices;
     using UnityEngine;
     using UnityEngine.Rendering;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Various settings for the bake.</para>
     /// </summary>
     public sealed class LightmapEditorSettings
     {
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern void AnalyzeLighting(out LightingStats enabled, out LightingStats active, out LightingStats inactive);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool GetGeometryHash(Renderer renderer, out Hash128 geometryHash);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool GetInputSystemHash(Renderer renderer, out Hash128 inputSystemHash);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool GetInstanceHash(Renderer renderer, out Hash128 instanceHash);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool GetInstanceResolution(Renderer renderer, out int width, out int height);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Object GetLightmapSettings();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern UnityEngine.Object GetLightmapSettings();
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern bool GetPVRAtlasHash(int instanceID, out Hash128 atlasHash);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern bool GetPVRAtlasInstanceOffset(int instanceID, out int atlasInstanceOffset);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern bool GetPVRInstanceHash(int instanceID, out Hash128 instanceHash);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool GetSystemResolution(Renderer renderer, out int width, out int height);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool GetTerrainSystemResolution(Terrain terrain, out int width, out int height, out int numChunksInX, out int numChunksInY);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool HasClampedResolution(Renderer renderer);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool HasZeroAreaMesh(Renderer renderer);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool IsLightmappedOrDynamicLightmappedForRendering(Renderer renderer);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void Reset();
 
         [Obsolete("LightmapEditorSettings.aoAmount has been deprecated.", false)]
@@ -55,11 +64,21 @@
         }
 
         /// <summary>
+        /// <para>Ambient occlusion (AO) for direct lighting.</para>
+        /// </summary>
+        public static float aoExponentDirect { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
+        /// <para>Ambient occlusion (AO) for indirect lighting.</para>
+        /// </summary>
+        public static float aoExponentIndirect { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
         /// <para>Beyond this distance a ray is considered to be unoccluded.</para>
         /// </summary>
-        public static float aoMaxDistance { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static float aoMaxDistance { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        public static float bakeResolution { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static float bakeResolution { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         [Obsolete("LightmapEditorSettings.bounceBoost has been deprecated.", false)]
         public static float bounceBoost
@@ -90,6 +109,11 @@
             {
             }
         }
+
+        /// <summary>
+        /// <para>Enable baked ambient occlusion (AO).</para>
+        /// </summary>
+        public static bool enableAmbientOcclusion { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         [Obsolete("LightmapEditorSettings.finalGatherContrastThreshold has been deprecated.", false)]
         public static float finalGatherContrastThreshold
@@ -131,6 +155,21 @@
             }
         }
 
+        /// <summary>
+        /// <para>Determines which backend to use for baking lightmaps.</para>
+        /// </summary>
+        public static GIBakeBackend giBakeBackend { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
+        /// <para>Determines the filtering kernel for the Progressive Path Tracer backend.</para>
+        /// </summary>
+        public static PathTracerFilter giPathTracerFilter { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
+        /// <para>Determines which sampling strategy to use for baking lightmaps with the path tracing backend.</para>
+        /// </summary>
+        public static PathTracerSampling giPathTracerSampling { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
         [Obsolete("LightmapEditorSettings.lastUsedResolution has been deprecated.", false)]
         public static float lastUsedResolution
         {
@@ -154,17 +193,17 @@
         /// <summary>
         /// <para>The maximum height of an individual lightmap texture.</para>
         /// </summary>
-        public static int maxAtlasHeight { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static int maxAtlasHeight { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The maximum width of an individual lightmap texture.</para>
         /// </summary>
-        public static int maxAtlasWidth { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static int maxAtlasWidth { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Texel separation between shapes.</para>
         /// </summary>
-        public static int padding { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static int padding { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         [Obsolete("LightmapEditorSettings.quality has been deprecated.", false)]
         public static LightmapBakeQuality quality
@@ -179,12 +218,12 @@
         /// <summary>
         /// <para>Lightmap resolution in texels per world unit. Defines the resolution of Realtime GI if enabled. If Baked GI is enabled, this defines the resolution used for indirect lighting. Higher resolution may take a long time to bake.</para>
         /// </summary>
-        public static float realtimeResolution { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static float realtimeResolution { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Determines how Unity will compress baked reflection cubemap.</para>
         /// </summary>
-        public static ReflectionCubemapCompression reflectionCubemapCompression { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static ReflectionCubemapCompression reflectionCubemapCompression { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         [Obsolete("resolution is now called realtimeResolution (UnityUpgradable) -> realtimeResolution", false)]
         public static float resolution
@@ -220,7 +259,44 @@
         /// <summary>
         /// <para>Whether to use texture compression on the generated lightmaps.</para>
         /// </summary>
-        public static bool textureCompression { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static bool textureCompression { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
+        /// <para>Backends available for baking lightmaps.</para>
+        /// </summary>
+        public enum GIBakeBackend
+        {
+            Radiosity,
+            PathTracer
+        }
+
+        /// <summary>
+        /// <para>The available filter kernels for the Progressive Path Tracer GI backend.</para>
+        /// </summary>
+        public enum PathTracerFilter
+        {
+            Gaussian,
+            ATrous
+        }
+
+        /// <summary>
+        /// <para>The available filtering modes for the Progressive Path Tracer GI backend.</para>
+        /// </summary>
+        public enum PathTracerFilterMode
+        {
+            None,
+            Auto,
+            Advanced
+        }
+
+        /// <summary>
+        /// <para>Available sampling strategies for baking lightmaps with the path tracing backend.</para>
+        /// </summary>
+        public enum PathTracerSampling
+        {
+            Auto,
+            Fixed
+        }
     }
 }
 

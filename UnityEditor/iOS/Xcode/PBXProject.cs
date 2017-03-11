@@ -2,42 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.IO;
+    using System.Runtime.InteropServices;
     using UnityEditor.iOS.Xcode.PBX;
 
     public class PBXProject
     {
         private PBXProjectData m_Data = new PBXProjectData();
-
-        internal string AddAppExtension(string mainTarget, string name, string infoPlistPath)
-        {
-            string ext = ".appex";
-            PBXNativeTargetData data = this.CreateNewTarget(name, ext, "com.apple.product-type.app-extension");
-            this.SetDefaultAppExtensionReleaseBuildFlags(this.buildConfigs[this.BuildConfigByName(data.guid, "Release")], infoPlistPath);
-            this.SetDefaultAppExtensionDebugBuildFlags(this.buildConfigs[this.BuildConfigByName(data.guid, "Debug")], infoPlistPath);
-            PBXSourcesBuildPhaseData data2 = PBXSourcesBuildPhaseData.Create();
-            this.sources.AddEntry(data2);
-            data.phases.AddGUID(data2.guid);
-            PBXResourcesBuildPhaseData data3 = PBXResourcesBuildPhaseData.Create();
-            this.resources.AddEntry(data3);
-            data.phases.AddGUID(data3.guid);
-            PBXFrameworksBuildPhaseData data4 = PBXFrameworksBuildPhaseData.Create();
-            this.frameworks.AddEntry(data4);
-            data.phases.AddGUID(data4.guid);
-            PBXCopyFilesBuildPhaseData data5 = PBXCopyFilesBuildPhaseData.Create("Embed App Extensions", "13");
-            this.copyFiles.AddEntry(data5);
-            this.nativeTargets[mainTarget].phases.AddGUID(data5.guid);
-            PBXContainerItemProxyData data6 = PBXContainerItemProxyData.Create(this.project.project.guid, "1", data.guid, name);
-            this.containerItems.AddEntry(data6);
-            PBXTargetDependencyData data7 = PBXTargetDependencyData.Create(data.guid, data6.guid);
-            this.targetDependencies.AddEntry(data7);
-            this.nativeTargets[mainTarget].dependencies.AddGUID(data7.guid);
-            PBXBuildFileData buildFile = PBXBuildFileData.CreateFromFile(this.FindFileGuidByProjectPath("Products/" + name + ext), false, "");
-            this.BuildFilesAdd(mainTarget, buildFile);
-            data5.files.AddGUID(buildFile.guid);
-            this.AddFile(infoPlistPath, name + "/Supporting Files/Info.plist", PBXSourceTree.Source);
-            return data.guid;
-        }
 
         public void AddAssetTagForFile(string targetGuid, string fileGuid, string tag)
         {
@@ -61,6 +33,18 @@
             {
                 this.AddBuildProperty(targetGuid, "ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS", tag);
             }
+        }
+
+        internal string AddBuildConfigForTarget(string targetGuid, string name)
+        {
+            if (this.BuildConfigByName(targetGuid, name) != null)
+            {
+                throw new Exception($"A build configuration by name {targetGuid} already exists for target {name}");
+            }
+            XCBuildConfigurationData data = XCBuildConfigurationData.Create(name);
+            this.buildConfigs.AddEntry(data);
+            this.configs[this.GetConfigListForTarget(targetGuid)].buildConfigs.AddGUID(data.guid);
+            return data.guid;
         }
 
         private void AddBuildFileImpl(string targetGuid, string fileGuid, bool weak, string compileFlags)
@@ -105,7 +89,48 @@
             this.buildConfigs[configGuid].AddProperty(name, value);
         }
 
-        public void AddExternalLibraryDependency(string targetGuid, string filename, string remoteFileGuid, string projectPath, string remoteInfo)
+        public bool AddCapability(string targetGuid, PBXCapabilityType capability, string entitlementsFilePath = null, bool addOptionalFramework = false)
+        {
+            if (capability.requiresEntitlements && (entitlementsFilePath == ""))
+            {
+                throw new Exception("Couldn't add the Xcode Capability " + capability.id + " to the PBXProject file because this capability requires an entitlement file.");
+            }
+            PBXProjectObjectData project = this.project.project;
+            if (((project.entitlementsFile != null) && (entitlementsFilePath != null)) && (project.entitlementsFile != entitlementsFilePath))
+            {
+                if (project.capabilities.Count > 0)
+                {
+                    throw new WarningException("Attention, it seems that you have multiple entitlements file. Only one will be added the Project : " + project.entitlementsFile);
+                }
+                return false;
+            }
+            if (project.capabilities.Contains(new PBXCapabilityType.TargetCapabilityPair(targetGuid, capability)))
+            {
+                throw new WarningException("This capability has already been added. Method ignored");
+            }
+            project.capabilities.Add(new PBXCapabilityType.TargetCapabilityPair(targetGuid, capability));
+            if (((capability.framework != "") && !capability.optionalFramework) || (((capability.framework != "") && capability.optionalFramework) && addOptionalFramework))
+            {
+                this.AddFrameworkToProject(targetGuid, capability.framework, false);
+            }
+            if ((entitlementsFilePath != null) && (project.entitlementsFile == null))
+            {
+                project.entitlementsFile = entitlementsFilePath;
+                this.AddFileImpl(entitlementsFilePath, entitlementsFilePath, PBXSourceTree.Source, false);
+                this.SetBuildProperty(targetGuid, "CODE_SIGN_ENTITLEMENTS", PBXPath.FixSlashes(entitlementsFilePath));
+            }
+            return true;
+        }
+
+        public string AddCopyFilesBuildPhase(string targetGuid, string name, string dstPath, string subfolderSpec)
+        {
+            PBXCopyFilesBuildPhaseData data = PBXCopyFilesBuildPhaseData.Create(name, dstPath, subfolderSpec);
+            this.copyFiles.AddEntry(data);
+            this.nativeTargets[targetGuid].phases.AddGUID(data.guid);
+            return data.guid;
+        }
+
+        internal void AddExternalLibraryDependency(string targetGuid, string filename, string remoteFileGuid, string projectPath, string remoteInfo)
         {
             PBXNativeTargetData target = this.nativeTargets[targetGuid];
             filename = PBXPath.FixSlashes(filename);
@@ -145,7 +170,7 @@
             data2.children.AddGUID(data4.guid);
         }
 
-        public void AddExternalProjectDependency(string path, string projectPath, PBXSourceTree sourceTree)
+        internal void AddExternalProjectDependency(string path, string projectPath, PBXSourceTree sourceTree)
         {
             if (sourceTree == PBXSourceTree.Group)
             {
@@ -161,10 +186,7 @@
             this.project.project.AddReference(gr.guid, fileRef.guid);
         }
 
-        public string AddFile(string path, string projectPath) => 
-            this.AddFileImpl(path, projectPath, PBXSourceTree.Source, false);
-
-        public string AddFile(string path, string projectPath, PBXSourceTree sourceTree)
+        public string AddFile(string path, string projectPath, PBXSourceTree sourceTree = 1)
         {
             if (sourceTree == PBXSourceTree.Group)
             {
@@ -210,15 +232,19 @@
             this.AddBuildFileImpl(targetGuid, fileGuid, false, null);
         }
 
+        public void AddFileToBuildSection(string targetGuid, string sectionGuid, string fileGuid)
+        {
+            PBXBuildFileData buildFile = PBXBuildFileData.CreateFromFile(fileGuid, false, null);
+            this.BuildFilesAdd(targetGuid, buildFile);
+            this.BuildSectionAny(sectionGuid).files.AddGUID(buildFile.guid);
+        }
+
         public void AddFileToBuildWithFlags(string targetGuid, string fileGuid, string compileFlags)
         {
             this.AddBuildFileImpl(targetGuid, fileGuid, false, compileFlags);
         }
 
-        public string AddFolderReference(string path, string projectPath) => 
-            this.AddFileImpl(path, projectPath, PBXSourceTree.Source, true);
-
-        public string AddFolderReference(string path, string projectPath, PBXSourceTree sourceTree)
+        public string AddFolderReference(string path, string projectPath, PBXSourceTree sourceTree = 1)
         {
             if (sourceTree == PBXSourceTree.Group)
             {
@@ -227,46 +253,111 @@
             return this.AddFileImpl(path, projectPath, sourceTree, true);
         }
 
+        public string AddFrameworksBuildPhase(string targetGuid)
+        {
+            PBXFrameworksBuildPhaseData data = PBXFrameworksBuildPhaseData.Create();
+            this.frameworks.AddEntry(data);
+            this.nativeTargets[targetGuid].phases.AddGUID(data.guid);
+            return data.guid;
+        }
+
         public void AddFrameworkToProject(string targetGuid, string framework, bool weak)
         {
             string fileGuid = this.AddFile("System/Library/Frameworks/" + framework, "Frameworks/" + framework, PBXSourceTree.Sdk);
             this.AddBuildFileImpl(targetGuid, fileGuid, weak, null);
         }
 
+        public string AddResourcesBuildPhase(string targetGuid)
+        {
+            PBXResourcesBuildPhaseData data = PBXResourcesBuildPhaseData.Create();
+            this.resources.AddEntry(data);
+            this.nativeTargets[targetGuid].phases.AddGUID(data.guid);
+            return data.guid;
+        }
+
+        public string AddSourcesBuildPhase(string targetGuid)
+        {
+            PBXSourcesBuildPhaseData data = PBXSourcesBuildPhaseData.Create();
+            this.sources.AddEntry(data);
+            this.nativeTargets[targetGuid].phases.AddGUID(data.guid);
+            return data.guid;
+        }
+
+        public string AddTarget(string name, string ext, string type)
+        {
+            XCConfigurationListData data = XCConfigurationListData.Create();
+            this.configs.AddEntry(data);
+            string path = name + ext;
+            string productRef = this.AddFile(path, "Products/" + path, PBXSourceTree.Build);
+            PBXNativeTargetData data2 = PBXNativeTargetData.Create(name, productRef, type, data.guid);
+            this.nativeTargets.AddEntry(data2);
+            this.project.project.targets.Add(data2.guid);
+            return data2.guid;
+        }
+
+        internal void AddTargetDependency(string targetGuid, string targetDependencyGuid)
+        {
+            string name = this.nativeTargets[targetDependencyGuid].name;
+            PBXContainerItemProxyData data = PBXContainerItemProxyData.Create(this.project.project.guid, "1", targetDependencyGuid, name);
+            this.containerItems.AddEntry(data);
+            PBXTargetDependencyData data2 = PBXTargetDependencyData.Create(targetDependencyGuid, data.guid);
+            this.targetDependencies.AddEntry(data2);
+            this.nativeTargets[targetGuid].dependencies.AddGUID(data2.guid);
+        }
+
+        internal void AppendShellScriptBuildPhase(IEnumerable<string> targetGuids, string name, string shellPath, string shellScript)
+        {
+            PBXShellScriptBuildPhaseData data = PBXShellScriptBuildPhaseData.Create(name, shellPath, shellScript);
+            this.shellScripts.AddEntry(data);
+            foreach (string str in targetGuids)
+            {
+                this.nativeTargets[str].phases.AddGUID(data.guid);
+            }
+        }
+
+        internal void AppendShellScriptBuildPhase(string targetGuid, string name, string shellPath, string shellScript)
+        {
+            PBXShellScriptBuildPhaseData data = PBXShellScriptBuildPhaseData.Create(name, shellPath, shellScript);
+            this.shellScripts.AddEntry(data);
+            this.nativeTargets[targetGuid].phases.AddGUID(data.guid);
+        }
+
         public string BuildConfigByName(string targetGuid, string name)
         {
-            PBXNativeTargetData data = this.nativeTargets[targetGuid];
-            foreach (string str in (IEnumerable<string>) this.configs[data.buildConfigList].buildConfigs)
+            foreach (string str in (IEnumerable<string>) this.configs[this.GetConfigListForTarget(targetGuid)].buildConfigs)
             {
-                XCBuildConfigurationData data2 = this.buildConfigs[str];
-                if ((data2 != null) && (data2.name == name))
+                XCBuildConfigurationData data = this.buildConfigs[str];
+                if ((data != null) && (data.name == name))
                 {
-                    return data2.guid;
+                    return data.guid;
                 }
             }
             return null;
         }
 
-        private void BuildFilesAdd(string targetGuid, PBXBuildFileData buildFile)
+        internal void BuildFilesAdd(string targetGuid, PBXBuildFileData buildFile)
         {
             this.m_Data.BuildFilesAdd(targetGuid, buildFile);
         }
 
-        private PBXBuildFileData BuildFilesGet(string guid) => 
+        internal PBXBuildFileData BuildFilesGet(string guid) => 
             this.m_Data.BuildFilesGet(guid);
 
-        private IEnumerable<PBXBuildFileData> BuildFilesGetAll() => 
+        internal IEnumerable<PBXBuildFileData> BuildFilesGetAll() => 
             this.m_Data.BuildFilesGetAll();
 
-        private PBXBuildFileData BuildFilesGetForSourceFile(string targetGuid, string fileGuid) => 
+        internal PBXBuildFileData BuildFilesGetForSourceFile(string targetGuid, string fileGuid) => 
             this.m_Data.BuildFilesGetForSourceFile(targetGuid, fileGuid);
 
-        private void BuildFilesRemove(string targetGuid, string fileGuid)
+        internal void BuildFilesRemove(string targetGuid, string fileGuid)
         {
             this.m_Data.BuildFilesRemove(targetGuid, fileGuid);
         }
 
-        private FileGUIDListBase BuildSectionAny(PBXNativeTargetData target, string path, bool isFolderRef) => 
+        internal FileGUIDListBase BuildSectionAny(string sectionGuid) => 
+            this.m_Data.BuildSectionAny(sectionGuid);
+
+        internal FileGUIDListBase BuildSectionAny(PBXNativeTargetData target, string path, bool isFolderRef) => 
             this.m_Data.BuildSectionAny(target, path, isFolderRef);
 
         public bool ContainsFileByProjectPath(string path) => 
@@ -282,24 +373,6 @@
                 throw new Exception("sourceTree must not be PBXSourceTree.Group");
             }
             return (this.FindFileGuidByRealPath(path, sourceTree) != null);
-        }
-
-        internal PBXNativeTargetData CreateNewTarget(string name, string ext, string type)
-        {
-            XCBuildConfigurationData data = XCBuildConfigurationData.Create("Release");
-            this.buildConfigs.AddEntry(data);
-            XCBuildConfigurationData data2 = XCBuildConfigurationData.Create("Debug");
-            this.buildConfigs.AddEntry(data2);
-            XCConfigurationListData data3 = XCConfigurationListData.Create();
-            this.configs.AddEntry(data3);
-            data3.buildConfigs.AddGUID(data.guid);
-            data3.buildConfigs.AddGUID(data2.guid);
-            string path = name + ext;
-            string productRef = this.AddFile(path, "Products/" + path, PBXSourceTree.Build);
-            PBXNativeTargetData data4 = PBXNativeTargetData.Create(name, productRef, type, data3.guid);
-            this.nativeTargets.AddEntry(data4);
-            this.project.project.targets.Add(data4.guid);
-            return data4;
         }
 
         private PBXGroupData CreateSourceGroup(string sourceGroup)
@@ -342,21 +415,21 @@
             return group;
         }
 
-        private void FileRefsAdd(string realPath, string projectPath, PBXGroupData parent, PBXFileReferenceData fileRef)
+        internal void FileRefsAdd(string realPath, string projectPath, PBXGroupData parent, PBXFileReferenceData fileRef)
         {
             this.m_Data.FileRefsAdd(realPath, projectPath, parent, fileRef);
         }
 
-        private PBXFileReferenceData FileRefsGet(string guid) => 
+        internal PBXFileReferenceData FileRefsGet(string guid) => 
             this.m_Data.FileRefsGet(guid);
 
-        private PBXFileReferenceData FileRefsGetByProjectPath(string path) => 
+        internal PBXFileReferenceData FileRefsGetByProjectPath(string path) => 
             this.m_Data.FileRefsGetByProjectPath(path);
 
-        private PBXFileReferenceData FileRefsGetByRealPath(string path, PBXSourceTree sourceTree) => 
+        internal PBXFileReferenceData FileRefsGetByRealPath(string path, PBXSourceTree sourceTree) => 
             this.m_Data.FileRefsGetByRealPath(path, sourceTree);
 
-        private void FileRefsRemove(string guid)
+        internal void FileRefsRemove(string guid)
         {
             this.m_Data.FileRefsRemove(guid);
         }
@@ -415,13 +488,28 @@
             return new List<string> { data.compileFlags };
         }
 
-        private string GetConfigListForTarget(string targetGuid)
+        internal string GetConfigListForTarget(string targetGuid)
         {
             if (targetGuid == this.project.project.guid)
             {
                 return this.project.project.buildConfigList;
             }
             return this.nativeTargets[targetGuid].buildConfigList;
+        }
+
+        internal HashSet<string> GetFileRefsByProjectPaths(IEnumerable<string> paths)
+        {
+            HashSet<string> set = new HashSet<string>();
+            foreach (string str in paths)
+            {
+                string path = PBXPath.FixSlashes(str);
+                PBXFileReferenceData data = this.FileRefsGetByProjectPath(path);
+                if (data != null)
+                {
+                    set.Add(data.path);
+                }
+            }
+            return set;
         }
 
         internal List<string> GetGroupChildrenFiles(string projectPath)
@@ -444,6 +532,26 @@
             return list2;
         }
 
+        internal HashSet<string> GetGroupChildrenFilesRefs(string projectPath)
+        {
+            projectPath = PBXPath.FixSlashes(projectPath);
+            PBXGroupData data = this.GroupsGetByProjectPath(projectPath);
+            if (data == null)
+            {
+                return new HashSet<string>();
+            }
+            HashSet<string> set2 = new HashSet<string>();
+            foreach (string str in (IEnumerable<string>) data.children)
+            {
+                PBXFileReferenceData data2 = this.FileRefsGet(str);
+                if (data2 != null)
+                {
+                    set2.Add(data2.path);
+                }
+            }
+            return ((set2 != null) ? set2 : new HashSet<string>());
+        }
+
         private PBXGroupData GetPBXGroupChildByName(PBXGroupData group, string name)
         {
             foreach (string str in (IEnumerable<string>) group.children)
@@ -463,35 +571,38 @@
         internal PBXProjectObjectData GetProjectInternal() => 
             this.project.project;
 
+        public string GetTargetProductFileRef(string targetGuid) => 
+            this.nativeTargets[targetGuid].productReference;
+
         public static string GetUnityTargetName() => 
             "Unity-iPhone";
 
         public static string GetUnityTestTargetName() => 
             "Unity-iPhone Tests";
 
-        private void GroupsAdd(string projectPath, PBXGroupData parent, PBXGroupData gr)
+        internal void GroupsAdd(string projectPath, PBXGroupData parent, PBXGroupData gr)
         {
             this.m_Data.GroupsAdd(projectPath, parent, gr);
         }
 
-        private void GroupsAddDuplicate(PBXGroupData gr)
+        internal void GroupsAddDuplicate(PBXGroupData gr)
         {
             this.m_Data.GroupsAddDuplicate(gr);
         }
 
-        private PBXGroupData GroupsGet(string guid) => 
+        internal PBXGroupData GroupsGet(string guid) => 
             this.m_Data.GroupsGet(guid);
 
-        private PBXGroupData GroupsGetByChild(string childGuid) => 
+        internal PBXGroupData GroupsGetByChild(string childGuid) => 
             this.m_Data.GroupsGetByChild(childGuid);
 
-        private PBXGroupData GroupsGetByProjectPath(string sourceGroup) => 
+        internal PBXGroupData GroupsGetByProjectPath(string sourceGroup) => 
             this.m_Data.GroupsGetByProjectPath(sourceGroup);
 
-        private PBXGroupData GroupsGetMainGroup() => 
+        internal PBXGroupData GroupsGetMainGroup() => 
             this.m_Data.GroupsGetMainGroup();
 
-        private void GroupsRemove(string guid)
+        internal void GroupsRemove(string guid)
         {
             this.m_Data.GroupsRemove(guid);
         }
@@ -722,6 +833,11 @@
             }
         }
 
+        internal void SetBaseReferenceForConfig(string configGuid, string baseReference)
+        {
+            this.buildConfigs[configGuid].baseConfigurationReference = baseReference;
+        }
+
         public void SetBuildProperty(IEnumerable<string> targetGuids, string name, string value)
         {
             foreach (string str in targetGuids)
@@ -767,82 +883,6 @@
             }
         }
 
-        private void SetDefaultAppExtensionDebugBuildFlags(XCBuildConfigurationData config, string infoPlistPath)
-        {
-            config.AddProperty("ALWAYS_SEARCH_USER_PATHS", "NO");
-            config.AddProperty("CLANG_CXX_LANGUAGE_STANDARD", "gnu++0x");
-            config.AddProperty("CLANG_CXX_LIBRARY", "libc++");
-            config.AddProperty("CLANG_ENABLE_MODULES", "YES");
-            config.AddProperty("CLANG_ENABLE_OBJC_ARC", "YES");
-            config.AddProperty("CLANG_WARN_BOOL_CONVERSION", "YES");
-            config.AddProperty("CLANG_WARN_CONSTANT_CONVERSION", "YES");
-            config.AddProperty("CLANG_WARN_DIRECT_OBJC_ISA_USAGE", "YES_ERROR");
-            config.AddProperty("CLANG_WARN_EMPTY_BODY", "YES");
-            config.AddProperty("CLANG_WARN_ENUM_CONVERSION", "YES");
-            config.AddProperty("CLANG_WARN_INT_CONVERSION", "YES");
-            config.AddProperty("CLANG_WARN_OBJC_ROOT_CLASS", "YES_ERROR");
-            config.AddProperty("CLANG_WARN_UNREACHABLE_CODE", "YES");
-            config.AddProperty("CLANG_WARN__DUPLICATE_METHOD_MATCH", "YES");
-            config.AddProperty("COPY_PHASE_STRIP", "NO");
-            config.AddProperty("ENABLE_STRICT_OBJC_MSGSEND", "YES");
-            config.AddProperty("GCC_C_LANGUAGE_STANDARD", "gnu99");
-            config.AddProperty("GCC_DYNAMIC_NO_PIC", "NO");
-            config.AddProperty("GCC_OPTIMIZATION_LEVEL", "0");
-            config.AddProperty("GCC_PREPROCESSOR_DEFINITIONS", "DEBUG=1");
-            config.AddProperty("GCC_PREPROCESSOR_DEFINITIONS", "$(inherited)");
-            config.AddProperty("GCC_SYMBOLS_PRIVATE_EXTERN", "NO");
-            config.AddProperty("GCC_WARN_64_TO_32_BIT_CONVERSION", "YES");
-            config.AddProperty("GCC_WARN_ABOUT_RETURN_TYPE", "YES_ERROR");
-            config.AddProperty("GCC_WARN_UNDECLARED_SELECTOR", "YES");
-            config.AddProperty("GCC_WARN_UNINITIALIZED_AUTOS", "YES_AGGRESSIVE");
-            config.AddProperty("GCC_WARN_UNUSED_FUNCTION", "YES");
-            config.AddProperty("INFOPLIST_FILE", infoPlistPath);
-            config.AddProperty("IPHONEOS_DEPLOYMENT_TARGET", "8.0");
-            config.AddProperty("LD_RUNPATH_SEARCH_PATHS", "$(inherited)");
-            config.AddProperty("LD_RUNPATH_SEARCH_PATHS", "@executable_path/Frameworks");
-            config.AddProperty("LD_RUNPATH_SEARCH_PATHS", "@executable_path/../../Frameworks");
-            config.AddProperty("MTL_ENABLE_DEBUG_INFO", "YES");
-            config.AddProperty("ONLY_ACTIVE_ARCH", "YES");
-            config.AddProperty("PRODUCT_NAME", "$(TARGET_NAME)");
-            config.AddProperty("SKIP_INSTALL", "YES");
-        }
-
-        private void SetDefaultAppExtensionReleaseBuildFlags(XCBuildConfigurationData config, string infoPlistPath)
-        {
-            config.AddProperty("ALWAYS_SEARCH_USER_PATHS", "NO");
-            config.AddProperty("CLANG_CXX_LANGUAGE_STANDARD", "gnu++0x");
-            config.AddProperty("CLANG_CXX_LIBRARY", "libc++");
-            config.AddProperty("CLANG_ENABLE_MODULES", "YES");
-            config.AddProperty("CLANG_ENABLE_OBJC_ARC", "YES");
-            config.AddProperty("CLANG_WARN_BOOL_CONVERSION", "YES");
-            config.AddProperty("CLANG_WARN_CONSTANT_CONVERSION", "YES");
-            config.AddProperty("CLANG_WARN_DIRECT_OBJC_ISA_USAGE", "YES_ERROR");
-            config.AddProperty("CLANG_WARN_EMPTY_BODY", "YES");
-            config.AddProperty("CLANG_WARN_ENUM_CONVERSION", "YES");
-            config.AddProperty("CLANG_WARN_INT_CONVERSION", "YES");
-            config.AddProperty("CLANG_WARN_OBJC_ROOT_CLASS", "YES_ERROR");
-            config.AddProperty("CLANG_WARN_UNREACHABLE_CODE", "YES");
-            config.AddProperty("CLANG_WARN__DUPLICATE_METHOD_MATCH", "YES");
-            config.AddProperty("COPY_PHASE_STRIP", "YES");
-            config.AddProperty("ENABLE_NS_ASSERTIONS", "NO");
-            config.AddProperty("ENABLE_STRICT_OBJC_MSGSEND", "YES");
-            config.AddProperty("GCC_C_LANGUAGE_STANDARD", "gnu99");
-            config.AddProperty("GCC_WARN_64_TO_32_BIT_CONVERSION", "YES");
-            config.AddProperty("GCC_WARN_ABOUT_RETURN_TYPE", "YES_ERROR");
-            config.AddProperty("GCC_WARN_UNDECLARED_SELECTOR", "YES");
-            config.AddProperty("GCC_WARN_UNINITIALIZED_AUTOS", "YES_AGGRESSIVE");
-            config.AddProperty("GCC_WARN_UNUSED_FUNCTION", "YES");
-            config.AddProperty("INFOPLIST_FILE", infoPlistPath);
-            config.AddProperty("IPHONEOS_DEPLOYMENT_TARGET", "8.0");
-            config.AddProperty("LD_RUNPATH_SEARCH_PATHS", "$(inherited)");
-            config.AddProperty("LD_RUNPATH_SEARCH_PATHS", "@executable_path/Frameworks");
-            config.AddProperty("LD_RUNPATH_SEARCH_PATHS", "@executable_path/../../Frameworks");
-            config.AddProperty("MTL_ENABLE_DEBUG_INFO", "NO");
-            config.AddProperty("PRODUCT_NAME", "$(TARGET_NAME)");
-            config.AddProperty("SKIP_INSTALL", "YES");
-            config.AddProperty("VALIDATE_PRODUCT", "YES");
-        }
-
         internal void SetTargetAttributes(string key, string value)
         {
             PBXElementDict dict2;
@@ -878,6 +918,25 @@
                 dict4.SetString(key, value);
             }
             this.project.project.UpdateVars();
+        }
+
+        public void SetTeamId(string targetGuid, string teamId)
+        {
+            this.SetBuildProperty(targetGuid, "DEVELOPMENT_TEAM", teamId);
+            this.project.project.teamIDs.Add(targetGuid, teamId);
+        }
+
+        internal string ShellScriptByName(string targetGuid, string name)
+        {
+            foreach (string str in (IEnumerable<string>) this.nativeTargets[targetGuid].phases)
+            {
+                PBXShellScriptBuildPhaseData data = this.shellScripts[str];
+                if ((data != null) && (data.name == name))
+                {
+                    return data.guid;
+                }
+            }
+            return null;
         }
 
         public string TargetGuidByName(string name)
@@ -951,43 +1010,43 @@
         public string WriteToString() => 
             this.m_Data.WriteToString();
 
-        private KnownSectionBase<XCBuildConfigurationData> buildConfigs =>
+        internal KnownSectionBase<XCBuildConfigurationData> buildConfigs =>
             this.m_Data.buildConfigs;
 
-        private KnownSectionBase<XCConfigurationListData> configs =>
+        internal KnownSectionBase<XCConfigurationListData> configs =>
             this.m_Data.configs;
 
-        private KnownSectionBase<PBXContainerItemProxyData> containerItems =>
+        internal KnownSectionBase<PBXContainerItemProxyData> containerItems =>
             this.m_Data.containerItems;
 
-        private KnownSectionBase<PBXCopyFilesBuildPhaseData> copyFiles =>
+        internal KnownSectionBase<PBXCopyFilesBuildPhaseData> copyFiles =>
             this.m_Data.copyFiles;
 
-        private KnownSectionBase<PBXFrameworksBuildPhaseData> frameworks =>
+        internal KnownSectionBase<PBXFrameworksBuildPhaseData> frameworks =>
             this.m_Data.frameworks;
 
-        private KnownSectionBase<PBXNativeTargetData> nativeTargets =>
+        internal KnownSectionBase<PBXNativeTargetData> nativeTargets =>
             this.m_Data.nativeTargets;
 
-        private PBXProjectSection project =>
+        internal PBXProjectSection project =>
             this.m_Data.project;
 
-        private KnownSectionBase<PBXReferenceProxyData> references =>
+        internal KnownSectionBase<PBXReferenceProxyData> references =>
             this.m_Data.references;
 
-        private KnownSectionBase<PBXResourcesBuildPhaseData> resources =>
+        internal KnownSectionBase<PBXResourcesBuildPhaseData> resources =>
             this.m_Data.resources;
 
-        private KnownSectionBase<PBXShellScriptBuildPhaseData> shellScripts =>
+        internal KnownSectionBase<PBXShellScriptBuildPhaseData> shellScripts =>
             this.m_Data.shellScripts;
 
-        private KnownSectionBase<PBXSourcesBuildPhaseData> sources =>
+        internal KnownSectionBase<PBXSourcesBuildPhaseData> sources =>
             this.m_Data.sources;
 
-        private KnownSectionBase<PBXTargetDependencyData> targetDependencies =>
+        internal KnownSectionBase<PBXTargetDependencyData> targetDependencies =>
             this.m_Data.targetDependencies;
 
-        private KnownSectionBase<PBXVariantGroupData> variantGroups =>
+        internal KnownSectionBase<PBXVariantGroupData> variantGroups =>
             this.m_Data.variantGroups;
     }
 }

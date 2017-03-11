@@ -71,7 +71,7 @@
             internal bool $disposing;
             internal IEnumerator<KeyValuePair<string, object>> $locvar0;
             internal int $PC;
-            internal KeyValuePair<string, object> <kvp>__0;
+            internal KeyValuePair<string, object> <kvp>__1;
 
             [DebuggerHidden]
             public void Dispose()
@@ -124,10 +124,10 @@
                     }
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<kvp>__0 = this.$locvar0.Current;
-                        if (this.<kvp>__0.Value is T)
+                        this.<kvp>__1 = this.$locvar0.Current;
+                        if (this.<kvp>__1.Value is T)
                         {
-                            this.$current = new KeyValuePair<string, T>(this.<kvp>__0.Key, (T) this.<kvp>__0.Value);
+                            this.$current = new KeyValuePair<string, T>(this.<kvp>__1.Key, (T) this.<kvp>__1.Value);
                             if (!this.$disposing)
                             {
                                 this.$PC = 1;

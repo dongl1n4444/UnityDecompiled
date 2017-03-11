@@ -8,7 +8,7 @@
     public struct ObjectReferenceKeyframe
     {
         public float time;
-        public Object value;
+        public UnityEngine.Object value;
     }
 }
 

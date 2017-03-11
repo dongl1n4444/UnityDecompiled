@@ -3,7 +3,7 @@
     using System;
 
     /// <summary>
-    /// <para>Enumeration of nodes which can be updated by VR input.</para>
+    /// <para>Enumeration of tracked VR nodes which can be updated by VR input.</para>
     /// </summary>
     public enum VRNode
     {
@@ -12,7 +12,9 @@
         CenterEye,
         Head,
         LeftHand,
-        RightHand
+        RightHand,
+        GameController,
+        TrackingReference
     }
 }
 

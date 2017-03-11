@@ -61,18 +61,8 @@
             return "x86";
         }
 
-        public static string GetExtensionForBuildTarget(BuildTarget target, BuildOptions options) => 
-            ModuleManager.GetBuildPostProcessor(target)?.GetExtension(target, options);
-
-        public static string GetScriptLayoutFileFromBuild(BuildOptions options, BuildTarget target, string installPath, string fileName)
-        {
-            IBuildPostprocessor buildPostProcessor = ModuleManager.GetBuildPostProcessor(target);
-            if (buildPostProcessor != null)
-            {
-                return buildPostProcessor.GetScriptLayoutFileFromBuild(options, installPath, fileName);
-            }
-            return "";
-        }
+        public static string GetExtensionForBuildTarget(BuildTargetGroup targetGroup, BuildTarget target, BuildOptions options) => 
+            ModuleManager.GetBuildPostProcessor(targetGroup, target)?.GetExtension(target, options);
 
         internal static bool InstallPluginsByExtension(string pluginSourceFolder, string extension, string debugExtension, string destPluginFolder, bool copyDirectories)
         {
@@ -126,10 +116,10 @@
             }
         }
 
-        public static void Launch(BuildTarget target, string path, string productName, BuildOptions options)
+        public static void Launch(BuildTargetGroup targetGroup, BuildTarget target, string path, string productName, BuildOptions options)
         {
             BuildLaunchPlayerArgs args;
-            IBuildPostprocessor buildPostProcessor = ModuleManager.GetBuildPostProcessor(target);
+            IBuildPostprocessor buildPostProcessor = ModuleManager.GetBuildPostProcessor(targetGroup, target);
             if (buildPostProcessor == null)
             {
                 throw new UnityException($"Launching {target} build target via mono is not supported");
@@ -142,19 +132,19 @@
             buildPostProcessor.LaunchPlayer(args);
         }
 
-        public static void Postprocess(BuildTarget target, string installPath, string companyName, string productName, int width, int height, string downloadWebplayerUrl, string manualDownloadWebplayerUrl, BuildOptions options, RuntimeClassRegistry usedClassRegistry, BuildReport report)
+        public static void Postprocess(BuildTargetGroup targetGroup, BuildTarget target, string installPath, string companyName, string productName, int width, int height, string downloadWebplayerUrl, string manualDownloadWebplayerUrl, BuildOptions options, RuntimeClassRegistry usedClassRegistry, BuildReport report)
         {
             BuildPostProcessArgs args;
             string str = "Temp/StagingArea";
             string str2 = "Temp/StagingArea/Data";
             string str3 = "Temp/StagingArea/Data/Managed";
             string playbackEngineDirectory = BuildPipeline.GetPlaybackEngineDirectory(target, options);
-            bool flag = ((options & BuildOptions.InstallInBuildFolder) != BuildOptions.CompressTextures) && SupportsInstallInBuildFolder(target);
+            bool flag = ((options & BuildOptions.InstallInBuildFolder) != BuildOptions.CompressTextures) && SupportsInstallInBuildFolder(targetGroup, target);
             if ((installPath == string.Empty) && !flag)
             {
                 throw new Exception(installPath + " must not be an empty string");
             }
-            IBuildPostprocessor buildPostProcessor = ModuleManager.GetBuildPostProcessor(target);
+            IBuildPostprocessor buildPostProcessor = ModuleManager.GetBuildPostProcessor(targetGroup, target);
             if (buildPostProcessor == null)
             {
                 throw new UnityException($"Build target '{target}' not supported");
@@ -174,12 +164,12 @@
             buildPostProcessor.PostProcess(args);
         }
 
-        public static string PrepareForBuild(BuildOptions options, BuildTarget target) => 
-            ModuleManager.GetBuildPostProcessor(target)?.PrepareForBuild(options, target);
+        public static string PrepareForBuild(BuildOptions options, BuildTargetGroup targetGroup, BuildTarget target) => 
+            ModuleManager.GetBuildPostProcessor(targetGroup, target)?.PrepareForBuild(options, target);
 
-        public static bool SupportsInstallInBuildFolder(BuildTarget target)
+        public static bool SupportsInstallInBuildFolder(BuildTargetGroup targetGroup, BuildTarget target)
         {
-            IBuildPostprocessor buildPostProcessor = ModuleManager.GetBuildPostProcessor(target);
+            IBuildPostprocessor buildPostProcessor = ModuleManager.GetBuildPostProcessor(targetGroup, target);
             if (buildPostProcessor != null)
             {
                 return buildPostProcessor.SupportsInstallInBuildFolder();
@@ -200,9 +190,9 @@
             return true;
         }
 
-        public static bool SupportsScriptsOnlyBuild(BuildTarget target)
+        public static bool SupportsScriptsOnlyBuild(BuildTargetGroup targetGroup, BuildTarget target)
         {
-            IBuildPostprocessor buildPostProcessor = ModuleManager.GetBuildPostProcessor(target);
+            IBuildPostprocessor buildPostProcessor = ModuleManager.GetBuildPostProcessor(targetGroup, target);
             return ((buildPostProcessor != null) && buildPostProcessor.SupportsScriptsOnlyBuild());
         }
 

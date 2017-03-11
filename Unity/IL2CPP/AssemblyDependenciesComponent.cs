@@ -7,7 +7,7 @@
     using Unity.Cecil.Visitor;
     using Unity.IL2CPP.IoCServices;
 
-    internal class AssemblyDependenciesComponent : IAssemblyDependencies
+    public class AssemblyDependenciesComponent : IAssemblyDependencies
     {
         private Dictionary<AssemblyDefinition, IEnumerable<AssemblyDefinition>> _assemblyReferences = new Dictionary<AssemblyDefinition, IEnumerable<AssemblyDefinition>>();
 

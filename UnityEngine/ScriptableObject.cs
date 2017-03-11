@@ -16,7 +16,7 @@
             Internal_CreateScriptableObject(this);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern void Internal_CreateScriptableObject([Writable] ScriptableObject self);
         [Obsolete("Use EditorUtility.SetDirty instead")]
         public void SetDirty()
@@ -24,7 +24,7 @@
             INTERNAL_CALL_SetDirty(this);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SetDirty(ScriptableObject self);
         /// <summary>
         /// <para>Creates an instance of a scriptable object.</para>
@@ -34,7 +34,7 @@
         /// <returns>
         /// <para>The created ScriptableObject.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern ScriptableObject CreateInstance(string className);
         /// <summary>
         /// <para>Creates an instance of a scriptable object.</para>
@@ -47,7 +47,7 @@
         public static ScriptableObject CreateInstance(System.Type type) => 
             CreateInstanceFromType(type);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern ScriptableObject CreateInstanceFromType(System.Type type);
         public static T CreateInstance<T>() where T: ScriptableObject => 
             ((T) CreateInstance(typeof(T)));

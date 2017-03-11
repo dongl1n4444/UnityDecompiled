@@ -12,7 +12,7 @@
         }
 
         public static LexicalInfo Copy(LexicalInfo li) => 
-            new LexicalInfo(li.get_FileName(), li.get_Line(), li.get_Column());
+            new LexicalInfo(li.FileName, li.Line, li.Column);
     }
 }
 

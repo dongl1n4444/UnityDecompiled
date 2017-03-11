@@ -12,7 +12,7 @@
         private SerializedProperty m_Rotation;
         private GUIContent rotationContent = new GUIContent("Rotation", "The local rotation of this Game Object relative to the parent.");
         private static int s_FoldoutHash = "Foldout".GetHashCode();
-        private Object[] targets;
+        private UnityEngine.Object[] targets;
 
         public void OnEnable(SerializedProperty m_Rotation, GUIContent label)
         {
@@ -42,7 +42,7 @@
             {
                 Transform transform2 = this.targets[i] as Transform;
                 Vector3 vector2 = transform2.GetLocalEulerAngles(transform2.rotationOrder);
-                flag |= ((vector2.x != localEulerAngles.x) || (vector2.y != localEulerAngles.y)) || (vector2.z != localEulerAngles.z);
+                flag |= ((vector2.x != localEulerAngles.x) || (vector2.y != localEulerAngles.y)) || !(vector2.z == localEulerAngles.z);
                 flag2 |= transform2.rotationOrder != transform.rotationOrder;
             }
             Rect totalPosition = EditorGUILayout.GetControlRect(true, EditorGUIUtility.singleLineHeight * (!EditorGUIUtility.wideMode ? ((float) 2) : ((float) 1)), new GUILayoutOption[0]);
@@ -51,7 +51,7 @@
             EditorGUI.BeginChangeCheck();
             int id = GUIUtility.GetControlID(s_FoldoutHash, FocusType.Keyboard, totalPosition);
             string str = "";
-            if (AnimationMode.InAnimationMode() && (transform.rotationOrder != RotationOrder.OrderZXY))
+            if (UnityEditor.AnimationMode.InAnimationMode() && (transform.rotationOrder != RotationOrder.OrderZXY))
             {
                 if (flag2)
                 {

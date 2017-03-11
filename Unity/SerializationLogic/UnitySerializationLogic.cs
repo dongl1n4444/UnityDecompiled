@@ -74,7 +74,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<CustomAttribute, TypeReference>(null, (IntPtr) <FieldAttributes>m__0);
+                <>f__am$cache0 = _ => _.AttributeType;
             }
             return Enumerable.Select<CustomAttribute, TypeReference>(field.CustomAttributes, <>f__am$cache0);
         }
@@ -84,7 +84,7 @@
             <HasFieldsThatCanContainUnityEngineObjectReferences>c__AnonStorey1 storey = new <HasFieldsThatCanContainUnityEngineObjectReferences>c__AnonStorey1 {
                 definition = definition
             };
-            return Enumerable.Any<KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver>>(Enumerable.Where<KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver>>(AllFieldsFor(storey.definition, typeResolver), new Func<KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver>, bool>(storey, (IntPtr) this.<>m__0)), new Func<KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver>, bool>(storey, (IntPtr) this.<>m__1));
+            return Enumerable.Any<KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver>>(Enumerable.Where<KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver>>(AllFieldsFor(storey.definition, typeResolver), new Func<KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver>, bool>(storey.<>m__0)), new Func<KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver>, bool>(storey.<>m__1));
         }
 
         public static bool HasSerializeFieldAttribute(FieldDefinition field)
@@ -108,26 +108,14 @@
         private static bool IsFieldTypeSerializable(TypeReference typeReference) => 
             (IsTypeSerializable(typeReference) || IsSupportedCollection(typeReference));
 
+        private static bool IsGenericDictionary(TypeReference typeReference)
+        {
+            TypeReference type = typeReference;
+            return ((type != null) && CecilUtils.IsGenericDictionary(type));
+        }
+
         public static bool IsNonSerialized(TypeReference typeDeclaration) => 
             ((typeDeclaration == null) || (typeDeclaration.IsEnum() || (typeDeclaration.HasGenericParameters || ((typeDeclaration.MetadataType == MetadataType.Object) || (typeDeclaration.FullName.StartsWith("System.") || (typeDeclaration.IsArray || ((typeDeclaration.FullName == "UnityEngine.MonoBehaviour") || (typeDeclaration.FullName == "UnityEngine.ScriptableObject"))))))));
-
-        private static bool IsOrExtendsGenericDictionary(TypeReference typeReference)
-        {
-            TypeDefinition definition;
-            for (TypeReference reference = typeReference; reference != null; reference = definition.BaseType)
-            {
-                if (CecilUtils.IsGenericDictionary(reference))
-                {
-                    return true;
-                }
-                definition = reference.CheckedResolve();
-                if (definition == null)
-                {
-                    break;
-                }
-            }
-            return false;
-        }
 
         private static bool IsSerializablePrimitive(TypeReference typeReference)
         {
@@ -170,7 +158,7 @@
             {
                 return false;
             }
-            if (IsOrExtendsGenericDictionary(typeReference))
+            if (IsGenericDictionary(typeReference))
             {
                 return false;
             }
@@ -197,19 +185,24 @@
 
         public static bool ShouldImplementIDeserializable(TypeReference typeDeclaration)
         {
+            if (typeDeclaration.FullName == "UnityEngine.ExposedReference`1")
+            {
+                return true;
+            }
             if (IsNonSerialized(typeDeclaration))
             {
                 return false;
             }
-            if (typeDeclaration is GenericInstanceType)
+            GenericInstanceType type = typeDeclaration as GenericInstanceType;
+            if (type != null)
             {
-                return false;
+                return (type.ElementType.FullName == "UnityEngine.ExposedReference`1");
             }
             try
             {
                 if (((!UnityEngineTypePredicates.IsMonoBehaviour(typeDeclaration) && !UnityEngineTypePredicates.IsScriptableObject(typeDeclaration)) && (typeDeclaration.CheckedResolve().IsSerializable && !typeDeclaration.CheckedResolve().IsAbstract)) && (<>f__am$cache1 == null))
                 {
-                    <>f__am$cache1 = new Func<CustomAttribute, bool>(null, (IntPtr) <ShouldImplementIDeserializable>m__1);
+                    <>f__am$cache1 = a => a.AttributeType.FullName.Contains("System.Runtime.CompilerServices.CompilerGenerated");
                 }
                 return (!Enumerable.Any<CustomAttribute>(typeDeclaration.CheckedResolve().CustomAttributes, <>f__am$cache1) || UnityEngineTypePredicates.ShouldHaveHadSerializableAttribute(typeDeclaration));
             }

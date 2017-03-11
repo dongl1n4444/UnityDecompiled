@@ -174,10 +174,27 @@
                 {
                     bool flag = this.smHost.liveLinkInfo.srcNode == edge.fromSlot.node;
                     bool flag2 = this.smHost.liveLinkInfo.dstNode == edge.toSlot.node;
-                    if (((flag && flag2) || ((flag2 && this.smHost.liveLinkInfo.transitionInfo.entry) && (edge.fromSlot.node is EntryNode))) || (((flag && this.smHost.liveLinkInfo.transitionInfo.exit) && (edge.toSlot.node is ExitNode)) || ((flag2 && this.smHost.liveLinkInfo.transitionInfo.anyState) && (edge.fromSlot.node is AnyStateNode))))
+                    bool flag3 = false;
+                    if (this.smHost.liveLinkInfo.transitionInfo.entry)
+                    {
+                        flag3 = (flag2 && (edge.fromSlot.node is EntryNode)) || ((flag && flag2) && (edge.toSlot.node is StateMachineNode));
+                    }
+                    else if (this.smHost.liveLinkInfo.transitionInfo.anyState)
+                    {
+                        flag3 = flag2 && (edge.fromSlot.node is AnyStateNode);
+                    }
+                    else if (this.smHost.liveLinkInfo.transitionInfo.exit)
+                    {
+                        flag3 = (flag && (edge.toSlot.node is ExitNode)) || (flag2 && (edge.fromSlot.node is EntryNode));
+                    }
+                    else
+                    {
+                        flag3 = flag && flag2;
+                    }
+                    if (flag3)
                     {
                         float normalizedTime = this.smHost.liveLinkInfo.transitionInfo.normalizedTime;
-                        if (this.smHost.liveLinkInfo.currentStateMachine != this.smHost.liveLinkInfo.nextStateMachine)
+                        if ((this.smHost.liveLinkInfo.currentStateMachine != this.smHost.liveLinkInfo.nextStateMachine) && !this.smHost.liveLinkInfo.transitionInfo.anyState)
                         {
                             normalizedTime = (normalizedTime % 0.5f) / 0.5f;
                         }

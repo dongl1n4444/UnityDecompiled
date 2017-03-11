@@ -93,7 +93,7 @@
             public GUIStyle box = "OL Box";
             public GUIStyle button = "LargeButton";
             public GUIContent overviewText = EditorGUIUtility.TextContent("A Material is using the texture as a normal map.\nThe texture must be marked as a normal map in the import settings.");
-            public GUIStyle selected = "ServerUpdateChangesetOn";
+            public GUIStyle selected = "OL SelectedRow";
         }
     }
 }

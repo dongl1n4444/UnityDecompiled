@@ -69,7 +69,7 @@
             <FindTypeByNameCaseInsensitive>c__AnonStorey0 storey = new <FindTypeByNameCaseInsensitive>c__AnonStorey0 {
                 name = name
             };
-            return Enumerable.FirstOrDefault<UnityType>(ms_types, new Func<UnityType, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.FirstOrDefault<UnityType>(ms_types, new Func<UnityType, bool>(storey.<>m__0));
         }
 
         public static UnityType FindTypeByPersistentTypeID(int id)
@@ -82,7 +82,7 @@
         public static ReadOnlyCollection<UnityType> GetTypes() => 
             ms_typesReadOnly;
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern UnityTypeTransport[] Internal_GetAllTypes();
         public bool IsDerivedFrom(UnityType baseClass) => 
             ((this.runtimeTypeIndex - baseClass.runtimeTypeIndex) < baseClass.descendantCount);

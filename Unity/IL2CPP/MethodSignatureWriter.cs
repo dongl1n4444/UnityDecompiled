@@ -13,6 +13,8 @@
     using Unity.IL2CPP.ILPreProcessor;
     using Unity.IL2CPP.IoC;
     using Unity.IL2CPP.IoCServices;
+    using Unity.IL2CPP.Marshaling;
+    using Unity.IL2CPP.Marshaling.MarshalInfoWriters;
 
     public class MethodSignatureWriter
     {
@@ -33,6 +35,34 @@
 
         public static bool CanDevirtualizeMethodCall(MethodDefinition method) => 
             ((!method.IsVirtual || method.DeclaringType.IsSealed) || method.IsFinal);
+
+        internal static string FormatComMethodParameterList(MethodReference interopMethod, MethodReference interfaceMethod, Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver, MarshalType marshalType, bool includeTypeNames)
+        {
+            List<string> elements = new List<string>();
+            int num = 0;
+            foreach (ParameterDefinition definition in interopMethod.Parameters)
+            {
+                MarshalInfo marshalInfo = interfaceMethod.Parameters[num].MarshalInfo;
+                DefaultMarshalInfoWriter writer = MarshalDataCollector.MarshalInfoWriterFor(typeResolver.Resolve(definition.ParameterType), marshalType, marshalInfo, true, false, false, null);
+                foreach (MarshaledType type in writer.MarshaledTypes)
+                {
+                    elements.Add(string.Format(!includeTypeNames ? "{1}" : "{0} {1}", type.DecoratedName, Naming.ForParameterName(definition) + type.VariableName));
+                }
+                num++;
+            }
+            TypeReference reference2 = typeResolver.Resolve(interopMethod.ReturnType);
+            if (reference2.MetadataType != MetadataType.Void)
+            {
+                MarshalInfo info2 = interfaceMethod.MethodReturnType.MarshalInfo;
+                MarshaledType[] marshaledTypes = MarshalDataCollector.MarshalInfoWriterFor(reference2, marshalType, info2, true, false, false, null).MarshaledTypes;
+                for (int i = 0; i < (marshaledTypes.Length - 1); i++)
+                {
+                    elements.Add(string.Format(!includeTypeNames ? "{1}" : "{0}* {1}", marshaledTypes[i].DecoratedName, Naming.ForComInterfaceReturnParameterName() + marshaledTypes[i].VariableName));
+                }
+                elements.Add(string.Format(!includeTypeNames ? "{1}" : "{0}* {1}", marshaledTypes[marshaledTypes.Length - 1].DecoratedName, Naming.ForComInterfaceReturnParameterName()));
+            }
+            return elements.AggregateWithComma();
+        }
 
         private static string FormatHiddenMethodArgument(ParameterFormat format)
         {
@@ -83,6 +113,18 @@
             return ((elements.Count != 0) ? elements.AggregateWithComma() : string.Empty);
         }
 
+        internal static string FormatProjectedComCallableWrapperMethodDeclaration(MethodReference interfaceMethod, Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver, MarshalType marshalType)
+        {
+            string str = FormatComMethodParameterList(interfaceMethod, interfaceMethod, typeResolver, marshalType, true);
+            string str2 = Naming.ForComCallableWrapperProjectedMethod(interfaceMethod);
+            string str3 = Naming.ForVariable(interfaceMethod.DeclaringType);
+            if (string.IsNullOrEmpty(str))
+            {
+                return $"il2cpp_hresult_t {str2}({str3} {Naming.ThisParameterName})";
+            }
+            return $"il2cpp_hresult_t {str2}({str3} {Naming.ThisParameterName}, {str})";
+        }
+
         private static string FormatThis(ParameterFormat format, TypeReference thisType)
         {
             if (format == ParameterFormat.WithNameCastThis)
@@ -124,6 +166,13 @@
 
         internal static string GetMethodSignature(string name, string returnType, string parameters, string specifiers = "", string attributes = "") => 
             $"{specifiers} {attributes} {returnType} {name} ({parameters})";
+
+        internal static string GetMethodSignatureRaw(MethodReference method)
+        {
+            Unity.IL2CPP.ILPreProcessor.TypeResolver resolver = new Unity.IL2CPP.ILPreProcessor.TypeResolver(method.DeclaringType as GenericInstanceType, method as GenericInstanceMethod);
+            string attributes = BuildMethodAttributes(method);
+            return GetMethodSignature(Naming.ForMethodNameOnly(method), Naming.ForVariable(resolver.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveReturnTypeIfNeeded(method))), FormatParameters(method, ParameterFormat.WithTypeAndName, false, true), "extern \"C\"", attributes);
+        }
 
         public static string GetSharedMethodSignature(CppCodeWriter writer, MethodReference method)
         {
@@ -187,7 +236,24 @@
         private static string ParameterStringFor(MethodReference methodDefinition, ParameterFormat format, ParameterDefinition parameterDefinition) => 
             FormatParameterName(Unity.IL2CPP.ILPreProcessor.TypeResolver.For(methodDefinition.DeclaringType).Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveParameterTypeIfNeeded(methodDefinition, parameterDefinition)), Naming.ForParameterName(parameterDefinition), format);
 
-        private static void RecordIncludes(CppCodeWriter writer, MethodReference method, Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver)
+        internal static void RecordIncludes(CppCodeWriter writer, MethodReference method)
+        {
+            Unity.IL2CPP.ILPreProcessor.TypeResolver resolver = new Unity.IL2CPP.ILPreProcessor.TypeResolver(method.DeclaringType as GenericInstanceType, method as GenericInstanceMethod);
+            if (method.HasThis)
+            {
+                writer.AddIncludesForTypeReference(!method.DeclaringType.IsComOrWindowsRuntimeInterface() ? method.DeclaringType : TypeProvider.SystemObject, false);
+            }
+            if (method.ReturnType.MetadataType != MetadataType.Void)
+            {
+                writer.AddIncludesForTypeReference(resolver.ResolveReturnType(method), false);
+            }
+            foreach (ParameterDefinition definition in method.Parameters)
+            {
+                writer.AddIncludesForTypeReference(resolver.ResolveParameterType(method, definition), true);
+            }
+        }
+
+        internal static void RecordIncludes(CppCodeWriter writer, MethodReference method, Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver)
         {
             if (method.HasThis)
             {
@@ -215,8 +281,8 @@
             internal bool $disposing;
             internal Collection<ParameterDefinition>.Enumerator $locvar0;
             internal int $PC;
-            internal ParameterDefinition <parameterDefinition>__1;
-            internal TypeReference <thisType>__0;
+            internal ParameterDefinition <parameterDefinition>__2;
+            internal TypeReference <thisType>__1;
             internal bool forceNoStaticThis;
             internal ParameterFormat format;
             internal bool includeHiddenMethodInfo;
@@ -311,16 +377,16 @@
                 }
                 if (((this.format != ParameterFormat.WithNameNoThis) && (this.format != ParameterFormat.WithTypeNoThis)) && ((this.format != ParameterFormat.WithTypeAndNameNoThis) && this.methodDefinition.HasThis))
                 {
-                    this.<thisType>__0 = this.methodDefinition.DeclaringType;
-                    if (this.<thisType>__0.IsValueType())
+                    this.<thisType>__1 = this.methodDefinition.DeclaringType;
+                    if (this.<thisType>__1.IsValueType())
                     {
-                        this.<thisType>__0 = new PointerType(this.<thisType>__0);
+                        this.<thisType>__1 = new PointerType(this.<thisType>__1);
                     }
-                    else if (this.<thisType>__0.IsSpecialSystemBaseType())
+                    else if (this.<thisType>__1.IsSpecialSystemBaseType())
                     {
-                        this.<thisType>__0 = this.methodDefinition.Module.TypeSystem.Object;
+                        this.<thisType>__1 = this.methodDefinition.Module.TypeSystem.Object;
                     }
-                    this.$current = MethodSignatureWriter.FormatThis(this.format, this.<thisType>__0);
+                    this.$current = MethodSignatureWriter.FormatThis(this.format, this.<thisType>__1);
                     if (!this.$disposing)
                     {
                         this.$PC = 5;
@@ -335,8 +401,8 @@
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<parameterDefinition>__1 = this.$locvar0.Current;
-                        this.$current = MethodSignatureWriter.ParameterStringFor(this.methodDefinition, this.format, this.<parameterDefinition>__1);
+                        this.<parameterDefinition>__2 = this.$locvar0.Current;
+                        this.$current = MethodSignatureWriter.ParameterStringFor(this.methodDefinition, this.format, this.<parameterDefinition>__2);
                         if (!this.$disposing)
                         {
                             this.$PC = 6;

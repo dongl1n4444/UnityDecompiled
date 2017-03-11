@@ -7,12 +7,13 @@
     using System.Runtime.InteropServices;
     using UnityEditor;
     using UnityEngine;
+    using UnityEngine.Scripting;
     using UnityEngineInternal;
 
     /// <summary>
     /// <para>A graph controlling the interaction of states. Each state references a motion.</para>
     /// </summary>
-    public sealed class AnimatorStateMachine : Object
+    public sealed class AnimatorStateMachine : UnityEngine.Object
     {
         private PushUndoIfNeeded undoHandler = new PushUndoIfNeeded(true);
 
@@ -27,7 +28,9 @@
             AnimatorStateTransition[] anyStateTransitions = this.anyStateTransitions;
             AnimatorStateTransition objectToAdd = new AnimatorStateTransition {
                 hasExitTime = false,
-                hasFixedDuration = true
+                hasFixedDuration = true,
+                duration = 0.25f,
+                exitTime = 0.75f
             };
             if (AssetDatabase.GetAssetPath(this) != "")
             {
@@ -63,7 +66,7 @@
             return transition;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void AddBehaviour(int instanceID);
         private AnimatorTransition AddEntryTransition()
         {
@@ -212,7 +215,7 @@
         /// </summary>
         /// <param name="stateMachineBehaviourType"></param>
         [TypeInferenceRule(TypeInferenceRules.TypeReferencedByFirstArgument)]
-        public StateMachineBehaviour AddStateMachineBehaviour(Type stateMachineBehaviourType) => 
+        public StateMachineBehaviour AddStateMachineBehaviour(System.Type stateMachineBehaviourType) => 
             ((StateMachineBehaviour) this.Internal_AddStateMachineBehaviourWithType(stateMachineBehaviourType));
 
         /// <summary>
@@ -285,14 +288,14 @@
             return objectToAdd;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void Clear();
         internal AnimatorStateMachine FindParent(AnimatorStateMachine stateMachine)
         {
             <FindParent>c__AnonStorey8 storey = new <FindParent>c__AnonStorey8 {
                 stateMachine = stateMachine
             };
-            if (Enumerable.Any<ChildAnimatorStateMachine>(this.stateMachines, new Func<ChildAnimatorStateMachine, bool>(storey, (IntPtr) this.<>m__0)))
+            if (Enumerable.Any<ChildAnimatorStateMachine>(this.stateMachines, new Func<ChildAnimatorStateMachine, bool>(storey.<>m__0)))
             {
                 return this;
             }
@@ -356,7 +359,7 @@
             return new List<AnimatorStateTransition>(this.anyStateTransitions).Find(new Predicate<AnimatorStateTransition>(yc.<>m__0));
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern MonoScript GetBehaviourMonoScript(int index);
         internal Vector3 GetStateMachinePosition(AnimatorStateMachine stateMachine)
         {
@@ -375,7 +378,7 @@
         /// <para>Gets the list of all outgoing state machine transitions from given state machine.</para>
         /// </summary>
         /// <param name="sourceStateMachine">The source state machine.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern AnimatorTransition[] GetStateMachineTransitions(AnimatorStateMachine sourceStateMachine);
         internal Vector3 GetStatePosition(AnimatorState state)
         {
@@ -399,20 +402,20 @@
             <HasState>c__AnonStorey4 storey = new <HasState>c__AnonStorey4 {
                 state = state
             };
-            return Enumerable.Any<ChildAnimatorState>(this.statesRecursive, new Func<ChildAnimatorState, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Any<ChildAnimatorState>(this.statesRecursive, new Func<ChildAnimatorState, bool>(storey.<>m__0));
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern bool HasState(AnimatorState state, bool recursive);
         internal bool HasStateMachine(AnimatorStateMachine child)
         {
             <HasStateMachine>c__AnonStorey6 storey = new <HasStateMachine>c__AnonStorey6 {
                 child = child
             };
-            return Enumerable.Any<ChildAnimatorStateMachine>(this.stateMachinesRecursive, new Func<ChildAnimatorStateMachine, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Any<ChildAnimatorStateMachine>(this.stateMachinesRecursive, new Func<ChildAnimatorStateMachine, bool>(storey.<>m__0));
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern bool HasStateMachine(AnimatorStateMachine state, bool recursive);
         internal bool HasTransition(AnimatorState stateA, AnimatorState stateB)
         {
@@ -420,52 +423,52 @@
                 stateB = stateB,
                 stateA = stateA
             };
-            return (Enumerable.Any<AnimatorStateTransition>(storey.stateA.transitions, new Func<AnimatorStateTransition, bool>(storey, (IntPtr) this.<>m__0)) || Enumerable.Any<AnimatorStateTransition>(storey.stateB.transitions, new Func<AnimatorStateTransition, bool>(storey, (IntPtr) this.<>m__1)));
+            return (Enumerable.Any<AnimatorStateTransition>(storey.stateA.transitions, new Func<AnimatorStateTransition, bool>(storey.<>m__0)) || Enumerable.Any<AnimatorStateTransition>(storey.stateB.transitions, new Func<AnimatorStateTransition, bool>(storey.<>m__1)));
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern ScriptableObject Internal_AddStateMachineBehaviourWithType(Type stateMachineBehaviourType);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern ScriptableObject Internal_AddStateMachineBehaviourWithType(System.Type stateMachineBehaviourType);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_Create(AnimatorStateMachine mono);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_anyStatePosition(out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_entryPosition(out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_exitPosition(out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_parentStateMachinePosition(out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_anyStatePosition(ref Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_entryPosition(ref Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_exitPosition(ref Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_parentStateMachinePosition(ref Vector3 value);
         internal bool IsDirectParent(AnimatorStateMachine stateMachine)
         {
             <IsDirectParent>c__AnonStorey5 storey = new <IsDirectParent>c__AnonStorey5 {
                 stateMachine = stateMachine
             };
-            return Enumerable.Any<ChildAnimatorStateMachine>(this.stateMachines, new Func<ChildAnimatorStateMachine, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Any<ChildAnimatorStateMachine>(this.stateMachines, new Func<ChildAnimatorStateMachine, bool>(storey.<>m__0));
         }
 
         /// <summary>
         /// <para>Makes a unique state machine name in the context of the parent state machine.</para>
         /// </summary>
         /// <param name="name">Desired name for the state machine.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern string MakeUniqueStateMachineName(string name);
         /// <summary>
         /// <para>Makes a unique state name in the context of the parent state machine.</para>
         /// </summary>
         /// <param name="name">Desired name for the state.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern string MakeUniqueStateName(string name);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void MoveState(AnimatorState state, AnimatorStateMachine target);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void MoveStateMachine(AnimatorStateMachine stateMachine, AnimatorStateMachine target);
         /// <summary>
         /// <para>Utility function to remove an AnyState transition from the state machine.</para>
@@ -476,7 +479,7 @@
             <RemoveAnyStateTransition>c__AnonStorey0 storey = new <RemoveAnyStateTransition>c__AnonStorey0 {
                 transition = transition
             };
-            if (Enumerable.Any<AnimatorStateTransition>(new List<AnimatorStateTransition>(this.anyStateTransitions), new Func<AnimatorStateTransition, bool>(storey, (IntPtr) this.<>m__0)))
+            if (Enumerable.Any<AnimatorStateTransition>(new List<AnimatorStateTransition>(this.anyStateTransitions), new Func<AnimatorStateTransition, bool>(storey.<>m__0)))
             {
                 this.undoHandler.DoUndo(this, "AnyState Transition Removed");
                 AnimatorStateTransition[] anyStateTransitions = this.anyStateTransitions;
@@ -506,7 +509,7 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void RemoveBehaviour(int index);
         /// <summary>
         /// <para>Utility function to remove an entry transition from the state machine.</para>
@@ -517,7 +520,7 @@
             <RemoveEntryTransition>c__AnonStorey1 storey = new <RemoveEntryTransition>c__AnonStorey1 {
                 transition = transition
             };
-            if (Enumerable.Any<AnimatorTransition>(new List<AnimatorTransition>(this.entryTransitions), new Func<AnimatorTransition, bool>(storey, (IntPtr) this.<>m__0)))
+            if (Enumerable.Any<AnimatorTransition>(new List<AnimatorTransition>(this.entryTransitions), new Func<AnimatorTransition, bool>(storey.<>m__0)))
             {
                 this.undoHandler.DoUndo(this, "Entry Transition Removed");
                 AnimatorTransition[] entryTransitions = this.entryTransitions;
@@ -543,7 +546,7 @@
             this.RemoveStateInternal(state);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void RemoveStateInternal(AnimatorState state);
         /// <summary>
         /// <para>Utility function to remove a state machine from its parent state machine.</para>
@@ -556,7 +559,7 @@
             this.RemoveStateMachineInternal(stateMachine);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void RemoveStateMachineInternal(AnimatorStateMachine stateMachine);
         /// <summary>
         /// <para>Utility function to remove an outgoing transition from source state machine.</para>
@@ -597,7 +600,7 @@
         /// <param name="stateMachine">The source state machine.</param>
         /// <param name="transitions">The outgoing transitions.</param>
         /// <param name="sourceStateMachine"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetStateMachineTransitions(AnimatorStateMachine sourceStateMachine, AnimatorTransition[] transitions);
         internal void SetStatePosition(AnimatorState state, Vector3 position)
         {
@@ -633,7 +636,7 @@
         /// <summary>
         /// <para>The list of AnyState transitions.</para>
         /// </summary>
-        public AnimatorStateTransition[] anyStateTransitions { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public AnimatorStateTransition[] anyStateTransitions { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         internal List<AnimatorStateTransition> anyStateTransitionsRecursive
         {
@@ -652,12 +655,12 @@
         /// <summary>
         /// <para>The Behaviour list assigned to this state machine.</para>
         /// </summary>
-        public StateMachineBehaviour[] behaviours { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public StateMachineBehaviour[] behaviours { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The state that the state machine will be in when it starts.</para>
         /// </summary>
-        public AnimatorState defaultState { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public AnimatorState defaultState { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The position of the entry node.</para>
@@ -679,7 +682,7 @@
         /// <summary>
         /// <para>The list of entry transitions in the state machine.</para>
         /// </summary>
-        public AnimatorTransition[] entryTransitions { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public AnimatorTransition[] entryTransitions { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The position of the exit node.</para>
@@ -734,7 +737,7 @@
         /// <summary>
         /// <para>The list of sub state machines.</para>
         /// </summary>
-        public ChildAnimatorStateMachine[] stateMachines { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public ChildAnimatorStateMachine[] stateMachines { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         internal List<ChildAnimatorStateMachine> stateMachinesRecursive
         {
@@ -753,7 +756,7 @@
         /// <summary>
         /// <para>The list of states.</para>
         /// </summary>
-        public ChildAnimatorState[] states { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public ChildAnimatorState[] states { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         internal List<ChildAnimatorState> statesRecursive
         {
@@ -769,7 +772,7 @@
             }
         }
 
-        internal int transitionCount { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal int transitionCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         [Obsolete("uniqueNameHash does not exist anymore.", true)]
         private int uniqueNameHash =>
@@ -784,7 +787,7 @@
                 (childSM.stateMachine == this.stateMachine);
 
             internal bool <>m__1(ChildAnimatorStateMachine sm) => 
-                Enumerable.Any<ChildAnimatorStateMachine>(sm.stateMachine.stateMachines, new Func<ChildAnimatorStateMachine, bool>(this, (IntPtr) this.<>m__2));
+                Enumerable.Any<ChildAnimatorStateMachine>(sm.stateMachine.stateMachines, (Func<ChildAnimatorStateMachine, bool>) (childSM => (childSM.stateMachine == this.stateMachine)));
 
             internal bool <>m__2(ChildAnimatorStateMachine childSM) => 
                 (childSM.stateMachine == this.stateMachine);

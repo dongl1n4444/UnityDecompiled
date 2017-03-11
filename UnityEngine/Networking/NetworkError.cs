@@ -18,7 +18,8 @@
         WrongOperation,
         VersionMismatch,
         CRCMismatch,
-        DNSFailure
+        DNSFailure,
+        UsageError
     }
 }
 

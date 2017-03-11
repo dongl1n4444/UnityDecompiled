@@ -25,12 +25,12 @@
 
         public static UnityConnectEditorWindow Create(string title, List<string> serviceUrls)
         {
-            UnityConnectEditorWindow[] windowArray = Resources.FindObjectsOfTypeAll(typeof(UnityConnectEditorWindow)) as UnityConnectEditorWindow[];
+            UnityConnectEditorWindow[] windowArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(UnityConnectEditorWindow)) as UnityConnectEditorWindow[];
             if (windowArray != null)
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<UnityConnectEditorWindow, bool>(null, (IntPtr) <Create>m__0);
+                    <>f__am$cache0 = win => win != null;
                 }
                 foreach (UnityConnectEditorWindow window in Enumerable.Where<UnityConnectEditorWindow>(windowArray, <>f__am$cache0))
                 {
@@ -38,7 +38,7 @@
                     return window;
                 }
             }
-            Type[] desiredDockNextTo = new Type[] { typeof(InspectorWindow) };
+            System.Type[] desiredDockNextTo = new System.Type[] { typeof(InspectorWindow) };
             UnityConnectEditorWindow window3 = EditorWindow.GetWindow<UnityConnectEditorWindow>(title, desiredDockNextTo);
             window3.m_ClearInitialOpenURL = false;
             window3.initialOpenUrl = serviceUrls[0];
@@ -93,7 +93,7 @@
             {
                 return false;
             }
-            return !Enumerable.Where<string>(this.m_ServiceUrls, new Func<string, int, bool>(storey, (IntPtr) this.<>m__0)).Any<string>();
+            return !Enumerable.Where<string>(this.m_ServiceUrls, new Func<string, int, bool>(storey.<>m__0)).Any<string>();
         }
 
         public string currentUrl

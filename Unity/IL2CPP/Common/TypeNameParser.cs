@@ -215,7 +215,7 @@
         {
             TypeNameParseInfo info = new TypeNameParseInfo();
             char[] data = name.ToCharArray();
-            TypeNameParser parser = new TypeNameParser(data, 0, data.Length, info, false);
+            Unity.IL2CPP.Common.TypeNameParser parser = new Unity.IL2CPP.Common.TypeNameParser(data, 0, data.Length, info, false);
             return (parser.Parse(true) ? info : null);
         }
 
@@ -465,7 +465,7 @@
                 }
             }
             TypeNameParseInfo info = new TypeNameParseInfo();
-            TypeNameParser parser = new TypeNameParser(this._data, this._p, this._end, info, true);
+            Unity.IL2CPP.Common.TypeNameParser parser = new Unity.IL2CPP.Common.TypeNameParser(this._data, this._p, this._end, info, true);
             if (!parser.Parse(flag2))
             {
                 return false;

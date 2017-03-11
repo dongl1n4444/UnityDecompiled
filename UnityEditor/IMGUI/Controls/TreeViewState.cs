@@ -5,13 +5,12 @@
     using UnityEditor;
     using UnityEngine;
 
+    /// <summary>
+    /// <para>The TreeViewState contains serializable state information for the TreeView.</para>
+    /// </summary>
     [Serializable]
-    internal class TreeViewState
+    public class TreeViewState
     {
-        [SerializeField]
-        private float[] m_ColumnWidths = null;
-        [SerializeField]
-        private CreateAssetUtility m_CreateAssetUtility = new CreateAssetUtility();
         [SerializeField]
         private List<int> m_ExpandedIDs = new List<int>();
         [SerializeField]
@@ -22,34 +21,19 @@
         private string m_SearchString;
         [SerializeField]
         private List<int> m_SelectedIDs = new List<int>();
+        /// <summary>
+        /// <para>The current scroll values of the TreeView's scroll view.</para>
+        /// </summary>
         public Vector2 scrollPos;
 
-        internal void OnAwake()
+        internal virtual void OnAwake()
         {
             this.m_RenameOverlay.Clear();
-            this.m_CreateAssetUtility = new CreateAssetUtility();
         }
 
-        internal float[] columnWidths
-        {
-            get => 
-                this.m_ColumnWidths;
-            set
-            {
-                this.m_ColumnWidths = value;
-            }
-        }
-
-        internal CreateAssetUtility createAssetUtility
-        {
-            get => 
-                this.m_CreateAssetUtility;
-            set
-            {
-                this.m_CreateAssetUtility = value;
-            }
-        }
-
+        /// <summary>
+        /// <para>This is the list of currently expanded TreeViewItem IDs.</para>
+        /// </summary>
         public List<int> expandedIDs
         {
             get => 
@@ -60,6 +44,9 @@
             }
         }
 
+        /// <summary>
+        /// <para>The ID for the TreeViewItem that currently is being used for multi selection and key navigation.</para>
+        /// </summary>
         public int lastClickedID
         {
             get => 
@@ -80,6 +67,9 @@
             }
         }
 
+        /// <summary>
+        /// <para>Search string state that can be used in the TreeView to filter the tree data when creating the TreeViewItems.</para>
+        /// </summary>
         public string searchString
         {
             get => 
@@ -90,6 +80,9 @@
             }
         }
 
+        /// <summary>
+        /// <para>Selected TreeViewItem IDs. Use of the SetSelection and IsSelected API will access this state.</para>
+        /// </summary>
         public List<int> selectedIDs
         {
             get => 

@@ -47,10 +47,10 @@
             {
                 AnimatorController.SetAnimatorController(this.m_AvatarPreview.Animator, null);
             }
-            Object.DestroyImmediate(this.m_Controller);
-            Object.DestroyImmediate(this.m_SrcState);
-            Object.DestroyImmediate(this.m_DstState);
-            Object.DestroyImmediate(this.m_Transition);
+            UnityEngine.Object.DestroyImmediate(this.m_Controller);
+            UnityEngine.Object.DestroyImmediate(this.m_SrcState);
+            UnityEngine.Object.DestroyImmediate(this.m_DstState);
+            UnityEngine.Object.DestroyImmediate(this.m_Transition);
             this.m_StateMachine = null;
             this.m_Controller = null;
             this.m_SrcState = null;
@@ -166,7 +166,7 @@
                 this.CopyTransitionForPreview(this.m_RefTransition, ref this.m_Transition);
                 this.DisableIKOnFeetIfNeeded();
                 AnimatorController.SetAnimatorController(this.m_AvatarPreview.Animator, this.m_Controller);
-                this.m_Controller.OnAnimatorControllerDirty = (Action) Delegate.Combine(this.m_Controller.OnAnimatorControllerDirty, new Action(this, (IntPtr) this.ControllerDirty));
+                this.m_Controller.OnAnimatorControllerDirty = (Action) Delegate.Combine(this.m_Controller.OnAnimatorControllerDirty, new Action(this.ControllerDirty));
             }
         }
 

@@ -2,9 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Class containing methods to ease debugging while developing a game.</para>
@@ -14,7 +16,7 @@
         internal static ILogger s_Logger = new Logger(new DebugLogHandler());
 
         /// <summary>
-        /// <para>Assert a condition and logs an error message to the Unity console on failure.</para>
+        /// <para>Assert a condition and logs a formatted error message to the Unity console on failure.</para>
         /// </summary>
         /// <param name="condition">Condition you expect to be true.</param>
         /// <param name="context">Object to which the message applies.</param>
@@ -24,12 +26,12 @@
         {
             if (!condition)
             {
-                logger.Log(LogType.Assert, "Assertion failed");
+                unityLogger.Log(LogType.Assert, "Assertion failed");
             }
         }
 
         /// <summary>
-        /// <para>Assert a condition and logs an error message to the Unity console on failure.</para>
+        /// <para>Assert a condition and logs a formatted error message to the Unity console on failure.</para>
         /// </summary>
         /// <param name="condition">Condition you expect to be true.</param>
         /// <param name="context">Object to which the message applies.</param>
@@ -39,7 +41,7 @@
         {
             if (!condition)
             {
-                logger.Log(LogType.Assert, message);
+                unityLogger.Log(LogType.Assert, message);
             }
         }
 
@@ -48,12 +50,12 @@
         {
             if (!condition)
             {
-                logger.Log(LogType.Assert, message);
+                unityLogger.Log(LogType.Assert, message);
             }
         }
 
         /// <summary>
-        /// <para>Assert a condition and logs an error message to the Unity console on failure.</para>
+        /// <para>Assert a condition and logs a formatted error message to the Unity console on failure.</para>
         /// </summary>
         /// <param name="condition">Condition you expect to be true.</param>
         /// <param name="context">Object to which the message applies.</param>
@@ -63,12 +65,12 @@
         {
             if (!condition)
             {
-                logger.Log(LogType.Assert, "Assertion failed", context);
+                unityLogger.Log(LogType.Assert, "Assertion failed", context);
             }
         }
 
         /// <summary>
-        /// <para>Assert a condition and logs an error message to the Unity console on failure.</para>
+        /// <para>Assert a condition and logs a formatted error message to the Unity console on failure.</para>
         /// </summary>
         /// <param name="condition">Condition you expect to be true.</param>
         /// <param name="context">Object to which the message applies.</param>
@@ -78,7 +80,7 @@
         {
             if (!condition)
             {
-                logger.Log(LogType.Assert, message, context);
+                unityLogger.Log(LogType.Assert, message, context);
             }
         }
 
@@ -87,16 +89,16 @@
         {
             if (!condition)
             {
-                logger.Log(LogType.Assert, message, context);
+                unityLogger.Log(LogType.Assert, message, context);
             }
         }
 
-        [Conditional("UNITY_ASSERTIONS"), Obsolete("Assert(bool, string, params object[]) is obsolete. Use AssertFormat(bool, string, params object[]) (UnityUpgradable) -> AssertFormat(*)", true)]
+        [Obsolete("Assert(bool, string, params object[]) is obsolete. Use AssertFormat(bool, string, params object[]) (UnityUpgradable) -> AssertFormat(*)", true), Conditional("UNITY_ASSERTIONS")]
         public static void Assert(bool condition, string format, params object[] args)
         {
             if (!condition)
             {
-                logger.LogFormat(LogType.Assert, format, args);
+                unityLogger.LogFormat(LogType.Assert, format, args);
             }
         }
 
@@ -112,7 +114,7 @@
         {
             if (!condition)
             {
-                logger.LogFormat(LogType.Assert, format, args);
+                unityLogger.LogFormat(LogType.Assert, format, args);
             }
         }
 
@@ -128,21 +130,21 @@
         {
             if (!condition)
             {
-                logger.LogFormat(LogType.Assert, context, format, args);
+                unityLogger.LogFormat(LogType.Assert, context, format, args);
             }
         }
 
         /// <summary>
         /// <para>Pauses the editor.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void Break();
         /// <summary>
         /// <para>Clears errors from the developer console.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void ClearDeveloperConsole();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void DebugBreak();
         /// <summary>
         /// <para>Draws a line between specified start and end points.</para>
@@ -200,7 +202,7 @@
         /// <param name="color">Color of the line.</param>
         /// <param name="duration">How long the line should be visible for.</param>
         /// <param name="depthTest">Should the line be obscured by objects closer to the camera?</param>
-        public static void DrawLine(Vector3 start, Vector3 end, [DefaultValue("Color.white")] Color color, [DefaultValue("0.0f")] float duration, [DefaultValue("true")] bool depthTest)
+        public static void DrawLine(Vector3 start, Vector3 end, [UnityEngine.Internal.DefaultValue("Color.white")] Color color, [UnityEngine.Internal.DefaultValue("0.0f")] float duration, [UnityEngine.Internal.DefaultValue("true")] bool depthTest)
         {
             INTERNAL_CALL_DrawLine(ref start, ref end, ref color, duration, depthTest);
         }
@@ -261,14 +263,14 @@
         /// <param name="color">Color of the drawn line.</param>
         /// <param name="duration">How long the line will be visible for (in seconds).</param>
         /// <param name="depthTest">Should the line be obscured by other objects closer to the camera?</param>
-        public static void DrawRay(Vector3 start, Vector3 dir, [DefaultValue("Color.white")] Color color, [DefaultValue("0.0f")] float duration, [DefaultValue("true")] bool depthTest)
+        public static void DrawRay(Vector3 start, Vector3 dir, [UnityEngine.Internal.DefaultValue("Color.white")] Color color, [UnityEngine.Internal.DefaultValue("0.0f")] float duration, [UnityEngine.Internal.DefaultValue("true")] bool depthTest)
         {
             DrawLine(start, start + dir, color, duration, depthTest);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void GetDiagnosticSwitches(List<DiagnosticSwitch> results);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_DrawLine(ref Vector3 start, ref Vector3 end, ref Color color, float duration, bool depthTest);
         /// <summary>
         /// <para>Logs message to the Unity Console.</para>
@@ -277,7 +279,7 @@
         /// <param name="context">Object to which the message applies.</param>
         public static void Log(object message)
         {
-            logger.Log(LogType.Log, message);
+            unityLogger.Log(LogType.Log, message);
         }
 
         /// <summary>
@@ -287,7 +289,7 @@
         /// <param name="context">Object to which the message applies.</param>
         public static void Log(object message, UnityEngine.Object context)
         {
-            logger.Log(LogType.Log, message, context);
+            unityLogger.Log(LogType.Log, message, context);
         }
 
         /// <summary>
@@ -298,7 +300,7 @@
         [Conditional("UNITY_ASSERTIONS")]
         public static void LogAssertion(object message)
         {
-            logger.Log(LogType.Assert, message);
+            unityLogger.Log(LogType.Assert, message);
         }
 
         /// <summary>
@@ -309,7 +311,7 @@
         [Conditional("UNITY_ASSERTIONS")]
         public static void LogAssertion(object message, UnityEngine.Object context)
         {
-            logger.Log(LogType.Assert, message, context);
+            unityLogger.Log(LogType.Assert, message, context);
         }
 
         /// <summary>
@@ -321,7 +323,7 @@
         [Conditional("UNITY_ASSERTIONS")]
         public static void LogAssertionFormat(string format, params object[] args)
         {
-            logger.LogFormat(LogType.Assert, format, args);
+            unityLogger.LogFormat(LogType.Assert, format, args);
         }
 
         /// <summary>
@@ -333,7 +335,7 @@
         [Conditional("UNITY_ASSERTIONS")]
         public static void LogAssertionFormat(UnityEngine.Object context, string format, params object[] args)
         {
-            logger.LogFormat(LogType.Assert, context, format, args);
+            unityLogger.LogFormat(LogType.Assert, context, format, args);
         }
 
         /// <summary>
@@ -343,7 +345,7 @@
         /// <param name="context">Object to which the message applies.</param>
         public static void LogError(object message)
         {
-            logger.Log(LogType.Error, message);
+            unityLogger.Log(LogType.Error, message);
         }
 
         /// <summary>
@@ -353,7 +355,7 @@
         /// <param name="context">Object to which the message applies.</param>
         public static void LogError(object message, UnityEngine.Object context)
         {
-            logger.Log(LogType.Error, message, context);
+            unityLogger.Log(LogType.Error, message, context);
         }
 
         /// <summary>
@@ -364,7 +366,7 @@
         /// <param name="context">Object to which the message applies.</param>
         public static void LogErrorFormat(string format, params object[] args)
         {
-            logger.LogFormat(LogType.Error, format, args);
+            unityLogger.LogFormat(LogType.Error, format, args);
         }
 
         /// <summary>
@@ -375,7 +377,7 @@
         /// <param name="context">Object to which the message applies.</param>
         public static void LogErrorFormat(UnityEngine.Object context, string format, params object[] args)
         {
-            logger.LogFormat(LogType.Error, context, format, args);
+            unityLogger.LogFormat(LogType.Error, context, format, args);
         }
 
         /// <summary>
@@ -385,7 +387,7 @@
         /// <param name="exception">Runtime Exception.</param>
         public static void LogException(Exception exception)
         {
-            logger.LogException(exception, null);
+            unityLogger.LogException(exception, null);
         }
 
         /// <summary>
@@ -395,7 +397,7 @@
         /// <param name="exception">Runtime Exception.</param>
         public static void LogException(Exception exception, UnityEngine.Object context)
         {
-            logger.LogException(exception, context);
+            unityLogger.LogException(exception, context);
         }
 
         /// <summary>
@@ -406,7 +408,7 @@
         /// <param name="context">Object to which the message applies.</param>
         public static void LogFormat(string format, params object[] args)
         {
-            logger.LogFormat(LogType.Log, format, args);
+            unityLogger.LogFormat(LogType.Log, format, args);
         }
 
         /// <summary>
@@ -417,10 +419,10 @@
         /// <param name="context">Object to which the message applies.</param>
         public static void LogFormat(UnityEngine.Object context, string format, params object[] args)
         {
-            logger.LogFormat(LogType.Log, context, format, args);
+            unityLogger.LogFormat(LogType.Log, context, format, args);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void LogPlayerBuildError(string message, string file, int line, int column);
         /// <summary>
         /// <para>A variant of Debug.Log that logs a warning message to the console.</para>
@@ -429,7 +431,7 @@
         /// <param name="context">Object to which the message applies.</param>
         public static void LogWarning(object message)
         {
-            logger.Log(LogType.Warning, message);
+            unityLogger.Log(LogType.Warning, message);
         }
 
         /// <summary>
@@ -439,7 +441,7 @@
         /// <param name="context">Object to which the message applies.</param>
         public static void LogWarning(object message, UnityEngine.Object context)
         {
-            logger.Log(LogType.Warning, message, context);
+            unityLogger.Log(LogType.Warning, message, context);
         }
 
         /// <summary>
@@ -450,7 +452,7 @@
         /// <param name="context">Object to which the message applies.</param>
         public static void LogWarningFormat(string format, params object[] args)
         {
-            logger.LogFormat(LogType.Warning, format, args);
+            unityLogger.LogFormat(LogType.Warning, format, args);
         }
 
         /// <summary>
@@ -461,28 +463,32 @@
         /// <param name="context">Object to which the message applies.</param>
         public static void LogWarningFormat(UnityEngine.Object context, string format, params object[] args)
         {
-            logger.LogFormat(LogType.Warning, context, format, args);
+            unityLogger.LogFormat(LogType.Warning, context, format, args);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void OpenConsoleFile();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void SetDiagnosticSwitch(string name, object value, bool setPersistent);
 
         /// <summary>
-        /// <para>Reports whether the development console is visible. The development console cannot be made to appear using:</para>
+        /// <para>Opens or closes developer console.</para>
         /// </summary>
-        public static bool developerConsoleVisible { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static bool developerConsoleVisible { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>In the Build Settings dialog there is a check box called "Development Build".</para>
         /// </summary>
-        public static bool isDebugBuild { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool isDebugBuild { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        [Obsolete("Debug.logger is obsolete. Please use Debug.unityLogger instead (UnityUpgradable) -> unityLogger"), EditorBrowsable(EditorBrowsableState.Never)]
+        public static ILogger logger =>
+            s_Logger;
 
         /// <summary>
         /// <para>Get default debug logger.</para>
         /// </summary>
-        public static ILogger logger =>
+        public static ILogger unityLogger =>
             s_Logger;
     }
 }

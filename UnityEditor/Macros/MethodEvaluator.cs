@@ -89,7 +89,7 @@
             type.GetConstructor(new Type[0])?.Invoke(new object[0]);
 
         private static string ToCommaSeparatedString<T>(IEnumerable<T> items) => 
-            string.Join(", ", Enumerable.Select<T, string>(items, new Func<T, string>(null, (IntPtr) <ToCommaSeparatedString`1>m__0<T>)).ToArray<string>());
+            string.Join(", ", Enumerable.Select<T, string>(items, new Func<T, string>(MethodEvaluator.<ToCommaSeparatedString`1>m__0<T>)).ToArray<string>());
 
         private class AssemblyResolver
         {

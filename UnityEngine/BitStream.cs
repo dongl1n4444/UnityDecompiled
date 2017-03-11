@@ -13,11 +13,11 @@
     {
         internal IntPtr m_Ptr;
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Serializen(BitStream self, ref NetworkViewID viewID);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Serializeq(BitStream self, ref Quaternion value, float maximumDelta);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Serializev(BitStream self, ref Vector3 value, float maximumDelta);
         public void Serialize(ref bool value)
         {
@@ -48,7 +48,7 @@
             this.Serialize(ref value, maxDelta);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Serialize(ref string value);
         public void Serialize(ref NetworkPlayer value)
         {
@@ -91,13 +91,13 @@
             this.Serializev(ref value, maxDelta);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Serializeb(ref int value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Serializec(ref char value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Serializef(ref float value, float maximumDelta);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Serializei(ref int value);
         private void Serializen(ref NetworkViewID viewID)
         {
@@ -109,7 +109,7 @@
             INTERNAL_CALL_Serializeq(this, ref value, maximumDelta);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Serializes(ref short value);
         private void Serializev(ref Vector3 value, float maximumDelta)
         {
@@ -119,12 +119,12 @@
         /// <summary>
         /// <para>Is the BitStream currently being read? (Read Only)</para>
         /// </summary>
-        public bool isReading { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isReading { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Is the BitStream currently being written? (Read Only)</para>
         /// </summary>
-        public bool isWriting { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isWriting { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

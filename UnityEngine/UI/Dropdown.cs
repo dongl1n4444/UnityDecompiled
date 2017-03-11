@@ -622,6 +622,7 @@
                 {
                     this.m_Value = Mathf.Clamp(value, 0, this.options.Count - 1);
                     this.RefreshShownValue();
+                    UISystemProfilerApi.AddMarker("Dropdown.value", this);
                     this.m_OnValueChanged.Invoke(this.m_Value);
                 }
             }

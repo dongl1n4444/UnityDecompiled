@@ -61,7 +61,7 @@ internal class ApplicationLauncherImpl
         }
         string args = $""{this.installPath}\{this.packageName}.sln" /nologo /maxcpucount /p:Configuration={this.configuration} /p:Platform={this.platform} /p:SolutionDir="{this.installPath.Replace(@"\", @"\\")}\\" /t:Build /clp:Verbosity=minimal";
         this.KillRunningAppInstances();
-        EditorUtility.DisplayProgressBar("Deploying Player", $"Building solution with Visual Studio version {Utility.GetVSVersion()}, {this.configuration}|{this.platform}", 0.5f);
+        EditorUtility.DisplayProgressBar("Deploying Player", $"Building solution with Visual Studio {GetVSVersionYear(Utility.GetVSVersion())}, {this.configuration}|{this.platform}", 0.5f);
         this.RunMSBuild(args);
     }
 
@@ -202,10 +202,10 @@ internal class ApplicationLauncherImpl
                 throw new Exception($"Invalid configuration flags: 0x{num:X}");
         }
         storey.configurationToLookFor = !this.configuration.Equals("Release", StringComparison.InvariantCultureIgnoreCase) ? ("_" + this.configuration) : "";
-        string str3 = Enumerable.FirstOrDefault<string>(Directory.GetFiles(str, "*.appx", SearchOption.AllDirectories), new Func<string, bool>(storey, (IntPtr) this.<>m__0));
+        string str3 = Enumerable.FirstOrDefault<string>(Directory.GetFiles(str, "*.appx", SearchOption.AllDirectories), new Func<string, bool>(storey.<>m__0));
         if (string.IsNullOrEmpty(str3))
         {
-            str3 = Enumerable.FirstOrDefault<string>(Directory.GetFiles(str, "*.appxbundle", SearchOption.AllDirectories), new Func<string, bool>(storey, (IntPtr) this.<>m__1));
+            str3 = Enumerable.FirstOrDefault<string>(Directory.GetFiles(str, "*.appxbundle", SearchOption.AllDirectories), new Func<string, bool>(storey.<>m__1));
         }
         return str3;
     }
@@ -221,7 +221,7 @@ internal class ApplicationLauncherImpl
     }
 
     private string GetProjectExt() => 
-        "csproj";
+        ((this.scriptingBackend != ScriptingImplementation.WinRTDotNET) ? "vcxproj" : "csproj");
 
     private string GetProjectName()
     {
@@ -272,11 +272,35 @@ internal class ApplicationLauncherImpl
         return (Paths.Combine(components) + "." + this.GetProjectExt());
     }
 
+    private static string GetVSVersionYear(string vsVersion)
+    {
+        if (vsVersion == null)
+        {
+            return vsVersion;
+        }
+        if (vsVersion != "12.0")
+        {
+            if (vsVersion == "14.0")
+            {
+                return "2015";
+            }
+            if (vsVersion == "15.0")
+            {
+                return "2017";
+            }
+            return vsVersion;
+        }
+        return "2013";
+    }
+
     private void KillRunningAppInstances()
     {
         if (((this.platform == "x86") || (this.platform == "x64")) || (this.platform == "Win32"))
         {
-            Utility.KillProcesses(new Func<string, bool>(this, (IntPtr) this.<KillRunningAppInstances>m__0));
+            Utility.KillProcesses(delegate (string exePath) {
+                string fileName = Path.GetFileName(exePath);
+                return (fileName.Contains(this.packageName) || fileName.Equals("Template.exe", StringComparison.InvariantCultureIgnoreCase)) && exePath.Contains(this.installPath);
+            });
         }
     }
 
@@ -327,7 +351,6 @@ internal class ApplicationLauncherImpl
                         return;
 
                     case WSABuildAndRunDeployTarget.WindowsPhone:
-                        this.BuildUsingMSBuild(false);
                         commandLine = commandLine + " -noMDIL";
                         this.RunOnPhone(commandLine);
                         return;

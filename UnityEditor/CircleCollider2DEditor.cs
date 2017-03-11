@@ -1,18 +1,41 @@
 ﻿namespace UnityEditor
 {
     using System;
+    using UnityEditor.IMGUI.Controls;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(CircleCollider2D))]
-    internal class CircleCollider2DEditor : Collider2DEditorBase
+    [CustomEditor(typeof(CircleCollider2D)), CanEditMultipleObjects]
+    internal class CircleCollider2DEditor : PrimitiveCollider2DEditor
     {
-        private int m_HandleControlID;
+        private readonly SphereBoundsHandle m_BoundsHandle = new SphereBoundsHandle(s_HandleControlIDHint);
         private SerializedProperty m_Radius;
+        private static readonly int s_HandleControlIDHint = typeof(CircleCollider2DEditor).Name.GetHashCode();
+
+        protected override void CopyColliderSizeToHandle()
+        {
+            CircleCollider2D target = (CircleCollider2D) base.target;
+            this.m_BoundsHandle.radius = target.radius * this.GetRadiusScaleFactor();
+        }
+
+        protected override bool CopyHandleSizeToCollider()
+        {
+            CircleCollider2D target = (CircleCollider2D) base.target;
+            float radius = target.radius;
+            float radiusScaleFactor = this.GetRadiusScaleFactor();
+            target.radius = !Mathf.Approximately(radiusScaleFactor, 0f) ? (this.m_BoundsHandle.radius / this.GetRadiusScaleFactor()) : 0f;
+            return !(target.radius == radius);
+        }
+
+        private float GetRadiusScaleFactor()
+        {
+            Vector3 lossyScale = ((Component) base.target).transform.lossyScale;
+            float a = Mathf.Abs(lossyScale.x);
+            return Mathf.Max(a, Mathf.Abs(lossyScale.y));
+        }
 
         public override void OnEnable()
         {
             base.OnEnable();
-            this.m_HandleControlID = -1;
             this.m_Radius = base.serializedObject.FindProperty("m_Radius");
         }
 
@@ -26,42 +49,8 @@
             base.FinalizeInspectorGUI();
         }
 
-        public void OnSceneGUI()
-        {
-            if (!Tools.viewToolActive)
-            {
-                bool flag = GUIUtility.hotControl == this.m_HandleControlID;
-                CircleCollider2D target = (CircleCollider2D) base.target;
-                Color color = Handles.color;
-                Handles.color = Handles.s_ColliderHandleColor;
-                bool enabled = GUI.enabled;
-                if (!base.editingCollider && !flag)
-                {
-                    GUI.enabled = false;
-                    Handles.color = new Color(0f, 0f, 0f, 0.001f);
-                }
-                Vector3 lossyScale = target.transform.lossyScale;
-                float a = Mathf.Abs(lossyScale.x);
-                float introduced11 = Mathf.Max(a, Mathf.Abs(lossyScale.y));
-                float num = Mathf.Max(introduced11, Mathf.Abs(lossyScale.z));
-                float f = num * target.radius;
-                f = Mathf.Max(Mathf.Abs(f), 1E-05f);
-                Vector3 position = target.transform.TransformPoint((Vector3) target.offset);
-                int hotControl = GUIUtility.hotControl;
-                float num4 = Handles.RadiusHandle(Quaternion.identity, position, f, true);
-                if (GUI.changed)
-                {
-                    Undo.RecordObject(target, "Adjust Radius");
-                    target.radius = (num4 * 1f) / num;
-                }
-                if ((hotControl != GUIUtility.hotControl) && (GUIUtility.hotControl != 0))
-                {
-                    this.m_HandleControlID = GUIUtility.hotControl;
-                }
-                Handles.color = color;
-                GUI.enabled = enabled;
-            }
-        }
+        protected override PrimitiveBoundsHandle boundsHandle =>
+            this.m_BoundsHandle;
     }
 }
 

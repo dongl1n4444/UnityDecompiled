@@ -168,7 +168,7 @@
         }
 
         /// <summary>
-        /// <para>Should the layout group control the heights of the children?</para>
+        /// <para>Returns true if the Layout Group controls the heights of its children. Returns false if children control their own heights.</para>
         /// </summary>
         public bool childControlHeight
         {
@@ -181,7 +181,7 @@
         }
 
         /// <summary>
-        /// <para>Should the layout group control the widths of the children?</para>
+        /// <para>Returns true if the Layout Group controls the widths of its children. Returns false if children control their own widths.</para>
         /// </summary>
         public bool childControlWidth
         {

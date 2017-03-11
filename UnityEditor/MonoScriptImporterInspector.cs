@@ -12,10 +12,8 @@
         private SerializedProperty m_Icon;
         private const int m_RowHeight = 0x10;
         private SerializedObject m_TargetObject;
-        private static GUIContent s_HelpIcon;
-        private static GUIContent s_TitleSettingsIcon;
 
-        private static bool IsTypeCompatible(Type type)
+        private static bool IsTypeCompatible(System.Type type)
         {
             if ((type == null) || (!type.IsSubclassOf(typeof(MonoBehaviour)) && !type.IsSubclassOf(typeof(ScriptableObject))))
             {
@@ -56,18 +54,22 @@
             MonoScript script = target.GetScript();
             if (script != null)
             {
-                Type type = script.GetClass();
+                System.Type type = script.GetClass();
                 if (!InternalEditorUtility.IsInEditorFolder(target.assetPath) && !IsTypeCompatible(type))
                 {
                     EditorGUILayout.HelpBox("No MonoBehaviour scripts in the file, or their names do not match the file name.", MessageType.Info);
                 }
-                Vector2 iconSize = EditorGUIUtility.GetIconSize();
-                EditorGUIUtility.SetIconSize(new Vector2(16f, 16f));
                 List<string> names = new List<string>();
-                List<Object> objects = new List<Object>();
+                List<UnityEngine.Object> objects = new List<UnityEngine.Object>();
                 bool didModify = false;
-                this.ShowFieldInfo(type, target, names, objects, ref didModify);
-                EditorGUIUtility.SetIconSize(iconSize);
+                using (new EditorGUIUtility.IconSizeScope(new Vector2(16f, 16f)))
+                {
+                    this.ShowFieldInfo(type, target, names, objects, ref didModify);
+                }
+                if (objects.Count != 0)
+                {
+                    EditorGUILayout.HelpBox("Default references will only be applied in edit mode.", MessageType.Info);
+                }
                 if (didModify)
                 {
                     target.SetDefaultReferences(names.ToArray(), objects.ToArray());
@@ -76,21 +78,21 @@
             }
         }
 
-        [MenuItem("CONTEXT/MonoImporter/Reset")]
+        [UnityEditor.MenuItem("CONTEXT/MonoImporter/Reset")]
         private static void ResetDefaultReferences(MenuCommand command)
         {
             MonoImporter context = command.context as MonoImporter;
-            context.SetDefaultReferences(new string[0], new Object[0]);
+            context.SetDefaultReferences(new string[0], new UnityEngine.Object[0]);
             AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(context));
         }
 
-        private void ShowFieldInfo(Type type, MonoImporter importer, List<string> names, List<Object> objects, ref bool didModify)
+        private void ShowFieldInfo(System.Type type, MonoImporter importer, List<string> names, List<UnityEngine.Object> objects, ref bool didModify)
         {
             if (IsTypeCompatible(type))
             {
                 this.ShowFieldInfo(type.BaseType, importer, names, objects, ref didModify);
-                FieldInfo[] fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-                foreach (FieldInfo info in fields)
+                System.Reflection.FieldInfo[] fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+                foreach (System.Reflection.FieldInfo info in fields)
                 {
                     if (!info.IsPublic)
                     {
@@ -100,10 +102,10 @@
                             continue;
                         }
                     }
-                    if (info.FieldType.IsSubclassOf(typeof(Object)) || (info.FieldType == typeof(Object)))
+                    if (info.FieldType.IsSubclassOf(typeof(UnityEngine.Object)) || (info.FieldType == typeof(UnityEngine.Object)))
                     {
-                        Object defaultReference = importer.GetDefaultReference(info.Name);
-                        Object item = EditorGUILayout.ObjectField(ObjectNames.NicifyVariableName(info.Name), defaultReference, info.FieldType, false, new GUILayoutOption[0]);
+                        UnityEngine.Object defaultReference = importer.GetDefaultReference(info.Name);
+                        UnityEngine.Object item = EditorGUILayout.ObjectField(ObjectNames.NicifyVariableName(info.Name), defaultReference, info.FieldType, false, new GUILayoutOption[0]);
                         names.Add(info.Name);
                         objects.Add(item);
                         if (defaultReference != item)

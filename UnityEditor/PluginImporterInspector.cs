@@ -5,11 +5,12 @@
     using System.ComponentModel;
     using System.Linq;
     using System.Runtime.CompilerServices;
+    using UnityEditor.Build;
     using UnityEditor.Modules;
     using UnityEditorInternal;
     using UnityEngine;
 
-    [CustomEditor(typeof(PluginImporter)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(PluginImporter))]
     internal class PluginImporterInspector : AssetImporterInspector
     {
         [CompilerGenerated]
@@ -18,6 +19,8 @@
         private static GetComptability <>f__am$cache1;
         [CompilerGenerated]
         private static GetComptability <>f__am$cache2;
+        [CompilerGenerated]
+        private static GetComptability <>f__am$cache3;
         private Compatibility m_CompatibleWithAnyPlatform;
         private Compatibility m_CompatibleWithEditor;
         private Compatibility[] m_CompatibleWithPlatform = new Compatibility[GetPlatformGroupArraySize()];
@@ -84,20 +87,20 @@
             base.Awake();
         }
 
-        private BuildPlayerWindow.BuildPlatform[] GetBuildPlayerValidPlatforms()
+        private BuildPlatform[] GetBuildPlayerValidPlatforms()
         {
-            List<BuildPlayerWindow.BuildPlatform> validPlatforms = BuildPlayerWindow.GetValidPlatforms();
-            List<BuildPlayerWindow.BuildPlatform> list2 = new List<BuildPlayerWindow.BuildPlatform>();
+            List<BuildPlatform> validPlatforms = BuildPlatforms.instance.GetValidPlatforms();
+            List<BuildPlatform> list2 = new List<BuildPlatform>();
             if (this.m_CompatibleWithEditor > Compatibility.NotCompatible)
             {
-                BuildPlayerWindow.BuildPlatform item = new BuildPlayerWindow.BuildPlatform("Editor settings", "Editor Settings", "BuildSettings.Editor", BuildTargetGroup.Unknown, true) {
+                BuildPlatform item = new BuildPlatform("Editor settings", "Editor Settings", "BuildSettings.Editor", BuildTargetGroup.Unknown, true) {
                     name = BuildPipeline.GetEditorTargetName()
                 };
                 list2.Add(item);
             }
-            foreach (BuildPlayerWindow.BuildPlatform platform2 in validPlatforms)
+            foreach (BuildPlatform platform2 in validPlatforms)
             {
-                if (!IgnorePlatform(platform2.DefaultTarget))
+                if (!IgnorePlatform(platform2.defaultTarget))
                 {
                     if (platform2.targetGroup == BuildTargetGroup.Standalone)
                     {
@@ -106,7 +109,7 @@
                             continue;
                         }
                     }
-                    else if ((this.m_CompatibleWithPlatform[(int) platform2.DefaultTarget] < Compatibility.Compatible) || (ModuleManager.GetPluginImporterExtension(platform2.targetGroup) == null))
+                    else if ((this.m_CompatibleWithPlatform[(int) platform2.defaultTarget] < Compatibility.Compatible) || (ModuleManager.GetPluginImporterExtension(platform2.targetGroup) == null))
                     {
                         continue;
                     }
@@ -310,13 +313,18 @@
                 <>f__am$cache0 = imp => imp.GetCompatibleWithAnyPlatform();
             }
             this.ResetCompatability(ref this.m_CompatibleWithAnyPlatform, <>f__am$cache0);
+            if (<>f__am$cache1 == null)
+            {
+                <>f__am$cache1 = imp => imp.GetCompatibleWithEditor();
+            }
+            this.ResetCompatability(ref this.m_CompatibleWithEditor, <>f__am$cache1);
             if (this.m_CompatibleWithAnyPlatform < Compatibility.Compatible)
             {
-                if (<>f__am$cache1 == null)
+                if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache1 = imp => imp.GetCompatibleWithEditor();
+                    <>f__am$cache2 = imp => imp.GetCompatibleWithEditor("", "");
                 }
-                this.ResetCompatability(ref this.m_CompatibleWithEditor, <>f__am$cache1);
+                this.ResetCompatability(ref this.m_CompatibleWithEditor, <>f__am$cache2);
                 using (List<BuildTarget>.Enumerator enumerator = GetValidBuildTargets().GetEnumerator())
                 {
                     while (enumerator.MoveNext())
@@ -330,11 +338,11 @@
             }
             else
             {
-                if (<>f__am$cache2 == null)
+                if (<>f__am$cache3 == null)
                 {
-                    <>f__am$cache2 = imp => !imp.GetExcludeEditorFromAnyPlatform();
+                    <>f__am$cache3 = imp => !imp.GetExcludeEditorFromAnyPlatform();
                 }
-                this.ResetCompatability(ref this.m_CompatibleWithEditor, <>f__am$cache2);
+                this.ResetCompatability(ref this.m_CompatibleWithEditor, <>f__am$cache3);
                 using (List<BuildTarget>.Enumerator enumerator2 = GetValidBuildTargets().GetEnumerator())
                 {
                     while (enumerator2.MoveNext())
@@ -432,7 +440,7 @@
 
         private void ShowPlatformSettings()
         {
-            BuildPlayerWindow.BuildPlatform[] buildPlayerValidPlatforms = this.GetBuildPlayerValidPlatforms();
+            BuildPlatform[] buildPlayerValidPlatforms = this.GetBuildPlayerValidPlatforms();
             if (buildPlayerValidPlatforms.Length > 0)
             {
                 GUILayout.Label("Platform settings", EditorStyles.boldLabel, new GUILayoutOption[0]);

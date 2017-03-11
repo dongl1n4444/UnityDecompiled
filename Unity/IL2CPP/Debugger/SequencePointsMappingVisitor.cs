@@ -1,10 +1,11 @@
 ﻿namespace Unity.IL2CPP.Debugger
 {
+    using Mono.Cecil;
     using Mono.Cecil.Cil;
     using System;
-    using Unity.Cecil.Visitor;
+    using Unity.IL2CPP;
 
-    internal class SequencePointsMappingVisitor : Unity.Cecil.Visitor.Visitor
+    internal class SequencePointsMappingVisitor
     {
         private readonly Action<Instruction, SequencePoint> _callback;
 
@@ -13,12 +14,15 @@
             this._callback = callback;
         }
 
-        protected override void Visit(Instruction instruction, Context context)
+        public void Process(MethodDefinition method)
         {
-            base.Visit(instruction, context);
-            if (instruction.SequencePoint != null)
+            foreach (Instruction instruction in method.Body.Instructions)
             {
-                this._callback.Invoke(instruction, instruction.SequencePoint);
+                SequencePoint sequencePoint = instruction.GetSequencePoint(method);
+                if (sequencePoint != null)
+                {
+                    this._callback(instruction, sequencePoint);
+                }
             }
         }
     }

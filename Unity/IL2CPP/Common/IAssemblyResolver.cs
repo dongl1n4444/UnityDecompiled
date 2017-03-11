@@ -4,7 +4,7 @@
     using System;
     using System.Collections.Generic;
 
-    public interface IAssemblyResolver : Mono.Cecil.IAssemblyResolver
+    public interface IAssemblyResolver : Mono.Cecil.IAssemblyResolver, IDisposable
     {
         IEnumerable<NPath> GetSearchDirectories();
         bool IsAssemblyCached(AssemblyNameReference assemblyName);

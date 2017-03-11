@@ -17,7 +17,7 @@
 
         public static void Draw(IEditablePoint points, Transform cloudTransform, List<int> selection, bool twoPassDrawing)
         {
-            LightmapVisualization.DrawPointCloud(points.GetUnselectedPositions(), points.GetSelectedPositions(), points.GetDefaultColor(), points.GetSelectedColor(), points.GetPointScale(), cloudTransform);
+            LightProbeVisualization.DrawPointCloud(points.GetUnselectedPositions(), points.GetSelectedPositions(), points.GetDefaultColor(), points.GetSelectedColor(), points.GetPointScale(), cloudTransform);
         }
 
         public static int FindNearest(Vector2 point, Transform cloudTransform, IEditablePoint points)
@@ -39,7 +39,7 @@
             }
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<KeyValuePair<int, float>, float>(null, (IntPtr) <FindNearest>m__0);
+                <>f__am$cache0 = x => x.Value;
             }
             return Enumerable.OrderBy<KeyValuePair<int, float>, float>(dictionary, <>f__am$cache0).First<KeyValuePair<int, float>>().Key;
         }
@@ -68,7 +68,7 @@
             if ((selection.Count != 0) && (Camera.current != null))
             {
                 Vector3 zero = Vector3.zero;
-                zero = (Tools.pivotMode != PivotMode.Pivot) ? ((Vector3) (Enumerable.Aggregate<int, Vector3>(selection, zero, new Func<Vector3, int, Vector3>(storey, (IntPtr) this.<>m__0)) / ((float) selection.Count))) : storey.points.GetPosition(selection[0]);
+                zero = (Tools.pivotMode != PivotMode.Pivot) ? ((Vector3) (Enumerable.Aggregate<int, Vector3>(selection, zero, new Func<Vector3, int, Vector3>(storey.<>m__0)) / ((float) selection.Count))) : storey.points.GetPosition(selection[0]);
                 zero = cloudTransform.TransformPoint(zero);
                 Vector3 position = Handles.PositionHandle(zero, (Tools.pivotRotation != PivotRotation.Local) ? Quaternion.identity : cloudTransform.rotation);
                 if (GUI.changed)

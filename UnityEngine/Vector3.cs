@@ -26,6 +26,16 @@
         /// <para>Z component of the vector.</para>
         /// </summary>
         public float z;
+        private static readonly Vector3 zeroVector;
+        private static readonly Vector3 oneVector;
+        private static readonly Vector3 upVector;
+        private static readonly Vector3 downVector;
+        private static readonly Vector3 leftVector;
+        private static readonly Vector3 rightVector;
+        private static readonly Vector3 forwardVector;
+        private static readonly Vector3 backVector;
+        private static readonly Vector3 positiveInfinityVector;
+        private static readonly Vector3 negativeInfinityVector;
         /// <summary>
         /// <para>Creates a new vector with given x, y, z components.</para>
         /// </summary>
@@ -65,7 +75,7 @@
             return vector;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Slerp(ref Vector3 a, ref Vector3 b, float t, out Vector3 value);
         /// <summary>
         /// <para>Spherically interpolates between two vectors.</para>
@@ -80,21 +90,21 @@
             return vector;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SlerpUnclamped(ref Vector3 a, ref Vector3 b, float t, out Vector3 value);
         private static void Internal_OrthoNormalize2(ref Vector3 a, ref Vector3 b)
         {
             INTERNAL_CALL_Internal_OrthoNormalize2(ref a, ref b);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_OrthoNormalize2(ref Vector3 a, ref Vector3 b);
         private static void Internal_OrthoNormalize3(ref Vector3 a, ref Vector3 b, ref Vector3 c)
         {
             INTERNAL_CALL_Internal_OrthoNormalize3(ref a, ref b, ref c);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_OrthoNormalize3(ref Vector3 a, ref Vector3 b, ref Vector3 c);
         public static void OrthoNormalize(ref Vector3 normal, ref Vector3 tangent)
         {
@@ -120,7 +130,7 @@
             return vector;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_RotateTowards(ref Vector3 current, ref Vector3 target, float maxRadiansDelta, float maxMagnitudeDelta, out Vector3 value);
         [Obsolete("Use Vector3.ProjectOnPlane instead.")]
         public static Vector3 Exclude(Vector3 excludeThis, Vector3 fromThat) => 
@@ -157,7 +167,7 @@
         {
             Vector3 vector = target - current;
             float magnitude = vector.magnitude;
-            if ((magnitude <= maxDistanceDelta) || (magnitude == 0f))
+            if ((magnitude <= maxDistanceDelta) || (magnitude < float.Epsilon))
             {
                 return target;
             }
@@ -242,14 +252,14 @@
         /// <summary>
         /// <para>Set x, y and z components of an existing Vector3.</para>
         /// </summary>
-        /// <param name="new_x"></param>
-        /// <param name="new_y"></param>
-        /// <param name="new_z"></param>
-        public void Set(float new_x, float new_y, float new_z)
+        /// <param name="newX"></param>
+        /// <param name="newY"></param>
+        /// <param name="newZ"></param>
+        public void Set(float newX, float newY, float newZ)
         {
-            this.x = new_x;
-            this.y = new_y;
-            this.z = new_z;
+            this.x = newX;
+            this.y = newY;
+            this.z = newZ;
         }
 
         /// <summary>
@@ -282,6 +292,10 @@
         public override int GetHashCode() => 
             ((this.x.GetHashCode() ^ (this.y.GetHashCode() << 2)) ^ (this.z.GetHashCode() >> 2));
 
+        /// <summary>
+        /// <para>Returns true if the given vector is exactly equal to this vector.</para>
+        /// </summary>
+        /// <param name="other"></param>
         public override bool Equals(object other)
         {
             if (!(other is Vector3))
@@ -369,10 +383,25 @@
         /// <summary>
         /// <para>Returns the angle in degrees between from and to.</para>
         /// </summary>
-        /// <param name="from">The angle extends round from this vector.</param>
-        /// <param name="to">The angle extends round to this vector.</param>
+        /// <param name="from">The vector from which the angular difference is measured.</param>
+        /// <param name="to">The vector to which the angular difference is measured.</param>
         public static float Angle(Vector3 from, Vector3 to) => 
             (Mathf.Acos(Mathf.Clamp(Dot(from.normalized, to.normalized), -1f, 1f)) * 57.29578f);
+
+        /// <summary>
+        /// <para>Returns the signed angle in degrees between from and to.</para>
+        /// </summary>
+        /// <param name="from">The vector from which the angular difference is measured.</param>
+        /// <param name="to">The vector to which the angular difference is measured.</param>
+        /// <param name="axis">A vector around which the other vectors are rotated.</param>
+        public static float SignedAngle(Vector3 from, Vector3 to, Vector3 axis)
+        {
+            Vector3 normalized = from.normalized;
+            Vector3 rhs = to.normalized;
+            float num = Mathf.Acos(Mathf.Clamp(Dot(normalized, rhs), -1f, 1f)) * 57.29578f;
+            float num2 = Mathf.Sign(Dot(axis, Cross(normalized, rhs)));
+            return (num * num2);
+        }
 
         /// <summary>
         /// <para>Returns the distance between a and b.</para>
@@ -399,16 +428,16 @@
             return vector;
         }
 
-        public static float Magnitude(Vector3 a) => 
-            Mathf.Sqrt(((a.x * a.x) + (a.y * a.y)) + (a.z * a.z));
+        public static float Magnitude(Vector3 vector) => 
+            Mathf.Sqrt(((vector.x * vector.x) + (vector.y * vector.y)) + (vector.z * vector.z));
 
         /// <summary>
         /// <para>Returns the length of this vector (Read Only).</para>
         /// </summary>
         public float magnitude =>
             Mathf.Sqrt(((this.x * this.x) + (this.y * this.y)) + (this.z * this.z));
-        public static float SqrMagnitude(Vector3 a) => 
-            (((a.x * a.x) + (a.y * a.y)) + (a.z * a.z));
+        public static float SqrMagnitude(Vector3 vector) => 
+            (((vector.x * vector.x) + (vector.y * vector.y)) + (vector.z * vector.z));
 
         /// <summary>
         /// <para>Returns the squared length of this vector (Read Only).</para>
@@ -435,42 +464,52 @@
         /// <para>Shorthand for writing Vector3(0, 0, 0).</para>
         /// </summary>
         public static Vector3 zero =>
-            new Vector3(0f, 0f, 0f);
+            zeroVector;
         /// <summary>
         /// <para>Shorthand for writing Vector3(1, 1, 1).</para>
         /// </summary>
         public static Vector3 one =>
-            new Vector3(1f, 1f, 1f);
+            oneVector;
         /// <summary>
         /// <para>Shorthand for writing Vector3(0, 0, 1).</para>
         /// </summary>
         public static Vector3 forward =>
-            new Vector3(0f, 0f, 1f);
+            forwardVector;
         /// <summary>
         /// <para>Shorthand for writing Vector3(0, 0, -1).</para>
         /// </summary>
         public static Vector3 back =>
-            new Vector3(0f, 0f, -1f);
+            backVector;
         /// <summary>
         /// <para>Shorthand for writing Vector3(0, 1, 0).</para>
         /// </summary>
         public static Vector3 up =>
-            new Vector3(0f, 1f, 0f);
+            upVector;
         /// <summary>
         /// <para>Shorthand for writing Vector3(0, -1, 0).</para>
         /// </summary>
         public static Vector3 down =>
-            new Vector3(0f, -1f, 0f);
+            downVector;
         /// <summary>
         /// <para>Shorthand for writing Vector3(-1, 0, 0).</para>
         /// </summary>
         public static Vector3 left =>
-            new Vector3(-1f, 0f, 0f);
+            leftVector;
         /// <summary>
         /// <para>Shorthand for writing Vector3(1, 0, 0).</para>
         /// </summary>
         public static Vector3 right =>
-            new Vector3(1f, 0f, 0f);
+            rightVector;
+        /// <summary>
+        /// <para>Shorthand for writing Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity).</para>
+        /// </summary>
+        public static Vector3 positiveInfinity =>
+            positiveInfinityVector;
+        /// <summary>
+        /// <para>Shorthand for writing Vector3(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity).</para>
+        /// </summary>
+        public static Vector3 negativeInfinity =>
+            negativeInfinityVector;
         public static Vector3 operator +(Vector3 a, Vector3 b) => 
             new Vector3(a.x + b.x, a.y + b.y, a.z + b.z);
 
@@ -493,7 +532,7 @@
             (SqrMagnitude(lhs - rhs) < 9.999999E-11f);
 
         public static bool operator !=(Vector3 lhs, Vector3 rhs) => 
-            (SqrMagnitude(lhs - rhs) >= 9.999999E-11f);
+            !(lhs == rhs);
 
         /// <summary>
         /// <para>Returns a nicely formatted string for this vector.</para>
@@ -521,6 +560,20 @@
         [Obsolete("Use Vector3.Angle instead. AngleBetween uses radians instead of degrees and was deprecated for this reason")]
         public static float AngleBetween(Vector3 from, Vector3 to) => 
             Mathf.Acos(Mathf.Clamp(Dot(from.normalized, to.normalized), -1f, 1f));
+
+        static Vector3()
+        {
+            zeroVector = new Vector3(0f, 0f, 0f);
+            oneVector = new Vector3(1f, 1f, 1f);
+            upVector = new Vector3(0f, 1f, 0f);
+            downVector = new Vector3(0f, -1f, 0f);
+            leftVector = new Vector3(-1f, 0f, 0f);
+            rightVector = new Vector3(1f, 0f, 0f);
+            forwardVector = new Vector3(0f, 0f, 1f);
+            backVector = new Vector3(0f, 0f, -1f);
+            positiveInfinityVector = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
+            negativeInfinityVector = new Vector3(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity);
+        }
     }
 }
 

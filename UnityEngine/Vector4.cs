@@ -28,6 +28,10 @@
         /// <para>W component of the vector.</para>
         /// </summary>
         public float w;
+        private static readonly Vector4 zeroVector;
+        private static readonly Vector4 oneVector;
+        private static readonly Vector4 positiveInfinityVector;
+        private static readonly Vector4 negativeInfinityVector;
         /// <summary>
         /// <para>Creates a new vector with given x, y, z, w components.</para>
         /// </summary>
@@ -118,16 +122,16 @@
         /// <summary>
         /// <para>Set x, y, z and w components of an existing Vector4.</para>
         /// </summary>
-        /// <param name="new_x"></param>
-        /// <param name="new_y"></param>
-        /// <param name="new_z"></param>
-        /// <param name="new_w"></param>
-        public void Set(float new_x, float new_y, float new_z, float new_w)
+        /// <param name="newX"></param>
+        /// <param name="newY"></param>
+        /// <param name="newZ"></param>
+        /// <param name="newW"></param>
+        public void Set(float newX, float newY, float newZ, float newW)
         {
-            this.x = new_x;
-            this.y = new_y;
-            this.z = new_z;
-            this.w = new_w;
+            this.x = newX;
+            this.y = newY;
+            this.z = newZ;
+            this.w = newW;
         }
 
         /// <summary>
@@ -191,6 +195,10 @@
         public override int GetHashCode() => 
             (((this.x.GetHashCode() ^ (this.y.GetHashCode() << 2)) ^ (this.z.GetHashCode() >> 2)) ^ (this.w.GetHashCode() >> 1));
 
+        /// <summary>
+        /// <para>Returns true if the given vector is exactly equal to this vector.</para>
+        /// </summary>
+        /// <param name="other"></param>
         public override bool Equals(object other)
         {
             if (!(other is Vector4))
@@ -293,12 +301,22 @@
         /// <para>Shorthand for writing Vector4(0,0,0,0).</para>
         /// </summary>
         public static Vector4 zero =>
-            new Vector4(0f, 0f, 0f, 0f);
+            zeroVector;
         /// <summary>
         /// <para>Shorthand for writing Vector4(1,1,1,1).</para>
         /// </summary>
         public static Vector4 one =>
-            new Vector4(1f, 1f, 1f, 1f);
+            oneVector;
+        /// <summary>
+        /// <para>Shorthand for writing Vector4(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity).</para>
+        /// </summary>
+        public static Vector4 positiveInfinity =>
+            positiveInfinityVector;
+        /// <summary>
+        /// <para>Shorthand for writing Vector4(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity).</para>
+        /// </summary>
+        public static Vector4 negativeInfinity =>
+            negativeInfinityVector;
         public static Vector4 operator +(Vector4 a, Vector4 b) => 
             new Vector4(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
 
@@ -321,7 +339,7 @@
             (SqrMagnitude(lhs - rhs) < 9.999999E-11f);
 
         public static bool operator !=(Vector4 lhs, Vector4 rhs) => 
-            (SqrMagnitude(lhs - rhs) >= 9.999999E-11f);
+            !(lhs == rhs);
 
         public static implicit operator Vector4(Vector3 v) => 
             new Vector4(v.x, v.y, v.z, 0f);
@@ -360,6 +378,14 @@
 
         public float SqrMagnitude() => 
             Dot(this, this);
+
+        static Vector4()
+        {
+            zeroVector = new Vector4(0f, 0f, 0f, 0f);
+            oneVector = new Vector4(1f, 1f, 1f, 1f);
+            positiveInfinityVector = new Vector4(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
+            negativeInfinityVector = new Vector4(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity);
+        }
     }
 }
 

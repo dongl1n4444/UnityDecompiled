@@ -2,100 +2,48 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using UnityEditor.Sprites;
+    using UnityEditor.U2D;
+    using UnityEditor.U2D.Interface;
     using UnityEditorInternal;
     using UnityEngine;
+    using UnityEngine.U2D.Interface;
 
-    internal class SpriteEditorWindow : SpriteUtilityWindow
+    internal class SpriteEditorWindow : SpriteUtilityWindow, ISpriteEditor
     {
-        [CompilerGenerated]
-        private static Comparison<Rect> <>f__am$cache0;
-        protected const float k_InspectorHeight = 160f;
-        private const int k_PolygonChangeShapeWindowHeight = 0x2d;
-        private const int k_PolygonChangeShapeWindowMargin = 0x11;
-        private const int k_PolygonChangeShapeWindowWarningHeight = 0x41;
-        private const int k_PolygonChangeShapeWindowWidth = 150;
-        internal static PrefKey k_SpriteEditorTrim = new PrefKey("Sprite Editor/Trim", "#t");
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private bool <textureIsDirty>k__BackingField;
+        private const float k_MarginForFraming = 0.05f;
+        private const float k_ModuleListWidth = 90f;
         private const float k_WarningMessageHeight = 40f;
         private const float k_WarningMessageWidth = 250f;
-        private GizmoMode m_GizmoMode;
+        private List<ISpriteEditorModule> m_AllRegisteredModules;
+        private IAssetDatabase m_AssetDatabase;
+        private ISpriteEditorModule m_CurrentModule = null;
+        private int m_CurrentModuleIndex = 0;
+        private IEventSystem m_EventSystem;
+        private IGUIUtility m_GUIUtility;
         public bool m_IgnoreNextPostprocessEvent;
-        public Texture2D m_OriginalTexture;
-        private Rect m_PolygonChangeShapeWindowRect = new Rect(0f, 17f, 150f, 45f);
-        private int m_PolygonSides = 0;
+        public ITexture2D m_OriginalTexture;
+        private UnityEngine.Texture2D m_OutlineTexture;
+        private UnityEngine.Texture2D m_ReadableTexture;
         private SpriteRectCache m_RectsCache;
+        private GUIContent[] m_RegisteredModuleNames;
+        private List<ISpriteEditorModule> m_RegisteredModules;
+        private bool m_RequestRepaint = false;
         public bool m_ResetOnNextRepaint;
         [SerializeField]
         private SpriteRect m_Selected;
         public string m_SelectedAssetPath;
-        private bool m_ShowPolygonChangeShapeWindow = false;
-        private SerializedProperty m_SpriteSheetOutline;
-        private TextureImporter m_TextureImporter;
+        private SpriteEditorWindowStyles m_SpriteEditorWindowStyles;
+        private UnityEditor.TextureImporter m_TextureImporter;
         private SerializedObject m_TextureImporterSO;
         private SerializedProperty m_TextureImporterSprites;
-        private bool m_TextureIsDirty;
-        private const float marginForFraming = 0.05f;
-        private const float maxSnapDistance = 14f;
-        private static bool[] s_AlphaPixelCache;
+        private IUndoSystem m_UndoSystem;
         public static SpriteEditorWindow s_Instance;
         public static bool s_OneClickDragStarted = false;
-
-        private static void AcquireOutline(SerializedProperty outlineSP, SpriteRect spriteRect)
-        {
-            for (int i = 0; i < outlineSP.arraySize; i++)
-            {
-                List<Vector2> item = new List<Vector2>();
-                SerializedProperty arrayElementAtIndex = outlineSP.GetArrayElementAtIndex(i);
-                for (int j = 0; j < arrayElementAtIndex.arraySize; j++)
-                {
-                    Vector2 vector = arrayElementAtIndex.GetArrayElementAtIndex(j).vector2Value;
-                    item.Add(vector);
-                }
-                spriteRect.m_Outline.Add(item);
-            }
-        }
-
-        private void AddSprite(Rect frame, int alignment, Vector2 pivot, AutoSlicingMethod slicingMethod)
-        {
-            if (slicingMethod != AutoSlicingMethod.DeleteAll)
-            {
-                SpriteRect existingOverlappingSprite = this.GetExistingOverlappingSprite(frame);
-                if (existingOverlappingSprite != null)
-                {
-                    if (slicingMethod == AutoSlicingMethod.Smart)
-                    {
-                        existingOverlappingSprite.m_Rect = frame;
-                        existingOverlappingSprite.m_Alignment = (SpriteAlignment) alignment;
-                        existingOverlappingSprite.m_Pivot = pivot;
-                    }
-                }
-                else
-                {
-                    this.AddSprite(frame, alignment, pivot, this.defaultColliderAlphaCutoff, this.defaultColliderDetail);
-                }
-            }
-            else
-            {
-                this.AddSprite(frame, alignment, pivot, this.defaultColliderAlphaCutoff, this.defaultColliderDetail);
-            }
-        }
-
-        public SpriteRect AddSprite(Rect rect, int alignment, Vector2 pivot, int colliderAlphaCutoff, float colliderDetail)
-        {
-            SpriteRect r = new SpriteRect {
-                m_Rect = rect,
-                m_Alignment = (SpriteAlignment) alignment,
-                m_Pivot = pivot
-            };
-            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(this.m_TextureImporter.assetPath);
-            r.m_Name = this.GetUniqueName(fileNameWithoutExtension);
-            r.m_OriginalName = r.m_Name;
-            this.textureIsDirty = true;
-            this.m_RectsCache.AddRect(r);
-            return r;
-        }
 
         private void ApplyCacheSettingsToInspector(SerializedObject so)
         {
@@ -112,113 +60,25 @@
             }
         }
 
-        private static void ApplyOutlineChanges(SerializedProperty outlineSP, SpriteRect spriteRect)
+        public void ClearProgressBar()
         {
-            outlineSP.ClearArray();
-            for (int i = 0; i < spriteRect.m_Outline.Count; i++)
-            {
-                outlineSP.InsertArrayElementAtIndex(i);
-                SerializedProperty arrayElementAtIndex = outlineSP.GetArrayElementAtIndex(i);
-                arrayElementAtIndex.ClearArray();
-                List<Vector2> list = spriteRect.m_Outline[i];
-                for (int j = 0; j < list.Count; j++)
-                {
-                    arrayElementAtIndex.InsertArrayElementAtIndex(j);
-                    arrayElementAtIndex.GetArrayElementAtIndex(j).vector2Value = list[j];
-                }
-            }
+            EditorUtility.ClearProgressBar();
         }
 
-        public Vector2 ApplySpriteAlignmentToPivot(Vector2 pivot, Rect rect, SpriteAlignment alignment)
+        public void DisplayProgressBar(string title, string content, float progress)
         {
-            Vector2[] snapPointsArray = this.GetSnapPointsArray(rect);
-            if (alignment != SpriteAlignment.Custom)
-            {
-                Vector2 texturePos = snapPointsArray[(int) alignment];
-                return this.ConvertFromTextureToNormalizedSpace(texturePos, rect);
-            }
-            return pivot;
-        }
-
-        private Vector4 ClampSpriteBorder(Vector4 border)
-        {
-            Rect rect = this.FlipNegativeRect(this.selected.m_Rect);
-            float width = rect.width;
-            float height = rect.height;
-            return new Vector4 { 
-                x = Mathf.RoundToInt(Mathf.Clamp(border.x, 0f, Mathf.Min(width - border.z, width))),
-                z = Mathf.RoundToInt(Mathf.Clamp(border.z, 0f, Mathf.Min(width - border.x, width))),
-                y = Mathf.RoundToInt(Mathf.Clamp(border.y, 0f, Mathf.Min(height - border.w, height))),
-                w = Mathf.RoundToInt(Mathf.Clamp(border.w, 0f, Mathf.Min(height - border.y, height)))
-            };
-        }
-
-        private Rect ClampSpriteRect(Rect rect)
-        {
-            Rect rect2 = new Rect {
-                xMin = Mathf.Clamp(rect.xMin, 0f, (float) (base.m_Texture.width - 1)),
-                yMin = Mathf.Clamp(rect.yMin, 0f, (float) (base.m_Texture.height - 1)),
-                xMax = Mathf.Clamp(rect.xMax, 1f, (float) base.m_Texture.width),
-                yMax = Mathf.Clamp(rect.yMax, 1f, (float) base.m_Texture.height)
-            };
-            if (Mathf.RoundToInt(rect2.width) == 0)
-            {
-                rect2.width = 1f;
-            }
-            if (Mathf.RoundToInt(rect2.height) == 0)
-            {
-                rect2.height = 1f;
-            }
-            return SpriteEditorUtility.RoundedRect(rect2);
-        }
-
-        private Vector2 ConvertFromTextureToNormalizedSpace(Vector2 texturePos, Rect rect) => 
-            new Vector2((texturePos.x - rect.xMin) / rect.width, (texturePos.y - rect.yMin) / rect.height);
-
-        private Texture2D CreateTemporaryDuplicate(Texture2D original, int width, int height)
-        {
-            if (!ShaderUtil.hardwareSupportsRectRenderTexture || (original == null))
-            {
-                return null;
-            }
-            RenderTexture active = RenderTexture.active;
-            bool flag = !TextureUtil.GetLinearSampled(original);
-            RenderTexture dest = RenderTexture.GetTemporary(width, height, 0, RenderTextureFormat.Default, !flag ? RenderTextureReadWrite.Linear : RenderTextureReadWrite.sRGB);
-            GL.sRGBWrite = flag && (QualitySettings.activeColorSpace == ColorSpace.Linear);
-            Graphics.Blit(original, dest);
-            GL.sRGBWrite = false;
-            RenderTexture.active = dest;
-            bool flag2 = (width >= SystemInfo.maxTextureSize) || (height >= SystemInfo.maxTextureSize);
-            Texture2D textured2 = new Texture2D(width, height, TextureFormat.RGBA32, (original.mipmapCount > 1) || flag2);
-            textured2.ReadPixels(new Rect(0f, 0f, (float) width, (float) height), 0, 0);
-            textured2.Apply();
-            RenderTexture.ReleaseTemporary(dest);
-            EditorGUIUtility.SetRenderTextureNoViewport(active);
-            textured2.alphaIsTransparency = original.alphaIsTransparency;
-            return textured2;
-        }
-
-        private void DeterminePolygonSides()
-        {
-            if (((this.selected != null) && (this.selected.m_Outline != null)) && (this.selected.m_Outline.Count == 1))
-            {
-                this.m_PolygonSides = this.selected.m_Outline[0].Count;
-            }
-            else
-            {
-                this.m_PolygonSides = 0;
-            }
+            EditorUtility.DisplayProgressBar(title, content, progress);
         }
 
         private void DoApply()
         {
-            Undo.ClearUndo(this.m_RectsCache);
+            this.m_UndoSystem.ClearUndo(this.m_RectsCache);
             this.DoApply(this.m_TextureImporterSO);
             this.m_TextureImporterSO.ApplyModifiedPropertiesWithoutUndo();
             this.m_IgnoreNextPostprocessEvent = true;
             this.DoTextureReimport(this.m_TextureImporter.assetPath);
             this.textureIsDirty = false;
-            this.selected = null;
+            this.selectedSpriteRect = null;
         }
 
         private void DoApply(SerializedObject so)
@@ -228,28 +88,29 @@
                 List<string> list = new List<string>();
                 List<string> list2 = new List<string>();
                 SerializedProperty property = so.FindProperty("m_SpriteSheet.m_Sprites");
-                property.ClearArray();
                 for (int i = 0; i < this.m_RectsCache.Count; i++)
                 {
-                    SpriteRect spriteRect = this.m_RectsCache.RectAt(i);
-                    if (string.IsNullOrEmpty(spriteRect.m_Name))
+                    SpriteRect rect = this.m_RectsCache.RectAt(i);
+                    if (string.IsNullOrEmpty(rect.name))
                     {
-                        spriteRect.m_Name = "Empty";
+                        rect.name = "Empty";
                     }
-                    if (!string.IsNullOrEmpty(spriteRect.m_OriginalName))
+                    if (!string.IsNullOrEmpty(rect.originalName))
                     {
-                        list.Add(spriteRect.m_OriginalName);
-                        list2.Add(spriteRect.m_Name);
+                        list.Add(rect.originalName);
+                        list2.Add(rect.name);
                     }
-                    property.InsertArrayElementAtIndex(i);
+                    if (property.arraySize < this.m_RectsCache.Count)
+                    {
+                        property.InsertArrayElementAtIndex(property.arraySize);
+                    }
                     SerializedProperty arrayElementAtIndex = property.GetArrayElementAtIndex(i);
-                    arrayElementAtIndex.FindPropertyRelative("m_Rect").rectValue = spriteRect.m_Rect;
-                    arrayElementAtIndex.FindPropertyRelative("m_Border").vector4Value = spriteRect.m_Border;
-                    arrayElementAtIndex.FindPropertyRelative("m_Name").stringValue = spriteRect.m_Name;
-                    arrayElementAtIndex.FindPropertyRelative("m_Alignment").intValue = (int) spriteRect.m_Alignment;
-                    arrayElementAtIndex.FindPropertyRelative("m_Pivot").vector2Value = spriteRect.m_Pivot;
-                    arrayElementAtIndex.FindPropertyRelative("m_TessellationDetail").floatValue = spriteRect.m_TessellationDetail;
-                    ApplyOutlineChanges(arrayElementAtIndex.FindPropertyRelative("m_Outline"), spriteRect);
+                    rect.ApplyToSerializedProperty(arrayElementAtIndex);
+                    EditorUtility.DisplayProgressBar(SpriteEditorWindowStyles.saveProgressTitle.text, string.Format(SpriteEditorWindowStyles.saveContentText.text, i, this.m_RectsCache.Count), ((float) i) / ((float) this.m_RectsCache.Count));
+                }
+                while (this.m_RectsCache.Count < property.arraySize)
+                {
+                    property.DeleteArrayElementAtIndex(this.m_RectsCache.Count);
                 }
                 if (list.Count > 0)
                 {
@@ -259,64 +120,30 @@
             else if (this.m_RectsCache.Count > 0)
             {
                 SpriteRect rect2 = this.m_RectsCache.RectAt(0);
-                so.FindProperty("m_Alignment").intValue = (int) rect2.m_Alignment;
-                so.FindProperty("m_SpriteBorder").vector4Value = rect2.m_Border;
-                so.FindProperty("m_SpritePivot").vector2Value = rect2.m_Pivot;
-                so.FindProperty("m_SpriteTessellationDetail").floatValue = rect2.m_TessellationDetail;
-                this.m_SpriteSheetOutline.ClearArray();
-                ApplyOutlineChanges(this.m_SpriteSheetOutline, rect2);
-            }
-        }
-
-        private void DoApplyRevertGUI()
-        {
-            using (new EditorGUI.DisabledScope(!this.textureIsDirty))
-            {
-                if (GUILayout.Button(SpriteEditorWindowStyles.revertButtonLabel, EditorStyles.toolbarButton, new GUILayoutOption[0]))
+                so.FindProperty("m_Alignment").intValue = (int) rect2.alignment;
+                so.FindProperty("m_SpriteBorder").vector4Value = rect2.border;
+                so.FindProperty("m_SpritePivot").vector2Value = rect2.pivot;
+                so.FindProperty("m_SpriteTessellationDetail").floatValue = rect2.tessellationDetail;
+                SerializedProperty outlineSP = so.FindProperty("m_SpriteSheet.m_Outline");
+                if (rect2.outline != null)
                 {
-                    this.DoRevert();
+                    SpriteRect.ApplyOutlineChanges(outlineSP, rect2.outline);
                 }
-                if (GUILayout.Button(SpriteEditorWindowStyles.applyButtonLabel, EditorStyles.toolbarButton, new GUILayoutOption[0]))
+                else
                 {
-                    this.DoApply();
+                    outlineSP.ClearArray();
+                }
+                SerializedProperty property4 = so.FindProperty("m_SpriteSheet.m_PhysicsShape");
+                if (rect2.physicsShape != null)
+                {
+                    SpriteRect.ApplyOutlineChanges(property4, rect2.physicsShape);
+                }
+                else
+                {
+                    property4.ClearArray();
                 }
             }
-        }
-
-        public void DoAutomaticSlicing(int minimumSpriteSize, int alignment, Vector2 pivot, AutoSlicingMethod slicingMethod)
-        {
-            Undo.RegisterCompleteObjectUndo(this.m_RectsCache, "Automatic Slicing");
-            if (slicingMethod == AutoSlicingMethod.DeleteAll)
-            {
-                this.m_RectsCache.ClearAll();
-            }
-            List<Rect> rects = new List<Rect>(InternalSpriteUtility.GenerateAutomaticSpriteRectangles(base.m_Texture, minimumSpriteSize, 0));
-            rects = this.SortRects(rects);
-            foreach (Rect rect in rects)
-            {
-                this.AddSprite(rect, alignment, pivot, slicingMethod);
-            }
-            this.selected = null;
-            this.textureIsDirty = true;
-            base.Repaint();
-        }
-
-        private void DoBorderFields()
-        {
-            EditorGUI.BeginChangeCheck();
-            Vector4 vector = this.ClampSpriteBorder(this.selected.m_Border);
-            int x = Mathf.RoundToInt(vector.x);
-            int w = Mathf.RoundToInt(vector.y);
-            int z = Mathf.RoundToInt(vector.z);
-            int y = Mathf.RoundToInt(vector.w);
-            this.FourIntFields(SpriteEditorWindowStyles.borderLabel, SpriteEditorWindowStyles.lLabel, SpriteEditorWindowStyles.tLabel, SpriteEditorWindowStyles.rLabel, SpriteEditorWindowStyles.bLabel, ref x, ref y, ref z, ref w);
-            Vector4 border = new Vector4((float) x, (float) w, (float) z, (float) y);
-            if (EditorGUI.EndChangeCheck())
-            {
-                Undo.RegisterCompleteObjectUndo(this.m_RectsCache, "Change Sprite Border");
-                this.textureIsDirty = true;
-                this.selected.m_Border = this.ClampSpriteBorder(border);
-            }
+            EditorUtility.ClearProgressBar();
         }
 
         private void DoEditingDisabledMessage()
@@ -324,224 +151,35 @@
             if (this.IsEditingDisabled())
             {
                 GUILayout.BeginArea(this.warningMessageRect);
-                EditorGUILayout.HelpBox(SpriteEditorWindowStyles.editingDiableMessageLabel.text, MessageType.Warning);
+                EditorGUILayout.HelpBox(SpriteEditorWindowStyles.editingDisableMessageLabel.text, MessageType.Warning);
                 GUILayout.EndArea();
-            }
-        }
-
-        public void DoGridSlicing(Vector2 size, Vector2 offset, Vector2 padding, int alignment, Vector2 pivot)
-        {
-            Rect[] rectArray = InternalSpriteUtility.GenerateGridSpriteRectangles(base.m_Texture, offset, size, padding);
-            bool flag = true;
-            if ((rectArray.Length > 0x3e8) && !EditorUtility.DisplayDialog(SpriteEditorWindowStyles.creatingMultipleSpriteDialogTitle.text, string.Format(SpriteEditorWindowStyles.creatingMultipleSpriteDialogContent.text, rectArray.Length), SpriteEditorWindowStyles.okButtonLabel.text, SpriteEditorWindowStyles.cancelButtonLabel.text))
-            {
-                flag = false;
-            }
-            if (flag)
-            {
-                Undo.RegisterCompleteObjectUndo(this.m_RectsCache, "Grid Slicing");
-                this.m_RectsCache.ClearAll();
-                foreach (Rect rect in rectArray)
-                {
-                    this.AddSprite(rect, alignment, pivot, this.defaultColliderAlphaCutoff, this.defaultColliderDetail);
-                }
-                this.selected = null;
-                this.textureIsDirty = true;
-            }
-            base.Repaint();
-        }
-
-        private void DoNameField()
-        {
-            EditorGUI.BeginChangeCheck();
-            string name = this.selected.m_Name;
-            GUI.SetNextControlName("SpriteName");
-            string filename = EditorGUILayout.TextField(SpriteEditorWindowStyles.nameLabel, name, new GUILayoutOption[0]);
-            if (EditorGUI.EndChangeCheck())
-            {
-                Undo.RegisterCompleteObjectUndo(this.m_RectsCache, "Change Sprite Name");
-                this.textureIsDirty = true;
-                filename = InternalEditorUtility.RemoveInvalidCharsFromFileName(filename, true);
-                if (string.IsNullOrEmpty(this.selected.m_OriginalName) && (filename != name))
-                {
-                    this.selected.m_OriginalName = name;
-                }
-                if (string.IsNullOrEmpty(filename))
-                {
-                    filename = name;
-                }
-                foreach (SpriteRect rect in this.m_RectsCache.m_Rects)
-                {
-                    if (rect.m_Name == filename)
-                    {
-                        filename = this.selected.m_OriginalName;
-                        break;
-                    }
-                }
-                this.selected.m_Name = filename;
-            }
-        }
-
-        private void DoPivotFields()
-        {
-            EditorGUI.BeginChangeCheck();
-            this.selected.m_Alignment = (SpriteAlignment) EditorGUILayout.Popup(SpriteUtilityWindow.Styles.s_PivotLabel, (int) this.selected.m_Alignment, SpriteUtilityWindow.Styles.spriteAlignmentOptions, new GUILayoutOption[0]);
-            Vector2 pivot = this.selected.m_Pivot;
-            Vector2 customOffset = pivot;
-            using (new EditorGUI.DisabledScope(this.selected.m_Alignment != SpriteAlignment.Custom))
-            {
-                Rect position = GUILayoutUtility.GetRect(322f, EditorGUI.GetPropertyHeight(SerializedPropertyType.Vector2, SpriteEditorWindowStyles.customPivotLabel));
-                GUI.SetNextControlName("PivotField");
-                customOffset = EditorGUI.Vector2Field(position, SpriteEditorWindowStyles.customPivotLabel, pivot);
-            }
-            if (EditorGUI.EndChangeCheck())
-            {
-                Undo.RegisterCompleteObjectUndo(this.m_RectsCache, "Change Sprite Pivot");
-                this.textureIsDirty = true;
-                this.selected.m_Pivot = SpriteEditorUtility.GetPivotValue(this.selected.m_Alignment, customOffset);
-            }
-        }
-
-        private void DoPolygonChangeShapeWindow()
-        {
-            if (this.m_ShowPolygonChangeShapeWindow && !this.IsEditingDisabled())
-            {
-                bool flag = false;
-                float labelWidth = EditorGUIUtility.labelWidth;
-                EditorGUIUtility.labelWidth = 45f;
-                GUILayout.BeginArea(this.m_PolygonChangeShapeWindowRect);
-                GUILayout.BeginVertical(GUI.skin.box, new GUILayoutOption[0]);
-                Event current = Event.current;
-                if ((this.isSidesValid && (current.type == EventType.KeyDown)) && (current.keyCode == KeyCode.Return))
-                {
-                    flag = true;
-                    current.Use();
-                }
-                EditorGUI.BeginChangeCheck();
-                this.m_PolygonSides = EditorGUILayout.IntField(SpriteEditorWindowStyles.sidesLabel, this.m_PolygonSides, new GUILayoutOption[0]);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    if (!this.isSidesValid)
-                    {
-                        this.m_PolygonChangeShapeWindowRect.height = 65f;
-                    }
-                    else
-                    {
-                        this.m_PolygonChangeShapeWindowRect.height = 45f;
-                    }
-                }
-                GUILayout.FlexibleSpace();
-                if (!this.isSidesValid)
-                {
-                    EditorGUILayout.HelpBox(SpriteEditorWindowStyles.polygonChangeShapeHelpBoxContent.text, MessageType.Warning, true);
-                }
-                else
-                {
-                    GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-                    GUILayout.FlexibleSpace();
-                    using (new EditorGUI.DisabledScope(!this.isSidesValid))
-                    {
-                        if (GUILayout.Button(SpriteEditorWindowStyles.changeButtonLabel, new GUILayoutOption[0]))
-                        {
-                            flag = true;
-                        }
-                    }
-                    GUILayout.EndHorizontal();
-                }
-                GUILayout.EndVertical();
-                if (flag)
-                {
-                    if (this.isSidesValid)
-                    {
-                        this.GeneratePolygonOutline(this.m_PolygonSides);
-                    }
-                    this.m_ShowPolygonChangeShapeWindow = false;
-                    GUIUtility.hotControl = 0;
-                    GUIUtility.keyboardControl = 0;
-                }
-                EditorGUIUtility.labelWidth = labelWidth;
-                GUILayout.EndArea();
-            }
-        }
-
-        private void DoPositionField()
-        {
-            EditorGUI.BeginChangeCheck();
-            Rect rect = this.selected.m_Rect;
-            int x = Mathf.RoundToInt(rect.x);
-            int y = Mathf.RoundToInt(rect.y);
-            int z = Mathf.RoundToInt(rect.width);
-            int w = Mathf.RoundToInt(rect.height);
-            this.FourIntFields(SpriteEditorWindowStyles.positionLabel, SpriteEditorWindowStyles.xLabel, SpriteEditorWindowStyles.yLabel, SpriteEditorWindowStyles.wLabel, SpriteEditorWindowStyles.hLabel, ref x, ref y, ref z, ref w);
-            Rect rect2 = new Rect((float) x, (float) y, (float) z, (float) w);
-            if (EditorGUI.EndChangeCheck())
-            {
-                Undo.RegisterCompleteObjectUndo(this.m_RectsCache, "Change Sprite Position");
-                this.textureIsDirty = true;
-                this.selected.m_Rect = this.ClampSpriteRect(rect2);
             }
         }
 
         private void DoRevert()
         {
-            this.m_TextureIsDirty = false;
-            this.selected = null;
+            this.textureIsDirty = false;
+            this.selectedSpriteRect = null;
             this.RefreshRects();
             GUI.FocusControl("");
         }
 
-        private void DoSelectedFrameInspector()
-        {
-            if (this.selected != null)
-            {
-                EditorGUIUtility.wideMode = true;
-                float labelWidth = EditorGUIUtility.labelWidth;
-                EditorGUIUtility.labelWidth = 135f;
-                GUILayout.BeginArea(this.inspectorRect);
-                GUILayout.BeginVertical(SpriteEditorWindowStyles.spriteLabel, GUI.skin.window, new GUILayoutOption[0]);
-                using (new EditorGUI.DisabledScope(!this.multipleSprites))
-                {
-                    this.DoNameField();
-                    this.DoPositionField();
-                }
-                this.DoBorderFields();
-                this.DoPivotFields();
-                GUILayout.EndVertical();
-                GUILayout.EndArea();
-                EditorGUIUtility.labelWidth = labelWidth;
-            }
-        }
-
         protected override void DoTextureGUIExtras()
         {
-            if (!this.IsEditingDisabled())
+            this.HandleFrameSelected();
+            if (this.m_EventSystem.current.type == EventType.Repaint)
             {
-                this.HandleGizmoMode();
-                if (this.multipleSprites)
+                SpriteEditorUtility.BeginLines(new Color(1f, 1f, 1f, 0.5f));
+                for (int i = 0; i < this.m_RectsCache.Count; i++)
                 {
-                    this.HandleRectCornerScalingHandles();
+                    if (this.m_RectsCache.RectAt(i) != this.selectedSpriteRect)
+                    {
+                        SpriteEditorUtility.DrawBox(this.m_RectsCache.RectAt(i).rect);
+                    }
                 }
-                this.HandleBorderCornerScalingHandles();
-                this.HandleBorderSidePointScalingSliders();
-                if (this.multipleSprites)
-                {
-                    this.HandleRectSideScalingHandles();
-                }
-                this.HandleBorderSideScalingHandles();
-                this.HandlePivotHandle();
-                if (this.multipleSprites)
-                {
-                    this.HandleDragging();
-                }
-                this.HandleSelection();
-                this.HandleFrameSelected();
-                if (this.multipleSprites)
-                {
-                    this.HandleCreate();
-                    this.HandleDelete();
-                    this.HandleDuplicate();
-                }
+                SpriteEditorUtility.EndLines();
             }
+            this.m_CurrentModule.DoTextureGUI();
         }
 
         public void DoTextureReimport(string path)
@@ -563,244 +201,94 @@
 
         private void DoToolbarGUI()
         {
-            if (this.polygonSprite)
+            GUIStyle toolbar = EditorStyles.toolbar;
+            Rect position = new Rect(0f, 0f, base.position.width, 17f);
+            if (this.m_EventSystem.current.type == EventType.Repaint)
             {
-                using (new EditorGUI.DisabledScope(this.IsEditingDisabled()))
-                {
-                    this.m_ShowPolygonChangeShapeWindow = GUILayout.Toggle(this.m_ShowPolygonChangeShapeWindow, SpriteEditorWindowStyles.changeShapeLabel, EditorStyles.toolbarButton, new GUILayoutOption[0]);
-                }
+                toolbar.Draw(position, false, false, false, false);
             }
-            else
+            base.m_TextureViewRect = new Rect(0f, 17f, base.position.width - 16f, (base.position.height - 16f) - 17f);
+            if (this.m_RegisteredModules.Count > 1)
             {
-                using (new EditorGUI.DisabledScope(!this.multipleSprites || this.IsEditingDisabled()))
+                int newModuleIndex = EditorGUI.Popup(new Rect(0f, 0f, 90f, 17f), this.m_CurrentModuleIndex, this.m_RegisteredModuleNames, EditorStyles.toolbarPopup);
+                if (newModuleIndex != this.m_CurrentModuleIndex)
                 {
-                    Rect buttonRect = EditorGUILayout.BeginHorizontal(new GUILayoutOption[0]);
-                    if (GUILayout.Button(SpriteEditorWindowStyles.sliceButtonLabel, EditorStyles.toolbarPopup, new GUILayoutOption[0]))
+                    if (this.textureIsDirty)
                     {
-                        SpriteEditorMenu.s_SpriteEditor = this;
-                        if (SpriteEditorMenu.ShowAtPosition(buttonRect))
+                        if (EditorUtility.DisplayDialog(SpriteEditorWindowStyles.applyRevertModuleDialogTitle.text, SpriteEditorWindowStyles.applyRevertModuleDialogContent.text, SpriteEditorWindowStyles.applyButtonLabel.text, SpriteEditorWindowStyles.revertButtonLabel.text))
                         {
-                            GUIUtility.ExitGUI();
+                            this.DoApply();
+                        }
+                        else
+                        {
+                            this.DoRevert();
                         }
                     }
-                    using (new EditorGUI.DisabledScope(this.selected == null))
-                    {
-                        if (GUILayout.Button(SpriteEditorWindowStyles.trimButtonLabel, EditorStyles.toolbarButton, new GUILayoutOption[0]) || (string.IsNullOrEmpty(GUI.GetNameOfFocusedControl()) && k_SpriteEditorTrim.activated))
-                        {
-                            Rect rect = this.TrimAlpha(this.selected.m_Rect);
-                            if ((rect.width <= 0f) && (rect.height <= 0f))
-                            {
-                                this.m_RectsCache.RemoveRect(this.selected);
-                                this.selected = null;
-                            }
-                            else
-                            {
-                                rect = this.ClampSpriteRect(rect);
-                                if (this.selected.m_Rect != rect)
-                                {
-                                    this.textureIsDirty = true;
-                                }
-                                this.selected.m_Rect = rect;
-                            }
-                            base.Repaint();
-                        }
-                    }
-                    EditorGUILayout.EndHorizontal();
+                    this.SetupModule(newModuleIndex);
+                }
+                position.x = 90f;
+            }
+            position = base.DoAlphaZoomToolbarGUI(position);
+            Rect rect5 = position;
+            rect5.x = rect5.width;
+            using (new EditorGUI.DisabledScope(!this.textureIsDirty))
+            {
+                rect5.width = EditorStyles.toolbarButton.CalcSize(SpriteEditorWindowStyles.applyButtonLabel).x;
+                rect5.x -= rect5.width;
+                if (GUI.Button(rect5, SpriteEditorWindowStyles.applyButtonLabel, EditorStyles.toolbarButton))
+                {
+                    this.DoApply();
+                    this.SetupModule(this.m_CurrentModuleIndex);
+                }
+                rect5.width = EditorStyles.toolbarButton.CalcSize(SpriteEditorWindowStyles.revertButtonLabel).x;
+                rect5.x -= rect5.width;
+                if (GUI.Button(rect5, SpriteEditorWindowStyles.revertButtonLabel, EditorStyles.toolbarButton))
+                {
+                    this.DoRevert();
+                    this.SetupModule(this.m_CurrentModuleIndex);
                 }
             }
+            position.width = rect5.x - position.x;
+            this.m_CurrentModule.DrawToolbarGUI(position);
         }
 
-        protected override void DrawGizmos()
+        public ITexture2D GetReadableTexture2D()
         {
-            SpriteEditorUtility.BeginLines(new Color(0f, 0f, 0f, 0.25f));
-            for (int i = 0; i < this.m_RectsCache.Count; i++)
+            if (this.m_ReadableTexture == null)
             {
-                Rect rect = this.m_RectsCache.RectAt(i).m_Rect;
-                if (this.m_RectsCache.RectAt(i) != this.selected)
+                ITextureImporter assetImporterFromPath = this.m_AssetDatabase.GetAssetImporterFromPath(this.m_SelectedAssetPath);
+                int width = 0;
+                int height = 0;
+                assetImporterFromPath.GetWidthAndHeight(ref width, ref height);
+                this.m_ReadableTexture = UnityEditor.SpriteUtility.CreateTemporaryDuplicate((UnityEngine.Texture2D) this.m_OriginalTexture, width, height);
+                if (this.m_ReadableTexture != null)
                 {
-                    SpriteEditorUtility.DrawBox(new Rect(rect.xMin + (1f / base.m_Zoom), rect.yMin + (1f / base.m_Zoom), rect.width, rect.height));
+                    this.m_ReadableTexture.filterMode = UnityEngine.FilterMode.Point;
                 }
             }
-            SpriteEditorUtility.EndLines();
-            SpriteEditorUtility.BeginLines(new Color(1f, 1f, 1f, 0.5f));
-            for (int j = 0; j < this.m_RectsCache.Count; j++)
-            {
-                if (this.m_RectsCache.RectAt(j) != this.selected)
-                {
-                    SpriteEditorUtility.DrawBox(this.m_RectsCache.RectAt(j).m_Rect);
-                }
-            }
-            SpriteEditorUtility.EndLines();
-            if (this.polygonSprite)
-            {
-                for (int m = 0; m < this.m_RectsCache.Count; m++)
-                {
-                    SpriteRect rect2 = this.m_RectsCache.RectAt(m);
-                    Vector2 vector = (Vector2) (rect2.m_Rect.size * 0.5f);
-                    if (rect2.m_Outline.Count > 0)
-                    {
-                        SpriteEditorUtility.BeginLines(new Color(0.75f, 0.75f, 0.75f, 0.75f));
-                        for (int n = 0; n < rect2.m_Outline.Count; n++)
-                        {
-                            int num5 = 0;
-                            while (num5 < (rect2.m_Outline[n].Count - 1))
-                            {
-                                SpriteEditorUtility.DrawLine(rect2.m_Outline[n][num5] + vector, rect2.m_Outline[n][num5 + 1] + vector);
-                                num5++;
-                            }
-                            SpriteEditorUtility.DrawLine(rect2.m_Outline[n][num5] + vector, rect2.m_Outline[n][0] + vector);
-                        }
-                        SpriteEditorUtility.EndLines();
-                    }
-                }
-            }
-            SpriteEditorUtility.BeginLines(new Color(0f, 1f, 0f, 0.7f));
-            for (int k = 0; k < this.m_RectsCache.Count; k++)
-            {
-                SpriteRect currentRect = this.m_RectsCache.RectAt(k);
-                if (this.ShouldDrawBorders(currentRect))
-                {
-                    Vector4 border = currentRect.m_Border;
-                    Rect rect4 = currentRect.m_Rect;
-                    SpriteEditorUtility.DrawLine(new Vector3(rect4.xMin + border.x, rect4.yMin), new Vector3(rect4.xMin + border.x, rect4.yMax));
-                    SpriteEditorUtility.DrawLine(new Vector3(rect4.xMax - border.z, rect4.yMin), new Vector3(rect4.xMax - border.z, rect4.yMax));
-                    SpriteEditorUtility.DrawLine(new Vector3(rect4.xMin, rect4.yMin + border.y), new Vector3(rect4.xMax, rect4.yMin + border.y));
-                    SpriteEditorUtility.DrawLine(new Vector3(rect4.xMin, rect4.yMax - border.w), new Vector3(rect4.xMax, rect4.yMax - border.w));
-                }
-            }
-            SpriteEditorUtility.EndLines();
-            if (this.ShouldShowRectScaling())
-            {
-                Rect position = this.selected.m_Rect;
-                SpriteEditorUtility.BeginLines(new Color(0f, 0.1f, 0.3f, 0.25f));
-                SpriteEditorUtility.DrawBox(new Rect(position.xMin + (1f / base.m_Zoom), position.yMin + (1f / base.m_Zoom), position.width, position.height));
-                SpriteEditorUtility.EndLines();
-                SpriteEditorUtility.BeginLines(new Color(0.25f, 0.5f, 1f, 0.75f));
-                SpriteEditorUtility.DrawBox(position);
-                SpriteEditorUtility.EndLines();
-            }
+            return new UnityEngine.U2D.Interface.Texture2D(this.m_ReadableTexture);
         }
 
-        private Rect FlipNegativeRect(Rect rect) => 
-            new Rect { 
-                xMin = Mathf.Min(rect.xMin, rect.xMax),
-                yMin = Mathf.Min(rect.yMin, rect.yMax),
-                xMax = Mathf.Max(rect.xMin, rect.xMax),
-                yMax = Mathf.Max(rect.yMin, rect.yMax)
-            };
-
-        private void FourIntFields(GUIContent label, GUIContent labelX, GUIContent labelY, GUIContent labelZ, GUIContent labelW, ref int x, ref int y, ref int z, ref int w)
+        private ITexture2D GetSelectedTexture2D()
         {
-            Rect rect = GUILayoutUtility.GetRect((float) 322f, (float) 32f);
-            Rect position = rect;
-            position.width = EditorGUIUtility.labelWidth;
-            position.height = 16f;
-            GUI.Label(position, label);
-            Rect rect3 = rect;
-            rect3.width -= EditorGUIUtility.labelWidth;
-            rect3.height = 16f;
-            rect3.x += EditorGUIUtility.labelWidth;
-            rect3.width /= 2f;
-            rect3.width -= 2f;
-            EditorGUIUtility.labelWidth = 12f;
-            GUI.SetNextControlName("FourIntFields_x");
-            x = EditorGUI.IntField(rect3, labelX, x);
-            rect3.x += rect3.width + 3f;
-            GUI.SetNextControlName("FourIntFields_y");
-            y = EditorGUI.IntField(rect3, labelY, y);
-            rect3.y += 16f;
-            rect3.x -= rect3.width + 3f;
-            GUI.SetNextControlName("FourIntFields_z");
-            z = EditorGUI.IntField(rect3, labelZ, z);
-            rect3.x += rect3.width + 3f;
-            GUI.SetNextControlName("FourIntFields_w");
-            w = EditorGUI.IntField(rect3, labelW, w);
-            EditorGUIUtility.labelWidth = 135f;
-        }
-
-        public void GeneratePolygonOutline(int sides)
-        {
-            for (int i = 0; i < this.m_RectsCache.Count; i++)
+            UnityEngine.Texture2D o = null;
+            if (Selection.activeObject is UnityEngine.Texture2D)
             {
-                SpriteRect rect = this.m_RectsCache.RectAt(i);
-                List<Vector2> item = new List<Vector2>();
-                item.AddRange(SpriteUtility.GeneratePolygonOutlineVerticesOfSize(sides, (int) rect.m_Rect.width, (int) rect.m_Rect.height));
-                rect.m_Outline.Clear();
-                rect.m_Outline.Add(item);
-                this.m_TextureIsDirty = true;
-            }
-            base.Repaint();
-        }
-
-        private SpriteRect GetExistingOverlappingSprite(Rect rect)
-        {
-            for (int i = 0; i < this.m_RectsCache.Count; i++)
-            {
-                Rect a = this.m_RectsCache.RectAt(i).m_Rect;
-                if (this.Overlap(a, rect))
-                {
-                    return this.m_RectsCache.RectAt(i);
-                }
-            }
-            return null;
-        }
-
-        private Texture2D GetSelectedTexture2D()
-        {
-            Texture2D assetObject = null;
-            if (Selection.activeObject is Texture2D)
-            {
-                assetObject = Selection.activeObject as Texture2D;
+                o = Selection.activeObject as UnityEngine.Texture2D;
             }
             else if (Selection.activeObject is Sprite)
             {
-                assetObject = SpriteUtility.GetSpriteTexture(Selection.activeObject as Sprite, false);
+                o = UnityEditor.Sprites.SpriteUtility.GetSpriteTexture(Selection.activeObject as Sprite, false);
             }
             else if (((Selection.activeGameObject != null) && (Selection.activeGameObject.GetComponent<SpriteRenderer>() != null)) && (Selection.activeGameObject.GetComponent<SpriteRenderer>().sprite != null))
             {
-                assetObject = SpriteUtility.GetSpriteTexture(Selection.activeGameObject.GetComponent<SpriteRenderer>().sprite, false);
+                o = UnityEditor.Sprites.SpriteUtility.GetSpriteTexture(Selection.activeGameObject.GetComponent<SpriteRenderer>().sprite, false);
             }
-            if (assetObject != null)
+            if (o != null)
             {
-                this.m_SelectedAssetPath = AssetDatabase.GetAssetPath(assetObject);
+                this.m_SelectedAssetPath = this.m_AssetDatabase.GetAssetPath(o);
             }
-            return assetObject;
-        }
-
-        private Vector2[] GetSnapPointsArray(Rect rect)
-        {
-            Vector2[] vectorArray = new Vector2[9];
-            vectorArray[1] = new Vector2(rect.xMin, rect.yMax);
-            vectorArray[2] = new Vector2(rect.center.x, rect.yMax);
-            vectorArray[3] = new Vector2(rect.xMax, rect.yMax);
-            vectorArray[4] = new Vector2(rect.xMin, rect.center.y);
-            vectorArray[0] = new Vector2(rect.center.x, rect.center.y);
-            vectorArray[5] = new Vector2(rect.xMax, rect.center.y);
-            vectorArray[6] = new Vector2(rect.xMin, rect.yMin);
-            vectorArray[7] = new Vector2(rect.center.x, rect.yMin);
-            vectorArray[8] = new Vector2(rect.xMax, rect.yMin);
-            return vectorArray;
-        }
-
-        private string GetUniqueName(string prefix)
-        {
-            int num = 0;
-            while (true)
-            {
-                string str = prefix + "_" + num++;
-                bool flag = false;
-                foreach (SpriteRect rect in this.m_RectsCache.m_Rects)
-                {
-                    if (rect.m_Name == str)
-                    {
-                        flag = true;
-                    }
-                }
-                if (!flag)
-                {
-                    return str;
-                }
-            }
+            return new UnityEngine.U2D.Interface.Texture2D(o);
         }
 
         public static void GetWindow()
@@ -820,220 +308,22 @@
                 {
                     this.DoRevert();
                 }
-            }
-        }
-
-        private void HandleBorderCornerScalingHandles()
-        {
-            if (this.selected != null)
-            {
-                GUIStyle dragBorderdot = SpriteUtilityWindow.s_Styles.dragBorderdot;
-                GUIStyle dragBorderDotActive = SpriteUtilityWindow.s_Styles.dragBorderDotActive;
-                Color color = new Color(0f, 1f, 0f);
-                Rect rect = new Rect(this.selected.m_Rect);
-                Vector4 border = this.selected.m_Border;
-                float x = rect.xMin + border.x;
-                float num2 = rect.xMax - border.z;
-                float y = rect.yMax - border.w;
-                float num4 = rect.yMin + border.y;
-                EditorGUI.BeginChangeCheck();
-                this.HandleBorderPointSlider(ref x, ref y, MouseCursor.ResizeUpLeft, (border.x < 1f) && (border.w < 1f), dragBorderdot, dragBorderDotActive, color);
-                this.HandleBorderPointSlider(ref num2, ref y, MouseCursor.ResizeUpRight, (border.z < 1f) && (border.w < 1f), dragBorderdot, dragBorderDotActive, color);
-                this.HandleBorderPointSlider(ref x, ref num4, MouseCursor.ResizeUpRight, (border.x < 1f) && (border.y < 1f), dragBorderdot, dragBorderDotActive, color);
-                this.HandleBorderPointSlider(ref num2, ref num4, MouseCursor.ResizeUpLeft, (border.z < 1f) && (border.y < 1f), dragBorderdot, dragBorderDotActive, color);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    Undo.RegisterCompleteObjectUndo(this.m_RectsCache, "Scale sprite border");
-                    border.x = x - rect.xMin;
-                    border.z = rect.xMax - num2;
-                    border.w = rect.yMax - y;
-                    border.y = num4 - rect.yMin;
-                    this.textureIsDirty = true;
-                }
-                this.selected.m_Border = this.ClampSpriteBorder(border);
-            }
-        }
-
-        private void HandleBorderPointSlider(ref float x, ref float y, MouseCursor mouseCursor, bool isHidden, GUIStyle dragDot, GUIStyle dragDotActive, Color color)
-        {
-            Color color2 = GUI.color;
-            if (isHidden)
-            {
-                GUI.color = new Color(0f, 0f, 0f, 0f);
-            }
-            else
-            {
-                GUI.color = color;
-            }
-            Vector2 vector = SpriteEditorHandles.PointSlider(new Vector2(x, y), mouseCursor, dragDot, dragDotActive);
-            x = vector.x;
-            y = vector.y;
-            GUI.color = color2;
-        }
-
-        private float HandleBorderScaleSlider(float x, float y, float width, float height, bool isHorizontal)
-        {
-            float num2;
-            float fixedWidth = SpriteUtilityWindow.s_Styles.dragBorderdot.fixedWidth;
-            Vector2 pos = Handles.matrix.MultiplyPoint((Vector3) new Vector2(x, y));
-            EditorGUI.BeginChangeCheck();
-            if (isHorizontal)
-            {
-                Rect cursorRect = new Rect(pos.x - (fixedWidth * 0.5f), pos.y, fixedWidth, height);
-                num2 = SpriteEditorHandles.ScaleSlider(pos, MouseCursor.ResizeHorizontal, cursorRect).x;
-            }
-            else
-            {
-                Rect rect2 = new Rect(pos.x, pos.y - (fixedWidth * 0.5f), width, fixedWidth);
-                num2 = SpriteEditorHandles.ScaleSlider(pos, MouseCursor.ResizeVertical, rect2).y;
-            }
-            if (EditorGUI.EndChangeCheck())
-            {
-                return num2;
-            }
-            return (!isHorizontal ? y : x);
-        }
-
-        private void HandleBorderSidePointScalingSliders()
-        {
-            if (this.selected != null)
-            {
-                GUIStyle dragBorderdot = SpriteUtilityWindow.s_Styles.dragBorderdot;
-                GUIStyle dragBorderDotActive = SpriteUtilityWindow.s_Styles.dragBorderDotActive;
-                Color color = new Color(0f, 1f, 0f);
-                Rect rect = this.selected.m_Rect;
-                Vector4 border = this.selected.m_Border;
-                float x = rect.xMin + border.x;
-                float num2 = rect.xMax - border.z;
-                float y = rect.yMax - border.w;
-                float num4 = rect.yMin + border.y;
-                EditorGUI.BeginChangeCheck();
-                float num5 = num4 - ((num4 - y) / 2f);
-                float num6 = x - ((x - num2) / 2f);
-                float num7 = num5;
-                this.HandleBorderPointSlider(ref x, ref num7, MouseCursor.ResizeHorizontal, false, dragBorderdot, dragBorderDotActive, color);
-                num7 = num5;
-                this.HandleBorderPointSlider(ref num2, ref num7, MouseCursor.ResizeHorizontal, false, dragBorderdot, dragBorderDotActive, color);
-                num7 = num6;
-                this.HandleBorderPointSlider(ref num7, ref y, MouseCursor.ResizeVertical, false, dragBorderdot, dragBorderDotActive, color);
-                num7 = num6;
-                this.HandleBorderPointSlider(ref num7, ref num4, MouseCursor.ResizeVertical, false, dragBorderdot, dragBorderDotActive, color);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    Undo.RegisterCompleteObjectUndo(this.m_RectsCache, "Scale sprite border");
-                    border.x = x - rect.xMin;
-                    border.z = rect.xMax - num2;
-                    border.w = rect.yMax - y;
-                    border.y = num4 - rect.yMin;
-                    this.textureIsDirty = true;
-                }
-                this.selected.m_Border = this.ClampSpriteBorder(border);
-            }
-        }
-
-        private void HandleBorderSideScalingHandles()
-        {
-            if (this.selected != null)
-            {
-                Rect rect = new Rect(this.selected.m_Rect);
-                Vector4 border = this.selected.m_Border;
-                float x = rect.xMin + border.x;
-                float num2 = rect.xMax - border.z;
-                float y = rect.yMax - border.w;
-                float num4 = rect.yMin + border.y;
-                Vector2 vector2 = Handles.matrix.MultiplyPoint(new Vector3(rect.xMin, rect.yMin));
-                Vector2 vector3 = Handles.matrix.MultiplyPoint(new Vector3(rect.xMax, rect.yMax));
-                float width = Mathf.Abs((float) (vector3.x - vector2.x));
-                float height = Mathf.Abs((float) (vector3.y - vector2.y));
-                EditorGUI.BeginChangeCheck();
-                x = this.HandleBorderScaleSlider(x, rect.yMax, width, height, true);
-                num2 = this.HandleBorderScaleSlider(num2, rect.yMax, width, height, true);
-                y = this.HandleBorderScaleSlider(rect.xMin, y, width, height, false);
-                num4 = this.HandleBorderScaleSlider(rect.xMin, num4, width, height, false);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    Undo.RegisterCompleteObjectUndo(this.m_RectsCache, "Scale sprite border");
-                    border.x = x - rect.xMin;
-                    border.z = rect.xMax - num2;
-                    border.w = rect.yMax - y;
-                    border.y = num4 - rect.yMin;
-                    this.selected.m_Border = this.ClampSpriteBorder(border);
-                    this.textureIsDirty = true;
-                }
-            }
-        }
-
-        private void HandleCreate()
-        {
-            if (!this.MouseOnTopOfInspector() && !Event.current.alt)
-            {
-                EditorGUI.BeginChangeCheck();
-                Rect rect = SpriteEditorHandles.RectCreator((float) base.m_Texture.width, (float) base.m_Texture.height, SpriteUtilityWindow.s_Styles.createRect);
-                if ((EditorGUI.EndChangeCheck() && (rect.width > 0f)) && (rect.height > 0f))
-                {
-                    Undo.RegisterCompleteObjectUndo(this.m_RectsCache, "Create sprite");
-                    this.selected = this.AddSprite(rect, 0, Vector2.zero, this.defaultColliderAlphaCutoff, this.defaultColliderDetail);
-                    GUIUtility.keyboardControl = 0;
-                }
-            }
-        }
-
-        private void HandleDelete()
-        {
-            if (((Event.current.type == EventType.ValidateCommand) || (Event.current.type == EventType.ExecuteCommand)) && ((Event.current.commandName == "SoftDelete") || (Event.current.commandName == "Delete")))
-            {
-                if (Event.current.type == EventType.ExecuteCommand)
-                {
-                    Undo.RegisterCompleteObjectUndo(this.m_RectsCache, "Delete sprite");
-                    this.m_RectsCache.RemoveRect(this.selected);
-                    this.selected = null;
-                    this.textureIsDirty = true;
-                }
-                Event.current.Use();
-            }
-        }
-
-        private void HandleDragging()
-        {
-            if ((this.selected != null) && !this.MouseOnTopOfInspector())
-            {
-                Rect clamp = new Rect(0f, 0f, (float) base.m_Texture.width, (float) base.m_Texture.height);
-                EditorGUI.BeginChangeCheck();
-                SpriteRect selected = this.selected;
-                Rect rect4 = SpriteEditorUtility.ClampedRect(SpriteEditorUtility.RoundedRect(SpriteEditorHandles.SliderRect(this.selected.m_Rect)), clamp, true);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    Undo.RegisterCompleteObjectUndo(this.m_RectsCache, "Move sprite");
-                    selected.m_Rect = rect4;
-                    this.textureIsDirty = true;
-                }
-            }
-        }
-
-        private void HandleDuplicate()
-        {
-            if (((Event.current.type == EventType.ValidateCommand) || (Event.current.type == EventType.ExecuteCommand)) && (Event.current.commandName == "Duplicate"))
-            {
-                if (Event.current.type == EventType.ExecuteCommand)
-                {
-                    Undo.RegisterCompleteObjectUndo(this.m_RectsCache, "Duplicate sprite");
-                    this.selected = this.AddSprite(this.selected.m_Rect, (int) this.selected.m_Alignment, this.selected.m_Pivot, this.defaultColliderAlphaCutoff, this.defaultColliderDetail);
-                }
-                Event.current.Use();
+                this.SetupModule(this.m_CurrentModuleIndex);
             }
         }
 
         private void HandleFrameSelected()
         {
-            if (((Event.current.type == EventType.ValidateCommand) || (Event.current.type == EventType.ExecuteCommand)) && (Event.current.commandName == "FrameSelected"))
+            IEvent current = this.m_EventSystem.current;
+            if (((current.type == EventType.ValidateCommand) || (current.type == EventType.ExecuteCommand)) && (current.commandName == "FrameSelected"))
             {
-                if (Event.current.type == EventType.ExecuteCommand)
+                if (current.type == EventType.ExecuteCommand)
                 {
-                    if (this.selected == null)
+                    if (this.selectedSpriteRect == null)
                     {
                         return;
                     }
-                    Rect rect = this.selected.m_Rect;
+                    Rect rect = this.selectedSpriteRect.rect;
                     float zoom = base.m_Zoom;
                     if (rect.width < rect.height)
                     {
@@ -1048,143 +338,48 @@
                     this.m_ScrollPosition.y = ((rect.center.y - (base.m_Texture.height * 0.5f)) * base.m_Zoom) * -1f;
                     base.Repaint();
                 }
-                Event.current.Use();
+                current.Use();
             }
         }
 
-        private void HandleGizmoMode()
+        public void HandleSpriteSelection()
         {
-            if (Event.current.control)
+            if (((this.m_EventSystem.current.type == EventType.MouseDown) && (this.m_EventSystem.current.button == 0)) && ((GUIUtility.hotControl == 0) && !this.m_EventSystem.current.alt))
             {
-                this.m_GizmoMode = GizmoMode.BorderEditing;
-            }
-            else
-            {
-                this.m_GizmoMode = GizmoMode.RectEditing;
-            }
-            Event current = Event.current;
-            if (((current.type == EventType.KeyDown) || (current.type == EventType.KeyUp)) && (((current.keyCode == KeyCode.LeftControl) || (current.keyCode == KeyCode.RightControl)) || ((current.keyCode == KeyCode.LeftAlt) || (current.keyCode == KeyCode.RightAlt))))
-            {
-                base.Repaint();
-            }
-        }
-
-        private void HandlePivotHandle()
-        {
-            if (this.selected != null)
-            {
-                EditorGUI.BeginChangeCheck();
-                SpriteRect selected = this.selected;
-                selected.m_Pivot = this.ApplySpriteAlignmentToPivot(selected.m_Pivot, selected.m_Rect, selected.m_Alignment);
-                Vector2 pivot = SpriteEditorHandles.PivotSlider(selected.m_Rect, selected.m_Pivot, SpriteUtilityWindow.s_Styles.pivotdot, SpriteUtilityWindow.s_Styles.pivotdotactive);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    Undo.RegisterCompleteObjectUndo(this.m_RectsCache, "Move sprite pivot");
-                    if (Event.current.control)
-                    {
-                        this.selected.m_Pivot = this.SnapPivot(pivot);
-                    }
-                    else
-                    {
-                        this.selected.m_Pivot = pivot;
-                        this.selected.m_Alignment = SpriteAlignment.Custom;
-                    }
-                    this.textureIsDirty = true;
-                }
-            }
-        }
-
-        private void HandleRectCornerScalingHandles()
-        {
-            if (this.selected != null)
-            {
-                GUIStyle dragdot = SpriteUtilityWindow.s_Styles.dragdot;
-                GUIStyle dragdotactive = SpriteUtilityWindow.s_Styles.dragdotactive;
-                Color white = Color.white;
-                Rect rect = new Rect(this.selected.m_Rect);
-                float xMin = rect.xMin;
-                float xMax = rect.xMax;
-                float yMax = rect.yMax;
-                float yMin = rect.yMin;
-                EditorGUI.BeginChangeCheck();
-                this.HandleBorderPointSlider(ref xMin, ref yMax, MouseCursor.ResizeUpLeft, false, dragdot, dragdotactive, white);
-                this.HandleBorderPointSlider(ref xMax, ref yMax, MouseCursor.ResizeUpRight, false, dragdot, dragdotactive, white);
-                this.HandleBorderPointSlider(ref xMin, ref yMin, MouseCursor.ResizeUpRight, false, dragdot, dragdotactive, white);
-                this.HandleBorderPointSlider(ref xMax, ref yMin, MouseCursor.ResizeUpLeft, false, dragdot, dragdotactive, white);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    Undo.RegisterCompleteObjectUndo(this.m_RectsCache, "Scale sprite");
-                    rect.xMin = xMin;
-                    rect.xMax = xMax;
-                    rect.yMax = yMax;
-                    rect.yMin = yMin;
-                    this.selected.m_Rect = this.ClampSpriteRect(rect);
-                    this.selected.m_Border = this.ClampSpriteBorder(this.selected.m_Border);
-                    this.textureIsDirty = true;
-                }
-                if (GUIUtility.hotControl == 0)
-                {
-                    this.selected.m_Rect = this.FlipNegativeRect(this.selected.m_Rect);
-                    this.selected.m_Border = this.ClampSpriteBorder(this.selected.m_Border);
-                }
-            }
-        }
-
-        private void HandleRectSideScalingHandles()
-        {
-            if (this.selected != null)
-            {
-                Rect rect = new Rect(this.selected.m_Rect);
-                float xMin = rect.xMin;
-                float xMax = rect.xMax;
-                float yMax = rect.yMax;
-                float yMin = rect.yMin;
-                Vector2 vector = Handles.matrix.MultiplyPoint(new Vector3(rect.xMin, rect.yMin));
-                Vector2 vector2 = Handles.matrix.MultiplyPoint(new Vector3(rect.xMax, rect.yMax));
-                float width = Mathf.Abs((float) (vector2.x - vector.x));
-                float height = Mathf.Abs((float) (vector2.y - vector.y));
-                EditorGUI.BeginChangeCheck();
-                xMin = this.HandleBorderScaleSlider(xMin, rect.yMax, width, height, true);
-                xMax = this.HandleBorderScaleSlider(xMax, rect.yMax, width, height, true);
-                yMax = this.HandleBorderScaleSlider(rect.xMin, yMax, width, height, false);
-                yMin = this.HandleBorderScaleSlider(rect.xMin, yMin, width, height, false);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    Undo.RegisterCompleteObjectUndo(this.m_RectsCache, "Scale sprite");
-                    rect.xMin = xMin;
-                    rect.xMax = xMax;
-                    rect.yMax = yMax;
-                    rect.yMin = yMin;
-                    this.selected.m_Rect = this.ClampSpriteRect(rect);
-                    this.selected.m_Border = this.ClampSpriteBorder(this.selected.m_Border);
-                    this.textureIsDirty = true;
-                }
-            }
-        }
-
-        private void HandleSelection()
-        {
-            if ((((Event.current.type == EventType.MouseDown) && (Event.current.button == 0)) && ((GUIUtility.hotControl == 0) && !Event.current.alt)) && !this.MouseOnTopOfInspector())
-            {
-                SpriteRect selected = this.selected;
-                this.selected = this.TrySelect(Event.current.mousePosition);
-                if (this.selected != null)
+                SpriteRect selectedSpriteRect = this.selectedSpriteRect;
+                this.selectedSpriteRect = this.TrySelect(this.m_EventSystem.current.mousePosition);
+                if (this.selectedSpriteRect != null)
                 {
                     s_OneClickDragStarted = true;
                 }
                 else
                 {
-                    base.Repaint();
+                    this.RequestRepaint();
                 }
-                if ((selected != this.selected) && (this.selected != null))
+                if ((selectedSpriteRect != this.selectedSpriteRect) && (this.selectedSpriteRect != null))
                 {
-                    Event.current.Use();
+                    this.m_EventSystem.current.Use();
                 }
             }
         }
 
-        private void InitializeAnimVariables()
+        private void InitModules()
         {
+            this.m_AllRegisteredModules = new List<ISpriteEditorModule>();
+            if (this.m_OutlineTexture == null)
+            {
+                this.m_OutlineTexture = new UnityEngine.Texture2D(1, 0x10, TextureFormat.RGBA32, false);
+                Color[] colors = new Color[] { new Color(0.5f, 0.5f, 0.5f, 0.5f), new Color(0.5f, 0.5f, 0.5f, 0.5f), new Color(0.8f, 0.8f, 0.8f, 0.8f), new Color(0.8f, 0.8f, 0.8f, 0.8f), Color.white, Color.white, Color.white, Color.white, new Color(0.8f, 0.8f, 0.8f, 1f), new Color(0.5f, 0.5f, 0.5f, 0.8f), new Color(0.3f, 0.3f, 0.3f, 0.5f), new Color(0.3f, 0.3f, 0.3f, 0.5f), new Color(0.3f, 0.3f, 0.3f, 0.3f), new Color(0.3f, 0.3f, 0.3f, 0.3f), new Color(0.1f, 0.1f, 0.1f, 0.1f), new Color(0.1f, 0.1f, 0.1f, 0.1f) };
+                this.m_OutlineTexture.SetPixels(colors);
+                this.m_OutlineTexture.Apply();
+                this.m_OutlineTexture.hideFlags = HideFlags.HideAndDontSave;
+            }
+            UnityEngine.U2D.Interface.Texture2D outlineTexture = new UnityEngine.U2D.Interface.Texture2D(this.m_OutlineTexture);
+            this.m_AllRegisteredModules.Add(new SpriteFrameModule(this, this.m_EventSystem, this.m_UndoSystem, this.m_AssetDatabase));
+            this.m_AllRegisteredModules.Add(new SpritePolygonModeModule(this, this.m_EventSystem, this.m_UndoSystem, this.m_AssetDatabase));
+            this.m_AllRegisteredModules.Add(new SpriteOutlineModule(this, this.m_EventSystem, this.m_UndoSystem, this.m_AssetDatabase, this.m_GUIUtility, new ShapeEditorFactory(), outlineTexture));
+            this.m_AllRegisteredModules.Add(new SpritePhysicsShapeModule(this, this.m_EventSystem, this.m_UndoSystem, this.m_AssetDatabase, this.m_GUIUtility, new ShapeEditorFactory(), outlineTexture));
+            this.UpdateAvailableModules();
         }
 
         public void InvalidatePropertiesCache()
@@ -1192,17 +387,17 @@
             if (this.m_RectsCache != null)
             {
                 this.m_RectsCache.ClearAll();
-                Object.DestroyImmediate(this.m_RectsCache);
+                UnityEngine.Object.DestroyImmediate(this.m_RectsCache);
             }
-            if (base.m_Texture != null)
+            if (this.m_ReadableTexture != null)
             {
-                Object.DestroyImmediate(base.m_Texture);
+                UnityEngine.Object.DestroyImmediate(this.m_ReadableTexture);
+                this.m_ReadableTexture = null;
             }
             this.m_OriginalTexture = null;
             this.m_TextureImporter = null;
             this.m_TextureImporterSO = null;
             this.m_TextureImporterSprites = null;
-            s_AlphaPixelCache = null;
         }
 
         public bool IsEditingDisabled() => 
@@ -1216,16 +411,6 @@
             }
         }
 
-        private bool MouseOnTopOfInspector()
-        {
-            if (this.selected == null)
-            {
-                return false;
-            }
-            Vector2 point = GUIClip.Unclip(Event.current.mousePosition) + new Vector2(0f, -22f);
-            return this.inspectorRect.Contains(point);
-        }
-
         private void OnDisable()
         {
             Undo.undoRedoPerformed = (Undo.UndoRedoCallback) Delegate.Remove(Undo.undoRedoPerformed, new Undo.UndoRedoCallback(this.UndoRedoPerformed));
@@ -1236,26 +421,54 @@
             this.HandleApplyRevertDialog();
             this.InvalidatePropertiesCache();
             EditorApplication.modifierKeysChanged = (EditorApplication.CallbackFunction) Delegate.Remove(EditorApplication.modifierKeysChanged, new EditorApplication.CallbackFunction(this.ModifierKeysChanged));
-            EditorApplication.playmodeStateChanged = (EditorApplication.CallbackFunction) Delegate.Remove(EditorApplication.playmodeStateChanged, new EditorApplication.CallbackFunction(this.OnPlayModeChanged));
             s_Instance = null;
+            if (this.m_OutlineTexture != null)
+            {
+                UnityEngine.Object.DestroyImmediate(this.m_OutlineTexture);
+                this.m_OutlineTexture = null;
+            }
+            if (this.m_ReadableTexture != null)
+            {
+                UnityEngine.Object.DestroyImmediate(this.m_ReadableTexture);
+                this.m_ReadableTexture = null;
+            }
         }
 
         private void OnEnable()
         {
+            this.m_EventSystem = new EventSystem();
+            this.m_UndoSystem = new UndoSystem();
+            this.m_AssetDatabase = new AssetDatabaseSystem();
+            this.m_GUIUtility = new GUIUtilitySystem();
             base.minSize = new Vector2(360f, 200f);
             base.titleContent = SpriteEditorWindowStyles.spriteEditorWindowTitle;
             s_Instance = this;
-            Undo.undoRedoPerformed = (Undo.UndoRedoCallback) Delegate.Combine(Undo.undoRedoPerformed, new Undo.UndoRedoCallback(this.UndoRedoPerformed));
+            this.m_UndoSystem.RegisterUndoCallback(new Undo.UndoRedoCallback(this.UndoRedoPerformed));
             EditorApplication.modifierKeysChanged = (EditorApplication.CallbackFunction) Delegate.Combine(EditorApplication.modifierKeysChanged, new EditorApplication.CallbackFunction(this.ModifierKeysChanged));
-            EditorApplication.playmodeStateChanged = (EditorApplication.CallbackFunction) Delegate.Combine(EditorApplication.playmodeStateChanged, new EditorApplication.CallbackFunction(this.OnPlayModeChanged));
-            this.Reset();
+            this.ResetWindow();
+            this.RefreshPropertiesCache();
+            this.RefreshRects();
+            this.InitModules();
+        }
+
+        private void OnFocus()
+        {
+            if (this.selectedTextureChanged)
+            {
+                this.OnSelectionChange();
+            }
         }
 
         private void OnGUI()
         {
+            base.InitStyles();
             if (this.m_ResetOnNextRepaint || this.selectedTextureChanged)
             {
-                this.Reset();
+                this.ResetWindow();
+                this.RefreshPropertiesCache();
+                this.RefreshRects();
+                this.UpdateAvailableModules();
+                this.SetupModule(this.m_CurrentModuleIndex);
                 this.m_ResetOnNextRepaint = false;
             }
             Matrix4x4 matrix = Handles.matrix;
@@ -1263,33 +476,21 @@
             {
                 using (new EditorGUI.DisabledScope(true))
                 {
-                    GUILayout.Label(SpriteUtilityWindow.Styles.s_NoSelectionWarning, new GUILayoutOption[0]);
+                    GUILayout.Label(SpriteEditorWindowStyles.noSelectionWarning, new GUILayoutOption[0]);
                 }
             }
             else
             {
-                base.InitStyles();
-                Rect rect = EditorGUILayout.BeginHorizontal(GUIContent.none, "Toolbar", new GUILayoutOption[0]);
                 this.DoToolbarGUI();
-                GUILayout.FlexibleSpace();
-                this.DoApplyRevertGUI();
-                base.DoAlphaZoomToolbarGUI();
-                EditorGUILayout.EndHorizontal();
-                EditorGUILayout.BeginHorizontal(new GUILayoutOption[0]);
-                base.m_TextureViewRect = new Rect(0f, rect.yMax, base.position.width - 16f, (base.position.height - 16f) - rect.height);
-                GUILayout.FlexibleSpace();
                 base.DoTextureGUI();
-                EditorGUILayout.EndHorizontal();
-                this.DoPolygonChangeShapeWindow();
                 this.DoEditingDisabledMessage();
-                this.DoSelectedFrameInspector();
+                this.m_CurrentModule.OnPostGUI();
                 Handles.matrix = matrix;
+                if (this.m_RequestRepaint)
+                {
+                    base.Repaint();
+                }
             }
-        }
-
-        private void OnPlayModeChanged()
-        {
-            this.OnSelectionChange();
         }
 
         private void OnSelectionChange()
@@ -1297,59 +498,24 @@
             if ((this.GetSelectedTexture2D() == null) || this.selectedTextureChanged)
             {
                 this.HandleApplyRevertDialog();
+                this.ResetWindow();
+                this.RefreshPropertiesCache();
+                this.RefreshRects();
             }
-            this.InvalidatePropertiesCache();
-            this.Reset();
-            this.UpdateSelectedSprite();
+            if (this.m_RectsCache != null)
+            {
+                if (Selection.activeObject is Sprite)
+                {
+                    this.UpdateSelectedSpriteRect(Selection.activeObject as Sprite);
+                }
+                else if ((Selection.activeGameObject != null) && (Selection.activeGameObject.GetComponent<SpriteRenderer>() != null))
+                {
+                    Sprite sprite = Selection.activeGameObject.GetComponent<SpriteRenderer>().sprite;
+                    this.UpdateSelectedSpriteRect(sprite);
+                }
+            }
+            this.UpdateAvailableModules();
             base.Repaint();
-        }
-
-        private bool Overlap(Rect a, Rect b) => 
-            ((((a.xMin < b.xMax) && (a.xMax > b.xMin)) && (a.yMin < b.yMax)) && (a.yMax > b.yMin));
-
-        private bool PixelHasAlpha(int x, int y)
-        {
-            if (base.m_Texture == null)
-            {
-                return false;
-            }
-            if (s_AlphaPixelCache == null)
-            {
-                s_AlphaPixelCache = new bool[base.m_Texture.width * base.m_Texture.height];
-                Color32[] colorArray = base.m_Texture.GetPixels32();
-                for (int i = 0; i < colorArray.Length; i++)
-                {
-                    s_AlphaPixelCache[i] = colorArray[i].a != 0;
-                }
-            }
-            int index = (y * base.m_Texture.width) + x;
-            return s_AlphaPixelCache[index];
-        }
-
-        private List<Rect> RectSweep(List<Rect> rects, Rect sweepRect)
-        {
-            if ((rects == null) || (rects.Count == 0))
-            {
-                return new List<Rect>();
-            }
-            List<Rect> list2 = new List<Rect>();
-            foreach (Rect rect in rects)
-            {
-                if (this.Overlap(rect, sweepRect))
-                {
-                    list2.Add(rect);
-                }
-            }
-            foreach (Rect rect2 in list2)
-            {
-                rects.Remove(rect2);
-            }
-            if (<>f__am$cache0 == null)
-            {
-                <>f__am$cache0 = (a, b) => a.x.CompareTo(b.x);
-            }
-            list2.Sort(<>f__am$cache0);
-            return list2;
         }
 
         public void RefreshPropertiesCache()
@@ -1357,24 +523,12 @@
             this.m_OriginalTexture = this.GetSelectedTexture2D();
             if (this.m_OriginalTexture != null)
             {
-                this.m_TextureImporter = AssetImporter.GetAtPath(this.m_SelectedAssetPath) as TextureImporter;
+                this.m_TextureImporter = AssetImporter.GetAtPath(this.m_SelectedAssetPath) as UnityEditor.TextureImporter;
                 if (this.m_TextureImporter != null)
                 {
                     this.m_TextureImporterSO = new SerializedObject(this.m_TextureImporter);
                     this.m_TextureImporterSprites = this.m_TextureImporterSO.FindProperty("m_SpriteSheet.m_Sprites");
-                    this.m_SpriteSheetOutline = this.m_TextureImporterSO.FindProperty("m_SpriteSheet.m_Outline");
-                    if (this.m_RectsCache != null)
-                    {
-                        this.selected = (this.m_TextureImporterSprites.arraySize <= 0) ? null : this.m_RectsCache.RectAt(0);
-                    }
-                    int width = 0;
-                    int height = 0;
-                    this.m_TextureImporter.GetWidthAndHeight(ref width, ref height);
-                    base.m_Texture = this.CreateTemporaryDuplicate(AssetDatabase.LoadMainAssetAtPath(this.m_TextureImporter.assetPath) as Texture2D, width, height);
-                    if (base.m_Texture != null)
-                    {
-                        base.m_Texture.filterMode = FilterMode.Point;
-                    }
+                    base.m_Texture = (this.m_OriginalTexture != null) ? new PreviewTexture2D((UnityEngine.Texture2D) this.m_OriginalTexture) : null;
                 }
             }
         }
@@ -1387,123 +541,83 @@
                 {
                     this.m_RectsCache.ClearAll();
                     Undo.ClearUndo(this.m_RectsCache);
-                    Object.DestroyImmediate(this.m_RectsCache);
+                    UnityEngine.Object.DestroyImmediate(this.m_RectsCache);
                 }
                 this.m_RectsCache = ScriptableObject.CreateInstance<SpriteRectCache>();
                 if (this.multipleSprites)
                 {
                     for (int i = 0; i < this.m_TextureImporterSprites.arraySize; i++)
                     {
-                        SpriteRect spriteRect = new SpriteRect {
-                            m_Rect = this.m_TextureImporterSprites.GetArrayElementAtIndex(i).FindPropertyRelative("m_Rect").rectValue,
-                            m_Name = this.m_TextureImporterSprites.GetArrayElementAtIndex(i).FindPropertyRelative("m_Name").stringValue,
-                            m_Alignment = (SpriteAlignment) this.m_TextureImporterSprites.GetArrayElementAtIndex(i).FindPropertyRelative("m_Alignment").intValue,
-                            m_Border = this.m_TextureImporterSprites.GetArrayElementAtIndex(i).FindPropertyRelative("m_Border").vector4Value
-                        };
-                        spriteRect.m_Pivot = SpriteEditorUtility.GetPivotValue(spriteRect.m_Alignment, this.m_TextureImporterSprites.GetArrayElementAtIndex(i).FindPropertyRelative("m_Pivot").vector2Value);
-                        spriteRect.m_TessellationDetail = this.m_TextureImporterSprites.GetArrayElementAtIndex(i).FindPropertyRelative("m_TessellationDetail").floatValue;
-                        AcquireOutline(this.m_TextureImporterSprites.GetArrayElementAtIndex(i).FindPropertyRelative("m_Outline"), spriteRect);
-                        this.m_RectsCache.AddRect(spriteRect);
+                        SpriteRect r = new SpriteRect();
+                        r.LoadFromSerializedProperty(this.m_TextureImporterSprites.GetArrayElementAtIndex(i));
+                        this.m_RectsCache.AddRect(r);
+                        EditorUtility.DisplayProgressBar(SpriteEditorWindowStyles.loadProgressTitle.text, string.Format(SpriteEditorWindowStyles.loadContentText.text, i, this.m_TextureImporterSprites.arraySize), ((float) i) / ((float) this.m_TextureImporterSprites.arraySize));
                     }
                 }
                 else if (this.validSprite)
                 {
                     SpriteRect rect2 = new SpriteRect {
-                        m_Rect = new Rect(0f, 0f, (float) base.m_Texture.width, (float) base.m_Texture.height),
-                        m_Name = this.m_OriginalTexture.name,
-                        m_Alignment = (SpriteAlignment) this.m_TextureImporterSO.FindProperty("m_Alignment").intValue,
-                        m_Border = this.m_TextureImporter.spriteBorder
+                        rect = new Rect(0f, 0f, (float) base.m_Texture.width, (float) base.m_Texture.height),
+                        name = this.m_OriginalTexture.name,
+                        alignment = (SpriteAlignment) this.m_TextureImporterSO.FindProperty("m_Alignment").intValue,
+                        border = this.m_TextureImporter.spriteBorder
                     };
-                    rect2.m_Pivot = SpriteEditorUtility.GetPivotValue(rect2.m_Alignment, this.m_TextureImporter.spritePivot);
-                    rect2.m_TessellationDetail = this.m_TextureImporterSO.FindProperty("m_SpriteTessellationDetail").floatValue;
-                    AcquireOutline(this.m_SpriteSheetOutline, rect2);
+                    rect2.pivot = SpriteEditorUtility.GetPivotValue(rect2.alignment, this.m_TextureImporter.spritePivot);
+                    rect2.tessellationDetail = this.m_TextureImporterSO.FindProperty("m_SpriteTessellationDetail").floatValue;
+                    SerializedProperty outlineSP = this.m_TextureImporterSO.FindProperty("m_SpriteSheet.m_Outline");
+                    rect2.outline = SpriteRect.AcquireOutline(outlineSP);
+                    SerializedProperty property2 = this.m_TextureImporterSO.FindProperty("m_SpriteSheet.m_PhysicsShape");
+                    rect2.physicsShape = SpriteRect.AcquireOutline(property2);
                     this.m_RectsCache.AddRect(rect2);
                 }
+                EditorUtility.ClearProgressBar();
                 if (this.m_RectsCache.Count > 0)
                 {
-                    this.selected = this.m_RectsCache.RectAt(0);
+                    this.selectedSpriteRect = this.m_RectsCache.RectAt(0);
                 }
             }
         }
 
-        public void Reset()
+        public void RequestRepaint()
+        {
+            if (EditorWindow.focusedWindow != this)
+            {
+                base.Repaint();
+            }
+            else
+            {
+                this.m_RequestRepaint = true;
+            }
+        }
+
+        public void ResetWindow()
         {
             this.InvalidatePropertiesCache();
-            this.selected = null;
+            this.selectedSpriteRect = null;
             this.textureIsDirty = false;
             base.m_Zoom = -1f;
-            this.RefreshPropertiesCache();
-            this.RefreshRects();
-            this.m_ShowPolygonChangeShapeWindow = this.polygonSprite;
-            if (this.m_ShowPolygonChangeShapeWindow)
-            {
-                this.DeterminePolygonSides();
-            }
-            base.Repaint();
         }
 
-        private void SelectSpriteIndex(Sprite sprite)
+        public void SetDataModified()
         {
-            if (sprite != null)
-            {
-                this.selected = null;
-                for (int i = 0; i < this.m_RectsCache.Count; i++)
-                {
-                    if (sprite.rect == this.m_RectsCache.RectAt(i).m_Rect)
-                    {
-                        this.selected = this.m_RectsCache.RectAt(i);
-                        break;
-                    }
-                }
-            }
+            this.textureIsDirty = true;
         }
 
-        private bool ShouldDrawBorders(SpriteRect currentRect) => 
-            (!Mathf.Approximately(currentRect.m_Border.sqrMagnitude, 0f) || ((currentRect == this.selected) && (this.m_GizmoMode == GizmoMode.BorderEditing)));
-
-        private bool ShouldShowRectScaling() => 
-            ((this.selected != null) && (this.m_GizmoMode == GizmoMode.RectEditing));
-
-        private Vector2 SnapPivot(Vector2 pivot)
+        private void SetupModule(int newModuleIndex)
         {
-            Rect rect = this.selected.m_Rect;
-            Vector2 texturePos = new Vector2(rect.xMin + (rect.width * pivot.x), rect.yMin + (rect.height * pivot.y));
-            Vector2[] snapPointsArray = this.GetSnapPointsArray(rect);
-            SpriteAlignment custom = SpriteAlignment.Custom;
-            float maxValue = float.MaxValue;
-            for (int i = 0; i < snapPointsArray.Length; i++)
+            if (s_Instance != null)
             {
-                Vector2 vector2 = texturePos - snapPointsArray[i];
-                float num3 = vector2.magnitude * base.m_Zoom;
-                if (num3 < maxValue)
+                if (this.m_CurrentModule != null)
                 {
-                    custom = (SpriteAlignment) i;
-                    maxValue = num3;
+                    this.m_CurrentModule.OnModuleDeactivate();
+                }
+                if (this.m_RegisteredModules.Count > newModuleIndex)
+                {
+                    this.m_CurrentModule = this.m_RegisteredModules[newModuleIndex];
+                    this.m_CurrentModule.OnModuleActivate();
+                    this.m_CurrentModuleIndex = newModuleIndex;
                 }
             }
-            this.selected.m_Alignment = custom;
-            return this.ConvertFromTextureToNormalizedSpace(texturePos, rect);
-        }
-
-        private List<Rect> SortRects(List<Rect> rects)
-        {
-            List<Rect> list = new List<Rect>();
-            while (rects.Count > 0)
-            {
-                Rect rect = rects[rects.Count - 1];
-                Rect sweepRect = new Rect(0f, rect.yMin, (float) base.m_Texture.width, rect.height);
-                List<Rect> collection = this.RectSweep(rects, sweepRect);
-                if (collection.Count > 0)
-                {
-                    list.AddRange(collection);
-                }
-                else
-                {
-                    list.AddRange(rects);
-                    return list;
-                }
-            }
-            return list;
         }
 
         public static void TextureImporterApply(SerializedObject so)
@@ -1514,51 +628,27 @@
             }
         }
 
-        private Rect TrimAlpha(Rect rect)
-        {
-            int xMax = (int) rect.xMax;
-            int xMin = (int) rect.xMin;
-            int yMax = (int) rect.yMax;
-            int yMin = (int) rect.yMin;
-            for (int i = (int) rect.yMin; i < ((int) rect.yMax); i++)
-            {
-                for (int j = (int) rect.xMin; j < ((int) rect.xMax); j++)
-                {
-                    if (this.PixelHasAlpha(j, i))
-                    {
-                        xMax = Mathf.Min(xMax, j);
-                        xMin = Mathf.Max(xMin, j);
-                        yMax = Mathf.Min(yMax, i);
-                        yMin = Mathf.Max(yMin, i);
-                    }
-                }
-            }
-            if ((xMax > xMin) || (yMax > yMin))
-            {
-                return new Rect(0f, 0f, 0f, 0f);
-            }
-            return new Rect((float) xMax, (float) yMax, (float) ((xMin - xMax) + 1), (float) ((yMin - yMax) + 1));
-        }
-
         private SpriteRect TrySelect(Vector2 mousePosition)
         {
-            float num = 1E+07f;
+            float maxValue = float.MaxValue;
             SpriteRect rect = null;
+            mousePosition = Handles.inverseMatrix.MultiplyPoint((Vector3) mousePosition);
             for (int i = 0; i < this.m_RectsCache.Count; i++)
             {
-                if (this.m_RectsCache.RectAt(i).m_Rect.Contains(Handles.s_InverseMatrix.MultiplyPoint((Vector3) mousePosition)))
+                SpriteRect rect2 = this.m_RectsCache.RectAt(i);
+                if (rect2.rect.Contains(mousePosition))
                 {
-                    if (this.m_RectsCache.RectAt(i) == this.selected)
+                    if (rect2 == this.selectedSpriteRect)
                     {
-                        return this.m_RectsCache.RectAt(i);
+                        return rect2;
                     }
-                    float width = this.m_RectsCache.RectAt(i).m_Rect.width;
-                    float height = this.m_RectsCache.RectAt(i).m_Rect.height;
+                    float width = rect2.rect.width;
+                    float height = rect2.rect.height;
                     float num5 = width * height;
-                    if (((width > 0f) && (height > 0f)) && (num5 < num))
+                    if (((width > 0f) && (height > 0f)) && (num5 < maxValue))
                     {
-                        rect = this.m_RectsCache.RectAt(i);
-                        num = num5;
+                        rect = rect2;
+                        maxValue = num5;
                     }
                 }
             }
@@ -1567,63 +657,84 @@
 
         private void UndoRedoPerformed()
         {
-            Texture2D textured = this.GetSelectedTexture2D();
+            ITexture2D textured = this.GetSelectedTexture2D();
             if ((textured != null) && (this.m_OriginalTexture != textured))
             {
                 this.OnSelectionChange();
             }
-            if ((this.m_RectsCache != null) && !this.m_RectsCache.Contains(this.selected))
+            if ((this.m_RectsCache != null) && !this.m_RectsCache.Contains(this.selectedSpriteRect))
             {
-                this.selected = null;
+                this.selectedSpriteRect = null;
             }
             base.Repaint();
         }
 
-        private void UpdateSelectedSprite()
+        private void UpdateAvailableModules()
         {
-            if (Selection.activeObject is Sprite)
+            if (this.m_AllRegisteredModules != null)
             {
-                this.SelectSpriteIndex(Selection.activeObject as Sprite);
+                this.m_RegisteredModules = new List<ISpriteEditorModule>();
+                foreach (ISpriteEditorModule module in this.m_AllRegisteredModules)
+                {
+                    if (module.CanBeActivated())
+                    {
+                        this.m_RegisteredModules.Add(module);
+                    }
+                }
+                this.m_RegisteredModuleNames = new GUIContent[this.m_RegisteredModules.Count];
+                for (int i = 0; i < this.m_RegisteredModules.Count; i++)
+                {
+                    this.m_RegisteredModuleNames[i] = new GUIContent(this.m_RegisteredModules[i].moduleName);
+                }
+                if (!this.m_RegisteredModules.Contains(this.m_CurrentModule))
+                {
+                    this.SetupModule(0);
+                }
+                else
+                {
+                    this.SetupModule(this.m_CurrentModuleIndex);
+                }
             }
-            else if ((Selection.activeGameObject != null) && (Selection.activeGameObject.GetComponent<SpriteRenderer>() != null))
+        }
+
+        private void UpdateSelectedSpriteRect(Sprite sprite)
+        {
+            for (int i = 0; i < this.m_RectsCache.Count; i++)
             {
-                Sprite sprite = Selection.activeGameObject.GetComponent<SpriteRenderer>().sprite;
-                this.SelectSpriteIndex(sprite);
+                if (sprite.rect == this.m_RectsCache.RectAt(i).rect)
+                {
+                    this.selectedSpriteRect = this.m_RectsCache.RectAt(i);
+                    return;
+                }
             }
+            this.selectedSpriteRect = null;
         }
 
         private bool activeTextureSelected =>
             (((this.m_TextureImporter != null) && (base.m_Texture != null)) && (this.m_OriginalTexture != null));
 
-        private int defaultColliderAlphaCutoff =>
-            0xfe;
+        public bool editingDisabled =>
+            EditorApplication.isPlayingOrWillChangePlaymode;
 
-        private float defaultColliderDetail =>
-            0.25f;
-
-        private Rect inspectorRect =>
-            new Rect(((base.position.width - 330f) - 8f) - 16f, ((base.position.height - 160f) - 8f) - 16f, 330f, 160f);
-
-        private bool isSidesValid =>
-            ((this.m_PolygonSides == 0) || ((this.m_PolygonSides >= 3) && (this.m_PolygonSides <= 0x80)));
+        public bool enableMouseMoveEvent
+        {
+            set
+            {
+                base.wantsMouseMove = value;
+            }
+        }
 
         private bool multipleSprites =>
             ((this.m_TextureImporter != null) && (this.m_TextureImporter.spriteImportMode == SpriteImportMode.Multiple));
 
-        public Texture2D originalTexture =>
-            this.m_OriginalTexture;
-
-        private bool polygonSprite =>
-            ((this.m_TextureImporter != null) && (this.m_TextureImporter.spriteImportMode == SpriteImportMode.Polygon));
-
-        internal Texture2D previewTexture =>
+        public ITexture2D previewTexture =>
             base.m_Texture;
 
-        internal SpriteRect selected
+        public SpriteRect selectedSpriteRect
         {
             get
             {
-                if (this.IsEditingDisabled())
+                if (this.editingDisabled)
                 {
                     return null;
                 }
@@ -1631,31 +742,26 @@
             }
             set
             {
-                if (value != this.m_Selected)
-                {
-                    this.m_Selected = value;
-                }
+                this.m_Selected = value;
             }
         }
+
+        public ITexture2D selectedTexture =>
+            this.m_OriginalTexture;
 
         public bool selectedTextureChanged
         {
             get
             {
-                Texture2D textured = this.GetSelectedTexture2D();
+                ITexture2D textured = this.GetSelectedTexture2D();
                 return ((textured != null) && (this.m_OriginalTexture != textured));
             }
         }
 
-        public bool textureIsDirty
-        {
-            get => 
-                this.m_TextureIsDirty;
-            set
-            {
-                this.m_TextureIsDirty = value;
-            }
-        }
+        public ISpriteRectCache spriteRects =>
+            this.m_RectsCache;
+
+        public bool textureIsDirty { get; set; }
 
         private bool validSprite =>
             ((this.m_TextureImporter != null) && (this.m_TextureImporter.spriteImportMode != SpriteImportMode.None));
@@ -1663,17 +769,29 @@
         private Rect warningMessageRect =>
             new Rect(((base.position.width - 250f) - 8f) - 16f, 24f, 250f, 40f);
 
-        public enum AutoSlicingMethod
-        {
-            DeleteAll,
-            Smart,
-            Safe
-        }
+        public Rect windowDimension =>
+            base.position;
 
-        private enum GizmoMode
+        internal class PreviewTexture2D : UnityEngine.U2D.Interface.Texture2D
         {
-            BorderEditing,
-            RectEditing
+            private int m_ActualHeight;
+            private int m_ActualWidth;
+
+            public PreviewTexture2D(UnityEngine.Texture2D t) : base(t)
+            {
+                this.m_ActualWidth = 0;
+                this.m_ActualHeight = 0;
+                if (t != null)
+                {
+                    (AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(t)) as UnityEditor.TextureImporter).GetWidthAndHeight(ref this.m_ActualWidth, ref this.m_ActualHeight);
+                }
+            }
+
+            public override int height =>
+                this.m_ActualHeight;
+
+            public override int width =>
+                this.m_ActualWidth;
         }
 
         private class SpriteEditorWindowStyles
@@ -1681,35 +799,19 @@
             public static readonly GUIContent applyButtonLabel = EditorGUIUtility.TextContent("Apply");
             public static readonly GUIContent applyRevertDialogContent = EditorGUIUtility.TextContent("Unapplied import settings for '{0}'");
             public static readonly GUIContent applyRevertDialogTitle = EditorGUIUtility.TextContent("Unapplied import settings");
-            public static readonly GUIContent bLabel = EditorGUIUtility.TextContent("B");
-            public static readonly GUIContent borderLabel = EditorGUIUtility.TextContent("Border");
-            public static readonly GUIContent cancelButtonLabel = EditorGUIUtility.TextContent("Cancel");
-            public static readonly GUIContent changeButtonLabel = EditorGUIUtility.TextContent("Change|Change to the new number of sides");
-            public static readonly GUIContent changeShapeLabel = EditorGUIUtility.TextContent("Change Shape");
-            public static readonly GUIContent creatingMultipleSpriteDialogContent = EditorGUIUtility.TextContent("Creating {0} sprites. \nThis can take up to several minutes");
-            public static readonly GUIContent creatingMultipleSpriteDialogTitle = EditorGUIUtility.TextContent("Creating multiple sprites");
-            public static readonly GUIContent customPivotLabel = EditorGUIUtility.TextContent("Custom Pivot");
-            public static readonly GUIContent editingDiableMessageLabel = EditorGUIUtility.TextContent("Editing is disabled during play mode");
-            public static readonly GUIContent hLabel = EditorGUIUtility.TextContent("H");
-            public static readonly GUIContent lLabel = EditorGUIUtility.TextContent("L");
-            public static readonly GUIContent nameLabel = EditorGUIUtility.TextContent("Name");
+            public static readonly GUIContent applyRevertModuleDialogContent = EditorGUIUtility.TextContent("You have unapplied changes from the current module");
+            public static readonly GUIContent applyRevertModuleDialogTitle = EditorGUIUtility.TextContent("Unapplied module changes");
+            public static readonly GUIContent editingDisableMessageLabel = EditorGUIUtility.TextContent("Editing is disabled during play mode");
+            public static readonly GUIContent loadContentText = EditorGUIUtility.TextContent("Loading Sprites {0}/{1}");
+            public static readonly GUIContent loadProgressTitle = EditorGUIUtility.TextContent("Loading");
             public static readonly GUIContent noButtonLabel = EditorGUIUtility.TextContent("No");
-            public static readonly GUIContent okButtonLabel = EditorGUIUtility.TextContent("Ok");
+            public static readonly GUIContent noSelectionWarning = EditorGUIUtility.TextContent("No texture or sprite selected");
             public static readonly GUIContent pendingChangesDialogContent = EditorGUIUtility.TextContent("You have pending changes in the Sprite Editor Window.\nDo you want to apply these changes?");
-            public static readonly GUIContent polygonChangeShapeHelpBoxContent = EditorGUIUtility.TextContent("Sides can only be either 0 or anything between 3 and 128");
-            public static readonly GUIContent positionLabel = EditorGUIUtility.TextContent("Position");
             public static readonly GUIContent revertButtonLabel = EditorGUIUtility.TextContent("Revert");
-            public static readonly GUIContent rLabel = EditorGUIUtility.TextContent("R");
-            public static readonly GUIContent sidesLabel = EditorGUIUtility.TextContent("Sides");
-            public static readonly GUIContent sliceButtonLabel = EditorGUIUtility.TextContent("Slice");
+            public static readonly GUIContent saveContentText = EditorGUIUtility.TextContent("Saving Sprites {0}/{1}");
+            public static readonly GUIContent saveProgressTitle = EditorGUIUtility.TextContent("Saving");
             public static readonly GUIContent spriteEditorWindowTitle = EditorGUIUtility.TextContent("Sprite Editor");
-            public static readonly GUIContent spriteLabel = EditorGUIUtility.TextContent("Sprite");
-            public static readonly GUIContent tLabel = EditorGUIUtility.TextContent("T");
-            public static readonly GUIContent trimButtonLabel = EditorGUIUtility.TextContent("Trim|Trims selected rectangle (T)");
-            public static readonly GUIContent wLabel = EditorGUIUtility.TextContent("W");
-            public static readonly GUIContent xLabel = EditorGUIUtility.TextContent("X");
             public static readonly GUIContent yesButtonLabel = EditorGUIUtility.TextContent("Yes");
-            public static readonly GUIContent yLabel = EditorGUIUtility.TextContent("Y");
         }
     }
 }

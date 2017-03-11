@@ -2,8 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using UnityEditor.Collaboration;
-    using UnityEditor.Connect;
     using UnityEngine;
 
     internal class SearchUtility
@@ -25,15 +23,12 @@
                 filter.assetLabels = new List<string>(filter.assetLabels) { str2 }.ToArray();
                 flag = true;
             }
-            if (UnityConnect.instance.userInfo.whitelisted && Collab.instance.collabInfo.whitelisted)
+            index = searchString.IndexOf("v:");
+            if (index >= 0)
             {
-                index = searchString.IndexOf("v:");
-                if (index >= 0)
-                {
-                    string str3 = searchString.Substring(index + 2);
-                    filter.versionControlStates = new List<string>(filter.versionControlStates) { str3 }.ToArray();
-                    flag = true;
-                }
+                string str3 = searchString.Substring(index + 2);
+                filter.versionControlStates = new List<string>(filter.versionControlStates) { str3 }.ToArray();
+                flag = true;
             }
             index = searchString.IndexOf("b:");
             if (index == 0)
@@ -75,7 +70,7 @@
                 {
                     str6 = "Assets/" + searchString.Substring(num3 + 1);
                 }
-                Object obj2 = AssetDatabase.LoadMainAssetAtPath(str6);
+                UnityEngine.Object obj2 = AssetDatabase.LoadMainAssetAtPath(str6);
                 if (obj2 != null)
                 {
                     instanceID = obj2.GetInstanceID();

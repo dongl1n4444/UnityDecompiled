@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
-    using UnityEditor.Animations;
     using UnityEngine;
     using UnityEngine.Profiling;
 
@@ -110,7 +109,7 @@
                     this.m_NodeInfos[i].m_ChildIndices = new List<int>();
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<char, bool>(null, (IntPtr) <FillNodeInfos>m__0);
+                        <>f__am$cache0 = f => f == '/';
                     }
                     this.m_NodeInfos[i].m_Depth = (i != 0) ? Enumerable.Count<char>(storey.fullPath, <>f__am$cache0) : 0;
                     string str = "";

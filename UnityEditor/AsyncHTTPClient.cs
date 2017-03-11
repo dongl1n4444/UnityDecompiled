@@ -9,6 +9,7 @@
     using System.Text;
     using UnityEngine;
     using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
     internal sealed class AsyncHTTPClient
     {
@@ -58,9 +59,9 @@
             AbortByHandle(this.m_Handle);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void AbortByHandle(IntPtr handle);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void AbortByTag(string tag);
         public void Begin()
         {
@@ -76,14 +77,14 @@
                 }
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<KeyValuePair<string, string>, string>(null, (IntPtr) <Begin>m__1);
+                    <>f__am$cache0 = kv => $"{kv.Key}: {kv.Value}";
                 }
                 string[] headers = Enumerable.Select<KeyValuePair<string, string>, string>(this.header, <>f__am$cache0).ToArray<string>();
                 this.m_Handle = SubmitClientRequest(this.tag, this.m_ToUrl, headers, this.m_Method, this.m_FromData, new RequestDoneCallback(this.Done), new RequestProgressCallback(this.Progress));
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void CurlRequestCheck();
         private void Done(State status, int i_ResponseCode)
         {
@@ -106,11 +107,11 @@
             return builder.ToString();
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern byte[] GetBytesByHandle(IntPtr handle);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Texture2D GetTextureByHandle(IntPtr handle);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SubmitClientRequest(string tag, string url, string[] headers, string method, string data, RequestDoneCallback doneDelegate, RequestProgressCallback progressDelegate, out IntPtr value);
         public bool IsAborted() => 
             (this.state == State.ABORTED);
@@ -185,7 +186,7 @@
         {
             set
             {
-                this.postData = string.Join("&", Enumerable.Select<KeyValuePair<string, string>, string>(value, new Func<KeyValuePair<string, string>, string>(this, (IntPtr) this.<set_postDictionary>m__0)).ToArray<string>());
+                this.postData = string.Join("&", (from kv in value select this.EscapeLong(kv.Key) + "=" + this.EscapeLong(kv.Value)).ToArray<string>());
             }
         }
 

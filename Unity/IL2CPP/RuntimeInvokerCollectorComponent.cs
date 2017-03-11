@@ -82,7 +82,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<KeyValuePair<TypeReference[], int>, string>(null, (IntPtr) <GetInvokers>m__0);
+                <>f__am$cache0 = invoker => NameForInvoker(invoker.Key);
             }
             return this._runtimeInvokerData.Select<KeyValuePair<TypeReference[], int>, string>(<>f__am$cache0).ToArray<string>().AsReadOnlyPortable<string>();
         }
@@ -191,7 +191,7 @@
                 writer.AddCodeGenIncludes();
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<KeyValuePair<TypeReference[], int>, int>(null, (IntPtr) <Write>m__1);
+                    <>f__am$cache1 = item => item.Value;
                 }
                 KeyValuePair<TypeReference[], int>[] items = this._runtimeInvokerData.OrderBy<KeyValuePair<TypeReference[], int>, int>(<>f__am$cache1).ToArray<KeyValuePair<TypeReference[], int>>();
                 foreach (KeyValuePair<TypeReference[], int> pair in items)
@@ -213,7 +213,7 @@
                 }
                 if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache2 = new Func<KeyValuePair<TypeReference[], int>, string>(null, (IntPtr) <Write>m__2);
+                    <>f__am$cache2 = kvp => NameForInvoker(kvp.Key);
                 }
                 return MetadataWriter.WriteTable<KeyValuePair<TypeReference[], int>>(writer, "extern const InvokerMethod", "g_Il2CppInvokerPointers", items, <>f__am$cache2);
             }

@@ -33,6 +33,7 @@
         private GUISlideGroup m_SlideGroup;
         public AddCallbackDelegate onAddCallback;
         public AddDropdownCallbackDelegate onAddDropdownCallback;
+        public CanAddCallbackDelegate onCanAddCallback;
         public CanRemoveCallbackDelegate onCanRemoveCallback;
         public ChangedCallbackDelegate onChangedCallback;
         public SelectCallbackDelegate onMouseUpCallback;
@@ -42,7 +43,7 @@
         private static Defaults s_Defaults;
         public bool showDefaultBackground;
 
-        public ReorderableList(IList elements, Type elementType)
+        public ReorderableList(IList elements, System.Type elementType)
         {
             this.drawFooterCallback = null;
             this.m_ActiveElement = -1;
@@ -68,7 +69,7 @@
             this.InitList(serializedObject, elements, null, true, true, true, true);
         }
 
-        public ReorderableList(IList elements, Type elementType, bool draggable, bool displayHeader, bool displayAddButton, bool displayRemoveButton)
+        public ReorderableList(IList elements, System.Type elementType, bool draggable, bool displayHeader, bool displayAddButton, bool displayRemoveButton)
         {
             this.drawFooterCallback = null;
             this.m_ActiveElement = -1;
@@ -292,6 +293,7 @@
                     {
                         if (this.m_NonDragTargetIndices[j] != -1)
                         {
+                            r.height = this.GetElementHeight(j);
                             if (this.elementHeightCallback == null)
                             {
                                 r.y = listRect.y + this.GetElementYOffset(j, this.m_ActiveElement);
@@ -369,6 +371,7 @@
                     {
                         bool selected = k == this.m_ActiveElement;
                         bool focused = (k == this.m_ActiveElement) && this.HasKeyboardControl();
+                        r.height = this.GetElementHeight(k);
                         r.y = listRect.y + this.GetElementYOffset(k);
                         if (this.drawElementBackgroundCallback == null)
                         {
@@ -596,7 +599,7 @@
                         return this.m_Elements.arraySize;
                     }
                     int arraySize = this.m_Elements.arraySize;
-                    foreach (Object obj2 in this.m_Elements.serializedObject.targetObjects)
+                    foreach (UnityEngine.Object obj2 in this.m_Elements.serializedObject.targetObjects)
                     {
                         SerializedObject obj3 = new SerializedObject(obj2);
                         arraySize = Math.Min(obj3.FindProperty(this.m_Elements.propertyPath).arraySize, arraySize);
@@ -654,6 +657,8 @@
 
         public delegate void AddDropdownCallbackDelegate(Rect buttonRect, ReorderableList list);
 
+        public delegate bool CanAddCallbackDelegate(ReorderableList list);
+
         public delegate bool CanRemoveCallbackDelegate(ReorderableList list);
 
         public delegate void ChangedCallbackDelegate(ReorderableList list);
@@ -683,12 +688,12 @@
                 }
                 else
                 {
-                    Type elementType = list.list.GetType().GetElementType();
+                    System.Type elementType = list.list.GetType().GetElementType();
                     if (elementType == typeof(string))
                     {
                         list.index = list.list.Add("");
                     }
-                    else if ((elementType != null) && (elementType.GetConstructor(Type.EmptyTypes) == null))
+                    else if ((elementType != null) && (elementType.GetConstructor(System.Type.EmptyTypes) == null))
                     {
                         Debug.LogError("Cannot add element. Type " + elementType.ToString() + " has no default constructor. Implement a default constructor or implement your own add behaviour.");
                     }
@@ -767,23 +772,29 @@
                 {
                     this.footerBackground.Draw(rect, false, false, false, false);
                 }
-                if (list.displayAdd && GUI.Button(position, (list.onAddDropdownCallback == null) ? this.iconToolbarPlus : this.iconToolbarPlusMore, this.preButton))
+                if (list.displayAdd)
                 {
-                    if (list.onAddDropdownCallback != null)
+                    using (new EditorGUI.DisabledScope((list.onCanAddCallback != null) && !list.onCanAddCallback(list)))
                     {
-                        list.onAddDropdownCallback(position, list);
-                    }
-                    else if (list.onAddCallback != null)
-                    {
-                        list.onAddCallback(list);
-                    }
-                    else
-                    {
-                        this.DoAddButton(list);
-                    }
-                    if (list.onChangedCallback != null)
-                    {
-                        list.onChangedCallback(list);
+                        if (GUI.Button(position, (list.onAddDropdownCallback == null) ? this.iconToolbarPlus : this.iconToolbarPlusMore, this.preButton))
+                        {
+                            if (list.onAddDropdownCallback != null)
+                            {
+                                list.onAddDropdownCallback(position, list);
+                            }
+                            else if (list.onAddCallback != null)
+                            {
+                                list.onAddCallback(list);
+                            }
+                            else
+                            {
+                                this.DoAddButton(list);
+                            }
+                            if (list.onChangedCallback != null)
+                            {
+                                list.onChangedCallback(list);
+                            }
+                        }
                     }
                 }
                 if (list.displayRemove)

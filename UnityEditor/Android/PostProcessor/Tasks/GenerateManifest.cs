@@ -3,14 +3,18 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Xml;
     using UnityEditor;
+    using UnityEditor.Analytics;
     using UnityEditor.Android;
     using UnityEditor.Android.PostProcessor;
+    using UnityEditor.CrashReporting;
     using UnityEditor.Utils;
     using UnityEngine;
     using UnityEngine.Networking;
@@ -27,7 +31,44 @@
             "super", "while", "null", "false", "true"
         };
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ProgressHandler OnProgress;
+
+        private void AddVRRelatedManifestEntries(PostProcessorContext context, AndroidManifest manifestXML, HashSet<string> activities)
+        {
+            VrSupportChecker checker = new VrSupportChecker();
+            if (checker.isCardboardEnabled || checker.isDaydreamEnabled)
+            {
+                manifestXML.OverrideTheme("@style/VrActivityTheme");
+            }
+            if (checker.isCardboardEnabled)
+            {
+                manifestXML.AddIntentFilterCategory("com.google.intent.category.CARDBOARD");
+            }
+            if (checker.isDaydreamEnabled)
+            {
+                manifestXML.AddUsesFeature("android.hardware.vr.high_performance", checker.isDaydreamOnly);
+                manifestXML.AddIntentFilterCategory("com.google.intent.category.DAYDREAM");
+                manifestXML.AddResourceToLaunchActivity("com.google.android.vr.icon", "@drawable/vr_icon_front");
+                manifestXML.AddResourceToLaunchActivity("com.google.android.vr.icon_background", "@drawable/vr_icon_back");
+                foreach (string str in activities)
+                {
+                    if (checker.isDaydreamPrimary)
+                    {
+                        manifestXML.EnableVrMode(str);
+                    }
+                    manifestXML.SetResizableActivity(str, false);
+                }
+            }
+            if (checker.isCardboardEnabled || checker.isDaydreamEnabled)
+            {
+                manifestXML.AddApplicationMetaDataAttribute("unityplayer.SkipPermissionsDialog", "true");
+            }
+            if (checker.isCardboardEnabled)
+            {
+                manifestXML.AddUsesPermission("android.permission.READ_EXTERNAL_STORAGE");
+            }
+        }
 
         private string CopyMainManifest(PostProcessorContext context, string target)
         {
@@ -46,7 +87,7 @@
         {
             if ((PlayerSettings.colorSpace == ColorSpace.Linear) && (subTarget != MobileTextureSubtarget.DXT))
             {
-                Debug.LogWarning("Linear rendering works only on new Tegra devices");
+                UnityEngine.Debug.LogWarning("Linear rendering works only on new Tegra devices");
             }
             switch (subTarget)
             {
@@ -78,13 +119,13 @@
                     break;
 
                 default:
-                    Debug.LogWarning("SubTarget not recognized : " + subTarget);
+                    UnityEngine.Debug.LogWarning("SubTarget not recognized : " + subTarget);
                     break;
             }
         }
 
         private bool doesReferenceNetworkClasses(AssemblyReferenceChecker checker) => 
-            ((((checker.HasReferenceToType("UnityEngine.Networking") || checker.HasReferenceToType("System.Net.Sockets")) || (checker.HasReferenceToType("UnityEngine.Network") || checker.HasReferenceToType("UnityEngine.RPC"))) || (checker.HasReferenceToType("UnityEngine.WWW") || checker.HasReferenceToType(typeof(Ping).FullName))) || checker.HasReferenceToType(typeof(UnityWebRequest).FullName));
+            (((((checker.HasReferenceToType("UnityEngine.Networking") || checker.HasReferenceToType("System.Net.Sockets")) || (checker.HasReferenceToType("UnityEngine.Network") || checker.HasReferenceToType("UnityEngine.RPC"))) || ((checker.HasReferenceToType("UnityEngine.WWW") || checker.HasReferenceToType(typeof(Ping).FullName)) || (checker.HasReferenceToType(typeof(UnityWebRequest).FullName) || PlayerSettings.submitAnalytics))) || (AnalyticsSettings.enabled || PerformanceReportingSettings.enabled)) || CrashReportingSettings.enabled);
 
         public void Execute(PostProcessorContext context)
         {
@@ -106,7 +147,7 @@
             context.Set<string>("PackageName", str3);
             if (new AndroidManifest(str2).GetActivityWithLaunchIntent().Length == 0)
             {
-                Debug.LogWarning("No activity found in the manifest with action MAIN and category LAUNCHER.\nYour application may not start correctly.");
+                UnityEngine.Debug.LogWarning("No activity found in the manifest with action MAIN and category LAUNCHER.\nYour application may not start correctly.");
             }
             this.ThrowIfInvalid(str3);
         }
@@ -197,10 +238,10 @@
             manifest2.SetVersion(bundleVersion, bundleVersionCode);
             int minSdkVersion = (int) PlayerSettings.Android.minSdkVersion;
             manifest2.AddUsesSDK(minSdkVersion, targetSdkVersion);
-            string bundleIdentifier = PlayerSettings.bundleIdentifier;
-            if (this.IsValidAndroidBundleIdentifier(bundleIdentifier))
+            string applicationIdentifier = PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.Android);
+            if (this.IsValidAndroidBundleIdentifier(applicationIdentifier))
             {
-                manifest2.packageName = bundleIdentifier;
+                manifest2.packageName = applicationIdentifier;
             }
             manifest2.Save();
         }
@@ -296,16 +337,20 @@
             {
                 manifestXML.AddUsesFeature("android.hardware.opengles.aep", true);
             }
+            if (graphicsAPIs.Contains<GraphicsDeviceType>(GraphicsDeviceType.Vulkan))
+            {
+                manifestXML.AddUsesFeature("android.hardware.vulkan", graphicsAPIs.Length == 1);
+            }
             if (EditorUserBuildSettings.androidBuildSubtarget != MobileTextureSubtarget.Generic)
             {
                 this.CreateSupportsTextureElem(manifestXML, EditorUserBuildSettings.androidBuildSubtarget);
             }
-            HashSet<string> set = new HashSet<string>(this.GetActivitiesWithMetadata(manifestXML, "unityplayer.UnityActivity", "true"));
+            HashSet<string> activities = new HashSet<string>(this.GetActivitiesWithMetadata(manifestXML, "unityplayer.UnityActivity", "true"));
             string[] other = new string[] { "com.unity3d.player.UnityPlayerNativeActivity", "com.unity3d.player.UnityPlayerActivity", "com.unity3d.player.UnityPlayerProxyActivity" };
-            set.UnionWith(other);
+            activities.UnionWith(other);
             string orientationAttr = this.GetOrientationAttr();
             bool flag = false;
-            foreach (string str5 in set)
+            foreach (string str5 in activities)
             {
                 flag = manifestXML.SetOrientation(str5, orientationAttr) || flag;
                 flag = manifestXML.SetLaunchMode(str5, "singleTask") || flag;
@@ -313,7 +358,7 @@
             }
             if (!flag)
             {
-                Debug.LogWarning($"Unable to find unity activity in manifest. You need to make sure orientation attribute is set to {orientationAttr} manually.");
+                UnityEngine.Debug.LogWarning($"Unable to find unity activity in manifest. You need to make sure orientation attribute is set to {orientationAttr} manually.");
             }
             manifestXML.SetApplicationFlag("isGame", PlayerSettings.Android.androidIsGame);
             if (PlayerSettings.Android.androidBannerEnabled)
@@ -322,7 +367,7 @@
             }
             if ((PlayerSettings.Android.androidTVCompatibility && !manifestXML.HasLeanbackLauncherActivity()) && !manifestXML.AddLeanbackLauncherActivity())
             {
-                Debug.LogWarning("No activity with LEANBACK_LAUNCHER or LAUNCHER categories found.\nThe build may not be compatible with Android TV. Specify an activity with LEANBACK_LAUNCHER or LAUNCHER category in the manifest, or disable Android TV compatibility in Player Settings.");
+                UnityEngine.Debug.LogWarning("No activity with LEANBACK_LAUNCHER or LAUNCHER categories found.\nThe build may not be compatible with Android TV. Specify an activity with LEANBACK_LAUNCHER or LAUNCHER category in the manifest, or disable Android TV compatibility in Player Settings.");
             }
             switch (PlayerSettings.Android.androidGamepadSupportLevel)
             {
@@ -336,12 +381,7 @@
             }
             if (PlayerSettings.virtualRealitySupported)
             {
-                manifestXML.OverrideTheme("@android:style/Theme.Black.NoTitleBar.Fullscreen");
-                int num2 = context.Get<int>("GearVRMinSdkVersion");
-                if (PlayerSettings.Android.minSdkVersion < num2)
-                {
-                    Debug.LogWarning("GearVR requires Minimum API Level of 19");
-                }
+                this.AddVRRelatedManifestEntries(context, manifestXML, activities);
             }
             AssemblyReferenceChecker checker = new AssemblyReferenceChecker();
             bool collectMethods = true;
@@ -444,11 +484,11 @@
                 string message = "Please set the Bundle Identifier in the Player Settings.";
                 message = (message + " The value must follow the convention 'com.YourCompanyName.YourProductName'") + " and can contain alphanumeric characters and underscore." + "\nEach segment must not start with a numeric character or underscore.";
                 Selection.activeObject = Unsupported.GetSerializedAssetInterfaceSingleton("PlayerSettings");
-                CancelPostProcess.AbortBuild("Bundle Identifier has not been set up correctly", message);
+                CancelPostProcess.AbortBuild("Bundle Identifier has not been set up correctly", message, null);
             }
             if (!this.IsValidJavaPackageName(packageName))
             {
-                Debug.LogWarning((("As of Unity 4.2 the restrictions on the Bundle Identifier has been updated " + " to include those for java package names. Specifically the" + " restrictions have been updated regarding reserved java keywords.") + "\n" + "\nhttp://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html") + "\nhttp://docs.oracle.com/javase/specs/jls/se7/html/jls-3.html#jls-3.9" + "\n");
+                UnityEngine.Debug.LogWarning((("As of Unity 4.2 the restrictions on the Bundle Identifier has been updated " + " to include those for java package names. Specifically the" + " restrictions have been updated regarding reserved java keywords.") + "\n" + "\nhttp://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html") + "\nhttp://docs.oracle.com/javase/specs/jls/se7/html/jls-3.html#jls-3.9" + "\n");
             }
         }
 

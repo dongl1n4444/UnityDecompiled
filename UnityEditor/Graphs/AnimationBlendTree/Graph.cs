@@ -168,7 +168,7 @@
             <FindNode>c__AnonStorey0 storey = new <FindNode>c__AnonStorey0 {
                 motion = motion
             };
-            return Enumerable.FirstOrDefault<UnityEditor.Graphs.AnimationBlendTree.Node>(base.nodes.Cast<UnityEditor.Graphs.AnimationBlendTree.Node>(), new Func<UnityEditor.Graphs.AnimationBlendTree.Node, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.FirstOrDefault<UnityEditor.Graphs.AnimationBlendTree.Node>(base.nodes.Cast<UnityEditor.Graphs.AnimationBlendTree.Node>(), new Func<UnityEditor.Graphs.AnimationBlendTree.Node, bool>(storey.<>m__0));
         }
 
         private T GetComponentFromSelection<T>() where T: Component

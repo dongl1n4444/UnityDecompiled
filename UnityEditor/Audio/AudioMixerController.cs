@@ -2,12 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEditor;
     using UnityEngine;
     using UnityEngine.Audio;
+    using UnityEngine.Scripting;
 
     internal sealed class AudioMixerController : AudioMixer
     {
@@ -18,7 +20,7 @@
         [CompilerGenerated]
         private static Func<<>__AnonType0<GUID, AudioMixerGroupController>, GUID> <>f__am$cache2;
         [CompilerGenerated]
-        private static Func<Object, AudioMixerGroupController> <>f__am$cache3;
+        private static Func<UnityEngine.Object, AudioMixerGroupController> <>f__am$cache3;
         public static float kMaxEffect = 0f;
         public static float kMinVolume = -80f;
         public static float kVolumeWarp = 1.7f;
@@ -30,6 +32,7 @@
         public int m_HighlightEffectIndex = -1;
         public static string s_GroupEffectDisplaySeperator = @"\";
 
+        [field: DebuggerBrowsable(0), CompilerGenerated]
         public event ChangedExposedParameterHandler ChangedExposedParameter;
 
         public AudioMixerController()
@@ -62,7 +65,7 @@
             }
             else
             {
-                Debug.LogError("Cannot expose the same parameter more than once!");
+                UnityEngine.Debug.LogError("Cannot expose the same parameter more than once!");
             }
         }
 
@@ -75,7 +78,7 @@
             this.views = views.ToArray<MixerGroupView>();
         }
 
-        private void AddNewSubAsset(Object obj, bool storeUndoState)
+        private void AddNewSubAsset(UnityEngine.Object obj, bool storeUndoState)
         {
             AssetDatabase.AddObjectToAsset(obj, this);
             if (storeUndoState)
@@ -90,7 +93,7 @@
                 groups = groups,
                 $this = this
             };
-            return Enumerable.Any<AudioMixerGroupController>(storey.groups, new Func<AudioMixerGroupController, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Any<AudioMixerGroupController>(storey.groups, new Func<AudioMixerGroupController, bool>(storey.<>m__0));
         }
 
         private static Dictionary<object, ConnectionNode> BuildTemporaryGraph(List<AudioMixerGroupController> allGroups, AudioMixerGroupController groupWhoseEffectIsChanged, AudioMixerEffectController effectWhoseTargetIsChanged, AudioMixerEffectController targetToTest, AudioMixerGroupController modifiedGroup1, List<AudioMixerEffectController> modifiedGroupEffects1, AudioMixerGroupController modifiedGroup2, List<AudioMixerEffectController> modifiedGroupEffects2)
@@ -142,10 +145,10 @@
         {
             int numGroups = 0;
             this.DeleteGroups(this.masterGroup.children);
-            this.BuildTestSetup(new Random(), this.masterGroup, minSpan, maxSpan, maxGroups, "G", ref numGroups);
+            this.BuildTestSetup(new System.Random(), this.masterGroup, minSpan, maxSpan, maxGroups, "G", ref numGroups);
         }
 
-        private void BuildTestSetup(Random r, AudioMixerGroupController parent, int minSpan, int maxSpan, int maxGroups, string prefix, ref int numGroups)
+        private void BuildTestSetup(System.Random r, AudioMixerGroupController parent, int minSpan, int maxSpan, int maxGroups, string prefix, ref int numGroups)
         {
             int num = (numGroups != 0) ? r.Next(minSpan, maxSpan + 1) : maxSpan;
             for (int i = 0; i < num; i++)
@@ -190,7 +193,7 @@
             return false;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool CheckForCyclicReferences(AudioMixer mixer, AudioMixerGroup group);
         public void ClearEventHandlers()
         {
@@ -222,7 +225,7 @@
         public void CloneNewSnapshotFromTarget(bool storeUndoState)
         {
             List<AudioMixerSnapshotController> list = new List<AudioMixerSnapshotController>(this.snapshots);
-            AudioMixerSnapshotController item = Object.Instantiate<AudioMixerSnapshotController>(this.TargetSnapshot);
+            AudioMixerSnapshotController item = UnityEngine.Object.Instantiate<AudioMixerSnapshotController>(this.TargetSnapshot);
             item.name = this.TargetSnapshot.name + " - Copy";
             list.Add(item);
             this.snapshots = list.ToArray();
@@ -253,7 +256,7 @@
             <ContainsExposedParameter>c__AnonStorey0 storey = new <ContainsExposedParameter>c__AnonStorey0 {
                 parameter = parameter
             };
-            return (Enumerable.Where<ExposedAudioParameter>(this.exposedParameters, new Func<ExposedAudioParameter, bool>(storey, (IntPtr) this.<>m__0)).ToArray<ExposedAudioParameter>().Length > 0);
+            return (Enumerable.Where<ExposedAudioParameter>(this.exposedParameters, new Func<ExposedAudioParameter, bool>(storey.<>m__0)).ToArray<ExposedAudioParameter>().Length > 0);
         }
 
         public void CopyAllSettingsToAllSnapshots(AudioMixerGroupController group, AudioMixerSnapshotController snapshot)
@@ -356,7 +359,7 @@
             };
             this.snapshots = new AudioMixerSnapshotController[] { controller2 };
             this.startSnapshot = controller2;
-            Object[] assets = new Object[] { this, this.masterGroup, effect, controller2 };
+            UnityEngine.Object[] assets = new UnityEngine.Object[] { this, this.masterGroup, effect, controller2 };
             AssetDatabase.CreateAssetFromObjects(assets, path);
         }
 
@@ -381,7 +384,7 @@
             return controller;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool CurrentViewContainsGroup(GUID group);
         public static float DbToLin(float x)
         {
@@ -553,7 +556,7 @@
             return list2;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool EditingTargetSnapshot();
         public AudioMixerGroupController FindParentGroup(AudioMixerGroupController node, AudioMixerGroupController group)
         {
@@ -620,7 +623,7 @@
             <GetCurrentViewGroupList>c__AnonStorey5 storey = new <GetCurrentViewGroupList>c__AnonStorey5();
             List<AudioMixerGroupController> allAudioGroupsSlow = this.GetAllAudioGroupsSlow();
             storey.view = this.views[this.currentViewIndex];
-            return Enumerable.Where<AudioMixerGroupController>(allAudioGroupsSlow, new Func<AudioMixerGroupController, bool>(storey, (IntPtr) this.<>m__0)).ToArray<AudioMixerGroupController>();
+            return Enumerable.Where<AudioMixerGroupController>(allAudioGroupsSlow, new Func<AudioMixerGroupController, bool>(storey.<>m__0)).ToArray<AudioMixerGroupController>();
         }
 
         private static void GetGroupsRecurse(AudioMixerGroupController group, List<AudioMixerGroupController> groups)
@@ -633,11 +636,11 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern int GetGroupVUInfo(GUID group, bool fader, ref float[] vuLevel, ref float[] vuPeak);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern float GetMaxVolume();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern float GetVolumeSplitPoint();
         public bool HasMoreThanOneGroup() => 
             (this.masterGroup.children.Length > 0);
@@ -646,14 +649,14 @@
         {
             if ((targetIndex < 0) || (targetIndex > targetEffects.Count))
             {
-                Debug.LogError(string.Concat(new object[] { "Inserting effect failed! size: ", targetEffects.Count, " at index: ", targetIndex }));
+                UnityEngine.Debug.LogError(string.Concat(new object[] { "Inserting effect failed! size: ", targetEffects.Count, " at index: ", targetIndex }));
                 return false;
             }
             targetEffects.Insert(targetIndex, effect);
             return true;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_CreateAudioMixerController(AudioMixerController mono);
         private bool IsChildOf(AudioMixerGroupController child, List<AudioMixerGroupController> groups)
         {
@@ -670,15 +673,15 @@
 
         private static void ListTemporaryGraph(Dictionary<object, ConnectionNode> graph)
         {
-            Debug.Log("Listing temporary graph:");
+            UnityEngine.Debug.Log("Listing temporary graph:");
             int num = 0;
             foreach (KeyValuePair<object, ConnectionNode> pair in graph)
             {
-                Debug.Log($"Node {num++}: {pair.Value.GetDisplayString()}");
+                UnityEngine.Debug.Log($"Node {num++}: {pair.Value.GetDisplayString()}");
                 int num2 = 0;
                 foreach (object obj2 in pair.Value.targets)
                 {
-                    Debug.Log($"  Target {num2++}: {graph[obj2].GetDisplayString()}");
+                    UnityEngine.Debug.Log($"  Target {num2++}: {graph[obj2].GetDisplayString()}");
                 }
             }
         }
@@ -726,12 +729,12 @@
         public void OnUnitySelectionChanged()
         {
             List<AudioMixerGroupController> allAudioGroupsSlow = this.GetAllAudioGroupsSlow();
-            Object[] filtered = Selection.GetFiltered(typeof(AudioMixerGroupController), SelectionMode.Deep);
+            UnityEngine.Object[] filtered = Selection.GetFiltered(typeof(AudioMixerGroupController), UnityEditor.SelectionMode.Deep);
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<Object, AudioMixerGroupController>(null, (IntPtr) <OnUnitySelectionChanged>m__3);
+                <>f__am$cache3 = g => (AudioMixerGroupController) g;
             }
-            this.m_CachedSelection = allAudioGroupsSlow.Intersect<AudioMixerGroupController>(Enumerable.Select<Object, AudioMixerGroupController>(filtered, <>f__am$cache3)).ToList<AudioMixerGroupController>();
+            this.m_CachedSelection = allAudioGroupsSlow.Intersect<AudioMixerGroupController>(Enumerable.Select<UnityEngine.Object, AudioMixerGroupController>(filtered, <>f__am$cache3)).ToList<AudioMixerGroupController>();
         }
 
         private void RemoveAncestorGroups(List<AudioMixerGroupController> groups)
@@ -759,7 +762,7 @@
             <RemoveExposedParameter>c__AnonStorey1 storey = new <RemoveExposedParameter>c__AnonStorey1 {
                 parameter = parameter
             };
-            this.exposedParameters = Enumerable.Where<ExposedAudioParameter>(this.exposedParameters, new Func<ExposedAudioParameter, bool>(storey, (IntPtr) this.<>m__0)).ToArray<ExposedAudioParameter>();
+            this.exposedParameters = Enumerable.Where<ExposedAudioParameter>(this.exposedParameters, new Func<ExposedAudioParameter, bool>(storey.<>m__0)).ToArray<ExposedAudioParameter>();
             this.OnChangedExposedParameter();
             if (this.exposedParamCache.ContainsKey(storey.parameter))
             {
@@ -826,7 +829,7 @@
         {
             if (insertionIndex >= 0)
             {
-                insertionIndex -= Enumerable.Count<AudioMixerGroupController>(newParent.children.ToList<AudioMixerGroupController>().GetRange(0, insertionIndex), new Func<AudioMixerGroupController, bool>(selection, (IntPtr) this.Contains));
+                insertionIndex -= Enumerable.Count<AudioMixerGroupController>(newParent.children.ToList<AudioMixerGroupController>().GetRange(0, insertionIndex), new Func<AudioMixerGroupController, bool>(selection.Contains));
             }
             Undo.RecordObject(newParent, "Change Audio Mixer Group Parent");
             List<AudioMixerGroupController> allAudioGroupsSlow = this.GetAllAudioGroupsSlow();
@@ -896,17 +899,17 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<GUID, AudioMixerGroupController, <>__AnonType0<GUID, AudioMixerGroupController>>(null, (IntPtr) <SanitizeGroupViews>m__0);
+                    <>f__am$cache0 = (x, y) => new <>__AnonType0<GUID, AudioMixerGroupController>(x, y);
                 }
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<<>__AnonType0<GUID, AudioMixerGroupController>, bool>(null, (IntPtr) <SanitizeGroupViews>m__1);
+                    <>f__am$cache1 = <>__TranspIdent0 => <>__TranspIdent0.y.groupID == <>__TranspIdent0.x;
                 }
                 if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache2 = new Func<<>__AnonType0<GUID, AudioMixerGroupController>, GUID>(null, (IntPtr) <SanitizeGroupViews>m__2);
+                    <>f__am$cache2 = <>__TranspIdent0 => <>__TranspIdent0.x;
                 }
-                views[i].guids = Enumerable.Select<<>__AnonType0<GUID, AudioMixerGroupController>, GUID>(Enumerable.Where<<>__AnonType0<GUID, AudioMixerGroupController>>(Enumerable.SelectMany<GUID, AudioMixerGroupController, <>__AnonType0<GUID, AudioMixerGroupController>>(views[i].guids, new Func<GUID, IEnumerable<AudioMixerGroupController>>(storey, (IntPtr) this.<>m__0), <>f__am$cache0), <>f__am$cache1), <>f__am$cache2).ToArray<GUID>();
+                views[i].guids = Enumerable.Select<<>__AnonType0<GUID, AudioMixerGroupController>, GUID>(Enumerable.Where<<>__AnonType0<GUID, AudioMixerGroupController>>(Enumerable.SelectMany<GUID, AudioMixerGroupController, <>__AnonType0<GUID, AudioMixerGroupController>>(views[i].guids, new Func<GUID, IEnumerable<AudioMixerGroupController>>(storey.<>m__0), <>f__am$cache0), <>f__am$cache1), <>f__am$cache2).ToArray<GUID>();
             }
             this.views = views.ToArray<MixerGroupView>();
         }
@@ -930,9 +933,9 @@
         private int SortFuncForExposedParameters(ExposedAudioParameter p1, ExposedAudioParameter p2) => 
             string.CompareOrdinal(this.ResolveExposedParameterPath(p1.guid, true), this.ResolveExposedParameterPath(p2.guid, true));
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void UpdateBypass();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void UpdateMuteSolo();
         public static float VolumeToScreenMapping(float value, float screenRange, bool forward)
         {
@@ -1038,7 +1041,7 @@
             }
         }
 
-        public int currentViewIndex { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int currentViewIndex { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         private Dictionary<GUID, AudioParameterPath> exposedParamCache
         {
@@ -1052,21 +1055,21 @@
             }
         }
 
-        public ExposedAudioParameter[] exposedParameters { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public ExposedAudioParameter[] exposedParameters { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        public bool isSuspended { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isSuspended { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public AudioMixerGroupController masterGroup { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public AudioMixerGroupController masterGroup { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        public int numExposedParameters { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int numExposedParameters { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public AudioMixerSnapshotController[] snapshots { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public AudioMixerSnapshotController[] snapshots { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        public AudioMixerSnapshot startSnapshot { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public AudioMixerSnapshot startSnapshot { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        public AudioMixerSnapshotController TargetSnapshot { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public AudioMixerSnapshotController TargetSnapshot { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        public MixerGroupView[] views { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public MixerGroupView[] views { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         [CompilerGenerated]
         private sealed class <AreAnyOfTheGroupsInTheListAncestors>c__AnonStorey2

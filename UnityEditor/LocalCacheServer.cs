@@ -25,6 +25,9 @@
         [SerializeField]
         public string time;
 
+        public static bool CheckCacheLocationExists() => 
+            Directory.Exists(GetCacheLocation());
+
         public static bool CheckValidCacheLocation(string path)
         {
             if (Directory.Exists(path))
@@ -45,7 +48,11 @@
         public static void Clear()
         {
             Kill();
-            Directory.Delete(GetCacheLocation(), true);
+            string cacheLocation = GetCacheLocation();
+            if (Directory.Exists(cacheLocation))
+            {
+                Directory.Delete(cacheLocation, true);
+            }
         }
 
         private void Create(int _port, ulong _size)
@@ -62,11 +69,12 @@
                 string[] textArray3 = new string[] { fileName, "bin", "node" };
                 fileName = Paths.Combine(textArray3);
             }
+            CreateCacheDirectory();
             this.path = GetCacheLocation();
             string[] textArray4 = new string[] { EditorApplication.applicationContentsPath, "Tools", "CacheServer", "main.js" };
             string str2 = Paths.Combine(textArray4);
             ProcessStartInfo info2 = new ProcessStartInfo(fileName);
-            object[] objArray1 = new object[] { str2, " --port ", _port, " --path ", this.path, " --nolegacy --monitor-parent-process ", Process.GetCurrentProcess().Id, " --silent --size ", _size };
+            object[] objArray1 = new object[] { "\"", str2, "\" --port ", _port, " --path ", this.path, " --nolegacy --monitor-parent-process ", Process.GetCurrentProcess().Id, " --silent --size ", _size };
             info2.Arguments = string.Concat(objArray1);
             info2.UseShellExecute = false;
             info2.CreateNoWindow = true;
@@ -80,6 +88,15 @@
             this.size = _size;
             this.time = process.StartTime.ToString();
             this.Save(true);
+        }
+
+        public static void CreateCacheDirectory()
+        {
+            string cacheLocation = GetCacheLocation();
+            if (!Directory.Exists(cacheLocation))
+            {
+                Directory.CreateDirectory(cacheLocation);
+            }
         }
 
         public static void CreateIfNeeded()
@@ -97,6 +114,7 @@
             {
                 if ((ScriptableSingleton<LocalCacheServer>.instance.size == num) && (ScriptableSingleton<LocalCacheServer>.instance.path == GetCacheLocation()))
                 {
+                    CreateCacheDirectory();
                     return;
                 }
                 Kill();
@@ -109,14 +127,13 @@
         {
             string str = EditorPrefs.GetString("LocalCacheServerPath");
             bool @bool = EditorPrefs.GetBool("LocalCacheServerCustomPath");
-            string path = str;
-            if (!@bool || string.IsNullOrEmpty(str))
+            string str2 = str;
+            if (@bool && !string.IsNullOrEmpty(str))
             {
-                string[] components = new string[] { OSUtil.GetDefaultCachePath(), "CacheServer" };
-                path = Paths.Combine(components);
+                return str2;
             }
-            Directory.CreateDirectory(path);
-            return path;
+            string[] components = new string[] { OSUtil.GetDefaultCachePath(), "CacheServer" };
+            return Paths.Combine(components);
         }
 
         [UsedByNativeCode]

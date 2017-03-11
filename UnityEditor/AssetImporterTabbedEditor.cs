@@ -8,7 +8,7 @@
         private AssetImporterInspector m_ActiveEditor;
         private int m_ActiveEditorIndex = 0;
         protected string[] m_SubEditorNames = null;
-        protected Type[] m_SubEditorTypes = null;
+        protected System.Type[] m_SubEditorTypes = null;
 
         protected AssetImporterTabbedEditor()
         {
@@ -23,7 +23,7 @@
             if (activeEditor != null)
             {
                 this.m_ActiveEditor = null;
-                Object.DestroyImmediate(activeEditor);
+                UnityEngine.Object.DestroyImmediate(activeEditor);
             }
         }
 
@@ -50,7 +50,7 @@
                     EditorPrefs.SetInt(base.GetType().Name + "ActiveEditorIndex", this.m_ActiveEditorIndex);
                     AssetImporterInspector activeEditor = this.activeEditor;
                     this.m_ActiveEditor = null;
-                    Object.DestroyImmediate(activeEditor);
+                    UnityEngine.Object.DestroyImmediate(activeEditor);
                     this.m_ActiveEditor = Editor.CreateEditor(base.targets, this.m_SubEditorTypes[this.m_ActiveEditorIndex]) as AssetImporterInspector;
                     this.m_ActiveEditor.assetEditor = this.assetEditor;
                 }

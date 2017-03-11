@@ -13,8 +13,30 @@ using UnityEngine;
 internal class PostProcessUAPIl2Cpp : PostProcessUAP
 {
     [CompilerGenerated]
-    private static Action<string> <>f__am$cache0;
+    private static Func<string, string> <>f__am$cache0;
+    [CompilerGenerated]
+    private static Action<string> <>f__am$cache1;
     private List<string> CppPlugins;
+    private static readonly string[] RemappedAssemblies_2_0_Profile = new string[] { 
+        "Microsoft.Win32.SafeHandles,mscorlib", "System,mscorlib", "System,System", "System,System.Core", "System.CodeDom.Compiler,System", "System.Collections,mscorlib", "System.Collections.Generic,mscorlib", "System.Collections.Generic,System", "System.Collections.Generic,System.Core", "System.Collections.ObjectModel,mscorlib", "System.Collections.ObjectModel,WindowsBase", "System.Collections.Specialized,System", "System.Collections.Specialized,WindowsBase", "System.ComponentModel,System", "System.ComponentModel.DataAnnotations,System.ComponentModel.DataAnnotations", "System.Data,System.Data",
+        "System.Data.Common,System.Data", "System.Diagnostics,mscorlib", "System.Diagnostics,System", "System.Diagnostics.CodeAnalysis,mscorlib", "System.Globalization,mscorlib", "System.IO,mscorlib", "System.IO,System", "System.IO,System.Core", "System.IO.Compression,System", "System.IO.IsolatedStorage,mscorlib", "System.Linq,System.Core", "System.Linq.Expressions,System.Core", "System.Net,System", "System.Net.NetworkInformation,System", "System.Net.Security,System", "System.Net.Sockets,System",
+        "System.Reflection,mscorlib", "System.Reflection.Emit,mscorlib", "System.Resources,mscorlib", "System.Runtime,mscorlib", "System.Runtime.CompilerServices,mscorlib", "System.Runtime.CompilerServices,System.Core", "System.Runtime.InteropServices,mscorlib", "System.Runtime.InteropServices,System", "System.Runtime.InteropServices.ComTypes,mscorlib", "System.Runtime.InteropServices.ComTypes,System", "System.Runtime.Serialization,mscorlib", "System.Runtime.Serialization,System.Runtime.Serialization", "System.Runtime.Serialization.Json,System.ServiceModel.Web", "System.Security,mscorlib", "System.Security.Authentication,System", "System.Security.Principal,mscorlib",
+        "System.ServiceModel,System.ServiceModel", "System.ServiceModel.Channels,System.ServiceModel", "System.ServiceModel.Description,System.ServiceModel", "System.ServiceModel.Dispatcher,System.ServiceModel", "System.ServiceModel.Security,System.ServiceModel", "System.ServiceModel.Security.Tokens,System.ServiceModel", "System.Text,mscorlib", "System.Text.RegularExpressions,System", "System.Threading,mscorlib", "System.Threading,System", "System.Threading,System.Core", "System.Xml,System.Runtime.Serialization", "System.Xml,System.Xml", "System.Xml.Linq,System.Xml.Linq", "System.Xml.Schema,System.Xml", "System.Xml.Serialization,System.Xml"
+    };
+    private static readonly string[] RemappedAssemblies_2_0_SubsetProfile = new string[] { 
+        "Microsoft.Win32.SafeHandles,mscorlib", "System,mscorlib", "System,System", "System,System.Core", "System.CodeDom.Compiler,System", "System.Collections,mscorlib", "System.Collections.Generic,mscorlib", "System.Collections.Generic,System", "System.Collections.Generic,System.Core", "System.Collections.ObjectModel,mscorlib", "System.Collections.Specialized,System", "System.ComponentModel,System", "System.Data,System.Data", "System.Data.Common,System.Data", "System.Diagnostics,mscorlib", "System.Diagnostics,System",
+        "System.Diagnostics.CodeAnalysis,mscorlib", "System.Globalization,mscorlib", "System.IO,mscorlib", "System.IO.Compression,System", "System.IO.IsolatedStorage,mscorlib", "System.Linq,System.Core", "System.Linq.Expressions,System.Core", "System.Net,System", "System.Net.NetworkInformation,System", "System.Net.Security,System", "System.Net.Sockets,System", "System.Reflection,mscorlib", "System.Reflection.Emit,mscorlib", "System.Resources,mscorlib", "System.Runtime,mscorlib", "System.Runtime.CompilerServices,mscorlib",
+        "System.Runtime.CompilerServices,System.Core", "System.Runtime.InteropServices,mscorlib", "System.Runtime.InteropServices.ComTypes,mscorlib", "System.Runtime.Serialization,mscorlib", "System.Runtime.Serialization,System.Runtime.Serialization", "System.Runtime.Serialization.Json,System.ServiceModel.Web", "System.Security,mscorlib", "System.Security.Authentication,System", "System.Security.Principal,mscorlib", "System.ServiceModel,System.ServiceModel", "System.ServiceModel.Channels,System.ServiceModel", "System.ServiceModel.Description,System.ServiceModel", "System.ServiceModel.Dispatcher,System.ServiceModel", "System.ServiceModel.Security,System.ServiceModel", "System.Text,mscorlib", "System.Text.RegularExpressions,System",
+        "System.Threading,mscorlib", "System.Threading,System", "System.Threading,System.Core", "System.Xml,System.Runtime.Serialization", "System.Xml,System.Xml", "System.Xml.Linq,System.Xml.Linq", "System.Xml.Schema,System.Xml", "System.Xml.Serialization,System.Xml"
+    };
+    private static readonly string[] RemappedAssemblies_4_6_Profile = new string[] { 
+        "Microsoft.Win32.SafeHandles,mscorlib", "System,mscorlib", "System,System", "System,System.ComponentModel.Composition", "System,System.Core", "System.CodeDom.Compiler,System", "System.Collections,mscorlib", "System.Collections.Concurrent,mscorlib", "System.Collections.Concurrent,System", "System.Collections.Generic,mscorlib", "System.Collections.Generic,System", "System.Collections.Generic,System.Core", "System.Collections.ObjectModel,mscorlib", "System.Collections.ObjectModel,System", "System.Collections.Specialized,System", "System.ComponentModel,System",
+        "System.ComponentModel.DataAnnotations,System.ComponentModel.DataAnnotations", "System.ComponentModel.DataAnnotations.Schema,System.ComponentModel.DataAnnotations", "System.Data,System.Data", "System.Data.Common,System.Data", "System.Diagnostics,mscorlib", "System.Diagnostics,System", "System.Diagnostics.CodeAnalysis,mscorlib", "System.Diagnostics.Contracts,mscorlib", "System.Diagnostics.Tracing,mscorlib", "System.Dynamic,System.Core", "System.Globalization,mscorlib", "System.IO,mscorlib", "System.IO,System", "System.IO,System.Core", "System.IO.Compression,System", "System.IO.Compression,System.IO.Compression.FileSystem",
+        "System.IO.IsolatedStorage,mscorlib", "System.Linq,System.Core", "System.Linq.Expressions,System.Core", "System.Net,System", "System.Net.NetworkInformation,System", "System.Net.Security,System", "System.Net.Sockets,System", "System.Numerics,System.Numerics", "System.Reflection,mscorlib", "System.Reflection.Emit,mscorlib", "System.Resources,mscorlib", "System.Runtime,mscorlib", "System.Runtime.CompilerServices,mscorlib", "System.Runtime.CompilerServices,System.Core", "System.Runtime.ExceptionServices,mscorlib", "System.Runtime.InteropServices,mscorlib",
+        "System.Runtime.InteropServices,System", "System.Runtime.InteropServices,System.Core", "System.Runtime.InteropServices.ComTypes,mscorlib", "System.Runtime.InteropServices.ComTypes,System", "System.Runtime.InteropServices.WindowsRuntime,mscorlib", "System.Runtime.Serialization,mscorlib", "System.Runtime.Serialization,System.Runtime.Serialization", "System.Runtime.Serialization.Json,System.Runtime.Serialization", "System.Runtime.Versioning,mscorlib", "System.Runtime.Versioning,System", "System.Security,mscorlib", "System.Security.Authentication,System", "System.Security.Authentication.ExtendedProtection,System", "System.Security.Claims,mscorlib", "System.Security.Principal,mscorlib", "System.ServiceModel,System.ServiceModel",
+        "System.ServiceModel.Channels,System.ServiceModel", "System.ServiceModel.Description,System.ServiceModel", "System.ServiceModel.Dispatcher,System.ServiceModel", "System.ServiceModel.Security,System.ServiceModel", "System.ServiceModel.Security.Tokens,System.ServiceModel", "System.Text,mscorlib", "System.Text.RegularExpressions,System", "System.Threading,mscorlib", "System.Threading,System", "System.Threading,System.Core", "System.Threading.Tasks,mscorlib", "System.Threading.Tasks,System.Core", "System.Windows.Input,System", "System.Xml,System.Runtime.Serialization", "System.Xml,System.Xml", "System.Xml.Linq,System.Xml.Linq",
+        "System.Xml.Schema,System.Xml", "System.Xml.Serialization,System.Xml"
+    };
     private RuntimeClassRegistry usedClassRegistry;
 
     public PostProcessUAPIl2Cpp(BuildPostProcessArgs args, string stagingArea = null) : base(args, stagingArea)
@@ -31,14 +53,36 @@ internal class PostProcessUAPIl2Cpp : PostProcessUAP
         }
     }
 
-    private void CopyClassLibraries()
+    protected override void CopyFrameworkAssemblies()
     {
-        foreach (string str in Directory.GetFiles(BuildPipeline.GetMonoLibDirectory(BuildTarget.WSAPlayer), "*.dll"))
+        string monoLibDirectory = BuildPipeline.GetMonoLibDirectory(BuildTarget.WSAPlayer);
+        if (PlayerSettings.GetApiCompatibilityLevel(BuildTargetGroup.WSA) == ApiCompatibilityLevel.NET_4_6)
         {
-            string path = Path.Combine(base.StagingAreaDataManaged, Path.GetFileName(str));
+            foreach (string str2 in Directory.GetFiles(Path.Combine(monoLibDirectory, "Facades"), "*.dll"))
+            {
+                string destFileName = Path.Combine(base.StagingAreaDataManaged, Path.GetFileName(str2));
+                File.Copy(str2, destFileName, true);
+            }
+            string[] strArray2 = new string[] { "System.Runtime.WindowsRuntime.dll", "System.Runtime.WindowsRuntime.UI.Xaml.dll" };
+            foreach (string str4 in strArray2)
+            {
+                string[] components = new string[] { IL2CPPUtils.editorIl2cppFolder, "BCLExtensions", str4 };
+                string sourceFileName = Paths.Combine(components);
+                string str6 = Path.Combine(base.StagingAreaDataManaged, str4);
+                File.Copy(sourceFileName, str6, true);
+            }
+            foreach (string str7 in PostProcessUAP.UWPReferences)
+            {
+                string str8 = Path.Combine(base.StagingAreaDataManaged, Path.GetFileName(str7));
+                File.Copy(str7, str8, true);
+            }
+        }
+        foreach (string str9 in Directory.GetFiles(monoLibDirectory, "*.dll"))
+        {
+            string path = Path.Combine(base.StagingAreaDataManaged, Path.GetFileName(str9));
             if (!File.Exists(path))
             {
-                File.Copy(str, path);
+                File.Copy(str9, path, true);
             }
         }
     }
@@ -51,7 +95,7 @@ internal class PostProcessUAPIl2Cpp : PostProcessUAP
             <CopyPlugins>c__AnonStorey0 storey = new <CopyPlugins>c__AnonStorey0();
             string assetPath = importer.assetPath;
             storey.pluginExtension = Path.GetExtension(assetPath);
-            if (Enumerable.Any<string>(strArray, new Func<string, bool>(storey, (IntPtr) this.<>m__0)))
+            if (Enumerable.Any<string>(strArray, new Func<string, bool>(storey.<>m__0)))
             {
                 this.CppPlugins.Add(assetPath);
             }
@@ -83,7 +127,52 @@ internal class PostProcessUAPIl2Cpp : PostProcessUAP
     public override void CreateVisualStudioSolution()
     {
         MetroIl2CppVisualStudioSolutionCreator.CreateSolution(base.InstallPath, base.VisualStudioName, base.StagingArea, base.SourceBuild, this.CppPlugins, base.Libraries);
-        MetroVisualStudioSolutionHelper.WriteUnityCommonProps(Path.Combine(base.InstallPath, "UnityCommon.props"), base.PlayerPackage, base.InstallPath, base.SourceBuild);
+        using (new ProfilerBlock("VisualStudioSolutionHelper.WriteUnityCommonProps"))
+        {
+            MetroVisualStudioSolutionHelper.WriteUnityCommonProps(Path.Combine(base.InstallPath, "UnityCommon.props"), base.PlayerPackage, base.InstallPath, base.SourceBuild, false);
+        }
+    }
+
+    protected override string GetAlternativeReferenceRewritterMappings()
+    {
+        string[] strArray;
+        ApiCompatibilityLevel apiCompatibilityLevel = PlayerSettings.GetApiCompatibilityLevel(BuildTargetGroup.WSA);
+        switch (apiCompatibilityLevel)
+        {
+            case ApiCompatibilityLevel.NET_2_0:
+                strArray = RemappedAssemblies_2_0_Profile;
+                break;
+
+            case ApiCompatibilityLevel.NET_2_0_Subset:
+                strArray = RemappedAssemblies_2_0_SubsetProfile;
+                break;
+
+            case ApiCompatibilityLevel.NET_4_6:
+                strArray = RemappedAssemblies_4_6_Profile;
+                break;
+
+            default:
+                throw new InvalidOperationException($"Cannot retrieve reference rewriter mappings for ApiCompatibilityLevel.{apiCompatibilityLevel}!");
+        }
+        string str = string.Join(";", strArray);
+        if (apiCompatibilityLevel == ApiCompatibilityLevel.NET_4_6)
+        {
+            if (<>f__am$cache0 == null)
+            {
+                <>f__am$cache0 = r => Path.GetFileName(r);
+            }
+            foreach (string str2 in Enumerable.Select<string, string>(PostProcessUAP.UWPReferences, <>f__am$cache0))
+            {
+                str = str + ";<winmd>," + str2;
+            }
+        }
+        return str;
+    }
+
+    protected override IEnumerable<string> GetAssembliesIgnoredByReferenceRewriter()
+    {
+        string[] second = new string[] { "UnityEngine.Networking", "UnityEngine.UI" };
+        return base.GetAssembliesIgnoredByReferenceRewriter().Concat<string>(second).ToArray<string>();
     }
 
     protected override string GetAssemblyConverterPlatform()
@@ -97,10 +186,8 @@ internal class PostProcessUAPIl2Cpp : PostProcessUAP
     protected override string GetPlayerFilesSourceDirectory() => 
         base.GetPlayerFilesSourceDirectory(Path.Combine("UAP", "il2cpp"));
 
-    protected override string GetReferenceAssembliesDirectory()
-    {
-        throw new NotSupportedException();
-    }
+    protected override string GetReferenceAssembliesDirectory() => 
+        base.StagingAreaDataManaged;
 
     protected override string GetTemplateDirectorySource()
     {
@@ -117,26 +204,27 @@ internal class PostProcessUAPIl2Cpp : PostProcessUAP
 
     protected override void RunIL2CPP()
     {
-        string path = Utility.CombinePath(base.StagingArea, "Il2CppOutputProject");
+        string str = Utility.CombinePath(base.StagingArea, "Il2CppOutputProject");
+        string path = Utility.CombinePath(str, "Source");
         if (EditorUtility.DisplayCancelableProgressBar("Building Player", "Cleaning up old IL2CPP generated files", 0.1f))
         {
             throw new OperationCanceledException();
         }
-        if (Directory.Exists(path))
+        using (new ProfilerBlock("PostProcessUAPIl2Cpp.RunIL2CPP.DeletePreviousGeneratedCppCode"))
         {
-            foreach (string str2 in Directory.GetFiles(path, "*.*", SearchOption.AllDirectories))
-            {
-                File.Delete(str2);
-            }
+            Utility.DeleteDirectoryRecursive(str);
+            Utility.CreateDirectory(path);
         }
-        this.CopyClassLibraries();
         WinRTIl2CppPlatformProvider platformProvider = new WinRTIl2CppPlatformProvider();
-        if (<>f__am$cache0 == null)
+        using (new ProfilerBlock("IL2CPPUtils.RunIL2CPP"))
         {
-            <>f__am$cache0 = delegate (string s) {
-            };
+            if (<>f__am$cache1 == null)
+            {
+                <>f__am$cache1 = delegate (string s) {
+                };
+            }
+            IL2CPPUtils.RunIl2Cpp(path, base.StagingAreaData, platformProvider, <>f__am$cache1, this.usedClassRegistry, false);
         }
-        IL2CPPUtils.RunIl2Cpp(path, base.StagingAreaData, platformProvider, <>f__am$cache0, this.usedClassRegistry, base.Development);
         if (EditorUtility.DisplayCancelableProgressBar("Building Player", "Copying IL2CPP related files", 0.1f))
         {
             throw new OperationCanceledException();
@@ -145,13 +233,40 @@ internal class PostProcessUAPIl2Cpp : PostProcessUAP
         string[] components = new string[] { cppOutputPath, "Data" };
         string source = Paths.Combine(components);
         string str5 = Utility.CombinePath(base.StagingAreaData, "il2cpp_data");
-        if (Directory.Exists(str5))
+        using (new ProfilerBlock("IL2CPPUtils.MoveIL2CPPGeneratedDataFiles"))
         {
-            Directory.Delete(str5, true);
+            if (Directory.Exists(str5))
+            {
+                Directory.Delete(str5, true);
+            }
+            Utility.MoveDirectory(source, str5, null);
         }
-        Directory.CreateDirectory(str5);
-        Utility.MoveDirectory(source, str5, null);
-        Utility.CopyDirectoryContents(platformProvider.il2CppFolder, Path.Combine(path, "IL2CPP"), true);
+        using (new ProfilerBlock("IL2CPPUtils.CopyIL2CPP"))
+        {
+            string str6 = platformProvider.il2CppFolder;
+            string[] textArray2 = new string[] { str, "IL2CPP" };
+            string str7 = Paths.Combine(textArray2);
+            using (new ProfilerBlock("Copy IL2CPP binaries"))
+            {
+                Utility.CopyDirectoryContents(Path.Combine(str6, "build"), Path.Combine(str7, "build"), true);
+            }
+            using (new ProfilerBlock("Copy libil2cpp external dependencies"))
+            {
+                Utility.CopyDirectoryContents(Path.Combine(str6, "external"), Path.Combine(str7, "external"), true);
+            }
+            using (new ProfilerBlock("Copy libil2cpp"))
+            {
+                Utility.CopyDirectoryContents(Path.Combine(str6, "libil2cpp"), Path.Combine(str7, "libil2cpp"), true);
+            }
+            using (new ProfilerBlock("Copy MapFileParser"))
+            {
+                Utility.CopyDirectoryContents(Path.GetDirectoryName(IL2CPPBuilder.GetMapFileParserPath()), Path.Combine(str7, "MapFileParser"), true);
+            }
+            using (new ProfilerBlock("Copy il2cpp_root"))
+            {
+                Utility.CopyFile(Path.Combine(str6, "il2cpp_root"), Path.Combine(str7, "il2cpp_root"));
+            }
+        }
     }
 
     protected override bool UseIL2CPP() => 

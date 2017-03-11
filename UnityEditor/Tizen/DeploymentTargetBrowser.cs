@@ -35,6 +35,10 @@
                 this.m_SelectedType = num;
                 this.RefreshDeviceList();
             }
+            if (GUILayout.Button(EditorGUIUtility.IconContent("Refresh", "Refresh Target List"), EditorStyles.iconButton, new GUILayoutOption[0]))
+            {
+                this.RefreshDeviceList();
+            }
             EditorGUILayout.EndHorizontal();
             int index = 0;
             IEnumerator enumerator = ListViewGUILayout.ListView(this.m_ListView, this.m_DeviceListBox, new GUILayoutOption[0]).GetEnumerator();

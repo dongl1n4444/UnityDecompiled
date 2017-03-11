@@ -10,6 +10,7 @@
     using System.Text;
     using Unity.IL2CPP.IoC;
     using Unity.IL2CPP.IoCServices;
+    using Unity.IL2CPP.Portability;
 
     internal class GuidProviderComponent : IGuidProvider
     {
@@ -41,7 +42,7 @@
             TypeDefinition definition = type.Resolve();
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<CustomAttribute, bool>(null, (IntPtr) <GuidFor>m__0);
+                <>f__am$cache0 = a => a.AttributeType.FullName == "System.Runtime.InteropServices.GuidAttribute";
             }
             CustomAttribute attribute = definition.CustomAttributes.SingleOrDefault<CustomAttribute>(<>f__am$cache0);
             if (attribute != null)
@@ -51,7 +52,7 @@
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<CustomAttribute, bool>(null, (IntPtr) <GuidFor>m__1);
+                <>f__am$cache1 = a => a.AttributeType.FullName == "Windows.Foundation.Metadata.GuidAttribute";
             }
             attribute = definition.CustomAttributes.SingleOrDefault<CustomAttribute>(<>f__am$cache1);
             if (attribute == null)
@@ -122,7 +123,7 @@
                 case MetadataType.Object:
                     return "cinterface(IInspectable)";
             }
-            TypeDefinition definition = WindowsRuntimeProjections.ProjectToWindowsRuntime(type.Resolve()).Resolve();
+            TypeDefinition definition = WindowsRuntimeProjections.ProjectToWindowsRuntime(type.Resolve());
             if (((type.MetadataType != MetadataType.Class) && (type.MetadataType != MetadataType.ValueType)) && (type.MetadataType != MetadataType.GenericInstance))
             {
                 throw new InvalidOperationException($"Cannot compute type identifier for {type.FullName}, as its metadata type is not supported: {type.MetadataType}.");
@@ -144,11 +145,11 @@
                 }
                 if (<>f__am$cache3 == null)
                 {
-                    <>f__am$cache3 = new Func<FieldDefinition, bool>(null, (IntPtr) <IdentifierFor>m__3);
+                    <>f__am$cache3 = f => !f.IsStatic;
                 }
                 if (<>f__am$cache4 == null)
                 {
-                    <>f__am$cache4 = new Func<FieldDefinition, TypeReference>(null, (IntPtr) <IdentifierFor>m__4);
+                    <>f__am$cache4 = f => f.FieldType;
                 }
                 IEnumerable<TypeReference> nameElements = definition.Fields.Where<FieldDefinition>(<>f__am$cache3).Select<FieldDefinition, TypeReference>(<>f__am$cache4);
                 return $"struct({definition.FullName};{IdentifierFor(nameElements)})";
@@ -174,7 +175,7 @@
         {
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<TypeReference, string>(null, (IntPtr) <IdentifierFor>m__2);
+                <>f__am$cache2 = element => IdentifierFor(element);
             }
             return nameElements.Select<TypeReference, string>(<>f__am$cache2).AggregateWith(";");
         }
@@ -185,9 +186,9 @@
             List<byte> list = new List<byte>();
             list.AddRange(kParameterizedNamespaceGuid);
             list.AddRange(Encoding.UTF8.GetBytes(typeIdentifier));
-            using (SHA1Managed managed = new SHA1Managed())
+            using (SHA1 sha = CryptographyPortability.CreateSHA1())
             {
-                buffer = managed.ComputeHash(list.ToArray());
+                buffer = sha.ComputeHash(list.ToArray());
             }
             int a = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(buffer, 0));
             short b = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(buffer, 4));

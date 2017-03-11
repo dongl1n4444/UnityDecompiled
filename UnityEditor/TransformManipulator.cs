@@ -120,7 +120,23 @@
                 for (int i = 0; i < s_MouseDownState.Length; i++)
                 {
                     TransformData data = s_MouseDownState[i];
-                    Undo.RecordObject((data.rectTransform == null) ? data.transform : data.rectTransform, "Resize");
+                    if (data.rectTransform != null)
+                    {
+                        Undo.RecordObject(data.rectTransform, "Resize");
+                    }
+                    else
+                    {
+                        SpriteRenderer component = data.transform.GetComponent<SpriteRenderer>();
+                        if ((component != null) && (component.drawMode != SpriteDrawMode.Simple))
+                        {
+                            UnityEngine.Object[] objectsToUndo = new UnityEngine.Object[] { component, data.transform };
+                            Undo.RecordObjects(objectsToUndo, "Resize");
+                        }
+                        else
+                        {
+                            Undo.RecordObject(data.transform, "Resize");
+                        }
+                    }
                 }
                 for (int j = 0; j < s_MouseDownState.Length; j++)
                 {
@@ -187,6 +203,12 @@
                     data.sizeDelta = data.rectTransform.sizeDelta;
                     data.rect = data.rectTransform.rect;
                     data.anchoredPosition = data.rectTransform.anchoredPosition;
+                    return data;
+                }
+                SpriteRenderer component = t.GetComponent<SpriteRenderer>();
+                if ((component != null) && (component.drawMode != SpriteDrawMode.Simple))
+                {
+                    data.sizeDelta = component.size;
                 }
                 return data;
             }
@@ -236,21 +258,28 @@
                 Quaternion refAlignment = this.GetRefAlignment(scaleRotation, ownRotation);
                 scaleDelta = (Vector3) (refAlignment * scaleDelta);
                 scaleDelta = Vector3.Scale(scaleDelta, (Vector3) (refAlignment * Vector3.one));
-                if (preferRectResize && (this.rectTransform != null))
+                if (preferRectResize)
                 {
-                    Vector2 vector5 = (this.sizeDelta + Vector2.Scale(this.rect.size, scaleDelta)) - this.rect.size;
-                    vector5.x = MathUtils.RoundBasedOnMinimumDifference(vector5.x, minDragDifference.x);
-                    vector5.y = MathUtils.RoundBasedOnMinimumDifference(vector5.y, minDragDifference.y);
-                    this.rectTransform.sizeDelta = vector5;
-                    if (this.rectTransform.drivenByObject != null)
+                    if (this.rectTransform != null)
                     {
-                        RectTransform.SendReapplyDrivenProperties(this.rectTransform);
+                        Vector2 vector5 = (this.sizeDelta + Vector2.Scale(this.rect.size, scaleDelta)) - this.rect.size;
+                        vector5.x = MathUtils.RoundBasedOnMinimumDifference(vector5.x, minDragDifference.x);
+                        vector5.y = MathUtils.RoundBasedOnMinimumDifference(vector5.y, minDragDifference.y);
+                        this.rectTransform.sizeDelta = vector5;
+                        if (this.rectTransform.drivenByObject != null)
+                        {
+                            RectTransform.SendReapplyDrivenProperties(this.rectTransform);
+                        }
+                        return;
+                    }
+                    SpriteRenderer component = this.transform.GetComponent<SpriteRenderer>();
+                    if ((component != null) && (component.drawMode != SpriteDrawMode.Simple))
+                    {
+                        component.size = Vector2.Scale(this.sizeDelta, scaleDelta);
+                        return;
                     }
                 }
-                else
-                {
-                    this.SetScaleValue(Vector3.Scale(this.scale, scaleDelta));
-                }
+                this.SetScaleValue(Vector3.Scale(this.scale, scaleDelta));
             }
 
             private void SetPosition(Vector3 newPosition)

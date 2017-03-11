@@ -44,8 +44,8 @@
                     ProfilerChoise item = new ProfilerChoise {
                         Name = device.name,
                         Enabled = true,
-                        IsSelected = new Func<bool>(storey, (IntPtr) this.<>m__0),
-                        ConnectTo = new Action(storey, (IntPtr) this.<>m__1)
+                        IsSelected = new Func<bool>(storey.<>m__0),
+                        ConnectTo = new Action(storey.<>m__1)
                     };
                     profilers.Add(item);
                 }
@@ -63,10 +63,10 @@
             };
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<bool>(null, (IntPtr) <AddEnterIPProfiler>m__1);
+                <>f__am$cache1 = () => false;
             }
             item.IsSelected = <>f__am$cache1;
-            item.ConnectTo = new Action(storey, (IntPtr) this.<>m__0);
+            item.ConnectTo = new Action(storey.<>m__0);
             profilers.Add(item);
         }
 
@@ -83,10 +83,10 @@
                 };
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<bool>(null, (IntPtr) <AddLastIPProfiler>m__0);
+                    <>f__am$cache0 = () => ProfilerDriver.connectedProfiler == 0xfeed;
                 }
                 item.IsSelected = <>f__am$cache0;
-                item.ConnectTo = new Action(storey, (IntPtr) this.<>m__0);
+                item.ConnectTo = new Action(storey.<>m__0);
                 profilers.Add(item);
             }
         }
@@ -116,8 +116,8 @@
                 ProfilerChoise item = new ProfilerChoise {
                     Name = connectionIdentifier,
                     Enabled = flag2,
-                    IsSelected = new Func<bool>(storey, (IntPtr) this.<>m__0),
-                    ConnectTo = new Action(storey, (IntPtr) this.<>m__1)
+                    IsSelected = new Func<bool>(storey.<>m__0),
+                    ConnectTo = new Action(storey.<>m__1)
                 };
                 profilers.Add(item);
             }
@@ -147,7 +147,7 @@
 
         public void OnGUI(Rect connectRect, GUIContent profilerLabel)
         {
-            if (EditorGUI.ButtonMouseDown(connectRect, profilerLabel, FocusType.Passive, EditorStyles.toolbarDropDown))
+            if (EditorGUI.DropdownButton(connectRect, profilerLabel, FocusType.Passive, EditorStyles.toolbarDropDown))
             {
                 int[] numArray;
                 List<ProfilerChoise> profilers = new List<ProfilerChoise>();
@@ -159,7 +159,7 @@
                 {
                     if (<>f__am$cache2 == null)
                     {
-                        <>f__am$cache2 = new Func<ProfilerChoise, bool>(null, (IntPtr) <OnGUI>m__2);
+                        <>f__am$cache2 = p => p.IsSelected();
                     }
                     if (!Enumerable.Any<ProfilerChoise>(profilers, <>f__am$cache2))
                     {
@@ -169,12 +169,13 @@
                         };
                         if (<>f__am$cache3 == null)
                         {
-                            <>f__am$cache3 = new Func<bool>(null, (IntPtr) <OnGUI>m__3);
+                            <>f__am$cache3 = () => true;
                         }
                         item.IsSelected = <>f__am$cache3;
                         if (<>f__am$cache4 == null)
                         {
-                            <>f__am$cache4 = new Action(null, (IntPtr) <OnGUI>m__4);
+                            <>f__am$cache4 = delegate {
+                            };
                         }
                         item.ConnectTo = <>f__am$cache4;
                         profilers.Add(item);
@@ -183,17 +184,17 @@
                 this.AddEnterIPProfiler(profilers, GUIUtility.GUIToScreenRect(connectRect));
                 if (<>f__am$cache5 == null)
                 {
-                    <>f__am$cache5 = new Func<ProfilerChoise, string>(null, (IntPtr) <OnGUI>m__5);
+                    <>f__am$cache5 = p => p.Name;
                 }
                 string[] options = Enumerable.Select<ProfilerChoise, string>(profilers, <>f__am$cache5).ToArray<string>();
                 if (<>f__am$cache6 == null)
                 {
-                    <>f__am$cache6 = new Func<ProfilerChoise, bool>(null, (IntPtr) <OnGUI>m__6);
+                    <>f__am$cache6 = p => p.Enabled;
                 }
                 bool[] enabled = Enumerable.Select<ProfilerChoise, bool>(profilers, <>f__am$cache6).ToArray<bool>();
                 if (<>f__am$cache7 == null)
                 {
-                    <>f__am$cache7 = p => p.IsSelected.Invoke();
+                    <>f__am$cache7 = p => p.IsSelected();
                 }
                 int num = profilers.FindIndex(<>f__am$cache7);
                 if (num == -1)
@@ -212,7 +213,7 @@
         {
             if (this.m_CurrentProfiler == null)
             {
-                this.m_CurrentProfiler = EditorGUIUtility.TextContent("Active Profiler|Select connected player to profile");
+                this.m_CurrentProfiler = EditorGUIUtility.TextContent("Connected Player|Select player to connect to for receiving profiler and log data.");
             }
             GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(100f) };
             Rect connectRect = GUILayoutUtility.GetRect(this.m_CurrentProfiler, EditorStyles.toolbarDropDown, options);
@@ -233,7 +234,7 @@
             if (selected < source.Count<ProfilerChoise>())
             {
                 ProfilerChoise choise = source[selected];
-                choise.ConnectTo.Invoke();
+                choise.ConnectTo();
             }
         }
 

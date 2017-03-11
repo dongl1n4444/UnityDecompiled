@@ -6,12 +6,7 @@
 
     internal class ColliderEditorBase : Editor
     {
-        protected void ForceQuitEditMode()
-        {
-            EditMode.QuitEditMode();
-        }
-
-        private static Bounds GetColliderBounds(Object collider)
+        private static Bounds GetColliderBounds(UnityEngine.Object collider)
         {
             if (collider is Collider2D)
             {
@@ -26,12 +21,13 @@
 
         protected void InspectorEditButtonGUI()
         {
-            EditMode.DoEditModeInspectorModeButton(EditMode.SceneViewEditMode.Collider, "Edit Collider", EditorGUIUtility.IconContent("EditCollider"), GetColliderBounds(base.target), this);
+            UnityEditorInternal.EditMode.DoEditModeInspectorModeButton(UnityEditorInternal.EditMode.SceneViewEditMode.Collider, "Edit Collider", this.editModeButton, GetColliderBounds(base.target), this);
         }
 
         public virtual void OnDisable()
         {
-            EditMode.onEditModeEndDelegate = (EditMode.OnEditModeStopFunc) Delegate.Remove(EditMode.onEditModeEndDelegate, new EditMode.OnEditModeStopFunc(this.OnEditModeEnd));
+            UnityEditorInternal.EditMode.onEditModeStartDelegate = (UnityEditorInternal.EditMode.OnEditModeStartFunc) Delegate.Remove(UnityEditorInternal.EditMode.onEditModeStartDelegate, new UnityEditorInternal.EditMode.OnEditModeStartFunc(this.OnEditModeStart));
+            UnityEditorInternal.EditMode.onEditModeEndDelegate = (UnityEditorInternal.EditMode.OnEditModeStopFunc) Delegate.Remove(UnityEditorInternal.EditMode.onEditModeEndDelegate, new UnityEditorInternal.EditMode.OnEditModeStopFunc(this.OnEditModeEnd));
         }
 
         protected virtual void OnEditEnd()
@@ -46,9 +42,9 @@
             }
         }
 
-        protected void OnEditModeStart(Editor editor, EditMode.SceneViewEditMode mode)
+        protected void OnEditModeStart(Editor editor, UnityEditorInternal.EditMode.SceneViewEditMode mode)
         {
-            if ((mode == EditMode.SceneViewEditMode.Collider) && (editor == this))
+            if ((mode == UnityEditorInternal.EditMode.SceneViewEditMode.Collider) && (editor == this))
             {
                 this.OnEditStart();
             }
@@ -60,11 +56,15 @@
 
         public virtual void OnEnable()
         {
-            EditMode.onEditModeStartDelegate = (EditMode.OnEditModeStartFunc) Delegate.Combine(EditMode.onEditModeStartDelegate, new EditMode.OnEditModeStartFunc(this.OnEditModeStart));
+            UnityEditorInternal.EditMode.onEditModeStartDelegate = (UnityEditorInternal.EditMode.OnEditModeStartFunc) Delegate.Combine(UnityEditorInternal.EditMode.onEditModeStartDelegate, new UnityEditorInternal.EditMode.OnEditModeStartFunc(this.OnEditModeStart));
+            UnityEditorInternal.EditMode.onEditModeEndDelegate = (UnityEditorInternal.EditMode.OnEditModeStopFunc) Delegate.Combine(UnityEditorInternal.EditMode.onEditModeEndDelegate, new UnityEditorInternal.EditMode.OnEditModeStopFunc(this.OnEditModeEnd));
         }
 
         public bool editingCollider =>
-            ((EditMode.editMode == EditMode.SceneViewEditMode.Collider) && EditMode.IsOwner(this));
+            ((UnityEditorInternal.EditMode.editMode == UnityEditorInternal.EditMode.SceneViewEditMode.Collider) && UnityEditorInternal.EditMode.IsOwner(this));
+
+        protected virtual GUIContent editModeButton =>
+            EditorGUIUtility.IconContent("EditCollider");
     }
 }
 

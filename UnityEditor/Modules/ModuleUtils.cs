@@ -8,7 +8,7 @@
         internal static string[] GetAdditionalReferencesForEditorCsharpProject()
         {
             List<string> list = new List<string>();
-            foreach (IPlatformSupportModule module in ModuleManager.platformSupportModules)
+            foreach (IPlatformSupportModule module in ModuleManager.platformSupportModulesDontRegister)
             {
                 list.AddRange(module.AssemblyReferencesForEditorCsharpProject);
             }
@@ -18,7 +18,7 @@
         internal static string[] GetAdditionalReferencesForUserScripts()
         {
             List<string> list = new List<string>();
-            foreach (IPlatformSupportModule module in ModuleManager.platformSupportModules)
+            foreach (IPlatformSupportModule module in ModuleManager.platformSupportModulesDontRegister)
             {
                 list.AddRange(module.AssemblyReferencesForUserScripts);
             }

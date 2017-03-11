@@ -31,7 +31,7 @@
             }
         }
 
-        public override void OnInspectorGUI(ParticleSystem s)
+        public override void OnInspectorGUI(InitialModuleUI initial)
         {
             if (s_Texts == null)
             {
@@ -44,9 +44,20 @@
         public override void UpdateCullingSupportedString(ref string text)
         {
             this.Init();
-            if ((!this.m_X.SupportsProcedural() || !this.m_Y.SupportsProcedural()) || !this.m_Z.SupportsProcedural())
+            string failureReason = string.Empty;
+            if (!this.m_X.SupportsProcedural(ref failureReason))
             {
-                text = text + "\n\tLifetime velocity curves use too many keys.";
+                text = text + "\nVelocity over Lifetime module curve X: " + failureReason;
+            }
+            failureReason = string.Empty;
+            if (!this.m_Y.SupportsProcedural(ref failureReason))
+            {
+                text = text + "\nVelocity over Lifetime module curve Y: " + failureReason;
+            }
+            failureReason = string.Empty;
+            if (!this.m_Z.SupportsProcedural(ref failureReason))
+            {
+                text = text + "\nVelocity over Lifetime module curve Z: " + failureReason;
             }
         }
 

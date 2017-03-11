@@ -3,17 +3,18 @@
     using System;
     using System.Reflection;
     using UnityEngine;
+    using UnityEngine.Scripting;
     using UnityEngine.Serialization;
 
     /// <summary>
     /// <para>Abstract base class for UnityEvents.</para>
     /// </summary>
-    [Serializable]
+    [Serializable, UsedByNativeCode]
     public abstract class UnityEventBase : ISerializationCallbackReceiver
     {
         private InvokableCallList m_Calls = new InvokableCallList();
         private bool m_CallsDirty = true;
-        [SerializeField, FormerlySerializedAs("m_PersistentListeners")]
+        [FormerlySerializedAs("m_PersistentListeners"), SerializeField]
         private PersistentCallGroup m_PersistentCalls = new PersistentCallGroup();
         [SerializeField]
         private string m_TypeName;
@@ -349,7 +350,7 @@
         }
 
         /// <summary>
-        /// <para>Remove all non-persisent (ie created from script) listeners  from the event.</para>
+        /// <para>Remove all listeners from the event.</para>
         /// </summary>
         public void RemoveAllListeners()
         {

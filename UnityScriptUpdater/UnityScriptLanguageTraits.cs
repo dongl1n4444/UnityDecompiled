@@ -2,18 +2,21 @@
 {
     using APIUpdater.Framework.Core.Replacements;
     using Boo.Lang.Compiler.Ast;
+    using Boo.Lang.Compiler.TypeSystem;
     using BooUpdater;
     using System;
 
     public class UnityScriptLanguageTraits : BooBasedLanguageTraits
     {
+        internal static BooBasedLanguageTraits Instance = new UnityScriptLanguageTraits();
+
         public override string ArrayTypeReferenceTypeName(ArrayTypeReference arrayReference) => 
-            arrayReference.get_ElementType().ToString();
+            arrayReference.ElementType.ToString();
 
         public override int ArtificialAstNodeLength(Node node)
         {
-            MethodInvocationExpression expression = node;
-            return ((expression.get_Target().get_Entity().get_EntityType() != 0x10) ? 0 : this.NewExpression.Length);
+            MethodInvocationExpression expression = (MethodInvocationExpression) node;
+            return ((expression.Target.Entity.EntityType != EntityType.Constructor) ? 0 : this.NewExpression.Length);
         }
 
         private bool IsExpandedDefaultSwitchCase(Statement candidateBlock, Statement parentStatement)
@@ -23,36 +26,36 @@
             {
                 return false;
             }
-            int index = block.get_Statements().IndexOf(parentStatement);
+            int index = block.Statements.IndexOf(parentStatement);
             if (index <= 0)
             {
                 return false;
             }
-            LabelStatement statement = block.get_Statements().get_Item(index - 1) as LabelStatement;
-            return ((statement != null) && statement.get_Name().Contains("$switch$"));
+            LabelStatement statement = block.Statements[index - 1] as LabelStatement;
+            return ((statement != null) && statement.Name.Contains("$switch$"));
         }
 
         private bool IsExpandedSwitchStatementCase(Node node)
         {
-            IfStatement statement = node.get_ParentNode() as IfStatement;
-            if (statement == null)
+            IfStatement parentNode = node.ParentNode as IfStatement;
+            if (parentNode == null)
             {
                 return false;
             }
-            BinaryExpression expression = statement.get_Condition() as BinaryExpression;
-            if ((expression == null) || (expression.get_Left().get_NodeType() != 0x36))
+            BinaryExpression condition = parentNode.Condition as BinaryExpression;
+            if ((condition == null) || (condition.Left.NodeType != NodeType.ReferenceExpression))
             {
                 return false;
             }
-            ReferenceExpression expression2 = expression.get_Left() as ReferenceExpression;
-            return expression2?.get_Name().Contains("$switch$");
+            ReferenceExpression left = condition.Left as ReferenceExpression;
+            return left?.Name.Contains("$switch$");
         }
 
         private bool IsInsideBlock(Expression node)
         {
             Statement parentStmt = node.FindRootStatement();
-            Statement candidateBlock = parentStmt.get_ParentNode();
-            return (((this.IsSwitchCondition(candidateBlock, parentStmt) || this.IsExpandedSwitchStatementCase(candidateBlock)) || this.IsExpandedDefaultSwitchCase(candidateBlock, parentStmt)) || ((candidateBlock.get_NodeType() == 0x20) && (candidateBlock.get_EndSourceLocation().get_Line() != -1)));
+            Statement parentNode = (Statement) parentStmt.ParentNode;
+            return (((this.IsSwitchCondition(parentNode, parentStmt) || this.IsExpandedSwitchStatementCase(parentNode)) || this.IsExpandedDefaultSwitchCase(parentNode, parentStmt)) || ((parentNode.NodeType == NodeType.Block) && (parentNode.EndSourceLocation.Line != -1)));
         }
 
         private bool IsSwitchCondition(Statement candidateBlock, Statement parentStmt)
@@ -62,8 +65,8 @@
             {
                 return false;
             }
-            Block block2 = block.get_ParentNode() as Block;
-            return ((block2 != null) && (block2.get_ParentNode().get_NodeType() == 0x16));
+            Block parentNode = block.ParentNode as Block;
+            return ((parentNode != null) && (parentNode.ParentNode.NodeType == NodeType.Method));
         }
 
         public override void WrapStatementsInBlockIfNeeded(MemberReferenceExpression node, IUpdateCollector<LexicalInfo> updateCollector)
@@ -71,8 +74,8 @@
             if (!this.IsInsideBlock(node))
             {
                 Statement statement = node.FindRootStatement();
-                updateCollector.Insert(statement.FindExpressionRoot().SourcePosition(), "{ ", node.get_LexicalInfo(), null).InclusiveRange = false;
-                updateCollector.Insert(new SourcePosition(statement.get_EndSourceLocation().get_Line(), statement.get_EndSourceLocation().get_Column() + 1), " }", node.get_LexicalInfo(), null);
+                updateCollector.Insert(statement.FindExpressionRoot().SourcePosition(), "{ ", node.LexicalInfo, null).InclusiveRange = false;
+                updateCollector.Insert(new SourcePosition(statement.EndSourceLocation.Line, statement.EndSourceLocation.Column + 1), " }", node.LexicalInfo, null);
             }
         }
 

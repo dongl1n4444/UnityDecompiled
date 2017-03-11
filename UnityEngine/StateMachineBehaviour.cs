@@ -1,7 +1,7 @@
 ﻿namespace UnityEngine
 {
     using System;
-    using UnityEngine.Experimental.Director;
+    using UnityEngine.Playables;
     using UnityEngine.Scripting;
 
     /// <summary>

@@ -22,6 +22,8 @@
         public static IIl2CppGenericMethodCollectorWriterService Il2CppGenericMethodCollector;
         [Inject]
         public static ITypeProviderService TypeProvider;
+        [Inject]
+        public static IWindowsRuntimeProjections WindowsRuntimeProjections;
 
         public GenericContextFreeVisitor(InflatedCollectionCollector generics)
         {
@@ -32,7 +34,7 @@
         {
             if ((genericInstanceMethod != null) && (<>f__am$cache0 == null))
             {
-                <>f__am$cache0 = new Func<TypeReference, bool>(null, (IntPtr) <IsFullyInflated>m__0);
+                <>f__am$cache0 = t => t.ContainsGenericParameters();
             }
             return (!genericInstanceMethod.GenericArguments.Any<TypeReference>(<>f__am$cache0) && !genericInstanceMethod.DeclaringType.ContainsGenericParameters());
         }
@@ -94,6 +96,17 @@
             GenericContextAwareVisitor.ProcessGenericType(inflatedType, this._generics, null);
         }
 
+        private void ProcessIReferenceIfNeeded(TypeDefinition typeDefinition)
+        {
+            if (typeDefinition.CanBoxToWindowsRuntime())
+            {
+                GenericInstanceType inflatedType = new GenericInstanceType(TypeProvider.IReferenceType) {
+                    GenericArguments = { typeDefinition }
+                };
+                this.ProcessGenericType(inflatedType);
+            }
+        }
+
         private static bool TypeHasFullySharableGenericParameters(TypeDefinition typeDefinition) => 
             (typeDefinition.HasGenericParameters && GenericSharingAnalysis.AreFullySharableGenericParameters(typeDefinition.GenericParameters));
 
@@ -149,7 +162,7 @@
             {
                 GenericContextAwareVisitor.ProcessGenericMethod((GenericInstanceMethod) GenericSharingAnalysis.GetFullySharedMethod(methodDefinition), this._generics);
             }
-            if (((methodDefinition.HasGenericParameters || methodDefinition.DeclaringType.HasGenericParameters) && (!methodDefinition.HasGenericParameters || GenericSharingAnalysis.AreFullySharableGenericParameters(methodDefinition.GenericParameters))) && (!methodDefinition.DeclaringType.HasGenericParameters || GenericSharingAnalysis.AreFullySharableGenericParameters(methodDefinition.DeclaringType.GenericParameters)))
+            if (((methodDefinition.HasGenericParameters || methodDefinition.DeclaringType.HasGenericParameters) && (!methodDefinition.HasGenericParameters || GenericSharingAnalysis.AreFullySharableGenericParameters(methodDefinition.GenericParameters))) && (!methodDefinition.IsStripped() && (!methodDefinition.DeclaringType.HasGenericParameters || GenericSharingAnalysis.AreFullySharableGenericParameters(methodDefinition.DeclaringType.GenericParameters))))
             {
                 Il2CppGenericMethodCollector.Add(GenericSharingAnalysis.GetFullySharedMethod(methodDefinition));
             }
@@ -200,6 +213,7 @@
             {
                 this.ProcessGenericType(GenericSharingAnalysis.GetFullySharedType(typeDefinition));
             }
+            this.ProcessIReferenceIfNeeded(typeDefinition);
             base.Visit(typeDefinition, context);
         }
 

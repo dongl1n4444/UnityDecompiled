@@ -39,19 +39,19 @@
         [Obsolete("NaCl export is no longer supported in Unity 5.0+.")]
         NaCl = 12,
         /// <summary>
-        /// <para>In the Dashboard widget on macOS.</para>
+        /// <para>In the Dashboard widget on Mac OS X.</para>
         /// </summary>
         OSXDashboardPlayer = 4,
         /// <summary>
-        /// <para>In the Unity editor on macOS.</para>
+        /// <para>In the Unity editor on Mac OS X.</para>
         /// </summary>
         OSXEditor = 0,
         /// <summary>
-        /// <para>In the player on macOS.</para>
+        /// <para>In the player on Mac OS X.</para>
         /// </summary>
         OSXPlayer = 1,
         /// <summary>
-        /// <para>In the web player on macOS.</para>
+        /// <para>In the web player on Mac OS X.</para>
         /// </summary>
         [Obsolete("WebPlayer export is no longer supported in Unity 5.4+.")]
         OSXWebPlayer = 3,
@@ -70,6 +70,10 @@
         /// <para>In the player on Samsung Smart TV.</para>
         /// </summary>
         SamsungTVPlayer = 0x1c,
+        /// <summary>
+        /// <para>In the player on Nintendo Switch.</para>
+        /// </summary>
+        Switch = 0x20,
         /// <summary>
         /// <para>In the player on Tizen.</para>
         /// </summary>

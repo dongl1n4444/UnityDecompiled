@@ -14,6 +14,12 @@
         public const int MIN_JVM_MEMORY = 0x40;
         private static string s_JDKLocation;
 
+        private static string AppendWindowsExtension(string command, string extension) => 
+            (command = command + ((Application.platform != RuntimePlatform.WindowsEditor) ? "" : extension));
+
+        public static string Bat(string command) => 
+            AppendWindowsExtension(command, ".bat");
+
         internal static string BrowseForJDK(string jdkPath)
         {
             if (string.IsNullOrEmpty(jdkPath))
@@ -52,7 +58,7 @@
         }
 
         public static string Exe(string command) => 
-            (command = command + ((Application.platform != RuntimePlatform.WindowsEditor) ? "" : ".exe"));
+            AppendWindowsExtension(command, ".exe");
 
         private static string GuessJDKLocation()
         {

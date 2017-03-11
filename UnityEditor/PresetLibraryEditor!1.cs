@@ -11,7 +11,7 @@
 
     internal class PresetLibraryEditor<T> where T: PresetLibrary
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <alwaysShowScrollAreaHorizontalLines>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private float <contentHeight>k__BackingField;
@@ -21,13 +21,13 @@
         private RectOffset <marginsForGrid>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private RectOffset <marginsForList>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private float <settingsMenuRightMargin>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <showHeader>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <useOnePixelOverlappedGrid>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <wantsToCreateLibrary>k__BackingField;
         public Action<PresetLibrary> addDefaultPresets;
         private const float kCheckoutButtonMargin = 2f;
@@ -104,14 +104,14 @@
             T currentLib = this.GetCurrentLib();
             if (currentLib == null)
             {
-                Debug.Log("No current library selected!");
+                UnityEngine.Debug.Log("No current library selected!");
                 return -1;
             }
             currentLib.Add(presetObject, presetName);
             this.SaveCurrentLib();
             if (this.presetsWasReordered != null)
             {
-                this.presetsWasReordered.Invoke();
+                this.presetsWasReordered();
             }
             this.Repaint();
             this.OnLayoutChanged();
@@ -160,7 +160,7 @@
             {
                 if ((presetIndex < 0) || (presetIndex >= currentLib.Count()))
                 {
-                    Debug.LogError("DeletePreset: Invalid index: out of bounds");
+                    UnityEngine.Debug.LogError("DeletePreset: Invalid index: out of bounds");
                 }
                 else
                 {
@@ -168,7 +168,7 @@
                     this.SaveCurrentLib();
                     if (this.presetsWasReordered != null)
                     {
-                        this.presetsWasReordered.Invoke();
+                        this.presetsWasReordered();
                     }
                     this.OnLayoutChanged();
                 }
@@ -247,7 +247,7 @@
                     }
                     else
                     {
-                        Debug.LogError("Could not create Default preset library " + ScriptableSingleton<PresetLibraryManager>.instance.GetLastError());
+                        UnityEngine.Debug.LogError("Could not create Default preset library " + ScriptableSingleton<PresetLibraryManager>.instance.GetLastError());
                     }
                 }
                 this.currentLibraryWithoutExtension = PresetLibraryLocations.defaultPresetLibraryPath;
@@ -277,7 +277,7 @@
             }
             else
             {
-                Debug.LogError("Could not load preset library " + this.currentLibraryWithoutExtension);
+                UnityEngine.Debug.LogError("Could not load preset library " + this.currentLibraryWithoutExtension);
             }
         }
 
@@ -329,7 +329,7 @@
                 Event current = Event.current;
                 if ((this.m_PresetLibraryFileLocation == PresetFileLocation.ProjectFolder) && (current.type == EventType.Repaint))
                 {
-                    this.m_IsOpenForEdit = AssetDatabase.IsOpenForEdit(this.pathWithExtension);
+                    this.m_IsOpenForEdit = AssetDatabase.IsOpenForEdit(this.pathWithExtension, StatusQueryOptions.UseCachedIfPossible);
                 }
                 else if (this.m_PresetLibraryFileLocation == PresetFileLocation.PreferencesFolder)
                 {
@@ -417,7 +417,7 @@
                                         GUIUtility.hotControl = controlID;
                                         if (current.clickCount == 1)
                                         {
-                                            this.m_ItemClickedCallback.Invoke(current.clickCount, lib.GetPreset(j));
+                                            this.m_ItemClickedCallback(current.clickCount, lib.GetPreset(j));
                                             current.Use();
                                         }
                                     }
@@ -438,7 +438,7 @@
                                 case EventType.MouseMove:
                                     if (!itemRect.Contains(current.mousePosition))
                                     {
-                                        goto Label_0849;
+                                        goto Label_084A;
                                     }
                                     if (this.m_State.m_HoverIndex != j)
                                     {
@@ -455,7 +455,7 @@
                                         {
                                             DragAndDrop.PrepareStartDrag();
                                             DragAndDrop.SetGenericData("DraggingPreset", j);
-                                            DragAndDrop.objectReferences = new Object[0];
+                                            DragAndDrop.objectReferences = new UnityEngine.Object[0];
                                             DragAndDrop.StartDrag("");
                                             this.m_DragState.draggingIndex = j;
                                             this.m_DragState.dragUponIndex = j;
@@ -468,9 +468,9 @@
                                 case EventType.Repaint:
                                     if ((this.m_State.m_HoverIndex == j) && !itemRect.Contains(current.mousePosition))
                                     {
-                                        goto Label_0485;
+                                        goto Label_0486;
                                     }
-                                    goto Label_0492;
+                                    goto Label_0493;
 
                                 case EventType.DragUpdated:
                                 case EventType.DragPerform:
@@ -483,10 +483,10 @@
                                     this.m_DragState.dragUponRect = itemRect;
                                     if (this.m_State.itemViewMode != PresetLibraryEditorState.ItemViewMode.List)
                                     {
-                                        goto Label_06B7;
+                                        goto Label_06B8;
                                     }
                                     this.m_DragState.insertAfterIndex = ((current.mousePosition.y - dragRect.y) / dragRect.height) > 0.5f;
-                                    goto Label_06E8;
+                                    goto Label_06E9;
 
                                 case EventType.DragExited:
                                     if (this.m_DragState.IsDragging())
@@ -506,9 +506,9 @@
                             }
                         }
                         continue;
-                    Label_0485:
+                    Label_0486:
                         this.m_State.m_HoverIndex = -1;
-                    Label_0492:
+                    Label_0493:
                         if ((this.m_DragState.draggingIndex == j) || (GUIUtility.hotControl == controlID))
                         {
                             this.DrawHoverEffect(itemRect, false);
@@ -527,9 +527,9 @@
                             EditorGUIUtility.AddCursorRect(itemRect, MouseCursor.ArrowMinus);
                         }
                         continue;
-                    Label_06B7:
+                    Label_06B8:
                         this.m_DragState.insertAfterIndex = ((current.mousePosition.x - dragRect.x) / dragRect.width) > 0.5f;
-                    Label_06E8:
+                    Label_06E9:
                         if (current.type == EventType.DragPerform)
                         {
                             if (this.m_DragState.draggingIndex >= 0)
@@ -542,7 +542,7 @@
                         DragAndDrop.visualMode = DragAndDropVisualMode.Move;
                         current.Use();
                         continue;
-                    Label_0849:
+                    Label_084A:
                         if (this.m_State.m_HoverIndex == j)
                         {
                             this.m_State.m_HoverIndex = -1;
@@ -565,7 +565,7 @@
             {
                 if ((presetIndex < 0) || (presetIndex >= currentLib.Count()))
                 {
-                    Debug.LogError("ReplacePreset: Invalid index: out of bounds");
+                    UnityEngine.Debug.LogError("ReplacePreset: Invalid index: out of bounds");
                 }
                 else
                 {
@@ -573,7 +573,7 @@
                     this.SaveCurrentLib();
                     if (this.presetsWasReordered != null)
                     {
-                        this.presetsWasReordered.Invoke();
+                        this.presetsWasReordered();
                     }
                 }
             }
@@ -617,7 +617,7 @@
             {
                 if ((presetIndex < 0) || (presetIndex >= currentLib.Count()))
                 {
-                    Debug.LogError("ReplacePreset: Invalid index: out of bounds");
+                    UnityEngine.Debug.LogError("ReplacePreset: Invalid index: out of bounds");
                 }
                 else
                 {
@@ -625,7 +625,7 @@
                     this.SaveCurrentLib();
                     if (this.presetsWasReordered != null)
                     {
-                        this.presetsWasReordered.Invoke();
+                        this.presetsWasReordered();
                     }
                 }
             }
@@ -648,7 +648,7 @@
             T currentLib = this.GetCurrentLib();
             if (currentLib == null)
             {
-                Debug.Log("No current library selected!");
+                UnityEngine.Debug.Log("No current library selected!");
             }
             else
             {
@@ -661,7 +661,7 @@
         {
             if (width < 1f)
             {
-                Debug.LogError(string.Concat(new object[] { "Invalid width ", width, ", ", Event.current.type }));
+                UnityEngine.Debug.LogError(string.Concat(new object[] { "Invalid width ", width, ", ", Event.current.type }));
             }
             else
             {
@@ -724,7 +724,7 @@
             if (this.wantsToCreateLibrary)
             {
                 this.wantsToCreateLibrary = false;
-                PopupWindow.Show(position, new PopupWindowContentForNewLibrary(new Func<string, PresetFileLocation, string>(this, (IntPtr) this.CreateNewLibraryCallback)));
+                PopupWindow.Show(position, new PopupWindowContentForNewLibrary(new Func<string, PresetFileLocation, string>(this.CreateNewLibraryCallback)));
                 GUIUtility.ExitGUI();
             }
             GUI.EndGroup();
@@ -739,7 +739,7 @@
         {
             if (Path.HasExtension(value))
             {
-                Debug.LogError("currentLibraryWithoutExtension should not have an extension: " + value);
+                UnityEngine.Debug.LogError("currentLibraryWithoutExtension should not have an extension: " + value);
             }
         }
 

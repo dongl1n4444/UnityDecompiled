@@ -1432,6 +1432,12 @@
                 }
                 if (Weaver.IsDerivedFrom(definition.FieldType.Resolve(), Weaver.SyncListType))
                 {
+                    if (definition.IsStatic)
+                    {
+                        Log.Error("SyncList [" + this.m_td.FullName + ":" + definition.FullName + "] cannot be a static");
+                        Weaver.fail = true;
+                        return;
+                    }
                     this.m_SyncVars.Add(definition);
                     this.m_SyncLists.Add(definition);
                     list.Add(this.ProcessSyncList(definition, ((int) 1) << syncVarStart));

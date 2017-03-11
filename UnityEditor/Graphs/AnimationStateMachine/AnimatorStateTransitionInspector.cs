@@ -95,7 +95,7 @@
                 EditorGUILayout.PropertyField(this.m_Offset, styles.transitionOffset, new GUILayoutOption[0]);
                 EditorGUILayout.PropertyField(this.m_InterruptionSource, styles.interruptionSource, new GUILayoutOption[0]);
                 TransitionInterruptionSource enumValueIndex = (TransitionInterruptionSource) this.m_InterruptionSource.enumValueIndex;
-                GUI.enabled = ((enumValueIndex == TransitionInterruptionSource.Source) || (enumValueIndex == TransitionInterruptionSource.SourceThenDestination)) || (enumValueIndex == TransitionInterruptionSource.DestinationThenSource);
+                GUI.enabled = (((enumValueIndex == TransitionInterruptionSource.Source) || (enumValueIndex == TransitionInterruptionSource.SourceThenDestination)) || (enumValueIndex == TransitionInterruptionSource.DestinationThenSource)) || ((enumValueIndex != TransitionInterruptionSource.None) && (sourceState == null));
                 EditorGUILayout.PropertyField(this.m_OrderedInterruption, styles.orderedInterruption, new GUILayoutOption[0]);
                 GUI.enabled = enabled;
                 if ((sourceState == null) && (destinationState != null))

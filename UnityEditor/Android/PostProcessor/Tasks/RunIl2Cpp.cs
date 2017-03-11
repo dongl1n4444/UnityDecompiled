@@ -1,7 +1,9 @@
 ﻿namespace UnityEditor.Android.PostProcessor.Tasks
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEditor;
     using UnityEditor.Android;
@@ -12,6 +14,7 @@
 
     internal class RunIl2Cpp : IPostProcessorTask
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ProgressHandler OnProgress;
 
         private void CopySymbolMap(string stagingArea, string assetsDataData, AndroidTargetDeviceType targetDeviceType)
@@ -50,7 +53,7 @@
                 bool isDevelopmentBuild = context.Get<bool>("DevelopmentPlayer");
                 RuntimeClassRegistry runtimeClassRegistry = context.Get<RuntimeClassRegistry>("UsedClassRegistry");
                 AndroidIl2CppPlatformProvider platformProvider = new AndroidIl2CppPlatformProvider(target, deviceType, isDevelopmentBuild);
-                IL2CPPUtils.RunIl2Cpp(tempFolder, stagingAreaData, platformProvider, null, runtimeClassRegistry, isDevelopmentBuild);
+                IL2CPPUtils.RunIl2Cpp(tempFolder, stagingAreaData, platformProvider, null, runtimeClassRegistry, false);
                 AndroidTargetDeviceType type2 = null;
                 if (device == AndroidTargetDevice.FAT)
                 {
@@ -60,7 +63,7 @@
                         this.OnProgress(this, "Compiling native assemblies for " + type2.Architecture);
                     }
                     platformProvider = new AndroidIl2CppPlatformProvider(target, type2, isDevelopmentBuild);
-                    IL2CPPUtils.RunCompileAndLink(tempFolder, stagingAreaData, platformProvider, null, runtimeClassRegistry, isDevelopmentBuild);
+                    IL2CPPUtils.RunCompileAndLink(tempFolder, stagingAreaData, platformProvider, null, runtimeClassRegistry, false);
                 }
                 this.FinalizeAndCleanup(str, stagingAreaData, tempFolder);
                 this.CopySymbolMap(str, stagingAreaData, deviceType);

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEngine;
@@ -13,22 +14,27 @@
         private readonly AndroidJavaObject m_CurrentActivity;
         private readonly AndroidJavaClass m_UnityAds;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event EventHandler<ErrorEventArgs> OnError;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event EventHandler<FinishEventArgs> OnFinish;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event EventHandler<ReadyEventArgs> OnReady;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event EventHandler<StartEventArgs> OnStart;
 
         public Platform() : base("com.unity3d.ads.IUnityAdsListener")
         {
             this.m_CurrentActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
             this.m_UnityAds = new AndroidJavaClass("com.unity3d.ads.UnityAds");
-            GameObject obj3 = new GameObject("UnityAdsCallbackExecutorObject") {
+            GameObject target = new GameObject("UnityAdsCallbackExecutorObject") {
                 hideFlags = HideFlags.HideAndDontSave | HideFlags.HideInInspector
             };
-            this.m_CallbackExecutor = obj3.AddComponent<CallbackExecutor>();
+            this.m_CallbackExecutor = target.AddComponent<CallbackExecutor>();
+            UnityEngine.Object.DontDestroyOnLoad(target);
         }
 
         public PlacementState GetPlacementState(string placementId)

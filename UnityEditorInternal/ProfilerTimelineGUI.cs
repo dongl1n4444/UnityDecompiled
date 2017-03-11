@@ -2,13 +2,17 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Runtime.CompilerServices;
+    using System.Text;
     using UnityEditor;
     using UnityEngine;
 
     [Serializable]
     internal class ProfilerTimelineGUI
     {
+        [CompilerGenerated]
+        private static Func<GroupInfo, bool> <>f__am$cache0;
         private float animationTime = 1f;
         private List<GroupInfo> groups;
         private const float kGroupHeight = 20f;
@@ -18,14 +22,10 @@
         private const float kTextFadeStartWidth = 50f;
         private const float kTextLongWidth = 200f;
         private double lastScrollUpdate = 0.0;
-        private float m_SelectedDur = 0f;
-        private int m_SelectedFrameId = -1;
-        private int m_SelectedInstanceId = -1;
-        private string m_SelectedName = string.Empty;
-        private Rect m_SelectedRect = Rect.zero;
-        private int m_SelectedThreadId = 0;
-        private float m_SelectedTime = 0f;
-        private float m_SelectedY = 0f;
+        private string m_LocalizedString_Instances;
+        private string m_LocalizedString_Total;
+        private SelectedEntryInfo m_SelectedEntry = new SelectedEntryInfo();
+        private float m_SelectedThreadY = 0f;
         [NonSerialized]
         private ZoomableArea m_TimeArea;
         private IProfilerWindowController m_Window;
@@ -34,14 +34,37 @@
         public ProfilerTimelineGUI(IProfilerWindowController window)
         {
             this.m_Window = window;
-            this.groups = new List<GroupInfo>();
+            GroupInfo[] collection = new GroupInfo[3];
+            GroupInfo info = new GroupInfo {
+                name = "",
+                height = 20f,
+                expanded = true,
+                threads = new List<ThreadInfo>()
+            };
+            collection[0] = info;
+            info = new GroupInfo {
+                name = "Unity Job System",
+                height = 20f,
+                expanded = true,
+                threads = new List<ThreadInfo>()
+            };
+            collection[1] = info;
+            info = new GroupInfo {
+                name = "Loading",
+                height = 20f,
+                expanded = false,
+                threads = new List<ThreadInfo>()
+            };
+            collection[2] = info;
+            this.groups = new List<GroupInfo>(collection);
+            this.m_LocalizedString_Total = LocalizationDatabase.GetLocalizedString("Total");
+            this.m_LocalizedString_Instances = LocalizationDatabase.GetLocalizedString("Instances");
         }
 
         private void CalculateBars(Rect r, int frameIndex, float time)
         {
             ProfilerFrameDataIterator iterator = new ProfilerFrameDataIterator();
-            int groupCount = iterator.GetGroupCount(frameIndex);
-            float num2 = 0f;
+            float num = 0f;
             iterator.SetRoot(frameIndex, 0);
             int threadCount = iterator.GetThreadCount(frameIndex);
             <CalculateBars>c__AnonStorey1 storey = new <CalculateBars>c__AnonStorey1 {
@@ -64,10 +87,6 @@
                         threads = new List<ThreadInfo>()
                     };
                     this.groups.Add(item);
-                    if ((storey2.groupname == "") || (storey2.groupname == "Unity Job System"))
-                    {
-                        item.expanded = true;
-                    }
                 }
                 ThreadInfo info2 = item.threads.Find(new Predicate<ThreadInfo>(storey2.<>m__1));
                 if (info2 == null)
@@ -84,12 +103,17 @@
                 {
                     info2.weight = (info2.desiredWeight * time) + ((1f - info2.desiredWeight) * (1f - time));
                 }
-                num2 += info2.weight;
+                num += info2.weight;
                 storey.i++;
             }
-            float num5 = 20f * groupCount;
+            if (<>f__am$cache0 == null)
+            {
+                <>f__am$cache0 = group => group.threads.Count > 1;
+            }
+            int num4 = Enumerable.Count<GroupInfo>(this.groups, <>f__am$cache0);
+            float num5 = 20f * num4;
             float num6 = r.height - num5;
-            float num7 = num6 / (num2 + 2f);
+            float num7 = num6 / (num + 1f);
             foreach (GroupInfo info3 in this.groups)
             {
                 foreach (ThreadInfo info4 in info3.threads)
@@ -99,21 +123,13 @@
             }
             this.groups[0].expanded = true;
             this.groups[0].height = 0f;
-            this.groups[0].threads[0].height = 3f * num7;
+            this.groups[0].threads[0].height = 2f * num7;
         }
 
         private void ClearSelection()
         {
             this.m_Window.ClearSelectedPropertyPath();
-            this.m_SelectedFrameId = -1;
-            this.m_SelectedThreadId = 0;
-            this.m_SelectedInstanceId = -1;
-            this.m_SelectedTime = 0f;
-            this.m_SelectedDur = 0f;
-            this.m_SelectedY = 0f;
-            this.m_SelectedName = string.Empty;
-            this.m_SelectedRect = Rect.zero;
-            Event.current.Use();
+            this.m_SelectedEntry.Reset();
         }
 
         public void DoGUI(int frameIndex, float width, float ypos, float height, bool detailView)
@@ -137,6 +153,20 @@
                 this.m_TimeArea.scaleWithWindow = true;
                 this.m_TimeArea.rect = new Rect((position.x + num) - 1f, position.y, position.width - num, position.height);
                 this.m_TimeArea.margin = 10f;
+            }
+            if (flag)
+            {
+                NativeProfilerTimeline_InitializeArgs args = new NativeProfilerTimeline_InitializeArgs();
+                args.Reset();
+                args.profilerColors = ProfilerColors.colors;
+                args.nativeAllocationColor = ProfilerColors.nativeAllocation;
+                args.ghostAlpha = 0.3f;
+                args.nonSelectedAlpha = 0.75f;
+                args.guiStyle = styles.bar.m_Ptr;
+                args.lineHeight = 16f;
+                args.textFadeOutWidth = 20f;
+                args.textFadeStartWidth = 50f;
+                NativeProfilerTimeline.Initialize(ref args);
             }
             ProfilerFrameDataIterator iterator = new ProfilerFrameDataIterator();
             iterator.SetRoot(frameIndex, 0);
@@ -175,6 +205,29 @@
             threadCount = 0;
             this.DoProfilerFrame(frameIndex, position, false, threadCount, 0f, detailView);
             GUI.EndClip();
+            this.DoSelectionTooltip(frameIndex, this.m_TimeArea.drawRect, detailView);
+        }
+
+        private void DoNativeProfilerTimeline(Rect r, int frameIndex, int threadIndex, float timeOffset, bool ghost)
+        {
+            Rect position = r;
+            float topMargin = Math.Min((float) (position.height * 0.25f), (float) 1f);
+            float num2 = topMargin + 1f;
+            position.y += topMargin;
+            position.height -= num2;
+            GUI.BeginGroup(position);
+            Rect threadRect = position;
+            threadRect.x = 0f;
+            threadRect.y = 0f;
+            if (Event.current.type == EventType.Repaint)
+            {
+                this.DrawNativeProfilerTimeline(threadRect, frameIndex, threadIndex, timeOffset, ghost);
+            }
+            else if ((Event.current.type == EventType.MouseDown) && !ghost)
+            {
+                this.HandleNativeProfilerTimelineInput(threadRect, frameIndex, threadIndex, timeOffset, topMargin);
+            }
+            GUI.EndGroup();
         }
 
         private void DoProfilerFrame(int frameIndex, Rect fullRect, bool ghost, int threadCount, float offset, bool detailView)
@@ -207,11 +260,15 @@
                         r.height = !expanded ? Math.Max((float) ((info.height / ((float) count)) - 1f), (float) 2f) : info2.height;
                         if (detailView)
                         {
-                            this.DrawProfilingDataDetailNative(r, frameIndex, info2.threadIndex, offset);
+                            this.DoNativeProfilerTimeline(r, frameIndex, info2.threadIndex, offset, ghost);
                         }
                         else
                         {
                             this.DrawProfilingData(iter, r, frameIndex, info2.threadIndex, offset, ghost, expanded);
+                        }
+                        if ((this.m_SelectedEntry.IsValid() && (this.m_SelectedEntry.frameId == frameIndex)) && (this.m_SelectedEntry.threadId == info2.threadIndex))
+                        {
+                            this.m_SelectedThreadY = y;
                         }
                         y += r.height;
                     }
@@ -220,33 +277,73 @@
                         y = num3 + info.height;
                     }
                 }
-                if (((this.m_SelectedName.Length > 0) && (this.m_SelectedFrameId == frameIndex)) && !ghost)
+            }
+        }
+
+        private void DoSelectionTooltip(int frameIndex, Rect fullRect, bool detailView)
+        {
+            if (this.m_SelectedEntry.IsValid() && (this.m_SelectedEntry.frameId == frameIndex))
+            {
+                string str = string.Format((this.m_SelectedEntry.duration < 1.0) ? "{0:f3}ms" : "{0:f2}ms", this.m_SelectedEntry.duration);
+                StringBuilder builder = new StringBuilder();
+                builder.Append($"{this.m_SelectedEntry.name}
+{str}");
+                if (this.m_SelectedEntry.instanceCount > 1)
                 {
-                    GUIContent content = new GUIContent(string.Format((this.m_SelectedDur < 1.0) ? "{0}\n{1:f3}ms" : "{0}\n{1:f2}ms", this.m_SelectedName, this.m_SelectedDur));
-                    GUIStyle tooltip = styles.tooltip;
-                    Vector2 vector = tooltip.CalcSize(content);
-                    float x = this.m_TimeArea.TimeToPixel(this.m_SelectedTime + (this.m_SelectedDur * 0.5f), this.m_SelectedRect);
-                    if (x > this.m_SelectedRect.xMax)
-                    {
-                        x = this.m_SelectedRect.xMax - 20f;
-                    }
-                    if (x < this.m_SelectedRect.x)
-                    {
-                        x = this.m_SelectedRect.x + 20f;
-                    }
-                    Rect position = new Rect(x - 32f, this.m_SelectedY, 50f, 7f);
-                    Rect rect3 = new Rect(x, this.m_SelectedY + 6f, vector.x, vector.y);
-                    if (rect3.xMax > (this.m_SelectedRect.xMax + 20f))
-                    {
-                        rect3.x = (this.m_SelectedRect.xMax - rect3.width) + 20f;
-                    }
-                    if (rect3.xMin < (this.m_SelectedRect.xMin + 30f))
-                    {
-                        rect3.x = this.m_SelectedRect.xMin + 30f;
-                    }
-                    GUI.Label(position, GUIContent.none, styles.tooltipArrow);
-                    GUI.Label(rect3, content, tooltip);
+                    string str2 = string.Format((this.m_SelectedEntry.totalDuration < 1.0) ? "{0:f3}ms" : "{0:f2}ms", this.m_SelectedEntry.totalDuration);
+                    builder.Append($"
+{this.m_LocalizedString_Total}: {str2} ({this.m_SelectedEntry.instanceCount} {this.m_LocalizedString_Instances})");
                 }
+                if (this.m_SelectedEntry.metaData.Length > 0)
+                {
+                    builder.Append($"
+{this.m_SelectedEntry.metaData}");
+                }
+                if (this.m_SelectedEntry.allocationInfo.Length > 0)
+                {
+                    builder.Append($"
+{this.m_SelectedEntry.allocationInfo}");
+                }
+                float y = (fullRect.y + this.m_SelectedThreadY) + this.m_SelectedEntry.relativeYPos;
+                GUIContent content = new GUIContent(builder.ToString());
+                GUIStyle tooltip = styles.tooltip;
+                Vector2 vector = tooltip.CalcSize(content);
+                float x = this.m_TimeArea.TimeToPixel(this.m_SelectedEntry.time + (this.m_SelectedEntry.duration * 0.5f), fullRect);
+                Rect position = new Rect(x - 32f, y, 64f, 6f);
+                Rect rect2 = new Rect(x, y + 6f, vector.x, vector.y);
+                if (rect2.xMax > (fullRect.xMax + 16f))
+                {
+                    rect2.x = (fullRect.xMax - rect2.width) + 16f;
+                }
+                if (position.xMax > (fullRect.xMax + 20f))
+                {
+                    position.x = (fullRect.xMax - position.width) + 20f;
+                }
+                if (rect2.xMin < (fullRect.xMin + 30f))
+                {
+                    rect2.x = fullRect.xMin + 30f;
+                }
+                if (position.xMin < (fullRect.xMin - 20f))
+                {
+                    position.x = fullRect.xMin - 20f;
+                }
+                float num3 = (16f + rect2.height) + (2f * position.height);
+                bool flag = (((y + vector.y) + 6f) > fullRect.yMax) && ((rect2.y - num3) > 0f);
+                if (flag)
+                {
+                    rect2.y -= num3;
+                    position.y -= 16f + (2f * position.height);
+                }
+                GUI.BeginClip(position);
+                Matrix4x4 matrix = GUI.matrix;
+                if (flag)
+                {
+                    GUIUtility.ScaleAroundPivot(new Vector2(1f, -1f), new Vector2(position.width * 0.5f, position.height));
+                }
+                GUI.Label(new Rect(0f, 0f, position.width, position.height), GUIContent.none, styles.tooltipArrow);
+                GUI.matrix = matrix;
+                GUI.EndClip();
+                GUI.Label(rect2, content, tooltip);
             }
         }
 
@@ -257,10 +354,9 @@
             if (Event.current.type == EventType.Repaint)
             {
                 styles.rightPane.Draw(rect2, false, false, false, false);
-                bool flag = height < 10f;
-                bool flag2 = height < 25f;
-                GUIContent content = (!group && !flag) ? GUIContent.Temp(name) : GUIContent.none;
-                if (flag2)
+                bool flag = height < 25f;
+                GUIContent content = GUIContent.Temp(name);
+                if (flag)
                 {
                     RectOffset padding = styles.leftPane.padding;
                     padding.top -= ((int) (25f - height)) / 2;
@@ -276,7 +372,7 @@
                     RectOffset offset3 = styles.leftPane.padding;
                     offset3.left -= 10;
                 }
-                if (flag2)
+                if (flag)
                 {
                     RectOffset offset4 = styles.leftPane.padding;
                     offset4.top += ((int) (25f - height)) / 2;
@@ -286,7 +382,7 @@
             {
                 position.width--;
                 position.xMin++;
-                return GUI.Toggle(position, expanded, GUIContent.Temp(name), styles.foldout);
+                return GUI.Toggle(position, expanded, GUIContent.none, styles.foldout);
             }
             return false;
         }
@@ -333,6 +429,10 @@
                 float num;
                 float num3;
                 float num2 = 16.66667f;
+                if (frameTime > 1000f)
+                {
+                    num2 = 100f;
+                }
                 HandleUtility.ApplyWireMaterial();
                 GL.Begin(1);
                 GL.Color(new Color(1f, 1f, 1f, 0.2f));
@@ -361,6 +461,21 @@
             }
         }
 
+        private void DrawNativeProfilerTimeline(Rect threadRect, int frameIndex, int threadIndex, float timeOffset, bool ghost)
+        {
+            bool flag = (this.m_SelectedEntry.threadId == threadIndex) && (this.m_SelectedEntry.frameId == frameIndex);
+            NativeProfilerTimeline_DrawArgs args = new NativeProfilerTimeline_DrawArgs();
+            args.Reset();
+            args.frameIndex = frameIndex;
+            args.threadIndex = threadIndex;
+            args.timeOffset = timeOffset;
+            args.threadRect = threadRect;
+            args.shownAreaRect = this.m_TimeArea.shownArea;
+            args.selectedEntryIndex = !flag ? -1 : this.m_SelectedEntry.nativeIndex;
+            args.mousedOverEntryIndex = -1;
+            NativeProfilerTimeline.Draw(ref args);
+        }
+
         private void DrawProfilingData(ProfilerFrameDataIterator iter, Rect r, int frameIndex, int threadIndex, float timeOffset, bool ghost, bool includeSubSamples)
         {
             float num = !ghost ? 7f : 21f;
@@ -378,10 +493,9 @@
             float height = num6 - (2f * num7);
             r.height -= num7;
             GUI.BeginGroup(r);
-            float num9 = r.y;
-            float num10 = 0f;
-            r.y = num10;
-            r.x = num10;
+            float num9 = 0f;
+            r.y = num9;
+            r.x = num9;
             bool singleClick = (Event.current.clickCount == 1) && (Event.current.type == EventType.MouseDown);
             bool doubleClick = (Event.current.clickCount == 2) && (Event.current.type == EventType.MouseDown);
             Rect shownArea = this.m_TimeArea.shownArea;
@@ -394,18 +508,18 @@
                 enterChildren = includeSubSamples;
                 float time = iter.startTimeMS + timeOffset;
                 float durationMS = iter.durationMS;
-                float num16 = Mathf.Max(durationMS, 0.0003f);
-                float num17 = TimeToPixelCached(time, rectWidthDivShownWidth, shownX, x);
-                float num18 = TimeToPixelCached(time + num16, rectWidthDivShownWidth, shownX, x) - 1f;
-                float width = num18 - num17;
-                if ((num17 > (r.x + r.width)) || (num18 < r.x))
+                float num15 = Mathf.Max(durationMS, 0.0003f);
+                float num16 = TimeToPixelCached(time, rectWidthDivShownWidth, shownX, x);
+                float num17 = TimeToPixelCached(time + num15, rectWidthDivShownWidth, shownX, x) - 1f;
+                float width = num17 - num16;
+                if ((num16 > (r.x + r.width)) || (num17 < r.x))
                 {
                     enterChildren = false;
                 }
                 else
                 {
-                    float num20 = iter.depth - 1;
-                    float num21 = r.y + (num20 * num6);
+                    float num19 = iter.depth - 1;
+                    float num20 = r.y + (num19 * num6);
                     if (flag)
                     {
                         bool flag5 = false;
@@ -413,11 +527,11 @@
                         {
                             flag5 = true;
                         }
-                        if (y != num21)
+                        if (y != num20)
                         {
                             flag5 = true;
                         }
-                        if ((num17 - num3) > 6f)
+                        if ((num16 - num3) > 6f)
                         {
                             flag5 = true;
                         }
@@ -433,22 +547,22 @@
                         if (!flag)
                         {
                             flag = true;
-                            y = num21;
-                            num2 = num17;
+                            y = num20;
+                            num2 = num16;
                             size = 0;
                         }
-                        num3 = num18;
+                        num3 = num17;
                         size++;
                         continue;
                     }
                     int instanceId = iter.instanceId;
                     string path = iter.path;
                     bool flag6 = (path == selectedPropertyPath) && !ghost;
-                    if (this.m_SelectedInstanceId >= 0)
+                    if (this.m_SelectedEntry.instanceId >= 0)
                     {
-                        flag6 &= instanceId == this.m_SelectedInstanceId;
+                        flag6 &= instanceId == this.m_SelectedEntry.instanceId;
                     }
-                    flag6 &= threadIndex == this.m_SelectedThreadId;
+                    flag6 &= threadIndex == this.m_SelectedEntry.threadId;
                     Color white = Color.white;
                     Color color4 = colors[iter.group % colors.Length];
                     color4.a = !flag6 ? 0.75f : 1f;
@@ -475,19 +589,23 @@
                     }
                     GUI.color = color4;
                     GUI.contentColor = white;
-                    Rect position = new Rect(num17, num21, width, height);
+                    Rect position = new Rect(num16, num20, width, height);
                     GUI.Label(position, name, styles.bar);
                     if ((singleClick || doubleClick) && (position.Contains(Event.current.mousePosition) && includeSubSamples))
                     {
                         this.m_Window.SetSelectedPropertyPath(path);
-                        this.m_SelectedFrameId = frameIndex;
-                        this.m_SelectedThreadId = threadIndex;
-                        this.m_SelectedInstanceId = instanceId;
-                        this.m_SelectedName = iter.name;
-                        this.m_SelectedTime = time;
-                        this.m_SelectedDur = durationMS;
-                        this.m_SelectedRect = r;
-                        this.m_SelectedY = (num9 + num21) + num6;
+                        this.m_SelectedEntry.Reset();
+                        this.m_SelectedEntry.frameId = frameIndex;
+                        this.m_SelectedEntry.threadId = threadIndex;
+                        this.m_SelectedEntry.instanceId = instanceId;
+                        this.m_SelectedEntry.name = iter.name;
+                        if (iter.extraTooltipInfo != null)
+                        {
+                            this.m_SelectedEntry.metaData = iter.extraTooltipInfo;
+                        }
+                        this.m_SelectedEntry.time = time;
+                        this.m_SelectedEntry.duration = durationMS;
+                        this.m_SelectedEntry.relativeYPos = num20 + num6;
                         this.UpdateSelectedObject(singleClick, doubleClick);
                         Event.current.Use();
                     }
@@ -503,54 +621,7 @@
             if ((Event.current.type == EventType.MouseDown) && r.Contains(Event.current.mousePosition))
             {
                 this.ClearSelection();
-            }
-            GUI.EndGroup();
-        }
-
-        private void DrawProfilingDataDetailNative(Rect r, int frameIndex, int threadIndex, float timeOffset)
-        {
-            bool singleClick = (Event.current.clickCount == 1) && (Event.current.type == EventType.MouseDown);
-            bool doubleClick = (Event.current.clickCount == 2) && (Event.current.type == EventType.MouseDown);
-            bool flag3 = r.Contains(Event.current.mousePosition);
-            GUI.BeginGroup(r);
-            ProfilingDataDrawNativeInfo d = new ProfilingDataDrawNativeInfo();
-            d.Reset();
-            d.trySelect = (!singleClick && !doubleClick) ? 0 : 1;
-            d.frameIndex = frameIndex;
-            d.threadIndex = threadIndex;
-            d.timeOffset = timeOffset;
-            d.threadRect = r;
-            d.shownAreaRect = this.m_TimeArea.shownArea;
-            d.mousePos = Event.current.mousePosition;
-            d.profilerColors = ProfilerColors.colors;
-            d.nativeAllocationColor = ProfilerColors.nativeAllocation;
-            d.ghostAlpha = 0.3f;
-            d.nonSelectedAlpha = 0.75f;
-            d.guiStyle = styles.bar.m_Ptr;
-            d.lineHeight = 16f;
-            d.textFadeOutWidth = 20f;
-            d.textFadeStartWidth = 50f;
-            ProfilerDraw.DrawNative(ref d);
-            if (singleClick || doubleClick)
-            {
-                if (d.out_SelectedPath.Length > 0)
-                {
-                    this.m_Window.SetSelectedPropertyPath(d.out_SelectedPath);
-                    this.m_SelectedFrameId = frameIndex;
-                    this.m_SelectedThreadId = threadIndex;
-                    this.m_SelectedInstanceId = d.out_SelectedInstanceId;
-                    this.m_SelectedTime = d.out_SelectedTime;
-                    this.m_SelectedDur = d.out_SelectedDur;
-                    this.m_SelectedY = r.y + d.out_SelectedY;
-                    this.m_SelectedName = d.out_SelectedName;
-                    this.m_SelectedRect = r;
-                    this.UpdateSelectedObject(singleClick, doubleClick);
-                    Event.current.Use();
-                }
-                else if (flag3)
-                {
-                    this.ClearSelection();
-                }
+                Event.current.Use();
             }
             GUI.EndGroup();
         }
@@ -583,16 +654,79 @@
             }
         }
 
+        private void HandleNativeProfilerTimelineInput(Rect threadRect, int frameIndex, int threadIndex, float timeOffset, float topMargin)
+        {
+            if (threadRect.Contains(Event.current.mousePosition))
+            {
+                bool singleClick = (Event.current.clickCount == 1) && (Event.current.type == EventType.MouseDown);
+                bool doubleClick = (Event.current.clickCount == 2) && (Event.current.type == EventType.MouseDown);
+                bool flag4 = (singleClick || doubleClick) && (Event.current.button == 0);
+                if (flag4)
+                {
+                    NativeProfilerTimeline_GetEntryAtPositionArgs args = new NativeProfilerTimeline_GetEntryAtPositionArgs();
+                    args.Reset();
+                    args.frameIndex = frameIndex;
+                    args.threadIndex = threadIndex;
+                    args.timeOffset = timeOffset;
+                    args.threadRect = threadRect;
+                    args.shownAreaRect = this.m_TimeArea.shownArea;
+                    args.position = Event.current.mousePosition;
+                    NativeProfilerTimeline.GetEntryAtPosition(ref args);
+                    int nativeIndex = args.out_EntryIndex;
+                    if (nativeIndex != -1)
+                    {
+                        if (!this.m_SelectedEntry.Equals(frameIndex, threadIndex, nativeIndex))
+                        {
+                            NativeProfilerTimeline_GetEntryTimingInfoArgs args2 = new NativeProfilerTimeline_GetEntryTimingInfoArgs();
+                            args2.Reset();
+                            args2.frameIndex = frameIndex;
+                            args2.threadIndex = threadIndex;
+                            args2.entryIndex = nativeIndex;
+                            args2.calculateFrameData = true;
+                            NativeProfilerTimeline.GetEntryTimingInfo(ref args2);
+                            NativeProfilerTimeline_GetEntryInstanceInfoArgs args3 = new NativeProfilerTimeline_GetEntryInstanceInfoArgs();
+                            args3.Reset();
+                            args3.frameIndex = frameIndex;
+                            args3.threadIndex = threadIndex;
+                            args3.entryIndex = nativeIndex;
+                            NativeProfilerTimeline.GetEntryInstanceInfo(ref args3);
+                            this.m_Window.SetSelectedPropertyPath(args3.out_Path);
+                            this.m_SelectedEntry.Reset();
+                            this.m_SelectedEntry.frameId = frameIndex;
+                            this.m_SelectedEntry.threadId = threadIndex;
+                            this.m_SelectedEntry.nativeIndex = nativeIndex;
+                            this.m_SelectedEntry.instanceId = args3.out_Id;
+                            this.m_SelectedEntry.time = args2.out_LocalStartTime;
+                            this.m_SelectedEntry.duration = args2.out_Duration;
+                            this.m_SelectedEntry.totalDuration = args2.out_TotalDurationForFrame;
+                            this.m_SelectedEntry.instanceCount = args2.out_InstanceCountForFrame;
+                            this.m_SelectedEntry.relativeYPos = args.out_EntryYMaxPos + topMargin;
+                            this.m_SelectedEntry.name = args.out_EntryName;
+                            this.m_SelectedEntry.allocationInfo = args3.out_AllocationInfo;
+                            this.m_SelectedEntry.metaData = args3.out_MetaData;
+                        }
+                        Event.current.Use();
+                        this.UpdateSelectedObject(singleClick, doubleClick);
+                    }
+                    else if (flag4)
+                    {
+                        this.ClearSelection();
+                        Event.current.Use();
+                    }
+                }
+            }
+        }
+
         private void PerformFrameSelected(float frameMS)
         {
-            float selectedTime = this.m_SelectedTime;
-            float selectedDur = this.m_SelectedDur;
-            if ((this.m_SelectedInstanceId < 0) || (selectedDur <= 0f))
+            float time = this.m_SelectedEntry.time;
+            float duration = this.m_SelectedEntry.duration;
+            if ((this.m_SelectedEntry.instanceId < 0) || (duration <= 0f))
             {
-                selectedTime = 0f;
-                selectedDur = frameMS;
+                time = 0f;
+                duration = frameMS;
             }
-            this.m_TimeArea.SetShownHRangeInsideMargins(selectedTime - (selectedDur * 0.2f), selectedTime + (selectedDur * 1.2f));
+            this.m_TimeArea.SetShownHRangeInsideMargins(time - (duration * 0.2f), time + (duration * 1.2f));
         }
 
         private static float TimeToPixelCached(float time, float rectWidthDivShownWidth, float shownX, float rectX) => 
@@ -611,7 +745,7 @@
 
         private void UpdateSelectedObject(bool singleClick, bool doubleClick)
         {
-            Object gameObject = EditorUtility.InstanceIDToObject(this.m_SelectedInstanceId);
+            UnityEngine.Object gameObject = EditorUtility.InstanceIDToObject(this.m_SelectedEntry.instanceId);
             if (gameObject is Component)
             {
                 gameObject = ((Component) gameObject).gameObject;
@@ -624,7 +758,7 @@
                 }
                 else if (doubleClick)
                 {
-                    Selection.objects = new List<Object> { gameObject }.ToArray();
+                    Selection.objects = new List<UnityEngine.Object> { gameObject }.ToArray();
                 }
             }
         }
@@ -665,12 +799,59 @@
             internal int i;
         }
 
+        private class EntryInfo
+        {
+            public float duration = 0f;
+            public int frameId = -1;
+            public string name = string.Empty;
+            public int nativeIndex = -1;
+            public float relativeYPos = 0f;
+            public int threadId = -1;
+            public float time = 0f;
+
+            public bool Equals(int frameId, int threadId, int nativeIndex) => 
+                (((frameId == this.frameId) && (threadId == this.threadId)) && (nativeIndex == this.nativeIndex));
+
+            public bool IsValid() => 
+                (this.name.Length > 0);
+
+            public virtual void Reset()
+            {
+                this.frameId = -1;
+                this.threadId = -1;
+                this.nativeIndex = -1;
+                this.relativeYPos = 0f;
+                this.time = 0f;
+                this.duration = 0f;
+                this.name = string.Empty;
+            }
+        }
+
         internal class GroupInfo
         {
             public bool expanded;
             public float height;
             public string name;
             public List<ProfilerTimelineGUI.ThreadInfo> threads;
+        }
+
+        private class SelectedEntryInfo : ProfilerTimelineGUI.EntryInfo
+        {
+            public string allocationInfo = string.Empty;
+            public int instanceCount = -1;
+            public int instanceId = -1;
+            public string metaData = string.Empty;
+            public float totalDuration = -1f;
+
+            public override void Reset()
+            {
+                base.Reset();
+                this.instanceId = -1;
+                this.metaData = string.Empty;
+                this.totalDuration = -1f;
+                this.instanceCount = -1;
+                this.allocationInfo = string.Empty;
+            }
         }
 
         internal class Styles

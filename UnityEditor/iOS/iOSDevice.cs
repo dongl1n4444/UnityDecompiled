@@ -33,7 +33,7 @@
                     return new RemoteAddress("127.0.0.1", i);
                 }
             }
-            throw new ApplicationException("Couldn't start iproxy");
+            throw new ApplicationException("Couldn't start proxy for device");
         }
 
         public RemoteAddress StartPlayerConnectionSupport()

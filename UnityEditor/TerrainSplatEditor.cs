@@ -9,6 +9,7 @@
         private int m_Index = -1;
         private float m_Metallic;
         public Texture2D m_NormalMap;
+        private bool m_NormalMapHasCorrectTextureType;
         private Vector2 m_ScrollPosition;
         private float m_Smoothness;
         private Color m_Specular;
@@ -48,6 +49,27 @@
             }
         }
 
+        private void CheckIfNormalMapHasCorrectTextureType()
+        {
+            string assetPath = AssetDatabase.GetAssetPath(this.m_NormalMap);
+            if (string.IsNullOrEmpty(assetPath))
+            {
+                this.m_NormalMapHasCorrectTextureType = true;
+            }
+            else
+            {
+                TextureImporter atPath = AssetImporter.GetAtPath(assetPath) as TextureImporter;
+                if (atPath == null)
+                {
+                    this.m_NormalMapHasCorrectTextureType = false;
+                }
+                else
+                {
+                    this.m_NormalMapHasCorrectTextureType = atPath.textureType == TextureImporterType.NormalMap;
+                }
+            }
+        }
+
         private void InitializeData(Terrain terrain, int index)
         {
             SplatPrototype prototype;
@@ -68,6 +90,7 @@
             this.m_Specular = prototype.specular;
             this.m_Metallic = prototype.metallic;
             this.m_Smoothness = prototype.smoothness;
+            this.CheckIfNormalMapHasCorrectTextureType();
         }
 
         private static bool IsUsingMetallic(Terrain.MaterialType materialType, Material materialTemplate) => 
@@ -112,10 +135,15 @@
                     break;
             }
             TextureFieldGUI(label, ref this.m_Texture, alignmentOffset);
+            Texture2D normalMap = this.m_NormalMap;
             TextureFieldGUI("\nNormal", ref this.m_NormalMap, -4f);
+            if (this.m_NormalMap != normalMap)
+            {
+                this.CheckIfNormalMapHasCorrectTextureType();
+            }
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
-            flag &= this.ValidateMainTexture(this.m_Texture);
+            flag &= this.ValidateTextures();
             if (flag)
             {
                 if (IsUsingMetallic(this.m_Terrain.materialType, this.m_Terrain.materialTemplate))
@@ -205,7 +233,7 @@
             GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(80f) };
             GUILayout.BeginVertical(options);
             GUILayout.Label(label, new GUILayoutOption[0]);
-            Type objType = typeof(Texture2D);
+            System.Type objType = typeof(Texture2D);
             GUILayoutOption[] optionArray2 = new GUILayoutOption[] { GUILayout.MaxWidth(64f) };
             Rect position = GUILayoutUtility.GetRect(64f, 64f, 64f, 64f, optionArray2);
             position.x += alignmentOffset;
@@ -213,36 +241,41 @@
             GUILayout.EndVertical();
         }
 
-        private bool ValidateMainTexture(Texture2D tex)
-        {
-            if (tex == null)
-            {
-                EditorGUILayout.HelpBox("Assign a tiling texture", MessageType.Warning);
-                return false;
-            }
-            if (tex.wrapMode != TextureWrapMode.Repeat)
-            {
-                EditorGUILayout.HelpBox("Texture wrap mode must be set to Repeat", MessageType.Warning);
-                return false;
-            }
-            if ((tex.width != Mathf.ClosestPowerOfTwo(tex.width)) || (tex.height != Mathf.ClosestPowerOfTwo(tex.height)))
-            {
-                EditorGUILayout.HelpBox("Texture size must be power of two", MessageType.Warning);
-                return false;
-            }
-            if (tex.mipmapCount <= 1)
-            {
-                EditorGUILayout.HelpBox("Texture must have mip maps", MessageType.Warning);
-                return false;
-            }
-            return true;
-        }
-
         private bool ValidateTerrain()
         {
             if ((this.m_Terrain == null) || (this.m_Terrain.terrainData == null))
             {
                 EditorGUILayout.HelpBox("Terrain does not exist", MessageType.Error);
+                return false;
+            }
+            return true;
+        }
+
+        private bool ValidateTextures()
+        {
+            if (this.m_Texture == null)
+            {
+                EditorGUILayout.HelpBox("Assign a tiling texture", MessageType.Warning);
+                return false;
+            }
+            if (this.m_Texture.wrapMode != TextureWrapMode.Repeat)
+            {
+                EditorGUILayout.HelpBox("Texture wrap mode must be set to Repeat", MessageType.Warning);
+                return false;
+            }
+            if ((this.m_Texture.width != Mathf.ClosestPowerOfTwo(this.m_Texture.width)) || (this.m_Texture.height != Mathf.ClosestPowerOfTwo(this.m_Texture.height)))
+            {
+                EditorGUILayout.HelpBox("Texture size must be power of two", MessageType.Warning);
+                return false;
+            }
+            if (this.m_Texture.mipmapCount <= 1)
+            {
+                EditorGUILayout.HelpBox("Texture must have mip maps", MessageType.Warning);
+                return false;
+            }
+            if (!this.m_NormalMapHasCorrectTextureType)
+            {
+                EditorGUILayout.HelpBox("Normal texture should be imported as Normal Map.", MessageType.Warning);
                 return false;
             }
             return true;

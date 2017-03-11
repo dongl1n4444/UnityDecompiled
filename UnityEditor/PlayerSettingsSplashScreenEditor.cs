@@ -4,11 +4,13 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEditor.AnimatedValues;
+    using UnityEditor.Build;
     using UnityEditor.Modules;
     using UnityEditorInternal;
     using UnityEngine;
     using UnityEngine.Events;
     using UnityEngine.Rendering;
+    using UnityEngine.Scripting;
 
     internal sealed class PlayerSettingsSplashScreenEditor
     {
@@ -85,7 +87,7 @@
             }
             if (GUI.Button(EditorGUI.PrefixLabel(GUILayoutUtility.GetRect(k_Texts.previewSplash, "button"), new GUIContent(" ")), k_Texts.previewSplash))
             {
-                SplashScreen.Begin();
+                UnityEngine.Rendering.SplashScreen.Begin();
                 GameView mainGameView = GameView.GetMainGameView();
                 if (mainGameView != null)
                 {
@@ -120,8 +122,8 @@
                     {
                         this.AddUnityLogoToLogosList();
                     }
-                    this.m_ShowLogoControlsAnimator.target = this.m_ShowUnitySplashLogo.boolValue;
                 }
+                this.m_ShowLogoControlsAnimator.target = this.m_ShowUnitySplashLogo.boolValue;
             }
             if (EditorGUILayout.BeginFadeGroup(this.m_ShowLogoControlsAnimator.faded))
             {
@@ -203,7 +205,7 @@
                 float num = Mathf.Clamp(rect.width - k_LogoListPropertyMinWidth, k_LogoListUnityLogoMinWidth, k_LogoListUnityLogoMaxWidth);
                 Rect position = new Rect(rect.x, rect.y + ((rect.height - k_LogoListLogoFieldHeight) / 2f), k_LogoListUnityLogoMinWidth, k_LogoListLogoFieldHeight);
                 EditorGUI.BeginChangeCheck();
-                Object obj2 = EditorGUI.ObjectField(position, GUIContent.none, (Sprite) property2.objectReferenceValue, typeof(Sprite), false);
+                UnityEngine.Object obj2 = EditorGUI.ObjectField(position, GUIContent.none, (Sprite) property2.objectReferenceValue, typeof(Sprite), false);
                 if (EditorGUI.EndChangeCheck())
                 {
                     property2.objectReferenceValue = obj2;
@@ -252,18 +254,18 @@
             return rect;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetSplashScreenActualBackgroundColor(out Color value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Texture2D INTERNAL_CALL_GetSplashScreenActualBackgroundImage(ref Rect windowRect);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetSplashScreenActualUVs(ref Rect windowRect, out Rect value);
-        private static void ObjectReferencePropertyField<T>(SerializedProperty property, GUIContent label) where T: Object
+        private static void ObjectReferencePropertyField<T>(SerializedProperty property, GUIContent label) where T: UnityEngine.Object
         {
             EditorGUI.BeginChangeCheck();
             Rect totalPosition = EditorGUILayout.GetControlRect(true, 64f, EditorStyles.objectFieldThumb, new GUILayoutOption[0]);
             label = EditorGUI.BeginProperty(totalPosition, label, property);
-            Object obj2 = EditorGUI.ObjectField(totalPosition, label, (T) property.objectReferenceValue, typeof(T), false);
+            UnityEngine.Object obj2 = EditorGUI.ObjectField(totalPosition, label, (T) property.objectReferenceValue, typeof(T), false);
             if (EditorGUI.EndChangeCheck())
             {
                 property.objectReferenceValue = obj2;
@@ -308,7 +310,7 @@
             this.m_ShowLogoControlsAnimator.valueChanged.AddListener(new UnityAction(this.m_Owner.Repaint));
             if (s_UnityLogo == null)
             {
-                s_UnityLogo = Resources.GetBuiltinResource<Sprite>("UnitySplash-cube.png");
+                s_UnityLogo = UnityEngine.Resources.GetBuiltinResource<Sprite>("UnitySplash-cube.png");
             }
         }
 
@@ -341,7 +343,7 @@
             }
         }
 
-        public void SplashSectionGUI(BuildPlayerWindow.BuildPlatform platform, BuildTargetGroup targetGroup, ISettingEditorExtension settingsExtension)
+        public void SplashSectionGUI(BuildPlatform platform, BuildTargetGroup targetGroup, ISettingEditorExtension settingsExtension)
         {
             GUI.changed = false;
             if (this.m_Owner.BeginSettingsBox(2, k_Texts.title))
@@ -380,7 +382,7 @@
             return (targetGroup == BuildTargetGroup.Standalone);
         }
 
-        public static bool licenseAllowsDisabling { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool licenseAllowsDisabling { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         private class Texts
         {
@@ -396,7 +398,7 @@
             public GUIContent logosTitle = EditorGUIUtility.TextContent("Logos*");
             public GUIContent logoZoom = EditorGUIUtility.TextContent("Logo Zoom");
             public GUIContent overlayOpacity = EditorGUIUtility.TextContent("Overlay Opacity|Overlay strength applied to improve logo visibility.");
-            public GUIContent previewSplash = EditorGUIUtility.TextContent("Preview");
+            public GUIContent previewSplash = EditorGUIUtility.TextContent("Preview|Preview the splash screen in the game view.");
             public GUIContent showLogo = EditorGUIUtility.TextContent("Show Unity Logo");
             public GUIContent showSplash = EditorGUIUtility.TextContent("Show Splash Screen");
             public GUIContent splashStyle = EditorGUIUtility.TextContent("Splash Style");

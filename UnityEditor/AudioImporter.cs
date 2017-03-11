@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Audio importer lets you modify AudioClip import settings from editor scripts.</para>
@@ -63,21 +64,17 @@
             return this.Internal_GetOverrideSampleSettings(buildTargetGroupByName);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern bool Internal_ClearSampleSettingOverride(BuildTargetGroup platform);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern bool Internal_ContainsSampleSettingsOverride(BuildTargetGroup platformGroup);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern bool Internal_GetLoadInBackground();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern AudioImporterSampleSettings Internal_GetOverrideSampleSettings(BuildTargetGroup platformGroup);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern bool Internal_GetPreloadAudioData();
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern void Internal_SetLoadInBackground(bool flag);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern bool Internal_SetOverrideSampleSettings(BuildTargetGroup platformGroup, AudioImporterSampleSettings settings);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Internal_SetPreloadAudioData(bool flag);
         [Obsolete("AudioImporter.maxBitrate is deprecated.", true)]
         internal int maxBitrate(AudioType type) => 
@@ -106,7 +103,7 @@
             return this.Internal_SetOverrideSampleSettings(buildTargetGroupByName, settings);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("AudioImporter.updateOrigData is deprecated.", true)]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("AudioImporter.updateOrigData is deprecated.", true), GeneratedByOldBindingsGenerator]
         internal extern void updateOrigData();
 
         [Obsolete("Setting and getting import channels is not used anymore (use forceToMono instead)", true)]
@@ -123,9 +120,9 @@
         /// <para>Compression bitrate.</para>
         /// </summary>
         [Obsolete("AudioImporter.compressionBitrate is no longer supported", true)]
-        public int compressionBitrate { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int compressionBitrate { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        internal int compSize { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal int compSize { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         [Obsolete("Setting/Getting decompressOnLoad is deprecated. Use AudioImporterSampleSettings.loadType instead.")]
         private bool decompressOnLoad
@@ -141,20 +138,20 @@
         }
 
         [Obsolete("AudioImporter.defaultBitrate is deprecated.", true)]
-        internal int defaultBitrate { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal int defaultBitrate { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The default sample settings for the AudioClip importer.</para>
         /// </summary>
-        public AudioImporterSampleSettings defaultSampleSettings { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public AudioImporterSampleSettings defaultSampleSettings { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         [Obsolete("AudioImporter.durationMS is deprecated.", true)]
-        internal int durationMS { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal int durationMS { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Force this clip to mono?</para>
         /// </summary>
-        public bool forceToMono { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool forceToMono { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         [Obsolete("Setting and getting the compression format is not used anymore (use compressionFormat in defaultSampleSettings instead). Source audio file is assumed to be PCM Wav.")]
         private AudioImporterFormat format
@@ -170,40 +167,40 @@
         }
 
         [Obsolete("AudioImporter.frequency is deprecated.", true)]
-        internal int frequency { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal int frequency { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         [Obsolete("AudioImporter.hardware is no longer supported. All mixing of audio is done by software and only some platforms use hardware acceleration to perform decoding.")]
-        public bool hardware { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool hardware { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Corresponding to the "Load In Background" flag in the AudioClip inspector, when this flag is set, the loading of the clip will happen delayed without blocking the main thread.</para>
         /// </summary>
+        [Obsolete("loadInBackground is not used anymore. AudioClips will now always be loaded in separate threads.")]
         public bool loadInBackground
         {
             get => 
-                this.Internal_GetLoadInBackground();
+                true;
             set
             {
-                this.Internal_SetLoadInBackground(value);
             }
         }
 
         [Obsolete("AudioImporter.loopable is no longer supported. All audio assets encoded by Unity are by default loopable.")]
-        public bool loopable { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool loopable { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         [Obsolete("AudioImporter.origChannelCount is deprecated.", true)]
-        internal int origChannelCount { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal int origChannelCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         [Obsolete("AudioImporter.origFileSize is deprecated.", true)]
-        internal int origFileSize { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal int origFileSize { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         [Obsolete("AudioImporter.origIsCompressible is deprecated.", true)]
-        internal bool origIsCompressible { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal bool origIsCompressible { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         [Obsolete("AudioImporter.origIsMonoForcable is deprecated.", true)]
-        internal bool origIsMonoForcable { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal bool origIsMonoForcable { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        internal int origSize { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal int origSize { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         [Obsolete("AudioImporter.origType is deprecated.", true)]
         internal AudioType origType =>
@@ -236,7 +233,7 @@
         }
 
         [Obsolete("AudioImporter.threeD is no longer supported")]
-        public bool threeD { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool threeD { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
     }
 }
 

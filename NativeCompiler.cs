@@ -27,7 +27,7 @@ internal abstract class NativeCompiler : INativeCompiler
             prefix = prefix,
             suffix = suffix
         };
-        return Enumerable.Aggregate<string, string>(items, "", new Func<string, string, string>(storey, (IntPtr) this.<>m__0));
+        return Enumerable.Aggregate<string, string>(items, "", new Func<string, string, string>(storey.<>m__0));
     }
 
     protected internal static IEnumerable<string> AllSourceFilesIn(string directory) => 
@@ -45,7 +45,7 @@ internal abstract class NativeCompiler : INativeCompiler
     {
         if (<>f__am$cache0 == null)
         {
-            <>f__am$cache0 = new Func<string, string, string>(null, (IntPtr) <ExecuteCommand>m__0);
+            <>f__am$cache0 = (buff, s) => buff + " " + s;
         }
         ProcessStartInfo startInfo = new ProcessStartInfo(command, Enumerable.Aggregate<string>(arguments, <>f__am$cache0));
         this.SetupProcessStartInfo(startInfo);
@@ -97,7 +97,7 @@ internal abstract class NativeCompiler : INativeCompiler
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<string, string, string>(null, (IntPtr) <RunProgram>m__1);
+                    <>f__am$cache1 = (buf, s) => buf + Environment.NewLine + s;
                 }
                 str = Enumerable.Aggregate<string>(standardOutput, <>f__am$cache1);
             }
@@ -106,13 +106,13 @@ internal abstract class NativeCompiler : INativeCompiler
             {
                 if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache2 = new Func<string, string, string>(null, (IntPtr) <RunProgram>m__2);
+                    <>f__am$cache2 = (buf, s) => buf + Environment.NewLine + s;
                 }
                 str = str + Enumerable.Aggregate<string>(errorOutput, <>f__am$cache2);
             }
             if (program.ExitCode != 0)
             {
-                Debug.LogError("Failed running " + startInfo.FileName + " " + startInfo.Arguments + "\n\n" + str);
+                UnityEngine.Debug.LogError("Failed running " + startInfo.FileName + " " + startInfo.Arguments + "\n\n" + str);
                 throw new Exception("IL2CPP compile failed.");
             }
         }

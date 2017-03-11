@@ -29,7 +29,7 @@
         [CompilerGenerated]
         private static Func<MethodDefinition, bool> <>f__am$cache5;
         [Inject]
-        public static IGenericSharingAnalysisService GenericSharingAnalysis;
+        public static IWindowsRuntimeProjections WindowsRuntimeProjections;
 
         private static bool CheckInterfaceMethodOverride(MethodReference itfMethod, MethodReference virtualMethod, bool requireNewslot, bool interfaceIsExplicitlyImplementedByClass, bool slotIsEmpty)
         {
@@ -78,7 +78,7 @@
             Dictionary<MethodReference, MethodDefinition> dictionary = new Dictionary<MethodReference, MethodDefinition>(new Unity.IL2CPP.Common.MethodReferenceComparer());
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<MethodDefinition, bool>(null, (IntPtr) <CollectOverrides>m__2);
+                <>f__am$cache2 = m => m.HasOverrides;
             }
             foreach (MethodDefinition definition in typeDefinition.Methods.Where<MethodDefinition>(<>f__am$cache2))
             {
@@ -144,10 +144,10 @@
 
         private static bool InterfaceIsExplicitlyImplementedByClass(TypeDefinition typeDefinition, TypeReference itf)
         {
-            <InterfaceIsExplicitlyImplementedByClass>c__AnonStorey1 storey = new <InterfaceIsExplicitlyImplementedByClass>c__AnonStorey1 {
+            <InterfaceIsExplicitlyImplementedByClass>c__AnonStorey2 storey = new <InterfaceIsExplicitlyImplementedByClass>c__AnonStorey2 {
                 itf = itf
             };
-            return ((typeDefinition.BaseType == null) || typeDefinition.Interfaces.Any<InterfaceImplementation>(new Func<InterfaceImplementation, bool>(storey, (IntPtr) this.<>m__0)));
+            return ((typeDefinition.BaseType == null) || typeDefinition.Interfaces.Any<InterfaceImplementation>(new Func<InterfaceImplementation, bool>(storey.<>m__0)));
         }
 
         private void OverrideInterfaceMethods(Dictionary<TypeReference, int> interfaceOffsets, List<MethodReference> slots, Dictionary<MethodReference, MethodDefinition> overrides, Dictionary<MethodReference, MethodReference> overrideMap)
@@ -218,46 +218,64 @@
         {
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<MethodDefinition, bool>(null, (IntPtr) <SetupClassMethods>m__5);
+                <>f__am$cache5 = m => m.IsVirtual && !m.IsStripped();
             }
-            foreach (MethodDefinition definition in typeDefinition.Methods.Where<MethodDefinition>(<>f__am$cache5))
+            using (IEnumerator<MethodDefinition> enumerator = typeDefinition.Methods.Where<MethodDefinition>(<>f__am$cache5).GetEnumerator())
             {
-                if (!definition.IsNewSlot)
+                while (enumerator.MoveNext())
                 {
-                    int num = -1;
-                    for (TypeReference reference = typeDefinition.GetBaseType(); reference != null; reference = reference.GetBaseType())
+                    <SetupClassMethods>c__AnonStorey1 storey = new <SetupClassMethods>c__AnonStorey1 {
+                        method = enumerator.Current
+                    };
+                    if (!storey.method.IsNewSlot)
                     {
-                        foreach (MethodReference reference2 in reference.GetVirtualMethods())
+                        int num = -1;
+                        for (TypeReference reference = typeDefinition.GetBaseType(); reference != null; reference = reference.GetBaseType())
                         {
-                            if ((definition.Name == reference2.Name) && VirtualMethodResolution.MethodSignaturesMatch(definition, reference2))
+                            foreach (MethodReference reference2 in reference.GetVirtualMethods())
                             {
-                                num = this.GetSlot(reference2);
-                                overrideMap.Add(reference2, definition);
+                                if ((storey.method.Name == reference2.Name) && VirtualMethodResolution.MethodSignaturesMatch(storey.method, reference2))
+                                {
+                                    num = this.GetSlot(reference2);
+                                    overrideMap.Add(reference2, storey.method);
+                                    break;
+                                }
+                            }
+                            if (num >= 0)
+                            {
                                 break;
                             }
                         }
                         if (num >= 0)
                         {
-                            break;
+                            this.SetSlot(storey.method, num);
                         }
                     }
-                    if (num >= 0)
+                    if ((storey.method.IsNewSlot && !storey.method.IsFinal) && this._methodSlots.ContainsKey(storey.method))
                     {
-                        this.SetSlot(definition, num);
+                        this._methodSlots.Remove(storey.method);
+                    }
+                    if (!this._methodSlots.ContainsKey(storey.method))
+                    {
+                        int count = slots.Count;
+                        slots.Add(null);
+                        this.SetSlot(storey.method, count);
+                    }
+                    int slot = this.GetSlot(storey.method);
+                    if (!storey.method.IsAbstract || typeDefinition.IsComOrWindowsRuntimeInterface())
+                    {
+                        slots[slot] = storey.method;
+                    }
+                    else if (typeDefinition.IsInterface)
+                    {
+                        TypeDefinition nativeToManagedAdapterClassFor = WindowsRuntimeProjections.GetNativeToManagedAdapterClassFor(typeDefinition);
+                        slots[slot] = nativeToManagedAdapterClassFor.Methods.First<MethodDefinition>(new Func<MethodDefinition, bool>(storey.<>m__0));
+                    }
+                    else
+                    {
+                        slots[slot] = null;
                     }
                 }
-                if ((definition.IsNewSlot && !definition.IsFinal) && this._methodSlots.ContainsKey(definition))
-                {
-                    this._methodSlots.Remove(definition);
-                }
-                if (!this._methodSlots.ContainsKey(definition))
-                {
-                    int count = slots.Count;
-                    slots.Add(null);
-                    this.SetSlot(definition, count);
-                }
-                int slot = this.GetSlot(definition);
-                slots[slot] = (!definition.IsAbstract || typeDefinition.IsComOrWindowsRuntimeInterface()) ? definition : null;
             }
         }
 
@@ -274,9 +292,9 @@
                 bool interfaceIsExplicitlyImplementedByClass = InterfaceIsExplicitlyImplementedByClass(typeDefinition, storey.itf);
                 if (<>f__am$cache3 == null)
                 {
-                    <>f__am$cache3 = new Func<MethodDefinition, bool>(null, (IntPtr) <SetupInterfaceMethods>m__3);
+                    <>f__am$cache3 = m => !m.IsStatic && !m.IsStripped();
                 }
-                foreach (MethodReference reference in definition.Methods.Where<MethodDefinition>(<>f__am$cache3).Select<MethodDefinition, MethodReference>(new Func<MethodDefinition, MethodReference>(storey, (IntPtr) this.<>m__0)))
+                foreach (MethodReference reference in definition.Methods.Where<MethodDefinition>(<>f__am$cache3).Select<MethodDefinition, MethodReference>(new Func<MethodDefinition, MethodReference>(storey.<>m__0)))
                 {
                     MethodReference reference2;
                     int slot = num + this.GetSlot(reference);
@@ -318,23 +336,26 @@
         private Dictionary<TypeReference, int> SetupInterfaceOffsets(TypeReference type, ref int currentSlot)
         {
             Dictionary<TypeReference, int> dictionary = new Dictionary<TypeReference, int>(new Unity.IL2CPP.Common.TypeReferenceEqualityComparer());
-            for (TypeReference reference = type.GetBaseType(); reference != null; reference = reference.GetBaseType())
+            if (!type.IsInterface())
             {
-                VTable table = this.VTableFor(reference, null);
-                foreach (TypeReference reference2 in reference.GetInterfaces())
+                for (TypeReference reference = type.GetBaseType(); reference != null; reference = reference.GetBaseType())
                 {
-                    this.SetupMethodSlotsForInterface(reference2);
-                    int num = table.InterfaceOffsets[reference2];
-                    dictionary[reference2] = num;
+                    VTable table = this.VTableFor(reference, null);
+                    foreach (TypeReference reference2 in reference.GetInterfaces())
+                    {
+                        this.SetupMethodSlotsForInterface(reference2);
+                        int num = table.InterfaceOffsets[reference2];
+                        dictionary[reference2] = num;
+                    }
                 }
-            }
-            foreach (TypeReference reference3 in type.GetInterfaces())
-            {
-                if (!dictionary.ContainsKey(reference3))
+                foreach (TypeReference reference3 in type.GetInterfaces())
                 {
-                    this.SetupMethodSlotsForInterface(reference3);
-                    dictionary.Add(reference3, currentSlot);
-                    currentSlot += VirtualMethodCount(reference3);
+                    if (!dictionary.ContainsKey(reference3))
+                    {
+                        this.SetupMethodSlotsForInterface(reference3);
+                        dictionary.Add(reference3, currentSlot);
+                        currentSlot += VirtualMethodCount(reference3);
+                    }
                 }
             }
             return dictionary;
@@ -350,7 +371,7 @@
             TypeDefinition definition = typeReference.Resolve();
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<MethodDefinition, bool>(null, (IntPtr) <SetupMethodSlotsForInterface>m__1);
+                <>f__am$cache1 = m => (m.IsVirtual && !m.IsStatic) && !m.IsStripped();
             }
             foreach (MethodDefinition definition2 in definition.Methods.Where<MethodDefinition>(<>f__am$cache1))
             {
@@ -364,10 +385,15 @@
             {
                 foreach (MethodReference reference in slots)
                 {
-                    if (((reference == null) || (reference.Resolve().IsAbstract && !reference.Resolve().DeclaringType.IsComOrWindowsRuntimeInterface())) || reference.Resolve().IsStatic)
+                    if (reference != null)
                     {
-                        throw new Exception($"Invalid method '{(reference != null) ? reference.FullName : "null"}' found in vtable for '{typeDefinition.FullName}'");
+                        MethodDefinition definition = reference.Resolve();
+                        if (!definition.IsStatic && (!definition.IsAbstract || reference.DeclaringType.IsComOrWindowsRuntimeInterface()))
+                        {
+                            continue;
+                        }
                     }
+                    throw new Exception($"Invalid method '{(reference != null) ? reference.FullName : "null"}' found in vtable for '{typeDefinition.FullName}'");
                 }
             }
         }
@@ -383,9 +409,9 @@
                     Unity.IL2CPP.ILPreProcessor.TypeResolver resolver = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(key);
                     if (<>f__am$cache4 == null)
                     {
-                        <>f__am$cache4 = new Func<MethodDefinition, bool>(null, (IntPtr) <ValidateInterfaceMethodSlots>m__4);
+                        <>f__am$cache4 = m => !m.IsStatic && !m.IsStripped();
                     }
-                    foreach (MethodReference reference2 in key.Resolve().Methods.Where<MethodDefinition>(<>f__am$cache4).Select<MethodDefinition, MethodReference>(new Func<MethodDefinition, MethodReference>(resolver, (IntPtr) this.Resolve)))
+                    foreach (MethodReference reference2 in key.Resolve().Methods.Where<MethodDefinition>(<>f__am$cache4).Select<MethodDefinition, MethodReference>(new Func<MethodDefinition, MethodReference>(resolver.Resolve)))
                     {
                         int num2 = num + this.GetSlot(reference2);
                         if (slots[num2] == null)
@@ -401,7 +427,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<MethodDefinition, bool>(null, (IntPtr) <VirtualMethodCount>m__0);
+                <>f__am$cache0 = m => m.IsVirtual && !m.IsStripped();
             }
             return type.Resolve().Methods.Count<MethodDefinition>(<>f__am$cache0);
         }
@@ -413,10 +439,14 @@
             {
                 return table;
             }
-            TypeDefinition definition = typeReference.Resolve();
-            if (definition.IsInterface && !definition.IsComOrWindowsRuntimeType())
+            if (typeReference.IsArray)
             {
-                throw new Exception();
+                throw new InvalidOperationException("Calculating vtable for arrays is not supported.");
+            }
+            TypeDefinition definition = typeReference.Resolve();
+            if ((definition.IsInterface && !definition.IsComOrWindowsRuntimeInterface()) && (WindowsRuntimeProjections.GetNativeToManagedAdapterClassFor(definition) == null))
+            {
+                throw new InvalidOperationException("Calculating vtable for non-COM interface is not supported.");
             }
             int currentSlot = (definition.BaseType != null) ? this.VTableFor(typeReference.GetBaseType(), null).Slots.Count : 0;
             Dictionary<TypeReference, int> interfaceOffsets = this.SetupInterfaceOffsets(typeReference, ref currentSlot);
@@ -468,25 +498,40 @@
             }
             Dictionary<MethodReference, MethodDefinition> overrides = CollectOverrides(typeDefinition);
             Dictionary<MethodReference, MethodReference> overrideMap = new Dictionary<MethodReference, MethodReference>(new Unity.IL2CPP.Common.MethodReferenceComparer());
-            this.OverrideInterfaceMethods(interfaceOffsets, slots, overrides, overrideMap);
-            this.SetupInterfaceMethods(typeDefinition, interfaceOffsets, overrideMap, slots);
-            this.ValidateInterfaceMethodSlots(typeDefinition, interfaceOffsets, slots);
+            if (!typeDefinition.IsInterface)
+            {
+                this.OverrideInterfaceMethods(interfaceOffsets, slots, overrides, overrideMap);
+                this.SetupInterfaceMethods(typeDefinition, interfaceOffsets, overrideMap, slots);
+                this.ValidateInterfaceMethodSlots(typeDefinition, interfaceOffsets, slots);
+            }
             this.SetupClassMethods(slots, typeDefinition, overrideMap);
             this.OverrideNonInterfaceMethods(overrides, slots, overrideMap);
             ReplaceOverridenMethods(overrideMap, slots);
             ValidateAllMethodSlots(typeDefinition, slots);
-            VTable table = new VTable(slots.AsReadOnly(), (!typeDefinition.IsInterface || typeDefinition.IsComOrWindowsRuntimeInterface()) ? interfaceOffsets : null);
+            VTable table = new VTable(slots.AsReadOnly(), interfaceOffsets);
             this._vtables[typeDefinition] = table;
             return table;
         }
 
         [CompilerGenerated]
-        private sealed class <InterfaceIsExplicitlyImplementedByClass>c__AnonStorey1
+        private sealed class <InterfaceIsExplicitlyImplementedByClass>c__AnonStorey2
         {
             internal TypeReference itf;
 
             internal bool <>m__0(InterfaceImplementation classItf) => 
                 Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(this.itf, classItf.InterfaceType, TypeComparisonMode.Exact);
+        }
+
+        [CompilerGenerated]
+        private sealed class <SetupClassMethods>c__AnonStorey1
+        {
+            internal MethodDefinition method;
+
+            internal bool <>m__0(MethodDefinition m) => 
+                m.Overrides.Any<MethodReference>(o => (o.Resolve() == this.method));
+
+            internal bool <>m__1(MethodReference o) => 
+                (o.Resolve() == this.method);
         }
 
         [CompilerGenerated]

@@ -1,11 +1,12 @@
 ﻿namespace UnityEngine
 {
     using System;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>The ContextMenu attribute allows you to add commands to the context menu.</para>
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple=true)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple=true), RequiredByNativeCode]
     public sealed class ContextMenu : Attribute
     {
         public readonly string menuItem;

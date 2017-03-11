@@ -5,7 +5,7 @@
     /// <summary>
     /// <para>All possible particle system vertex shader inputs.</para>
     /// </summary>
-    [Flags]
+    [Flags, Obsolete("ParticleSystemVertexStreams is deprecated. Please use ParticleSystemVertexStream instead.")]
     public enum ParticleSystemVertexStreams
     {
         /// <summary>

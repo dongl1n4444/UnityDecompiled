@@ -1,7 +1,9 @@
 ﻿namespace UnityEditor.Android.PostProcessor.Tasks
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEditor;
     using UnityEditor.Android;
@@ -10,6 +12,7 @@
 
     internal class FastZip : IPostProcessorTask
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ProgressHandler OnProgress;
 
         private void CreatePackagesWithFastzip(PostProcessorContext context)
@@ -38,12 +41,12 @@
                 info = new FileInfo(str7);
                 if (!File.Exists(str7) || (info.Length == 0L))
                 {
-                    Debug.LogError(str5);
+                    UnityEngine.Debug.LogError(str5);
                     CancelPostProcess.AbortBuildPointToConsole("OBB Builder Failed!", "Failed to build OBB package.");
                 }
                 if (info.Length >= 0x80000000L)
                 {
-                    Debug.LogError(str5);
+                    UnityEngine.Debug.LogError(str5);
                     CancelPostProcess.AbortBuildPointToConsole("OBB Builder Failed!", "OBB file too big for Android Market (max 2GB).");
                 }
                 document.PatchStringRes("bool", TasksCommon.GetMD5HashOfEOCD(str7), true.ToString());
@@ -71,7 +74,7 @@
             info = new FileInfo(str7);
             if (!File.Exists(str7) || (info.Length == 0L))
             {
-                Debug.LogError(str5);
+                UnityEngine.Debug.LogError(str5);
                 CancelPostProcess.AbortBuildPointToConsole("Fastzip Failed!", "Failed to build APK package.");
             }
         }

@@ -2,10 +2,12 @@
 {
     using System;
     using System.Runtime.CompilerServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Representation of a listener in 3D space.</para>
     /// </summary>
+    [RequireComponent(typeof(Transform))]
     public sealed class AudioListener : Behaviour
     {
         /// <summary>
@@ -31,14 +33,14 @@
             GetOutputDataHelper(samples, channel);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void GetOutputDataHelper(float[] samples, int channel);
         /// <summary>
         /// <para>Deprecated Version. Returns a block of the listener (master)'s spectrum data.</para>
         /// </summary>
-        /// <param name="numSamples">Number of values (the length of the samples array). Must be a power of 2. Min = 64. Max = 8192.</param>
-        /// <param name="channel">The channel to sample from.</param>
-        /// <param name="window">The FFTWindow type to use when sampling.</param>
+        /// <param name="numSamples"></param>
+        /// <param name="channel"></param>
+        /// <param name="window"></param>
         [Obsolete("GetSpectrumData returning a float[] is deprecated, use GetOutputData and pass a pre allocated array instead.")]
         public static float[] GetSpectrumData(int numSamples, int channel, FFTWindow window)
         {
@@ -58,23 +60,23 @@
             GetSpectrumDataHelper(samples, channel, window);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void GetSpectrumDataHelper(float[] samples, int channel, FFTWindow window);
 
         /// <summary>
         /// <para>The paused state of the audio system.</para>
         /// </summary>
-        public static bool pause { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static bool pause { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>This lets you set whether the Audio Listener should be updated in the fixed or dynamic update.</para>
         /// </summary>
-        public AudioVelocityUpdateMode velocityUpdateMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public AudioVelocityUpdateMode velocityUpdateMode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Controls the game sound volume (0.0 to 1.0).</para>
         /// </summary>
-        public static float volume { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static float volume { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
     }
 }
 

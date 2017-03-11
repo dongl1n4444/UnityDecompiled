@@ -23,7 +23,7 @@
 
         public void ClearChannelStrips()
         {
-            Selection.objects = new Object[0];
+            Selection.objects = new UnityEngine.Object[0];
         }
 
         public bool HasSingleChannelStripSelection() => 
@@ -31,12 +31,12 @@
 
         private void RefreshCachedChannelStripSelection()
         {
-            Object[] filtered = Selection.GetFiltered(typeof(AudioMixerGroupController), SelectionMode.Deep);
+            UnityEngine.Object[] filtered = Selection.GetFiltered(typeof(AudioMixerGroupController), UnityEditor.SelectionMode.Deep);
             this.ChannelStripSelection = new List<AudioMixerGroupController>();
             List<AudioMixerGroupController> allAudioGroupsSlow = this.m_Controller.GetAllAudioGroupsSlow();
             foreach (AudioMixerGroupController controller in allAudioGroupsSlow)
             {
-                if (filtered.Contains<Object>(controller))
+                if (filtered.Contains<UnityEngine.Object>(controller))
                 {
                     this.ChannelStripSelection.Add(controller);
                 }
@@ -69,7 +69,7 @@
 
         public void ToggleChannelStrip(AudioMixerGroupController group)
         {
-            List<Object> list = new List<Object>(Selection.objects);
+            List<UnityEngine.Object> list = new List<UnityEngine.Object>(Selection.objects);
             if (list.Contains(group))
             {
                 list.Remove(group);

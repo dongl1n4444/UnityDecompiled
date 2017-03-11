@@ -21,40 +21,12 @@
                 }
                 else
                 {
-                    _unityRoot = CommonPaths.Il2CppRoot?.ParentContaining("build.pl");
-                }
-            }
-
-            private static NPath EditorToolsPath
-            {
-                get
-                {
-                    if (PlatformUtils.IsWindows())
-                    {
-                        string[] textArray1 = new string[] { "build/WindowsEditor/Data/Tools" };
-                        return UnityRoot.Combine(textArray1);
-                    }
-                    if (PlatformUtils.IsLinux())
-                    {
-                        string[] textArray2 = new string[] { "build/LinuxEditor/Data/Tools/" };
-                        return UnityRoot.Combine(textArray2);
-                    }
-                    string[] append = new string[] { "build/MacEditor/Unity.app/Contents/Tools" };
-                    return UnityRoot.Combine(append);
+                    _unityRoot = CommonPaths.Il2CppRoot?.Parent.ParentContaining("build.pl");
                 }
             }
 
             public static NPath UnityRoot =>
                 _unityRoot;
-
-            public static NPath UnusedBytecodeStripper
-            {
-                get
-                {
-                    string[] append = new string[] { "UnusedByteCodeStripper2/UnusedBytecodeStripper2.exe" };
-                    return EditorToolsPath.Combine(append);
-                }
-            }
         }
     }
 }

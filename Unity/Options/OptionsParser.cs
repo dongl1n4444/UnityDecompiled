@@ -21,9 +21,11 @@
         [CompilerGenerated]
         private static Func<string, bool> <>f__am$cache0;
         [CompilerGenerated]
-        private static Func<Match, string> <>f__am$cache1;
+        private static Func<FieldInfo, bool> <>f__am$cache1;
         [CompilerGenerated]
-        private static Func<string, string, string> <>f__am$cache2;
+        private static Func<Match, string> <>f__am$cache2;
+        [CompilerGenerated]
+        private static Func<string, string, string> <>f__am$cache3;
         [CompilerGenerated]
         private static Func<Type, bool> <>f__mg$cache0;
         public const int HelpOutputColumnPadding = 50;
@@ -35,7 +37,7 @@
 
         private static Action<string> ActionFor(ProgramOptionsAttribute options, FieldInfo field)
         {
-            <ActionFor>c__AnonStorey1 storey = new <ActionFor>c__AnonStorey1 {
+            <ActionFor>c__AnonStorey2 storey = new <ActionFor>c__AnonStorey2 {
                 field = field,
                 options = options
             };
@@ -112,15 +114,26 @@
 
         private void ExtendOptionSet(OptionSet optionSet, Type type)
         {
-            FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.Static);
-            foreach (FieldInfo info in fields)
+            IEnumerable<FieldInfo> optionFields = GetOptionFields(type);
+            foreach (FieldInfo info in optionFields)
             {
                 ProgramOptionsAttribute options = (ProgramOptionsAttribute) type.GetCustomAttributesPortable(typeof(ProgramOptionsAttribute), false).First<object>();
-                foreach (string str in this.OptionNamesFor(options, info))
+                foreach (string str in OptionNamesFor(options, info))
                 {
                     optionSet.Add(str, DescriptionFor(info), ActionFor(options, info));
                 }
             }
+        }
+
+        private static IEnumerable<FieldInfo> GetOptionFields(Type optionType)
+        {
+            FieldInfo[] fields = optionType.GetFields(BindingFlags.Public | BindingFlags.Static);
+            if (<>f__am$cache1 == null)
+            {
+                <>f__am$cache1 = field => field.GetCustomAttributes(typeof(OptionAttribute), false).Any<object>();
+            }
+            IEnumerable<FieldInfo> second = optionType.GetFields(BindingFlags.NonPublic | BindingFlags.Static).Where<FieldInfo>(<>f__am$cache1);
+            return fields.Concat<FieldInfo>(second);
         }
 
         internal static bool HasProgramOptionsAttribute(Type type) => 
@@ -130,7 +143,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <HelpRequested>m__0);
+                <>f__am$cache0 = v => ((v == "--h") || (v == "--help")) || (v == "-help");
             }
             return (commandLine.Count<string>(<>f__am$cache0) > 0);
         }
@@ -151,14 +164,14 @@
                 {
                     if (<>f__mg$cache0 == null)
                     {
-                        <>f__mg$cache0 = new Func<Type, bool>(null, (IntPtr) HasProgramOptionsAttribute);
+                        <>f__mg$cache0 = new Func<Type, bool>(OptionsParser.HasProgramOptionsAttribute);
                     }
                     list.AddRange(assembly2.GetTypesPortable().Where<Type>(<>f__mg$cache0));
                     if (includeReferencedAssemblies)
                     {
                         foreach (AssemblyName name in assembly2.GetReferencedAssembliesPortable())
                         {
-                            if (((((name.Name != "mscorlib") && !name.Name.StartsWith("System")) && !name.Name.StartsWith("Mono.Cecil")) && (name.Name != "Unity.IL2CPP.RuntimeServices")) && !set.Contains(name))
+                            if (((((name.Name != "mscorlib") && !name.Name.StartsWith("System")) && (!name.Name.StartsWith("Mono.Cecil") && (name.Name != "Unity.IL2CPP.RuntimeServices"))) && !name.Name.StartsWith("Microsoft")) && !set.Contains(name))
                             {
                                 try
                                 {
@@ -181,19 +194,34 @@
 
         private static string NormalizeName(string name)
         {
-            if (<>f__am$cache1 == null)
-            {
-                <>f__am$cache1 = new Func<Match, string>(null, (IntPtr) <NormalizeName>m__1);
-            }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<string, string, string>(null, (IntPtr) <NormalizeName>m__2);
+                <>f__am$cache2 = m => m.Value.ToLower();
             }
-            return NameBuilder.Matches(name).Cast<Match>().Select<Match, string>(<>f__am$cache1).Aggregate<string>(<>f__am$cache2);
+            if (<>f__am$cache3 == null)
+            {
+                <>f__am$cache3 = (buff, s) => buff + "-" + s;
+            }
+            return NameBuilder.Matches(name).Cast<Match>().Select<Match, string>(<>f__am$cache2).Aggregate<string>(<>f__am$cache3);
+        }
+
+        public static string OptionNameFor(Type type, string fieldName)
+        {
+            <OptionNameFor>c__AnonStorey1 storey = new <OptionNameFor>c__AnonStorey1 {
+                fieldName = fieldName
+            };
+            FieldInfo field = GetOptionFields(type).FirstOrDefault<FieldInfo>(new Func<FieldInfo, bool>(storey.<>m__0));
+            if (field == null)
+            {
+                throw new ArgumentException($"No field on type {type} named {storey.fieldName}");
+            }
+            ProgramOptionsAttribute options = (ProgramOptionsAttribute) type.GetCustomAttributesPortable(typeof(ProgramOptionsAttribute), false).First<object>();
+            char[] trimChars = new char[] { '=' };
+            return $"--{OptionNamesFor(options, field).First<string>()}".TrimEnd(trimChars);
         }
 
         [DebuggerHidden]
-        private IEnumerable<string> OptionNamesFor(ProgramOptionsAttribute options, FieldInfo field) => 
+        private static IEnumerable<string> OptionNamesFor(ProgramOptionsAttribute options, FieldInfo field) => 
             new <OptionNamesFor>c__Iterator0 { 
                 field = field,
                 options = options,
@@ -208,10 +236,10 @@
             Dictionary<string, HelpInformation> dictionary = new Dictionary<string, HelpInformation>();
             foreach (Type type in types)
             {
-                foreach (FieldInfo info in type.GetFields(BindingFlags.Public | BindingFlags.Static))
+                foreach (FieldInfo info in GetOptionFields(type))
                 {
-                    object[] customAttributes = info.GetCustomAttributes(typeof(HelpDetailsAttribute), false);
-                    if (customAttributes.Length > 1)
+                    object[] objArray = info.GetCustomAttributes(typeof(HelpDetailsAttribute), false).ToArray<object>();
+                    if (objArray.Length > 1)
                     {
                         throw new InvalidOperationException($"Field, {info.Name}, has more than one help attribute");
                     }
@@ -223,7 +251,7 @@
                     if (!info.GetCustomAttributes(typeof(HideFromHelpAttribute), false).Any<object>())
                     {
                         HelpInformation information;
-                        if (customAttributes.Length == 0)
+                        if (objArray.Length == 0)
                         {
                             information = new HelpInformation {
                                 Summary = null,
@@ -233,7 +261,7 @@
                         }
                         else
                         {
-                            HelpDetailsAttribute attribute = (HelpDetailsAttribute) customAttributes[0];
+                            HelpDetailsAttribute attribute = (HelpDetailsAttribute) objArray[0];
                             information = new HelpInformation {
                                 Summary = attribute.Summary,
                                 FieldInfo = info,
@@ -258,13 +286,13 @@
 
         private static object ParseValue(Type type, string value)
         {
-            <ParseValue>c__AnonStorey2 storey = new <ParseValue>c__AnonStorey2 {
+            <ParseValue>c__AnonStorey3 storey = new <ParseValue>c__AnonStorey3 {
                 type = type,
                 value = value
             };
             if (storey.type.IsEnumPortable())
             {
-                return Enum.GetValues(storey.type).Cast<object>().First<object>(new Func<object, bool>(storey, (IntPtr) this.<>m__0));
+                return Enum.GetValues(storey.type).Cast<object>().First<object>(new Func<object, bool>(storey.<>m__0));
             }
             object obj3 = Convert.ChangeType(storey.value, storey.type, CultureInfo.InvariantCulture);
             if (obj3 == null)
@@ -376,7 +404,7 @@
         }
 
         [CompilerGenerated]
-        private sealed class <ActionFor>c__AnonStorey1
+        private sealed class <ActionFor>c__AnonStorey2
         {
             internal FieldInfo field;
             internal ProgramOptionsAttribute options;
@@ -403,11 +431,23 @@
         }
 
         [CompilerGenerated]
+        private sealed class <OptionNameFor>c__AnonStorey1
+        {
+            internal string fieldName;
+
+            internal bool <>m__0(FieldInfo f) => 
+                (f.Name == this.fieldName);
+        }
+
+        [CompilerGenerated]
         private sealed class <OptionNamesFor>c__Iterator0 : IEnumerable, IEnumerable<string>, IEnumerator, IDisposable, IEnumerator<string>
         {
             internal string $current;
             internal bool $disposing;
+            internal object[] $locvar0;
+            internal int $locvar1;
             internal int $PC;
+            internal object <aliasAttr>__1;
             internal string <name>__0;
             internal FieldInfo field;
             internal ProgramOptionsAttribute options;
@@ -447,7 +487,7 @@
                                 this.$PC = 1;
                             }
                         }
-                        goto Label_0129;
+                        goto Label_0212;
 
                     case 1:
                         this.$current = OptionsParser.NormalizeName(this.field.DeclaringType.Name) + "." + this.<name>__0;
@@ -455,15 +495,44 @@
                         {
                             this.$PC = 2;
                         }
-                        goto Label_0129;
+                        goto Label_0212;
 
                     case 2:
                     case 3:
+                        this.$locvar0 = this.field.GetCustomAttributes(typeof(OptionAliasAttribute), false);
+                        this.$locvar1 = 0;
+                        while (this.$locvar1 < this.$locvar0.Length)
+                        {
+                            this.<aliasAttr>__1 = this.$locvar0[this.$locvar1];
+                            if (this.field.FieldType != typeof(bool))
+                            {
+                                this.$current = $"{((OptionAliasAttribute) this.<aliasAttr>__1).Name}=";
+                                if (!this.$disposing)
+                                {
+                                    this.$PC = 4;
+                                }
+                            }
+                            else
+                            {
+                                this.$current = ((OptionAliasAttribute) this.<aliasAttr>__1).Name;
+                                if (!this.$disposing)
+                                {
+                                    this.$PC = 5;
+                                }
+                            }
+                            goto Label_0212;
+                        Label_01E7:
+                            this.$locvar1++;
+                        }
                         this.$PC = -1;
                         break;
+
+                    case 4:
+                    case 5:
+                        goto Label_01E7;
                 }
                 return false;
-            Label_0129:
+            Label_0212:
                 return true;
             }
 
@@ -498,13 +567,13 @@
         }
 
         [CompilerGenerated]
-        private sealed class <ParseValue>c__AnonStorey2
+        private sealed class <ParseValue>c__AnonStorey3
         {
             internal Type type;
             internal string value;
 
             internal bool <>m__0(object v) => 
-                string.Equals(Enum.GetName(this.type, v), this.value, StringComparison.InvariantCultureIgnoreCase);
+                string.Equals(Enum.GetName(this.type, v), this.value, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

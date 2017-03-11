@@ -1,20 +1,33 @@
 ﻿namespace UnityEditor
 {
     using System;
+    using UnityEditor.IMGUI.Controls;
     using UnityEngine;
 
     [CustomEditor(typeof(BoxCollider)), CanEditMultipleObjects]
-    internal class BoxColliderEditor : Collider3DEditorBase
+    internal class BoxColliderEditor : PrimitiveCollider3DEditor
     {
-        private readonly BoxEditor m_BoxEditor = new BoxEditor(true, s_BoxHash);
+        private readonly BoxBoundsHandle m_BoundsHandle = new BoxBoundsHandle(s_HandleControlIDHint);
         private SerializedProperty m_Center;
         private SerializedProperty m_Size;
-        private static readonly int s_BoxHash = "BoxColliderEditor".GetHashCode();
+        private static readonly int s_HandleControlIDHint = typeof(BoxColliderEditor).Name.GetHashCode();
 
-        public override void OnDisable()
+        protected override void CopyColliderPropertiesToHandle()
         {
-            base.OnDisable();
-            this.m_BoxEditor.OnDisable();
+            BoxCollider target = (BoxCollider) base.target;
+            this.m_BoundsHandle.center = base.TransformColliderCenterToHandleSpace(target.transform, target.center);
+            this.m_BoundsHandle.size = Vector3.Scale(target.size, target.transform.lossyScale);
+        }
+
+        protected override void CopyHandlePropertiesToCollider()
+        {
+            BoxCollider target = (BoxCollider) base.target;
+            target.center = base.TransformHandleCenterToColliderSpace(target.transform, this.m_BoundsHandle.center);
+            Vector3 vector = Vector3.Scale(this.m_BoundsHandle.size, base.InvertScaleVector(target.transform.lossyScale));
+            float x = Mathf.Abs(vector.x);
+            float y = Mathf.Abs(vector.y);
+            vector = new Vector3(x, y, Mathf.Abs(vector.z));
+            target.size = vector;
         }
 
         public override void OnEnable()
@@ -22,8 +35,6 @@
             base.OnEnable();
             this.m_Center = base.serializedObject.FindProperty("m_Center");
             this.m_Size = base.serializedObject.FindProperty("m_Size");
-            this.m_BoxEditor.OnEnable();
-            this.m_BoxEditor.SetAlwaysDisplayHandles(true);
         }
 
         public override void OnInspectorGUI()
@@ -37,26 +48,8 @@
             base.serializedObject.ApplyModifiedProperties();
         }
 
-        public void OnSceneGUI()
-        {
-            if (base.editingCollider)
-            {
-                BoxCollider target = (BoxCollider) base.target;
-                Vector3 center = target.center;
-                Vector3 size = target.size;
-                Color color = Handles.s_ColliderHandleColor;
-                if (!target.enabled)
-                {
-                    color = Handles.s_ColliderHandleColorDisabled;
-                }
-                if (this.m_BoxEditor.OnSceneGUI(target.transform, color, ref center, ref size))
-                {
-                    Undo.RecordObject(target, "Modify Box Collider");
-                    target.center = center;
-                    target.size = size;
-                }
-            }
-        }
+        protected override PrimitiveBoundsHandle boundsHandle =>
+            this.m_BoundsHandle;
     }
 }
 

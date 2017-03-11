@@ -54,7 +54,7 @@
             internal bool $disposing;
             internal List<Node>.Enumerator $locvar0;
             internal int $PC;
-            internal Node <n>__0;
+            internal Node <n>__1;
 
             [DebuggerHidden]
             public void Dispose()
@@ -107,10 +107,10 @@
                     }
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<n>__0 = this.$locvar0.Current;
-                        if (!TopologicalSort.s_SortedNodes.Contains(this.<n>__0))
+                        this.<n>__1 = this.$locvar0.Current;
+                        if (!TopologicalSort.s_SortedNodes.Contains(this.<n>__1))
                         {
-                            this.$current = this.<n>__0;
+                            this.$current = this.<n>__1;
                             if (!this.$disposing)
                             {
                                 this.$PC = 1;

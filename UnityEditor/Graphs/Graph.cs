@@ -203,7 +203,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<Node, int>(null, (IntPtr) <GetNodeIdsForSerialization>m__0);
+                <>f__am$cache0 = n => n.GetInstanceID();
             }
             return Enumerable.Select<Node, int>(graph.nodes, <>f__am$cache0).ToArray<int>();
         }
@@ -336,7 +336,7 @@
             }
             else
             {
-                foreach (UnityEditor.Graphs.Edge edge2 in Enumerable.Where<UnityEditor.Graphs.Edge>(this.m_InvalidEdges, new Func<UnityEditor.Graphs.Edge, bool>(storey, (IntPtr) this.<>m__0)))
+                foreach (UnityEditor.Graphs.Edge edge2 in Enumerable.Where<UnityEditor.Graphs.Edge>(this.m_InvalidEdges, new Func<UnityEditor.Graphs.Edge, bool>(storey.<>m__0)))
                 {
                     if (this.CanConnect(edge2.fromSlot, edge2.toSlot))
                     {
@@ -358,7 +358,7 @@
                 throw new ArgumentException("Expected an output data slot");
             }
             List<UnityEditor.Graphs.Edge> list = storey.s.edges.ToList<UnityEditor.Graphs.Edge>();
-            List<UnityEditor.Graphs.Edge> list2 = Enumerable.Where<UnityEditor.Graphs.Edge>(this.m_InvalidEdges, new Func<UnityEditor.Graphs.Edge, bool>(storey, (IntPtr) this.<>m__0)).ToList<UnityEditor.Graphs.Edge>();
+            List<UnityEditor.Graphs.Edge> list2 = Enumerable.Where<UnityEditor.Graphs.Edge>(this.m_InvalidEdges, new Func<UnityEditor.Graphs.Edge, bool>(storey.<>m__0)).ToList<UnityEditor.Graphs.Edge>();
             foreach (UnityEditor.Graphs.Edge edge in storey.s.edges)
             {
                 edge.toSlot.edges.RemoveAll(new Predicate<UnityEditor.Graphs.Edge>(storey.<>m__1));
@@ -457,7 +457,7 @@
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<Node, IEnumerable<Slot>>(null, (IntPtr) <WakeUpEdges>m__1);
+                    <>f__am$cache1 = n => n.slots;
                 }
                 foreach (Slot slot in Enumerable.SelectMany<Node, Slot>(this.nodes, <>f__am$cache1))
                 {

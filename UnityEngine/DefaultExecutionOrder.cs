@@ -5,10 +5,10 @@
     using System.Runtime.CompilerServices;
     using UnityEngine.Scripting;
 
-    [AttributeUsage(AttributeTargets.Class), UsedByNativeCode]
+    [UsedByNativeCode, AttributeUsage(AttributeTargets.Class)]
     public class DefaultExecutionOrder : Attribute
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private int <order>k__BackingField;
 
         public DefaultExecutionOrder(int order)

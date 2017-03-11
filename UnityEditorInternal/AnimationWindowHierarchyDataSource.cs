@@ -12,7 +12,7 @@
     {
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <showAll>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private AnimationWindowState <state>k__BackingField;
 
         public AnimationWindowHierarchyDataSource(TreeViewController treeView, AnimationWindowState animationWindowState) : base(treeView)
@@ -127,7 +127,7 @@
         {
             if (selectedItem.rootGameObject != null)
             {
-                Object animatedObject = AnimationUtility.GetAnimatedObject(selectedItem.rootGameObject, curveBinding);
+                UnityEngine.Object animatedObject = AnimationUtility.GetAnimatedObject(selectedItem.rootGameObject, curveBinding);
                 if (animatedObject != null)
                 {
                     return AssetPreview.GetMiniThumbnail(animatedObject);

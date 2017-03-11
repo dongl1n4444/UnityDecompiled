@@ -59,9 +59,17 @@
         /// <para>Mouse was dragged.</para>
         /// </summary>
         MouseDrag = 3,
+        /// <summary>
+        /// <para>Mouse entered a window (Editor views only).</para>
+        /// </summary>
+        MouseEnterWindow = 20,
+        /// <summary>
+        /// <para>Mouse left a window (Editor views only).</para>
+        /// </summary>
+        MouseLeaveWindow = 0x15,
         mouseMove = 2,
         /// <summary>
-        /// <para>Mouse was moved (editor views only).</para>
+        /// <para>Mouse was moved (Editor views only).</para>
         /// </summary>
         MouseMove = 2,
         mouseUp = 1,

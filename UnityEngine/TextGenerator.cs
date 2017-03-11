@@ -273,22 +273,27 @@
                 return this.m_Lines;
             }
         }
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Init();
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private extern void Dispose_cpp();
         internal bool Populate_Internal(string str, Font font, Color color, int fontSize, float scaleFactor, float lineSpacing, FontStyle style, bool richText, bool resizeTextForBestFit, int resizeTextMinSize, int resizeTextMaxSize, VerticalWrapMode verticalOverFlow, HorizontalWrapMode horizontalOverflow, bool updateBounds, TextAnchor anchor, Vector2 extents, Vector2 pivot, bool generateOutOfBounds, bool alignByGeometry, out TextGenerationError error)
         {
             uint num = 0;
-            bool flag = this.Populate_Internal_cpp(str, font, color, fontSize, scaleFactor, lineSpacing, style, richText, resizeTextForBestFit, resizeTextMinSize, resizeTextMaxSize, (int) verticalOverFlow, (int) horizontalOverflow, updateBounds, anchor, extents.x, extents.y, pivot.x, pivot.y, generateOutOfBounds, alignByGeometry, out num);
+            if (font == null)
+            {
+                error = TextGenerationError.NoFont;
+                return false;
+            }
+            bool flag2 = this.Populate_Internal_cpp(str, font, color, fontSize, scaleFactor, lineSpacing, style, richText, resizeTextForBestFit, resizeTextMinSize, resizeTextMaxSize, (int) verticalOverFlow, (int) horizontalOverflow, updateBounds, anchor, extents.x, extents.y, pivot.x, pivot.y, generateOutOfBounds, alignByGeometry, out num);
             error = (TextGenerationError) num;
-            return flag;
+            return flag2;
         }
 
         internal bool Populate_Internal_cpp(string str, Font font, Color color, int fontSize, float scaleFactor, float lineSpacing, FontStyle style, bool richText, bool resizeTextForBestFit, int resizeTextMinSize, int resizeTextMaxSize, int verticalOverFlow, int horizontalOverflow, bool updateBounds, TextAnchor anchor, float extentsX, float extentsY, float pivotX, float pivotY, bool generateOutOfBounds, bool alignByGeometry, out uint error) => 
             INTERNAL_CALL_Populate_Internal_cpp(this, str, font, ref color, fontSize, scaleFactor, lineSpacing, style, richText, resizeTextForBestFit, resizeTextMinSize, resizeTextMaxSize, verticalOverFlow, horizontalOverflow, updateBounds, anchor, extentsX, extentsY, pivotX, pivotY, generateOutOfBounds, alignByGeometry, out error);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool INTERNAL_CALL_Populate_Internal_cpp(TextGenerator self, string str, Font font, ref Color color, int fontSize, float scaleFactor, float lineSpacing, FontStyle style, bool richText, bool resizeTextForBestFit, int resizeTextMinSize, int resizeTextMaxSize, int verticalOverFlow, int horizontalOverflow, bool updateBounds, TextAnchor anchor, float extentsX, float extentsY, float pivotX, float pivotY, bool generateOutOfBounds, bool alignByGeometry, out uint error);
         /// <summary>
         /// <para>Extents of the generated text in rect format.</para>
@@ -302,13 +307,13 @@
                 return rect;
             }
         }
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_rectExtents(out Rect value);
         /// <summary>
         /// <para>Number of vertices generated.</para>
         /// </summary>
-        public int vertexCount { [MethodImpl(MethodImplOptions.InternalCall)] get; }
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        public int vertexCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void GetVerticesInternal(object vertices);
         /// <summary>
         /// <para>Returns the current UILineInfo.</para>
@@ -316,18 +321,18 @@
         /// <returns>
         /// <para>Vertices.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern UIVertex[] GetVerticesArray();
         /// <summary>
         /// <para>The number of characters that have been generated.</para>
         /// </summary>
-        public int characterCount { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int characterCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
         /// <summary>
         /// <para>The number of characters that have been generated and are included in the visible lines.</para>
         /// </summary>
         public int characterCountVisible =>
             (this.characterCount - 1);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void GetCharactersInternal(object characters);
         /// <summary>
         /// <para>Returns the current UICharInfo.</para>
@@ -335,13 +340,13 @@
         /// <returns>
         /// <para>Character information.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern UICharInfo[] GetCharactersArray();
         /// <summary>
         /// <para>Number of text lines generated.</para>
         /// </summary>
-        public int lineCount { [MethodImpl(MethodImplOptions.InternalCall)] get; }
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        public int lineCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void GetLinesInternal(object lines);
         /// <summary>
         /// <para>Returns the current UILineInfo.</para>
@@ -349,12 +354,12 @@
         /// <returns>
         /// <para>Line information.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern UILineInfo[] GetLinesArray();
         /// <summary>
         /// <para>The size of the font that was found if using best fit mode.</para>
         /// </summary>
-        public int fontSizeUsedForBestFit { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int fontSizeUsedForBestFit { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

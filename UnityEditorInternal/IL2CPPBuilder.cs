@@ -16,10 +16,8 @@
         [CompilerGenerated]
         private static Func<string, string> <>f__am$cache1;
         [CompilerGenerated]
-        private static Func<string, string> <>f__am$cache2;
-        [CompilerGenerated]
-        private static Func<string, string, string> <>f__am$cache3;
-        private readonly bool m_DevelopmentBuild;
+        private static Func<string, string, string> <>f__am$cache2;
+        private readonly bool m_DebugBuild;
         private readonly LinkXmlReader m_linkXmlReader = new LinkXmlReader();
         private readonly Action<string> m_ModifyOutputBeforeCompile;
         private readonly IIl2CppPlatformProvider m_PlatformProvider;
@@ -27,25 +25,20 @@
         private readonly string m_StagingAreaData;
         private readonly string m_TempFolder;
 
-        public IL2CPPBuilder(string tempFolder, string stagingAreaData, IIl2CppPlatformProvider platformProvider, Action<string> modifyOutputBeforeCompile, RuntimeClassRegistry runtimeClassRegistry, bool developmentBuild)
+        public IL2CPPBuilder(string tempFolder, string stagingAreaData, IIl2CppPlatformProvider platformProvider, Action<string> modifyOutputBeforeCompile, RuntimeClassRegistry runtimeClassRegistry, bool debugBuild)
         {
             this.m_TempFolder = tempFolder;
             this.m_StagingAreaData = stagingAreaData;
             this.m_PlatformProvider = platformProvider;
             this.m_ModifyOutputBeforeCompile = modifyOutputBeforeCompile;
             this.m_RuntimeClassRegistry = runtimeClassRegistry;
-            this.m_DevelopmentBuild = developmentBuild;
+            this.m_DebugBuild = debugBuild;
         }
 
         private void ConvertPlayerDlltoCpp(ICollection<string> userAssemblies, string outputDirectory, string workingDirectory)
         {
             if (userAssemblies.Count != 0)
             {
-                if (<>f__am$cache1 == null)
-                {
-                    <>f__am$cache1 = new Func<string, string>(null, (IntPtr) <ConvertPlayerDlltoCpp>m__1);
-                }
-                string[] strArray = Enumerable.Select<string, string>(Directory.GetFiles("Assets", "il2cpp_extra_types.txt", SearchOption.AllDirectories), <>f__am$cache1).ToArray<string>();
                 List<string> arguments = new List<string> { "--convert-to-cpp" };
                 if (this.m_PlatformProvider.emitNullChecks)
                 {
@@ -63,33 +56,21 @@
                 {
                     arguments.Add("--enable-divide-by-zero-check");
                 }
-                if (this.m_PlatformProvider.loadSymbols)
-                {
-                    arguments.Add("--enable-symbol-loading");
-                }
                 if (this.m_PlatformProvider.developmentMode)
                 {
                     arguments.Add("--development-mode");
+                }
+                if (PlayerSettings.GetApiCompatibilityLevel(BuildPipeline.GetBuildTargetGroup(this.m_PlatformProvider.target)) == ApiCompatibilityLevel.NET_4_6)
+                {
+                    arguments.Add("--dotnetprofile=\"net45\"");
                 }
                 Il2CppNativeCodeBuilder builder = this.m_PlatformProvider.CreateIl2CppNativeCodeBuilder();
                 if (builder != null)
                 {
                     Il2CppNativeCodeBuilderUtils.ClearAndPrepareCacheDirectory(builder);
-                    arguments.AddRange(Il2CppNativeCodeBuilderUtils.AddBuilderArguments(builder, this.OutputFileRelativePath(), this.m_PlatformProvider.includePaths));
+                    arguments.AddRange(Il2CppNativeCodeBuilderUtils.AddBuilderArguments(builder, this.OutputFileRelativePath(), this.m_PlatformProvider.includePaths, this.m_DebugBuild));
                 }
                 arguments.Add($"--map-file-parser="{GetMapFileParserPath()}"");
-                if (strArray.Length > 0)
-                {
-                    foreach (string str in strArray)
-                    {
-                        arguments.Add($"--extra-types.file="{str}"");
-                    }
-                }
-                string path = Path.Combine(this.m_PlatformProvider.il2CppFolder, "il2cpp_default_extra_types.txt");
-                if (File.Exists(path))
-                {
-                    arguments.Add($"--extra-types.file="{path}"");
-                }
                 string environmentVariable = PlayerSettings.GetAdditionalIl2CppArgs();
                 if (!string.IsNullOrEmpty(environmentVariable))
                 {
@@ -101,13 +82,18 @@
                     arguments.Add(environmentVariable);
                 }
                 List<string> list2 = new List<string>(userAssemblies);
-                if (<>f__am$cache2 == null)
+                if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache2 = new Func<string, string>(null, (IntPtr) <ConvertPlayerDlltoCpp>m__2);
+                    <>f__am$cache1 = arg => "--assembly=\"" + Path.GetFullPath(arg) + "\"";
                 }
-                arguments.AddRange(Enumerable.Select<string, string>(list2, <>f__am$cache2));
+                arguments.AddRange(Enumerable.Select<string, string>(list2, <>f__am$cache1));
                 arguments.Add($"--generatedcppdir="{Path.GetFullPath(outputDirectory)}"");
-                if (EditorUtility.DisplayCancelableProgressBar("Building Player", "Converting managed assemblies to C++", 0.3f))
+                string info = "Converting managed assemblies to C++";
+                if (builder != null)
+                {
+                    info = "Building native binary with IL2CPP...";
+                }
+                if (EditorUtility.DisplayCancelableProgressBar("Building Player", info, 0.3f))
                 {
                     throw new OperationCanceledException();
                 }
@@ -126,7 +112,7 @@
                 isUsed = isUsed,
                 managedDir = managedDir
             };
-            return Enumerable.Select<string, string>(Enumerable.Where<string>(assemblies, new Func<string, bool>(storey, (IntPtr) this.<>m__0)), new Func<string, string>(storey, (IntPtr) this.<>m__1));
+            return Enumerable.Select<string, string>(Enumerable.Where<string>(assemblies, new Func<string, bool>(storey.<>m__0)), new Func<string, string>(storey.<>m__1));
         }
 
         public string GetCppOutputDirectoryInStagingArea() => 
@@ -135,10 +121,13 @@
         public static string GetCppOutputPath(string tempFolder) => 
             Path.Combine(tempFolder, "il2cppOutput");
 
+        private string GetIl2CppCoreExe() => 
+            (this.m_PlatformProvider.il2CppFolder + "/build/il2cppcore/il2cppcore.dll");
+
         private string GetIl2CppExe() => 
             (this.m_PlatformProvider.il2CppFolder + "/build/il2cpp.exe");
 
-        private static string GetMapFileParserPath() => 
+        public static string GetMapFileParserPath() => 
             Path.GetFullPath(Path.Combine(EditorApplication.applicationContentsPath, (Application.platform != RuntimePlatform.WindowsEditor) ? "Tools/MapFileParser/MapFileParser" : @"Tools\MapFileParser\MapFileParser.exe"));
 
         private HashSet<string> GetUserAssemblies(string managedDir)
@@ -178,7 +167,7 @@
                     IsReadOnly = false
                 };
             }
-            AssemblyStripper.StripAssemblies(this.m_StagingAreaData, this.m_PlatformProvider, this.m_RuntimeClassRegistry, this.m_DevelopmentBuild);
+            AssemblyStripper.StripAssemblies(this.m_StagingAreaData, this.m_PlatformProvider, this.m_RuntimeClassRegistry);
             FileUtil.CreateOrCleanDirectory(cppOutputDirectoryInStagingArea);
             if (this.m_ModifyOutputBeforeCompile != null)
             {
@@ -201,7 +190,7 @@
             if (builder != null)
             {
                 Il2CppNativeCodeBuilderUtils.ClearAndPrepareCacheDirectory(builder);
-                List<string> arguments = Il2CppNativeCodeBuilderUtils.AddBuilderArguments(builder, this.OutputFileRelativePath(), this.m_PlatformProvider.includePaths).ToList<string>();
+                List<string> arguments = Il2CppNativeCodeBuilderUtils.AddBuilderArguments(builder, this.OutputFileRelativePath(), this.m_PlatformProvider.includePaths, this.m_DebugBuild).ToList<string>();
                 arguments.Add($"--map-file-parser="{GetMapFileParserPath()}"");
                 arguments.Add($"--generatedcppdir="{Path.GetFullPath(this.GetCppOutputDirectoryInStagingArea())}"");
                 Action<ProcessStartInfo> setupStartInfo = new Action<ProcessStartInfo>(builder.SetupStartInfo);
@@ -212,14 +201,39 @@
 
         private void RunIl2CppWithArguments(List<string> arguments, Action<ProcessStartInfo> setupStartInfo, string workingDirectory)
         {
-            string exe = this.GetIl2CppExe();
-            if (<>f__am$cache3 == null)
+            if (<>f__am$cache2 == null)
             {
-                <>f__am$cache3 = new Func<string, string, string>(null, (IntPtr) <RunIl2CppWithArguments>m__3);
+                <>f__am$cache2 = (current, arg) => current + arg + " ";
             }
-            string args = Enumerable.Aggregate<string, string>(arguments, string.Empty, <>f__am$cache3);
+            string args = Enumerable.Aggregate<string, string>(arguments, string.Empty, <>f__am$cache2);
+            bool flag = this.ShouldUseIl2CppCore();
+            string exe = !flag ? this.GetIl2CppExe() : this.GetIl2CppCoreExe();
             Console.WriteLine("Invoking il2cpp with arguments: " + args);
-            Runner.RunManagedProgram(exe, args, workingDirectory, new Il2CppOutputParser(), setupStartInfo);
+            if (flag)
+            {
+                Runner.RunNetCoreProgram(exe, args, workingDirectory, new Il2CppOutputParser(), setupStartInfo);
+            }
+            else
+            {
+                Runner.RunManagedProgram(exe, args, workingDirectory, new Il2CppOutputParser(), setupStartInfo);
+            }
+        }
+
+        private bool ShouldUseIl2CppCore()
+        {
+            if (Application.platform == RuntimePlatform.OSXEditor)
+            {
+                if (SystemInfo.operatingSystem.StartsWith("Mac OS X 10."))
+                {
+                    if (new Version(SystemInfo.operatingSystem.Substring(9)) < new Version(10, 9))
+                    {
+                        return false;
+                    }
+                    return true;
+                }
+                return true;
+            }
+            return false;
         }
 
         [CompilerGenerated]

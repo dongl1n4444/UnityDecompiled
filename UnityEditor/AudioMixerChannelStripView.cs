@@ -255,7 +255,7 @@
             {
                 if (<>f__am$cache3 == null)
                 {
-                    <>f__am$cache3 = new Func<AudioMixerGroupController, bool>(null, (IntPtr) <DoBypassEffectsButton>m__3);
+                    <>f__am$cache3 = g => g.bypassEffects;
                 }
                 if (Enumerable.Any<AudioMixerGroupController>(allGroups, <>f__am$cache3))
                 {
@@ -385,14 +385,14 @@
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<AudioMixerGroupController, bool>(null, (IntPtr) <DoMuteButton>m__1);
+                    <>f__am$cache1 = g => g.mute;
                 }
                 if (Enumerable.Any<AudioMixerGroupController>(allGroups, <>f__am$cache1))
                 {
                     Undo.RecordObject(group, "Change mute state");
                     if (<>f__am$cache2 == null)
                     {
-                        <>f__am$cache2 = new Func<AudioMixerGroupController, bool>(null, (IntPtr) <DoMuteButton>m__2);
+                        <>f__am$cache2 = g => g.solo;
                     }
                     if (Enumerable.Any<AudioMixerGroupController>(allGroups, <>f__am$cache2))
                     {
@@ -437,7 +437,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<AudioMixerGroupController, bool>(null, (IntPtr) <DoSoloButton>m__0);
+                    <>f__am$cache0 = g => g.solo;
                 }
                 if (Enumerable.Any<AudioMixerGroupController>(allGroups, <>f__am$cache0))
                 {
@@ -949,7 +949,7 @@
             bool keepMultiSelection = Event.current.shift || clickedControlInGroup;
             bool useShiftAsActionKey = false;
             storey.newSelection = InternalEditorUtility.GetNewSelection(clickedGroup.GetInstanceID(), allInstanceIDs, selectedInstanceIDs, lastClickedInstanceID, keepMultiSelection, useShiftAsActionKey, allowMultiSelection);
-            Selection.objects = Enumerable.Where<AudioMixerGroupController>(p.allGroups, new Func<AudioMixerGroupController, bool>(storey, (IntPtr) this.<>m__0)).ToList<AudioMixerGroupController>().ToArray();
+            Selection.objects = Enumerable.Where<AudioMixerGroupController>(p.allGroups, new Func<AudioMixerGroupController, bool>(storey.<>m__0)).ToList<AudioMixerGroupController>().ToArray();
             this.m_Controller.OnUnitySelectionChanged();
             InspectorWindow.RepaintAllInspectors();
         }
@@ -1094,7 +1094,7 @@
                 };
                 if (<>f__am$cache4 == null)
                 {
-                    <>f__am$cache4 = new Func<AudioMixerGroupController, bool>(null, (IntPtr) <OnGUI>m__4);
+                    <>f__am$cache4 = g => g.solo;
                 }
                 params2.anySoloActive = Enumerable.Any<AudioMixerGroupController>(allGroups, <>f__am$cache4);
                 params2.visibleRect = new Rect(this.m_State.m_ScrollPos.x, this.m_State.m_ScrollPos.y, rect.width, rect.height);
@@ -1222,7 +1222,7 @@
             {
                 if (!current.shift)
                 {
-                    Selection.objects = new Object[0];
+                    Selection.objects = new UnityEngine.Object[0];
                     this.m_Controller.OnUnitySelectionChanged();
                 }
                 GUIUtility.hotControl = this.m_RectSelectionControlID;
@@ -1444,7 +1444,7 @@
                 {
                     if (<>f__am$cache5 == null)
                     {
-                        <>f__am$cache5 = new Func<AudioMixerEffectController, bool>(null, (IntPtr) <WarningOverlay>m__5);
+                        <>f__am$cache5 = e => e.bypass;
                     }
                     num3 += Enumerable.Count<AudioMixerEffectController>(controller.effects, <>f__am$cache5);
                 }

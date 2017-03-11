@@ -10,17 +10,17 @@ using UnityEngine;
 
 internal class AssemblyValidation
 {
-    private static Dictionary<RuntimePlatform, List<Type>> _rulesByPlatform;
+    private static Dictionary<RuntimePlatform, List<System.Type>> _rulesByPlatform;
     [CompilerGenerated]
     private static Func<IValidationRule, bool> <>f__am$cache0;
     [CompilerGenerated]
-    private static Func<object, Type> <>f__am$cache1;
+    private static Func<object, System.Type> <>f__am$cache1;
     [CompilerGenerated]
     private static Func<AssemblyValidationRule, int> <>f__am$cache2;
     [CompilerGenerated]
-    private static Func<Type, bool> <>f__mg$cache0;
+    private static Func<System.Type, bool> <>f__mg$cache0;
 
-    internal static int CompareValidationRulesByPriority(Type a, Type b, RuntimePlatform platform)
+    internal static int CompareValidationRulesByPriority(System.Type a, System.Type b, RuntimePlatform platform)
     {
         int num = PriorityFor(a, platform);
         int num2 = PriorityFor(b, platform);
@@ -31,17 +31,17 @@ internal class AssemblyValidation
         return ((num >= num2) ? 1 : -1);
     }
 
-    private static ConstructorInfo ConstructorFor(Type type, IEnumerable<object> options)
+    private static ConstructorInfo ConstructorFor(System.Type type, IEnumerable<object> options)
     {
         if (<>f__am$cache1 == null)
         {
-            <>f__am$cache1 = new Func<object, Type>(null, (IntPtr) <ConstructorFor>m__1);
+            <>f__am$cache1 = o => o.GetType();
         }
-        Type[] types = Enumerable.Select<object, Type>(options, <>f__am$cache1).ToArray<Type>();
+        System.Type[] types = Enumerable.Select<object, System.Type>(options, <>f__am$cache1).ToArray<System.Type>();
         return type.GetConstructor(types);
     }
 
-    private static IValidationRule CreateValidationRuleWithOptions(Type type, params object[] options)
+    private static IValidationRule CreateValidationRuleWithOptions(System.Type type, params object[] options)
     {
         List<object> list = new List<object>(options);
         while (true)
@@ -60,22 +60,22 @@ internal class AssemblyValidation
         }
     }
 
-    private static bool IsValidationRule(Type type) => 
+    private static bool IsValidationRule(System.Type type) => 
         ValidationRuleAttributesFor(type).Any<AssemblyValidationRule>();
 
-    private static int PriorityFor(Type type, RuntimePlatform platform)
+    private static int PriorityFor(System.Type type, RuntimePlatform platform)
     {
         <PriorityFor>c__AnonStorey3 storey = new <PriorityFor>c__AnonStorey3 {
             platform = platform
         };
         if (<>f__am$cache2 == null)
         {
-            <>f__am$cache2 = new Func<AssemblyValidationRule, int>(null, (IntPtr) <PriorityFor>m__2);
+            <>f__am$cache2 = attr => attr.Priority;
         }
-        return Enumerable.Select<AssemblyValidationRule, int>(Enumerable.Where<AssemblyValidationRule>(ValidationRuleAttributesFor(type), new Func<AssemblyValidationRule, bool>(storey, (IntPtr) this.<>m__0)), <>f__am$cache2).FirstOrDefault<int>();
+        return Enumerable.Select<AssemblyValidationRule, int>(Enumerable.Where<AssemblyValidationRule>(ValidationRuleAttributesFor(type), new Func<AssemblyValidationRule, bool>(storey.<>m__0)), <>f__am$cache2).FirstOrDefault<int>();
     }
 
-    internal static void RegisterValidationRule(Type type)
+    internal static void RegisterValidationRule(System.Type type)
     {
         foreach (AssemblyValidationRule rule in ValidationRuleAttributesFor(type))
         {
@@ -83,20 +83,20 @@ internal class AssemblyValidation
         }
     }
 
-    internal static void RegisterValidationRuleForPlatform(RuntimePlatform platform, Type type)
+    internal static void RegisterValidationRuleForPlatform(RuntimePlatform platform, System.Type type)
     {
         <RegisterValidationRuleForPlatform>c__AnonStorey2 storey = new <RegisterValidationRuleForPlatform>c__AnonStorey2 {
             platform = platform
         };
         if (!_rulesByPlatform.ContainsKey(storey.platform))
         {
-            _rulesByPlatform[storey.platform] = new List<Type>();
+            _rulesByPlatform[storey.platform] = new List<System.Type>();
         }
         if (_rulesByPlatform[storey.platform].IndexOf(type) == -1)
         {
             _rulesByPlatform[storey.platform].Add(type);
         }
-        _rulesByPlatform[storey.platform].Sort(new Comparison<Type>(storey.<>m__0));
+        _rulesByPlatform[storey.platform].Sort(new Comparison<System.Type>(storey.<>m__0));
     }
 
     public static ValidationResult Validate(RuntimePlatform platform, IEnumerable<string> userAssemblies, params object[] options)
@@ -126,7 +126,7 @@ internal class AssemblyValidation
         return new ValidationResult { Success = true };
     }
 
-    private static IEnumerable<AssemblyValidationRule> ValidationRuleAttributesFor(Type type) => 
+    private static IEnumerable<AssemblyValidationRule> ValidationRuleAttributesFor(System.Type type) => 
         type.GetCustomAttributes(true).OfType<AssemblyValidationRule>();
 
     private static IEnumerable<IValidationRule> ValidationRulesFor(RuntimePlatform platform, params object[] options)
@@ -136,13 +136,13 @@ internal class AssemblyValidation
         };
         if (<>f__am$cache0 == null)
         {
-            <>f__am$cache0 = new Func<IValidationRule, bool>(null, (IntPtr) <ValidationRulesFor>m__0);
+            <>f__am$cache0 = v => v != null;
         }
-        return Enumerable.Where<IValidationRule>(Enumerable.Select<Type, IValidationRule>(ValidationRuleTypesFor(platform), new Func<Type, IValidationRule>(storey, (IntPtr) this.<>m__0)), <>f__am$cache0);
+        return Enumerable.Where<IValidationRule>(Enumerable.Select<System.Type, IValidationRule>(ValidationRuleTypesFor(platform), new Func<System.Type, IValidationRule>(storey.<>m__0)), <>f__am$cache0);
     }
 
     [DebuggerHidden]
-    private static IEnumerable<Type> ValidationRuleTypesFor(RuntimePlatform platform) => 
+    private static IEnumerable<System.Type> ValidationRuleTypesFor(RuntimePlatform platform) => 
         new <ValidationRuleTypesFor>c__Iterator0 { 
             platform = platform,
             $PC = -2
@@ -152,13 +152,13 @@ internal class AssemblyValidation
     {
         if (_rulesByPlatform == null)
         {
-            _rulesByPlatform = new Dictionary<RuntimePlatform, List<Type>>();
+            _rulesByPlatform = new Dictionary<RuntimePlatform, List<System.Type>>();
             Assembly assembly = typeof(AssemblyValidation).Assembly;
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Func<Type, bool>(null, (IntPtr) IsValidationRule);
+                <>f__mg$cache0 = new Func<System.Type, bool>(AssemblyValidation.IsValidationRule);
             }
-            foreach (Type type in Enumerable.Where<Type>(assembly.GetTypes(), <>f__mg$cache0))
+            foreach (System.Type type in Enumerable.Where<System.Type>(assembly.GetTypes(), <>f__mg$cache0))
             {
                 RegisterValidationRule(type);
             }
@@ -179,7 +179,7 @@ internal class AssemblyValidation
     {
         internal RuntimePlatform platform;
 
-        internal int <>m__0(Type a, Type b) => 
+        internal int <>m__0(System.Type a, System.Type b) => 
             AssemblyValidation.CompareValidationRulesByPriority(a, b, this.platform);
     }
 
@@ -188,18 +188,18 @@ internal class AssemblyValidation
     {
         internal object[] options;
 
-        internal IValidationRule <>m__0(Type t) => 
+        internal IValidationRule <>m__0(System.Type t) => 
             AssemblyValidation.CreateValidationRuleWithOptions(t, this.options);
     }
 
     [CompilerGenerated]
-    private sealed class <ValidationRuleTypesFor>c__Iterator0 : IEnumerable, IEnumerable<Type>, IEnumerator, IDisposable, IEnumerator<Type>
+    private sealed class <ValidationRuleTypesFor>c__Iterator0 : IEnumerable, IEnumerable<System.Type>, IEnumerator, IDisposable, IEnumerator<System.Type>
     {
-        internal Type $current;
+        internal System.Type $current;
         internal bool $disposing;
-        internal List<Type>.Enumerator $locvar0;
+        internal List<System.Type>.Enumerator $locvar0;
         internal int $PC;
-        internal Type <validationType>__0;
+        internal System.Type <validationType>__1;
         internal RuntimePlatform platform;
 
         [DebuggerHidden]
@@ -248,8 +248,8 @@ internal class AssemblyValidation
             {
                 while (this.$locvar0.MoveNext())
                 {
-                    this.<validationType>__0 = this.$locvar0.Current;
-                    this.$current = this.<validationType>__0;
+                    this.<validationType>__1 = this.$locvar0.Current;
+                    this.$current = this.<validationType>__1;
                     if (!this.$disposing)
                     {
                         this.$PC = 1;
@@ -277,7 +277,7 @@ internal class AssemblyValidation
         }
 
         [DebuggerHidden]
-        IEnumerator<Type> IEnumerable<Type>.GetEnumerator()
+        IEnumerator<System.Type> IEnumerable<System.Type>.GetEnumerator()
         {
             if (Interlocked.CompareExchange(ref this.$PC, 0, -2) == -2)
             {
@@ -290,7 +290,7 @@ internal class AssemblyValidation
         IEnumerator IEnumerable.GetEnumerator() => 
             this.System.Collections.Generic.IEnumerable<System.Type>.GetEnumerator();
 
-        Type IEnumerator<Type>.Current =>
+        System.Type IEnumerator<System.Type>.Current =>
             this.$current;
 
         object IEnumerator.Current =>

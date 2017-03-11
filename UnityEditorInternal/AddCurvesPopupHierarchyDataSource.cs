@@ -11,7 +11,7 @@
 
     internal class AddCurvesPopupHierarchyDataSource : TreeViewDataSource
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static bool <showEntireHierarchy>k__BackingField;
 
         public AddCurvesPopupHierarchyDataSource(TreeViewController treeView) : base(treeView)
@@ -83,7 +83,7 @@
                     bool flag2 = false;
                     if (!flag)
                     {
-                        flag2 = animatableBindings[i + 1].type != item.type;
+                        flag2 = !(animatableBindings[i + 1].type == item.type);
                     }
                     if (AnimationWindowUtility.IsCurveCreated(selectionItem.animationClip, item))
                     {
@@ -121,7 +121,7 @@
             <AddScriptableObjectToHierarchy>c__AnonStorey0 storey = new <AddScriptableObjectToHierarchy>c__AnonStorey0 {
                 selectionItem = selectionItem
             };
-            EditorCurveBinding[] curveBindings = Enumerable.Where<EditorCurveBinding>(AnimationUtility.GetScriptableObjectAnimatableBindings(scriptableObject), new Func<EditorCurveBinding, bool>(storey, (IntPtr) this.<>m__0)).ToArray<EditorCurveBinding>();
+            EditorCurveBinding[] curveBindings = Enumerable.Where<EditorCurveBinding>(AnimationUtility.GetScriptableObjectAnimatableBindings(scriptableObject), new Func<EditorCurveBinding, bool>(storey.<>m__0)).ToArray<EditorCurveBinding>();
             TreeViewItem item = null;
             if (curveBindings.Length > 0)
             {
@@ -181,7 +181,7 @@
         {
             if (selectionItem.rootGameObject != null)
             {
-                Object animatedObject = AnimationUtility.GetAnimatedObject(selectionItem.rootGameObject, binding);
+                UnityEngine.Object animatedObject = AnimationUtility.GetAnimatedObject(selectionItem.rootGameObject, binding);
                 if (animatedObject != null)
                 {
                     return ObjectNames.GetInspectorTitle(animatedObject);

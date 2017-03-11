@@ -62,8 +62,7 @@
                 currentVariantStripping = !usedBySceneOnly ? 0 : 1;
             }
             drawPos.y += 6f;
-            int comboCount = ShaderUtil.GetComboCount(this.m_Shader, usedBySceneOnly);
-            string text = !usedBySceneOnly ? (comboCount + " variants total") : (comboCount + " variants included");
+            string text = FormatCount(ShaderUtil.GetVariantCount(this.m_Shader, usedBySceneOnly)) + (!usedBySceneOnly ? " variants total" : " variants included");
             Rect position = drawPos;
             position.x += Styles.menuItem.padding.left;
             position.width -= Styles.menuItem.padding.left + 4;
@@ -106,6 +105,26 @@
         {
             GUI.Label(new Rect(rect.x + 5f, rect.y + 3f, rect.width - 10f, 3f), GUIContent.none, Styles.separator);
             rect.y += 6f;
+        }
+
+        private static string FormatCount(ulong count)
+        {
+            if (count > 0x3b9aca00L)
+            {
+                double num = ((double) count) / 1000000000.0;
+                return (num.ToString("f2") + "B");
+            }
+            if (count > 0xf4240L)
+            {
+                double num2 = ((double) count) / 1000000.0;
+                return (num2.ToString("f2") + "M");
+            }
+            if (count > 0x3e8L)
+            {
+                double num3 = ((double) count) / 1000.0;
+                return (num3.ToString("f2") + "k");
+            }
+            return count.ToString();
         }
 
         public override Vector2 GetWindowSize()
@@ -175,7 +194,7 @@
             {
                 if (s_CurrentPlatformMask < 0)
                 {
-                    s_CurrentPlatformMask = EditorPrefs.GetInt("ShaderInspectorPlatformMask", 0x7ffff);
+                    s_CurrentPlatformMask = EditorPrefs.GetInt("ShaderInspectorPlatformMask", 0xfffff);
                 }
                 return s_CurrentPlatformMask;
             }

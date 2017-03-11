@@ -1,17 +1,15 @@
 ﻿namespace UnityEngine
 {
     using System;
-    using System.Diagnostics;
-    using System.Runtime.CompilerServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Provide a custom documentation URL for a class.</para>
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple=false)]
+    [UsedByNativeCode, AttributeUsage(AttributeTargets.Class, AllowMultiple=false)]
     public sealed class HelpURLAttribute : Attribute
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string <URL>k__BackingField;
+        internal readonly string m_Url;
 
         /// <summary>
         /// <para>Initialize the HelpURL attribute with a documentation url.</para>
@@ -19,13 +17,14 @@
         /// <param name="url">The custom documentation URL for this class.</param>
         public HelpURLAttribute(string url)
         {
-            this.URL = url;
+            this.m_Url = url;
         }
 
         /// <summary>
         /// <para>The documentation URL specified for this class.</para>
         /// </summary>
-        public string URL { get; private set; }
+        public string URL =>
+            this.m_Url;
     }
 }
 

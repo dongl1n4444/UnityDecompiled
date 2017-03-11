@@ -134,9 +134,9 @@
             internal IEnumerator<string> $locvar2;
             internal int $PC;
             internal GccToolChain $this;
-            internal string <compilerFlag>__2;
-            internal string <define>__0;
-            internal NPath <includePath>__1;
+            internal string <compilerFlag>__3;
+            internal string <define>__1;
+            internal NPath <includePath>__2;
             internal CppCompilationInstruction cppCompilationInstruction;
 
             [DebuggerHidden]
@@ -220,8 +220,8 @@
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<define>__0 = this.$locvar0.Current;
-                        this.$current = "-D" + this.<define>__0;
+                        this.<define>__1 = this.$locvar0.Current;
+                        this.$current = "-D" + this.<define>__1;
                         if (!this.$disposing)
                         {
                             this.$PC = 1;
@@ -247,8 +247,8 @@
                 {
                     while (this.$locvar1.MoveNext())
                     {
-                        this.<includePath>__1 = this.$locvar1.Current;
-                        this.$current = "-I" + this.<includePath>__1.InQuotes();
+                        this.<includePath>__2 = this.$locvar1.Current;
+                        this.$current = "-I" + this.<includePath>__2.InQuotes();
                         if (!this.$disposing)
                         {
                             this.$PC = 2;
@@ -267,15 +267,15 @@
                         this.$locvar1.Dispose();
                     }
                 }
-                this.$locvar2 = this.$this.ChooseCompilerFlags(this.cppCompilationInstruction, new Func<CppCompilationInstruction, IEnumerable<string>>(this.$this, (IntPtr) this.DefaultCompilerFlagsFor)).GetEnumerator();
+                this.$locvar2 = this.$this.ChooseCompilerFlags(this.cppCompilationInstruction, new Func<CppCompilationInstruction, IEnumerable<string>>(this.$this.DefaultCompilerFlagsFor)).GetEnumerator();
                 num = 0xfffffffd;
             Label_0196:
                 try
                 {
                     while (this.$locvar2.MoveNext())
                     {
-                        this.<compilerFlag>__2 = this.$locvar2.Current;
-                        this.$current = this.<compilerFlag>__2;
+                        this.<compilerFlag>__3 = this.$locvar2.Current;
+                        this.$current = this.<compilerFlag>__3;
                         if (!this.$disposing)
                         {
                             this.$PC = 3;

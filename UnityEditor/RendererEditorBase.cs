@@ -28,7 +28,7 @@
         protected void RenderCommonProbeFields(bool useMiniStyle)
         {
             bool isDeferredRenderingPath = SceneView.IsUsingDeferredRenderingPath();
-            bool isDeferredReflections = isDeferredRenderingPath && (GraphicsSettings.GetShaderMode(BuiltinShaderType.DeferredReflections) != BuiltinShaderMode.Disabled);
+            bool isDeferredReflections = isDeferredRenderingPath && (GraphicsSettings.GetShaderMode(BuiltinShaderType.DeferredReflections) != UnityEngine.Rendering.BuiltinShaderMode.Disabled);
             this.m_Probes.RenderReflectionProbeUsage(useMiniStyle, isDeferredRenderingPath, isDeferredReflections);
             this.m_Probes.RenderProbeAnchor(useMiniStyle);
         }
@@ -41,8 +41,7 @@
         protected void RenderSortingLayerFields()
         {
             EditorGUILayout.Space();
-            EditorGUILayout.SortingLayerField(Styles.m_SortingLayerStyle, this.m_SortingLayerID, EditorStyles.popup, EditorStyles.label);
-            EditorGUILayout.PropertyField(this.m_SortingOrder, Styles.m_SortingOrderStyle, new GUILayoutOption[0]);
+            SortingLayerEditorUtility.RenderSortingLayerFields(this.m_SortingOrder, this.m_SortingLayerID);
         }
 
         internal class Probes
@@ -64,48 +63,48 @@
             private GUIContent[] m_LightProbeBlendModeOptions;
             private SerializedProperty m_LightProbeUsage;
             private string[] m_LightProbeUsageNames;
-            private GUIContent m_LightProbeUsageStyle = EditorGUIUtility.TextContent("Light Probes|Probe-based lighting interpolation mode. This mode is disabled when the object has the lightmap static flag set.");
+            private GUIContent m_LightProbeUsageStyle = EditorGUIUtility.TextContent("Light Probes|Specifies how Light Probes will handle the interpolation of lighting and occlusion. Disabled if the object is set to Lightmap Static.");
             private GUIContent m_LightProbeVolumeNote = EditorGUIUtility.TextContent("A valid Light Probe Proxy Volume component could not be found.");
             private SerializedProperty m_LightProbeVolumeOverride;
             private GUIContent m_LightProbeVolumeOverrideStyle = EditorGUIUtility.TextContent("Proxy Volume Override|If set, the Renderer will use the Light Probe Proxy Volume component from another GameObject.");
             private GUIContent m_LightProbeVolumeUnsupportedNote = EditorGUIUtility.TextContent("The Light Probe Proxy Volume feature is unsupported by the current graphics hardware or API configuration. Simple 'Blend Probes' mode will be used instead.");
             private GUIContent m_LightProbeVolumeUnsupportedOnTreesNote = EditorGUIUtility.TextContent("The Light Probe Proxy Volume feature is not supported on tree rendering. Simple 'Blend Probes' mode will be used instead.");
             private SerializedProperty m_ProbeAnchor;
-            private GUIContent m_ProbeAnchorStyle = EditorGUIUtility.TextContent("Anchor Override|If set, the Renderer will use this Transform's position to sample light probes and find the matching reflection probe.");
+            private GUIContent m_ProbeAnchorStyle = EditorGUIUtility.TextContent("Anchor Override|Specifies the Transform position that will be used for sampling the light probes and reflection probes.");
             private SerializedProperty m_ReceiveShadows;
             private SerializedProperty m_ReflectionProbeUsage;
             private string[] m_ReflectionProbeUsageNames;
             private GUIContent[] m_ReflectionProbeUsageOptions;
-            private GUIContent m_ReflectionProbeUsageStyle = EditorGUIUtility.TextContent("Reflection Probes");
+            private GUIContent m_ReflectionProbeUsageStyle = EditorGUIUtility.TextContent("Reflection Probes|Specifies if or how the object is affected by reflections in the Scene.  This property cannot be disabled in deferred rendering modes.");
 
             public Probes()
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<string, string>(null, (IntPtr) <m_ReflectionProbeUsageNames>m__0);
+                    <>f__am$cache0 = new Func<string, string>(RendererEditorBase.Probes.<m_ReflectionProbeUsageNames>m__0);
                 }
                 this.m_ReflectionProbeUsageNames = Enumerable.Select<string, string>(Enum.GetNames(typeof(ReflectionProbeUsage)), <>f__am$cache0).ToArray<string>();
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<string, string>(null, (IntPtr) <m_LightProbeUsageNames>m__1);
+                    <>f__am$cache1 = new Func<string, string>(RendererEditorBase.Probes.<m_LightProbeUsageNames>m__1);
                 }
                 this.m_LightProbeUsageNames = Enumerable.Select<string, string>(Enum.GetNames(typeof(LightProbeUsage)), <>f__am$cache1).ToArray<string>();
                 if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache2 = new Func<string, string>(null, (IntPtr) <m_ReflectionProbeUsageOptions>m__2);
+                    <>f__am$cache2 = new Func<string, string>(RendererEditorBase.Probes.<m_ReflectionProbeUsageOptions>m__2);
                 }
                 if (<>f__am$cache3 == null)
                 {
-                    <>f__am$cache3 = new Func<string, GUIContent>(null, (IntPtr) <m_ReflectionProbeUsageOptions>m__3);
+                    <>f__am$cache3 = new Func<string, GUIContent>(RendererEditorBase.Probes.<m_ReflectionProbeUsageOptions>m__3);
                 }
                 this.m_ReflectionProbeUsageOptions = Enumerable.Select<string, GUIContent>(Enumerable.Select<string, string>(Enum.GetNames(typeof(ReflectionProbeUsage)), <>f__am$cache2).ToArray<string>(), <>f__am$cache3).ToArray<GUIContent>();
                 if (<>f__am$cache4 == null)
                 {
-                    <>f__am$cache4 = new Func<string, string>(null, (IntPtr) <m_LightProbeBlendModeOptions>m__4);
+                    <>f__am$cache4 = new Func<string, string>(RendererEditorBase.Probes.<m_LightProbeBlendModeOptions>m__4);
                 }
                 if (<>f__am$cache5 == null)
                 {
-                    <>f__am$cache5 = new Func<string, GUIContent>(null, (IntPtr) <m_LightProbeBlendModeOptions>m__5);
+                    <>f__am$cache5 = new Func<string, GUIContent>(RendererEditorBase.Probes.<m_LightProbeBlendModeOptions>m__5);
                 }
                 this.m_LightProbeBlendModeOptions = Enumerable.Select<string, GUIContent>(Enumerable.Select<string, string>(Enum.GetNames(typeof(LightProbeUsage)), <>f__am$cache4).ToArray<string>(), <>f__am$cache5).ToArray<GUIContent>();
                 this.m_BlendInfo = new List<ReflectionProbeBlendInfo>();
@@ -156,15 +155,15 @@
             internal bool IsUsingLightProbeProxyVolume(int selectionCount) => 
                 (((selectionCount == 1) && (this.m_LightProbeUsage.intValue == 2)) || (((selectionCount > 1) && !this.m_LightProbeUsage.hasMultipleDifferentValues) && (this.m_LightProbeUsage.intValue == 2)));
 
-            internal void OnGUI(Object[] selection, Renderer renderer, bool useMiniStyle)
+            internal void OnGUI(UnityEngine.Object[] selection, Renderer renderer, bool useMiniStyle)
             {
                 int selectionCount = 1;
                 bool isDeferredRenderingPath = SceneView.IsUsingDeferredRenderingPath();
-                bool isDeferredReflections = isDeferredRenderingPath && (GraphicsSettings.GetShaderMode(BuiltinShaderType.DeferredReflections) != BuiltinShaderMode.Disabled);
+                bool isDeferredReflections = isDeferredRenderingPath && (GraphicsSettings.GetShaderMode(BuiltinShaderType.DeferredReflections) != UnityEngine.Rendering.BuiltinShaderMode.Disabled);
                 bool usesLightMaps = false;
                 if (selection != null)
                 {
-                    foreach (Object obj2 in selection)
+                    foreach (UnityEngine.Object obj2 in selection)
                     {
                         if (LightmapEditorSettings.IsLightmappedOrDynamicLightmappedForRendering((Renderer) obj2))
                         {
@@ -313,7 +312,7 @@
                         position.x += position.width;
                         position.width = num4;
                         ReflectionProbeBlendInfo info = blendInfos[i];
-                        EditorGUI.ObjectField(position, info.probe, typeof(ReflectionProbe), true);
+                        EditorGUI.ObjectField(position, info.probe, typeof(UnityEngine.ReflectionProbe), true);
                         position.x += position.width;
                         position.width = num2;
                         ReflectionProbeBlendInfo info2 = blendInfos[i];
@@ -321,12 +320,6 @@
                     }
                 }
             }
-        }
-
-        private static class Styles
-        {
-            public static GUIContent m_SortingLayerStyle = EditorGUIUtility.TextContent("Sorting Layer|Name of the Renderer's sorting layer");
-            public static GUIContent m_SortingOrderStyle = EditorGUIUtility.TextContent("Order in Layer|Renderer's order within a sorting layer");
         }
     }
 }

@@ -93,7 +93,7 @@
         {
             public GUIStyle box = "OL Box";
             public GUIStyle button = "LargeButton";
-            public GUIStyle selected = "ServerUpdateChangesetOn";
+            public GUIStyle selected = "OL SelectedRow";
         }
     }
 }

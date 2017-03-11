@@ -8,30 +8,6 @@
     public enum AndroidSdkVersions
     {
         /// <summary>
-        /// <para>Android 2.3.3, "Gingerbread", API level 10.</para>
-        /// </summary>
-        AndroidApiLevel10 = 10,
-        /// <summary>
-        /// <para>Android 3.0, "Honeycomb", API level 11.</para>
-        /// </summary>
-        AndroidApiLevel11 = 11,
-        /// <summary>
-        /// <para>Android 3.1, "Honeycomb", API level 12.</para>
-        /// </summary>
-        AndroidApiLevel12 = 12,
-        /// <summary>
-        /// <para>Android 3.2, "Honeycomb", API level 13.</para>
-        /// </summary>
-        AndroidApiLevel13 = 13,
-        /// <summary>
-        /// <para>Android 4.0, "Ice Cream Sandwich", API level 14.</para>
-        /// </summary>
-        AndroidApiLevel14 = 14,
-        /// <summary>
-        /// <para>Android 4.0.3, "Ice Cream Sandwich", API level 15.</para>
-        /// </summary>
-        AndroidApiLevel15 = 15,
-        /// <summary>
         /// <para>Android 4.1, "Jelly Bean", API level 16.</para>
         /// </summary>
         AndroidApiLevel16 = 0x10,
@@ -56,9 +32,21 @@
         /// </summary>
         AndroidApiLevel22 = 0x16,
         /// <summary>
-        /// <para>Android 2.3.1, "Gingerbread", API level 9.</para>
+        /// <para>Android 6.0, "Marshmallow", API level 23.</para>
         /// </summary>
-        AndroidApiLevel9 = 9
+        AndroidApiLevel23 = 0x17,
+        /// <summary>
+        /// <para>Android 7.0, "Nougat", API level 24.</para>
+        /// </summary>
+        AndroidApiLevel24 = 0x18,
+        /// <summary>
+        /// <para>Android 7.1, "Nougat", API level 25.</para>
+        /// </summary>
+        AndroidApiLevel25 = 0x19,
+        /// <summary>
+        /// <para>Sets the target API level automatically, according to the latest installed SDK on your computer.</para>
+        /// </summary>
+        AndroidApiLevelAuto = 0
     }
 }
 

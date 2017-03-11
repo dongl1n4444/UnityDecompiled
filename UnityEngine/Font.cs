@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Threading;
@@ -13,8 +14,10 @@
     /// </summary>
     public sealed class Font : UnityEngine.Object
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         private event FontTextureRebuildCallback m_FontTextureRebuildCallback;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event Action<Font> textureRebuilt;
 
         /// <summary>
@@ -79,7 +82,7 @@
             return this.GetCharacterInfo(ch, out info, size, normal);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool GetCharacterInfo(char ch, out CharacterInfo info, [UnityEngine.Internal.DefaultValue("0")] int size, [UnityEngine.Internal.DefaultValue("FontStyle.Normal")] FontStyle style);
         /// <summary>
         /// <para>Returns the maximum number of verts that the text generator may return for a given string.</para>
@@ -94,7 +97,7 @@
         /// <returns>
         /// <para>An array of the names of all fonts installed on the machine.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string[] GetOSInstalledFontNames();
         /// <summary>
         /// <para>Does this font have a specific character?</para>
@@ -103,11 +106,11 @@
         /// <returns>
         /// <para>Whether or not the font has the character specified.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool HasCharacter(char c);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_CreateDynamicFont([Writable] Font _font, string[] _names, int size);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_CreateFont([Writable] Font _font, string name);
         [RequiredByNativeCode]
         private static void InvokeTextureRebuilt_Internal(Font font)
@@ -144,42 +147,42 @@
         /// <param name="characters">The characters which are needed to be in the font texture.</param>
         /// <param name="size">The size of the requested characters (the default value of zero will use the font's default size).</param>
         /// <param name="style">The style of the requested characters.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void RequestCharactersInTexture(string characters, [UnityEngine.Internal.DefaultValue("0")] int size, [UnityEngine.Internal.DefaultValue("FontStyle.Normal")] FontStyle style);
 
         /// <summary>
         /// <para>The ascent of the font.</para>
         /// </summary>
-        public int ascent { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int ascent { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Access an array of all characters contained in the font texture.</para>
         /// </summary>
-        public CharacterInfo[] characterInfo { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public CharacterInfo[] characterInfo { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Is the font a dynamic font.</para>
         /// </summary>
-        public bool dynamic { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool dynamic { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public string[] fontNames { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public string[] fontNames { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The default size of the font.</para>
         /// </summary>
-        public int fontSize { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int fontSize { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The line height of the font.</para>
         /// </summary>
-        public int lineHeight { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int lineHeight { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The material used for the font display.</para>
         /// </summary>
-        public Material material { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public Material material { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        [Obsolete("Font.textureRebuildCallback has been deprecated. Use Font.textureRebuilt instead."), EditorBrowsable(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Font.textureRebuildCallback has been deprecated. Use Font.textureRebuilt instead.")]
         public FontTextureRebuildCallback textureRebuildCallback
         {
             get => 

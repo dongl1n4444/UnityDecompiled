@@ -18,31 +18,30 @@
         private int m_InstanceID;
         private string m_UnityRuntimeErrorString;
         internal static int OffsetOfInstanceIDInCPlusPlusObject = -1;
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern UnityEngine.Object Internal_CloneSingle(UnityEngine.Object data);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern UnityEngine.Object Internal_CloneSingleWithParent(UnityEngine.Object data, Transform parent, bool worldPositionStays);
-        [ThreadAndSerializationSafe]
         private static UnityEngine.Object Internal_InstantiateSingle(UnityEngine.Object data, Vector3 pos, Quaternion rot) => 
             INTERNAL_CALL_Internal_InstantiateSingle(data, ref pos, ref rot);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern UnityEngine.Object INTERNAL_CALL_Internal_InstantiateSingle(UnityEngine.Object data, ref Vector3 pos, ref Quaternion rot);
         private static UnityEngine.Object Internal_InstantiateSingleWithParent(UnityEngine.Object data, Transform parent, Vector3 pos, Quaternion rot) => 
             INTERNAL_CALL_Internal_InstantiateSingleWithParent(data, parent, ref pos, ref rot);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern UnityEngine.Object INTERNAL_CALL_Internal_InstantiateSingleWithParent(UnityEngine.Object data, Transform parent, ref Vector3 pos, ref Quaternion rot);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern int GetOffsetOfInstanceIDInCPlusPlusObject();
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private extern void EnsureRunningOnMainThread();
         /// <summary>
         /// <para>Removes a gameobject, component or asset.</para>
         /// </summary>
         /// <param name="obj">The object to destroy.</param>
         /// <param name="t">The optional amount of time to delay before destroying the object.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void Destroy(UnityEngine.Object obj, [DefaultValue("0.0F")] float t);
         /// <summary>
         /// <para>Removes a gameobject, component or asset.</para>
@@ -57,14 +56,14 @@
         }
 
         /// <summary>
-        /// <para>Destroys the object obj immediately.</para>
+        /// <para>Destroys the object obj immediately. You are strongly recommended to use Destroy instead.</para>
         /// </summary>
         /// <param name="obj">Object to be destroyed.</param>
         /// <param name="allowDestroyingAssets">Set to true to allow assets to be destoyed.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void DestroyImmediate(UnityEngine.Object obj, [DefaultValue("false")] bool allowDestroyingAssets);
         /// <summary>
-        /// <para>Destroys the object obj immediately.</para>
+        /// <para>Destroys the object obj immediately. You are strongly recommended to use Destroy instead.</para>
         /// </summary>
         /// <param name="obj">Object to be destroyed.</param>
         /// <param name="allowDestroyingAssets">Set to true to allow assets to be destoyed.</param>
@@ -82,23 +81,23 @@
         /// <returns>
         /// <para>The array of objects found matching the type specified.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall), TypeInferenceRule(TypeInferenceRules.ArrayOfTypeReferencedByFirstArgument)]
+        [MethodImpl(MethodImplOptions.InternalCall), TypeInferenceRule(TypeInferenceRules.ArrayOfTypeReferencedByFirstArgument), GeneratedByOldBindingsGenerator]
         public static extern UnityEngine.Object[] FindObjectsOfType(System.Type type);
         /// <summary>
         /// <para>The name of the object.</para>
         /// </summary>
-        public string name { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public string name { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
         /// <summary>
         /// <para>Makes the object target not be destroyed automatically when loading a new scene.</para>
         /// </summary>
         /// <param name="target"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void DontDestroyOnLoad(UnityEngine.Object target);
         /// <summary>
         /// <para>Should the object be hidden, saved with the scene or modifiable by the user?</para>
         /// </summary>
-        public HideFlags hideFlags { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        public HideFlags hideFlags { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void DestroyObject(UnityEngine.Object obj, [DefaultValue("0.0F")] float t);
         [ExcludeFromDocs]
         public static void DestroyObject(UnityEngine.Object obj)
@@ -107,7 +106,7 @@
             DestroyObject(obj, t);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("use Object.FindObjectsOfType instead.")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("use Object.FindObjectsOfType instead."), GeneratedByOldBindingsGenerator]
         public static extern UnityEngine.Object[] FindSceneObjectsOfType(System.Type type);
         /// <summary>
         /// <para>Returns a list of all active and inactive loaded objects of Type type, including assets.</para>
@@ -116,7 +115,7 @@
         /// <returns>
         /// <para>The array of objects and assets found matching the type specified.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("use Resources.FindObjectsOfTypeAll instead.")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("use Resources.FindObjectsOfTypeAll instead."), GeneratedByOldBindingsGenerator]
         public static extern UnityEngine.Object[] FindObjectsOfTypeIncludingAssets(System.Type type);
         /// <summary>
         /// <para>Returns a list of all active and inactive loaded objects of Type type.</para>
@@ -132,9 +131,9 @@
         /// <summary>
         /// <para>Returns the name of the game object.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public override extern string ToString();
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         internal static extern bool DoesObjectWithInstanceIDExist(int instanceID);
         /// <summary>
         /// <para>Returns the instance id of the object.</para>
@@ -204,7 +203,7 @@
         /// <param name="position">Position for the new object.</param>
         /// <param name="rotation">Orientation of the new object.</param>
         /// <param name="parent">Parent that will be assigned to the new object.</param>
-        /// <param name="instantiateInWorldSpace">If when assigning the parent the original world position should be maintained.</param>
+        /// <param name="instantiateInWorldSpace">Pass true when assigning a parent Object to maintain the world position of the Object, instead of setting its position relative to the new parent. Pass false to set the Object's position relative to its new parent.</param>
         /// <returns>
         /// <para>The instantiated clone.</para>
         /// </returns>
@@ -226,7 +225,7 @@
         /// <param name="position">Position for the new object.</param>
         /// <param name="rotation">Orientation of the new object.</param>
         /// <param name="parent">Parent that will be assigned to the new object.</param>
-        /// <param name="instantiateInWorldSpace">If when assigning the parent the original world position should be maintained.</param>
+        /// <param name="instantiateInWorldSpace">Pass true when assigning a parent Object to maintain the world position of the Object, instead of setting its position relative to the new parent. Pass false to set the Object's position relative to its new parent.</param>
         /// <returns>
         /// <para>The instantiated clone.</para>
         /// </returns>
@@ -248,7 +247,7 @@
         /// <param name="position">Position for the new object.</param>
         /// <param name="rotation">Orientation of the new object.</param>
         /// <param name="parent">Parent that will be assigned to the new object.</param>
-        /// <param name="instantiateInWorldSpace">If when assigning the parent the original world position should be maintained.</param>
+        /// <param name="instantiateInWorldSpace">Pass true when assigning a parent Object to maintain the world position of the Object, instead of setting its position relative to the new parent. Pass false to set the Object's position relative to its new parent.</param>
         /// <returns>
         /// <para>The instantiated clone.</para>
         /// </returns>
@@ -266,7 +265,7 @@
         /// <param name="position">Position for the new object.</param>
         /// <param name="rotation">Orientation of the new object.</param>
         /// <param name="parent">Parent that will be assigned to the new object.</param>
-        /// <param name="instantiateInWorldSpace">If when assigning the parent the original world position should be maintained.</param>
+        /// <param name="instantiateInWorldSpace">Pass true when assigning a parent Object to maintain the world position of the Object, instead of setting its position relative to the new parent. Pass false to set the Object's position relative to its new parent.</param>
         /// <returns>
         /// <para>The instantiated clone.</para>
         /// </returns>
@@ -281,7 +280,7 @@
         /// <param name="position">Position for the new object.</param>
         /// <param name="rotation">Orientation of the new object.</param>
         /// <param name="parent">Parent that will be assigned to the new object.</param>
-        /// <param name="instantiateInWorldSpace">If when assigning the parent the original world position should be maintained.</param>
+        /// <param name="instantiateInWorldSpace">Pass true when assigning a parent Object to maintain the world position of the Object, instead of setting its position relative to the new parent. Pass false to set the Object's position relative to its new parent.</param>
         /// <returns>
         /// <para>The instantiated clone.</para>
         /// </returns>
@@ -309,7 +308,7 @@
             ((T) Instantiate(original, position, rotation, parent));
 
         public static T Instantiate<T>(T original, Transform parent) where T: UnityEngine.Object => 
-            Instantiate<T>(original, parent, true);
+            Instantiate<T>(original, parent, false);
 
         public static T Instantiate<T>(T original, Transform parent, bool worldPositionStays) where T: UnityEngine.Object => 
             ((T) Instantiate(original, parent, worldPositionStays));

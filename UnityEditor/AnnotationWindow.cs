@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Runtime.CompilerServices;
-    using UnityEditorInternal;
     using UnityEngine;
 
     internal class AnnotationWindow : EditorWindow
@@ -148,7 +147,7 @@
                     rect5.width = 9f;
                     if (GUI.Button(rect5, this.iconSelectContent, m_Styles.iconDropDown))
                     {
-                        Object script = EditorGUIUtility.GetScript(ainfo.m_ScriptClass);
+                        UnityEngine.Object script = EditorGUIUtility.GetScript(ainfo.m_ScriptClass);
                         if (script != null)
                         {
                             this.m_LastScriptThatHasShownTheIconSelector = ainfo.m_ScriptClass;
@@ -413,24 +412,24 @@
 
         internal void OnGUI()
         {
-            if (Event.current.type != EventType.Layout)
+            if (m_Styles == null)
             {
-                if (m_Styles == null)
-                {
-                    m_Styles = new Styles();
-                }
-                if (this.m_SyncWithState)
-                {
-                    this.SyncToState();
-                }
-                float topSectionHeight = this.GetTopSectionHeight();
-                this.DrawTopSection(topSectionHeight);
-                this.DrawAnnotationList(topSectionHeight, base.position.height - topSectionHeight);
-                GUI.Label(new Rect(0f, 0f, base.position.width, base.position.height), GUIContent.none, m_Styles.background);
-                if ((Event.current.type == EventType.KeyDown) && (Event.current.keyCode == KeyCode.Escape))
-                {
-                    this.Cancel();
-                }
+                m_Styles = new Styles();
+            }
+            if (this.m_SyncWithState)
+            {
+                this.SyncToState();
+            }
+            float topSectionHeight = this.GetTopSectionHeight();
+            this.DrawTopSection(topSectionHeight);
+            this.DrawAnnotationList(topSectionHeight, base.position.height - topSectionHeight);
+            if (Event.current.type == EventType.Repaint)
+            {
+                m_Styles.background.Draw(new Rect(0f, 0f, base.position.width, base.position.height), GUIContent.none, false, false, false, false);
+            }
+            if ((Event.current.type == EventType.KeyDown) && (Event.current.keyCode == KeyCode.Escape))
+            {
+                this.Cancel();
             }
         }
 
@@ -490,7 +489,7 @@
                     if (s_Debug)
                     {
                         str2 = message;
-                        object[] objArray2 = new object[] { str2, "   ", BaseObjectTools.ClassIDToString(item.m_ClassID), ": icon ", item.m_IconEnabled, " gizmo ", item.m_GizmoEnabled, "\n" };
+                        object[] objArray2 = new object[] { str2, "   ", UnityType.FindTypeByPersistentTypeID(item.m_ClassID).name, ": icon ", item.m_IconEnabled, " gizmo ", item.m_GizmoEnabled, "\n" };
                         message = string.Concat(objArray2);
                     }
                 }

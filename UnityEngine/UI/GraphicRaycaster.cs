@@ -36,110 +36,123 @@
         {
             if (this.canvas != null)
             {
-                Vector3 position = Display.RelativeMouseAt((Vector3) eventData.position);
-                int targetDisplay = this.canvas.targetDisplay;
-                if (position.z == targetDisplay)
+                int targetDisplay;
+                Vector2 vector2;
+                if ((this.canvas.renderMode == RenderMode.ScreenSpaceOverlay) || (this.eventCamera == null))
                 {
-                    Vector2 vector2;
-                    if (position.z == 0f)
+                    targetDisplay = this.canvas.targetDisplay;
+                }
+                else
+                {
+                    targetDisplay = this.eventCamera.targetDisplay;
+                }
+                Vector3 position = Display.RelativeMouseAt((Vector3) eventData.position);
+                if (position != Vector3.zero)
+                {
+                    int z = (int) position.z;
+                    if (z != targetDisplay)
                     {
-                        position = (Vector3) eventData.position;
+                        return;
                     }
-                    if (this.eventCamera == null)
+                }
+                else
+                {
+                    position = (Vector3) eventData.position;
+                }
+                if (this.eventCamera == null)
+                {
+                    float width = Screen.width;
+                    float height = Screen.height;
+                    if ((targetDisplay > 0) && (targetDisplay < Display.displays.Length))
                     {
-                        float width = Screen.width;
-                        float height = Screen.height;
-                        if ((targetDisplay > 0) && (targetDisplay < Display.displays.Length))
-                        {
-                            width = Display.displays[targetDisplay].systemWidth;
-                            height = Display.displays[targetDisplay].systemHeight;
-                        }
-                        vector2 = new Vector2(position.x / width, position.y / height);
+                        width = Display.displays[targetDisplay].systemWidth;
+                        height = Display.displays[targetDisplay].systemHeight;
                     }
-                    else
+                    vector2 = new Vector2(position.x / width, position.y / height);
+                }
+                else
+                {
+                    vector2 = this.eventCamera.ScreenToViewportPoint(position);
+                }
+                if ((((vector2.x >= 0f) && (vector2.x <= 1f)) && (vector2.y >= 0f)) && (vector2.y <= 1f))
+                {
+                    float maxValue = float.MaxValue;
+                    Ray r = new Ray();
+                    if (this.eventCamera != null)
                     {
-                        vector2 = this.eventCamera.ScreenToViewportPoint(position);
+                        r = this.eventCamera.ScreenPointToRay(position);
                     }
-                    if ((((vector2.x >= 0f) && (vector2.x <= 1f)) && (vector2.y >= 0f)) && (vector2.y <= 1f))
+                    if ((this.canvas.renderMode != RenderMode.ScreenSpaceOverlay) && (this.blockingObjects != BlockingObjects.None))
                     {
-                        float maxValue = float.MaxValue;
-                        Ray r = new Ray();
+                        RaycastHit hit;
+                        float f = 100f;
                         if (this.eventCamera != null)
                         {
-                            r = this.eventCamera.ScreenPointToRay(position);
+                            f = this.eventCamera.farClipPlane - this.eventCamera.nearClipPlane;
                         }
-                        if ((this.canvas.renderMode != RenderMode.ScreenSpaceOverlay) && (this.blockingObjects != BlockingObjects.None))
+                        if ((((this.blockingObjects == BlockingObjects.ThreeD) || (this.blockingObjects == BlockingObjects.All)) && (ReflectionMethodsCache.Singleton.raycast3D != null)) && ReflectionMethodsCache.Singleton.raycast3D(r, out hit, f, (int) this.m_BlockingMask))
                         {
-                            RaycastHit hit;
-                            float f = 100f;
-                            if (this.eventCamera != null)
+                            maxValue = hit.distance;
+                        }
+                        if (((this.blockingObjects == BlockingObjects.TwoD) || (this.blockingObjects == BlockingObjects.All)) && (ReflectionMethodsCache.Singleton.raycast2D != null))
+                        {
+                            RaycastHit2D hitd = ReflectionMethodsCache.Singleton.raycast2D(r.origin, r.direction, f, (int) this.m_BlockingMask);
+                            if (hitd.collider != null)
                             {
-                                f = this.eventCamera.farClipPlane - this.eventCamera.nearClipPlane;
-                            }
-                            if ((((this.blockingObjects == BlockingObjects.ThreeD) || (this.blockingObjects == BlockingObjects.All)) && (ReflectionMethodsCache.Singleton.raycast3D != null)) && ReflectionMethodsCache.Singleton.raycast3D(r, out hit, f, (int) this.m_BlockingMask))
-                            {
-                                maxValue = hit.distance;
-                            }
-                            if (((this.blockingObjects == BlockingObjects.TwoD) || (this.blockingObjects == BlockingObjects.All)) && (ReflectionMethodsCache.Singleton.raycast2D != null))
-                            {
-                                RaycastHit2D hitd = ReflectionMethodsCache.Singleton.raycast2D(r.origin, r.direction, f, (int) this.m_BlockingMask);
-                                if (hitd.collider != null)
-                                {
-                                    maxValue = hitd.fraction * f;
-                                }
+                                maxValue = hitd.fraction * f;
                             }
                         }
-                        this.m_RaycastResults.Clear();
-                        Raycast(this.canvas, this.eventCamera, position, this.m_RaycastResults);
-                        for (int i = 0; i < this.m_RaycastResults.Count; i++)
+                    }
+                    this.m_RaycastResults.Clear();
+                    Raycast(this.canvas, this.eventCamera, position, this.m_RaycastResults);
+                    for (int i = 0; i < this.m_RaycastResults.Count; i++)
+                    {
+                        GameObject gameObject = this.m_RaycastResults[i].gameObject;
+                        bool flag = true;
+                        if (this.ignoreReversedGraphics)
                         {
-                            GameObject gameObject = this.m_RaycastResults[i].gameObject;
-                            bool flag = true;
-                            if (this.ignoreReversedGraphics)
+                            if (this.eventCamera == null)
                             {
-                                if (this.eventCamera == null)
+                                Vector3 rhs = (Vector3) (gameObject.transform.rotation * Vector3.forward);
+                                flag = Vector3.Dot(Vector3.forward, rhs) > 0f;
+                            }
+                            else
+                            {
+                                Vector3 lhs = (Vector3) (this.eventCamera.transform.rotation * Vector3.forward);
+                                Vector3 vector5 = (Vector3) (gameObject.transform.rotation * Vector3.forward);
+                                flag = Vector3.Dot(lhs, vector5) > 0f;
+                            }
+                        }
+                        if (flag)
+                        {
+                            float num8 = 0f;
+                            if ((this.eventCamera == null) || (this.canvas.renderMode == RenderMode.ScreenSpaceOverlay))
+                            {
+                                num8 = 0f;
+                            }
+                            else
+                            {
+                                Transform transform = gameObject.transform;
+                                Vector3 forward = transform.forward;
+                                num8 = Vector3.Dot(forward, transform.position - r.origin) / Vector3.Dot(forward, r.direction);
+                                if (num8 < 0f)
                                 {
-                                    Vector3 rhs = (Vector3) (gameObject.transform.rotation * Vector3.forward);
-                                    flag = Vector3.Dot(Vector3.forward, rhs) > 0f;
-                                }
-                                else
-                                {
-                                    Vector3 lhs = (Vector3) (this.eventCamera.transform.rotation * Vector3.forward);
-                                    Vector3 vector5 = (Vector3) (gameObject.transform.rotation * Vector3.forward);
-                                    flag = Vector3.Dot(lhs, vector5) > 0f;
+                                    continue;
                                 }
                             }
-                            if (flag)
+                            if (num8 < maxValue)
                             {
-                                float num7 = 0f;
-                                if ((this.eventCamera == null) || (this.canvas.renderMode == RenderMode.ScreenSpaceOverlay))
-                                {
-                                    num7 = 0f;
-                                }
-                                else
-                                {
-                                    Transform transform = gameObject.transform;
-                                    Vector3 forward = transform.forward;
-                                    num7 = Vector3.Dot(forward, transform.position - r.origin) / Vector3.Dot(forward, r.direction);
-                                    if (num7 < 0f)
-                                    {
-                                        continue;
-                                    }
-                                }
-                                if (num7 < maxValue)
-                                {
-                                    RaycastResult item = new RaycastResult {
-                                        gameObject = gameObject,
-                                        module = this,
-                                        distance = num7,
-                                        screenPosition = position,
-                                        index = resultAppendList.Count,
-                                        depth = this.m_RaycastResults[i].depth,
-                                        sortingLayer = this.canvas.sortingLayerID,
-                                        sortingOrder = this.canvas.sortingOrder
-                                    };
-                                    resultAppendList.Add(item);
-                                }
+                                RaycastResult item = new RaycastResult {
+                                    gameObject = gameObject,
+                                    module = this,
+                                    distance = num8,
+                                    screenPosition = position,
+                                    index = resultAppendList.Count,
+                                    depth = this.m_RaycastResults[i].depth,
+                                    sortingLayer = this.canvas.sortingLayerID,
+                                    sortingOrder = this.canvas.sortingOrder
+                                };
+                                resultAppendList.Add(item);
                             }
                         }
                     }
@@ -153,7 +166,7 @@
             for (int i = 0; i < graphicsForCanvas.Count; i++)
             {
                 Graphic item = graphicsForCanvas[i];
-                if (((item.depth != -1) && item.raycastTarget) && (RectTransformUtility.RectangleContainsScreenPoint(item.rectTransform, pointerPosition, eventCamera) && item.Raycast(pointerPosition, eventCamera)))
+                if ((!item.canvasRenderer.cull && (item.depth != -1)) && ((item.raycastTarget && RectTransformUtility.RectangleContainsScreenPoint(item.rectTransform, pointerPosition, eventCamera)) && item.Raycast(pointerPosition, eventCamera)))
                 {
                     s_SortedGraphics.Add(item);
                 }
@@ -229,7 +242,7 @@
             {
                 if (this.canvas.renderMode == RenderMode.ScreenSpaceOverlay)
                 {
-                    return this.canvas.renderOrder;
+                    return this.canvas.rootCanvas.renderOrder;
                 }
                 return base.renderOrderPriority;
             }

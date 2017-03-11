@@ -3,22 +3,26 @@
     using Mono.Cecil;
     using Mono.Cecil.Cil;
     using System;
+    using System.Runtime.CompilerServices;
     using System.Text;
 
     public static class ErrorMessageWriter
     {
-        private static bool AppendSourceCodeLocation(ErrorInformation errorInformation, StringBuilder message)
+        [CompilerGenerated]
+        private static Func<Instruction, MethodDefinition, SequencePoint> <>f__mg$cache0;
+
+        private static bool AppendSourceCodeLocation(ErrorInformation errorInformation, StringBuilder message, Func<Instruction, MethodDefinition, SequencePoint> getSequencePoint)
         {
-            string str = FindSourceCodeLocationForInstruction(errorInformation.Instruction);
+            string str = FindSourceCodeLocationForInstruction(errorInformation.Instruction, errorInformation.Method, getSequencePoint);
             if (string.IsNullOrEmpty(str))
             {
-                str = FindSourceCodeLocation(errorInformation.Method);
+                str = FindSourceCodeLocation(errorInformation.Method, getSequencePoint);
             }
             if (string.IsNullOrEmpty(str) && (errorInformation.Type != null))
             {
                 foreach (MethodDefinition definition in errorInformation.Type.Methods)
                 {
-                    str = FindSourceCodeLocation(definition);
+                    str = FindSourceCodeLocation(definition, getSequencePoint);
                     if (!string.IsNullOrEmpty(str))
                     {
                         break;
@@ -33,14 +37,14 @@
             return false;
         }
 
-        private static string FindSourceCodeLocation(MethodDefinition method)
+        private static string FindSourceCodeLocation(MethodDefinition method, Func<Instruction, MethodDefinition, SequencePoint> getSequencePoint)
         {
             string str = string.Empty;
             if ((method != null) && method.HasBody)
             {
                 foreach (Instruction instruction in method.Body.Instructions)
                 {
-                    str = FindSourceCodeLocationForInstruction(instruction);
+                    str = FindSourceCodeLocationForInstruction(instruction, method, getSequencePoint);
                     if (!string.IsNullOrEmpty(str))
                     {
                         return str;
@@ -50,17 +54,30 @@
             return str;
         }
 
-        private static string FindSourceCodeLocationForInstruction(Instruction instruction)
+        private static string FindSourceCodeLocationForInstruction(Instruction instruction, MethodDefinition method, Func<Instruction, MethodDefinition, SequencePoint> getSequencePoint)
         {
-            string str = string.Empty;
-            if ((instruction != null) && (instruction.SequencePoint != null))
+            if (instruction == null)
             {
-                str = $"{instruction.SequencePoint.Document.Url}:{instruction.SequencePoint.StartLine}";
+                return string.Empty;
             }
-            return str;
+            SequencePoint point = getSequencePoint(instruction, method);
+            if (point == null)
+            {
+                return string.Empty;
+            }
+            return $"{point.Document.Url}:{point.StartLine}";
         }
 
         public static string FormatMessage(ErrorInformation errorInformation, string additionalInformation)
+        {
+            if (<>f__mg$cache0 == null)
+            {
+                <>f__mg$cache0 = new Func<Instruction, MethodDefinition, SequencePoint>(ErrorMessageWriter.GetSequencePoint);
+            }
+            return FormatMessage(errorInformation, additionalInformation, <>f__mg$cache0);
+        }
+
+        public static string FormatMessage(ErrorInformation errorInformation, string additionalInformation, Func<Instruction, MethodDefinition, SequencePoint> getSequencePoint)
         {
             if (errorInformation == null)
             {
@@ -72,6 +89,18 @@
             {
                 message.AppendFormat(" for method '{0}'", errorInformation.Method.FullName);
             }
+            else if (errorInformation.Field != null)
+            {
+                message.AppendFormat(" for field '{0}'", errorInformation.Field.FullName);
+            }
+            else if (errorInformation.Property != null)
+            {
+                message.AppendFormat(" for property '{0}'", errorInformation.Property.FullName);
+            }
+            else if (errorInformation.Event != null)
+            {
+                message.AppendFormat(" for event '{0}'", errorInformation.Event.FullName);
+            }
             else if (errorInformation.Type != null)
             {
                 message.AppendFormat(" for type '{0}'", errorInformation.Type);
@@ -80,10 +109,13 @@
             {
                 message.Append(" (no further information about what managed code was being converted is available)");
             }
-            bool flag = AppendSourceCodeLocation(errorInformation, message);
+            bool flag = AppendSourceCodeLocation(errorInformation, message, getSequencePoint);
             if ((!flag && (errorInformation.Type != null)) && (errorInformation.Type.Module != null))
             {
-                message.AppendFormat(" in assembly '{0}'", errorInformation.Type.Module.FullyQualifiedName);
+                if (errorInformation.Type.Module.FileName == null)
+                {
+                }
+                message.AppendFormat(" in assembly '{0}'", errorInformation.Type.Module.Name);
             }
             if (!flag)
             {
@@ -96,6 +128,9 @@
             }
             return message.ToString();
         }
+
+        private static SequencePoint GetSequencePoint(Instruction ins, MethodDefinition method) => 
+            ins.GetSequencePoint(method);
     }
 }
 

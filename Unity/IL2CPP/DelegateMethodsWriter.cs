@@ -43,33 +43,33 @@
             this._writer = writer;
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<FieldDefinition, bool>(null, (IntPtr) <DelegateMethodsWriter>m__0);
+                <>f__am$cache0 = new Func<FieldDefinition, bool>(DelegateMethodsWriter.<DelegateMethodsWriter>m__0);
             }
             FieldDefinition field = TypeProvider.SystemDelegate.Fields.Single<FieldDefinition>(<>f__am$cache0);
             this._methodPtrGetterName = Naming.ForFieldGetter(field);
             this._methodPtrSetterName = Naming.ForFieldSetter(field);
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<FieldDefinition, bool>(null, (IntPtr) <DelegateMethodsWriter>m__1);
+                <>f__am$cache1 = new Func<FieldDefinition, bool>(DelegateMethodsWriter.<DelegateMethodsWriter>m__1);
             }
             FieldDefinition definition2 = TypeProvider.SystemDelegate.Fields.Single<FieldDefinition>(<>f__am$cache1);
             this._methodGetterName = Naming.ForFieldGetter(definition2);
             this._methodSetterName = Naming.ForFieldSetter(definition2);
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<FieldDefinition, bool>(null, (IntPtr) <DelegateMethodsWriter>m__2);
+                <>f__am$cache2 = new Func<FieldDefinition, bool>(DelegateMethodsWriter.<DelegateMethodsWriter>m__2);
             }
             FieldDefinition definition3 = TypeProvider.SystemDelegate.Fields.Single<FieldDefinition>(<>f__am$cache2);
             this._targetGetterName = Naming.ForFieldGetter(definition3);
             this._targetSetterName = Naming.ForFieldSetter(definition3);
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<FieldDefinition, bool>(null, (IntPtr) <DelegateMethodsWriter>m__3);
+                <>f__am$cache3 = new Func<FieldDefinition, bool>(DelegateMethodsWriter.<DelegateMethodsWriter>m__3);
             }
             FieldDefinition definition4 = TypeProvider.SystemIntPtr.Fields.Single<FieldDefinition>(<>f__am$cache3);
             this._valueGetterName = Naming.ForFieldGetter(definition4);
             storey.expectedName = (CodeGenOptions.Dotnetprofile != DotNetProfile.Net45) ? "prev" : "delegates";
-            FieldDefinition definition5 = TypeProvider.SystemMulticastDelegate.Fields.Single<FieldDefinition>(new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0));
+            FieldDefinition definition5 = TypeProvider.SystemMulticastDelegate.Fields.Single<FieldDefinition>(new Func<FieldDefinition, bool>(storey.<>m__0));
             this._prevGetterName = Naming.ForFieldGetter(definition5);
         }
 
@@ -240,7 +240,7 @@
             string str6 = ExpressionForFieldOfThis(this._prevGetterName);
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteInvocationsForDelegate45>m__4);
+                <>f__am$cache4 = f => f.Name == "delegates";
             }
             FieldDefinition definition = TypeProvider.SystemMulticastDelegate.Fields.Single<FieldDefinition>(<>f__am$cache4);
             string str7 = Naming.ForVariable(definition.FieldType);
@@ -271,14 +271,14 @@
             this._writer.EndBlock(false);
         }
 
-        private void WriteInvokeChainedDelegates(MethodReference method, List<string> parametersOnlyName)
+        private void WriteInvokeChainedDelegates(MethodReference method, List<string> parametersOnlyName, IRuntimeMetadataAccess metadataAccess)
         {
             string str = CommaSeperate(parametersOnlyName, true);
             string str2 = ExpressionForFieldOfThis(this._prevGetterName) + "()";
             object[] args = new object[] { str2 };
             this.WriteLine("if({0} != NULL)", args);
             this._writer.BeginBlock();
-            object[] objArray2 = new object[] { Naming.ForMethod(method), Naming.ForVariable(method.DeclaringType), str2, str };
+            object[] objArray2 = new object[] { metadataAccess.Method(method), Naming.ForVariable(method.DeclaringType), str2, str };
             this.WriteLine("{0}(({1}){2}{3}, method);", objArray2);
             this._writer.EndBlock(false);
         }
@@ -368,7 +368,7 @@
             }
         }
 
-        private void WriteMethodBodyForInvoke(MethodReference method)
+        private void WriteMethodBodyForInvoke(MethodReference method, IRuntimeMetadataAccess metadataAccess)
         {
             List<string> parametersOnlyName = MethodSignatureWriter.ParametersFor(method, ParameterFormat.WithNameNoThis, false, false, false).ToList<string>();
             if (CodeGenOptions.Dotnetprofile == DotNetProfile.Net45)
@@ -377,7 +377,7 @@
             }
             else
             {
-                this.WriteInvokeChainedDelegates(method, parametersOnlyName);
+                this.WriteInvokeChainedDelegates(method, parametersOnlyName, metadataAccess);
                 this.WriteInvocationsForDelegate(Naming.ThisParameterName, method, parametersOnlyName, null);
             }
         }
@@ -392,7 +392,7 @@
             switch (method.Name)
             {
                 case "Invoke":
-                    this.WriteMethodBodyForInvoke(method);
+                    this.WriteMethodBodyForInvoke(method, metadataAccess);
                     return;
 
                 case "BeginInvoke":

@@ -225,18 +225,18 @@
             {
                 iOSDevices = LoadiOSDeviceDescriptions();
             }
-            device = Enumerable.FirstOrDefault<iOSDeviceDescription>(iOSDevices, new Func<iOSDeviceDescription, bool>(storey, (IntPtr) this.<>m__0));
+            device = Enumerable.FirstOrDefault<iOSDeviceDescription>(iOSDevices, new Func<iOSDeviceDescription, bool>(storey.<>m__0));
             if (device.IsValid())
             {
                 return true;
             }
             storey.modelId = GuessModelId(name, storey.revision);
-            device = Enumerable.FirstOrDefault<iOSDeviceDescription>(iOSDevices, new Func<iOSDeviceDescription, bool>(storey, (IntPtr) this.<>m__1));
+            device = Enumerable.FirstOrDefault<iOSDeviceDescription>(iOSDevices, new Func<iOSDeviceDescription, bool>(storey.<>m__1));
             if (device.IsValid())
             {
                 return true;
             }
-            device = Enumerable.FirstOrDefault<iOSDeviceDescription>(iOSDevices, new Func<iOSDeviceDescription, bool>(storey, (IntPtr) this.<>m__2));
+            device = Enumerable.FirstOrDefault<iOSDeviceDescription>(iOSDevices, new Func<iOSDeviceDescription, bool>(storey.<>m__2));
             return device.IsValid();
         }
 

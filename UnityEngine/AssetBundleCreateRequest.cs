@@ -10,13 +10,13 @@
     [RequiredByNativeCode]
     public sealed class AssetBundleCreateRequest : AsyncOperation
     {
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void DisableCompatibilityChecks();
 
         /// <summary>
         /// <para>Asset object being loaded (Read Only).</para>
         /// </summary>
-        public AssetBundle assetBundle { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public AssetBundle assetBundle { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

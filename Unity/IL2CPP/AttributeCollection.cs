@@ -37,7 +37,7 @@
             this._attributeTypeRanges.Add(new AttributeTypeRange(this._attributeTypeIndices.Count, customAttributes.Length));
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<CustomAttribute, int>(null, (IntPtr) <Add>m__2);
+                <>f__am$cache2 = ca => Il2CppTypeCollector.GetOrCreateIndex(ca.AttributeType, 0);
             }
             this._attributeTypeIndices.AddRange(customAttributes.Select<CustomAttribute, int>(<>f__am$cache2));
         }
@@ -52,11 +52,11 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<KeyValuePair<string, uint>, uint>(null, (IntPtr) <GetEntries>m__0);
+                <>f__am$cache0 = v => v.Value;
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<KeyValuePair<string, uint>, string>(null, (IntPtr) <GetEntries>m__1);
+                <>f__am$cache1 = v => v.Key;
             }
             return this._indices.OrderBy<KeyValuePair<string, uint>, uint>(<>f__am$cache0).Select<KeyValuePair<string, uint>, string>(<>f__am$cache1).ToArray<string>();
         }

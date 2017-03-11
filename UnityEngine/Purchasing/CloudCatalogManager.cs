@@ -35,11 +35,11 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<char, int, string>(null, (IntPtr) <CamelCaseToSnakeCase>m__0);
+                <>f__am$cache0 = (a, b) => (!char.IsUpper(a) || (b <= 0)) ? char.ToLower(a).ToString() : ("_" + char.ToLower(a));
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<string, string, string>(null, (IntPtr) <CamelCaseToSnakeCase>m__1);
+                <>f__am$cache1 = (a, b) => a + b;
             }
             return Enumerable.Aggregate<string>(Enumerable.Select<char, string>(s, <>f__am$cache0), <>f__am$cache1);
         }
@@ -69,22 +69,29 @@
                     object obj5;
                     object obj6;
                     object obj7;
+                    object obj8;
                     obj4.TryGetValue("id", out obj5);
                     obj4.TryGetValue("store_ids", out obj6);
                     obj4.TryGetValue("type", out obj7);
-                    JsonObject obj8 = (JsonObject) obj6;
+                    obj4.TryGetValue("enabled", out obj8);
+                    JsonObject obj9 = (JsonObject) obj6;
                     string storeSpecificId = (string) obj5;
-                    if ((obj8 != null) && obj8.ContainsKey(key))
+                    if ((obj9 != null) && obj9.ContainsKey(key))
                     {
-                        object obj9 = null;
-                        obj8.TryGetValue(key, out obj9);
-                        if (obj9 != null)
+                        object obj10 = null;
+                        obj9.TryGetValue(key, out obj10);
+                        if (obj10 != null)
                         {
-                            storeSpecificId = (string) obj9;
+                            storeSpecificId = (string) obj10;
                         }
                     }
                     ProductType type = (ProductType) Enum.Parse(typeof(ProductType), (string) obj7);
-                    set.Add(new ProductDefinition((string) obj5, storeSpecificId, type));
+                    bool enabled = true;
+                    if ((obj8 != null) && ((obj8 is bool) || (obj8 is bool)))
+                    {
+                        enabled = (bool) obj8;
+                    }
+                    set.Add(new ProductDefinition((string) obj5, storeSpecificId, type, enabled));
                 }
                 set2 = set;
             }
@@ -162,7 +169,7 @@
                 {
                     this.delayInSeconds = Math.Max(5, this.delayInSeconds * 2);
                     this.delayInSeconds = Math.Min(300, this.delayInSeconds);
-                    this.$this.m_AsyncUtil.Schedule(new Action(this, (IntPtr) this.<>m__2), this.delayInSeconds);
+                    this.$this.m_AsyncUtil.Schedule(() => this.$this.FetchProducts(this.callback, this.delayInSeconds), this.delayInSeconds);
                 }
             }
 

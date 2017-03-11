@@ -4,8 +4,6 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
-    using UnityEditor.Collaboration;
-    using UnityEditor.Connect;
     using UnityEngine;
 
     [Serializable]
@@ -79,21 +77,14 @@
             }
             this.AddToString<string>("t:", this.m_ClassNames, ref result);
             this.AddToString<string>("l:", this.m_AssetLabels, ref result);
-            if (UnityConnect.instance.userInfo.whitelisted && Collab.instance.collabInfo.whitelisted)
-            {
-                this.AddToString<string>("v:", this.m_VersionControlStates, ref result);
-            }
+            this.AddToString<string>("v:", this.m_VersionControlStates, ref result);
             this.AddToString<string>("b:", this.m_AssetBundleNames, ref result);
             return result;
         }
 
         public State GetState()
         {
-            bool flag = ((!string.IsNullOrEmpty(this.m_NameFilter) || !this.IsNullOrEmpty<string>(this.m_AssetLabels)) || (!this.IsNullOrEmpty<string>(this.m_ClassNames) || !this.IsNullOrEmpty<string>(this.m_AssetBundleNames))) || !this.IsNullOrEmpty<int>(this.m_ReferencingInstanceIDs);
-            if (UnityConnect.instance.userInfo.whitelisted && Collab.instance.collabInfo.whitelisted)
-            {
-                flag = flag || !this.IsNullOrEmpty<string>(this.m_VersionControlStates);
-            }
+            bool flag = (((!string.IsNullOrEmpty(this.m_NameFilter) || !this.IsNullOrEmpty<string>(this.m_AssetLabels)) || (!this.IsNullOrEmpty<string>(this.m_ClassNames) || !this.IsNullOrEmpty<string>(this.m_AssetBundleNames))) || !this.IsNullOrEmpty<int>(this.m_ReferencingInstanceIDs)) || !this.IsNullOrEmpty<string>(this.m_VersionControlStates);
             bool flag2 = !this.IsNullOrEmpty<string>(this.m_Folders);
             if (flag)
             {
@@ -150,7 +141,7 @@
                 this.m_Folders = newFilter.m_Folders;
                 flag = true;
             }
-            if ((UnityConnect.instance.userInfo.whitelisted && Collab.instance.collabInfo.whitelisted) && (newFilter.m_VersionControlStates != this.m_VersionControlStates))
+            if (newFilter.m_VersionControlStates != this.m_VersionControlStates)
             {
                 this.m_VersionControlStates = newFilter.m_VersionControlStates;
                 flag = true;
@@ -224,7 +215,7 @@
             {
                 str = str + "[Labels: " + this.m_AssetLabels[0] + "]";
             }
-            if ((UnityConnect.instance.userInfo.whitelisted && Collab.instance.collabInfo.whitelisted) && ((this.m_VersionControlStates != null) && (this.m_VersionControlStates.Length > 0)))
+            if ((this.m_VersionControlStates != null) && (this.m_VersionControlStates.Length > 0))
             {
                 str = str + "[VersionStates: " + this.m_VersionControlStates[0] + "]";
             }

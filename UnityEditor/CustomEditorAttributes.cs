@@ -7,16 +7,16 @@
 
     internal class CustomEditorAttributes
     {
-        private static readonly Dictionary<Type, Type> kCachedEditorForType = new Dictionary<Type, Type>();
-        private static readonly Dictionary<Type, Type> kCachedMultiEditorForType = new Dictionary<Type, Type>();
+        private static readonly Dictionary<System.Type, System.Type> kCachedEditorForType = new Dictionary<System.Type, System.Type>();
+        private static readonly Dictionary<System.Type, System.Type> kCachedMultiEditorForType = new Dictionary<System.Type, System.Type>();
         private static readonly List<MonoEditorType> kSCustomEditors = new List<MonoEditorType>();
         private static readonly List<MonoEditorType> kSCustomMultiEditors = new List<MonoEditorType>();
         private static bool s_Initialized;
 
-        internal static Type FindCustomEditorType(Object o, bool multiEdit) => 
+        internal static System.Type FindCustomEditorType(UnityEngine.Object o, bool multiEdit) => 
             FindCustomEditorTypeByType(o.GetType(), multiEdit);
 
-        internal static Type FindCustomEditorTypeByType(Type type, bool multiEdit)
+        internal static System.Type FindCustomEditorTypeByType(System.Type type, bool multiEdit)
         {
             if (!s_Initialized)
             {
@@ -29,8 +29,8 @@
             }
             if (type != null)
             {
-                Type inspectorType;
-                Dictionary<Type, Type> dictionary = !multiEdit ? kCachedEditorForType : kCachedMultiEditorForType;
+                System.Type inspectorType;
+                Dictionary<System.Type, System.Type> dictionary = !multiEdit ? kCachedEditorForType : kCachedMultiEditorForType;
                 if (dictionary.TryGetValue(type, out inspectorType))
                 {
                     return inspectorType;
@@ -38,11 +38,11 @@
                 List<MonoEditorType> list = !multiEdit ? kSCustomEditors : kSCustomMultiEditors;
                 for (int j = 0; j < 2; j++)
                 {
-                    for (Type type4 = type; type4 != null; type4 = type4.BaseType)
+                    for (System.Type type4 = type; type4 != null; type4 = type4.BaseType)
                     {
                         for (int k = 0; k < list.Count; k++)
                         {
-                            if (IsAppropriateEditor(list[k], type4, type != type4, j == 1))
+                            if (IsAppropriateEditor(list[k], type4, !(type == type4), j == 1))
                             {
                                 inspectorType = list[k].m_InspectorType;
                                 dictionary.Add(type, inspectorType);
@@ -56,7 +56,7 @@
             return null;
         }
 
-        private static bool IsAppropriateEditor(MonoEditorType editor, Type parentClass, bool isChildClass, bool isFallback)
+        private static bool IsAppropriateEditor(MonoEditorType editor, System.Type parentClass, bool isChildClass, bool isFallback)
         {
             if (isChildClass && !editor.m_EditorForChildClasses)
             {
@@ -66,13 +66,13 @@
             {
                 return false;
             }
-            return (parentClass == editor.m_InspectedType);
+            return ((parentClass == editor.m_InspectedType) || (parentClass.IsGenericType && (parentClass.GetGenericTypeDefinition() == editor.m_InspectedType)));
         }
 
         internal static void Rebuild(Assembly assembly)
         {
-            Type[] typesFromAssembly = AssemblyHelper.GetTypesFromAssembly(assembly);
-            foreach (Type type in typesFromAssembly)
+            System.Type[] typesFromAssembly = AssemblyHelper.GetTypesFromAssembly(assembly);
+            foreach (System.Type type in typesFromAssembly)
             {
                 object[] customAttributes = type.GetCustomAttributes(typeof(CustomEditor), false);
                 foreach (CustomEditor editor in customAttributes)
@@ -108,8 +108,8 @@
         private class MonoEditorType
         {
             public bool m_EditorForChildClasses;
-            public Type m_InspectedType;
-            public Type m_InspectorType;
+            public System.Type m_InspectedType;
+            public System.Type m_InspectorType;
             public bool m_IsFallback;
         }
     }

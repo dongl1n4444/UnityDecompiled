@@ -8,19 +8,17 @@
     {
         public readonly bool VoidReturn;
         public readonly int ParameterCount;
-        public readonly bool Com;
-        public InvokerData(bool voidReturn, int parameterCount, bool com = false)
+        public InvokerData(bool voidReturn, int parameterCount)
         {
             this.VoidReturn = voidReturn;
             this.ParameterCount = parameterCount;
-            this.Com = com;
         }
 
         public override int GetHashCode() => 
-            ((this.VoidReturn.GetHashCode() ^ this.ParameterCount.GetHashCode()) ^ this.Com.GetHashCode());
+            (this.VoidReturn.GetHashCode() ^ this.ParameterCount.GetHashCode());
 
         public bool Equals(InvokerData other) => 
-            (((this.VoidReturn == other.VoidReturn) && (this.ParameterCount == other.ParameterCount)) && (this.Com == other.Com));
+            ((this.VoidReturn == other.VoidReturn) && (this.ParameterCount == other.ParameterCount));
     }
 }
 

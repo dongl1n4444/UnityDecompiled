@@ -11,7 +11,7 @@
         internal override bool GetOptimizedGUIBlock(bool isDirty, bool isVisible, out OptimizedGUIBlock block, out float height)
         {
             bool flag = base.GetOptimizedGUIBlockImplementation(isDirty, isVisible, out block, out height);
-            if ((base.target is MonoBehaviour) && (AudioUtil.HaveAudioCallback(base.target as MonoBehaviour) && (AudioUtil.GetCustomFilterChannelCount(base.target as MonoBehaviour) > 0)))
+            if ((base.target is MonoBehaviour) && (AudioUtil.HasAudioCallback(base.target as MonoBehaviour) && (AudioUtil.GetCustomFilterChannelCount(base.target as MonoBehaviour) > 0)))
             {
                 return false;
             }
@@ -56,7 +56,7 @@
             if (!this.IsMissingMonoBehaviourTarget() || !this.MissingMonoBehaviourGUI())
             {
                 base.OnInspectorGUI();
-                if ((base.target is MonoBehaviour) && (AudioUtil.HaveAudioCallback(base.target as MonoBehaviour) && (AudioUtil.GetCustomFilterChannelCount(base.target as MonoBehaviour) > 0)))
+                if ((base.target is MonoBehaviour) && (AudioUtil.HasAudioCallback(base.target as MonoBehaviour) && (AudioUtil.GetCustomFilterChannelCount(base.target as MonoBehaviour) > 0)))
                 {
                     if (this.m_AudioFilterGUI == null)
                     {

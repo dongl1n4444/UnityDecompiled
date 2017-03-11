@@ -1,6 +1,8 @@
 ﻿namespace UnityEngine.Advertisements
 {
     using System;
+    using System.Diagnostics;
+    using System.Runtime.CompilerServices;
     using System.Threading;
 
     internal sealed class UnsupportedPlatform : IPlatform
@@ -15,6 +17,7 @@
             }
         }
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event EventHandler<FinishEventArgs> OnFinish;
 
         public event EventHandler<ReadyEventArgs> OnReady

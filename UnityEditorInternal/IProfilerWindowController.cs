@@ -5,8 +5,8 @@
     internal interface IProfilerWindowController
     {
         void ClearSelectedPropertyPath();
-        ProfilerProperty CreateProperty(bool details);
         int GetActiveVisibleFrameIndex();
+        ProfilerProperty GetRootProfilerProperty(ProfilerColumn sortType);
         string GetSearch();
         bool IsSearching();
         void Repaint();

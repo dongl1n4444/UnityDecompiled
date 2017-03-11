@@ -10,6 +10,7 @@
     using System.Runtime.CompilerServices;
     using System.Threading;
     using Unity.IL2CPP;
+    using Unity.IL2CPP.Common;
     using Unity.IL2CPP.IoC;
     using Unity.IL2CPP.IoCServices;
 
@@ -46,7 +47,14 @@
             TypeDefinition interfaceType = mainModule.GetType("System.Collections.Generic.ICollection`1");
             TypeDefinition definition4 = mainModule.GetType("System.Collections.Generic.IList`1");
             TypeDefinition definition5 = mainModule.GetType("System.Collections.Generic.IEnumerable`1");
-            return Enumerable.Empty<MethodReference>().Concat<MethodReference>(GetArrayInterfaceMethods(type, interfaceType, "InternalArray__ICollection_").Select<MethodDefinition, MethodReference>(new Func<MethodDefinition, MethodReference>(storey, (IntPtr) this.<>m__0))).Concat<MethodReference>(GetArrayInterfaceMethods(type, definition4, "InternalArray__").Select<MethodDefinition, MethodReference>(new Func<MethodDefinition, MethodReference>(storey, (IntPtr) this.<>m__1))).Concat<MethodReference>(GetArrayInterfaceMethods(type, definition5, "InternalArray__IEnumerable_").Select<MethodDefinition, MethodReference>(new Func<MethodDefinition, MethodReference>(storey, (IntPtr) this.<>m__2)));
+            IEnumerable<MethodReference> first = Enumerable.Empty<MethodReference>().Concat<MethodReference>(GetArrayInterfaceMethods(type, interfaceType, "InternalArray__ICollection_").Select<MethodDefinition, MethodReference>(new Func<MethodDefinition, MethodReference>(storey.<>m__0))).Concat<MethodReference>(GetArrayInterfaceMethods(type, definition4, "InternalArray__").Select<MethodDefinition, MethodReference>(new Func<MethodDefinition, MethodReference>(storey.<>m__1))).Concat<MethodReference>(GetArrayInterfaceMethods(type, definition5, "InternalArray__IEnumerable_").Select<MethodDefinition, MethodReference>(new Func<MethodDefinition, MethodReference>(storey.<>m__2)));
+            if (CodeGenOptions.Dotnetprofile == DotNetProfile.Net45)
+            {
+                TypeDefinition definition6 = mainModule.GetType("System.Collections.Generic.IReadOnlyList`1");
+                TypeDefinition definition7 = mainModule.GetType("System.Collections.Generic.IReadOnlyCollection`1");
+                first = first.Concat<MethodReference>(GetArrayInterfaceMethods(type, definition6, "InternalArray__IReadOnlyList_").Select<MethodDefinition, MethodReference>(new Func<MethodDefinition, MethodReference>(storey.<>m__3))).Concat<MethodReference>(GetArrayInterfaceMethods(type, definition7, "InternalArray__IReadOnlyCollection_").Select<MethodDefinition, MethodReference>(new Func<MethodDefinition, MethodReference>(storey.<>m__4)));
+            }
+            return first;
         }
 
         private static bool IsGenericInstanceWithMoreThanOneGenericArgument(TypeReference type)
@@ -63,7 +71,7 @@
         }
 
         private static bool IsSpecialCollectionGenericInterface(string typeFullName) => 
-            ((typeFullName.Contains("System.Collections.Generic.ICollection`1") || typeFullName.Contains("System.Collections.Generic.IEnumerable`1")) || typeFullName.Contains("System.Collections.Generic.IList`1"));
+            (((typeFullName.Contains("System.Collections.Generic.ICollection`1") || typeFullName.Contains("System.Collections.Generic.IEnumerable`1")) || (typeFullName.Contains("System.Collections.Generic.IList`1") || typeFullName.Contains("System.Collections.Generic.IReadOnlyList`1"))) || typeFullName.Contains("System.Collections.Generic.IReadOnlyCollection`1"));
 
         internal static IEnumerable<TypeReference> TypeAndAllBaseAndInterfaceTypesFor(TypeReference type)
         {
@@ -93,7 +101,7 @@
             private <GetArrayInterfaceMethods>c__AnonStorey3 $locvar2;
             internal int $PC;
             internal MethodDefinition <arrayMethod>__2;
-            internal MethodDefinition <method>__0;
+            internal MethodDefinition <method>__1;
             internal string arrayMethodPrefix;
             internal TypeDefinition arrayType;
             internal TypeDefinition interfaceType;
@@ -142,12 +150,12 @@
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<method>__0 = this.$locvar0.Current;
+                        this.<method>__1 = this.$locvar0.Current;
                         this.$locvar2 = new <GetArrayInterfaceMethods>c__AnonStorey3();
                         this.$locvar2.<>f__ref$0 = this;
                         this.$locvar2.<>f__ref$2 = this.$locvar1;
-                        this.$locvar2.methodName = this.<method>__0.Name;
-                        this.<arrayMethod>__2 = this.arrayType.Methods.SingleOrDefault<MethodDefinition>(new Func<MethodDefinition, bool>(this.$locvar2, (IntPtr) this.<>m__0));
+                        this.$locvar2.methodName = this.<method>__1.Name;
+                        this.<arrayMethod>__2 = this.arrayType.Methods.SingleOrDefault<MethodDefinition>(new Func<MethodDefinition, bool>(this.$locvar2.<>m__0));
                         if (this.<arrayMethod>__2 != null)
                         {
                             this.$current = this.<arrayMethod>__2;
@@ -230,6 +238,12 @@
                 ArrayTypeInfoWriter.InflateArrayMethod(m, this.arrayType.ElementType);
 
             internal MethodReference <>m__2(MethodDefinition m) => 
+                ArrayTypeInfoWriter.InflateArrayMethod(m, this.arrayType.ElementType);
+
+            internal MethodReference <>m__3(MethodDefinition m) => 
+                ArrayTypeInfoWriter.InflateArrayMethod(m, this.arrayType.ElementType);
+
+            internal MethodReference <>m__4(MethodDefinition m) => 
                 ArrayTypeInfoWriter.InflateArrayMethod(m, this.arrayType.ElementType);
         }
     }

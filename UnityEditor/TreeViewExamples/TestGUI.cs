@@ -28,11 +28,11 @@
             {
                 if (this.m_LabelStyle == null)
                 {
-                    this.m_LabelStyle = new GUIStyle(TreeViewGUI.s_Styles.lineStyle);
+                    this.m_LabelStyle = new GUIStyle(TreeViewGUI.Styles.lineStyle);
                     int num = 6;
                     this.m_LabelStyle.padding.right = num;
                     this.m_LabelStyle.padding.left = num;
-                    this.m_LabelStyleRightAlign = new GUIStyle(TreeViewGUI.s_Styles.lineStyle);
+                    this.m_LabelStyleRightAlign = new GUIStyle(TreeViewGUI.Styles.lineStyle);
                     num = 6;
                     this.m_LabelStyleRightAlign.padding.left = num;
                     this.m_LabelStyleRightAlign.padding.right = num;
@@ -40,7 +40,7 @@
                 }
                 if (selected)
                 {
-                    TreeViewGUI.s_Styles.selectionStyle.Draw(rect, false, false, true, focused);
+                    TreeViewGUI.Styles.selectionStyle.Draw(rect, false, false, true, focused);
                 }
                 if ((isPinging || (this.columnWidths == null)) || (this.columnWidths.Length == 0))
                 {
@@ -75,7 +75,7 @@
         }
 
         private float[] columnWidths =>
-            base.m_TreeView.state.columnWidths;
+            ((TreeViewStateWithColumns) base.m_TreeView.state).columnWidths;
     }
 }
 

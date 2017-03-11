@@ -14,7 +14,7 @@
         private const string kLocalEulerAnglesHint = "m_LocalEulerAnglesHint";
         private const string kLocalRotation = "m_LocalRotation";
 
-        private static void AddKey(IAnimationRecordingState state, EditorCurveBinding binding, Type type, PropertyModification modification)
+        private static void AddKey(IAnimationRecordingState state, EditorCurveBinding binding, System.Type type, PropertyModification modification)
         {
             GameObject activeRootGameObject = state.activeRootGameObject;
             AnimationClip activeAnimationClip = state.activeAnimationClip;
@@ -29,17 +29,17 @@
                     {
                         outObject = currentValue;
                     }
-                    if (state.frame != 0)
+                    if ((state.currentFrame != 0) && state.addZeroFrame)
                     {
                         AnimationWindowUtility.AddKeyframeToCurve(curve, outObject, type, AnimationKeyTime.Frame(0, activeAnimationClip.frameRate));
                     }
                 }
-                AnimationWindowUtility.AddKeyframeToCurve(curve, currentValue, type, AnimationKeyTime.Frame(state.frame, activeAnimationClip.frameRate));
+                AnimationWindowUtility.AddKeyframeToCurve(curve, currentValue, type, AnimationKeyTime.Frame(state.currentFrame, activeAnimationClip.frameRate));
                 state.SaveCurve(curve);
             }
         }
 
-        private static void AddRotationKey(IAnimationRecordingState state, EditorCurveBinding binding, Type type, Vector3 previousEulerAngles, Vector3 currentEulerAngles)
+        private static void AddRotationKey(IAnimationRecordingState state, EditorCurveBinding binding, System.Type type, Vector3 previousEulerAngles, Vector3 currentEulerAngles)
         {
             AnimationClip activeAnimationClip = state.activeAnimationClip;
             if ((activeAnimationClip.hideFlags & HideFlags.NotEditable) == HideFlags.None)
@@ -48,11 +48,11 @@
                 for (int i = 0; i < 3; i++)
                 {
                     AnimationWindowCurve curve = new AnimationWindowCurve(activeAnimationClip, bindingArray[i], type);
-                    if ((curve.length == 0) && (state.frame != 0))
+                    if ((curve.length == 0) && (state.currentFrame != 0))
                     {
                         AnimationWindowUtility.AddKeyframeToCurve(curve, previousEulerAngles[i], type, AnimationKeyTime.Frame(0, activeAnimationClip.frameRate));
                     }
-                    AnimationWindowUtility.AddKeyframeToCurve(curve, currentEulerAngles[i], type, AnimationKeyTime.Frame(state.frame, activeAnimationClip.frameRate));
+                    AnimationWindowUtility.AddKeyframeToCurve(curve, currentEulerAngles[i], type, AnimationKeyTime.Frame(state.currentFrame, activeAnimationClip.frameRate));
                     state.SaveCurve(curve);
                 }
             }
@@ -64,7 +64,7 @@
             {
                 EditorCurveBinding binding = baseBinding;
                 binding.propertyName = modification.previousValue.propertyPath;
-                AnimationMode.AddPropertyModification(binding, modification.previousValue, modification.keepPrefabOverride);
+                UnityEditor.AnimationMode.AddPropertyModification(binding, modification.previousValue, modification.keepPrefabOverride);
             }
         }
 
@@ -181,7 +181,7 @@
             {
                 EditorCurveBinding binding = new EditorCurveBinding();
                 PropertyModification previousValue = modifications[i].previousValue;
-                Type type = AnimationUtility.PropertyModificationToEditorCurveBinding(previousValue, activeRootGameObject, out binding);
+                System.Type type = AnimationUtility.PropertyModificationToEditorCurveBinding(previousValue, activeRootGameObject, out binding);
                 if (type != null)
                 {
                     if (((component != null) && component.isHuman) && ((binding.type == typeof(Transform)) && component.IsBoneTransform(previousValue.target as Transform)))
@@ -190,7 +190,7 @@
                     }
                     else
                     {
-                        AnimationMode.AddPropertyModification(binding, previousValue, modifications[i].keepPrefabOverride);
+                        UnityEditor.AnimationMode.AddPropertyModification(binding, previousValue, modifications[i].keepPrefabOverride);
                         EditorCurveBinding[] bindingArray = RotationCurveInterpolation.RemapAnimationBindingForAddKey(binding, activeAnimationClip);
                         if (bindingArray != null)
                         {
@@ -224,90 +224,92 @@
                 if (key != null)
                 {
                     EditorCurveBinding binding = new EditorCurveBinding();
-                    Type type = AnimationUtility.PropertyModificationToEditorCurveBinding(modification.lastQuatModification.currentValue, state.activeRootGameObject, out binding);
+                    System.Type type = AnimationUtility.PropertyModificationToEditorCurveBinding(modification.lastQuatModification.currentValue, state.activeRootGameObject, out binding);
                     if (type != null)
                     {
+                        object obj2;
+                        object obj3;
+                        object obj4;
+                        object obj5;
                         AddRotationPropertyModification(state, binding, modification.x);
                         AddRotationPropertyModification(state, binding, modification.y);
                         AddRotationPropertyModification(state, binding, modification.z);
                         AddRotationPropertyModification(state, binding, modification.w);
+                        Quaternion localRotation = key.localRotation;
+                        Quaternion q = key.localRotation;
+                        if (ValueFromPropertyModification(modification.x.previousValue, binding, out obj2))
+                        {
+                            localRotation.x = (float) obj2;
+                        }
+                        if (ValueFromPropertyModification(modification.y.previousValue, binding, out obj3))
+                        {
+                            localRotation.y = (float) obj3;
+                        }
+                        if (ValueFromPropertyModification(modification.z.previousValue, binding, out obj4))
+                        {
+                            localRotation.z = (float) obj4;
+                        }
+                        if (ValueFromPropertyModification(modification.w.previousValue, binding, out obj5))
+                        {
+                            localRotation.w = (float) obj5;
+                        }
+                        if (ValueFromPropertyModification(modification.x.currentValue, binding, out obj2))
+                        {
+                            q.x = (float) obj2;
+                        }
+                        if (ValueFromPropertyModification(modification.y.currentValue, binding, out obj3))
+                        {
+                            q.y = (float) obj3;
+                        }
+                        if (ValueFromPropertyModification(modification.z.currentValue, binding, out obj4))
+                        {
+                            q.z = (float) obj4;
+                        }
+                        if (ValueFromPropertyModification(modification.w.currentValue, binding, out obj5))
+                        {
+                            q.w = (float) obj5;
+                        }
                         if (modification.useEuler)
                         {
-                            object obj2;
-                            object obj3;
-                            object obj4;
+                            object obj6;
+                            object obj7;
+                            object obj8;
                             AddRotationPropertyModification(state, binding, modification.eulerX);
                             AddRotationPropertyModification(state, binding, modification.eulerY);
                             AddRotationPropertyModification(state, binding, modification.eulerZ);
                             Vector3 localEulerAngles = key.GetLocalEulerAngles(RotationOrder.OrderZXY);
-                            Vector3 currentEulerAngles = key.GetLocalEulerAngles(RotationOrder.OrderZXY);
-                            if (ValueFromPropertyModification(modification.eulerX.previousValue, binding, out obj2))
+                            Vector3 eulerHint = localEulerAngles;
+                            if (ValueFromPropertyModification(modification.eulerX.previousValue, binding, out obj6))
                             {
-                                localEulerAngles.x = (float) obj2;
+                                localEulerAngles.x = (float) obj6;
                             }
-                            if (ValueFromPropertyModification(modification.eulerY.previousValue, binding, out obj3))
+                            if (ValueFromPropertyModification(modification.eulerY.previousValue, binding, out obj7))
                             {
-                                localEulerAngles.y = (float) obj3;
+                                localEulerAngles.y = (float) obj7;
                             }
-                            if (ValueFromPropertyModification(modification.eulerZ.previousValue, binding, out obj4))
+                            if (ValueFromPropertyModification(modification.eulerZ.previousValue, binding, out obj8))
                             {
-                                localEulerAngles.z = (float) obj4;
+                                localEulerAngles.z = (float) obj8;
                             }
-                            if (ValueFromPropertyModification(modification.eulerX.currentValue, binding, out obj2))
+                            if (ValueFromPropertyModification(modification.eulerX.currentValue, binding, out obj6))
                             {
-                                currentEulerAngles.x = (float) obj2;
+                                eulerHint.x = (float) obj6;
                             }
-                            if (ValueFromPropertyModification(modification.eulerY.currentValue, binding, out obj3))
+                            if (ValueFromPropertyModification(modification.eulerY.currentValue, binding, out obj7))
                             {
-                                currentEulerAngles.y = (float) obj3;
+                                eulerHint.y = (float) obj7;
                             }
-                            if (ValueFromPropertyModification(modification.eulerZ.currentValue, binding, out obj4))
+                            if (ValueFromPropertyModification(modification.eulerZ.currentValue, binding, out obj8))
                             {
-                                currentEulerAngles.z = (float) obj4;
+                                eulerHint.z = (float) obj8;
                             }
-                            AddRotationKey(state, binding, type, localEulerAngles, currentEulerAngles);
+                            localEulerAngles = AnimationUtility.GetClosestEuler(localRotation, localEulerAngles, RotationOrder.OrderZXY);
+                            eulerHint = AnimationUtility.GetClosestEuler(q, eulerHint, RotationOrder.OrderZXY);
+                            AddRotationKey(state, binding, type, localEulerAngles, eulerHint);
                         }
                         else
                         {
-                            object obj5;
-                            object obj6;
-                            object obj7;
-                            object obj8;
-                            Quaternion localRotation = key.localRotation;
-                            Quaternion quaternion2 = key.localRotation;
-                            if (ValueFromPropertyModification(modification.x.previousValue, binding, out obj5))
-                            {
-                                localRotation.x = (float) obj5;
-                            }
-                            if (ValueFromPropertyModification(modification.y.previousValue, binding, out obj6))
-                            {
-                                localRotation.y = (float) obj6;
-                            }
-                            if (ValueFromPropertyModification(modification.z.previousValue, binding, out obj7))
-                            {
-                                localRotation.z = (float) obj7;
-                            }
-                            if (ValueFromPropertyModification(modification.w.previousValue, binding, out obj8))
-                            {
-                                localRotation.w = (float) obj8;
-                            }
-                            if (ValueFromPropertyModification(modification.x.currentValue, binding, out obj5))
-                            {
-                                quaternion2.x = (float) obj5;
-                            }
-                            if (ValueFromPropertyModification(modification.y.currentValue, binding, out obj6))
-                            {
-                                quaternion2.y = (float) obj6;
-                            }
-                            if (ValueFromPropertyModification(modification.z.currentValue, binding, out obj7))
-                            {
-                                quaternion2.z = (float) obj7;
-                            }
-                            if (ValueFromPropertyModification(modification.w.currentValue, binding, out obj8))
-                            {
-                                quaternion2.w = (float) obj8;
-                            }
-                            AddRotationKey(state, binding, type, localRotation.eulerAngles, quaternion2.eulerAngles);
+                            AddRotationKey(state, binding, type, localRotation.eulerAngles, q.eulerAngles);
                         }
                     }
                 }

@@ -1,12 +1,15 @@
 ﻿namespace UnityEditor.Hardware
 {
     using System;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Threading;
+    using UnityEngine.Scripting;
 
     public sealed class DevDeviceList
     {
+        [field: DebuggerBrowsable(0), CompilerGenerated]
         public static  event OnChangedHandler Changed;
 
         public static bool FindDevice(string deviceId, out DevDevice device)
@@ -23,7 +26,7 @@
             return false;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern DevDevice[] GetDevices();
         public static void OnChanged()
         {
@@ -39,7 +42,7 @@
             OnChanged();
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void UpdateInternal(string target, DevDevice[] devices);
 
         public delegate void OnChangedHandler();

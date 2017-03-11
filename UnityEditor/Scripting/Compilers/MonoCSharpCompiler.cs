@@ -22,7 +22,7 @@
 
         public static string[] Compile(string[] sources, string[] references, string[] defines, string outputFile)
         {
-            MonoIsland island = new MonoIsland(BuildTarget.StandaloneWindows, "unity", sources, references, defines, outputFile);
+            MonoIsland island = new MonoIsland(BuildTarget.StandaloneWindows, ApiCompatibilityLevel.NET_2_0_Subset, sources, references, defines, outputFile);
             using (MonoCSharpCompiler compiler = new MonoCSharpCompiler(island, false))
             {
                 compiler.BeginCompiling();
@@ -32,7 +32,7 @@
                 }
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<CompilerMessage, string>(null, (IntPtr) <Compile>m__0);
+                    <>f__am$cache0 = cm => cm.message;
                 }
                 return Enumerable.Select<CompilerMessage, string>(compiler.GetCompilerMessages(), <>f__am$cache0).ToArray<string>();
             }
@@ -46,13 +46,13 @@
 
         private string GetCompilerPath(List<string> arguments)
         {
-            string str = MonoInstallationFinder.GetProfileDirectory(this._island._target, "4.5", "MonoBleedingEdge");
-            string path = Path.Combine(str, "mcs.exe");
+            string profileDirectory = MonoInstallationFinder.GetProfileDirectory("4.5", "MonoBleedingEdge");
+            string path = Path.Combine(profileDirectory, "mcs.exe");
             if (!File.Exists(path))
             {
-                throw new ApplicationException("Unable to find csharp compiler in " + str);
+                throw new ApplicationException("Unable to find csharp compiler in " + profileDirectory);
             }
-            arguments.Add("-sdk:" + this._island._classlib_profile);
+            arguments.Add("-sdk:" + ((this._island._api_compatibility_level != ApiCompatibilityLevel.NET_4_6) ? BuildPipeline.CompatibilityProfileToClassLibFolder(this._island._api_compatibility_level) : "4.6"));
             return path;
         }
 
@@ -63,7 +63,8 @@
                 "-target:library",
                 "-nowarn:0169",
                 "-langversion:4",
-                "-out:" + ScriptCompilerBase.PrepareFileName(this._island._output)
+                "-out:" + ScriptCompilerBase.PrepareFileName(this._island._output),
+                "-unsafe"
             };
             if (!this._island._development_player && !this._island._editor)
             {
@@ -81,29 +82,11 @@
             {
                 arguments.Add(ScriptCompilerBase.PrepareFileName(str3));
             }
-            foreach (string str4 in this.GetAdditionalReferences())
+            string profile = (this._island._api_compatibility_level != ApiCompatibilityLevel.NET_2_0) ? base.GetMonoProfileLibDirectory() : "2.0-api";
+            string profileDirectory = MonoInstallationFinder.GetProfileDirectory(profile, "MonoBleedingEdge");
+            foreach (string str6 in this.GetAdditionalReferences())
             {
-                string profile = this._island._classlib_profile;
-                switch (profile)
-                {
-                    case "2":
-                    case "2.0":
-                        profile = "2.0-api";
-                        break;
-
-                    case "4":
-                    case "4.0":
-                        profile = "4.0-api";
-                        break;
-
-                    default:
-                        if (profile == "4.5")
-                        {
-                            profile = "4.5-api";
-                        }
-                        break;
-                }
-                string path = Path.Combine(MonoInstallationFinder.GetProfileDirectory(this._island._target, profile, "MonoBleedingEdge"), str4);
+                string path = Path.Combine(profileDirectory, str6);
                 if (File.Exists(path))
                 {
                     arguments.Add("-r:" + ScriptCompilerBase.PrepareFileName(path));
@@ -111,11 +94,11 @@
             }
             if (!base.AddCustomResponseFileIfPresent(arguments, "mcs.rsp"))
             {
-                if ((this._island._classlib_profile == "unity") && base.AddCustomResponseFileIfPresent(arguments, "smcs.rsp"))
+                if ((this._island._api_compatibility_level == ApiCompatibilityLevel.NET_2_0_Subset) && base.AddCustomResponseFileIfPresent(arguments, "smcs.rsp"))
                 {
                     Debug.LogWarning("Using obsolete custom response file 'smcs.rsp'. Please use 'mcs.rsp' instead.");
                 }
-                else if ((this._island._classlib_profile == "2.0") && base.AddCustomResponseFileIfPresent(arguments, "gmcs.rsp"))
+                else if ((this._island._api_compatibility_level == ApiCompatibilityLevel.NET_2_0) && base.AddCustomResponseFileIfPresent(arguments, "gmcs.rsp"))
                 {
                     Debug.LogWarning("Using obsolete custom response file 'gmcs.rsp'. Please use 'mcs.rsp' instead.");
                 }

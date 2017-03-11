@@ -16,13 +16,13 @@
         private static Func<string, string> <>f__am$cache0;
         [CompilerGenerated]
         private static Func<JSONValue, string> <>f__am$cache1;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private static string <Name>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private static List<string> <OpenDocuments>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-        private static int <ProcessId>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private static int <ProcessId>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private static string <ServerURL>k__BackingField;
 
         static ScriptEditorSettings()
@@ -64,7 +64,7 @@
             }
             catch (Exception exception)
             {
-                Logger.Log(exception);
+                UnityEditor.RestService.Logger.Log(exception);
                 Clear();
                 Save();
             }
@@ -76,7 +76,7 @@
             builder.AppendFormat("{{\n\t\"name\" : \"{0}\",\n\t\"serverurl\" : \"{1}\",\n\t\"processid\" : {2},\n\t", Name, ServerURL, ProcessId);
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, string>(null, (IntPtr) <Save>m__0);
+                <>f__am$cache0 = d => "\"" + d + "\"";
             }
             builder.AppendFormat("\"opendocuments\" : [{0}]\n}}", string.Join(",", Enumerable.Select<string, string>(OpenDocuments, <>f__am$cache0).ToArray<string>()));
             File.WriteAllText(FilePath, builder.ToString());

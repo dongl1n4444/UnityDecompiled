@@ -42,8 +42,7 @@
             this._context = context;
             IType type = tss.Map(this._context.GetType());
             this._contextNamespace = type;
-            IEntity entity1 = type.get_DeclaringEntity();
-            if (entity1 <= null)
+            if (type.DeclaringEntity <= null)
             {
             }
             this._scriptContainerNamespace = NullNamespace.Default;
@@ -84,7 +83,7 @@
         }
 
         public override Boo.Lang.Compiler.TypeSystem.EntityType EntityType =>
-            0x1000;
+            Boo.Lang.Compiler.TypeSystem.EntityType.Namespace;
 
         public override string FullName =>
             this.Name;

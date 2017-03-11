@@ -65,8 +65,22 @@
         {
             if ((((this.m_LastClientSyncTime != 0f) && (NetworkServer.active || NetworkClient.active)) && ((base.isServer || base.isClient) && (this.GetNetworkSendInterval() != 0f))) && (!base.hasAuthority && (this.m_LastClientSyncTime != 0f)))
             {
-                this.m_Target.localPosition = Vector3.Lerp(this.m_Target.localPosition, this.m_TargetSyncPosition, this.m_InterpolateMovement);
-                this.m_Target.localRotation = Quaternion.Slerp(this.m_Target.localRotation, this.m_TargetSyncRotation3D, this.m_InterpolateRotation);
+                if (this.m_InterpolateMovement > 0f)
+                {
+                    this.m_Target.localPosition = Vector3.Lerp(this.m_Target.localPosition, this.m_TargetSyncPosition, this.m_InterpolateMovement);
+                }
+                else
+                {
+                    this.m_Target.localPosition = this.m_TargetSyncPosition;
+                }
+                if (this.m_InterpolateRotation > 0f)
+                {
+                    this.m_Target.localRotation = Quaternion.Slerp(this.m_Target.localRotation, this.m_TargetSyncRotation3D, this.m_InterpolateRotation);
+                }
+                else
+                {
+                    this.m_Target.localRotation = this.m_TargetSyncRotation3D;
+                }
             }
         }
 

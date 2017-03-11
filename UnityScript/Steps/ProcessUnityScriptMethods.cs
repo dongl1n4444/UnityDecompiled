@@ -45,25 +45,25 @@
         private bool ___get_UnityRuntimeServicesType_cached;
         private object ___get_UnityRuntimeServicesType_lock = new object();
         private IType ___get_UnityRuntimeServicesType_returnValue;
-        protected Module _activeModule;
+        protected Boo.Lang.Compiler.Ast.Module _activeModule;
         protected bool _implicit;
 
         public void ApplyImplicitArrayConversion(BinaryExpression node)
         {
-            IType expressionType = this.GetExpressionType(node.get_Left());
-            if (expressionType.get_IsArray())
+            IType expressionType = this.GetExpressionType(node.Left);
+            if (expressionType.IsArray)
             {
-                IType type2 = this.GetExpressionType(node.get_Right());
-                if (type2 == this.UnityScriptLangArray())
+                IType type = this.GetExpressionType(node.Right);
+                if (type == this.UnityScriptLangArray())
                 {
-                    node.set_Right(this.get_CodeBuilder().CreateCast(expressionType, this.get_CodeBuilder().CreateMethodInvocation(node.get_Right(), this.ResolveMethod(type2, "ToBuiltin"), this.get_CodeBuilder().CreateTypeofExpression(expressionType.get_ElementType()))));
+                    node.Right = this.CodeBuilder.CreateCast(expressionType, this.CodeBuilder.CreateMethodInvocation(node.Right, this.ResolveMethod(type, "ToBuiltin"), this.CodeBuilder.CreateTypeofExpression(expressionType.ElementType)));
                 }
             }
         }
 
         public void CheckEntryPoint(Method node)
         {
-            if ((node.get_IsStatic() && node.get_IsPublic()) && ((node.get_Name() == "Main") && (this.GetType(node.get_ReturnType()) == this.get_TypeSystemServices().VoidType)))
+            if ((node.IsStatic && node.IsPublic) && ((node.Name == "Main") && (this.GetType(node.ReturnType) == this.TypeSystemServices.VoidType)))
             {
                 ContextAnnotations.SetEntryPoint(base._context, node);
             }
@@ -75,27 +75,27 @@
             {
                 ReturnStatement statement;
                 ReturnStatement statement1 = statement = new ReturnStatement(LexicalInfo.Empty);
-                statement.set_Expression(Expression.Lift(this.EmptyEnumeratorReference));
-                node.get_Body().Add(statement);
+                Expression expression1 = statement.Expression = Expression.Lift(this.EmptyEnumeratorReference);
+                node.Body.Add(statement);
             }
         }
 
         public override IType GetGeneratorReturnType(InternalMethod generator) => 
-            this.get_TypeSystemServices().IEnumeratorType;
+            this.TypeSystemServices.IEnumeratorType;
 
         public override void Initialize(CompilerContext context)
         {
             base.Initialize(context);
-            this.set_OptimizeNullComparisons(false);
+            this.OptimizeNullComparisons = false;
         }
 
         public bool IsCompilerGenerated(ReferenceExpression reference) => 
-            reference.get_Name().Contains("$");
+            reference.Name.Contains("$");
 
         public bool IsEmptyCoroutine(Method node)
         {
-            InternalMethod entity = this.GetEntity(node);
-            bool flag1 = entity.get_ReturnType() == this.GetGeneratorReturnType(entity);
+            InternalMethod entity = (InternalMethod) this.GetEntity(node);
+            bool flag1 = entity.ReturnType == this.GetGeneratorReturnType(entity);
             if (!flag1)
             {
                 return flag1;
@@ -126,15 +126,15 @@
         }
 
         public bool NeedsUpdateableIteration(ForStatement node) => 
-            !this.GetExpressionType(node.get_Iterator()).get_IsArray();
+            !this.GetExpressionType(node.Iterator).IsArray;
 
         public override void OnForStatement(ForStatement node)
         {
-            if (1 != node.get_Declarations().Count)
+            if (1 != node.Declarations.Count)
             {
                 throw new AssertionFailedException("1 == len(node.Declarations)");
             }
-            this.Visit(node.get_Iterator());
+            this.Visit(node.Iterator);
             if (this.NeedsUpdateableIteration(node))
             {
                 this.ProcessUpdateableIteration(node);
@@ -149,13 +149,13 @@
         {
             base.OnMethod(node);
             this.CheckForEmptyCoroutine(node);
-            if (this.get_Parameters().get_OutputType() != 1)
+            if (this.Parameters.OutputType != CompilerOutputType.Library)
             {
                 this.CheckEntryPoint(node);
             }
         }
 
-        public override void OnModule(Module module)
+        public override void OnModule(Boo.Lang.Compiler.Ast.Module module)
         {
             this.ActiveModule = module;
             base.OnModule(module);
@@ -165,7 +165,7 @@
         {
             if ((this.Strict && !this._implicit) && !this.IsCompilerGenerated(reference))
             {
-                this.EmitUnknownIdentifierError(reference, reference.get_Name());
+                this.EmitUnknownIdentifierError(reference, reference.Name);
             }
             else
             {
@@ -177,8 +177,8 @@
         {
             if (function == UnityScript.TypeSystem.UnityScriptTypeSystem.UnityScriptEval)
             {
-                EvalAnnotation.Mark(this.get_CurrentMethod());
-                this.BindExpressionType(node, this.get_TypeSystemServices().ObjectType);
+                EvalAnnotation.Mark(this.CurrentMethod);
+                this.BindExpressionType(node, this.TypeSystemServices.ObjectType);
             }
             else if (function == UnityScript.TypeSystem.UnityScriptTypeSystem.UnityScriptTypeof)
             {
@@ -196,15 +196,15 @@
             if (UtilitiesModule.IsPossibleStartCoroutineInvocationForm(node))
             {
                 UnityScript.TypeSystem.UnityScriptTypeSystem unityScriptTypeSystem = this.UnityScriptTypeSystem;
-                if (unityScriptTypeSystem.IsScriptType(method.get_DeclaringType()) && unityScriptTypeSystem.IsGenerator(method))
+                if (unityScriptTypeSystem.IsScriptType(method.DeclaringType) && unityScriptTypeSystem.IsGenerator(method))
                 {
-                    if (this.get_CurrentMethod().get_IsStatic())
+                    if (this.CurrentMethod.IsStatic)
                     {
-                        this.get_Warnings().Add(UnityScriptWarnings.CannotStartCoroutineFromStaticFunction(node.get_LexicalInfo(), method.get_Name()));
+                        this.Warnings.Add(UnityScriptWarnings.CannotStartCoroutineFromStaticFunction(node.LexicalInfo, method.Name));
                     }
                     else
                     {
-                        node.get_ParentNode().Replace(node, this.get_CodeBuilder().CreateMethodInvocation(this.get_CodeBuilder().CreateSelfReference(node.get_LexicalInfo(), this.get_CurrentType()), this._StartCoroutine, node));
+                        node.ParentNode.Replace(node, this.CodeBuilder.CreateMethodInvocation(this.CodeBuilder.CreateSelfReference(node.LexicalInfo, this.CurrentType), this._StartCoroutine, node));
                     }
                 }
             }
@@ -212,7 +212,7 @@
 
         public void ProcessNormalIteration(ForStatement node)
         {
-            node.set_Iterator(this.ProcessIterator(node.get_Iterator(), node.get_Declarations()));
+            node.Iterator = this.ProcessIterator(node.Iterator, node.Declarations);
             this.VisitForStatementBlock(node);
         }
 
@@ -222,7 +222,7 @@
             this.ApplyImplicitArrayConversion(node);
             if (this.ValidateAssignment(node))
             {
-                this.BindExpressionType(node, this.GetExpressionType(node.get_Right()));
+                this.BindExpressionType(node, this.GetExpressionType(node.Right));
             }
             else
             {
@@ -232,45 +232,45 @@
 
         private void ProcessTypeofBuiltin(MethodInvocationExpression node)
         {
-            if (node.get_Arguments().get_Count() != 1)
+            if (node.Arguments.Count != 1)
             {
-                this.Error(node, new CompilerError("UCE0001", node.get_Target().get_LexicalInfo(), "'typeof' takes a single argument.", null));
+                this.Error(node, new CompilerError("UCE0001", node.Target.LexicalInfo, "'typeof' takes a single argument.", null));
             }
             else
             {
-                IType type = node.get_Arguments().get_Item(0).get_Entity() as IType;
-                if (type != null)
+                IType entity = node.Arguments[0].Entity as IType;
+                if (entity != null)
                 {
-                    node.get_ParentNode().Replace(node, this.get_CodeBuilder().CreateTypeofExpression(type));
+                    node.ParentNode.Replace(node, this.CodeBuilder.CreateTypeofExpression(entity));
                 }
                 else
                 {
-                    node.set_Target(this.get_CodeBuilder().CreateReference(this._UnityRuntimeServices_GetTypeOf));
-                    this.BindExpressionType(node, this.get_TypeSystemServices().TypeType);
+                    node.Target = this.CodeBuilder.CreateReference(this._UnityRuntimeServices_GetTypeOf);
+                    this.BindExpressionType(node, this.TypeSystemServices.TypeType);
                 }
             }
         }
 
         public void ProcessUpdateableIteration(ForStatement node)
         {
-            Expression expression = node.get_Iterator();
-            MethodInvocationExpression expression2 = this.get_CodeBuilder().CreateMethodInvocation(this._UnityRuntimeServices_GetEnumerator, node.get_Iterator());
-            expression2.set_LexicalInfo(new LexicalInfo(node.get_Iterator().get_LexicalInfo()));
-            node.set_Iterator(expression2);
-            this.ProcessDeclarationForIterator(node.get_Declarations().get_Item(0), this.GetEnumeratorItemType(this.GetExpressionType(expression)));
+            Expression iterator = node.Iterator;
+            MethodInvocationExpression expression2 = this.CodeBuilder.CreateMethodInvocation(this._UnityRuntimeServices_GetEnumerator, node.Iterator);
+            expression2.LexicalInfo = new LexicalInfo(node.Iterator.LexicalInfo);
+            node.Iterator = expression2;
+            this.ProcessDeclarationForIterator(node.Declarations[0], this.GetEnumeratorItemType(this.GetExpressionType(iterator)));
             this.VisitForStatementBlock(node);
             this.TransformIteration(node);
         }
 
         public IField ResolveUnityRuntimeField(string name) => 
-            this.get_NameResolutionService().ResolveField(this.UnityRuntimeServicesType, name);
+            this.NameResolutionService.ResolveField(this.UnityRuntimeServicesType, name);
 
         public IMethod ResolveUnityRuntimeMethod(string name) => 
-            this.get_NameResolutionService().ResolveMethod(this.UnityRuntimeServicesType, name);
+            this.NameResolutionService.ResolveMethod(this.UnityRuntimeServicesType, name);
 
         public bool ShouldDisableImplicitDowncastWarning()
         {
-            bool flag1 = !this.get_Parameters().get_Strict();
+            bool flag1 = !this.Parameters.Strict;
             if (flag1)
             {
                 return flag1;
@@ -280,53 +280,54 @@
 
         public void TransformIteration(ForStatement node)
         {
-            string[] textArray1 = new string[] { "iterator" };
-            InternalLocal iteratorVariable = this.get_CodeBuilder().DeclareLocal(this.get_CurrentMethod(), base._context.GetUniqueName(textArray1), this.get_TypeSystemServices().IEnumeratorType);
-            iteratorVariable.set_IsUsed(true);
-            Block block = new Block(node.get_LexicalInfo());
-            block.Add(this.get_CodeBuilder().CreateAssignment(node.get_LexicalInfo(), this.get_CodeBuilder().CreateReference(iteratorVariable), node.get_Iterator()));
-            WhileStatement statement = new WhileStatement(node.get_LexicalInfo());
-            statement.set_Condition(this.get_CodeBuilder().CreateMethodInvocation(this.get_CodeBuilder().CreateReference(iteratorVariable), this.IEnumerator_MoveNext));
-            MethodInvocationExpression expression = this.get_CodeBuilder().CreateMethodInvocation(this.get_CodeBuilder().CreateReference(iteratorVariable), this.IEnumerator_get_Current);
-            InternalLocal entity = TypeSystemServices.GetEntity(node.get_Declarations().get_Item(0));
-            statement.get_Block().Add(this.get_CodeBuilder().CreateAssignment(node.get_LexicalInfo(), this.get_CodeBuilder().CreateReference(entity), expression));
-            statement.get_Block().Add(node.get_Block());
-            new LoopVariableUpdater(this, base._context, iteratorVariable, entity).Visit(node);
-            block.Add(statement);
-            node.get_ParentNode().Replace(node, block);
+            string[] components = new string[] { "iterator" };
+            InternalLocal local = this.CodeBuilder.DeclareLocal(this.CurrentMethod, base._context.GetUniqueName(components), this.TypeSystemServices.IEnumeratorType);
+            local.IsUsed = true;
+            Block newNode = new Block(node.LexicalInfo);
+            newNode.Add(this.CodeBuilder.CreateAssignment(node.LexicalInfo, this.CodeBuilder.CreateReference(local), node.Iterator));
+            WhileStatement stmt = new WhileStatement(node.LexicalInfo) {
+                Condition = this.CodeBuilder.CreateMethodInvocation(this.CodeBuilder.CreateReference(local), this.IEnumerator_MoveNext)
+            };
+            MethodInvocationExpression rhs = this.CodeBuilder.CreateMethodInvocation(this.CodeBuilder.CreateReference(local), this.IEnumerator_get_Current);
+            InternalLocal entity = (InternalLocal) TypeSystemServices.GetEntity(node.Declarations[0]);
+            stmt.Block.Add(this.CodeBuilder.CreateAssignment(node.LexicalInfo, this.CodeBuilder.CreateReference(entity), rhs));
+            stmt.Block.Add(node.Block);
+            new LoopVariableUpdater(this, base._context, local, entity).Visit(node);
+            newNode.Add(stmt);
+            node.ParentNode.Replace(node, newNode);
         }
 
         public IType UnityScriptLangArray() => 
-            this.get_TypeSystemServices().Map(typeof(Array));
+            this.TypeSystemServices.Map(typeof(UnityScript.Lang.Array));
 
         public void UpdateSettingsForActiveModule()
         {
-            this.get_Parameters().set_Strict(Pragmas.IsEnabledOn(this.ActiveModule, "strict"));
+            this.Parameters.Strict = Pragmas.IsEnabledOn(this.ActiveModule, "strict");
             this._implicit = Pragmas.IsEnabledOn(this.ActiveModule, "implicit");
             My<UnityDowncastPermissions>.Instance.Enabled = Pragmas.IsEnabledOn(this.ActiveModule, "downcast");
             if (this.ShouldDisableImplicitDowncastWarning())
             {
-                this.get_Parameters().DisableWarning(this.ImplicitDowncast);
+                this.Parameters.DisableWarning(this.ImplicitDowncast);
             }
             else
             {
-                this.get_Parameters().EnableWarning(this.ImplicitDowncast);
+                this.Parameters.EnableWarning(this.ImplicitDowncast);
             }
         }
 
         public override void VisitMemberPreservingContext(TypeMember node)
         {
-            Module module = node.get_EnclosingModule();
-            if (module == this.ActiveModule)
+            Boo.Lang.Compiler.Ast.Module enclosingModule = node.EnclosingModule;
+            if (enclosingModule == this.ActiveModule)
             {
                 base.VisitMemberPreservingContext(node);
             }
             else
             {
-                Module activeModule = this.ActiveModule;
+                Boo.Lang.Compiler.Ast.Module activeModule = this.ActiveModule;
                 try
                 {
-                    this.ActiveModule = module;
+                    this.ActiveModule = enclosingModule;
                     base.VisitMemberPreservingContext(node);
                 }
                 finally
@@ -346,8 +347,8 @@
                     {
                         if (!this.___get__StartCoroutine_cached)
                         {
-                            Type[] typeArray1 = new Type[] { typeof(IEnumerator) };
-                            this.___get__StartCoroutine_returnValue = this.get_NameResolutionService().ResolveMethod(this.UnityScriptTypeSystem.ScriptBaseType, "StartCoroutine", typeArray1);
+                            Type[] paramTypes = new Type[] { typeof(IEnumerator) };
+                            this.___get__StartCoroutine_returnValue = this.NameResolutionService.ResolveMethod(this.UnityScriptTypeSystem.ScriptBaseType, "StartCoroutine", paramTypes);
                             this.___get__StartCoroutine_cached = true;
                         }
                     }
@@ -413,7 +414,7 @@
             }
         }
 
-        public Module ActiveModule
+        public Boo.Lang.Compiler.Ast.Module ActiveModule
         {
             get => 
                 this._activeModule;
@@ -434,7 +435,7 @@
                     {
                         if (!this.___get_EmptyEnumeratorReference_cached)
                         {
-                            this.___get_EmptyEnumeratorReference_returnValue = this.get_CodeBuilder().CreateMemberReference(this.ResolveUnityRuntimeField("EmptyEnumerator"));
+                            this.___get_EmptyEnumeratorReference_returnValue = this.CodeBuilder.CreateMemberReference(this.ResolveUnityRuntimeField("EmptyEnumerator"));
                             this.___get_EmptyEnumeratorReference_cached = true;
                         }
                     }
@@ -504,7 +505,7 @@
             "BCW0028";
 
         public bool Strict =>
-            this.get_Parameters().get_Strict();
+            this.Parameters.Strict;
 
         public IType UnityRuntimeServicesType
         {
@@ -516,7 +517,7 @@
                     {
                         if (!this.___get_UnityRuntimeServicesType_cached)
                         {
-                            this.___get_UnityRuntimeServicesType_returnValue = this.get_TypeSystemServices().Map(typeof(UnityRuntimeServices));
+                            this.___get_UnityRuntimeServicesType_returnValue = this.TypeSystemServices.Map(typeof(UnityRuntimeServices));
                             this.___get_UnityRuntimeServicesType_cached = true;
                         }
                     }
@@ -526,10 +527,10 @@
         }
 
         public UnityScriptCompilerParameters UnityScriptParameters =>
-            ((UnityScriptCompilerParameters) base._context.get_Parameters());
+            ((UnityScriptCompilerParameters) base._context.Parameters);
 
         public UnityScript.TypeSystem.UnityScriptTypeSystem UnityScriptTypeSystem =>
-            ((UnityScript.TypeSystem.UnityScriptTypeSystem) this.get_TypeSystemServices());
+            ((UnityScript.TypeSystem.UnityScriptTypeSystem) this.TypeSystemServices);
 
         [Serializable]
         public class LoopVariableUpdater : DepthFirstVisitor
@@ -551,15 +552,15 @@
             public override void OnExpressionStatement(ExpressionStatement node)
             {
                 this._found = false;
-                this.Visit(node.get_Expression());
+                this.Visit(node.Expression);
                 if (this._found)
                 {
-                    Node node2 = node.get_ParentNode();
-                    BooCodeBuilder builder = this._context.get_CodeBuilder();
-                    Block block = new Block(node.get_LexicalInfo());
-                    block.Add(node);
-                    block.Add(builder.CreateMethodInvocation(this._parent._UnityRuntimeServices_Update, builder.CreateReference(this._iteratorVariable), builder.CreateReference(this._loopVariable)));
-                    node2.Replace(node, block);
+                    Node parentNode = node.ParentNode;
+                    BooCodeBuilder codeBuilder = this._context.CodeBuilder;
+                    Block newNode = new Block(node.LexicalInfo);
+                    newNode.Add(node);
+                    newNode.Add(codeBuilder.CreateMethodInvocation(this._parent._UnityRuntimeServices_Update, codeBuilder.CreateReference(this._iteratorVariable), codeBuilder.CreateReference(this._loopVariable)));
+                    parentNode.Replace(node, newNode);
                 }
             }
 
@@ -567,7 +568,7 @@
             {
                 if (!this._found)
                 {
-                    IEntity entity = node.get_Entity();
+                    IEntity entity = node.Entity;
                     this._found = entity == this._loopVariable;
                 }
             }

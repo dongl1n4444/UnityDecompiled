@@ -21,7 +21,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, string>(null, (IntPtr) <InQuotes>m__0);
+                <>f__am$cache0 = input => input.InQuotes();
             }
             return inputs.Select<string, string>(<>f__am$cache0);
         }
@@ -34,7 +34,7 @@
             <PrefixedWith>c__AnonStorey0 storey = new <PrefixedWith>c__AnonStorey0 {
                 prefix = prefix
             };
-            return inputs.Select<string, string>(new Func<string, string>(storey, (IntPtr) this.<>m__0));
+            return inputs.Select<string, string>(new Func<string, string>(storey.<>m__0));
         }
 
         public static string SeparateWithSpaces(this IEnumerable<string> inputs)

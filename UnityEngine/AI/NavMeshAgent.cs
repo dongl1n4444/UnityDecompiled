@@ -4,6 +4,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
     using UnityEngine.Scripting.APIUpdating;
 
     /// <summary>
@@ -16,7 +17,7 @@
         /// <para>Enables or disables the current off-mesh link.</para>
         /// </summary>
         /// <param name="activated">Is the link activated?</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void ActivateCurrentOffMeshLink(bool activated);
         /// <summary>
         /// <para>Calculate a path to a specified point and store the resulting path.</para>
@@ -38,11 +39,11 @@
         /// <summary>
         /// <para>Completes the movement on the current OffMeshLink.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void CompleteOffMeshLink();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void CopyPathTo(NavMeshPath path);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool FindClosestEdge(out NavMeshHit hit);
         /// <summary>
         /// <para>Gets the cost for path calculation when crossing area of a particular type.</para>
@@ -51,9 +52,9 @@
         /// <returns>
         /// <para>Current cost for specified area index.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern float GetAreaCost(int areaIndex);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern OffMeshLinkData GetCurrentOffMeshLinkDataInternal();
         /// <summary>
         /// <para>Gets the cost for crossing ground of a particular type.</para>
@@ -62,37 +63,39 @@
         /// <returns>
         /// <para>Current cost of specified layer.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use GetAreaCost instead.")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use GetAreaCost instead."), GeneratedByOldBindingsGenerator]
         public extern float GetLayerCost(int layer);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern OffMeshLinkData GetNextOffMeshLinkDataInternal();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern UnityEngine.Object GetOwnerInternal();
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool INTERNAL_CALL_CalculatePathInternal(NavMeshAgent self, ref Vector3 targetPosition, NavMeshPath path);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Move(NavMeshAgent self, ref Vector3 offset);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool INTERNAL_CALL_Raycast(NavMeshAgent self, ref Vector3 targetPosition, out NavMeshHit hit);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool INTERNAL_CALL_SetDestination(NavMeshAgent self, ref Vector3 target);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool INTERNAL_CALL_Warp(NavMeshAgent self, ref Vector3 newPosition);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_desiredVelocity(out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_destination(out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_nextPosition(out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_pathEndPosition(out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_steeringTarget(out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_velocity(out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_destination(ref Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_nextPosition(ref Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_velocity(ref Vector3 value);
         /// <summary>
         /// <para>Apply relative movement to current position.</para>
@@ -109,21 +112,21 @@
         /// <summary>
         /// <para>Clears the current path.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void ResetPath();
         /// <summary>
         /// <para>Resumes the movement along the current path after a pause.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Set isStopped to false instead"), GeneratedByOldBindingsGenerator]
         public extern void Resume();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool SamplePathPosition(int areaMask, float maxDistance, out NavMeshHit hit);
         /// <summary>
         /// <para>Sets the cost for traversing over areas of the area type.</para>
         /// </summary>
         /// <param name="areaIndex">Area cost.</param>
         /// <param name="areaCost">New cost for the specified area index.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetAreaCost(int areaIndex, float areaCost);
         /// <summary>
         /// <para>Sets or updates the destination thus triggering the calculation for a new path.</para>
@@ -140,7 +143,7 @@
         /// </summary>
         /// <param name="layer">Layer index.</param>
         /// <param name="cost">New cost for the specified layer.</param>
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use SetAreaCost instead.")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use SetAreaCost instead."), GeneratedByOldBindingsGenerator]
         public extern void SetLayerCost(int layer, float cost);
         /// <summary>
         /// <para>Assign a new path to this agent.</para>
@@ -149,23 +152,24 @@
         /// <returns>
         /// <para>True if the path is succesfully assigned.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool SetPath(NavMeshPath path);
         /// <summary>
         /// <para>Stop movement of this agent along its current path.</para>
         /// </summary>
+        [Obsolete("Set isStopped to true instead")]
         public void Stop()
         {
             this.StopInternal();
         }
 
-        [Obsolete("Use Stop() instead")]
+        [Obsolete("Set isStopped to true instead")]
         public void Stop(bool stopUpdates)
         {
             this.StopInternal();
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void StopInternal();
         /// <summary>
         /// <para>Warps agent to the provided position.</para>
@@ -180,42 +184,42 @@
         /// <summary>
         /// <para>The maximum acceleration of an agent as it follows a path, given in units / sec^2.</para>
         /// </summary>
-        public float acceleration { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float acceleration { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Maximum turning speed in (deg/s) while following a path.</para>
         /// </summary>
-        public float angularSpeed { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float angularSpeed { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Specifies which NavMesh areas are passable. Changing areaMask will make the path stale (see isPathStale).</para>
         /// </summary>
-        public int areaMask { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int areaMask { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Should the agent brake automatically to avoid overshooting the destination point?</para>
         /// </summary>
-        public bool autoBraking { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool autoBraking { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Should the agent attempt to acquire a new path if the existing path becomes invalid?</para>
         /// </summary>
-        public bool autoRepath { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool autoRepath { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Should the agent move across OffMeshLinks automatically?</para>
         /// </summary>
-        public bool autoTraverseOffMeshLink { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool autoTraverseOffMeshLink { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The avoidance priority level.</para>
         /// </summary>
-        public int avoidancePriority { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int avoidancePriority { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The relative vertical displacement of the owning GameObject.</para>
         /// </summary>
-        public float baseOffset { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float baseOffset { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The current OffMeshLinkData.</para>
@@ -256,27 +260,35 @@
         /// <summary>
         /// <para>Does the agent currently have a path? (Read Only)</para>
         /// </summary>
-        public bool hasPath { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool hasPath { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The height of the agent for purposes of passing under obstacles, etc.</para>
         /// </summary>
-        public float height { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float height { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Is the agent currently bound to the navmesh? (Read Only)</para>
         /// </summary>
-        public bool isOnNavMesh { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isOnNavMesh { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Is the agent currently positioned on an OffMeshLink? (Read Only)</para>
         /// </summary>
-        public bool isOnOffMeshLink { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isOnOffMeshLink { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Is the current path stale. (Read Only)</para>
         /// </summary>
-        public bool isPathStale { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isPathStale { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        /// <summary>
+        /// <para>This property holds the stop or resume condition of the NavMesh agent.</para>
+        /// </summary>
+        public bool isStopped { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        public UnityEngine.Object navMeshOwner =>
+            this.GetOwnerInternal();
 
         /// <summary>
         /// <para>The next OffMeshLinkData on the current path.</para>
@@ -304,7 +316,7 @@
         /// <summary>
         /// <para>The level of quality of avoidance.</para>
         /// </summary>
-        public ObstacleAvoidanceType obstacleAvoidanceType { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public ObstacleAvoidanceType obstacleAvoidanceType { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Property to get and set the current path.</para>
@@ -340,27 +352,27 @@
         /// <summary>
         /// <para>Is a path in the process of being computed but not yet ready? (Read Only)</para>
         /// </summary>
-        public bool pathPending { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool pathPending { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The status of the current path (complete, partial or invalid).</para>
         /// </summary>
-        public NavMeshPathStatus pathStatus { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public NavMeshPathStatus pathStatus { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The avoidance radius for the agent.</para>
         /// </summary>
-        public float radius { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float radius { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The distance between the agent's position and the destination on the current path. (Read Only)</para>
         /// </summary>
-        public float remainingDistance { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public float remainingDistance { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Maximum movement speed when following a path.</para>
         /// </summary>
-        public float speed { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float speed { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Get the current steering target along the path. (Read Only)</para>
@@ -378,17 +390,19 @@
         /// <summary>
         /// <para>Stop within this distance from the target position.</para>
         /// </summary>
-        public float stoppingDistance { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float stoppingDistance { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Gets or sets whether the transform position is synchronized with the simulated agent position. The default value is true.</para>
         /// </summary>
-        public bool updatePosition { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool updatePosition { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Should the agent update the transform orientation?</para>
         /// </summary>
-        public bool updateRotation { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool updateRotation { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        public bool updateUpAxis { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Access the current velocity of the NavMeshAgent component, or set a velocity to control the agent manually.</para>
@@ -411,7 +425,7 @@
         /// <para>Specifies which NavMesh layers are passable (bitfield). Changing walkableMask will make the path stale (see isPathStale).</para>
         /// </summary>
         [Obsolete("Use areaMask instead.")]
-        public int walkableMask { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int walkableMask { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
     }
 }
 

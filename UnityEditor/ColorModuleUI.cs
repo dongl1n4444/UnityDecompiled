@@ -24,13 +24,13 @@
             }
         }
 
-        public override void OnInspectorGUI(ParticleSystem s)
+        public override void OnInspectorGUI(InitialModuleUI initial)
         {
             if (s_Texts == null)
             {
                 s_Texts = new Texts();
             }
-            base.GUIMinMaxGradient(s_Texts.color, this.m_Gradient, new GUILayoutOption[0]);
+            base.GUIMinMaxGradient(s_Texts.color, this.m_Gradient, false, new GUILayoutOption[0]);
         }
 
         private class Texts

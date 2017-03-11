@@ -39,7 +39,7 @@
             {
                 return num;
             }
-            uint key = this._hashFunc.Invoke(value);
+            uint key = this._hashFunc(value);
             uint item = key;
             if (this._lastUsedCollisionOffset.TryGetValue(key, out num5))
             {

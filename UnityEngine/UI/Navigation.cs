@@ -22,7 +22,7 @@
         [FormerlySerializedAs("selectOnRight"), SerializeField]
         private Selectable m_SelectOnRight;
         /// <summary>
-        /// <para>Navigation mode.</para>
+        /// <para>Navitation mode.</para>
         /// </summary>
         public Mode mode
         {
@@ -34,7 +34,7 @@
             }
         }
         /// <summary>
-        /// <para>Specify a Selectable UI GameObject to highlight when the Up arrow key is pressed.</para>
+        /// <para>Selectable to select on up.</para>
         /// </summary>
         public Selectable selectOnUp
         {
@@ -46,7 +46,7 @@
             }
         }
         /// <summary>
-        /// <para>Specify a Selectable UI GameObject to highlight when the down arrow key is pressed.</para>
+        /// <para>Selectable to select on down.</para>
         /// </summary>
         public Selectable selectOnDown
         {
@@ -58,7 +58,7 @@
             }
         }
         /// <summary>
-        /// <para>Specify a Selectable UI GameObject to highlight when the left arrow key is pressed.</para>
+        /// <para>Selectable to select on left.</para>
         /// </summary>
         public Selectable selectOnLeft
         {
@@ -70,7 +70,7 @@
             }
         }
         /// <summary>
-        /// <para>Specify a Selectable UI GameObject to highlight when the right arrow key is pressed.</para>
+        /// <para>Selectable to select on right.</para>
         /// </summary>
         public Selectable selectOnRight
         {

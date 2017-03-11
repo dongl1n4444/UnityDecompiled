@@ -5,7 +5,7 @@
     using UnityEngine.Scripting;
 
     /// <summary>
-    /// <para>Class that specifies some information about a renderable character.</para>
+    /// <para>Class that specifes some information about a renderable character.</para>
     /// </summary>
     [StructLayout(LayoutKind.Sequential), UsedByNativeCode]
     public struct UICharInfo

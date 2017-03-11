@@ -43,6 +43,11 @@
             {
                 this.Add(type4.ElementType, 0);
             }
+            PointerType type5 = type as PointerType;
+            if (type5 != null)
+            {
+                this.Add(type5.ElementType, 0);
+            }
         }
 
         public void Dispose()

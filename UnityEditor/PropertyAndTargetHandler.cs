@@ -7,9 +7,9 @@
     {
         public TargetChoiceHandler.TargetChoiceMenuFunction function;
         public SerializedProperty property;
-        public Object target;
+        public UnityEngine.Object target;
 
-        public PropertyAndTargetHandler(SerializedProperty property, Object target, TargetChoiceHandler.TargetChoiceMenuFunction function)
+        public PropertyAndTargetHandler(SerializedProperty property, UnityEngine.Object target, TargetChoiceHandler.TargetChoiceMenuFunction function)
         {
             this.property = property;
             this.target = target;

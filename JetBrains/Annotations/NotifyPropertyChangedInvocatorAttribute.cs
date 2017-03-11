@@ -7,7 +7,7 @@
     [AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=true)]
     public sealed class NotifyPropertyChangedInvocatorAttribute : Attribute
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <ParameterName>k__BackingField;
 
         public NotifyPropertyChangedInvocatorAttribute()

@@ -1,12 +1,15 @@
 ﻿namespace UnityEngine.Events
 {
     using System;
+    using System.Diagnostics;
     using System.Reflection;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEngineInternal;
 
     internal class InvokableCall<T1> : BaseInvokableCall
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         protected event UnityAction<T1> Delegate;
 
         public InvokableCall(UnityAction<T1> action)

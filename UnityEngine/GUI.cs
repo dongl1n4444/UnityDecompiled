@@ -12,7 +12,7 @@
     /// </summary>
     public class GUI
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static DateTime <nextScrollStepTime>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static int <scrollTroughSide>k__BackingField;
@@ -135,20 +135,7 @@
         /// <param name="style">The style to use for the background.</param>
         public static void BeginGroup(Rect position, GUIContent content, GUIStyle style)
         {
-            GUIUtility.CheckOnGUI();
-            int controlID = GUIUtility.GetControlID(s_BeginGroupHash, FocusType.Passive);
-            if ((content != GUIContent.none) || (style != GUIStyle.none))
-            {
-                if (Event.current.type == EventType.Repaint)
-                {
-                    style.Draw(position, content, controlID);
-                }
-                else if (position.Contains(Event.current.mousePosition))
-                {
-                    GUIUtility.mouseUsed = true;
-                }
-            }
-            GUIClip.Push(position, Vector2.zero, Vector2.zero, false);
+            BeginGroup(position, content, style, Vector2.zero);
         }
 
         /// <summary>
@@ -162,6 +149,24 @@
         public static void BeginGroup(Rect position, Texture image, GUIStyle style)
         {
             BeginGroup(position, GUIContent.Temp(image), style);
+        }
+
+        internal static void BeginGroup(Rect position, GUIContent content, GUIStyle style, Vector2 scrollOffset)
+        {
+            GUIUtility.CheckOnGUI();
+            int controlID = GUIUtility.GetControlID(s_BeginGroupHash, FocusType.Passive);
+            if ((content != GUIContent.none) || (style != GUIStyle.none))
+            {
+                if (Event.current.type == EventType.Repaint)
+                {
+                    style.Draw(position, content, controlID);
+                }
+                else if (position.Contains(Event.current.mousePosition))
+                {
+                    GUIUtility.mouseUsed = true;
+                }
+            }
+            GUIClip.Push(position, scrollOffset, Vector2.zero, false);
         }
 
         /// <summary>
@@ -355,7 +360,7 @@
         }
 
         /// <summary>
-        /// <para>Create a Box on the GUI Layer. A Box can contain text, an image, or a combination of these along with an optional tooltip, through using a GUIContent parameter. You may also use a GUIStyle to adjust the layout of items in a box, text colour and other properties.</para>
+        /// <para>Make a graphical box.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the box.</param>
         /// <param name="text">Text to display on the box.</param>
@@ -368,7 +373,7 @@
         }
 
         /// <summary>
-        /// <para>Create a Box on the GUI Layer. A Box can contain text, an image, or a combination of these along with an optional tooltip, through using a GUIContent parameter. You may also use a GUIStyle to adjust the layout of items in a box, text colour and other properties.</para>
+        /// <para>Make a graphical box.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the box.</param>
         /// <param name="text">Text to display on the box.</param>
@@ -381,7 +386,7 @@
         }
 
         /// <summary>
-        /// <para>Create a Box on the GUI Layer. A Box can contain text, an image, or a combination of these along with an optional tooltip, through using a GUIContent parameter. You may also use a GUIStyle to adjust the layout of items in a box, text colour and other properties.</para>
+        /// <para>Make a graphical box.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the box.</param>
         /// <param name="text">Text to display on the box.</param>
@@ -394,7 +399,7 @@
         }
 
         /// <summary>
-        /// <para>Create a Box on the GUI Layer. A Box can contain text, an image, or a combination of these along with an optional tooltip, through using a GUIContent parameter. You may also use a GUIStyle to adjust the layout of items in a box, text colour and other properties.</para>
+        /// <para>Make a graphical box.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the box.</param>
         /// <param name="text">Text to display on the box.</param>
@@ -407,7 +412,7 @@
         }
 
         /// <summary>
-        /// <para>Create a Box on the GUI Layer. A Box can contain text, an image, or a combination of these along with an optional tooltip, through using a GUIContent parameter. You may also use a GUIStyle to adjust the layout of items in a box, text colour and other properties.</para>
+        /// <para>Make a graphical box.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the box.</param>
         /// <param name="text">Text to display on the box.</param>
@@ -425,7 +430,7 @@
         }
 
         /// <summary>
-        /// <para>Create a Box on the GUI Layer. A Box can contain text, an image, or a combination of these along with an optional tooltip, through using a GUIContent parameter. You may also use a GUIStyle to adjust the layout of items in a box, text colour and other properties.</para>
+        /// <para>Make a graphical box.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the box.</param>
         /// <param name="text">Text to display on the box.</param>
@@ -441,13 +446,13 @@
         /// <para>Bring a specific window to back of the floating windows.</para>
         /// </summary>
         /// <param name="windowID">The identifier used when you created the window in the Window call.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void BringWindowToBack(int windowID);
         /// <summary>
         /// <para>Bring a specific window to front of the floating windows.</para>
         /// </summary>
         /// <param name="windowID">The identifier used when you created the window in the Window call.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void BringWindowToFront(int windowID);
         /// <summary>
         /// <para>Make a single press button. The user clicks them and something happens immediately.</para>
@@ -637,7 +642,7 @@
         }
 
         [RequiredByNativeCode]
-        internal static void CallWindowDelegate(WindowFunction func, int id, GUISkin _skin, int forceRect, float width, float height, GUIStyle style)
+        internal static void CallWindowDelegate(WindowFunction func, int id, int instanceID, GUISkin _skin, int forceRect, float width, float height, GUIStyle style)
         {
             GUILayoutUtility.SelectIDList(id, true);
             GUISkin skin = GUI.skin;
@@ -803,12 +808,8 @@
             INTERNAL_CALL_DoLabel(ref position, content, style);
         }
 
-        private static Rect DoModalWindow(int id, Rect clientRect, WindowFunction func, GUIContent content, GUIStyle style, GUISkin skin)
-        {
-            Rect rect;
-            INTERNAL_CALL_DoModalWindow(id, ref clientRect, func, content, style, skin, out rect);
-            return rect;
-        }
+        private static Rect DoModalWindow(int id, Rect clientRect, WindowFunction func, GUIContent content, GUIStyle style, GUISkin skin) => 
+            Internal_DoModalWindow(id, GUIUtility.s_OriginalID, clientRect, func, content, style, skin);
 
         private static bool DoRepeatButton(Rect position, GUIContent content, GUIStyle style, FocusType focusType)
         {
@@ -894,12 +895,8 @@
         internal static bool DoToggle(Rect position, int id, bool value, GUIContent content, IntPtr style) => 
             INTERNAL_CALL_DoToggle(ref position, id, value, content, style);
 
-        private static Rect DoWindow(int id, Rect clientRect, WindowFunction func, GUIContent title, GUIStyle style, GUISkin skin, bool forceRectOnLayout)
-        {
-            Rect rect;
-            INTERNAL_CALL_DoWindow(id, ref clientRect, func, title, style, skin, forceRectOnLayout, out rect);
-            return rect;
-        }
+        private static Rect DoWindow(int id, Rect clientRect, WindowFunction func, GUIContent title, GUIStyle style, GUISkin skin, bool forceRectOnLayout) => 
+            Internal_DoWindow(id, GUIUtility.s_OriginalID, clientRect, func, title, style, skin, forceRectOnLayout);
 
         /// <summary>
         /// <para>If you want to have the entire window background to act as a drag area, use the version of DragWindow that takes no parameters and put it at the end of the window function.</para>
@@ -967,6 +964,22 @@
         /// <param name="imageAspect">Aspect ratio to use for the source image. If 0 (the default), the aspect ratio from the image is used.  Pass in w/h for the desired aspect ratio.  This allows the aspect ratio of the source image to be adjusted without changing the pixel width and height.</param>
         public static void DrawTexture(Rect position, Texture image, ScaleMode scaleMode, bool alphaBlend, float imageAspect)
         {
+            DrawTexture(position, image, scaleMode, alphaBlend, imageAspect, color, 0f, 0f);
+        }
+
+        /// <summary>
+        /// <para>Draws a border with rounded corners within a rectangle. The texture is used to pattern the border.  Note that this method only works on shader model 2.5 and above.</para>
+        /// </summary>
+        /// <param name="position">Rectangle on the screen to draw the texture within.</param>
+        /// <param name="image">Texture to display.</param>
+        /// <param name="scaleMode">How to scale the image when the aspect ratio of it doesn't fit the aspect ratio to be drawn within.</param>
+        /// <param name="alphaBlend">Whether to apply alpha blending when drawing the image (enabled by default).</param>
+        /// <param name="imageAspect">Aspect ratio to use for the source image. If 0 (the default), the aspect ratio from the image is used.  Pass in w/h for the desired aspect ratio.  This allows the aspect ratio of the source image to be adjusted without changing the pixel width and height.</param>
+        /// <param name="color">A tint color to apply on the texture.</param>
+        /// <param name="borderWidth">The width of the border. If 0, the full texture is drawn.</param>
+        /// <param name="cornerRadius">The radius for rounded corners. If 0, corners will not be rounded.</param>
+        public static void DrawTexture(Rect position, Texture image, ScaleMode scaleMode, bool alphaBlend, float imageAspect, Color color, float borderWidth, float cornerRadius)
+        {
             GUIUtility.CheckOnGUI();
             if (Event.current.type == EventType.Repaint)
             {
@@ -980,18 +993,28 @@
                     {
                         imageAspect = ((float) image.width) / ((float) image.height);
                     }
-                    Material material = !alphaBlend ? blitMaterial : blendMaterial;
-                    InternalDrawTextureArguments arguments = new InternalDrawTextureArguments {
-                        texture = image,
+                    Material roundedRectMaterial = null;
+                    if ((borderWidth > Mathf.Epsilon) || (cornerRadius > Mathf.Epsilon))
+                    {
+                        roundedRectMaterial = GUI.roundedRectMaterial;
+                    }
+                    else
+                    {
+                        roundedRectMaterial = !alphaBlend ? blitMaterial : blendMaterial;
+                    }
+                    Internal_DrawTextureArguments args = new Internal_DrawTextureArguments {
                         leftBorder = 0,
                         rightBorder = 0,
                         topBorder = 0,
                         bottomBorder = 0,
                         color = color,
-                        mat = material
+                        borderWidth = borderWidth,
+                        cornerRadius = cornerRadius,
+                        texture = image,
+                        mat = roundedRectMaterial
                     };
-                    CalculateScaledTextureRects(position, scaleMode, imageAspect, ref arguments.screenRect, ref arguments.sourceRect);
-                    Graphics.DrawTexture(ref arguments);
+                    CalculateScaledTextureRects(position, scaleMode, imageAspect, ref args.screenRect, ref args.sourceRect);
+                    Graphics.Internal_DrawTexture(ref args);
                 }
             }
         }
@@ -1021,18 +1044,18 @@
             if (Event.current.type == EventType.Repaint)
             {
                 Material material = !alphaBlend ? blitMaterial : blendMaterial;
-                InternalDrawTextureArguments arguments = new InternalDrawTextureArguments {
+                Internal_DrawTextureArguments args = new Internal_DrawTextureArguments {
                     texture = image,
+                    mat = material,
                     leftBorder = 0,
                     rightBorder = 0,
                     topBorder = 0,
                     bottomBorder = 0,
                     color = color,
-                    mat = material,
                     screenRect = position,
                     sourceRect = texCoords
                 };
-                Graphics.DrawTexture(ref arguments);
+                Graphics.Internal_DrawTexture(ref args);
             }
         }
 
@@ -1048,7 +1071,7 @@
         public static void EndGroup()
         {
             GUIUtility.CheckOnGUI();
-            GUIClip.Pop();
+            GUIClip.Internal_Pop();
         }
 
         /// <summary>
@@ -1118,13 +1141,13 @@
         /// <para>Move keyboard focus to a named control.</para>
         /// </summary>
         /// <param name="name">Name set using SetNextControlName.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void FocusControl(string name);
         /// <summary>
         /// <para>Make a window become the active window.</para>
         /// </summary>
         /// <param name="windowID">The identifier used when you created the window in the Window call.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void FocusWindow(int windowID);
         private static int GetButtonGridMouseSelection(Rect[] buttonRects, Vector2 mousePos, bool findNearest)
         {
@@ -1159,7 +1182,7 @@
         /// <summary>
         /// <para>Get the name of named control that has focus.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetNameOfFocusedControl();
         internal static ScrollViewState GetTopScrollView()
         {
@@ -1408,43 +1431,57 @@
         public static float HorizontalSlider(Rect position, float value, float leftValue, float rightValue, GUIStyle slider, GUIStyle thumb) => 
             Slider(position, value, 0f, leftValue, rightValue, slider, thumb, true, 0);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void InitializeGUIClipTexture();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_BeginWindows();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool INTERNAL_CALL_DoButton(ref Rect position, GUIContent content, IntPtr style);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_DoLabel(ref Rect position, GUIContent content, IntPtr style);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void INTERNAL_CALL_DoModalWindow(int id, ref Rect clientRect, WindowFunction func, GUIContent content, GUIStyle style, GUISkin skin, out Rect value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool INTERNAL_CALL_DoToggle(ref Rect position, int id, bool value, GUIContent content, IntPtr style);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void INTERNAL_CALL_DoWindow(int id, ref Rect clientRect, WindowFunction func, GUIContent title, GUIStyle style, GUISkin skin, bool forceRectOnLayout, out Rect value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_DragWindow(ref Rect position);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_Internal_DoModalWindow(int id, int instanceID, ref Rect clientRect, WindowFunction func, GUIContent content, GUIStyle style, GUISkin skin, out Rect value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_Internal_DoWindow(int id, int instanceID, ref Rect clientRect, WindowFunction func, GUIContent title, GUIStyle style, GUISkin skin, bool forceRectOnLayout, out Rect value);
+        private static Rect Internal_DoModalWindow(int id, int instanceID, Rect clientRect, WindowFunction func, GUIContent content, GUIStyle style, GUISkin skin)
+        {
+            Rect rect;
+            INTERNAL_CALL_Internal_DoModalWindow(id, instanceID, ref clientRect, func, content, style, skin, out rect);
+            return rect;
+        }
+
+        private static Rect Internal_DoWindow(int id, int instanceID, Rect clientRect, WindowFunction func, GUIContent title, GUIStyle style, GUISkin skin, bool forceRectOnLayout)
+        {
+            Rect rect;
+            INTERNAL_CALL_Internal_DoWindow(id, instanceID, ref clientRect, func, title, style, skin, forceRectOnLayout, out rect);
+            return rect;
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_EndWindows();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_get_backgroundColor(out Color value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_get_color(out Color value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_get_contentColor(out Color value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern string Internal_GetMouseTooltip();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern string Internal_GetTooltip();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_set_backgroundColor(ref Color value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_set_color(ref Color value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_set_contentColor(ref Color value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_SetTooltip(string value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void InternalRepaintEditorWindow();
         /// <summary>
         /// <para>Make a text or texture label on screen.</para>
@@ -1919,16 +1956,16 @@
         /// <para>Set the name of the next control.</para>
         /// </summary>
         /// <param name="name"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetNextControlName(string name);
-        public static float Slider(Rect position, float value, float size, float start, float end, GUIStyle sliderStyle, GUIStyle thumbStyle, bool horiz, int id)
+        public static float Slider(Rect position, float value, float size, float start, float end, GUIStyle slider, GUIStyle thumb, bool horiz, int id)
         {
             GUIUtility.CheckOnGUI();
             if (id == 0)
             {
                 id = GUIUtility.GetControlID(s_SliderHash, FocusType.Passive, position);
             }
-            SliderHandler handler = new SliderHandler(position, value, size, start, end, sliderStyle, thumbStyle, horiz, id);
+            SliderHandler handler = new SliderHandler(position, value, size, start, end, slider, thumb, horiz, id);
             return handler.Handle();
         }
 
@@ -2280,7 +2317,7 @@
         /// <summary>
         /// <para>Remove focus from all windows.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void UnfocusWindow();
         /// <summary>
         /// <para>Make a vertical scrollbar. Scrollbars are what you use to scroll through a document. Most likely, you want to use scrollViews instead.</para>
@@ -2395,14 +2432,14 @@
             }
         }
 
-        internal static Material blendMaterial { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal static Material blendMaterial { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        internal static Material blitMaterial { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal static Material blitMaterial { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Returns true if any controls changed the value of the input data.</para>
         /// </summary>
-        public static bool changed { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static bool changed { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Global tinting color for the GUI.</para>
@@ -2441,12 +2478,12 @@
         /// <summary>
         /// <para>The sorting depth of the currently executing GUI behaviour.</para>
         /// </summary>
-        public static int depth { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static int depth { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Is the GUI enabled?</para>
         /// </summary>
-        public static bool enabled { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static bool enabled { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The GUI transform matrix.</para>
@@ -2475,6 +2512,8 @@
                 <nextScrollStepTime>k__BackingField = value;
             }
         }
+
+        internal static Material roundedRectMaterial { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         internal static int scrollTroughSide
         {
@@ -2535,7 +2574,7 @@
             }
         }
 
-        internal static bool usePageScrollbars { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal static bool usePageScrollbars { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         public class ClipScope : GUI.Scope
         {
@@ -2687,9 +2726,9 @@
         /// </summary>
         public class ScrollViewScope : GUI.Scope
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private bool <handleScrollWheel>k__BackingField;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private Vector2 <scrollPosition>k__BackingField;
 
             /// <summary>
@@ -2776,82 +2815,6 @@
             /// <para>The modified scrollPosition. Feed this back into the variable you pass in, as shown in the example.</para>
             /// </summary>
             public Vector2 scrollPosition { get; private set; }
-        }
-
-        internal sealed class ScrollViewState
-        {
-            public bool apply = false;
-            public bool hasScrollTo = false;
-            public Rect position;
-            public Vector2 scrollPosition;
-            public Rect viewRect;
-            public Rect visibleRect;
-
-            internal Vector2 ScrollNeeded(Rect position)
-            {
-                Rect visibleRect = this.visibleRect;
-                visibleRect.x += this.scrollPosition.x;
-                visibleRect.y += this.scrollPosition.y;
-                float num = position.width - this.visibleRect.width;
-                if (num > 0f)
-                {
-                    position.width -= num;
-                    position.x += num * 0.5f;
-                }
-                num = position.height - this.visibleRect.height;
-                if (num > 0f)
-                {
-                    position.height -= num;
-                    position.y += num * 0.5f;
-                }
-                Vector2 zero = Vector2.zero;
-                if (position.xMax > visibleRect.xMax)
-                {
-                    zero.x += position.xMax - visibleRect.xMax;
-                }
-                else if (position.xMin < visibleRect.xMin)
-                {
-                    zero.x -= visibleRect.xMin - position.xMin;
-                }
-                if (position.yMax > visibleRect.yMax)
-                {
-                    zero.y += position.yMax - visibleRect.yMax;
-                }
-                else if (position.yMin < visibleRect.yMin)
-                {
-                    zero.y -= visibleRect.yMin - position.yMin;
-                }
-                Rect viewRect = this.viewRect;
-                viewRect.width = Mathf.Max(viewRect.width, this.visibleRect.width);
-                viewRect.height = Mathf.Max(viewRect.height, this.visibleRect.height);
-                zero.x = Mathf.Clamp(zero.x, viewRect.xMin - this.scrollPosition.x, (viewRect.xMax - this.visibleRect.width) - this.scrollPosition.x);
-                zero.y = Mathf.Clamp(zero.y, viewRect.yMin - this.scrollPosition.y, (viewRect.yMax - this.visibleRect.height) - this.scrollPosition.y);
-                return zero;
-            }
-
-            internal void ScrollTo(Rect position)
-            {
-                this.ScrollTowards(position, float.PositiveInfinity);
-            }
-
-            internal bool ScrollTowards(Rect position, float maxDelta)
-            {
-                Vector2 vector = this.ScrollNeeded(position);
-                if (vector.sqrMagnitude < 0.0001f)
-                {
-                    return false;
-                }
-                if (maxDelta != 0f)
-                {
-                    if (vector.magnitude > maxDelta)
-                    {
-                        vector = (Vector2) (vector.normalized * maxDelta);
-                    }
-                    this.scrollPosition += vector;
-                    this.apply = true;
-                }
-                return true;
-            }
         }
 
         /// <summary>

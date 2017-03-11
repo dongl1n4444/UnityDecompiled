@@ -16,7 +16,7 @@
             <GetEnabledVRDeviceInfo>c__AnonStorey1 storey = new <GetEnabledVRDeviceInfo>c__AnonStorey1 {
                 enabledVRDevices = GetVREnabledDevicesOnTarget(target)
             };
-            return Enumerable.Where<VRDeviceInfoEditor>(GetAllVRDeviceInfoByTarget(target), new Func<VRDeviceInfoEditor, bool>(storey, (IntPtr) this.<>m__0)).ToArray<VRDeviceInfoEditor>();
+            return Enumerable.Where<VRDeviceInfoEditor>(GetAllVRDeviceInfoByTarget(target), new Func<VRDeviceInfoEditor, bool>(storey.<>m__0)).ToArray<VRDeviceInfoEditor>();
         }
 
         public static VRDeviceInfoEditor[] GetEnabledVRDeviceInfo(BuildTargetGroup targetGroup)
@@ -24,7 +24,7 @@
             <GetEnabledVRDeviceInfo>c__AnonStorey0 storey = new <GetEnabledVRDeviceInfo>c__AnonStorey0 {
                 enabledVRDevices = GetVREnabledDevicesOnTargetGroup(targetGroup)
             };
-            return Enumerable.Where<VRDeviceInfoEditor>(GetAllVRDeviceInfo(targetGroup), new Func<VRDeviceInfoEditor, bool>(storey, (IntPtr) this.<>m__0)).ToArray<VRDeviceInfoEditor>();
+            return Enumerable.Where<VRDeviceInfoEditor>(GetAllVRDeviceInfo(targetGroup), new Func<VRDeviceInfoEditor, bool>(storey.<>m__0)).ToArray<VRDeviceInfoEditor>();
         }
 
         [Obsolete("Use GetVREnabledOnTargetGroup instead.")]

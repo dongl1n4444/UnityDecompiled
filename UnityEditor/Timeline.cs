@@ -219,6 +219,7 @@
                         break;
 
                     case DragStates.Source:
+                    case DragStates.TimeArea:
                         this.m_TimeArea.m_Translation.x += current.delta.x;
                         break;
 
@@ -228,15 +229,11 @@
                             this.Time = this.m_TimeArea.PixelToTime(num9 + current.delta.x, rect);
                         }
                         break;
-
-                    case DragStates.TimeArea:
-                        this.m_TimeArea.m_Translation.x += current.delta.x;
-                        break;
                 }
                 current.Use();
                 GUI.changed = true;
             }
-            if ((current.type == EventType.MouseUp) && (GUIUtility.hotControl == this.id))
+            if (Event.current.GetTypeForControl(this.id) == EventType.MouseUp)
             {
                 this.SrcStartTime = this.m_TimeArea.PixelToTime(x, rect);
                 this.SrcStopTime = this.m_TimeArea.PixelToTime(pixelX, rect);
@@ -590,7 +587,7 @@
         }
 
         private bool WasDraggingData() => 
-            (((this.m_DstDragOffset != 0f) || (this.m_LeftThumbOffset != 0f)) || (this.m_RightThumbOffset != 0f));
+            (((this.m_DstDragOffset != 0f) || (this.m_LeftThumbOffset != 0f)) || !(this.m_RightThumbOffset == 0f));
 
         public float DstDuration =>
             (this.DstStopTime - this.DstStartTime);
@@ -806,7 +803,6 @@
             public readonly GUIStyle onLeft = new GUIStyle("MeTransOnLeft");
             public readonly GUIStyle onOff = new GUIStyle("MeTransOn2Off");
             public readonly GUIStyle onRight = new GUIStyle("MeTransOnRight");
-            public readonly GUIStyle overlay = new GUIStyle("MeTransBGOver");
             public readonly GUIStyle playhead = new GUIStyle("MeTransPlayhead");
             public GUIStyle rightBlock = new GUIStyle("MeTransitionBlock");
             public readonly GUIStyle select = new GUIStyle("MeTransitionSelect");

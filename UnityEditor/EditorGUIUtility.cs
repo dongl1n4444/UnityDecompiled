@@ -9,6 +9,7 @@
     using UnityEditorInternal;
     using UnityEngine;
     using UnityEngine.Internal;
+    using UnityEngine.Rendering;
     using UnityEngine.Scripting;
     using UnityEngineInternal;
 
@@ -28,6 +29,7 @@
         private static Texture2D s_ErrorIcon;
         private static float s_FieldWidth = 0f;
         internal static int s_FontIsBold = -1;
+        internal static Material s_GUITextureBlitColorspaceMaterial;
         private static bool s_HierarchyMode = false;
         private static Hashtable s_IconGUIContents = new Hashtable();
         private static GUIContent s_Image = new GUIContent();
@@ -96,14 +98,14 @@
             return currentViewWidth;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool CanHaveKeyboardFocus(int id);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void CleanCache(string text);
         /// <summary>
-        /// <para>Creates an event that can be sent to another window.</para>
+        /// <para>Creates an event.</para>
         /// </summary>
-        /// <param name="commandName">The command to be sent.</param>
+        /// <param name="commandName"></param>
         public static Event CommandEvent(string commandName)
         {
             Event evt = new Event();
@@ -332,7 +334,7 @@
         /// <para>Get a texture from its source filename.</para>
         /// </summary>
         /// <param name="name"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern Texture2D FindTexture(string name);
         internal static GUIStyle GetBasicTextureStyle(Texture2D tex)
         {
@@ -347,9 +349,9 @@
         internal static bool GetBoldDefaultFont() => 
             (s_FontIsBold == 1);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Object GetBuiltinExtraResource(Type type, string path);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern UnityEngine.Object GetBuiltinExtraResource(System.Type type, string path);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern BuiltinResource[] GetBuiltinResourceList(int classID);
         /// <summary>
         /// <para>Get one of the built-in GUI skins, which can be the game view, inspector or scene view skin as chosen by the parameter.</para>
@@ -358,7 +360,7 @@
         public static GUISkin GetBuiltinSkin(EditorSkin skin) => 
             GUIUtility.GetBuiltinSkin((int) skin);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern AssetBundle GetEditorAssetBundle();
         public static List<Rect> GetFlowLayoutedRects(Rect rect, GUIStyle style, float horizontalSpacing, float verticalSpacing, List<string> items)
         {
@@ -401,8 +403,8 @@
             return null;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Texture2D GetIconForObject(Object obj);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern Texture2D GetIconForObject(UnityEngine.Object obj);
         /// <summary>
         /// <para>Get the size that has been set using SetIconSize.</para>
         /// </summary>
@@ -441,8 +443,8 @@
             return strArray;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern string GetObjectNameWithInfo(Object obj);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern string GetObjectNameWithInfo(UnityEngine.Object obj);
         /// <summary>
         /// <para>The controlID of the currently showing object picker.</para>
         /// </summary>
@@ -452,7 +454,7 @@
         /// <summary>
         /// <para>The object currently selected in the object picker.</para>
         /// </summary>
-        public static Object GetObjectPickerObject() => 
+        public static UnityEngine.Object GetObjectPickerObject() => 
             ObjectSelector.GetCurrentObject();
 
         internal static Color GetPasteboardColor()
@@ -462,9 +464,9 @@
             return color;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Object GetScript(string scriptClass);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern UnityEngine.Object GetScript(string scriptClass);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern int GetSearchIndexOfControlIDList();
         private static GUIStyle GetStyle(string styleName)
         {
@@ -481,7 +483,7 @@
             return error;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern string GetTypeNameWithInfo(string typeName);
         [RequiredByNativeCode]
         internal static void HandleControlID(int id)
@@ -527,10 +529,10 @@
         /// <para>Does a given class have per-object thumbnails?</para>
         /// </summary>
         /// <param name="objType"></param>
-        public static bool HasObjectThumbnail(Type objType) => 
+        public static bool HasObjectThumbnail(System.Type objType) => 
             ((objType != null) && ((objType.IsSubclassOf(typeof(Texture)) || (objType == typeof(Texture))) || (objType == typeof(Sprite))));
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool HasPasteboardColor();
         [Obsolete("EditorGUIUtility.HSVToRGB is obsolete. Use Color.HSVToRGB instead (UnityUpgradable) -> [UnityEngine] UnityEngine.Color.HSVToRGB(*)", true)]
         public static Color HSVToRGB(float H, float S, float V) => 
@@ -584,27 +586,27 @@
             INTERNAL_CALL_Internal_AddCursorRect(ref r, m, controlID);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetPasteboardColor(out Color value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_AddCursorRect(ref Rect r, MouseCursor m, int controlID);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_RenderGameViewCameras(RenderTexture target, int targetDisplay, ref Rect screenRect, ref Vector2 mousePosition, bool gizmos);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_RenderGameViewCamerasInternal(RenderTexture target, int targetDisplay, ref Rect screenRect, ref Vector2 mousePosition, bool gizmos);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SetIconSize(ref Vector2 size);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SetPasteboardColor(ref Color color);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_GetIconSize(out Vector2 size);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool Internal_GetKeyboardRect(int id, out Rect rect);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int Internal_GetNextKeyboardControlID(bool forward);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_MoveKeyboardFocus(bool forward);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_SetupEventValues(object evt);
         internal static void Internal_SwitchSkin()
         {
@@ -618,21 +620,21 @@
         /// <returns>
         /// <para>True if a camera will render to the display.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool IsDisplayReferencedByCameras(int displayIndex);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool IsGizmosAllowedForObject(Object obj);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern bool IsGizmosAllowedForObject(UnityEngine.Object obj);
         /// <summary>
         /// <para>Load a built-in resource.</para>
         /// </summary>
         /// <param name="path"></param>
-        public static Object Load(string path) => 
-            Load(path, typeof(Object));
+        public static UnityEngine.Object Load(string path) => 
+            Load(path, typeof(UnityEngine.Object));
 
         [TypeInferenceRule(TypeInferenceRules.TypeReferencedBySecondArgument)]
-        private static Object Load(string filename, Type type)
+        private static UnityEngine.Object Load(string filename, System.Type type)
         {
-            Object obj2 = AssetDatabase.LoadAssetAtPath("Assets/Editor Default Resources/" + filename, type);
+            UnityEngine.Object obj2 = AssetDatabase.LoadAssetAtPath("Assets/Editor Default Resources/" + filename, type);
             if (obj2 != null)
             {
                 return obj2;
@@ -707,12 +709,12 @@
         }
 
         /// <summary>
-        /// <para>Load a required built-in resource.</para>
+        /// <para>Load a built-in resource that has to be there.</para>
         /// </summary>
         /// <param name="path"></param>
-        public static Object LoadRequired(string path)
+        public static UnityEngine.Object LoadRequired(string path)
         {
-            Object obj2 = Load(path, typeof(Object));
+            UnityEngine.Object obj2 = Load(path, typeof(UnityEngine.Object));
             if (obj2 == null)
             {
                 Debug.LogError("Unable to find required resource at 'Editor Default Resources/" + path + "'");
@@ -725,7 +727,7 @@
             s_ContextWidth = CalcContextWidth();
         }
 
-        [Obsolete("LookLikeControls and LookLikeInspector modes are deprecated. Use EditorGUIUtility.labelWidth and EditorGUIUtility.fieldWidth to control label and field widths."), ExcludeFromDocs]
+        [ExcludeFromDocs, Obsolete("LookLikeControls and LookLikeInspector modes are deprecated. Use EditorGUIUtility.labelWidth and EditorGUIUtility.fieldWidth to control label and field widths.")]
         public static void LookLikeControls()
         {
             float fieldWidth = 0f;
@@ -738,7 +740,7 @@
         /// </summary>
         /// <param name="labelWidth">Width to use for prefixed labels.</param>
         /// <param name="fieldWidth">Width of text entries.</param>
-        [ExcludeFromDocs, Obsolete("LookLikeControls and LookLikeInspector modes are deprecated. Use EditorGUIUtility.labelWidth and EditorGUIUtility.fieldWidth to control label and field widths.")]
+        [Obsolete("LookLikeControls and LookLikeInspector modes are deprecated. Use EditorGUIUtility.labelWidth and EditorGUIUtility.fieldWidth to control label and field widths."), ExcludeFromDocs]
         public static void LookLikeControls(float labelWidth)
         {
             float fieldWidth = 0f;
@@ -790,7 +792,7 @@
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="type"></param>
-        public static GUIContent ObjectContent(Object obj, Type type)
+        public static GUIContent ObjectContent(UnityEngine.Object obj, System.Type type)
         {
             if (obj != null)
             {
@@ -811,9 +813,9 @@
         }
 
         /// <summary>
-        /// <para>Ping an object in the Scene like clicking it in an inspector.</para>
+        /// <para>Ping an object in a window like clicking it in an inspector.</para>
         /// </summary>
-        /// <param name="obj">The object to be pinged.</param>
+        /// <param name="obj"></param>
         /// <param name="targetInstanceID"></param>
         public static void PingObject(int targetInstanceID)
         {
@@ -830,11 +832,11 @@
         }
 
         /// <summary>
-        /// <para>Ping an object in the Scene like clicking it in an inspector.</para>
+        /// <para>Ping an object in a window like clicking it in an inspector.</para>
         /// </summary>
-        /// <param name="obj">The object to be pinged.</param>
+        /// <param name="obj"></param>
         /// <param name="targetInstanceID"></param>
-        public static void PingObject(Object obj)
+        public static void PingObject(UnityEngine.Object obj)
         {
             if (obj != null)
             {
@@ -910,7 +912,7 @@
         /// <para>Send an input event into the game.</para>
         /// </summary>
         /// <param name="evt"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void QueueGameViewInputEvent(Event evt);
         internal static void RefreshScrollPosition()
         {
@@ -997,7 +999,7 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string SerializeMainMenuToString();
         internal static void SetBoldDefaultFont(bool isBold)
         {
@@ -1009,10 +1011,22 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void SetDefaultFont(Font font);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void SetIconForObject(Object obj, Texture2D icon);
+        internal static void SetGUITextureBlitColorspaceSettings(Material mat)
+        {
+            if ((SystemInfo.graphicsDeviceType == GraphicsDeviceType.Metal) && (QualitySettings.activeColorSpace == ColorSpace.Linear))
+            {
+                mat.SetFloat("_ConvertToGamma", 1f);
+            }
+            else
+            {
+                mat.SetFloat("_ConvertToGamma", 0f);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern void SetIconForObject(UnityEngine.Object obj, Texture2D icon);
         /// <summary>
         /// <para>Set icons rendered as part of GUIContent to be rendered at a specific size.</para>
         /// </summary>
@@ -1022,26 +1036,26 @@
             INTERNAL_CALL_SetIconSize(ref size);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void SetLockedLayers(int layers);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetMenuLocalizationTestMode(bool onoff);
         internal static void SetPasteboardColor(Color color)
         {
             INTERNAL_CALL_SetPasteboardColor(ref color);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void SetRenderTextureNoViewport(RenderTexture rt);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void SetSearchIndexOfControlIDList(int index);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void SetVisibleLayers(int layers);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetWantsMouseJumping(int wantz);
-        public static void ShowObjectPicker<T>(Object obj, bool allowSceneObjects, string searchFilter, int controlID) where T: Object
+        public static void ShowObjectPicker<T>(UnityEngine.Object obj, bool allowSceneObjects, string searchFilter, int controlID) where T: UnityEngine.Object
         {
-            Type requiredType = typeof(T);
+            System.Type requiredType = typeof(T);
             ObjectSelector.get.Show(obj, requiredType, null, allowSceneObjects);
             ObjectSelector.get.objectSelectorID = controlID;
             ObjectSelector.get.searchFilter = searchFilter;
@@ -1087,7 +1101,8 @@
             {
                 textAndTooltip = "";
             }
-            GUIContent content = (GUIContent) s_TextGUIContents[textAndTooltip];
+            string str = textAndTooltip;
+            GUIContent content = (GUIContent) s_TextGUIContents[str];
             if (content == null)
             {
                 string[] nameAndTooltipString = GetNameAndTooltipString(textAndTooltip);
@@ -1096,7 +1111,7 @@
                 {
                     content.tooltip = nameAndTooltipString[2];
                 }
-                s_TextGUIContents[textAndTooltip] = content;
+                s_TextGUIContents[str] = content;
             }
             return content;
         }
@@ -1107,7 +1122,12 @@
             {
                 textAndTooltip = "";
             }
-            GUIContent content = (GUIContent) s_TextGUIContents[textAndTooltip];
+            if (icon == null)
+            {
+                icon = "";
+            }
+            string str = $"{textAndTooltip}|{icon}";
+            GUIContent content = (GUIContent) s_TextGUIContents[str];
             if (content == null)
             {
                 string[] nameAndTooltipString = GetNameAndTooltipString(textAndTooltip);
@@ -1118,7 +1138,7 @@
                 {
                     content.tooltip = nameAndTooltipString[2];
                 }
-                s_TextGUIContents[textAndTooltip] = content;
+                s_TextGUIContents[str] = content;
             }
             return content;
         }
@@ -1190,6 +1210,20 @@
             set
             {
                 s_FieldWidth = value;
+            }
+        }
+
+        internal static Material GUITextureBlitColorspaceMaterial
+        {
+            get
+            {
+                if (s_GUITextureBlitColorspaceMaterial == null)
+                {
+                    Shader shader = LoadRequired("SceneView/GUITextureBlitColorspace.shader") as Shader;
+                    s_GUITextureBlitColorspaceMaterial = new Material(shader);
+                    SetGUITextureBlitColorspaceSettings(s_GUITextureBlitColorspaceMaterial);
+                }
+                return s_GUITextureBlitColorspaceMaterial;
             }
         }
 
@@ -1267,7 +1301,7 @@
         public static float singleLineHeight =>
             16f;
 
-        internal static int skinIndex { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        internal static int skinIndex { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Get the height used by default for vertical spacing between controls.</para>
@@ -1281,7 +1315,7 @@
         /// <summary>
         /// <para>The system copy buffer.</para>
         /// </summary>
-        public static string systemCopyBuffer { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static string systemCopyBuffer { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         internal static Texture2D warningIcon
         {
@@ -1298,7 +1332,7 @@
         /// <summary>
         /// <para>Get a white texture.</para>
         /// </summary>
-        public static Texture2D whiteTexture { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static Texture2D whiteTexture { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         internal static GUIStyle whiteTextureStyle
         {
@@ -1323,6 +1357,28 @@
             set
             {
                 s_WideMode = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Disposable scope helper for GetIconSize / SetIconSize.</para>
+        /// </summary>
+        public class IconSizeScope : GUI.Scope
+        {
+            private Vector2 m_OriginalIconSize = EditorGUIUtility.GetIconSize();
+
+            /// <summary>
+            /// <para>Begin an IconSizeScope.</para>
+            /// </summary>
+            /// <param name="iconSizeWithinScope">Size to be used for icons rendered as GUIContent within this scope.</param>
+            public IconSizeScope(Vector2 iconSizeWithinScope)
+            {
+                EditorGUIUtility.SetIconSize(iconSizeWithinScope);
+            }
+
+            protected override void CloseScope()
+            {
+                EditorGUIUtility.SetIconSize(this.m_OriginalIconSize);
             }
         }
 

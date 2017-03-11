@@ -290,7 +290,7 @@
             this.initialize();
         }
 
-        public UnityScriptLexer(Stream ins) : this((InputBuffer) new ByteBuffer(ins))
+        public UnityScriptLexer(Stream ins) : this(new ByteBuffer(ins))
         {
             if (!this.$initialized__UnityScript_Parser_UnityScriptLexer$)
             {
@@ -298,7 +298,7 @@
             }
         }
 
-        public UnityScriptLexer(TextReader r) : this((InputBuffer) new CharBuffer(r))
+        public UnityScriptLexer(TextReader r) : this(new CharBuffer(r))
         {
             if (!this.$initialized__UnityScript_Parser_UnityScriptLexer$)
             {
@@ -423,14 +423,14 @@
 
         public void mADD(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x51;
+            t = 0x51;
             this.match("+");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -438,14 +438,14 @@
 
         public void mASSIGN(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x4e;
+            t = 0x4e;
             this.match("=");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -453,14 +453,14 @@
 
         public void mAT(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x63;
+            t = 0x63;
             this.match("@");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -468,14 +468,14 @@
 
         public void mBITWISE_AND(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x48;
+            t = 0x48;
             this.match("&");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -483,14 +483,14 @@
 
         public void mBITWISE_NOT(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x58;
+            t = 0x58;
             this.match("~");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -498,14 +498,14 @@
 
         public void mBITWISE_OR(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 70;
+            t = 70;
             this.match("|");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -513,14 +513,14 @@
 
         public void mBITWISE_XOR(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x49;
+            t = 0x49;
             this.match("^");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -528,14 +528,14 @@
 
         public void mCOLON(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x42;
+            t = 0x42;
             this.match(":");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -543,14 +543,14 @@
 
         public void mCOMMA(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x43;
+            t = 0x43;
             this.match(",");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -558,14 +558,14 @@
 
         public void mDECREMENT(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 80;
+            t = 80;
             this.match("--");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -573,14 +573,14 @@
 
         protected void mDIGIT(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x7a;
+            t = 0x7a;
             this.matchRange('0', '9');
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -588,14 +588,14 @@
 
         public void mDIVISION(bool _createToken)
         {
-            int sKIP = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            sKIP = 0x68;
+            t = 0x68;
             bool flag = false;
             if ((base.cached_LA1 == '/') && (base.cached_LA2 == '*'))
             {
-                int num3 = this.mark();
+                int pos = this.mark();
                 flag = true;
                 base.inputState.guessing++;
                 try
@@ -606,7 +606,7 @@
                 {
                     flag = false;
                 }
-                this.rewind(num3);
+                this.rewind(pos);
                 base.inputState.guessing--;
             }
             if (flag)
@@ -614,7 +614,7 @@
                 this.mML_COMMENT(false);
                 if ((base.inputState.guessing == 0) && !this.PreserveComments)
                 {
-                    sKIP = Token.SKIP;
+                    t = Token.SKIP;
                 }
             }
             else
@@ -636,11 +636,11 @@
                         {
                             if (this.PreserveComments)
                             {
-                                sKIP = 0x38;
+                                t = 0x38;
                             }
                             else
                             {
-                                sKIP = Token.SKIP;
+                                t = Token.SKIP;
                             }
                         }
                         break;
@@ -649,14 +649,14 @@
                         this.match("=");
                         if (base.inputState.guessing == 0)
                         {
-                            sKIP = 0x34;
+                            t = 0x34;
                         }
                         break;
                 }
             }
-            if ((_createToken && (token == null)) && (sKIP != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(sKIP);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -664,22 +664,22 @@
 
         public void mDOT(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x41;
+            t = 0x41;
             this.match(".");
             if ((base.cached_LA1 >= '0') && (base.cached_LA1 <= '9'))
             {
                 this.mDOUBLE_SUFFIX(false);
                 if (base.inputState.guessing == 0)
                 {
-                    num = 0x6a;
+                    t = 0x6a;
                 }
             }
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -687,10 +687,10 @@
 
         public void mDOUBLE_QUOTED_STRING(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 60;
+            t = 60;
             int num3 = base.text.Length;
             this.match("\"");
             base.text.Length = num3;
@@ -707,9 +707,9 @@
             num3 = base.text.Length;
             this.match("\"");
             base.text.Length = num3;
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -717,10 +717,10 @@
 
         protected void mDOUBLE_SUFFIX(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 110;
+            t = 110;
             int num3 = 0;
             while (true)
             {
@@ -760,9 +760,9 @@
                     this.match("D");
                     break;
             }
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -770,10 +770,10 @@
 
         protected void mDQS_ESC(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x72;
+            t = 0x72;
             int num3 = base.text.Length;
             this.match(@"\");
             base.text.Length = num3;
@@ -799,9 +799,9 @@
                     this.match("\"");
                     break;
             }
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -809,14 +809,14 @@
 
         public void mEOS(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x4d;
+            t = 0x4d;
             this.match(";");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -824,14 +824,14 @@
 
         public void mEQUALITY(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x55;
+            t = 0x55;
             this.match("==");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -839,10 +839,10 @@
 
         protected void mEXPONENT(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x6f;
+            t = 0x6f;
             switch (base.cached_LA1)
             {
                 case 'e':
@@ -898,9 +898,9 @@
                 }
                 num3++;
             }
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -908,14 +908,14 @@
 
         public void mGREATER_THAN(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x5f;
+            t = 0x5f;
             this.match(">");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -923,14 +923,14 @@
 
         public void mGREATER_THAN_OR_EQUAL(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x60;
+            t = 0x60;
             this.match(">=");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -938,10 +938,10 @@
 
         protected void mHEXDIGIT(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x7b;
+            t = 0x7b;
             char ch = base.cached_LA1;
             switch (ch)
             {
@@ -971,9 +971,9 @@
                     this.matchRange('0', '9');
                     break;
             }
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -981,10 +981,10 @@
 
         public void mID(bool _createToken)
         {
-            int num = new int();
+            int ttype = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x3b;
+            ttype = 0x3b;
             this.mID_LETTER(false);
         Label_0025:
             switch (base.cached_LA1)
@@ -1058,10 +1058,10 @@
                     this.mDIGIT(false);
                     goto Label_0025;
             }
-            num = this.testLiteralsTable(num);
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            ttype = this.testLiteralsTable(ttype);
+            if ((_createToken && (token == null)) && (ttype != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(ttype);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1069,10 +1069,10 @@
 
         protected void mID_LETTER(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x79;
+            t = 0x79;
             char ch = base.cached_LA1;
             switch (ch)
             {
@@ -1117,9 +1117,9 @@
                     this.matchRange('A', 'Z');
                     break;
             }
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1127,14 +1127,14 @@
 
         public void mINCREMENT(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x4f;
+            t = 0x4f;
             this.match("++");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1142,14 +1142,14 @@
 
         public void mINEQUALITY(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x56;
+            t = 0x56;
             this.match("!=");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1157,14 +1157,14 @@
 
         public void mINPLACE_ADD(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x35;
+            t = 0x35;
             this.match("+=");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1172,14 +1172,14 @@
 
         public void mINPLACE_BITWISE_AND(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x4a;
+            t = 0x4a;
             this.match("&=");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1187,14 +1187,14 @@
 
         public void mINPLACE_BITWISE_OR(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x47;
+            t = 0x47;
             this.match("|=");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1202,14 +1202,14 @@
 
         public void mINPLACE_BITWISE_XOR(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x66;
+            t = 0x66;
             this.match("^=");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1217,14 +1217,14 @@
 
         public void mINPLACE_MULTIPLY(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x37;
+            t = 0x37;
             this.match("*=");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1232,14 +1232,14 @@
 
         public void mINPLACE_SHIFT_LEFT(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x5e;
+            t = 0x5e;
             this.match("<<=");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1247,14 +1247,14 @@
 
         public void mINPLACE_SHIFT_RIGHT(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x62;
+            t = 0x62;
             this.match(">>=");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1262,14 +1262,14 @@
 
         public void mINPLACE_SUBTRACT(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x36;
+            t = 0x36;
             this.match("-=");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1277,10 +1277,10 @@
 
         public void mINT(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x6b;
+            t = 0x6b;
             if ((base.cached_LA1 != '0') || (base.cached_LA2 != 'x'))
             {
                 if (((base.cached_LA1 < '0') || (base.cached_LA1 > '9')) || (1 == 0))
@@ -1332,7 +1332,7 @@
                                     this.mDOUBLE_SUFFIX(false);
                                     if (base.inputState.guessing == 0)
                                     {
-                                        num = 0x6a;
+                                        t = 0x6a;
                                     }
                                     break;
 
@@ -1341,7 +1341,7 @@
                                     this.mEXPONENT(false);
                                     if (base.inputState.guessing == 0)
                                     {
-                                        num = 0x6a;
+                                        t = 0x6a;
                                     }
                                     break;
                             }
@@ -1363,7 +1363,7 @@
                             }
                             if (base.inputState.guessing == 0)
                             {
-                                num = 0x6c;
+                                t = 0x6c;
                             }
                         }
                         goto Label_038E;
@@ -1406,19 +1406,19 @@
                 }
                 if (base.inputState.guessing == 0)
                 {
-                    num = 0x6c;
+                    t = 0x6c;
                 }
             }
             goto Label_038E;
         Label_02EF:
             if (base.inputState.guessing == 0)
             {
-                num = 0x6a;
+                t = 0x6a;
             }
         Label_038E:
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1560,14 +1560,14 @@
 
         public void mLBRACE(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x3d;
+            t = 0x3d;
             this.match("{");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1575,14 +1575,14 @@
 
         public void mLBRACK(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x44;
+            t = 0x44;
             this.match("[");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1590,14 +1590,14 @@
 
         public void mLESS_THAN(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x5b;
+            t = 0x5b;
             this.match("<");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1605,14 +1605,14 @@
 
         public void mLESS_THAN_OR_EQUAL(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x5c;
+            t = 0x5c;
             this.match("<=");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1620,14 +1620,14 @@
 
         public void mLOGICAL_AND(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x4c;
+            t = 0x4c;
             this.match("&&");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1635,14 +1635,14 @@
 
         public void mLOGICAL_NOT(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x67;
+            t = 0x67;
             this.match("!");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1650,14 +1650,14 @@
 
         public void mLOGICAL_OR(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x4b;
+            t = 0x4b;
             this.match("||");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1665,14 +1665,14 @@
 
         public void mLPAREN(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x3f;
+            t = 0x3f;
             this.match("(");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1680,10 +1680,10 @@
 
         protected void mML_COMMENT(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x75;
+            t = 0x75;
             this.match("/*");
         Label_0029:
             while ((((base.cached_LA1 == '*') && (base.cached_LA2 >= '\x0003')) && ((base.cached_LA2 <= 0xfffe) && (this.LA(3) >= '\x0003'))) && ((this.LA(3) <= 0xfffe) && (this.LA(2) != '/')))
@@ -1701,9 +1701,9 @@
                 goto Label_0029;
             }
             this.match("*/");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1711,14 +1711,14 @@
 
         public void mMODULUS(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x53;
+            t = 0x53;
             this.match("%");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1726,14 +1726,14 @@
 
         public void mMULTIPLY(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x54;
+            t = 0x54;
             this.match("*");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1741,10 +1741,10 @@
 
         protected void mNEWLINE(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 120;
+            t = 120;
             char ch = base.cached_LA1;
             if (ch == '\n')
             {
@@ -1766,9 +1766,9 @@
             {
                 this.newline();
             }
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1776,10 +1776,10 @@
 
         public void mPRAGMA_ON(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x39;
+            t = 0x39;
             IToken token2 = null;
             int num3 = base.text.Length;
             this.match("#pragma");
@@ -1836,7 +1836,7 @@
                     base.text.Length = num3;
                     if (base.inputState.guessing == 0)
                     {
-                        num = 0x3a;
+                        t = 0x3a;
                     }
                 }
                 else
@@ -1857,9 +1857,9 @@
             num3 = base.text.Length;
             this.mNEWLINE(false);
             base.text.Length = num3;
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1868,10 +1868,10 @@
         protected void mPRAGMA_WHITE_SPACE(bool _createToken)
         {
             int num3;
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x70;
+            t = 0x70;
             switch (base.cached_LA1)
             {
                 case ' ':
@@ -1889,9 +1889,9 @@
                 default:
                     throw new NoViableAltForCharException(base.cached_LA1, this.getFilename(), this.getLine(), this.getColumn());
             }
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1899,14 +1899,14 @@
 
         public void mQUESTION_MARK(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x57;
+            t = 0x57;
             this.match("?");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1914,14 +1914,14 @@
 
         public void mRBRACE(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x3e;
+            t = 0x3e;
             this.match("}");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1929,14 +1929,14 @@
 
         public void mRBRACK(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x45;
+            t = 0x45;
             this.match("]");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1944,10 +1944,10 @@
 
         protected void mRE_CHAR(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x76;
+            t = 0x76;
             if (base.cached_LA1 == '\\')
             {
                 this.mRE_ESC(false);
@@ -1960,9 +1960,9 @@
                 }
                 this.match(tokenSet_6_);
             }
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -1970,10 +1970,10 @@
 
         protected void mRE_ESC(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x77;
+            t = 0x77;
             this.match(@"\");
             switch (base.cached_LA1)
             {
@@ -2164,9 +2164,9 @@
                 default:
                     throw new NoViableAltForCharException(base.cached_LA1, this.getFilename(), this.getLine(), this.getColumn());
             }
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -2174,10 +2174,10 @@
 
         protected void mRE_LITERAL(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x69;
+            t = 0x69;
             this.match("/");
             int num3 = 0;
             while (true)
@@ -2197,9 +2197,9 @@
                 num3++;
             }
             this.match("/");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -2207,14 +2207,14 @@
 
         public void mREFERENCE_EQUALITY(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x59;
+            t = 0x59;
             this.match("===");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -2222,14 +2222,14 @@
 
         public void mREFERENCE_INEQUALITY(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 90;
+            t = 90;
             this.match("!==");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -2237,14 +2237,14 @@
 
         public void mRPAREN(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x40;
+            t = 0x40;
             this.match(")");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -2253,10 +2253,10 @@
         protected void mSESC(bool _createToken)
         {
             int num3;
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x74;
+            t = 0x74;
             switch (base.cached_LA1)
             {
                 case 'r':
@@ -2350,9 +2350,9 @@
                 default:
                     throw new NoViableAltForCharException(base.cached_LA1, this.getFilename(), this.getLine(), this.getColumn());
             }
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -2360,14 +2360,14 @@
 
         public void mSHIFT_LEFT(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x5d;
+            t = 0x5d;
             this.match("<<");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -2375,14 +2375,14 @@
 
         public void mSHIFT_RIGHT(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x61;
+            t = 0x61;
             this.match(">>");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -2390,10 +2390,10 @@
 
         public void mSINGLE_QUOTED_STRING(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x6d;
+            t = 0x6d;
             int num3 = base.text.Length;
             this.match("'");
             base.text.Length = num3;
@@ -2410,9 +2410,9 @@
             num3 = base.text.Length;
             this.match("'");
             base.text.Length = num3;
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -2420,10 +2420,10 @@
 
         protected void mSQS_ESC(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x73;
+            t = 0x73;
             int num3 = base.text.Length;
             this.match(@"\");
             base.text.Length = num3;
@@ -2449,9 +2449,9 @@
                     this.match("'");
                     break;
             }
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -2459,14 +2459,14 @@
 
         public void mSUBTRACT(bool _createToken)
         {
-            int num = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            num = 0x52;
+            t = 0x52;
             this.match("-");
-            if ((_createToken && (token == null)) && (num != Token.SKIP))
+            if ((_createToken && (token == null)) && (t != Token.SKIP))
             {
-                token = this.makeToken(num);
+                token = this.makeToken(t);
                 token.setText(base.text.ToString(length, base.text.Length - length));
             }
             base.returnToken_ = token;
@@ -2474,10 +2474,10 @@
 
         public void mWHITE_SPACE(bool _createToken)
         {
-            int sKIP = new int();
+            int t = new int();
             IToken token = null;
             int length = base.text.Length;
-            sKIP = 0x71;
+            t = 0x71;
             int num3 = 0;
             while (true)
             {
@@ -2507,11 +2507,11 @@
                         }
                         if (base.inputState.guessing == 0)
                         {
-                            sKIP = Token.SKIP;
+                            t = Token.SKIP;
                         }
-                        if ((_createToken && (token == null)) && (sKIP != Token.SKIP))
+                        if ((_createToken && (token == null)) && (t != Token.SKIP))
                         {
-                            token = this.makeToken(sKIP);
+                            token = this.makeToken(t);
                             token.setText(base.text.ToString(length, base.text.Length - length));
                         }
                         base.returnToken_ = token;
@@ -2524,9 +2524,10 @@
         public override IToken nextToken()
         {
             IToken token = null;
+            IToken token3;
             while (true)
             {
-                int num = 0;
+                int type = 0;
                 this.resetText();
                 try
                 {
@@ -2868,9 +2869,10 @@
                         }
                         if (base.returnToken_ != null)
                         {
-                            num = base.returnToken_.get_Type();
-                            base.returnToken_.set_Type(num);
-                            return base.returnToken_;
+                            type = base.returnToken_.Type;
+                            base.returnToken_.Type = type;
+                            token3 = base.returnToken_;
+                            break;
                         }
                     }
                     catch (RecognitionException exception)
@@ -2887,6 +2889,7 @@
                     throw new TokenStreamException(exception2.Message);
                 }
             }
+            return token3;
         }
 
         public bool PreserveComments

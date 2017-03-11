@@ -117,7 +117,7 @@
         {
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<KeyValuePair<string, UnityConnectServiceData>, ServiceInfo>(null, (IntPtr) <GetAllServiceInfos>m__2);
+                <>f__am$cache2 = item => new ServiceInfo(item.Value.serviceName, item.Value.serviceUrl, item.Value.serviceJsGlobalObjectName, item.Value.serviceJsGlobalObject.IsServiceEnabled());
             }
             return Enumerable.Select<KeyValuePair<string, UnityConnectServiceData>, ServiceInfo>(this.m_Services, <>f__am$cache2).ToArray<ServiceInfo>();
         }
@@ -129,7 +129,7 @@
         {
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<UnityConnectServiceData, string>(null, (IntPtr) <GetAllServiceUrls>m__1);
+                <>f__am$cache1 = unityConnectData => unityConnectData.serviceUrl;
             }
             return Enumerable.Select<UnityConnectServiceData, string>(this.m_Services.Values, <>f__am$cache1).ToList<string>();
         }
@@ -139,7 +139,7 @@
             <GetServiceFromUrl>c__AnonStorey0 storey = new <GetServiceFromUrl>c__AnonStorey0 {
                 searchUrl = searchUrl
             };
-            return Enumerable.FirstOrDefault<KeyValuePair<string, UnityConnectServiceData>>(this.m_Services, new Func<KeyValuePair<string, UnityConnectServiceData>, bool>(storey, (IntPtr) this.<>m__0)).Value;
+            return Enumerable.FirstOrDefault<KeyValuePair<string, UnityConnectServiceData>>(this.m_Services, new Func<KeyValuePair<string, UnityConnectServiceData>, bool>(storey.<>m__0)).Value;
         }
 
         public string GetUrlForService(string serviceName) => 
@@ -164,6 +164,10 @@
         private void Init()
         {
             JSProxyMgr.GetInstance().AddGlobalObject("UnityConnectEditor", this);
+            if (Application.HasARGV("createProject"))
+            {
+                this.ShowService("Hub", true);
+            }
         }
 
         protected void InstanceStateChanged(ConnectInfo state)
@@ -174,7 +178,10 @@
                 if ((actualServiceName != this.m_CurrentServiceName) || ((s_UnityConnectEditorWindow != null) && (this.m_Services[actualServiceName].serviceUrl != s_UnityConnectEditorWindow.currentUrl)))
                 {
                     bool forceFocus = ((s_UnityConnectEditorWindow != null) && (s_UnityConnectEditorWindow.webView != null)) && s_UnityConnectEditorWindow.webView.HasApplicationFocus();
-                    this.ShowService(actualServiceName, forceFocus);
+                    if (forceFocus)
+                    {
+                        this.ShowService(actualServiceName, forceFocus);
+                    }
                 }
             }
         }
@@ -245,7 +252,7 @@
         {
             get
             {
-                UnityConnectEditorWindow[] windowArray = Resources.FindObjectsOfTypeAll(typeof(UnityConnectEditorWindow)) as UnityConnectEditorWindow[];
+                UnityConnectEditorWindow[] windowArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(UnityConnectEditorWindow)) as UnityConnectEditorWindow[];
                 if (windowArray == null)
                 {
                 }

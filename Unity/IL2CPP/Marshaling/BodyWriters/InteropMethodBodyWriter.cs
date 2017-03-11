@@ -3,89 +3,61 @@
     using Mono.Cecil;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Runtime.CompilerServices;
     using Unity.IL2CPP;
-    using Unity.IL2CPP.ILPreProcessor;
     using Unity.IL2CPP.IoC;
     using Unity.IL2CPP.IoCServices;
     using Unity.IL2CPP.Marshaling;
     using Unity.IL2CPP.Marshaling.MarshalInfoWriters;
 
-    internal abstract class InteropMethodBodyWriter
+    public abstract class InteropMethodBodyWriter : InteropMethodInfo
     {
-        private readonly MethodReference _interopMethod;
-        protected readonly MarshaledType[] _marshaledParameterTypes;
-        protected readonly MarshaledType _marshaledReturnType;
-        private readonly InteropMarshaler _marshaler;
-        protected readonly MarshaledParameter[] _parameters;
-        protected readonly Unity.IL2CPP.ILPreProcessor.TypeResolver _typeResolver;
-        [Inject]
-        public static INamingService Naming;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private bool <AreParametersMarshaled>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private bool <IsReturnValueMarshaled>k__BackingField;
         [Inject]
         public static ITypeProviderService TypeProvider;
 
-        protected InteropMethodBodyWriter(MethodReference interopMethod, MethodReference methodForParameterNames, InteropMarshaler marshaler)
+        protected InteropMethodBodyWriter(MethodReference interopMethod, MethodReference methodForParameterNames, InteropMarshaler marshaler) : base(interopMethod, methodForParameterNames, marshaler)
         {
-            this._typeResolver = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(interopMethod.DeclaringType, interopMethod);
-            this._interopMethod = interopMethod;
-            this._marshaler = marshaler;
-            MethodDefinition definition = this._interopMethod.Resolve();
-            this._parameters = new MarshaledParameter[definition.Parameters.Count];
-            for (int i = 0; i < definition.Parameters.Count; i++)
-            {
-                ParameterDefinition definition2 = definition.Parameters[i];
-                TypeReference parameterType = this._typeResolver.Resolve(definition2.ParameterType);
-                this._parameters[i] = new MarshaledParameter(methodForParameterNames.Parameters[i].Name, Naming.ForParameterName(methodForParameterNames.Parameters[i]), parameterType, definition2.MarshalInfo, definition2.IsIn, definition2.IsOut);
-            }
-            List<MarshaledType> list = new List<MarshaledType>();
-            foreach (MarshaledParameter parameter in this._parameters)
-            {
-                foreach (MarshaledType type in this.MarshalInfoWriterFor(parameter).MarshaledTypes)
-                {
-                    list.Add(new MarshaledType(type.Name, type.DecoratedName, parameter.NameInGeneratedCode + type.VariableName));
-                }
-            }
-            MarshaledType[] marshaledTypes = this.MarshalInfoWriterFor(this.GetMethodReturnType()).MarshaledTypes;
-            for (int j = 0; j < (marshaledTypes.Length - 1); j++)
-            {
-                MarshaledType type2 = marshaledTypes[j];
-                list.Add(new MarshaledType(type2.Name + "*", type2.DecoratedName + "*", Naming.ForComInterfaceReturnParameterName() + type2.VariableName));
-            }
-            this._marshaledParameterTypes = list.ToArray();
-            this._marshaledReturnType = marshaledTypes[marshaledTypes.Length - 1];
+            this.<AreParametersMarshaled>k__BackingField = true;
+            this.<IsReturnValueMarshaled>k__BackingField = true;
         }
 
         protected DefaultMarshalInfoWriter FirstOrDefaultUnmarshalableMarshalInfoWriter()
         {
-            foreach (MarshaledParameter parameter in this._parameters)
+            foreach (MarshaledParameter parameter in base.Parameters)
             {
-                if (!this._marshaler.CanMarshalAsInputParameter(parameter))
+                if (!base._marshaler.CanMarshalAsInputParameter(parameter))
                 {
-                    return this._marshaler.MarshalInfoWriterFor(parameter);
+                    return base._marshaler.MarshalInfoWriterFor(parameter);
                 }
-                if (this.IsOutParameter(parameter) && !this._marshaler.CanMarshalAsOutputParameter(parameter))
+                if (this.IsOutParameter(parameter) && !base._marshaler.CanMarshalAsOutputParameter(parameter))
                 {
-                    return this._marshaler.MarshalInfoWriterFor(parameter);
+                    return base._marshaler.MarshalInfoWriterFor(parameter);
                 }
             }
             MethodReturnType methodReturnType = this.GetMethodReturnType();
-            if ((methodReturnType.ReturnType.MetadataType != MetadataType.Void) && !this._marshaler.CanMarshalAsOutputParameter(methodReturnType))
+            if ((methodReturnType.ReturnType.MetadataType != MetadataType.Void) && !base._marshaler.CanMarshalAsOutputParameter(methodReturnType))
             {
-                return this._marshaler.MarshalInfoWriterFor(methodReturnType);
+                return base._marshaler.MarshalInfoWriterFor(methodReturnType);
             }
             return null;
         }
 
         protected IList<CustomAttribute> GetCustomMethodAttributes() => 
-            this._interopMethod.Resolve().CustomAttributes;
+            this.InteropMethod.Resolve().CustomAttributes;
 
         protected string GetMethodName() => 
-            this._interopMethod.Name;
+            this.InteropMethod.Name;
 
         protected virtual string GetMethodNameInGeneratedCode() => 
-            Naming.ForMethodNameOnly(this._interopMethod);
+            InteropMethodInfo.Naming.ForMethodNameOnly(this.InteropMethod);
 
-        protected virtual MethodReturnType GetMethodReturnType() => 
-            this._interopMethod.MethodReturnType;
+        protected MethodReturnType GetMethodReturnType() => 
+            this.InteropMethod.MethodReturnType;
 
         protected bool IsInParameter(MarshaledParameter parameter)
         {
@@ -108,10 +80,10 @@
         }
 
         protected DefaultMarshalInfoWriter MarshalInfoWriterFor(MethodReturnType methodReturnType) => 
-            this._marshaler.MarshalInfoWriterFor(methodReturnType);
+            base._marshaler.MarshalInfoWriterFor(methodReturnType);
 
         protected DefaultMarshalInfoWriter MarshalInfoWriterFor(MarshaledParameter parameter) => 
-            this._marshaler.MarshalInfoWriterFor(parameter);
+            base._marshaler.MarshalInfoWriterFor(parameter);
 
         private bool ParameterRequiresCleanup(MarshaledParameter parameter) => 
             (this.IsInParameter(parameter) || parameter.IsOut);
@@ -122,11 +94,11 @@
             {
                 if (this.IsInParameter(parameter))
                 {
-                    this._marshaler.WriteMarshalCleanupParameter(writer, valueName, parameter, metadataAccess);
+                    base._marshaler.WriteMarshalCleanupParameter(writer, valueName, parameter, metadataAccess);
                 }
                 else
                 {
-                    this._marshaler.WriteMarshalCleanupEmptyParameter(writer, valueName, parameter, metadataAccess);
+                    base._marshaler.WriteMarshalCleanupEmptyParameter(writer, valueName, parameter, metadataAccess);
                 }
             }
         }
@@ -136,17 +108,17 @@
         {
             if (this.IsInParameter(parameter))
             {
-                return this._marshaler.WriteMarshalInputParameter(writer, parameter, this._parameters, metadataAccess);
+                return base._marshaler.WriteMarshalInputParameter(writer, parameter, base.Parameters, metadataAccess);
             }
-            return this._marshaler.WriteMarshalEmptyInputParameter(writer, parameter, this._parameters, metadataAccess);
+            return base._marshaler.WriteMarshalEmptyInputParameter(writer, parameter, base.Parameters, metadataAccess);
         }
 
         private string[] WriteMarshalInputParameters(CppCodeWriter writer, IRuntimeMetadataAccess metadataAccess)
         {
-            string[] strArray = new string[this._parameters.Length];
-            for (int i = 0; i < this._parameters.Length; i++)
+            string[] strArray = new string[base.Parameters.Length];
+            for (int i = 0; i < base.Parameters.Length; i++)
             {
-                strArray[i] = this.WriteMarshalInputParameter(writer, this._parameters[i], metadataAccess);
+                strArray[i] = this.WriteMarshalInputParameter(writer, base.Parameters[i], metadataAccess);
             }
             return strArray;
         }
@@ -155,16 +127,16 @@
         {
             if (this.IsOutParameter(parameter))
             {
-                this._marshaler.WriteMarshalOutputParameter(writer, valueName, parameter, this._parameters, metadataAccess);
+                base._marshaler.WriteMarshalOutputParameter(writer, valueName, parameter, base.Parameters, metadataAccess);
             }
         }
 
         private void WriteMarshalOutputParameters(CppCodeWriter writer, string[] localVariableNames, IRuntimeMetadataAccess metadataAccess)
         {
-            for (int i = 0; i < this._parameters.Length; i++)
+            for (int i = 0; i < base.Parameters.Length; i++)
             {
-                this.WriteMarshalOutputParameter(writer, localVariableNames[i], this._parameters[i], metadataAccess);
-                this.WriteCleanupParameter(writer, localVariableNames[i], this._parameters[i], metadataAccess);
+                this.WriteMarshalOutputParameter(writer, localVariableNames[i], base.Parameters[i], metadataAccess);
+                this.WriteCleanupParameter(writer, localVariableNames[i], base.Parameters[i], metadataAccess);
             }
         }
 
@@ -177,7 +149,7 @@
             }
             else
             {
-                foreach (MarshaledParameter parameter in this._parameters)
+                foreach (MarshaledParameter parameter in base.Parameters)
                 {
                     this.MarshalInfoWriterFor(parameter).WriteIncludesForMarshaling(writer);
                 }
@@ -189,19 +161,29 @@
         private void WriteMethodBodyImpl(CppCodeWriter writer, IRuntimeMetadataAccess metadataAccess)
         {
             this.WriteMethodPrologue(writer, metadataAccess);
-            string[] localVariableNames = this.WriteMarshalInputParameters(writer, metadataAccess);
+            string[] localVariableNames = !this.AreParametersMarshaled ? null : this.WriteMarshalInputParameters(writer, metadataAccess);
             string unmarshaledReturnValueVariableName = null;
-            object[] args = new object[] { this._marshaler.GetPrettyCalleeName() };
+            object[] args = new object[] { base._marshaler.GetPrettyCalleeName() };
             writer.WriteLine("// {0} invocation", args);
             this.WriteInteropCallStatement(writer, localVariableNames, metadataAccess);
             writer.WriteLine();
             MethodReturnType methodReturnType = this.GetMethodReturnType();
             if (methodReturnType.ReturnType.MetadataType != MetadataType.Void)
             {
-                unmarshaledReturnValueVariableName = this._marshaler.WriteMarshalReturnValue(writer, methodReturnType, this._parameters, metadataAccess);
-                this._marshaler.WriteMarshalCleanupReturnValue(writer, methodReturnType, metadataAccess);
+                if (this.IsReturnValueMarshaled)
+                {
+                    unmarshaledReturnValueVariableName = base._marshaler.WriteMarshalReturnValue(writer, methodReturnType, base.Parameters, metadataAccess);
+                    base._marshaler.WriteMarshalCleanupReturnValue(writer, methodReturnType, metadataAccess);
+                }
+                else
+                {
+                    unmarshaledReturnValueVariableName = InteropMethodInfo.Naming.ForInteropReturnValue();
+                }
             }
-            this.WriteMarshalOutputParameters(writer, localVariableNames, metadataAccess);
+            if (this.AreParametersMarshaled)
+            {
+                this.WriteMarshalOutputParameters(writer, localVariableNames, metadataAccess);
+            }
             this.WriteMethodEpilogue(writer, metadataAccess);
             this.WriteReturnStatement(writer, unmarshaledReturnValueVariableName, metadataAccess);
         }
@@ -222,6 +204,15 @@
                 writer.WriteLine("return {0};", args);
             }
         }
+
+        protected virtual bool AreParametersMarshaled =>
+            this.<AreParametersMarshaled>k__BackingField;
+
+        protected sealed override MethodReference InteropMethod =>
+            base.InteropMethod;
+
+        protected virtual bool IsReturnValueMarshaled =>
+            this.<IsReturnValueMarshaled>k__BackingField;
     }
 }
 

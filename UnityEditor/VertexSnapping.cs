@@ -112,7 +112,7 @@
             Vector3 vector3;
             Event current = Event.current;
             Tools.vertexDragging = true;
-            Transform[] transforms = Selection.GetTransforms(SelectionMode.Editable | SelectionMode.ExcludePrefab | SelectionMode.Deep);
+            Transform[] transforms = Selection.GetTransforms(UnityEditor.SelectionMode.Editable | UnityEditor.SelectionMode.ExcludePrefab | UnityEditor.SelectionMode.Deep);
             HandleUtility.ignoreRaySnapObjects = null;
             Vector3 world = FindNearestPivot(transforms, current.mousePosition);
             bool flag = HandleUtility.FindNearestVertex(current.mousePosition, transforms, out vector);

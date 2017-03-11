@@ -1,13 +1,13 @@
 ﻿namespace Unity.IL2CPP
 {
     using Mono.Cecil;
+    using Mono.Cecil.Rocks;
     using NiceIO;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
-    using Unity.Cecil.Visitor;
 
     internal class VirtualInvokerCollector
     {
@@ -36,7 +36,7 @@
             string[] first = new string[] { "obj" };
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<int, int, string>(null, (IntPtr) <CallParametersFor>m__3);
+                <>f__am$cache3 = (m, i) => $"p{i + 1}";
             }
             string[] second = new string[] { "invokeData.method" };
             return first.Concat<string>(Enumerable.Range(1, data.ParameterCount).Select<int, string>(<>f__am$cache3)).Concat<string>(second).AggregateWithComma();
@@ -47,7 +47,7 @@
             string[] first = new string[] { "void*" };
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<int, int, string>(null, (IntPtr) <FunctionPointerParametersFor>m__5);
+                <>f__am$cache5 = (m, i) => $"T{i + 1}";
             }
             string[] second = new string[] { "const MethodInfo*" };
             return first.Concat<string>(Enumerable.Range(1, data.ParameterCount).Select<int, string>(<>f__am$cache5)).Concat<string>(second).AggregateWithComma();
@@ -55,18 +55,26 @@
 
         private static string InvokeParametersFor(InvokerData data, bool isGeneric)
         {
-            string[] first = !isGeneric ? new string[] { "Il2CppMethodSlot slot", "void* obj" } : new string[] { "const MethodInfo* method", "void* obj" };
+            string[] first = !isGeneric ? new string[] { "Il2CppMethodSlot slot", "Il2CppObject* obj" } : new string[] { "const MethodInfo* method", "Il2CppObject* obj" };
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<int, int, string>(null, (IntPtr) <InvokeParametersFor>m__4);
+                <>f__am$cache4 = (m, i) => string.Format("T{0} p{0}", i + 1);
             }
             return first.Concat<string>(Enumerable.Range(1, data.ParameterCount).Select<int, string>(<>f__am$cache4)).AggregateWithComma();
         }
 
         public void Process(AssemblyDefinition assembly)
         {
-            InvokerVisitor visitor = new InvokerVisitor(this._invokerData, this._processGenerics);
-            assembly.Accept(visitor);
+            foreach (TypeDefinition definition in assembly.MainModule.GetAllTypes())
+            {
+                foreach (MethodDefinition definition2 in definition.Methods)
+                {
+                    if (definition2.IsVirtual && (this._processGenerics == definition2.HasGenericParameters))
+                    {
+                        this._invokerData.Add(new InvokerData(definition2.ReturnType.MetadataType == MetadataType.Void, definition2.Parameters.Count));
+                    }
+                }
+            }
         }
 
         private static string ReturnTypeFor(InvokerData data) => 
@@ -80,11 +88,11 @@
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<int, string>(null, (IntPtr) <TemplateParametersFor>m__1);
+                <>f__am$cache1 = i => "T" + i;
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<string, string>(null, (IntPtr) <TemplateParametersFor>m__2);
+                <>f__am$cache2 = t => "typename " + t;
             }
             return (!data.VoidReturn ? ((IEnumerable<string>) new string[] { "R" }) : Enumerable.Empty<string>()).Concat<string>(Enumerable.Range(1, data.ParameterCount).Select<int, string>(<>f__am$cache1)).Select<string, string>(<>f__am$cache2).AggregateWithComma();
         }
@@ -96,7 +104,7 @@
                 writer.WriteLine("#pragma once");
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<InvokerData, int>(null, (IntPtr) <Write>m__0);
+                    <>f__am$cache0 = m => (m.ParameterCount * 10) + (!m.VoidReturn ? 1 : 0);
                 }
                 foreach (InvokerData data in this._invokerData.OrderBy<InvokerData, int>(<>f__am$cache0))
                 {
@@ -124,39 +132,19 @@
                     object[] objArray5 = new object[] { ReturnTypeFor(data), InvokeParametersFor(data, this._processGenerics) };
                     writer.WriteLine("static inline {0} Invoke ({1})", objArray5);
                     writer.BeginBlock();
-                    writer.WriteLine("VirtualInvokeData invokeData;");
                     if (this._processGenerics)
                     {
+                        writer.WriteLine("VirtualInvokeData invokeData;");
                         writer.WriteLine("il2cpp_codegen_get_generic_virtual_invoke_data(method, obj, &invokeData);");
                     }
                     else
                     {
-                        writer.WriteLine("il2cpp_codegen_get_virtual_invoke_data (slot, obj, &invokeData);");
+                        writer.WriteLine("const VirtualInvokeData& invokeData = il2cpp_codegen_get_virtual_invoke_data(slot, obj);");
                     }
                     object[] objArray6 = new object[] { !data.VoidReturn ? "return " : "", str, CallParametersFor(data) };
                     writer.WriteLine("{0}(({1})invokeData.methodPtr)({2});", objArray6);
                     writer.EndBlock(false);
                     writer.EndBlock(true);
-                }
-            }
-        }
-
-        private class InvokerVisitor : Unity.Cecil.Visitor.Visitor
-        {
-            private readonly HashSet<InvokerData> _collection;
-            private readonly bool _processGenerics;
-
-            public InvokerVisitor(HashSet<InvokerData> collection, bool processGenerics)
-            {
-                this._collection = collection;
-                this._processGenerics = processGenerics;
-            }
-
-            protected override void Visit(MethodDefinition methodDefinition, Unity.Cecil.Visitor.Context context)
-            {
-                if (methodDefinition.IsVirtual && (this._processGenerics == methodDefinition.HasGenericParameters))
-                {
-                    this._collection.Add(new InvokerData(methodDefinition.ReturnType.MetadataType == MetadataType.Void, methodDefinition.Parameters.Count, false));
                 }
             }
         }

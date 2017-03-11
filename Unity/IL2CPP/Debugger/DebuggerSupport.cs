@@ -9,7 +9,6 @@
     using System.IO;
     using System.Linq;
     using System.Runtime.CompilerServices;
-    using Unity.Cecil.Visitor;
     using Unity.IL2CPP;
     using Unity.IL2CPP.ILPreProcessor;
     using Unity.IL2CPP.IoC;
@@ -39,7 +38,7 @@
         {
             if (DebuggerOptions.Enabled)
             {
-                assembly.Accept(this._documentsCollector);
+                this._documentsCollector.Process(assembly);
             }
         }
 
@@ -64,14 +63,14 @@
         private IEnumerable<string> DocumentsFor(MethodDefinition methodDefinition)
         {
             CollectSourceDocumentsVisitor visitor = new CollectSourceDocumentsVisitor();
-            methodDefinition.Accept(visitor);
+            visitor.Process(methodDefinition);
             return visitor.Documents;
         }
 
         private static IEnumerable<string> DocumentsFor(TypeDefinition typeDefinition)
         {
             CollectSourceDocumentsVisitor visitor = new CollectSourceDocumentsVisitor();
-            typeDefinition.Accept(visitor);
+            visitor.Process(typeDefinition);
             return visitor.Documents;
         }
 
@@ -194,26 +193,19 @@
         private static void WriteDebugLocalInfos(CppCodeWriter writer, MethodReference methodReference, MethodDefinition methodDefinition)
         {
             <WriteDebugLocalInfos>c__AnonStorey1 storey = new <WriteDebugLocalInfos>c__AnonStorey1 {
-                methodReference = methodReference
+                methodDefinition = methodDefinition
             };
-            foreach (VariableDefinition definition in methodDefinition.Body.Variables)
+            foreach (VariableDefinition definition in storey.methodDefinition.Body.Variables)
             {
-                for (TypeSpecification specification = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(storey.methodReference.DeclaringType).ResolveVariableType(storey.methodReference, definition) as TypeSpecification; specification != null; specification = specification.ElementType as TypeSpecification)
+                for (TypeSpecification specification = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(methodReference.DeclaringType).ResolveVariableType(methodReference, definition) as TypeSpecification; specification != null; specification = specification.ElementType as TypeSpecification)
                 {
                 }
-                object[] args = new object[] { Naming.ForDebugMethodLocalInfo(definition, storey.methodReference) };
+                object[] args = new object[] { Naming.ForDebugMethodLocalInfo(definition, storey.methodDefinition) };
                 writer.WriteLine("Il2CppDebugLocalsInfo {0} = ", args);
-                object[] values = new object[4];
-                values[0] = Naming.Null;
-                if (definition.Name == null)
-                {
-                }
-                values[1] = Quote(definition.Index.ToString());
-                values[2] = 0;
-                values[3] = 0;
+                object[] values = new object[] { Naming.Null, Quote(definition.GetName(storey.methodDefinition)), 0, 0 };
                 writer.WriteArrayInitializer(values);
             }
-            writer.WriteArrayInitializer("const Il2CppDebugLocalsInfo*", Naming.ForDebugLocalInfo(storey.methodReference), methodDefinition.Body.Variables.Select<VariableDefinition, string>(new Func<VariableDefinition, string>(storey, (IntPtr) this.<>m__0)), true);
+            writer.WriteArrayInitializer("const Il2CppDebugLocalsInfo*", Naming.ForDebugLocalInfo(methodReference), storey.methodDefinition.Body.Variables.Select<VariableDefinition, string>(new Func<VariableDefinition, string>(storey.<>m__0)), true);
         }
 
         public void WriteDebugMetadataIncludes(CppCodeWriter writer)
@@ -300,7 +292,7 @@
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<KeyValuePair<string, TypeReference>, string>(null, (IntPtr) <WriteLocalsAddressArray>m__1);
+                    <>f__am$cache1 = v => "&" + v.Key;
                 }
                 writer.WriteArrayInitializer("void*", "__dbg_locals", localvars.Select<KeyValuePair<string, TypeReference>, string>(<>f__am$cache1), true);
             }
@@ -314,7 +306,7 @@
             object[] args = new object[] { Naming.ForDebugMethodInfoOffsetTable(methodReference) };
             storey.writer.WriteLine("const int32_t {0}[] = ", args);
             storey.writer.BeginBlock();
-            methodDefinition.Accept(new SequencePointsMappingVisitor(new Action<Instruction, SequencePoint>(storey, (IntPtr) this.<>m__0)));
+            new SequencePointsMappingVisitor(new Action<Instruction, SequencePoint>(storey.<>m__0)).Process(methodDefinition);
             storey.writer.WriteLine("-1, -1");
             storey.writer.EndBlock(true);
         }
@@ -325,7 +317,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<ParameterDefinition, string>(null, (IntPtr) <WriteParamsAddressArray>m__0);
+                    <>f__am$cache0 = p => "&" + Naming.ForParameterName(p);
                 }
                 writer.WriteArrayInitializer("void*", "__dbg_params", methodDefinition.Parameters.Select<ParameterDefinition, string>(<>f__am$cache0), true);
             }
@@ -343,22 +335,22 @@
                 sequencePoints = sequencePoints,
                 methodDefinition = methodDefinition
             };
-            storey.methodDefinition.Accept(new SequencePointsMappingVisitor(new Action<Instruction, SequencePoint>(storey, (IntPtr) this.<>m__0)));
+            new SequencePointsMappingVisitor(new Action<Instruction, SequencePoint>(storey.<>m__0)).Process(storey.methodDefinition);
             if (storey.sequencePoints.Count != 0)
             {
                 object[] args = new object[] { variableName };
                 writer.WriteLine("static SequencePointRecord {0}[] = ", args);
-                writer.WriteArrayInitializer(storey.sequencePoints.Select<SequencePointInfo, string>(new Func<SequencePointInfo, string>(storey, (IntPtr) this.<>m__1)).ToArray<string>());
+                writer.WriteArrayInitializer(storey.sequencePoints.Select<SequencePointInfo, string>(new Func<SequencePointInfo, string>(storey.<>m__1)).ToArray<string>());
             }
         }
 
         [CompilerGenerated]
         private sealed class <WriteDebugLocalInfos>c__AnonStorey1
         {
-            internal MethodReference methodReference;
+            internal MethodDefinition methodDefinition;
 
             internal string <>m__0(VariableDefinition v) => 
-                DebuggerSupport.Naming.AddressOf(DebuggerSupport.Naming.ForDebugMethodLocalInfo(v, this.methodReference));
+                DebuggerSupport.Naming.AddressOf(DebuggerSupport.Naming.ForDebugMethodLocalInfo(v, this.methodDefinition));
         }
 
         [CompilerGenerated]

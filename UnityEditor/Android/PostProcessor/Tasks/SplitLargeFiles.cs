@@ -1,13 +1,16 @@
 ﻿namespace UnityEditor.Android.PostProcessor.Tasks
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEditor.Android.PostProcessor;
     using UnityEditor.Utils;
 
     internal class SplitLargeFiles : IPostProcessorTask
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ProgressHandler OnProgress;
 
         public void Execute(PostProcessorContext context)
@@ -20,9 +23,7 @@
             string[] components = new string[] { str, "assets", "bin", "Data" };
             this.SplitFiles(Paths.Combine(components), "*.assets", 0x100000);
             string[] textArray2 = new string[] { str, "assets", "bin", "Data" };
-            this.SplitFiles(Paths.Combine(textArray2), "*.resource", 0x100000);
-            string[] textArray3 = new string[] { str, "assets", "bin", "Data" };
-            this.SplitFiles(Paths.Combine(textArray3), "level*", 0x100000);
+            this.SplitFiles(Paths.Combine(textArray2), "level*", 0x100000);
         }
 
         private void SplitFiles(string path, string extension, int threshold)

@@ -163,7 +163,7 @@
         {
             this.DragCleanup(revertExpanded);
             DragAndDrop.AcceptDrag();
-            List<Object> list = new List<Object>(DragAndDrop.objectReferences);
+            List<UnityEngine.Object> list = new List<UnityEngine.Object>(DragAndDrop.objectReferences);
             bool draggedItemsFromOwnTreeView = true;
             if (((list.Count > 0) && (list[0] != null)) && (TreeViewUtility.FindItemInList<TreeViewItem>(list[0].GetInstanceID(), this.m_TreeView.data.GetRows()) == null))
             {
@@ -184,9 +184,11 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<TreeViewItem, int>(null, (IntPtr) <GetCurrentExpanded>m__1);
+                <>f__am$cache0 = item => item.id;
             }
-            return Enumerable.Select<TreeViewItem, int>(Enumerable.Where<TreeViewItem>(this.m_TreeView.data.GetRows(), new Func<TreeViewItem, bool>(this, (IntPtr) this.<GetCurrentExpanded>m__0)), <>f__am$cache0).ToList<int>();
+            return Enumerable.Select<TreeViewItem, int>(from item in this.m_TreeView.data.GetRows()
+                where this.m_TreeView.data.IsExpanded(item)
+                select item, <>f__am$cache0).ToList<int>();
         }
 
         public int GetDropTargetControlID() => 
@@ -214,7 +216,7 @@
                     }
                     return num2;
                 }
-                Debug.LogError("Did not find targetItem,; should be a child of parentItem");
+                UnityEngine.Debug.LogError("Did not find targetItem,; should be a child of parentItem");
             }
             return -1;
         }

@@ -10,11 +10,11 @@
     {
         [FormerlySerializedAs("arguments"), SerializeField]
         private ArgumentCache m_Arguments = new ArgumentCache();
-        [FormerlySerializedAs("m_Enabled"), SerializeField, FormerlySerializedAs("enabled")]
+        [FormerlySerializedAs("enabled"), FormerlySerializedAs("m_Enabled"), SerializeField]
         private UnityEventCallState m_CallState = UnityEventCallState.RuntimeOnly;
         [FormerlySerializedAs("methodName"), SerializeField]
         private string m_MethodName;
-        [SerializeField, FormerlySerializedAs("mode")]
+        [FormerlySerializedAs("mode"), SerializeField]
         private PersistentListenerMode m_Mode = PersistentListenerMode.EventDefined;
         [FormerlySerializedAs("instance"), SerializeField]
         private UnityEngine.Object m_Target;

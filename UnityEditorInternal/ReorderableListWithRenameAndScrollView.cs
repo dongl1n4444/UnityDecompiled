@@ -32,7 +32,7 @@
 
         public void BeginRename(int index, float delay)
         {
-            this.GetRenameOverlay().BeginRename(this.onGetNameAtIndex.Invoke(index), index, delay);
+            this.GetRenameOverlay().BeginRename(this.onGetNameAtIndex(index), index, delay);
             this.m_ReorderableList.index = index;
             this.m_LastSelectedIndex = index;
             this.FrameItem(index);
@@ -88,7 +88,7 @@
         {
             if ((Event.current.type == EventType.Repaint) && (this.onGetNameAtIndex != null))
             {
-                this.elementStyle.Draw(r, this.onGetNameAtIndex.Invoke(index), false, false, isSelected, true);
+                this.elementStyle.Draw(r, this.onGetNameAtIndex(index), false, false, isSelected, true);
             }
         }
 
@@ -233,7 +233,7 @@
             {
                 string str = !string.IsNullOrEmpty(this.GetRenameOverlay().name) ? this.GetRenameOverlay().name : this.GetRenameOverlay().originalName;
                 int userData = this.GetRenameOverlay().userData;
-                this.onNameChangedAtIndex.Invoke(userData, str);
+                this.onNameChangedAtIndex(userData, str);
             }
             if (this.GetRenameOverlay().HasKeyboardFocus())
             {

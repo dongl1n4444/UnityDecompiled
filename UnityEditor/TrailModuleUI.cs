@@ -47,7 +47,7 @@
             }
         }
 
-        public override void OnInspectorGUI(ParticleSystem s)
+        public override void OnInspectorGUI(InitialModuleUI initial)
         {
             if (s_Texts == null)
             {
@@ -62,17 +62,26 @@
             ModuleUI.GUIToggle(s_Texts.sizeAffectsWidth, this.m_SizeAffectsWidth, new GUILayoutOption[0]);
             ModuleUI.GUIToggle(s_Texts.sizeAffectsLifetime, this.m_SizeAffectsLifetime, new GUILayoutOption[0]);
             ModuleUI.GUIToggle(s_Texts.inheritParticleColor, this.m_InheritParticleColor, new GUILayoutOption[0]);
-            base.GUIMinMaxGradient(s_Texts.colorOverLifetime, this.m_ColorOverLifetime, new GUILayoutOption[0]);
+            base.GUIMinMaxGradient(s_Texts.colorOverLifetime, this.m_ColorOverLifetime, false, new GUILayoutOption[0]);
             ModuleUI.GUIMinMaxCurve(s_Texts.widthOverTrail, this.m_WidthOverTrail, new GUILayoutOption[0]);
-            base.GUIMinMaxGradient(s_Texts.colorOverTrail, this.m_ColorOverTrail, new GUILayoutOption[0]);
-            if (base.m_ParticleSystemUI.m_ParticleSystem.trails.enabled)
+            base.GUIMinMaxGradient(s_Texts.colorOverTrail, this.m_ColorOverTrail, false, new GUILayoutOption[0]);
+            foreach (ParticleSystem system in base.m_ParticleSystemUI.m_ParticleSystems)
             {
-                ParticleSystemRenderer component = base.m_ParticleSystemUI.m_ParticleSystem.GetComponent<ParticleSystemRenderer>();
-                if ((component != null) && (component.trailMaterial == null))
+                if (system.trails.enabled)
                 {
-                    EditorGUILayout.HelpBox("Assign a Trail Material in the Renderer Module", MessageType.Warning, true);
+                    ParticleSystemRenderer component = system.GetComponent<ParticleSystemRenderer>();
+                    if ((component != null) && (component.trailMaterial == null))
+                    {
+                        EditorGUILayout.HelpBox("Assign a Trail Material in the Renderer Module", MessageType.Warning, true);
+                        break;
+                    }
                 }
             }
+        }
+
+        public override void UpdateCullingSupportedString(ref string text)
+        {
+            text = text + "\nTrails module is enabled.";
         }
 
         private class Texts

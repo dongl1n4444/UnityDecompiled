@@ -13,7 +13,7 @@
         private MaterialPropertyDrawer m_PropertyDrawer;
         private static Dictionary<string, MaterialPropertyHandler> s_PropertyHandlers = new Dictionary<string, MaterialPropertyHandler>();
 
-        private static MaterialPropertyDrawer CreatePropertyDrawer(Type klass, string argsText)
+        private static MaterialPropertyDrawer CreatePropertyDrawer(System.Type klass, string argsText)
         {
             if (string.IsNullOrEmpty(argsText))
             {
@@ -95,7 +95,7 @@
                 str = match.Groups[1].Value;
                 argsText = match.Groups[2].Value.Trim();
             }
-            foreach (Type type in EditorAssemblies.SubclassesOf(typeof(MaterialPropertyDrawer)))
+            foreach (System.Type type in EditorAssemblies.SubclassesOf(typeof(MaterialPropertyDrawer)))
             {
                 if (((type.Name == str) || (type.Name == (str + "Drawer"))) || (((type.Name == ("Material" + str + "Drawer")) || (type.Name == (str + "Decorator"))) || (type.Name == ("Material" + str + "Decorator"))))
                 {

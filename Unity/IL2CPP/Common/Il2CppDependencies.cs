@@ -26,18 +26,6 @@
         internal static bool Available =>
             (_root != null);
 
-        internal static bool HasUnusedByteCodeStripper
-        {
-            get
-            {
-                if (!Available)
-                {
-                    return false;
-                }
-                return UnusedByteCodeStripper.Exists("");
-            }
-        }
-
         internal static NPath Root
         {
             get
@@ -47,15 +35,6 @@
                     throw new InvalidOperationException("No il2cpp dependencies found");
                 }
                 return _root;
-            }
-        }
-
-        internal static NPath UnusedByteCodeStripper
-        {
-            get
-            {
-                string[] append = new string[] { "UnusedByteCodeStripper2", "UnusedBytecodeStripper2.exe" };
-                return _root.Combine(append);
             }
         }
     }

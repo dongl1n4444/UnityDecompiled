@@ -65,7 +65,7 @@
             ArrayUtility.Insert<AnimationEvent>(ref events, length, evt);
             AnimationUtility.SetAnimationEvents(clip, events);
             events = AnimationUtility.GetAnimationEvents(clip);
-            if ((events[length].time != evt.time) || (events[length].functionName != events[length].functionName))
+            if ((events[length].time != evt.time) || (events[length].functionName != evt.functionName))
             {
                 Debug.LogError("Failed insertion");
             }

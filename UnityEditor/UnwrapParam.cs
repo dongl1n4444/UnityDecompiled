@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Unwrapping settings.</para>
@@ -27,7 +28,7 @@
         /// </summary>
         public float packMargin;
         internal int recollectVertices;
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetDefaults(out UnwrapParam param);
     }
 }

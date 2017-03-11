@@ -49,9 +49,30 @@
         public virtual string DecorateVariable(string unmarshaledParameterName, string marshaledVariableName) => 
             marshaledVariableName;
 
+        public virtual string GetDefaultCppValue(MarshaledType type)
+        {
+            if (type.Name.EndsWith("*") || (type.Name == "Il2CppHString"))
+            {
+                return Naming.Null;
+            }
+            if ((this._typeRef.MetadataType == MetadataType.Class) && !this._typeRef.DerivesFromObject())
+            {
+                return (type.Name + "()");
+            }
+            if (this._typeRef.MetadataType.IsPrimitiveType())
+            {
+                return CppCodeWriter.InitializerStringForPrimitiveType(this._typeRef.MetadataType);
+            }
+            if (type.Name.IsPrimitiveCppType())
+            {
+                return CppCodeWriter.InitializerStringForPrimitiveCppType(type.Name);
+            }
+            return "{}";
+        }
+
         public virtual string GetMarshalingException()
         {
-            throw new NotSupportedException($"Cannot retrieve marshaling exception for type ({new object[0]}) that can be marshaled.");
+            throw new NotSupportedException($"Cannot retrieve marshaling exception for type ({this._typeRef}) that can be marshaled.");
         }
 
         public virtual string GetMarshalingFromNativeException() => 
@@ -134,11 +155,11 @@
         {
         }
 
-        public virtual void WriteMarshalFunctionDefinitions(CppCodeWriter writer, IMethodCollector methodCollector)
+        public virtual void WriteMarshalFunctionDefinitions(CppCodeWriter writer, IInteropDataCollector interopDataCollector)
         {
         }
 
-        public virtual void WriteMarshalOutParameterFromNative(CppCodeWriter writer, string variableName, ManagedMarshalValue destinationVariable, IList<MarshaledParameter> methodParameters, bool returnValue, bool forNativeWrapperOfManagedMethod, IRuntimeMetadataAccess metadataAccess)
+        public virtual void WriteMarshalOutParameterFromNative(CppCodeWriter writer, string variableName, ManagedMarshalValue destinationVariable, IList<MarshaledParameter> methodParameters, bool returnValue, bool forNativeWrapperOfManagedMethod, bool isIn, IRuntimeMetadataAccess metadataAccess)
         {
             this.WriteMarshalVariableFromNative(writer, variableName, destinationVariable, methodParameters, returnValue, forNativeWrapperOfManagedMethod, metadataAccess);
         }
@@ -175,31 +196,7 @@
         {
             foreach (MarshaledType type in this.MarshaledTypes)
             {
-                if (type.Name.EndsWith("*") || (type.Name == "Il2CppHString"))
-                {
-                    object[] args = new object[] { type.Name, variableName + type.VariableName };
-                    writer.WriteLine("{0} {1} = NULL;", args);
-                }
-                else if ((this._typeRef.MetadataType == MetadataType.Class) && !this._typeRef.DerivesFromObject())
-                {
-                    object[] objArray2 = new object[] { type.Name, variableName + type.VariableName };
-                    writer.WriteLine("{0} {1} = {0}();", objArray2);
-                }
-                else if (this._typeRef.MetadataType.IsPrimitiveType())
-                {
-                    object[] objArray3 = new object[] { type.Name, variableName + type.VariableName, CppCodeWriter.InitializerStringForPrimitiveType(this._typeRef.MetadataType) };
-                    writer.WriteLine("{0} {1} = {2};", objArray3);
-                }
-                else if (type.Name.IsPrimitiveCppType())
-                {
-                    object[] objArray4 = new object[] { type.Name, variableName + type.VariableName, CppCodeWriter.InitializerStringForPrimitiveCppType(type.Name) };
-                    writer.WriteLine("{0} {1} = {2};", objArray4);
-                }
-                else
-                {
-                    object[] objArray5 = new object[] { type.Name, variableName + type.VariableName };
-                    writer.WriteLine("{0} {1} = {{ }};", objArray5);
-                }
+                writer.WriteStatement(Emit.Assign($"{type.Name} {variableName + type.VariableName}", this.GetDefaultCppValue(type)));
             }
         }
 
@@ -223,11 +220,11 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<MarshaledType, string>(null, (IntPtr) <get_NativeSize>m__0);
+                    <>f__am$cache0 = t => $"sizeof({t.Name})";
                 }
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<string, string, string>(null, (IntPtr) <get_NativeSize>m__1);
+                    <>f__am$cache1 = (x, y) => x + " + " + y;
                 }
                 return this.MarshaledTypes.Select<MarshaledType, string>(<>f__am$cache0).Aggregate<string>(<>f__am$cache1);
             }

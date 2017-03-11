@@ -65,9 +65,10 @@
                 {
                     s_PreviewTexture = new Texture2D(0x60, 0x60, TextureFormat.RGBA32, false, true);
                     s_PreviewTexture.name = "ParticleNoisePreview";
-                    s_PreviewTexture.filterMode = FilterMode.Bilinear;
+                    s_PreviewTexture.filterMode = UnityEngine.FilterMode.Bilinear;
                     s_PreviewTexture.hideFlags = HideFlags.HideAndDontSave;
                     s_Texts.previewTexture.image = s_PreviewTexture;
+                    s_Texts.previewTextureMultiEdit.image = s_PreviewTexture;
                 }
                 s_PreviewTextureDirty = true;
                 this.previewTextureStyle = new GUIStyle(ParticleSystemStyles.Get().label);
@@ -76,7 +77,7 @@
             }
         }
 
-        public override void OnInspectorGUI(ParticleSystem s)
+        public override void OnInspectorGUI(InitialModuleUI initial)
         {
             if (s_Texts == null)
             {
@@ -84,22 +85,34 @@
             }
             if (s_PreviewTextureDirty)
             {
-                base.m_ParticleSystemUI.m_ParticleSystem.GenerateNoisePreviewTexture(s_PreviewTexture);
+                if (base.m_ParticleSystemUI.multiEdit)
+                {
+                    Color32[] colors = new Color32[s_PreviewTexture.width * s_PreviewTexture.height];
+                    for (int i = 0; i < colors.Length; i++)
+                    {
+                        colors[i] = new Color32(120, 120, 120, 0xff);
+                    }
+                    s_PreviewTexture.SetPixels32(colors);
+                    s_PreviewTexture.Apply(false);
+                }
+                else
+                {
+                    base.m_ParticleSystemUI.m_ParticleSystems[0].GenerateNoisePreviewTexture(s_PreviewTexture);
+                }
                 s_PreviewTextureDirty = false;
             }
-            bool flag = base.m_ParticleSystemUI.m_ParticleEffectUI.m_Owner is ParticleSystemInspector;
-            if (flag)
+            if (!base.isWindowView)
             {
                 GUILayout.BeginHorizontal(new GUILayoutOption[0]);
                 GUILayout.BeginVertical(new GUILayoutOption[0]);
             }
             EditorGUI.BeginChangeCheck();
-            bool flag2 = ModuleUI.GUIToggle(s_Texts.separateAxes, this.m_SeparateAxes, new GUILayoutOption[0]);
-            bool flag3 = EditorGUI.EndChangeCheck();
+            bool addToCurveEditor = ModuleUI.GUIToggle(s_Texts.separateAxes, this.m_SeparateAxes, new GUILayoutOption[0]);
+            bool flag2 = EditorGUI.EndChangeCheck();
             EditorGUI.BeginChangeCheck();
-            if (flag3)
+            if (flag2)
             {
-                if (flag2)
+                if (addToCurveEditor)
                 {
                     this.m_StrengthX.RemoveCurveFromEditor();
                     this.m_RemapX.RemoveCurveFromEditor();
@@ -114,13 +127,17 @@
                     this.m_RemapZ.RemoveCurveFromEditor();
                 }
             }
-            MinMaxCurveState state = this.m_StrengthX.state;
-            this.m_StrengthY.state = state;
-            this.m_StrengthZ.state = state;
-            state = this.m_RemapX.state;
-            this.m_RemapY.state = state;
-            this.m_RemapZ.state = state;
-            if (flag2)
+            if (!this.m_StrengthX.stateHasMultipleDifferentValues)
+            {
+                this.m_StrengthZ.SetMinMaxState(this.m_StrengthX.state, addToCurveEditor);
+                this.m_StrengthY.SetMinMaxState(this.m_StrengthX.state, addToCurveEditor);
+            }
+            if (!this.m_RemapX.stateHasMultipleDifferentValues)
+            {
+                this.m_RemapZ.SetMinMaxState(this.m_RemapX.state, addToCurveEditor);
+                this.m_RemapY.SetMinMaxState(this.m_RemapX.state, addToCurveEditor);
+            }
+            if (addToCurveEditor)
             {
                 this.m_StrengthX.m_DisplayName = s_Texts.x;
                 base.GUITripleMinMaxCurve(GUIContent.none, s_Texts.x, this.m_StrengthX, s_Texts.y, this.m_StrengthY, s_Texts.z, this.m_StrengthZ, null, new GUILayoutOption[0]);
@@ -133,17 +150,17 @@
             ModuleUI.GUIFloat(s_Texts.frequency, this.m_Frequency, new GUILayoutOption[0]);
             ModuleUI.GUIMinMaxCurve(s_Texts.scrollSpeed, this.m_ScrollSpeed, new GUILayoutOption[0]);
             ModuleUI.GUIToggle(s_Texts.damping, this.m_Damping, new GUILayoutOption[0]);
-            int num = ModuleUI.GUIInt(s_Texts.octaves, this.m_Octaves, new GUILayoutOption[0]);
-            using (new EditorGUI.DisabledScope(num == 1))
+            int num2 = ModuleUI.GUIInt(s_Texts.octaves, this.m_Octaves, new GUILayoutOption[0]);
+            using (new EditorGUI.DisabledScope(num2 == 1))
             {
                 ModuleUI.GUIFloat(s_Texts.octaveMultiplier, this.m_OctaveMultiplier, new GUILayoutOption[0]);
                 ModuleUI.GUIFloat(s_Texts.octaveScale, this.m_OctaveScale, new GUILayoutOption[0]);
             }
             ModuleUI.GUIPopup(s_Texts.quality, this.m_Quality, s_Texts.qualityDropdown, new GUILayoutOption[0]);
-            bool flag4 = ModuleUI.GUIToggle(s_Texts.remap, this.m_RemapEnabled, new GUILayoutOption[0]);
-            using (new EditorGUI.DisabledScope(!flag4))
+            bool flag3 = ModuleUI.GUIToggle(s_Texts.remap, this.m_RemapEnabled, new GUILayoutOption[0]);
+            using (new EditorGUI.DisabledScope(!flag3))
             {
-                if (flag2)
+                if (addToCurveEditor)
                 {
                     this.m_RemapX.m_DisplayName = s_Texts.x;
                     base.GUITripleMinMaxCurve(GUIContent.none, s_Texts.x, this.m_RemapX, s_Texts.y, this.m_RemapY, s_Texts.z, this.m_RemapZ, null, new GUILayoutOption[0]);
@@ -154,21 +171,34 @@
                     ModuleUI.GUIMinMaxCurve(s_Texts.remapCurve, this.m_RemapX, new GUILayoutOption[0]);
                 }
             }
-            if (flag)
+            if (!base.isWindowView)
             {
                 GUILayout.EndVertical();
             }
-            if ((EditorGUI.EndChangeCheck() || (this.m_ScrollSpeed.scalar.floatValue > 0f)) || (flag4 || flag3))
+            if ((EditorGUI.EndChangeCheck() || (this.m_ScrollSpeed.scalar.floatValue != 0f)) || (flag3 || flag2))
             {
                 s_PreviewTextureDirty = true;
                 base.m_ParticleSystemUI.m_ParticleEffectUI.m_Owner.Repaint();
             }
-            GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(false) };
-            GUILayout.Label(s_Texts.previewTexture, this.previewTextureStyle, options);
-            if (flag)
+            if (base.m_ParticleSystemUI.multiEdit)
+            {
+                GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(false) };
+                GUILayout.Label(s_Texts.previewTextureMultiEdit, this.previewTextureStyle, options);
+            }
+            else
+            {
+                GUILayoutOption[] optionArray2 = new GUILayoutOption[] { GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(false) };
+                GUILayout.Label(s_Texts.previewTexture, this.previewTextureStyle, optionArray2);
+            }
+            if (!base.isWindowView)
             {
                 GUILayout.EndHorizontal();
             }
+        }
+
+        public override void UpdateCullingSupportedString(ref string text)
+        {
+            text = text + "\nNoise module is enabled.";
         }
 
         private class Texts
@@ -178,7 +208,8 @@
             public GUIContent octaveMultiplier = EditorGUIUtility.TextContent("Octave Multiplier|When combining each octave, scale the intensity by this amount.");
             public GUIContent octaves = EditorGUIUtility.TextContent("Octaves|Layers of noise that combine to produce final noise (Adding octaves increases the performance cost substantially!)");
             public GUIContent octaveScale = EditorGUIUtility.TextContent("Octave Scale|When combining each octave, zoom in by this amount.");
-            public GUIContent previewTexture = EditorGUIUtility.TextContent("Preview");
+            public GUIContent previewTexture = EditorGUIUtility.TextContent("Preview|Preview the noise as a texture.");
+            public GUIContent previewTextureMultiEdit = EditorGUIUtility.TextContent("Preview (Disabled)|Preview is disabled in multi-object editing mode.");
             public GUIContent quality = EditorGUIUtility.TextContent("Quality|Generate 1D, 2D or 3D noise.");
             public string[] qualityDropdown = new string[] { "Low (1D)", "Medium (2D)", "High (3D)" };
             public GUIContent remap = EditorGUIUtility.TextContent("Remap|Remap the final noise values into a new range.");

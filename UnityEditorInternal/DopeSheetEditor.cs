@@ -13,7 +13,7 @@
     internal class DopeSheetEditor : TimeArea, CurveUpdater
     {
         [CompilerGenerated]
-        private static Comparison<Object> <>f__am$cache0;
+        private static Comparison<UnityEngine.Object> <>f__am$cache0;
         private const float k_KeyframeOffset = -6.5f;
         private const float k_PptrKeyframeOffset = -1f;
         private const int kLabelMarginHorizontal = 8;
@@ -31,8 +31,8 @@
         private DopeSheetControlPointRenderer m_PointRenderer;
         private DopeSheetEditorRectangleTool m_RectangleTool;
         private DopeSheetSelectionRect m_SelectionRect;
-        public int m_SpritePreviewCacheSize;
-        public bool m_SpritePreviewLoading;
+        private int m_SpritePreviewCacheSize;
+        private bool m_SpritePreviewLoading;
         public AnimationWindowState state;
 
         public DopeSheetEditor(EditorWindow owner) : base(false)
@@ -72,7 +72,7 @@
             return false;
         }
 
-        private EditorCurveBinding? CreateNewPptrDopeline(AnimationWindowSelectionItem selectedItem, Type valueType)
+        private EditorCurveBinding? CreateNewPptrDopeline(AnimationWindowSelectionItem selectedItem, System.Type valueType)
         {
             List<EditorCurveBinding> animatableProperties = null;
             if (selectedItem.rootGameObject != null)
@@ -108,7 +108,7 @@
             return null;
         }
 
-        private void CreateNewPPtrKeyframe(float time, Object value, AnimationWindowCurve targetCurve)
+        private void CreateNewPPtrKeyframe(float time, UnityEngine.Object value, AnimationWindowCurve targetCurve)
         {
             ObjectReferenceKeyframe key = new ObjectReferenceKeyframe {
                 time = time,
@@ -155,7 +155,7 @@
             {
                 return false;
             }
-            Type type = DragAndDrop.objectReferences[0].GetType();
+            System.Type type = DragAndDrop.objectReferences[0].GetType();
             AnimationWindowCurve curve = null;
             if (dopeLine.valueType == type)
             {
@@ -171,8 +171,8 @@
                         {
                             curve = curve2;
                         }
-                        Sprite[] spriteArray = SpriteUtility.GetSpriteFromPathsOrObjects(DragAndDrop.objectReferences, DragAndDrop.paths, Event.current.type);
-                        if (((curve2.valueType == typeof(Sprite)) && (spriteArray != null)) && (spriteArray.Length > 0))
+                        List<Sprite> list = SpriteUtility.GetSpriteFromPathsOrObjects(DragAndDrop.objectReferences, DragAndDrop.paths, Event.current.type);
+                        if ((curve2.valueType == typeof(Sprite)) && (list.Count > 0))
                         {
                             curve = curve2;
                             type = typeof(Sprite);
@@ -205,7 +205,7 @@
             return true;
         }
 
-        private bool DopelineForValueTypeExists(Type valueType)
+        private bool DopelineForValueTypeExists(System.Type valueType)
         {
             <DopelineForValueTypeExists>c__AnonStorey0 storey = new <DopelineForValueTypeExists>c__AnonStorey0 {
                 valueType = valueType
@@ -236,7 +236,7 @@
                     Texture2D texture = null;
                     if (keyframe.isPPtrCurve && dopeline.tallMode)
                     {
-                        texture = (keyframe.value != null) ? AssetPreview.GetAssetPreview(((Object) keyframe.value).GetInstanceID(), this.assetPreviewManagerID) : null;
+                        texture = (keyframe.value != null) ? AssetPreview.GetAssetPreview(((UnityEngine.Object) keyframe.value).GetInstanceID(), this.assetPreviewManagerID) : null;
                     }
                     if (texture != null)
                     {
@@ -271,7 +271,7 @@
                 float time = Mathf.Max(this.state.PixelToTime(Event.current.mousePosition.x, AnimationWindowState.SnapMode.SnapToClipFrame), 0f);
                 Color color8 = Color.gray.RGBMultiplied((float) 1.2f);
                 Texture2D assetPreview = null;
-                foreach (Object obj2 in this.GetSortedDragAndDropObjectReferences())
+                foreach (UnityEngine.Object obj2 in this.GetSortedDragAndDropObjectReferences())
                 {
                     Rect dragAndDropRect = this.GetDragAndDropRect(dopeline, time);
                     if (dopeline.isPptrDopeline && dopeline.tallMode)
@@ -465,10 +465,9 @@
                 }
             }
             AnimationKeyTime time = AnimationKeyTime.Time(this.state.PixelToTime(Event.current.mousePosition.x, AnimationWindowState.SnapMode.SnapToClipFrame), this.state.frameRate);
-            this.state.recording = true;
-            this.state.ResampleAnimation();
+            this.state.StartRecording();
             string text = "Add Key";
-            if ((dopeline.isEditable && (list.Count == 0)) && this.state.canRecord)
+            if (dopeline.isEditable && (list.Count == 0))
             {
                 AddKeyToDopelineContext userData = new AddKeyToDopelineContext {
                     dopeline = dopeline,
@@ -481,7 +480,7 @@
                 menu.AddDisabledItem(new GUIContent(text));
             }
             text = (this.state.selectedKeys.Count <= 1) ? "Delete Key" : "Delete Keys";
-            if ((dopeline.isEditable && ((this.state.selectedKeys.Count > 0) || (list.Count > 0))) && this.state.canRecord)
+            if (dopeline.isEditable && ((this.state.selectedKeys.Count > 0) || (list.Count > 0)))
             {
                 menu.AddItem(new GUIContent(text), false, new GenericMenu.MenuFunction2(this.DeleteKeys), (this.state.selectedKeys.Count <= 0) ? list : this.state.selectedKeys);
             }
@@ -521,7 +520,7 @@
             return menu;
         }
 
-        private AnimationWindowCurve GetCurveOfType(DopeLine dopeLine, Type type)
+        private AnimationWindowCurve GetCurveOfType(DopeLine dopeLine, System.Type type)
         {
             foreach (AnimationWindowCurve curve in dopeLine.curves)
             {
@@ -558,10 +557,6 @@
             {
                 width = dopeline.position.height;
             }
-            if (dopeline.isPptrDopeline && dopeline.tallMode)
-            {
-                return new Rect(this.state.TimeToPixel(this.state.SnapToFrame(time, AnimationWindowState.SnapMode.SnapToClipFrame)) + this.GetKeyframeOffset(dopeline, keyframe), dopeline.position.yMin, width, dopeline.position.height);
-            }
             return new Rect(this.state.TimeToPixel(this.state.SnapToFrame(time, AnimationWindowState.SnapMode.SnapToClipFrame)) + this.GetKeyframeOffset(dopeline, keyframe), dopeline.position.yMin, width, dopeline.position.height);
         }
 
@@ -574,14 +569,14 @@
             return keyframeRect;
         }
 
-        private Object[] GetSortedDragAndDropObjectReferences()
+        private UnityEngine.Object[] GetSortedDragAndDropObjectReferences()
         {
-            Object[] objectReferences = DragAndDrop.objectReferences;
+            UnityEngine.Object[] objectReferences = DragAndDrop.objectReferences;
             if (<>f__am$cache0 == null)
             {
                 <>f__am$cache0 = (a, b) => EditorUtility.NaturalCompare(a.name, b.name);
             }
-            Array.Sort<Object>(objectReferences, <>f__am$cache0);
+            Array.Sort<UnityEngine.Object>(objectReferences, <>f__am$cache0);
             return objectReferences;
         }
 
@@ -626,10 +621,6 @@
         {
             AnimationKeyTime time = AnimationKeyTime.Time(this.state.PixelToTime(Event.current.mousePosition.x, AnimationWindowState.SnapMode.SnapToClipFrame), this.state.frameRate);
             AnimationWindowUtility.AddKeyframes(this.state, dopeline.curves.ToArray<AnimationWindowCurve>(), time);
-            if (!this.state.playing && this.state.syncTimeDuringDrag)
-            {
-                this.state.frame = time.frame;
-            }
             Event.current.Use();
         }
 
@@ -691,7 +682,7 @@
                     this.m_IsDraggingPlayheadStarted = true;
                     GUIUtility.hotControl = controlID;
                     this.m_DragStartTime = this.state.PixelToTime(Event.current.mousePosition.x);
-                    this.state.StartLiveEdit();
+                    this.m_RectangleTool.OnStartMove(new Vector2(this.m_DragStartTime, 0f), this.m_RectangleTool.rippleTimeClutch);
                     Event.current.Use();
                 }
                 float maxValue = float.MaxValue;
@@ -700,22 +691,16 @@
                     maxValue = Mathf.Min(keyframe.time, maxValue);
                 }
                 float a = this.state.SnapToFrame(this.state.PixelToTime(Event.current.mousePosition.x), AnimationWindowState.SnapMode.SnapToClipFrame);
-                float deltaTime = a - this.m_DragStartTime;
                 if (this.m_IsDragging && !Mathf.Approximately(a, this.m_DragStartTime))
                 {
-                    this.state.MoveSelectedKeys(deltaTime, true);
-                    if (((this.state.activeKeyframe != null) && !this.state.playing) && this.state.syncTimeDuringDrag)
-                    {
-                        this.state.frame = this.state.TimeToFrameFloor(this.state.activeKeyframe.time + this.state.activeKeyframe.curve.timeOffset);
-                    }
+                    this.m_RectangleTool.OnMove(new Vector2(a, 0f));
                     Event.current.Use();
                 }
                 if (typeForControl == EventType.MouseUp)
                 {
                     if (this.m_IsDragging && (GUIUtility.hotControl == controlID))
                     {
-                        this.state.MoveSelectedKeys(deltaTime, true);
-                        this.state.EndLiveEdit();
+                        this.m_RectangleTool.OnEndMove();
                         Event.current.Use();
                         this.m_IsDragging = false;
                     }
@@ -786,17 +771,17 @@
                 {
                     this.state.ClearSelections();
                 }
-                float num = this.state.PixelToTime(Event.current.mousePosition.x);
-                float num2 = num;
+                float time = this.state.PixelToTime(Event.current.mousePosition.x);
+                float num2 = time;
                 if (Event.current.shift)
                 {
                     foreach (AnimationWindowKeyframe keyframe2 in dopeline.keys)
                     {
                         if (this.state.KeyIsSelected(keyframe2))
                         {
-                            if (keyframe2.time < num)
+                            if (keyframe2.time < time)
                             {
-                                num = keyframe2.time;
+                                time = keyframe2.time;
                             }
                             if (keyframe2.time > num2)
                             {
@@ -828,7 +813,7 @@
                             {
                                 foreach (AnimationWindowKeyframe keyframe4 in dopeline.keys)
                                 {
-                                    if ((keyframe4 == keyframe3) || ((keyframe4.time > num) && (keyframe4.time < num2)))
+                                    if ((keyframe4 == keyframe3) || ((keyframe4.time > time) && (keyframe4.time < num2)))
                                     {
                                         this.state.SelectKey(keyframe4);
                                     }
@@ -845,10 +830,6 @@
                         }
                         this.state.activeKeyframe = keyframe3;
                         this.m_MousedownOnKeyframe = true;
-                        if (!this.state.playing && this.state.syncTimeDuringDrag)
-                        {
-                            this.state.frame = this.state.TimeToFrameRound(this.state.activeKeyframe.time + this.state.activeKeyframe.curve.timeOffset);
-                        }
                         current.Use();
                     }
                 }
@@ -865,20 +846,12 @@
                 {
                     this.HandleDopelineDoubleclick(dopeline);
                 }
-                if ((current.button == 1) && !this.state.playing)
+                if (((current.button == 1) && !this.state.controlInterface.playing) && !flag4)
                 {
-                    AnimationKeyTime time = AnimationKeyTime.Time(this.state.PixelToTime(Event.current.mousePosition.x, AnimationWindowState.SnapMode.SnapToClipFrame), this.state.frameRate);
-                    if (this.state.syncTimeDuringDrag)
-                    {
-                        this.state.frame = time.frame;
-                    }
-                    if (!flag4)
-                    {
-                        this.state.ClearSelections();
-                        this.m_IsDraggingPlayheadStarted = true;
-                        HandleUtility.Repaint();
-                        current.Use();
-                    }
+                    this.state.ClearSelections();
+                    this.m_IsDraggingPlayheadStarted = true;
+                    HandleUtility.Repaint();
+                    current.Use();
                 }
             }
         }
@@ -973,10 +946,10 @@
                 string undoLabel = "Drop Key";
                 this.state.SaveKeySelection(undoLabel);
                 this.state.ClearSelections();
-                Object[] sortedDragAndDropObjectReferences = this.GetSortedDragAndDropObjectReferences();
-                foreach (Object obj2 in sortedDragAndDropObjectReferences)
+                UnityEngine.Object[] sortedDragAndDropObjectReferences = this.GetSortedDragAndDropObjectReferences();
+                foreach (UnityEngine.Object obj2 in sortedDragAndDropObjectReferences)
                 {
-                    Object obj3 = obj2;
+                    UnityEngine.Object obj3 = obj2;
                     if (obj3 is Texture2D)
                     {
                         obj3 = SpriteUtility.TextureToSprite(obj2 as Texture2D);
@@ -1063,14 +1036,14 @@
             }
             for (int i = 0; i < DragAndDrop.objectReferences.Length; i++)
             {
-                Object obj2 = DragAndDrop.objectReferences[i];
+                UnityEngine.Object obj2 = DragAndDrop.objectReferences[i];
                 if (obj2 == null)
                 {
                     return false;
                 }
                 if (i < (DragAndDrop.objectReferences.Length - 1))
                 {
-                    Object obj3 = DragAndDrop.objectReferences[i + 1];
+                    UnityEngine.Object obj3 = DragAndDrop.objectReferences[i + 1];
                     bool flag2 = ((obj2 is Texture2D) || (obj2 is Sprite)) && ((obj3 is Texture2D) || (obj3 is Sprite));
                     if ((obj2.GetType() != obj3.GetType()) && !flag2)
                     {
@@ -1103,34 +1076,13 @@
         public bool isDragging =>
             this.m_IsDragging;
 
-        public Bounds selectionBounds
-        {
-            get
-            {
-                List<AnimationWindowKeyframe> selectedKeys = this.state.selectedKeys;
-                if (selectedKeys.Count > 0)
-                {
-                    AnimationWindowKeyframe keyframe = selectedKeys[0];
-                    float x = keyframe.time + keyframe.curve.timeOffset;
-                    float y = !keyframe.isPPtrCurve ? ((float) keyframe.value) : 0f;
-                    Bounds bounds = new Bounds((Vector3) new Vector2(x, y), (Vector3) Vector2.zero);
-                    for (int i = 1; i < selectedKeys.Count; i++)
-                    {
-                        keyframe = selectedKeys[i];
-                        x = keyframe.time + keyframe.curve.timeOffset;
-                        y = !keyframe.isPPtrCurve ? ((float) keyframe.value) : 0f;
-                        bounds.Encapsulate((Vector3) new Vector2(x, y));
-                    }
-                    return bounds;
-                }
-                return new Bounds((Vector3) Vector2.zero, (Vector3) Vector2.zero);
-            }
-        }
+        public bool spritePreviewLoading =>
+            this.m_SpritePreviewLoading;
 
         [CompilerGenerated]
         private sealed class <DopelineForValueTypeExists>c__AnonStorey0
         {
-            internal Type valueType;
+            internal System.Type valueType;
 
             internal bool <>m__0(AnimationWindowCurve curve) => 
                 (curve.valueType == this.valueType);

@@ -4,6 +4,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine.Internal;
+    using UnityEngine.Scripting;
     using UnityEngineInternal;
 
     /// <summary>
@@ -40,31 +41,47 @@
         /// <para>Returns the closest power of two value.</para>
         /// </summary>
         /// <param name="value"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern int ClosestPowerOfTwo(int value);
         /// <summary>
         /// <para>Converts the given value from gamma (sRGB) to linear color space.</para>
         /// </summary>
         /// <param name="value"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern float GammaToLinearSpace(float value);
         /// <summary>
         /// <para>Converts the given value from linear to gamma (sRGB) color space.</para>
         /// </summary>
         /// <param name="value"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern float LinearToGammaSpace(float value);
+        /// <summary>
+        /// <para>Convert a color temperature in Kelvin to RGB color.</para>
+        /// </summary>
+        /// <param name="kelvin">Temperature in Kelvin. Range 1000 to 40000 Kelvin.</param>
+        /// <returns>
+        /// <para>Correlated Color Temperature as floating point RGB color.</para>
+        /// </returns>
+        public static Color CorrelatedColorTemperatureToRGB(float kelvin)
+        {
+            Color color;
+            INTERNAL_CALL_CorrelatedColorTemperatureToRGB(kelvin, out color);
+            return color;
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_CorrelatedColorTemperatureToRGB(float kelvin, out Color value);
         /// <summary>
         /// <para>Returns true if the value is power of two.</para>
         /// </summary>
         /// <param name="value"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool IsPowerOfTwo(int value);
         /// <summary>
         /// <para>Returns the next power of two value.</para>
         /// </summary>
         /// <param name="value"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int NextPowerOfTwo(int value);
         /// <summary>
         /// <para>Generate 2D Perlin noise.</para>
@@ -74,19 +91,16 @@
         /// <returns>
         /// <para>Value between 0.0 and 1.0.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern float PerlinNoise(float x, float y);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern ushort FloatToHalf(float val);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern float HalfToFloat(ushort val);
         /// <summary>
         /// <para>Returns the sine of angle f in radians.</para>
         /// </summary>
-        /// <param name="f">The argument as a radian.</param>
-        /// <returns>
-        /// <para>The return value between -1 and +1.</para>
-        /// </returns>
+        /// <param name="f"></param>
         public static float Sin(float f) => 
             ((float) Math.Sin((double) f));
 
@@ -432,24 +446,18 @@
         /// <summary>
         /// <para>Linearly interpolates between a and b by t.</para>
         /// </summary>
-        /// <param name="a">The start value.</param>
-        /// <param name="b">The end value.</param>
-        /// <param name="t">The interpolation value between the two floats.</param>
-        /// <returns>
-        /// <para>The interpolated float result between the two float values.</para>
-        /// </returns>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="t"></param>
         public static float Lerp(float a, float b, float t) => 
             (a + ((b - a) * Clamp01(t)));
 
         /// <summary>
-        /// <para>Linearly interpolates between a and b by t with no limit to t.</para>
+        /// <para>Linearly interpolates between a and b by t.</para>
         /// </summary>
-        /// <param name="a">The start value.</param>
-        /// <param name="b">The end value.</param>
-        /// <param name="t">The interpolation between the two floats.</param>
-        /// <returns>
-        /// <para>The float value as a result from the linear interpolation.</para>
-        /// </returns>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="t"></param>
         public static float LerpUnclamped(float a, float b, float t) => 
             (a + ((b - a) * t));
 

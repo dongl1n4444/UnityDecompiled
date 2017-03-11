@@ -2,6 +2,7 @@
 {
     using System;
 
+    [Obsolete("AssetStatus enum is not used anymore (Asset Server has been removed)")]
     public enum AssetStatus
     {
         BadState = 9,

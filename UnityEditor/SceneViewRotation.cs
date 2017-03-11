@@ -29,6 +29,7 @@
         private AnimBool m_RotationLocked = new AnimBool();
         private int[] m_ViewDirectionControlIDs;
         private AnimBool m_Visible = new AnimBool();
+        private static readonly GUIContent[] s_HandleAxisLabels = new GUIContent[] { new GUIContent("x"), new GUIContent("y"), new GUIContent("z") };
         private static Styles s_Styles;
 
         private void AxisSelectors(SceneView view, Camera cam, float size, float sgn, GUIStyle viewAxisLabelStyle)
@@ -36,7 +37,6 @@
             for (int i = kDirectionRotations.Length - 1; i >= 0; i--)
             {
                 Quaternion direction = kDirectionRotations[i];
-                string[] strArray = new string[] { "x", "y", "z" };
                 float faded = this.dirVisible[i % 3].faded;
                 Vector3 rhs = (Vector3) (kDirectionRotations[i] * Vector3.forward);
                 float num3 = Vector3.Dot(view.camera.transform.forward, rhs);
@@ -88,7 +88,7 @@
                         Vector3 vector2 = rhs;
                         vector2 += (Vector3) ((num3 * view.camera.transform.forward) * -0.5f);
                         vector2 = (Vector3) (((vector2 * 0.7f) + (vector2.normalized * 1.5f)) * size);
-                        Handles.Label(-vector2, new GUIContent(strArray[i]), styles.viewAxisLabelStyle);
+                        Handles.Label(-vector2, s_HandleAxisLabels[i], styles.viewAxisLabelStyle);
                     }
                     if (sgn < 0f)
                     {

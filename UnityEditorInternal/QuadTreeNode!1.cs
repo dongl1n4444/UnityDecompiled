@@ -34,11 +34,7 @@
             List<T> list = new List<T>();
             foreach (T local in this.m_Elements)
             {
-                if (RectUtils.Contains(local.boundingRect, queryArea))
-                {
-                    list.Add(local);
-                }
-                else if (queryArea.Overlaps(local.boundingRect))
+                if (RectUtils.Contains(local.boundingRect, queryArea) || queryArea.Overlaps(local.boundingRect))
                 {
                     list.Add(local);
                 }
