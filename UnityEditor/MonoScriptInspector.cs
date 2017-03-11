@@ -1,6 +1,6 @@
 ﻿namespace UnityEditor
 {
-    [CustomEditor(typeof(MonoScript)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(MonoScript))]
     internal class MonoScriptInspector : TextAssetInspector
     {
     }

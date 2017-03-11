@@ -5,7 +5,7 @@
 
     internal sealed class EditorGUILayoutUtilityInternal : GUILayoutUtility
     {
-        internal static GUILayoutGroup BeginLayoutArea(GUIStyle style, Type LayoutType) => 
+        internal static GUILayoutGroup BeginLayoutArea(GUIStyle style, System.Type LayoutType) => 
             GUILayoutUtility.DoBeginLayoutArea(style, LayoutType);
 
         internal static GUILayoutGroup topLevel =>

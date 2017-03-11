@@ -10,7 +10,7 @@
     internal class GameViewSizes : ScriptableSingleton<GameViewSizes>
     {
         [CompilerGenerated]
-        private static Action <>f__am$cache0;
+        private static System.Action <>f__am$cache0;
         [SerializeField]
         private GameViewSizeGroup m_Android = new GameViewSizeGroup();
         [NonSerialized]
@@ -319,7 +319,7 @@
             {
                 <>f__am$cache0 = () => RefreshGameViewSizeGroupType();
             }
-            EditorUserBuildSettings.activeBuildTargetChanged = (Action) Delegate.Combine(EditorUserBuildSettings.activeBuildTargetChanged, <>f__am$cache0);
+            EditorUserBuildSettings.activeBuildTargetChanged = (System.Action) Delegate.Combine(EditorUserBuildSettings.activeBuildTargetChanged, <>f__am$cache0);
         }
 
         private static void RefreshDerivedGameViewSize(GameViewSizeGroupType groupType, int gameViewSizeIndex, GameViewSize gameViewSize)

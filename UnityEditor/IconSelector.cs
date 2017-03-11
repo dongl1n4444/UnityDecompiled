@@ -15,7 +15,7 @@
         private GUIContent[] m_SmallIcons;
         private Texture2D m_StartIcon;
         private static Styles m_Styles;
-        private Object m_TargetObject;
+        private UnityEngine.Object m_TargetObject;
         private static int s_HashIconSelector = "IconSelector".GetHashCode();
         private static IconSelector s_IconSelector = null;
         private static long s_LastClosedTime = 0L;
@@ -128,7 +128,7 @@
             return contentArray;
         }
 
-        private void Init(Object targetObj, Rect activatorRect, bool showLabelIcons)
+        private void Init(UnityEngine.Object targetObj, Rect activatorRect, bool showLabelIcons)
         {
             this.m_TargetObject = targetObj;
             this.m_StartIcon = EditorGUIUtility.GetIconForObject(this.m_TargetObject);
@@ -294,7 +294,7 @@
             }
         }
 
-        internal static bool ShowAtPosition(Object targetObj, Rect activatorRect, bool showLabelIcons)
+        internal static bool ShowAtPosition(UnityEngine.Object targetObj, Rect activatorRect, bool showLabelIcons)
         {
             int instanceID = targetObj.GetInstanceID();
             long num2 = DateTime.Now.Ticks / 0x2710L;

@@ -8,7 +8,7 @@
 
     internal abstract class VRCustomOptions
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <IsExpanded>k__BackingField;
         private SerializedProperty settings;
 
@@ -22,13 +22,13 @@
             SerializedProperty property = null;
             if (this.settings == null)
             {
-                Debug.LogError("No existing VR settings. Failed to find:" + name);
+                UnityEngine.Debug.LogError("No existing VR settings. Failed to find:" + name);
                 return property;
             }
             property = this.settings.FindPropertyRelative(name);
             if (property == null)
             {
-                Debug.LogError("Failed to find:" + name);
+                UnityEngine.Debug.LogError("Failed to find:" + name);
             }
             return property;
         }

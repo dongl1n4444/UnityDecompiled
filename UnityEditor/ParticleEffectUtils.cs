@@ -14,7 +14,7 @@
             {
                 foreach (GameObject obj2 in s_Planes)
                 {
-                    Object.DestroyImmediate(obj2);
+                    UnityEngine.Object.DestroyImmediate(obj2);
                 }
                 s_Planes.Clear();
             }

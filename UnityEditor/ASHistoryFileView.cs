@@ -69,7 +69,7 @@
                         {
                             if (firstSelected.Previous(this.m_ExpandedArray))
                             {
-                                Object pptrValue = firstSelected.pptrValue;
+                                UnityEngine.Object pptrValue = firstSelected.pptrValue;
                                 this.SelectionClick(firstSelected);
                                 this.FrameObject(pptrValue);
                             }
@@ -77,7 +77,7 @@
                         else
                         {
                             this.SelType = SelectionType.All;
-                            Selection.objects = new Object[0];
+                            Selection.objects = new UnityEngine.Object[0];
                             this.ScrollTo(0f);
                         }
                     }
@@ -94,12 +94,12 @@
                             if (lastSelected.instanceID == this.GetLast().instanceID)
                             {
                                 this.SelType = SelectionType.DeletedItemsRoot;
-                                Selection.objects = new Object[0];
+                                Selection.objects = new UnityEngine.Object[0];
                                 this.ScrollToDeletedItem(-1);
                             }
                             else if (lastSelected.Next(this.m_ExpandedArray))
                             {
-                                Object target = lastSelected.pptrValue;
+                                UnityEngine.Object target = lastSelected.pptrValue;
                                 this.SelectionClick(lastSelected);
                                 this.FrameObject(target);
                             }
@@ -176,7 +176,7 @@
                             break;
                         }
                     }
-                    Object obj4 = first.pptrValue;
+                    UnityEngine.Object obj4 = first.pptrValue;
                     this.SelectionClick(first);
                     this.FrameObject(obj4);
                     break;
@@ -203,7 +203,7 @@
                                 break;
                             }
                         }
-                        Object obj5 = last.pptrValue;
+                        UnityEngine.Object obj5 = last.pptrValue;
                         this.SelectionClick(last);
                         this.FrameObject(obj5);
                         break;
@@ -480,7 +480,7 @@
             }
             this.m_ScreenRect = theRect;
             Hashtable hashtable = new Hashtable();
-            foreach (Object obj2 in Selection.objects)
+            foreach (UnityEngine.Object obj2 in Selection.objects)
             {
                 hashtable.Add(obj2.GetInstanceID(), null);
             }
@@ -645,7 +645,7 @@
         {
         }
 
-        private bool FrameObject(Object target)
+        private bool FrameObject(UnityEngine.Object target)
         {
             if (target != null)
             {
@@ -698,7 +698,7 @@
         {
             int row = 0x3b9aca00;
             HierarchyProperty property = null;
-            foreach (Object obj2 in Selection.objects)
+            foreach (UnityEngine.Object obj2 in Selection.objects)
             {
                 HierarchyProperty property2 = new HierarchyProperty(HierarchyType.Assets);
                 if (property2.Find(obj2.GetInstanceID(), this.m_ExpandedArray) && (property2.row < row))
@@ -720,7 +720,7 @@
                 return new string[0];
             }
             Hashtable selection = new Hashtable();
-            foreach (Object obj2 in Selection.objects)
+            foreach (UnityEngine.Object obj2 in Selection.objects)
             {
                 selection.Add(obj2.GetInstanceID(), null);
             }
@@ -749,7 +749,7 @@
         {
             int row = -1;
             HierarchyProperty property = null;
-            foreach (Object obj2 in Selection.objects)
+            foreach (UnityEngine.Object obj2 in Selection.objects)
             {
                 HierarchyProperty property2 = new HierarchyProperty(HierarchyType.Assets);
                 if (property2.Find(obj2.GetInstanceID(), this.m_ExpandedArray) && (property2.row > row))
@@ -940,7 +940,7 @@
                 {
                     list.Add(property.pptrValue);
                 }
-                Selection.objects = list.ToArray(typeof(Object)) as Object[];
+                Selection.objects = list.ToArray(typeof(UnityEngine.Object)) as UnityEngine.Object[];
             }
             else if (!Event.current.shift)
             {
@@ -978,7 +978,7 @@
                         break;
                     }
                 }
-                Selection.objects = list2.ToArray(typeof(Object)) as Object[];
+                Selection.objects = list2.ToArray(typeof(UnityEngine.Object)) as UnityEngine.Object[];
             }
             this.SelType = SelectionType.Items;
             this.FrameObject(Selection.activeObject);

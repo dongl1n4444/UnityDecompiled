@@ -23,7 +23,7 @@
             if (this.editor != null)
             {
                 this.OnSceneDrag = null;
-                Object.DestroyImmediate(this.editor);
+                UnityEngine.Object.DestroyImmediate(this.editor);
                 this.editor = null;
             }
             GC.SuppressFinalize(this);
@@ -40,7 +40,7 @@
         public bool HasPreviewGUI() => 
             this.editor.HasPreviewGUI();
 
-        private bool Init(Object obj, EditorFeatures requirements)
+        private bool Init(UnityEngine.Object obj, EditorFeatures requirements)
         {
             this.editor = Editor.CreateEditor(obj);
             if (this.editor == null)
@@ -67,7 +67,7 @@
             return true;
         }
 
-        public static EditorWrapper Make(Object obj, EditorFeatures requirements)
+        public static EditorWrapper Make(UnityEngine.Object obj, EditorFeatures requirements)
         {
             EditorWrapper wrapper = new EditorWrapper();
             if (wrapper.Init(obj, requirements))

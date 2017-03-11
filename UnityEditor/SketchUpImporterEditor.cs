@@ -9,7 +9,7 @@
         {
             if (base.m_SubEditorTypes == null)
             {
-                base.m_SubEditorTypes = new Type[] { typeof(SketchUpImporterModelEditor), typeof(ModelImporterRigEditor), typeof(ModelImporterClipEditor) };
+                base.m_SubEditorTypes = new System.Type[] { typeof(SketchUpImporterModelEditor), typeof(ModelImporterRigEditor), typeof(ModelImporterClipEditor) };
                 base.m_SubEditorNames = new string[] { "Sketch Up", "Rig", "Animations" };
             }
             base.OnEnable();

@@ -189,15 +189,15 @@
 
         private void ClearCachedProperties()
         {
-            Object.DestroyImmediate(this.m_LightingEditor);
+            UnityEngine.Object.DestroyImmediate(this.m_LightingEditor);
             this.m_LightingEditor = null;
-            Object.DestroyImmediate(this.m_FogEditor);
+            UnityEngine.Object.DestroyImmediate(this.m_FogEditor);
             this.m_FogEditor = null;
-            Object.DestroyImmediate(this.m_OtherRenderingEditor);
+            UnityEngine.Object.DestroyImmediate(this.m_OtherRenderingEditor);
             this.m_OtherRenderingEditor = null;
         }
 
-        [MenuItem("Window/Lighting", false, 0x832)]
+        [UnityEditor.MenuItem("Window/Lighting", false, 0x832)]
         private static void CreateLightingWindow()
         {
             LightingWindow window = EditorWindow.GetWindow<LightingWindow>();
@@ -218,7 +218,7 @@
                     Lightmapping.concurrentJobsType = (Lightmapping.ConcurrentJobsType) EditorGUILayout.IntPopup(styles.ConcurrentJobs, (int) Lightmapping.concurrentJobsType, this.kConcurrentJobsTypeStrings, this.kConcurrentJobsTypeValues, new GUILayoutOption[0]);
                     Lightmapping.enlightenForceUpdates = EditorGUILayout.Toggle(styles.ForceUpdates, Lightmapping.enlightenForceUpdates, new GUILayoutOption[0]);
                     Lightmapping.enlightenForceWhiteAlbedo = EditorGUILayout.Toggle(styles.ForceWhiteAlbedo, Lightmapping.enlightenForceWhiteAlbedo, new GUILayoutOption[0]);
-                    Lightmapping.filterMode = (FilterMode) EditorGUILayout.EnumPopup(EditorGUIUtility.TempContent("Filter Mode"), Lightmapping.filterMode, new GUILayoutOption[0]);
+                    Lightmapping.filterMode = (UnityEngine.FilterMode) EditorGUILayout.EnumPopup(EditorGUIUtility.TempContent("Filter Mode"), Lightmapping.filterMode, new GUILayoutOption[0]);
                     EditorGUILayout.Slider(property, 0f, 10f, styles.BounceScale, new GUILayoutOption[0]);
                     EditorGUILayout.Slider(property2, 0f, 1f, styles.UpdateThreshold, new GUILayoutOption[0]);
                     GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(this.kButtonWidth) };
@@ -611,7 +611,7 @@
             }
         }
 
-        private Object renderSettings =>
+        private UnityEngine.Object renderSettings =>
             RenderSettings.GetRenderSettings();
 
         private static Styles styles

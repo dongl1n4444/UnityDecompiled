@@ -41,13 +41,13 @@
             base.Repaint();
         }
 
-        protected void DoRenderPreview(Object[] subAssets)
+        protected void DoRenderPreview(UnityEngine.Object[] subAssets)
         {
             if ((this.m_PreviewUtility.m_RenderTexture.width > 0) && (this.m_PreviewUtility.m_RenderTexture.height > 0))
             {
                 Color color;
                 List<ProceduralMaterial> list = new List<ProceduralMaterial>();
-                foreach (Object obj2 in subAssets)
+                foreach (UnityEngine.Object obj2 in subAssets)
                 {
                     if (obj2 is ProceduralMaterial)
                     {
@@ -130,7 +130,7 @@
             if (((selectedMaterial == null) || (this.m_MaterialInspector == null)) || (this.m_MaterialInspector.target != selectedMaterial))
             {
                 EditorGUI.EndEditingActiveTextField();
-                Object.DestroyImmediate(this.m_MaterialInspector);
+                UnityEngine.Object.DestroyImmediate(this.m_MaterialInspector);
                 this.m_MaterialInspector = null;
                 if (selectedMaterial != null)
                 {
@@ -141,7 +141,7 @@
                         {
                             Debug.LogError("The shader: '" + selectedMaterial.shader.name + "' is using a custom editor deriving from MaterialEditor, please derive from ShaderGUI instead. Only the ShaderGUI approach works with Procedural Materials. Search the docs for 'ShaderGUI'");
                         }
-                        Object.DestroyImmediate(this.m_MaterialInspector);
+                        UnityEngine.Object.DestroyImmediate(this.m_MaterialInspector);
                         this.m_MaterialInspector = Editor.CreateEditor(selectedMaterial, typeof(ProceduralMaterialInspector));
                     }
                     ((ProceduralMaterialInspector) this.m_MaterialInspector).DisableReimportOnDisable();
@@ -363,7 +363,7 @@
             if (this.m_MaterialInspector != null)
             {
                 ((ProceduralMaterialInspector) this.m_MaterialInspector).ReimportSubstancesIfNeeded();
-                Object.DestroyImmediate(this.m_MaterialInspector);
+                UnityEngine.Object.DestroyImmediate(this.m_MaterialInspector);
             }
             s_CachedSelectedMaterialInstanceName = this.m_SelectedMaterialInstanceName;
             if (this.m_PreviewUtility != null)
@@ -422,7 +422,7 @@
             }
         }
 
-        public override Texture2D RenderStaticPreview(string assetPath, Object[] subAssets, int width, int height)
+        public override Texture2D RenderStaticPreview(string assetPath, UnityEngine.Object[] subAssets, int width, int height)
         {
             if (!ShaderUtil.hardwareSupportsRectRenderTexture)
             {
@@ -464,8 +464,8 @@
         {
             public int Compare(object o1, object o2)
             {
-                Object obj2 = o1 as Object;
-                Object obj3 = o2 as Object;
+                UnityEngine.Object obj2 = o1 as UnityEngine.Object;
+                UnityEngine.Object obj3 = o2 as UnityEngine.Object;
                 return EditorUtility.NaturalCompare(obj2.name, obj3.name);
             }
         }

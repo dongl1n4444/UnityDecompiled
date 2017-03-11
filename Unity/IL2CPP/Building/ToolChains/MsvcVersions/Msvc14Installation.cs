@@ -13,12 +13,32 @@
     internal class Msvc14Installation : MsvcInstallation
     {
         private readonly NPath _netfxsdkDir;
+        private readonly List<NPath> _sdkBinDirectories;
+        private readonly NPath _sdkUnionMetadataDirectory;
         private readonly string _sdkVersion;
 
         public Msvc14Installation(NPath visualStudioDir) : base(new Version(14, 0), visualStudioDir)
         {
+            this._sdkBinDirectories = new List<NPath>();
             base.SDKDirectory = WindowsSDKs.GetWindows10SDKDirectory(out this._sdkVersion);
             this._netfxsdkDir = WindowsSDKs.GetDotNetFrameworkSDKDirectory();
+            if (base.SDKDirectory != null)
+            {
+                string[] append = new string[] { "bin" };
+                NPath item = base.SDKDirectory.Combine(append);
+                string[] textArray2 = new string[] { this._sdkVersion };
+                NPath path2 = item.Combine(textArray2);
+                if (path2.DirectoryExists(""))
+                {
+                    this._sdkBinDirectories.Add(path2);
+                }
+                this._sdkBinDirectories.Add(item);
+                string[] textArray3 = new string[] { "UnionMetadata" };
+                NPath path3 = base.SDKDirectory.Combine(textArray3);
+                string[] textArray4 = new string[] { this._sdkVersion };
+                NPath path4 = path3.Combine(textArray4);
+                this._sdkUnionMetadataDirectory = !path4.DirectoryExists("") ? path3 : path4;
+            }
         }
 
         [DebuggerHidden]
@@ -44,11 +64,11 @@
                 $PC = -2
             };
 
-        public override NPath GetUnionMetadataDirectory()
-        {
-            string[] append = new string[] { "UnionMetadata" };
-            return base.SDKDirectory.Combine(append);
-        }
+        protected override IEnumerable<NPath> GetSDKBinDirectories() => 
+            this._sdkBinDirectories;
+
+        public override NPath GetUnionMetadataDirectory() => 
+            this._sdkUnionMetadataDirectory;
 
         [DebuggerHidden]
         public override IEnumerable<NPath> GetWindowsMetadataReferences() => 

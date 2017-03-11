@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CustomEditor(typeof(Transform)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(Transform))]
     internal class TransformInspector : Editor
     {
         private SerializedProperty m_Position;

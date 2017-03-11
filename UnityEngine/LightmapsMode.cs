@@ -25,7 +25,7 @@
         /// </summary>
         [Obsolete("Enum member LightmapsMode.SeparateDirectional has been deprecated and will be removed in a future version. Use CombinedDirectional instead (UnityUpgradable) -> CombinedDirectional", false), EditorBrowsable(EditorBrowsableState.Never)]
         SeparateDirectional = 2,
-        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Enum member LightmapsMode.Single has been deprecated. Use NonDirectional instead (UnityUpgradable) -> NonDirectional", true)]
+        [Obsolete("Enum member LightmapsMode.Single has been deprecated. Use NonDirectional instead (UnityUpgradable) -> NonDirectional", true), EditorBrowsable(EditorBrowsableState.Never)]
         Single = 0
     }
 }

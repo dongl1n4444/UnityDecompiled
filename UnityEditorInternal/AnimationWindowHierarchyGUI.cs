@@ -14,7 +14,7 @@
     {
         [CompilerGenerated]
         private static Predicate<AnimationWindowCurve> <>f__am$cache0;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private AnimationWindowState <state>k__BackingField;
         public const float k_AddCurveButtonNodeHeight = 40f;
         private readonly GUIContent k_AnimatePropertyLabel;
@@ -149,7 +149,7 @@
                     GUI.color = k_KeyColorForNonCurves;
                 }
                 bool flag = false;
-                if (AnimationMode.InAnimationMode())
+                if (UnityEditor.AnimationMode.InAnimationMode())
                 {
                     foreach (AnimationWindowCurve curve in node.curves)
                     {
@@ -228,7 +228,7 @@
                 {
                     TreeViewGUI.s_Styles.selectionStyle.Draw(rect, false, false, true, focused);
                 }
-                if (AnimationMode.InAnimationMode())
+                if (UnityEditor.AnimationMode.InAnimationMode())
                 {
                     rect.width -= 77f;
                 }
@@ -506,7 +506,7 @@
                 menu.AddItem(new GUIContent("Interpolation/Euler Angles (Quaternion)"), rotationInterpolationMode == RotationCurveInterpolation.Mode.Baked, !enabled ? function : new GenericMenu.MenuFunction2(this.ChangeRotationInterpolation), RotationCurveInterpolation.Mode.Baked);
                 menu.AddItem(new GUIContent("Interpolation/Quaternion"), rotationInterpolationMode == RotationCurveInterpolation.Mode.NonBaked, !enabled ? function : new GenericMenu.MenuFunction2(this.ChangeRotationInterpolation), RotationCurveInterpolation.Mode.NonBaked);
             }
-            if (AnimationMode.InAnimationMode())
+            if (UnityEditor.AnimationMode.InAnimationMode())
             {
                 menu.AddSeparator("");
                 bool flag3 = true;
@@ -831,7 +831,7 @@
                     EditorCurveBinding renamedBinding = AnimationWindowUtility.GetRenamedBinding(curve.binding, newPath);
                     if (AnimationWindowUtility.CurveExists(renamedBinding, this.state.allCurves.ToArray()))
                     {
-                        Debug.LogWarning("Curve already exists, renaming cancelled.");
+                        UnityEngine.Debug.LogWarning("Curve already exists, renaming cancelled.");
                     }
                     else
                     {

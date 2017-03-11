@@ -919,7 +919,7 @@
             int length = assetPath.LastIndexOf("/");
             if (length >= 0)
             {
-                Object obj2 = AssetDatabase.LoadAssetAtPath(assetPath.Substring(0, length), typeof(Object));
+                UnityEngine.Object obj2 = AssetDatabase.LoadAssetAtPath(assetPath.Substring(0, length), typeof(UnityEngine.Object));
                 if (obj2 != null)
                 {
                     return obj2.GetInstanceID();
@@ -1012,7 +1012,7 @@
                             ProjectWindowUtil.DuplicateSelectedAssets();
                             GUIUtility.ExitGUI();
                         }
-                        else if (Selection.GetFiltered(typeof(Object), SelectionMode.Assets).Length != 0)
+                        else if (Selection.GetFiltered(typeof(UnityEngine.Object), UnityEditor.SelectionMode.Assets).Length != 0)
                         {
                             Event.current.Use();
                         }
@@ -1209,12 +1209,12 @@
                 this.m_ListArea.allowUserRenderingHook = true;
                 this.m_ListArea.allowFindNextShortcut = true;
                 this.m_ListArea.foldersFirst = this.GetShouldShowFoldersFirst();
-                this.m_ListArea.repaintCallback = (Action) Delegate.Combine(this.m_ListArea.repaintCallback, new Action(this.Repaint));
+                this.m_ListArea.repaintCallback = (System.Action) Delegate.Combine(this.m_ListArea.repaintCallback, new System.Action(this.Repaint));
                 this.m_ListArea.itemSelectedCallback = (Action<bool>) Delegate.Combine(this.m_ListArea.itemSelectedCallback, new Action<bool>(this.ListAreaItemSelectedCallback));
-                this.m_ListArea.keyboardCallback = (Action) Delegate.Combine(this.m_ListArea.keyboardCallback, new Action(this.ListAreaKeyboardCallback));
-                this.m_ListArea.gotKeyboardFocus = (Action) Delegate.Combine(this.m_ListArea.gotKeyboardFocus, new Action(this.ListGotKeyboardFocus));
+                this.m_ListArea.keyboardCallback = (System.Action) Delegate.Combine(this.m_ListArea.keyboardCallback, new System.Action(this.ListAreaKeyboardCallback));
+                this.m_ListArea.gotKeyboardFocus = (System.Action) Delegate.Combine(this.m_ListArea.gotKeyboardFocus, new System.Action(this.ListGotKeyboardFocus));
                 this.m_ListArea.drawLocalAssetHeader = (Func<Rect, float>) Delegate.Combine(this.m_ListArea.drawLocalAssetHeader, new Func<Rect, float>(this.DrawLocalAssetHeader));
-                this.m_ListArea.assetStoreSearchEnded = (Action) Delegate.Combine(this.m_ListArea.assetStoreSearchEnded, new Action(this.AssetStoreSearchEndedCallback));
+                this.m_ListArea.assetStoreSearchEnded = (System.Action) Delegate.Combine(this.m_ListArea.assetStoreSearchEnded, new System.Action(this.AssetStoreSearchEndedCallback));
                 this.m_ListArea.gridSize = this.m_StartGridSize;
                 this.m_StartGridSize = Mathf.Clamp(this.m_StartGridSize, this.m_ListArea.minGridSize, this.m_ListArea.maxGridSize);
                 this.m_LastFoldersGridSize = Mathf.Min(this.m_LastFoldersGridSize, (float) this.m_ListArea.maxGridSize);
@@ -1302,9 +1302,9 @@
                 this.m_AssetTree = new TreeViewController(this, this.m_AssetTreeState);
                 this.m_AssetTree.deselectOnUnhandledMouseDown = true;
                 this.m_AssetTree.selectionChangedCallback = (Action<int[]>) Delegate.Combine(this.m_AssetTree.selectionChangedCallback, new Action<int[]>(this.AssetTreeSelectionCallback));
-                this.m_AssetTree.keyboardInputCallback = (Action) Delegate.Combine(this.m_AssetTree.keyboardInputCallback, new Action(this.AssetTreeKeyboardInputCallback));
+                this.m_AssetTree.keyboardInputCallback = (System.Action) Delegate.Combine(this.m_AssetTree.keyboardInputCallback, new System.Action(this.AssetTreeKeyboardInputCallback));
                 this.m_AssetTree.contextClickItemCallback = (Action<int>) Delegate.Combine(this.m_AssetTree.contextClickItemCallback, new Action<int>(this.AssetTreeViewContextClick));
-                this.m_AssetTree.contextClickOutsideItemsCallback = (Action) Delegate.Combine(this.m_AssetTree.contextClickOutsideItemsCallback, new Action(this.AssetTreeViewContextClickOutsideItems));
+                this.m_AssetTree.contextClickOutsideItemsCallback = (System.Action) Delegate.Combine(this.m_AssetTree.contextClickOutsideItemsCallback, new System.Action(this.AssetTreeViewContextClickOutsideItems));
                 this.m_AssetTree.itemDoubleClickedCallback = (Action<int>) Delegate.Combine(this.m_AssetTree.itemDoubleClickedCallback, new Action<int>(this.AssetTreeItemDoubleClickedCallback));
                 this.m_AssetTree.onGUIRowCallback = (Action<int, Rect>) Delegate.Combine(this.m_AssetTree.onGUIRowCallback, new Action<int, Rect>(this.OnGUIAssetCallback));
                 this.m_AssetTree.dragEndedCallback = (Action<int[], bool>) Delegate.Combine(this.m_AssetTree.dragEndedCallback, new Action<int[], bool>(this.AssetTreeDragEnded));
@@ -2347,7 +2347,7 @@
                 {
                     return pathName;
                 }
-                if (Selection.GetFiltered(typeof(Object), SelectionMode.Assets).Length == 0)
+                if (Selection.GetFiltered(typeof(UnityEngine.Object), UnityEditor.SelectionMode.Assets).Length == 0)
                 {
                     pathName = Path.Combine(this.m_SearchFilter.folders[0], pathName);
                     pathName = pathName.Replace(@"\", "/");

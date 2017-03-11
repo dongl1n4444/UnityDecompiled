@@ -42,7 +42,7 @@
         private static Defaults s_Defaults;
         public bool showDefaultBackground;
 
-        public ReorderableList(IList elements, Type elementType)
+        public ReorderableList(IList elements, System.Type elementType)
         {
             this.drawFooterCallback = null;
             this.m_ActiveElement = -1;
@@ -68,7 +68,7 @@
             this.InitList(serializedObject, elements, null, true, true, true, true);
         }
 
-        public ReorderableList(IList elements, Type elementType, bool draggable, bool displayHeader, bool displayAddButton, bool displayRemoveButton)
+        public ReorderableList(IList elements, System.Type elementType, bool draggable, bool displayHeader, bool displayAddButton, bool displayRemoveButton)
         {
             this.drawFooterCallback = null;
             this.m_ActiveElement = -1;
@@ -596,7 +596,7 @@
                         return this.m_Elements.arraySize;
                     }
                     int arraySize = this.m_Elements.arraySize;
-                    foreach (Object obj2 in this.m_Elements.serializedObject.targetObjects)
+                    foreach (UnityEngine.Object obj2 in this.m_Elements.serializedObject.targetObjects)
                     {
                         SerializedObject obj3 = new SerializedObject(obj2);
                         arraySize = Math.Min(obj3.FindProperty(this.m_Elements.propertyPath).arraySize, arraySize);
@@ -683,12 +683,12 @@
                 }
                 else
                 {
-                    Type elementType = list.list.GetType().GetElementType();
+                    System.Type elementType = list.list.GetType().GetElementType();
                     if (elementType == typeof(string))
                     {
                         list.index = list.list.Add("");
                     }
-                    else if ((elementType != null) && (elementType.GetConstructor(Type.EmptyTypes) == null))
+                    else if ((elementType != null) && (elementType.GetConstructor(System.Type.EmptyTypes) == null))
                     {
                         Debug.LogError("Cannot add element. Type " + elementType.ToString() + " has no default constructor. Implement a default constructor or implement your own add behaviour.");
                     }

@@ -52,7 +52,7 @@
                         EditorSceneManager.OpenScene(paths[k], OpenSceneMode.Additive);
                     }
                     BuildNavMesh();
-                    Object sceneNavMeshData = NavMeshBuilder.sceneNavMeshData;
+                    UnityEngine.Object sceneNavMeshData = NavMeshBuilder.sceneNavMeshData;
                     for (int m = 0; m < paths.Length; m++)
                     {
                         if (EditorSceneManager.OpenScene(paths[m]).IsValid())
@@ -81,9 +81,9 @@
         /// </summary>
         public static bool isRunning { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-        public static Object navMeshSettingsObject { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static UnityEngine.Object navMeshSettingsObject { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-        internal static Object sceneNavMeshData { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        internal static UnityEngine.Object sceneNavMeshData { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
     }
 }
 

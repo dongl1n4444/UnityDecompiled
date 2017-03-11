@@ -4,7 +4,7 @@
     using UnityEngine;
 
     [Obsolete("LightmapSnapshot has been deprecated. Use LightingDataAsset instead (UnityUpgradable) -> LightingDataAsset", true)]
-    public class LightmapSnapshot : Object
+    public class LightmapSnapshot : UnityEngine.Object
     {
     }
 }

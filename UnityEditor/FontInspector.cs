@@ -8,7 +8,7 @@
     {
         public override void OnInspectorGUI()
         {
-            foreach (Object obj2 in base.targets)
+            foreach (UnityEngine.Object obj2 in base.targets)
             {
                 if (obj2.hideFlags == HideFlags.NotEditable)
                 {

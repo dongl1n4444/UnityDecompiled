@@ -10,7 +10,7 @@
     /// <summary>
     /// <para>States are the basic building blocks of a state machine. Each state contains a Motion ( AnimationClip or BlendTree) which will play while the character is in that state. When an event in the game triggers a state transition, the character will be left in a new state whose animation sequence will then take over.</para>
     /// </summary>
-    public sealed class AnimatorState : Object
+    public sealed class AnimatorState : UnityEngine.Object
     {
         private PushUndoIfNeeded undoHandler = new PushUndoIfNeeded(true);
 
@@ -63,7 +63,7 @@
         /// </summary>
         /// <param name="stateMachineBehaviourType"></param>
         [TypeInferenceRule(TypeInferenceRules.TypeReferencedByFirstArgument)]
-        public StateMachineBehaviour AddStateMachineBehaviour(Type stateMachineBehaviourType) => 
+        public StateMachineBehaviour AddStateMachineBehaviour(System.Type stateMachineBehaviourType) => 
             ((StateMachineBehaviour) this.Internal_AddStateMachineBehaviourWithType(stateMachineBehaviourType));
 
         /// <summary>
@@ -172,7 +172,7 @@
             null;
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern ScriptableObject Internal_AddStateMachineBehaviourWithType(Type stateMachineBehaviourType);
+        private extern ScriptableObject Internal_AddStateMachineBehaviourWithType(System.Type stateMachineBehaviourType);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_Create(AnimatorState mono);
         [MethodImpl(MethodImplOptions.InternalCall)]

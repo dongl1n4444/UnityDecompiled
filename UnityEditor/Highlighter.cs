@@ -93,7 +93,7 @@
             active = true;
             if (!SetWindow(windowTitle))
             {
-                Debug.LogWarning("Window " + windowTitle + " not found.");
+                UnityEngine.Debug.LogWarning("Window " + windowTitle + " not found.");
                 return false;
             }
             activeText = text;
@@ -115,7 +115,7 @@
             }
             else
             {
-                Debug.LogWarning("Item " + text + " not found in window " + windowTitle + ".");
+                UnityEngine.Debug.LogWarning("Item " + text + " not found in window " + windowTitle + ".");
                 Stop();
             }
             InternalEditorUtility.RepaintAllViews();
@@ -176,7 +176,7 @@
 
         private static bool SetWindow(string windowTitle)
         {
-            Object[] objArray = Resources.FindObjectsOfTypeAll(typeof(GUIView));
+            UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(GUIView));
             GUIView view = null;
             foreach (GUIView view2 in objArray)
             {
@@ -249,7 +249,7 @@
                 rect = new RectOffset(((int) rect.width) / 2, ((int) rect.width) / 2, ((int) rect.height) / 2, ((int) rect.height) / 2).Add(rect);
             }
             s_RepaintRegion = rect;
-            foreach (GUIView view in Resources.FindObjectsOfTypeAll(typeof(GUIView)))
+            foreach (GUIView view in UnityEngine.Resources.FindObjectsOfTypeAll(typeof(GUIView)))
             {
                 if (view.window == s_View.window)
                 {

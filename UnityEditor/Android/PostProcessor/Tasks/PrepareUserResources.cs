@@ -37,7 +37,7 @@
             File.WriteAllText(Path.Combine(targetDir, AndroidLibraries.ProjectPropertiesFileName), $"android.library=true
 
 target=android-{num}");
-            File.WriteAllText(Path.Combine(targetDir, "AndroidManifest.xml"), $"<?xml version="1.0" encoding="utf-8"?><manifest xmlns:android="http://schemas.android.com/apk/res/android" package="{PlayerSettings.bundleIdentifier}"
+            File.WriteAllText(Path.Combine(targetDir, "AndroidManifest.xml"), $"<?xml version="1.0" encoding="utf-8"?><manifest xmlns:android="http://schemas.android.com/apk/res/android" package="{PlayerSettings.bundleIdentifier}.resources"
 android:versionCode="1" android:versionName="1.0"></manifest>");
             FileUtil.CopyDirectoryRecursiveForPostprocess(sourceDir, path, true);
         }

@@ -117,7 +117,7 @@
             s_Instance = this;
             this.m_Settings = new EditorTestsRunnerSettings("UnityTest.EditorTestsRunnerWindow");
             this.m_FilterSettings.UpdateCounters(Enumerable.Empty<ITestResult>());
-            if ((s_TestEngine.testSuite != null) && (s_TestEngine.testSuite.get_TestCount() != 0))
+            if ((s_TestEngine.testSuite != null) && (s_TestEngine.testSuite.TestCount != 0))
             {
                 if (this.m_TestListTree == null)
                 {
@@ -195,7 +195,7 @@
                     {
                         if (<>f__am$cache1 == null)
                         {
-                            <>f__am$cache1 = l => l.test.testMethod.get_TestName();
+                            <>f__am$cache1 = l => l.test.testMethod.TestName;
                         }
                         this.RunTests(Enumerable.Select<EditorTestResult, TestName>(source, <>f__am$cache1).ToArray<TestName>());
                         GUIUtility.ExitGUI();
@@ -353,7 +353,7 @@
             base.Repaint();
         }
 
-        [MenuItem("Window/Editor Tests Runner", false, 0x7df)]
+        [UnityEditor.MenuItem("Window/Editor Tests Runner", false, 0x7df)]
         public static void ShowEditorTestsRunnerWindow()
         {
             EditorWindow.GetWindow(typeof(EditorTestsRunnerWindow)).Show();
@@ -398,7 +398,7 @@
         private void TestDoubleClickCallback(int nodeId)
         {
             TreeViewItem item = this.m_TestListTree.FindItem(nodeId);
-            Event current = Event.current;
+            UnityEngine.Event current = UnityEngine.Event.current;
             if (current.control || current.command)
             {
                 if (item is TestLineTreeViewItem)

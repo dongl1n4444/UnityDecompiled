@@ -17,7 +17,7 @@
     [CustomEditor(typeof(Material)), CanEditMultipleObjects]
     public class MaterialEditor : Editor
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <forceVisible>k__BackingField;
         /// <summary>
         /// <para>Useful for indenting shader properties that need the same indent as mini texture field.</para>
@@ -62,7 +62,7 @@
         /// <param name="targets"></param>
         public static void ApplyMaterialPropertyDrawers(Material material)
         {
-            Object[] targets = new Object[] { material };
+            UnityEngine.Object[] targets = new UnityEngine.Object[] { material };
             ApplyMaterialPropertyDrawers(targets);
         }
 
@@ -71,7 +71,7 @@
         /// </summary>
         /// <param name="material"></param>
         /// <param name="targets"></param>
-        public static void ApplyMaterialPropertyDrawers(Object[] targets)
+        public static void ApplyMaterialPropertyDrawers(UnityEngine.Object[] targets)
         {
             if ((targets != null) && (targets.Length != 0))
             {
@@ -111,7 +111,7 @@
                 this.m_PreviousGUIColor = GUI.color;
                 if (MaterialAnimationUtility.IsAnimated(prop, this.m_RendererForAnimationMode))
                 {
-                    GUI.color = AnimationMode.animatedPropertyColor;
+                    GUI.color = UnityEditor.AnimationMode.animatedPropertyColor;
                 }
             }
         }
@@ -124,7 +124,7 @@
                 if ((this.m_CustomShaderGUI == null) && !this.IsMaterialEditor(this.m_Shader.customEditor))
                 {
                     object[] args = new object[] { this.m_Shader.name, this.m_Shader.customEditor };
-                    Debug.LogWarningFormat("Could not create a custom UI for the shader '{0}'. The shader has the following: 'CustomEditor = {1}'. Does the custom editor specified include its namespace? And does the class either derive from ShaderGUI or MaterialEditor?", args);
+                    UnityEngine.Debug.LogWarningFormat("Could not create a custom UI for the shader '{0}'. The shader has the following: 'CustomEditor = {1}'. Does the custom editor specified include its namespace? And does the class either derive from ShaderGUI or MaterialEditor?", args);
                 }
             }
         }
@@ -602,13 +602,13 @@
         /// <para>Get shader property information of the passed materials.</para>
         /// </summary>
         /// <param name="mats"></param>
-        public static MaterialProperty[] GetMaterialProperties(Object[] mats)
+        public static MaterialProperty[] GetMaterialProperties(UnityEngine.Object[] mats)
         {
             if (mats == null)
             {
                 throw new ArgumentNullException("mats");
             }
-            if (Array.IndexOf<Object>(mats, null) >= 0)
+            if (Array.IndexOf<UnityEngine.Object>(mats, null) >= 0)
             {
                 throw new ArgumentException("List of materials contains null");
             }
@@ -621,13 +621,13 @@
         /// <param name="mats">Selected materials.</param>
         /// <param name="name">Property name.</param>
         /// <param name="propertyIndex">Property index.</param>
-        public static MaterialProperty GetMaterialProperty(Object[] mats, int propertyIndex)
+        public static MaterialProperty GetMaterialProperty(UnityEngine.Object[] mats, int propertyIndex)
         {
             if (mats == null)
             {
                 throw new ArgumentNullException("mats");
             }
-            if (Array.IndexOf<Object>(mats, null) >= 0)
+            if (Array.IndexOf<UnityEngine.Object>(mats, null) >= 0)
             {
                 throw new ArgumentException("List of materials contains null");
             }
@@ -640,13 +640,13 @@
         /// <param name="mats">Selected materials.</param>
         /// <param name="name">Property name.</param>
         /// <param name="propertyIndex">Property index.</param>
-        public static MaterialProperty GetMaterialProperty(Object[] mats, string name)
+        public static MaterialProperty GetMaterialProperty(UnityEngine.Object[] mats, string name)
         {
             if (mats == null)
             {
                 throw new ArgumentNullException("mats");
             }
-            if (Array.IndexOf<Object>(mats, null) >= 0)
+            if (Array.IndexOf<UnityEngine.Object>(mats, null) >= 0)
             {
                 throw new ArgumentException("List of materials contains null");
             }
@@ -833,7 +833,7 @@
             return textureScale;
         }
 
-        internal static Type GetTextureTypeFromDimension(TextureDimension dim)
+        internal static System.Type GetTextureTypeFromDimension(TextureDimension dim)
         {
             switch (dim)
             {
@@ -936,7 +936,7 @@
             }
             if (flag2)
             {
-                Undo.RecordObject(Object.FindObjectOfType<RenderSettings>(), "Assign Skybox Material");
+                Undo.RecordObject(UnityEngine.Object.FindObjectOfType<RenderSettings>(), "Assign Skybox Material");
                 RenderSettings.skybox = base.target as Material;
                 evt.Use();
             }
@@ -1036,7 +1036,7 @@
                                 continue;
                             }
                         }
-                        Debug.Log("Something is wrong, weird object found: " + current.name);
+                        UnityEngine.Debug.Log("Something is wrong, weird object found: " + current.name);
                     }
                 }
                 finally
@@ -1056,7 +1056,7 @@
                 s_LightIcons[1] = EditorGUIUtility.IconContent("PreMatLight1");
                 s_TimeIcons[0] = EditorGUIUtility.IconContent("PlayButton");
                 s_TimeIcons[1] = EditorGUIUtility.IconContent("PauseButton");
-                Mesh builtinResource = Resources.GetBuiltinResource(typeof(Mesh), "Quad.fbx") as Mesh;
+                Mesh builtinResource = UnityEngine.Resources.GetBuiltinResource(typeof(Mesh), "Quad.fbx") as Mesh;
                 s_Meshes[4] = builtinResource;
                 s_PlaneMesh = builtinResource;
             }
@@ -1067,8 +1067,8 @@
             string str = "UnityEditor." + customEditorName;
             foreach (Assembly assembly in EditorAssemblies.loadedAssemblies)
             {
-                Type[] typesFromAssembly = AssemblyHelper.GetTypesFromAssembly(assembly);
-                foreach (Type type in typesFromAssembly)
+                System.Type[] typesFromAssembly = AssemblyHelper.GetTypesFromAssembly(assembly);
+                foreach (System.Type type in typesFromAssembly)
                 {
                     if ((type.FullName.Equals(customEditorName, StringComparison.Ordinal) || type.FullName.Equals(str, StringComparison.Ordinal)) && typeof(MaterialEditor).IsAssignableFrom(type))
                     {
@@ -1098,7 +1098,7 @@
         public void LightmapEmissionProperty(Rect position, int labelIndent)
         {
             EditorGUI.indentLevel += labelIndent;
-            Object[] targets = base.targets;
+            UnityEngine.Object[] targets = base.targets;
             Material target = (Material) base.target;
             MaterialGlobalIlluminationFlags globalIlluminationInt = GetGlobalIlluminationInt(target.globalIlluminationFlags);
             bool flag = false;
@@ -1278,7 +1278,7 @@
 
         public static Renderer PrepareMaterialPropertiesForAnimationMode(MaterialProperty[] properties, bool isMaterialEditable)
         {
-            bool flag = AnimationMode.InAnimationMode();
+            bool flag = UnityEditor.AnimationMode.InAnimationMode();
             Renderer associatedRenderFromInspector = GetAssociatedRenderFromInspector();
             if (associatedRenderFromInspector != null)
             {
@@ -1361,7 +1361,7 @@
         {
             if (this.m_InsidePropertiesGUI)
             {
-                Debug.LogWarning("PropertiesGUI() is being called recursively. If you want to render the default gui for shader properties then call PropertiesDefaultGUI() instead");
+                UnityEngine.Debug.LogWarning("PropertiesGUI() is being called recursively. If you want to render the default gui for shader properties then call PropertiesDefaultGUI() instead");
                 return false;
             }
             EditorGUI.BeginChangeCheck();
@@ -1497,7 +1497,7 @@
                     num8 = num6;
                 }
                 num8 = Mathf.Clamp(num8, -1, 0x1388);
-                foreach (Object obj2 in base.targets)
+                foreach (UnityEngine.Object obj2 in base.targets)
                 {
                     ((Material) obj2).renderQueue = num8;
                 }
@@ -1507,7 +1507,7 @@
             EditorGUI.showMixedValue = false;
         }
 
-        public sealed override Texture2D RenderStaticPreview(string assetPath, Object[] subAssets, int width, int height)
+        public sealed override Texture2D RenderStaticPreview(string assetPath, UnityEngine.Object[] subAssets, int width, int height)
         {
             if (!ShaderUtil.hardwareSupportsRectRenderTexture)
             {
@@ -1863,7 +1863,7 @@
                 throw new ArgumentException($"The MaterialProperty '{prop.name}' should be of type 'Texture' (its type is '{prop.type})'");
             }
             this.m_DesiredTexdim = prop.textureDimension;
-            Type textureTypeFromDimension = GetTextureTypeFromDimension(this.m_DesiredTexdim);
+            System.Type textureTypeFromDimension = GetTextureTypeFromDimension(this.m_DesiredTexdim);
             bool enabled = GUI.enabled;
             EditorGUI.BeginChangeCheck();
             if ((prop.flags & MaterialProperty.PropFlags.PerRendererData) != MaterialProperty.PropFlags.None)
@@ -2034,7 +2034,7 @@
             this.TexturePropertyMiniThumbnail(controlRectForSingleLine, textureProp, label.text, label.tooltip);
             if (colorProperty.type != MaterialProperty.PropType.Color)
             {
-                Debug.LogError("Assuming MaterialProperty.PropType.Color (was " + colorProperty.type + ")");
+                UnityEngine.Debug.LogError("Assuming MaterialProperty.PropType.Color (was " + colorProperty.type + ")");
                 return controlRectForSingleLine;
             }
             this.BeginAnimatedCheck(colorProperty);
@@ -2147,9 +2147,9 @@
             return new Vector4(vector.x, vector.y, vector2.x, vector2.y);
         }
 
-        private Object TextureValidator(Object[] references, Type objType, SerializedProperty property)
+        private UnityEngine.Object TextureValidator(UnityEngine.Object[] references, System.Type objType, SerializedProperty property)
         {
-            foreach (Object obj2 in references)
+            foreach (UnityEngine.Object obj2 in references)
             {
                 Texture texture = obj2 as Texture;
                 if ((texture != null) && ((texture.dimension == this.m_DesiredTexdim) || (this.m_DesiredTexdim == TextureDimension.Any)))

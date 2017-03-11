@@ -21,7 +21,7 @@
         {
             try
             {
-                return BooParser.ParseFile(fileName).get_Modules().First<Module>().get_Namespace().get_Name();
+                return BooParser.ParseFile(fileName).Modules.First<Module>().Namespace.Name;
             }
             catch
             {

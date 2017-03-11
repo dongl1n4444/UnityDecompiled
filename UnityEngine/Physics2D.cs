@@ -1504,7 +1504,7 @@
             return Raycast(origin, direction, distance, layerMask, negativeInfinity, positiveInfinity);
         }
 
-        [ExcludeFromDocs, RequiredByNativeCode]
+        [RequiredByNativeCode, ExcludeFromDocs]
         public static RaycastHit2D Raycast(Vector2 origin, Vector2 direction, float distance, int layerMask, float minDepth)
         {
             float positiveInfinity = float.PositiveInfinity;

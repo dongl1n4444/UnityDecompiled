@@ -27,7 +27,7 @@
         /// <para>Returns the System.Type object of the class implemented by this script.</para>
         /// </summary>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern Type GetClass();
+        public extern System.Type GetClass();
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern string GetNamespace();
         [MethodImpl(MethodImplOptions.InternalCall)]

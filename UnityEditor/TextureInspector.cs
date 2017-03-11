@@ -4,7 +4,7 @@
     using UnityEngine;
     using UnityEngine.Rendering;
 
-    [CustomEditor(typeof(Texture2D)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(Texture2D))]
     internal class TextureInspector : Editor
     {
         protected SerializedProperty m_Aniso;
@@ -51,8 +51,8 @@
         {
             EditorGUI.BeginChangeCheck();
             EditorGUI.showMixedValue = this.m_FilterMode.hasMultipleDifferentValues;
-            FilterMode intValue = (FilterMode) this.m_FilterMode.intValue;
-            intValue = (FilterMode) EditorGUILayout.EnumPopup(EditorGUIUtility.TempContent("Filter Mode"), intValue, new GUILayoutOption[0]);
+            UnityEngine.FilterMode intValue = (UnityEngine.FilterMode) this.m_FilterMode.intValue;
+            intValue = (UnityEngine.FilterMode) EditorGUILayout.EnumPopup(EditorGUIUtility.TempContent("Filter Mode"), intValue, new GUILayoutOption[0]);
             EditorGUI.showMixedValue = false;
             if (EditorGUI.EndChangeCheck())
             {
@@ -250,8 +250,8 @@ Padded to {gPUWidth}x{gPUHeight}");
                 PreviewGUI.BeginScrollView(r, this.m_Pos, viewRect, "PreHorizontalScrollbar", "PreHorizontalScrollbarThumb");
                 float mipMapBias = target.mipMapBias;
                 TextureUtil.SetMipMapBiasNoDirty(target, mipLevelForRendering - this.Log2(((float) num) / viewRect.width));
-                FilterMode filterMode = target.filterMode;
-                TextureUtil.SetFilterModeNoDirty(target, FilterMode.Point);
+                UnityEngine.FilterMode filterMode = target.filterMode;
+                TextureUtil.SetFilterModeNoDirty(target, UnityEngine.FilterMode.Point);
                 if (this.m_ShowAlpha)
                 {
                     EditorGUI.DrawTextureAlpha(viewRect, target);
@@ -384,7 +384,7 @@ Padded to {gPUWidth}x{gPUHeight}");
             }
         }
 
-        public override Texture2D RenderStaticPreview(string assetPath, Object[] subAssets, int width, int height)
+        public override Texture2D RenderStaticPreview(string assetPath, UnityEngine.Object[] subAssets, int width, int height)
         {
             Texture2D textured2;
             if (!ShaderUtil.hardwareSupportsRectRenderTexture)
@@ -442,7 +442,7 @@ Padded to {gPUWidth}x{gPUHeight}");
             ShaderUtil.rawViewportRect = rawViewportRect;
             if ((materialForSpecialTexture != null) && Unsupported.IsDeveloperBuild())
             {
-                Object.DestroyImmediate(materialForSpecialTexture);
+                UnityEngine.Object.DestroyImmediate(materialForSpecialTexture);
             }
             return textured2;
         }

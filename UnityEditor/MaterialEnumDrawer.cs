@@ -10,7 +10,7 @@
     internal class MaterialEnumDrawer : MaterialPropertyDrawer
     {
         [CompilerGenerated]
-        private static Func<Assembly, IEnumerable<Type>> <>f__am$cache0;
+        private static Func<Assembly, IEnumerable<System.Type>> <>f__am$cache0;
         private readonly GUIContent[] names;
         private readonly int[] values;
 
@@ -21,12 +21,12 @@
             };
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<Assembly, IEnumerable<Type>>(MaterialEnumDrawer.<MaterialEnumDrawer>m__0);
+                <>f__am$cache0 = new Func<Assembly, IEnumerable<System.Type>>(MaterialEnumDrawer.<MaterialEnumDrawer>m__0);
             }
-            Type[] typeArray = Enumerable.SelectMany<Assembly, Type>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache0).ToArray<Type>();
+            System.Type[] typeArray = Enumerable.SelectMany<Assembly, System.Type>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache0).ToArray<System.Type>();
             try
             {
-                Type enumType = Enumerable.FirstOrDefault<Type>(typeArray, new Func<Type, bool>(storey.<>m__0));
+                System.Type enumType = Enumerable.FirstOrDefault<System.Type>(typeArray, new Func<System.Type, bool>(storey.<>m__0));
                 string[] names = Enum.GetNames(enumType);
                 this.names = new GUIContent[names.Length];
                 for (int i = 0; i < names.Length; i++)
@@ -105,7 +105,7 @@
         }
 
         [CompilerGenerated]
-        private static IEnumerable<Type> <MaterialEnumDrawer>m__0(Assembly x) => 
+        private static IEnumerable<System.Type> <MaterialEnumDrawer>m__0(Assembly x) => 
             AssemblyHelper.GetTypesFromAssembly(x);
 
         public override float GetPropertyHeight(MaterialProperty prop, string label, MaterialEditor editor)
@@ -143,7 +143,7 @@
         {
             internal string enumName;
 
-            internal bool <>m__0(Type x) => 
+            internal bool <>m__0(System.Type x) => 
                 (x.IsSubclassOf(typeof(Enum)) && ((x.Name == this.enumName) || (x.FullName == this.enumName)));
         }
     }

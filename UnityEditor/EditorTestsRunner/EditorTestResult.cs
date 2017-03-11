@@ -38,9 +38,9 @@
                 builder.AppendFormat(" [{0}s]", this.duration.ToString("##0.###"));
             }
             builder.AppendLine();
-            if ((this.m_Test != null) && !string.IsNullOrEmpty(this.m_Test.testMethod.get_Description()))
+            if ((this.m_Test != null) && !string.IsNullOrEmpty(this.m_Test.testMethod.Description))
             {
-                builder.AppendFormat("({0})\n", this.m_Test.testMethod.get_Description().Trim());
+                builder.AppendFormat("({0})\n", this.m_Test.testMethod.Description.Trim());
             }
             if (!string.IsNullOrEmpty(this.message))
             {
@@ -69,7 +69,7 @@
             {
                 return false;
             }
-            if (!options.showIgnored && ((this.m_Test.testMethod.get_RunState() == 4) || (this.executed && (this.test.testMethod.get_RunState() == 3))))
+            if (!options.showIgnored && ((this.m_Test.testMethod.RunState == RunState.Ignored) || (this.executed && (this.test.testMethod.RunState == RunState.Skipped))))
             {
                 return false;
             }

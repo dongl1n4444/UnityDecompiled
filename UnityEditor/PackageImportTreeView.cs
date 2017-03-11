@@ -56,7 +56,7 @@
         {
             if ((folder.item != null) && !folder.item.isFolder)
             {
-                Debug.LogError("Should be a folder item!");
+                UnityEngine.Debug.LogError("Should be a folder item!");
             }
             if (!folder.hasChildren)
             {
@@ -531,7 +531,7 @@
 
         private class PackageImportTreeViewItem : TreeViewItem
         {
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private ImportPackageItem <item>k__BackingField;
             private PackageImportTreeView.EnabledState m_EnableState;
 

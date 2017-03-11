@@ -6,7 +6,7 @@
     using UnityEngine.Events;
     using UnityEngine.Rendering;
 
-    [CustomEditor(typeof(GraphicsSettings))]
+    [CustomEditor(typeof(UnityEditor.GraphicsSettings))]
     internal class GraphicsSettingsInspector : Editor
     {
         private Editor m_AlwaysIncludedShadersEditor;
@@ -78,8 +78,8 @@
             }
         }
 
-        private Object graphicsSettings =>
-            GraphicsSettings.GetGraphicsSettings();
+        private UnityEngine.Object graphicsSettings =>
+            UnityEngine.Rendering.GraphicsSettings.GetGraphicsSettings();
 
         private Editor shaderPreloadEditor
         {

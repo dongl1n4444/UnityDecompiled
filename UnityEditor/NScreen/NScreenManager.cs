@@ -121,7 +121,7 @@
         {
             if (!EditorApplication.isPaused)
             {
-                if ((!EditorApplication.isPlaying && EditorApplication.isPlayingOrWillChangePlaymode) && ((Resources.FindObjectsOfTypeAll<RemoteGame>().Length > 0) && ScriptableSingleton<NScreenManager>.instance.BuildOnPlay))
+                if ((!EditorApplication.isPlaying && EditorApplication.isPlayingOrWillChangePlaymode) && ((UnityEngine.Resources.FindObjectsOfTypeAll<RemoteGame>().Length > 0) && ScriptableSingleton<NScreenManager>.instance.BuildOnPlay))
                 {
                     Build();
                 }
@@ -142,7 +142,7 @@
 
         internal static void RepaintAllGameViews()
         {
-            foreach (RemoteGame game in Resources.FindObjectsOfTypeAll<RemoteGame>())
+            foreach (RemoteGame game in UnityEngine.Resources.FindObjectsOfTypeAll<RemoteGame>())
             {
                 game.Repaint();
                 game.GameViewAspectWasChanged();
@@ -157,7 +157,7 @@
         internal static void StartAll()
         {
             ScriptableSingleton<NScreenManager>.instance.ResetIds();
-            foreach (RemoteGame game in Resources.FindObjectsOfTypeAll<RemoteGame>())
+            foreach (RemoteGame game in UnityEngine.Resources.FindObjectsOfTypeAll<RemoteGame>())
             {
                 game.id = ScriptableSingleton<NScreenManager>.instance.GetNewId();
                 game.StartGame();
@@ -166,7 +166,7 @@
 
         internal static void StopAll()
         {
-            foreach (RemoteGame game in Resources.FindObjectsOfTypeAll<RemoteGame>())
+            foreach (RemoteGame game in UnityEngine.Resources.FindObjectsOfTypeAll<RemoteGame>())
             {
                 game.StopGame();
             }

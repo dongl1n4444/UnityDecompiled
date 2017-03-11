@@ -8,7 +8,7 @@
 
     internal class DestroyMatchRequest : Request
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private NetworkID <networkId>k__BackingField;
 
         public override bool IsValid() => 

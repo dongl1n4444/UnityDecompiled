@@ -611,7 +611,7 @@
 
         private void UpdateSelectedObject(bool singleClick, bool doubleClick)
         {
-            Object gameObject = EditorUtility.InstanceIDToObject(this.m_SelectedInstanceId);
+            UnityEngine.Object gameObject = EditorUtility.InstanceIDToObject(this.m_SelectedInstanceId);
             if (gameObject is Component)
             {
                 gameObject = ((Component) gameObject).gameObject;
@@ -624,7 +624,7 @@
                 }
                 else if (doubleClick)
                 {
-                    Selection.objects = new List<Object> { gameObject }.ToArray();
+                    Selection.objects = new List<UnityEngine.Object> { gameObject }.ToArray();
                 }
             }
         }

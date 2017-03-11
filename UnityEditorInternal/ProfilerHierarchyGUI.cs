@@ -260,7 +260,7 @@
                             if (this.m_DetailViewSelectedProperty != str2)
                             {
                                 this.m_DetailViewSelectedProperty = str2;
-                                Object gameObject = EditorUtility.InstanceIDToObject(property.instanceIDs[0]);
+                                UnityEngine.Object gameObject = EditorUtility.InstanceIDToObject(property.instanceIDs[0]);
                                 if (gameObject is Component)
                                 {
                                     gameObject = ((Component) gameObject).gameObject;
@@ -624,10 +624,10 @@
         private static void SelectObjectsInHierarchyView(ProfilerProperty property)
         {
             int[] instanceIDs = property.instanceIDs;
-            List<Object> list = new List<Object>();
+            List<UnityEngine.Object> list = new List<UnityEngine.Object>();
             foreach (int num in instanceIDs)
             {
-                Object item = EditorUtility.InstanceIDToObject(num);
+                UnityEngine.Object item = EditorUtility.InstanceIDToObject(num);
                 Component component = item as Component;
                 if (component != null)
                 {

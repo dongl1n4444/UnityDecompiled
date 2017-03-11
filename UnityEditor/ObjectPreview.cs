@@ -14,7 +14,7 @@
         private const int kPreviewLabelPadding = 5;
         private const int kPreviewMinSize = 0x37;
         protected int m_ReferenceTargetIndex;
-        protected Object[] m_Targets;
+        protected UnityEngine.Object[] m_Targets;
         private static Styles s_Styles;
 
         private static float AbsRatioDiff(float x, float y) => 
@@ -29,7 +29,7 @@
             DrawPreview(this, previewArea, this.m_Targets);
         }
 
-        internal static void DrawPreview(IPreviewable defaultPreview, Rect previewArea, Object[] targets)
+        internal static void DrawPreview(IPreviewable defaultPreview, Rect previewArea, UnityEngine.Object[] targets)
         {
             if (s_Styles == null)
             {
@@ -67,7 +67,7 @@
                     Rect position = new Rect(rect.x + (((i % numArray[0]) * rect.width) / ((float) numArray[0])), rect.y + (((i / numArray[0]) * rect.height) / ((float) numArray[1])), vector.x, vector.y);
                     if (flag2 && position.Contains(Event.current.mousePosition))
                     {
-                        Selection.objects = new Object[] { defaultPreview.target };
+                        Selection.objects = new UnityEngine.Object[] { defaultPreview.target };
                     }
                     position.height -= 12f;
                     Rect rect3 = new Rect(position.x + ((position.width - a) * 0.5f), position.y + ((position.height - a) * 0.5f), a, a);
@@ -180,7 +180,7 @@
         /// <para>Called when the Preview gets created with the objects being previewed.</para>
         /// </summary>
         /// <param name="targets">The objects being previewed.</param>
-        public virtual void Initialize(Object[] targets)
+        public virtual void Initialize(UnityEngine.Object[] targets)
         {
             this.m_ReferenceTargetIndex = 0;
             this.m_Targets = targets;
@@ -243,7 +243,7 @@
         /// <summary>
         /// <para>The object currently being previewed.</para>
         /// </summary>
-        public virtual Object target =>
+        public virtual UnityEngine.Object target =>
             this.m_Targets[this.m_ReferenceTargetIndex];
 
         private class Styles

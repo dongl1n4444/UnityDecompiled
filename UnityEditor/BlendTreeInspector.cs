@@ -12,7 +12,7 @@
     using UnityEngine;
     using UnityEngine.Events;
 
-    [CustomEditor(typeof(BlendTree))]
+    [CustomEditor(typeof(UnityEditor.Animations.BlendTree))]
     internal class BlendTreeInspector : Editor
     {
         [CompilerGenerated]
@@ -33,9 +33,9 @@
         private static GetFloatFromMotion <>f__am$cache7;
         [CompilerGenerated]
         private static GetFloatFromMotion <>f__am$cache8;
-        internal static Action<BlendTree> blendParameterInputChanged = null;
+        internal static Action<UnityEditor.Animations.BlendTree> blendParameterInputChanged = null;
         internal static Animator currentAnimator = null;
-        internal static AnimatorController currentController = null;
+        internal static UnityEditor.Animations.AnimatorController currentController = null;
         private int kNumCirclePoints = 20;
         private const int kVisResolution = 0x40;
         private readonly int m_BlendAnimationID = "BlendAnimationIDHash".GetHashCode();
@@ -43,7 +43,7 @@
         private SerializedProperty m_BlendParameterY;
         private Rect m_BlendRect;
         private Texture2D m_BlendTex = null;
-        private BlendTree m_BlendTree;
+        private UnityEditor.Animations.BlendTree m_BlendTree;
         private SerializedProperty m_BlendType;
         private SerializedProperty m_Childs;
         private readonly int m_ClickDragFloatID = "ClickDragFloatIDHash".GetHashCode();
@@ -64,7 +64,7 @@
         private string m_WarningMessage = null;
         private float[] m_Weights;
         private List<Texture2D> m_WeightTexs = new List<Texture2D>();
-        internal static BlendTree parentBlendTree = null;
+        internal static UnityEditor.Animations.BlendTree parentBlendTree = null;
         private static float s_ClickDragFloatDistance;
         private static bool s_ClickDragFloatDragged;
         private bool s_DraggingPoint = false;
@@ -72,7 +72,7 @@
 
         private void AddBlendTreeCallback()
         {
-            BlendTree tree = this.m_BlendTree.CreateBlendTreeChild((float) 0f);
+            UnityEditor.Animations.BlendTree tree = this.m_BlendTree.CreateBlendTreeChild((float) 0f);
             int length = this.m_BlendTree.children.Length;
             if (currentController != null)
             {
@@ -601,14 +601,14 @@
             return value;
         }
 
-        private List<string> CollectParameters(AnimatorController controller)
+        private List<string> CollectParameters(UnityEditor.Animations.AnimatorController controller)
         {
             List<string> list = new List<string>();
             if (controller != null)
             {
-                foreach (AnimatorControllerParameter parameter in controller.parameters)
+                foreach (UnityEngine.AnimatorControllerParameter parameter in controller.parameters)
                 {
-                    if (parameter.type == AnimatorControllerParameterType.Float)
+                    if (parameter.type == UnityEngine.AnimatorControllerParameterType.Float)
                     {
                         list.Add(parameter.name);
                     }
@@ -733,7 +733,7 @@
             num4 /= (float) numArray.Length;
             if (num4 < Mathf.Epsilon)
             {
-                Debug.LogWarning("Could not compute threshold for '" + this.m_BlendTree.name + "' there is not enough data");
+                UnityEngine.Debug.LogWarning("Could not compute threshold for '" + this.m_BlendTree.name + "' there is not enough data");
                 base.m_SerializedObject.Update();
             }
             else
@@ -759,7 +759,7 @@
                     {
                         if (objectReferenceValue.apparentSpeed < Mathf.Epsilon)
                         {
-                            Debug.LogWarning("Could not adjust time scale for " + objectReferenceValue.name + " because it has no speed");
+                            UnityEngine.Debug.LogWarning("Could not adjust time scale for " + objectReferenceValue.name + " because it has no speed");
                         }
                         else
                         {
@@ -768,7 +768,7 @@
                     }
                     else
                     {
-                        Debug.LogWarning("Could not adjust time scale for " + objectReferenceValue.name + " because it is not a muscle clip");
+                        UnityEngine.Debug.LogWarning("Could not adjust time scale for " + objectReferenceValue.name + " because it is not a muscle clip");
                     }
                 }
             }
@@ -822,11 +822,11 @@
             Motion motion = this.m_BlendTree.children[index].motion;
             EditorGUI.PropertyField(rowRects[num], property, GUIContent.none);
             num++;
-            if (EditorGUI.EndChangeCheck() && ((motion is BlendTree) && (motion != (property.objectReferenceValue as Motion))))
+            if (EditorGUI.EndChangeCheck() && ((motion is UnityEditor.Animations.BlendTree) && (motion != (property.objectReferenceValue as Motion))))
             {
                 if (EditorUtility.DisplayDialog("Changing BlendTree will delete previous BlendTree", "You cannot undo this action.", "Delete", "Cancel"))
                 {
-                    MecanimUtilities.DestroyBlendTreeRecursive(motion as BlendTree);
+                    MecanimUtilities.DestroyBlendTreeRecursive(motion as UnityEditor.Animations.BlendTree);
                 }
                 else
                 {
@@ -1076,7 +1076,7 @@
             return numArray;
         }
 
-        internal static float GetParameterValue(Animator animator, BlendTree blendTree, string parameterName)
+        internal static float GetParameterValue(Animator animator, UnityEditor.Animations.BlendTree blendTree, string parameterName)
         {
             if (((EditorApplication.isPlaying && (animator != null)) && animator.enabled) && animator.gameObject.activeInHierarchy)
             {
@@ -1125,7 +1125,7 @@
             }
             if (this.m_BlendTree == null)
             {
-                this.m_BlendTree = base.target as BlendTree;
+                this.m_BlendTree = base.target as UnityEditor.Animations.BlendTree;
             }
             if (styles == null)
             {
@@ -1192,15 +1192,15 @@
             }
             if (this.m_VisInstance != null)
             {
-                Object.DestroyImmediate(this.m_VisInstance);
+                UnityEngine.Object.DestroyImmediate(this.m_VisInstance);
             }
             for (int i = 0; i < this.m_WeightTexs.Count; i++)
             {
-                Object.DestroyImmediate(this.m_WeightTexs[i]);
+                UnityEngine.Object.DestroyImmediate(this.m_WeightTexs[i]);
             }
             if (this.m_BlendTex != null)
             {
-                Object.DestroyImmediate(this.m_BlendTex);
+                UnityEngine.Object.DestroyImmediate(this.m_BlendTex);
             }
         }
 
@@ -1249,7 +1249,7 @@
             EditorGUI.showMixedValue = false;
             if (EditorGUI.EndChangeCheck() && !string.IsNullOrEmpty(str))
             {
-                foreach (Object obj2 in base.targets)
+                foreach (UnityEngine.Object obj2 in base.targets)
                 {
                     ObjectNames.SetNameSmart(obj2, str);
                 }
@@ -1481,7 +1481,7 @@
             base.serializedObject.ApplyModifiedProperties();
         }
 
-        internal static void SetParameterValue(Animator animator, BlendTree blendTree, BlendTree parentBlendTree, string parameterName, float parameterValue)
+        internal static void SetParameterValue(Animator animator, UnityEditor.Animations.BlendTree blendTree, UnityEditor.Animations.BlendTree parentBlendTree, string parameterName, float parameterValue)
         {
             if (((EditorApplication.isPlaying && (animator != null)) && animator.enabled) && animator.gameObject.activeInHierarchy)
             {
@@ -1589,7 +1589,7 @@
             }
             while (this.m_WeightTexs.Count > activeMotionPositions.Length)
             {
-                Object.DestroyImmediate(this.m_WeightTexs[this.m_WeightTexs.Count - 1]);
+                UnityEngine.Object.DestroyImmediate(this.m_WeightTexs[this.m_WeightTexs.Count - 1]);
                 this.m_WeightTexs.RemoveAt(this.m_WeightTexs.Count - 1);
             }
             if (GUIUtility.hotControl == 0)

@@ -9,13 +9,13 @@
     {
         [SerializeField]
         private bool m_BoolArgument;
-        [SerializeField, FormerlySerializedAs("floatArgument")]
+        [FormerlySerializedAs("floatArgument"), SerializeField]
         private float m_FloatArgument;
-        [FormerlySerializedAs("intArgument"), SerializeField]
+        [SerializeField, FormerlySerializedAs("intArgument")]
         private int m_IntArgument;
-        [FormerlySerializedAs("objectArgument"), SerializeField]
+        [SerializeField, FormerlySerializedAs("objectArgument")]
         private UnityEngine.Object m_ObjectArgument;
-        [SerializeField, FormerlySerializedAs("objectArgumentAssemblyTypeName")]
+        [FormerlySerializedAs("objectArgumentAssemblyTypeName"), SerializeField]
         private string m_ObjectArgumentAssemblyTypeName;
         [FormerlySerializedAs("stringArgument"), SerializeField]
         private string m_StringArgument;

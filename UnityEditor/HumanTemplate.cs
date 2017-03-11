@@ -4,7 +4,7 @@
     using System.Runtime.CompilerServices;
     using UnityEngine;
 
-    public sealed class HumanTemplate : Object
+    public sealed class HumanTemplate : UnityEngine.Object
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern HumanTemplate();

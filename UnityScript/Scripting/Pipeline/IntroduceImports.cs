@@ -17,14 +17,14 @@
 
         public void AddImports(string[] imports)
         {
-            foreach (Module module in this.get_CompileUnit().get_Modules())
+            foreach (Module module in this.CompileUnit.Modules)
             {
                 int index = 0;
                 string[] strArray = imports;
                 int length = strArray.Length;
                 while (index < length)
                 {
-                    module.get_Imports().Add(new Import(strArray[index]));
+                    module.Imports.Add(new Import(strArray[index]));
                     index++;
                 }
             }

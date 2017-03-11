@@ -125,7 +125,7 @@
 
         public static void Show(string publisher)
         {
-            MetroCreateTestCertificateWindow[] windowArray = (MetroCreateTestCertificateWindow[]) Resources.FindObjectsOfTypeAll(typeof(MetroCreateTestCertificateWindow));
+            MetroCreateTestCertificateWindow[] windowArray = (MetroCreateTestCertificateWindow[]) UnityEngine.Resources.FindObjectsOfTypeAll(typeof(MetroCreateTestCertificateWindow));
             MetroCreateTestCertificateWindow window = (windowArray.Length <= 0) ? ScriptableObject.CreateInstance<MetroCreateTestCertificateWindow>() : windowArray[0];
             window.path = Path.Combine(Application.dataPath, "WSATestCertificate.pfx").Replace('\\', '/');
             window.publisher = publisher;

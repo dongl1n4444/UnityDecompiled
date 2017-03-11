@@ -68,7 +68,7 @@
             if (flag)
             {
                 builder.AppendLine("Please fix plugin settings and try again.");
-                Debug.LogError(builder.ToString());
+                UnityEngine.Debug.LogError(builder.ToString());
             }
             return flag;
         }
@@ -155,17 +155,17 @@
 
         internal class Property
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private object <defaultValue>k__BackingField;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private string <key>k__BackingField;
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private GUIContent <name>k__BackingField;
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private string <platformName>k__BackingField;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-            private Type <type>k__BackingField;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            private System.Type <type>k__BackingField;
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private object <value>k__BackingField;
 
             internal Property(string name, string key, object defaultValue, string platformName) : this(new GUIContent(name), key, defaultValue, platformName)
@@ -218,7 +218,7 @@
                     this.value = this.defaultValue;
                     if (!string.IsNullOrEmpty(platformData))
                     {
-                        Debug.LogWarning(string.Concat(new object[] { "Failed to parse value ('", platformData, "') for ", this.key, ", platform: ", this.platformName, ", type: ", this.type, ". Default value will be set '", this.defaultValue, "'" }));
+                        UnityEngine.Debug.LogWarning(string.Concat(new object[] { "Failed to parse value ('", platformData, "') for ", this.key, ", platform: ", this.platformName, ", type: ", this.type, ". Default value will be set '", this.defaultValue, "'" }));
                     }
                 }
             }
@@ -231,7 +231,7 @@
 
             internal string platformName { get; set; }
 
-            internal Type type { get; set; }
+            internal System.Type type { get; set; }
 
             internal object value { get; set; }
         }

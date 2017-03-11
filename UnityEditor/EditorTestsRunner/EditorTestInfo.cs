@@ -26,32 +26,32 @@
 
         public EditorTestInfo(ITest testInfo)
         {
-            this.id = testInfo.get_TestName().get_TestID().ToString();
-            this.fullName = testInfo.get_TestName().get_FullName();
+            this.id = testInfo.TestName.TestID.ToString();
+            this.fullName = testInfo.TestName.FullName;
         }
 
         public EditorTestInfo(TestMethod testMethod)
         {
             this.methodName = testMethod.get_MethodName();
-            this.fullMethodName = testMethod.get_Method().ToString();
-            this.className = testMethod.get_FixtureType().Name;
+            this.fullMethodName = testMethod.Method.ToString();
+            this.className = testMethod.FixtureType.Name;
             this.fullClassName = testMethod.get_ClassName();
-            this.Namespace = testMethod.get_Method().ReflectedType.Namespace;
-            this.fullName = testMethod.get_TestName().get_FullName();
+            this.Namespace = testMethod.Method.ReflectedType.Namespace;
+            this.fullName = testMethod.TestName.FullName;
             this.paramName = ExtractMethodCallParametersString(this.fullName);
-            this.id = testMethod.get_TestName().get_TestID().GetHashCode().ToString();
-            List<string> list = testMethod.get_Categories().Cast<string>().ToList<string>();
-            if (testMethod.get_Parent().get_Categories().Count > 0)
+            this.id = testMethod.TestName.TestID.GetHashCode().ToString();
+            List<string> list = testMethod.Categories.Cast<string>().ToList<string>();
+            if (testMethod.Parent.Categories.Count > 0)
             {
-                list.AddRange(testMethod.get_Parent().get_Categories().Cast<string>());
+                list.AddRange(testMethod.Parent.Categories.Cast<string>());
             }
-            if (testMethod.get_Parent() is ParameterizedMethodSuite)
+            if (testMethod.Parent is ParameterizedMethodSuite)
             {
-                list.AddRange(testMethod.get_Parent().get_Parent().get_Categories().Cast<string>());
+                list.AddRange(testMethod.Parent.Parent.Categories.Cast<string>());
             }
             this.categories = list.ToArray();
             this.assemblyPath = this.GetAssemblyPath(testMethod);
-            this.isIgnored = testMethod.get_RunState() == 4;
+            this.isIgnored = testMethod.RunState == RunState.Ignored;
         }
 
         private static string ExtractMethodCallParametersString(string methodFullName)
@@ -67,16 +67,16 @@
 
         private string GetAssemblyPath(TestMethod testMethod)
         {
-            Test test = testMethod;
-            while (test != null)
+            Test parent = testMethod;
+            while (parent != null)
             {
-                test = test.get_Parent();
-                if (test is TestAssembly)
+                parent = parent.Parent;
+                if (parent is TestAssembly)
                 {
-                    string path = (test as TestAssembly).get_TestName().get_FullName();
-                    if (File.Exists(path))
+                    string fullName = (parent as TestAssembly).TestName.FullName;
+                    if (File.Exists(fullName))
                     {
-                        return path;
+                        return fullName;
                     }
                 }
             }

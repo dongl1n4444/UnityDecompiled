@@ -20,7 +20,7 @@
         [CompilerGenerated]
         private static Func<KeyValuePair<VisualStudioVersion, string>, string> <>f__am$cache1;
         [CompilerGenerated]
-        private static Action <>f__mg$cache0;
+        private static System.Action <>f__mg$cache0;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private static Dictionary<VisualStudioVersion, string> <InstalledVisualStudios>k__BackingField;
         private static bool s_AlreadySyncedThisDomainReload;
@@ -30,9 +30,9 @@
         {
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Action(SyncVS.SyncVisualStudioProjectIfItAlreadyExists);
+                <>f__mg$cache0 = new System.Action(SyncVS.SyncVisualStudioProjectIfItAlreadyExists);
             }
-            EditorUserBuildSettings.activeBuildTargetChanged = (Action) Delegate.Combine(EditorUserBuildSettings.activeBuildTargetChanged, <>f__mg$cache0);
+            EditorUserBuildSettings.activeBuildTargetChanged = (System.Action) Delegate.Combine(EditorUserBuildSettings.activeBuildTargetChanged, <>f__mg$cache0);
             try
             {
                 InstalledVisualStudios = GetInstalledVisualStudios() as Dictionary<VisualStudioVersion, string>;
@@ -300,7 +300,7 @@
             }
         }
 
-        [MenuItem("Assets/Open C# Project")]
+        [UnityEditor.MenuItem("Assets/Open C# Project")]
         private static void SyncAndOpenSolution()
         {
             SyncSolution();

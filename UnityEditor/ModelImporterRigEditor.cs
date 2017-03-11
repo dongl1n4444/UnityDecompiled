@@ -10,7 +10,7 @@
 
     internal class ModelImporterRigEditor : AssetImporterInspector
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private int <rootIndex>k__BackingField;
         private const float kDeleteWidth = 17f;
         private SerializedProperty m_AnimationCompression;
@@ -74,7 +74,7 @@
                     Animator component = original.GetComponent<Animator>();
                     if ((component != null) && !component.hasTransformHierarchy)
                     {
-                        original = Object.Instantiate<GameObject>(original);
+                        original = UnityEngine.Object.Instantiate<GameObject>(original);
                         AnimatorUtility.DeoptimizeTransformHierarchy(original);
                     }
                     Transform transform = original.transform.Find(this.m_RootMotionBoneList[this.rootIndex].text);
@@ -97,14 +97,14 @@
                     bool flag2 = (animator2 != null) && !animator2.hasTransformHierarchy;
                     if (flag2)
                     {
-                        obj7 = Object.Instantiate<GameObject>(obj7);
+                        obj7 = UnityEngine.Object.Instantiate<GameObject>(obj7);
                         AnimatorUtility.DeoptimizeTransformHierarchy(obj7);
                     }
                     AvatarSetupTool.AutoSetupOnInstance(obj7, modelImporterSerializedObject);
                     this.m_IsBiped = AvatarBipedMapper.IsBiped(obj7.transform, this.m_BipedMappingReport);
                     if (flag2)
                     {
-                        Object.DestroyImmediate(obj7);
+                        UnityEngine.Object.DestroyImmediate(obj7);
                     }
                     modelImporterSerializedObject.ApplyModifiedProperties();
                 }
@@ -226,7 +226,7 @@
                         }
                         else
                         {
-                            Debug.Log("Cannot configure avatar, inspector is locked");
+                            UnityEngine.Debug.Log("Cannot configure avatar, inspector is locked");
                         }
                     }
                 }
@@ -273,7 +273,7 @@
 
         private static bool DoesHumanDescriptionMatch(ModelImporter importer, ModelImporter otherImporter)
         {
-            Object[] objs = new Object[] { importer, otherImporter };
+            UnityEngine.Object[] objs = new UnityEngine.Object[] { importer, otherImporter };
             SerializedObject obj2 = new SerializedObject(objs) {
                 maxArraySizeForMultiEditing = Math.Max(importer.transformPaths.Length, otherImporter.transformPaths.Length)
             };

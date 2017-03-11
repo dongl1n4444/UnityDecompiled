@@ -42,8 +42,7 @@
             this._context = context;
             IType type = tss.Map(this._context.GetType());
             this._contextNamespace = type;
-            IEntity entity1 = type.get_DeclaringEntity();
-            if (entity1 <= null)
+            if (type.DeclaringEntity <= null)
             {
             }
             this._scriptContainerNamespace = NullNamespace.Default;
@@ -68,7 +67,7 @@
             int length = objArray.Length;
             while (num < length)
             {
-                mapper = $adaptor$__EvaluationContextNamespace_Resolve$callable15$92_13__$EntityMapper$5.Adapt(new __EvaluationContextNamespace_Resolve$callable15$92_13__(new $Resolve$closure$211(objArray, num, this).Invoke));
+                mapper = $adaptor$__EvaluationContextNamespace_Resolve$callable15$92_13__$EntityMapper$5.Adapt(new __EvaluationContextNamespace_Resolve$callable15$92_13__(new $Resolve$closure$211(num, objArray, this).Invoke));
                 type = this._tss.Map(objArray[num].GetType());
                 num++;
             }
@@ -84,7 +83,7 @@
         }
 
         public override Boo.Lang.Compiler.TypeSystem.EntityType EntityType =>
-            0x1000;
+            Boo.Lang.Compiler.TypeSystem.EntityType.Namespace;
 
         public override string FullName =>
             this.Name;
@@ -98,19 +97,19 @@
         [Serializable]
         internal class $Resolve$closure$211
         {
-            internal int $$234$277;
-            internal object[] $$235$276;
+            internal int $$234$276;
+            internal object[] $$235$277;
             internal EvaluationContextNamespace $this$278;
 
-            public $Resolve$closure$211(object[] $$235$276, int $$234$277, EvaluationContextNamespace $this$278)
+            public $Resolve$closure$211(int $$234$276, object[] $$235$277, EvaluationContextNamespace $this$278)
             {
-                this.$$235$276 = $$235$276;
-                this.$$234$277 = $$234$277;
+                this.$$234$276 = $$234$276;
+                this.$$235$277 = $$235$277;
                 this.$this$278 = $this$278;
             }
 
             public ActiveScriptEntity Invoke(IEntity entity) => 
-                new ActiveScriptEntity(this.$this$278._context.GetActiveScriptId(this.$$235$276[this.$$234$277]), (IMember) entity);
+                new ActiveScriptEntity(this.$this$278._context.GetActiveScriptId(this.$$235$277[this.$$234$276]), (IMember) entity);
         }
 
         [Serializable, CompilerGenerated]

@@ -16,9 +16,9 @@
         private static Func<string, string> <>f__am$cache0;
         [CompilerGenerated]
         private static Func<JSONValue, string> <>f__am$cache1;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private static string <Name>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private static string <Name>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static List<string> <OpenDocuments>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static int <ProcessId>k__BackingField;
@@ -64,7 +64,7 @@
             }
             catch (Exception exception)
             {
-                Logger.Log(exception);
+                UnityEditor.RestService.Logger.Log(exception);
                 Clear();
                 Save();
             }

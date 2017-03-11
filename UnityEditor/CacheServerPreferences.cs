@@ -107,13 +107,13 @@
                 {
                     EditorGUILayout.HelpBox("Connection successful.", MessageType.Info, false);
                 }
-                goto Label_041C;
+                goto Label_04B9;
             Label_0212:
                 EditorGUILayout.HelpBox("Connection failed.", MessageType.Warning, false);
-                goto Label_041C;
+                goto Label_04B9;
             Label_0223:
                 GUILayout.Space(44f);
-                goto Label_041C;
+                goto Label_04B9;
             Label_0238:
                 if (s_CacheServerMode == CacheServerMode.Local)
                 {
@@ -149,30 +149,48 @@
                     {
                         s_CachePath = "";
                     }
-                    GUILayoutOption[] optionArray2 = new GUILayoutOption[] { GUILayout.Width(120f) };
-                    if (GUILayout.Button(Styles.cleanCache, optionArray2))
+                    if (LocalCacheServer.CheckCacheLocationExists())
                     {
-                        LocalCacheServer.Clear();
-                        s_LocalCacheServerUsedSize = 0L;
+                        GUIContent label = EditorGUIUtility.TextContent("Cache size is unknown");
+                        if (s_LocalCacheServerUsedSize != -1L)
+                        {
+                            label = EditorGUIUtility.TextContent("Cache size is " + EditorUtility.FormatBytes(s_LocalCacheServerUsedSize));
+                        }
+                        GUILayout.BeginHorizontal(new GUILayoutOption[0]);
+                        GUIStyle miniButton = EditorStyles.miniButton;
+                        EditorGUILayout.PrefixLabel(label, miniButton);
+                        if (EditorGUI.Button(GUILayoutUtility.GetRect(GUIContent.none, miniButton), Styles.enumerateCache, miniButton))
+                        {
+                            s_LocalCacheServerUsedSize = !LocalCacheServer.CheckCacheLocationExists() ? 0L : FileUtil.GetDirectorySize(LocalCacheServer.GetCacheLocation());
+                        }
+                        GUILayout.EndHorizontal();
+                        GUILayout.BeginHorizontal(new GUILayoutOption[0]);
+                        EditorGUILayout.PrefixLabel(EditorGUIUtility.blankContent, miniButton);
+                        if (EditorGUI.Button(GUILayoutUtility.GetRect(GUIContent.none, miniButton), Styles.cleanCache, miniButton))
+                        {
+                            LocalCacheServer.Clear();
+                            s_LocalCacheServerUsedSize = 0L;
+                        }
+                        GUILayout.EndHorizontal();
                     }
-                    if (s_LocalCacheServerUsedSize == -1L)
+                    else
                     {
-                        s_LocalCacheServerUsedSize = FileUtil.GetDirectorySize(LocalCacheServer.GetCacheLocation());
+                        EditorGUILayout.HelpBox("Local cache directory does not exist - please check that you can access the cache folder and are able to write to it", MessageType.Warning, false);
+                        s_LocalCacheServerUsedSize = -1L;
                     }
-                    GUILayout.Label(Styles.cacheSizeIs.text + " " + EditorUtility.FormatBytes(s_LocalCacheServerUsedSize), new GUILayoutOption[0]);
                     GUILayout.Label(Styles.cacheFolderLocation.text + ":", new GUILayoutOption[0]);
                     GUILayout.Label(LocalCacheServer.GetCacheLocation(), s_Constants.cacheFolderLocation, new GUILayoutOption[0]);
                 }
-            Label_041C:
+            Label_04B9:
                 if (EditorGUI.EndChangeCheck())
                 {
                     s_HasPendingChanges = true;
                 }
-                if ((s_HasPendingChanges && (type == EventType.MouseUp)) || (type == EventType.KeyDown))
+                if (s_HasPendingChanges && (GUIUtility.hotControl == 0))
                 {
+                    s_HasPendingChanges = false;
                     WritePreferences();
                     ReadPreferences();
-                    s_HasPendingChanges = false;
                 }
             }
         }
@@ -217,7 +235,7 @@
                 if (EditorUtility.DisplayDialog("Delete old Cache", message, "Delete", "Don't Delete"))
                 {
                     LocalCacheServer.Clear();
-                    s_LocalCacheServerUsedSize = 0L;
+                    s_LocalCacheServerUsedSize = -1L;
                 }
             }
             EditorPrefs.SetString("CacheServerIPAddress", s_CacheServerIPAddress);
@@ -262,9 +280,9 @@
             public static readonly GUIContent browse = EditorGUIUtility.TextContent("Browse...");
             public static readonly GUIContent browseCacheLocation = EditorGUIUtility.TextContent("Browse for local asset cache server location");
             public static readonly GUIContent cacheFolderLocation = EditorGUIUtility.TextContent("Cache Folder Location|The local asset cache server folder is shared between all projects.");
-            public static readonly GUIContent cacheSizeIs = EditorGUIUtility.TextContent("Cache size is");
             public static readonly GUIContent cleanCache = EditorGUIUtility.TextContent("Clean Cache");
             public static readonly GUIContent customCacheLocation = EditorGUIUtility.TextContent("Custom cache location|Specify the local asset cache server folder location.");
+            public static readonly GUIContent enumerateCache = EditorGUIUtility.TextContent("Check Cache Size|Check the size of the local asset cache server - can take a while");
             public static readonly GUIContent maxCacheSize = EditorGUIUtility.TextContent("Maximum Cache Size (GB)|The size of the local asset cache server folder will be kept below this maximum value.");
         }
     }

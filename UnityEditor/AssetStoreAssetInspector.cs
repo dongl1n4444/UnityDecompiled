@@ -14,7 +14,7 @@
         private int lastAssetID;
         internal static PaymentAvailability m_PaymentAvailability;
         private EditorWrapper m_PreviewEditor;
-        private Object m_PreviewObject;
+        private UnityEngine.Object m_PreviewObject;
         private bool packageInfoShown = true;
         private Vector2 pos;
         internal static string s_PaymentMethodCard = "";
@@ -471,7 +471,7 @@
                 {
                     return null;
                 }
-                Object preview = firstAsset.Preview;
+                UnityEngine.Object preview = firstAsset.Preview;
                 if (preview == null)
                 {
                     return null;

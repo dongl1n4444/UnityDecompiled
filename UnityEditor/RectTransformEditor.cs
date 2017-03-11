@@ -14,9 +14,9 @@
     internal class RectTransformEditor : Editor
     {
         [CompilerGenerated]
-        private static Func<Object, bool> <>f__am$cache0;
+        private static Func<UnityEngine.Object, bool> <>f__am$cache0;
         [CompilerGenerated]
-        private static Func<Object, bool> <>f__am$cache1;
+        private static Func<UnityEngine.Object, bool> <>f__am$cache1;
         [CompilerGenerated]
         private static FloatGetter <>f__am$cache10;
         [CompilerGenerated]
@@ -50,17 +50,17 @@
         [CompilerGenerated]
         private static FloatGetter <>f__am$cache1F;
         [CompilerGenerated]
-        private static Func<Object, bool> <>f__am$cache2;
+        private static Func<UnityEngine.Object, bool> <>f__am$cache2;
         [CompilerGenerated]
-        private static Func<Object, bool> <>f__am$cache3;
+        private static Func<UnityEngine.Object, bool> <>f__am$cache3;
         [CompilerGenerated]
-        private static Func<Object, bool> <>f__am$cache4;
+        private static Func<UnityEngine.Object, bool> <>f__am$cache4;
         [CompilerGenerated]
-        private static Func<Object, bool> <>f__am$cache5;
+        private static Func<UnityEngine.Object, bool> <>f__am$cache5;
         [CompilerGenerated]
-        private static Func<Object, bool> <>f__am$cache6;
+        private static Func<UnityEngine.Object, bool> <>f__am$cache6;
         [CompilerGenerated]
-        private static Func<Object, bool> <>f__am$cache7;
+        private static Func<UnityEngine.Object, bool> <>f__am$cache7;
         [CompilerGenerated]
         private static FloatGetter <>f__am$cache8;
         [CompilerGenerated]
@@ -583,10 +583,10 @@
                 driven = driven,
                 getter = getter
             };
-            using (new EditorGUI.DisabledScope(Enumerable.Any<Object>(base.targets, new Func<Object, bool>(storey.<>m__0))))
+            using (new EditorGUI.DisabledScope(Enumerable.Any<UnityEngine.Object>(base.targets, new Func<UnityEngine.Object, bool>(storey.<>m__0))))
             {
                 float num = storey.getter(base.target as RectTransform);
-                EditorGUI.showMixedValue = Enumerable.Select<Object, float>(base.targets, new Func<Object, float>(storey.<>m__1)).Distinct<float>().Count<float>() >= 2;
+                EditorGUI.showMixedValue = Enumerable.Select<UnityEngine.Object, float>(base.targets, new Func<UnityEngine.Object, float>(storey.<>m__1)).Distinct<float>().Count<float>() >= 2;
                 EditorGUI.BeginChangeCheck();
                 float f = EditorGUI.FloatField(position, label, num);
                 if (EditorGUI.EndChangeCheck())
@@ -606,10 +606,10 @@
                 driven = driven,
                 getter = getter
             };
-            using (new EditorGUI.DisabledScope(Enumerable.Any<Object>(base.targets, new Func<Object, bool>(storey.<>m__0))))
+            using (new EditorGUI.DisabledScope(Enumerable.Any<UnityEngine.Object>(base.targets, new Func<UnityEngine.Object, bool>(storey.<>m__0))))
             {
                 float num = storey.getter(base.target as RectTransform);
-                EditorGUI.showMixedValue = Enumerable.Select<Object, float>(base.targets, new Func<Object, float>(storey.<>m__1)).Distinct<float>().Count<float>() >= 2;
+                EditorGUI.showMixedValue = Enumerable.Select<UnityEngine.Object, float>(base.targets, new Func<UnityEngine.Object, float>(storey.<>m__1)).Distinct<float>().Count<float>() >= 2;
                 EditorGUI.BeginChangeCheck();
                 int id = GUIUtility.GetControlID(s_FloatFieldHash, FocusType.Keyboard, position);
                 Rect labelPosition = new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
@@ -885,22 +885,22 @@
             {
                 <>f__am$cache0 = x => ((x as RectTransform).drivenProperties & DrivenTransformProperties.Rotation) != DrivenTransformProperties.None;
             }
-            this.m_RotationGUI.RotationField(Enumerable.Any<Object>(base.targets, <>f__am$cache0));
+            this.m_RotationGUI.RotationField(Enumerable.Any<UnityEngine.Object>(base.targets, <>f__am$cache0));
             if (<>f__am$cache1 == null)
             {
                 <>f__am$cache1 = x => ((x as RectTransform).drivenProperties & DrivenTransformProperties.ScaleX) != DrivenTransformProperties.None;
             }
-            s_ScaleDisabledMask[0] = Enumerable.Any<Object>(base.targets, <>f__am$cache1);
+            s_ScaleDisabledMask[0] = Enumerable.Any<UnityEngine.Object>(base.targets, <>f__am$cache1);
             if (<>f__am$cache2 == null)
             {
                 <>f__am$cache2 = x => ((x as RectTransform).drivenProperties & DrivenTransformProperties.ScaleY) != DrivenTransformProperties.None;
             }
-            s_ScaleDisabledMask[1] = Enumerable.Any<Object>(base.targets, <>f__am$cache2);
+            s_ScaleDisabledMask[1] = Enumerable.Any<UnityEngine.Object>(base.targets, <>f__am$cache2);
             if (<>f__am$cache3 == null)
             {
                 <>f__am$cache3 = x => ((x as RectTransform).drivenProperties & DrivenTransformProperties.ScaleZ) != DrivenTransformProperties.None;
             }
-            s_ScaleDisabledMask[2] = Enumerable.Any<Object>(base.targets, <>f__am$cache3);
+            s_ScaleDisabledMask[2] = Enumerable.Any<UnityEngine.Object>(base.targets, <>f__am$cache3);
             Vector3FieldWithDisabledMash(EditorGUILayout.GetControlRect(new GUILayoutOption[0]), this.m_LocalScale, styles.transformScaleContent, s_ScaleDisabledMask);
             base.serializedObject.ApplyModifiedProperties();
         }
@@ -946,7 +946,7 @@
                 }
                 this.DrawSizes(rectInUserSpace, userSpace, rect3, space, target, guiParent);
                 RectTransformSnapping.DrawGuides();
-                if (Tools.current == Tool.Rect)
+                if (Tools.current == UnityEditor.Tool.Rect)
                 {
                     this.ParentRectPreviewDragHandles(guiParent, space);
                 }
@@ -1229,7 +1229,7 @@
         private static bool ShouldDoIntSnapping(RectTransform rect)
         {
             Canvas componentInParent = rect.gameObject.GetComponentInParent<Canvas>();
-            return ((componentInParent != null) && (componentInParent.renderMode != RenderMode.WorldSpace));
+            return ((componentInParent != null) && (componentInParent.renderMode != UnityEngine.RenderMode.WorldSpace));
         }
 
         private void SmartAnchorFields()
@@ -1290,22 +1290,22 @@
             {
                 <>f__am$cache4 = x => !((x as RectTransform).anchorMin.x == (x as RectTransform).anchorMax.x);
             }
-            bool flag = Enumerable.Any<Object>(base.targets, <>f__am$cache4);
+            bool flag = Enumerable.Any<UnityEngine.Object>(base.targets, <>f__am$cache4);
             if (<>f__am$cache5 == null)
             {
                 <>f__am$cache5 = x => !((x as RectTransform).anchorMin.y == (x as RectTransform).anchorMax.y);
             }
-            bool flag2 = Enumerable.Any<Object>(base.targets, <>f__am$cache5);
+            bool flag2 = Enumerable.Any<UnityEngine.Object>(base.targets, <>f__am$cache5);
             if (<>f__am$cache6 == null)
             {
                 <>f__am$cache6 = x => (x as RectTransform).anchorMin.x == (x as RectTransform).anchorMax.x;
             }
-            bool flag3 = Enumerable.Any<Object>(base.targets, <>f__am$cache6);
+            bool flag3 = Enumerable.Any<UnityEngine.Object>(base.targets, <>f__am$cache6);
             if (<>f__am$cache7 == null)
             {
                 <>f__am$cache7 = x => (x as RectTransform).anchorMin.y == (x as RectTransform).anchorMax.y;
             }
-            bool flag4 = Enumerable.Any<Object>(base.targets, <>f__am$cache7);
+            bool flag4 = Enumerable.Any<UnityEngine.Object>(base.targets, <>f__am$cache7);
             Rect columnRect = this.GetColumnRect(totalRect, 0);
             if ((flag3 || anyWithoutParent) || anyDrivenX)
             {
@@ -1544,10 +1544,10 @@
             internal DrivenTransformProperties driven;
             internal RectTransformEditor.FloatGetter getter;
 
-            internal bool <>m__0(Object x) => 
+            internal bool <>m__0(UnityEngine.Object x) => 
                 (((x as RectTransform).drivenProperties & this.driven) != DrivenTransformProperties.None);
 
-            internal float <>m__1(Object x) => 
+            internal float <>m__1(UnityEngine.Object x) => 
                 this.getter(x as RectTransform);
         }
 
@@ -1557,10 +1557,10 @@
             internal DrivenTransformProperties driven;
             internal RectTransformEditor.FloatGetter getter;
 
-            internal bool <>m__0(Object x) => 
+            internal bool <>m__0(UnityEngine.Object x) => 
                 (((x as RectTransform).drivenProperties & this.driven) != DrivenTransformProperties.None);
 
-            internal float <>m__1(Object x) => 
+            internal float <>m__1(UnityEngine.Object x) => 
                 this.getter(x as RectTransform);
         }
 

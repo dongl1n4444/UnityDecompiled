@@ -12,7 +12,7 @@
     public static class MacroEvaluator
     {
         [CompilerGenerated]
-        private static Func<Type, bool> <>f__am$cache0;
+        private static Func<System.Type, bool> <>f__am$cache0;
         private static readonly EvaluationContext EditorEvaluationContext = new EvaluationContext(new EditorEvaluationDomainProvider());
 
         public static string Eval(string macro)
@@ -35,7 +35,7 @@
             {
                 <>f__am$cache0 = t => t != null;
             }
-            MethodInfo method = Enumerable.Where<Type>(Enumerable.Select<Assembly, Type>(EditorAssemblies.loadedAssemblies, new Func<Assembly, Type>(storey.<>m__0)), <>f__am$cache0).First<Type>().GetMethod(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
+            MethodInfo method = Enumerable.Where<System.Type>(Enumerable.Select<Assembly, System.Type>(EditorAssemblies.loadedAssemblies, new Func<Assembly, System.Type>(storey.<>m__0)), <>f__am$cache0).First<System.Type>().GetMethod(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
             if (method == null)
             {
                 throw new ArgumentException($"cannot find method {name} in type {storey.typename}");
@@ -53,7 +53,7 @@
         {
             internal string typename;
 
-            internal Type <>m__0(Assembly a) => 
+            internal System.Type <>m__0(Assembly a) => 
                 a.GetType(this.typename, false);
         }
 

@@ -10,7 +10,7 @@
     internal class Collider2DEditorBase : ColliderEditorBase
     {
         [CompilerGenerated]
-        private static Func<Object, Rigidbody2D> <>f__am$cache0;
+        private static Func<UnityEngine.Object, Rigidbody2D> <>f__am$cache0;
         private SerializedProperty m_Density;
         private SerializedProperty m_IsTrigger;
         private SerializedProperty m_Material;
@@ -105,7 +105,7 @@
             {
                 <>f__am$cache0 = x => (x as Collider2D).attachedRigidbody;
             }
-            if (Enumerable.Select<Object, Rigidbody2D>(base.targets, <>f__am$cache0).Distinct<Rigidbody2D>().Count<Rigidbody2D>() > 1)
+            if (Enumerable.Select<UnityEngine.Object, Rigidbody2D>(base.targets, <>f__am$cache0).Distinct<Rigidbody2D>().Count<Rigidbody2D>() > 1)
             {
                 return false;
             }

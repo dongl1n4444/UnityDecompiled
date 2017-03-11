@@ -73,25 +73,25 @@
                 this.$TabSize$25 = 8;
                 this.$initialized__UnityScript_UnityScriptCompilerParameters$ = true;
             }
-            this.set_Checked(false);
-            this.set_OutputType(1);
+            this.Checked = false;
+            this.OutputType = CompilerOutputType.Library;
             DeferredEnvironment environment1 = environment = new DeferredEnvironment();
             environment.Add(typeof(EntityFormatter), $adaptor$__UnityScriptCompilerParameters$callable3$40_30__$ObjectFactory$0.Adapt(new __UnityScriptCompilerParameters$callable3$40_30__(this.$constructor$closure$48)));
             environment.Add(typeof(TypeSystemServices), $adaptor$__UnityScriptCompilerParameters$callable4$41_33__$ObjectFactory$1.Adapt(new __UnityScriptCompilerParameters$callable4$41_33__(this.$constructor$closure$49)));
             environment.Add(typeof(CallableResolutionService), $adaptor$__UnityScriptCompilerParameters$callable5$42_40__$ObjectFactory$2.Adapt(new __UnityScriptCompilerParameters$callable5$42_40__(this.$constructor$closure$50)));
             environment.Add(typeof(DowncastPermissions), $adaptor$__UnityScriptCompilerParameters$callable6$43_34__$ObjectFactory$3.Adapt(new __UnityScriptCompilerParameters$callable6$43_34__(this.$constructor$closure$51)));
             environment.Add(typeof(LanguageAmbiance), $adaptor$__UnityScriptCompilerParameters$callable7$44_31__$ObjectFactory$4.Adapt(new __UnityScriptCompilerParameters$callable7$44_31__(this.$constructor$closure$52)));
-            this.set_Environment(environment);
+            this.Environment = environment;
             if (loadDefaultReferences)
             {
-                this.get_References().Add(typeof(Array).Assembly);
-                this.get_References().Add(this.GetType().Assembly);
+                this.References.Add(typeof(UnityScript.Lang.Array).Assembly);
+                this.References.Add(this.GetType().Assembly);
             }
         }
 
         public void AddToEnvironment(Type serviceType, ObjectFactory factory)
         {
-            (this.get_Environment() as DeferredEnvironment).Add(serviceType, factory);
+            (this.Environment as DeferredEnvironment).Add(serviceType, factory);
         }
 
         public string DisableEval
@@ -107,7 +107,7 @@
         public override bool Ducky
         {
             get => 
-                !this.get_Strict();
+                !this.Strict;
             set
             {
                 throw new Exception("Ducky is always equals not Strict. Set Strict instead.");

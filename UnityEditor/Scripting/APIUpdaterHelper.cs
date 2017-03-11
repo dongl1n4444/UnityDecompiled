@@ -34,9 +34,9 @@
         [CompilerGenerated]
         private static Func<Assembly, bool> <>f__am$cache4;
         [CompilerGenerated]
-        private static Func<Assembly, IEnumerable<Type>> <>f__am$cache5;
+        private static Func<Assembly, IEnumerable<System.Type>> <>f__am$cache5;
         [CompilerGenerated]
-        private static Func<CustomAttribute, bool> <>f__am$cache6;
+        private static Func<Mono.Cecil.CustomAttribute, bool> <>f__am$cache6;
 
         private static string APIVersionArgument() => 
             (" --api-version " + Application.unityVersion + " ");
@@ -51,7 +51,7 @@
         private static string ConfigurationProviderAssembliesPathArgument()
         {
             StringBuilder builder = new StringBuilder();
-            foreach (PackageInfo info in ModuleManager.packageManager.unityExtensions)
+            foreach (Unity.DataContract.PackageInfo info in ModuleManager.packageManager.unityExtensions)
             {
                 if (<>f__am$cache2 == null)
                 {
@@ -97,12 +97,12 @@
                     case 2:
                         return true;
                 }
-                Debug.LogError(str + Environment.NewLine + str2);
+                UnityEngine.Debug.LogError(str + Environment.NewLine + str2);
             }
             return false;
         }
 
-        private static Type FindTypeInLoadedAssemblies(Func<Type, bool> predicate)
+        private static System.Type FindTypeInLoadedAssemblies(Func<System.Type, bool> predicate)
         {
             if (<>f__am$cache4 == null)
             {
@@ -112,7 +112,7 @@
             {
                 <>f__am$cache5 = a => a.GetTypes();
             }
-            return Enumerable.FirstOrDefault<Type>(Enumerable.SelectMany<Assembly, Type>(Enumerable.Where<Assembly>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache4), <>f__am$cache5), predicate);
+            return Enumerable.FirstOrDefault<System.Type>(Enumerable.SelectMany<Assembly, System.Type>(Enumerable.Where<Assembly>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache4), <>f__am$cache5), predicate);
         }
 
         private static string GetUnityEditorManagedPath() => 
@@ -138,7 +138,7 @@
             };
             try
             {
-                flag = FindTypeInLoadedAssemblies(new Func<Type, bool>(storey.<>m__0)) != null;
+                flag = FindTypeInLoadedAssemblies(new Func<System.Type, bool>(storey.<>m__0)) != null;
             }
             catch (ReflectionTypeLoadException exception)
             {
@@ -164,7 +164,7 @@
                 }
                 storey.typename = match.Groups["typename"].Value;
                 storey.namespaceName = match.Groups["namespace"].Value;
-                flag = FindTypeInLoadedAssemblies(new Func<Type, bool>(storey.<>m__0)) != null;
+                flag = FindTypeInLoadedAssemblies(new Func<System.Type, bool>(storey.<>m__0)) != null;
             }
             catch (ReflectionTypeLoadException exception)
             {
@@ -191,10 +191,10 @@
             {
                 ReflectorVariable0 = false;
             }
-            return (ReflectorVariable0 ? !((<>f__am$cache6 == null) && Enumerable.Any<CustomAttribute>(assembly.CustomAttributes, <>f__am$cache6)) : true);
+            return (ReflectorVariable0 ? !((<>f__am$cache6 == null) && Enumerable.Any<Mono.Cecil.CustomAttribute>(assembly.CustomAttributes, <>f__am$cache6)) : true);
         }
 
-        private static bool IsUpdateable(Type type)
+        private static bool IsUpdateable(System.Type type)
         {
             object[] customAttributes = type.GetCustomAttributes(typeof(ObsoleteAttribute), false);
             if (customAttributes.Length != 1)
@@ -207,7 +207,7 @@
 
         internal static bool MayContainUpdatableReferences(string assemblyPath)
         {
-            using (FileStream stream = File.Open(assemblyPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (FileStream stream = File.Open(assemblyPath, System.IO.FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 AssemblyDefinition assembly = AssemblyDefinition.ReadAssembly(stream);
                 if (assembly.Name.IsWindowsRuntime)
@@ -222,7 +222,7 @@
             return true;
         }
 
-        private static bool NamespaceHasChanged(Type type, string namespaceName)
+        private static bool NamespaceHasChanged(System.Type type, string namespaceName)
         {
             object[] customAttributes = type.GetCustomAttributes(typeof(MovedFromAttribute), false);
             if (customAttributes.Length != 1)
@@ -284,7 +284,7 @@
             return program.ExitCode;
         }
 
-        private static bool TargetsWindowsSpecificFramework(CustomAttribute targetFrameworkAttr)
+        private static bool TargetsWindowsSpecificFramework(Mono.Cecil.CustomAttribute targetFrameworkAttr)
         {
             <TargetsWindowsSpecificFramework>c__AnonStorey3 storey = new <TargetsWindowsSpecificFramework>c__AnonStorey3();
             if (!targetFrameworkAttr.AttributeType.FullName.Contains("System.Runtime.Versioning.TargetFrameworkAttribute"))
@@ -313,8 +313,8 @@
             internal string className;
             internal string namespaceName;
 
-            internal bool <>m__0(Type t) => 
-                (((t.Name == this.className) && (t.Namespace == this.namespaceName)) && APIUpdaterHelper.IsUpdateable(t));
+            internal bool <>m__0(System.Type t) => 
+                (((t.Name == this.className) && (t.Namespace == this.namespaceName)) && UnityEditor.Scripting.APIUpdaterHelper.IsUpdateable(t));
         }
 
         [CompilerGenerated]
@@ -323,8 +323,8 @@
             internal string namespaceName;
             internal string typename;
 
-            internal bool <>m__0(Type t) => 
-                ((t.Name == this.typename) && APIUpdaterHelper.NamespaceHasChanged(t, this.namespaceName));
+            internal bool <>m__0(System.Type t) => 
+                ((t.Name == this.typename) && UnityEditor.Scripting.APIUpdaterHelper.NamespaceHasChanged(t, this.namespaceName));
         }
 
         [CompilerGenerated]

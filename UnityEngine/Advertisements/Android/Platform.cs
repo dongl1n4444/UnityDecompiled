@@ -25,10 +25,11 @@
         {
             this.m_CurrentActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
             this.m_UnityAds = new AndroidJavaClass("com.unity3d.ads.UnityAds");
-            GameObject obj3 = new GameObject("UnityAdsCallbackExecutorObject") {
+            GameObject target = new GameObject("UnityAdsCallbackExecutorObject") {
                 hideFlags = HideFlags.HideAndDontSave | HideFlags.HideInInspector
             };
-            this.m_CallbackExecutor = obj3.AddComponent<CallbackExecutor>();
+            this.m_CallbackExecutor = target.AddComponent<CallbackExecutor>();
+            UnityEngine.Object.DontDestroyOnLoad(target);
         }
 
         public PlacementState GetPlacementState(string placementId)

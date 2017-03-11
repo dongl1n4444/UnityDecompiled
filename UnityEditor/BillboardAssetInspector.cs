@@ -131,12 +131,12 @@
             {
                 this.m_PreviewUtility.Cleanup();
                 this.m_PreviewUtility = null;
-                Object.DestroyImmediate(this.m_ShadedMesh, true);
-                Object.DestroyImmediate(this.m_GeometryMesh, true);
+                UnityEngine.Object.DestroyImmediate(this.m_ShadedMesh, true);
+                UnityEngine.Object.DestroyImmediate(this.m_GeometryMesh, true);
                 this.m_GeometryMaterial = null;
                 if (this.m_WireframeMaterial != null)
                 {
-                    Object.DestroyImmediate(this.m_WireframeMaterial, true);
+                    UnityEngine.Object.DestroyImmediate(this.m_WireframeMaterial, true);
                 }
             }
         }
@@ -208,7 +208,7 @@
             }
         }
 
-        public override Texture2D RenderStaticPreview(string assetPath, Object[] subAssets, int width, int height)
+        public override Texture2D RenderStaticPreview(string assetPath, UnityEngine.Object[] subAssets, int width, int height)
         {
             if (!ShaderUtil.hardwareSupportsRectRenderTexture)
             {

@@ -355,7 +355,7 @@
                         if (delay2.CanStartDrag())
                         {
                             DragAndDrop.PrepareStartDrag();
-                            DragAndDrop.objectReferences = new Object[0];
+                            DragAndDrop.objectReferences = new UnityEngine.Object[0];
                             DragAndDrop.paths = null;
                             if (this.ilvState.wantsReordering)
                             {

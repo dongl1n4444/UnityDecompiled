@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(MovieTexture))]
+    [CustomEditor(typeof(MovieTexture)), CanEditMultipleObjects]
     internal class MovieTextureInspector : TextureInspector
     {
         private static GUIContent[] s_PlayIcons = new GUIContent[2];

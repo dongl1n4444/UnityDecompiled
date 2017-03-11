@@ -5,7 +5,7 @@
 
     internal class TerrainMenus
     {
-        [MenuItem("GameObject/3D Object/Terrain", false, 0xbb8)]
+        [UnityEditor.MenuItem("GameObject/3D Object/Terrain", false, 0xbb8)]
         private static void CreateTerrain(MenuCommand menuCommand)
         {
             TerrainData asset = new TerrainData {
@@ -42,7 +42,7 @@
 
         private static Terrain GetActiveTerrain()
         {
-            Object[] filtered = Selection.GetFiltered(typeof(Terrain), SelectionMode.Editable);
+            UnityEngine.Object[] filtered = Selection.GetFiltered(typeof(Terrain), UnityEditor.SelectionMode.Editable);
             if (filtered.Length != 0)
             {
                 return (filtered[0] as Terrain);

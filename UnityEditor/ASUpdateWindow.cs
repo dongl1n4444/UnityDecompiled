@@ -248,7 +248,7 @@
 
         private string GetFirstSelected()
         {
-            Object[] filtered = Selection.GetFiltered(typeof(Object), SelectionMode.Assets);
+            UnityEngine.Object[] filtered = Selection.GetFiltered(typeof(UnityEngine.Object), UnityEditor.SelectionMode.Assets);
             return ((filtered.Length == 0) ? string.Empty : AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(filtered[0])));
         }
 

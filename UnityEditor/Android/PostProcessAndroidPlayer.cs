@@ -13,7 +13,7 @@
         {
             if (target != BuildTarget.Android)
             {
-                CancelPostProcess.AbortBuild("Build failure", "Internal error: Target platform mismatch");
+                CancelPostProcess.AbortBuild("Build failure", "Internal error: Target platform mismatch", null);
             }
             PostProcessRunner runner = new PostProcessRunner();
             _context.Set<string>("InstallPath", installPath);
@@ -25,7 +25,7 @@
         {
             if (target != BuildTarget.Android)
             {
-                CancelPostProcess.AbortBuild("Build failure", "Internal error: Target platform mismatch");
+                CancelPostProcess.AbortBuild("Build failure", "Internal error: Target platform mismatch", null);
             }
             _context.Set<BuildTarget>("BuildTarget", target);
             _context.Set<string>("StagingAreaData", stagingAreaData);
@@ -104,7 +104,7 @@
         {
             if (target != BuildTarget.Android)
             {
-                CancelPostProcess.AbortBuild("Build failure", "Internal error: Target platform mismatch");
+                CancelPostProcess.AbortBuild("Build failure", "Internal error: Target platform mismatch", null);
             }
             if ((options & BuildOptions.BuildAdditionalStreamedScenes) == BuildOptions.CompressTextures)
             {

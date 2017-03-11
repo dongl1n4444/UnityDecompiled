@@ -23,7 +23,7 @@
                 this.impl.m_PushUndo = value;
             }
         }
-        public void DoUndo(Object target, string undoOperation)
+        public void DoUndo(UnityEngine.Object target, string undoOperation)
         {
             this.impl.DoUndo(target, undoOperation);
         }
@@ -48,7 +48,7 @@
                 this.m_PushUndo = pushUndo;
             }
 
-            public void DoUndo(Object target, string undoOperation)
+            public void DoUndo(UnityEngine.Object target, string undoOperation)
             {
                 if (this.m_PushUndo)
                 {

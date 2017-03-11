@@ -1474,6 +1474,21 @@
             this.PushExpression(type, Emit.Cast(type, operand.ToString()));
         }
 
+        private void LoadVirtualFunction(Instruction ins)
+        {
+            MethodReference operand = (MethodReference) ins.Operand;
+            MethodDefinition methodDefinition = operand.Resolve();
+            StackInfo info = this._valueStack.Pop();
+            if (methodDefinition.IsVirtual)
+            {
+                this.PushCallToLoadVirtualFunction(operand, methodDefinition, info.Expression);
+            }
+            else
+            {
+                this.PushCallToLoadFunction(operand);
+            }
+        }
+
         private static bool NeedsNullArgForStaticMethod(MethodReference method, bool isConstructor)
         {
             if (method.HasThis)
@@ -2503,20 +2518,17 @@
                     return;
 
                 case Code.Ldftn:
-                {
-                    MethodReference reference13 = (MethodReference) ins.Operand;
-                    this._writer.AddIncludeForTypeDefinition(this._typeResolver.Resolve(reference13.DeclaringType));
-                    this.StoreLocalIntPtrAndPush($"(void*){this._runtimeMetadataAccess.MethodInfo(reference13)}");
+                    this.PushCallToLoadFunction((MethodReference) ins.Operand);
                     return;
-                }
+
                 case Code.Ldvirtftn:
-                    this.PushCallToLoadVirtualFunction(ins);
+                    this.LoadVirtualFunction(ins);
                     return;
 
                 case Code.Ldarg:
                 {
-                    ParameterReference reference14 = (ParameterReference) ins.Operand;
-                    int num4 = reference14.Index;
+                    ParameterReference reference13 = (ParameterReference) ins.Operand;
+                    int num4 = reference13.Index;
                     if (this._methodDefinition.HasThis)
                     {
                         num4++;
@@ -2674,26 +2686,25 @@
             }
         }
 
-        private void PushCallToLoadVirtualFunction(Instruction ins)
+        private void PushCallToLoadFunction(MethodReference merthodReference)
+        {
+            this._writer.AddIncludeForTypeDefinition(this._typeResolver.Resolve(merthodReference.DeclaringType));
+            this.StoreLocalIntPtrAndPush($"(void*){this._runtimeMetadataAccess.MethodInfo(merthodReference)}");
+        }
+
+        private void PushCallToLoadVirtualFunction(MethodReference methodReference, MethodDefinition methodDefinition, string targetExpression)
         {
             string str;
-            StackInfo info = this._valueStack.Pop();
-            MethodReference operand = (MethodReference) ins.Operand;
-            bool flag = operand.DeclaringType.IsInterface();
-            MethodDefinition method = operand.Resolve();
-            if (flag)
+            bool flag = methodReference.DeclaringType.IsInterface();
+            if (methodReference.IsGenericInstance)
             {
-                str = Emit.Call("GetInterfaceMethodInfo", info.Expression, this._vTableBuilder.IndexFor(method).ToString(), this._runtimeMetadataAccess.TypeInfoFor(operand.DeclaringType));
-            }
-            else if (method.IsVirtual)
-            {
-                str = Emit.Call("GetVirtualMethodInfo", info.Expression, this._vTableBuilder.IndexFor(method).ToString());
+                str = !flag ? Emit.Call("il2cpp_codegen_get_generic_virtual_method", this._runtimeMetadataAccess.MethodInfo(methodReference), targetExpression) : Emit.Call("il2cpp_codegen_get_generic_interface_method", this._runtimeMetadataAccess.MethodInfo(methodReference), targetExpression);
             }
             else
             {
-                str = this._runtimeMetadataAccess.MethodInfo(operand);
+                str = !flag ? Emit.Call("GetVirtualMethodInfo", targetExpression, this._vTableBuilder.IndexFor(methodDefinition).ToString()) : Emit.Call("GetInterfaceMethodInfo", targetExpression, this._vTableBuilder.IndexFor(methodDefinition).ToString(), this._runtimeMetadataAccess.TypeInfoFor(methodReference.DeclaringType));
             }
-            this._writer.AddIncludeForTypeDefinition(this._typeResolver.Resolve(operand.DeclaringType));
+            this._writer.AddIncludeForTypeDefinition(this._typeResolver.Resolve(methodReference.DeclaringType));
             this.StoreLocalIntPtrAndPush($"(void*){str}");
         }
 

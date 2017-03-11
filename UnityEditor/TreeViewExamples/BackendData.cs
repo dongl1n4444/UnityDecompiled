@@ -9,7 +9,7 @@
 
     internal class BackendData
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private int <IDCounter>k__BackingField;
         private const int k_MaxChildren = 15;
         private const int k_MaxDepth = 12;
@@ -21,7 +21,7 @@
 
         private void AddChildrenRecursive(Foo foo, int numChildren, bool force)
         {
-            if (((this.IDCounter <= this.m_MaxItems) && (foo.depth < 12)) && (force || (Random.value >= 0.5f)))
+            if (((this.IDCounter <= this.m_MaxItems) && (foo.depth < 12)) && (force || (UnityEngine.Random.value >= 0.5f)))
             {
                 if (foo.children == null)
                 {
@@ -40,7 +40,7 @@
                 {
                     foreach (Foo foo3 in foo.children)
                     {
-                        this.AddChildrenRecursive(foo3, Random.Range(3, 15), false);
+                        this.AddChildrenRecursive(foo3, UnityEngine.Random.Range(3, 15), false);
                     }
                 }
             }
@@ -100,7 +100,7 @@
             this.m_Root = new Foo("Root", 0, 0);
             for (int i = 0; i < 10; i++)
             {
-                this.AddChildrenRecursive(this.m_Root, Random.Range(3, 15), true);
+                this.AddChildrenRecursive(this.m_Root, UnityEngine.Random.Range(3, 15), true);
             }
         }
 
@@ -197,7 +197,7 @@
             private int <depth>k__BackingField;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private int <id>k__BackingField;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private string <name>k__BackingField;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private BackendData.Foo <parent>k__BackingField;

@@ -38,9 +38,9 @@
 
         public string GetInstalledETag()
         {
-            if (File.Exists("Assets/Plugins/UnityPurchasing/ETag"))
+            if (System.IO.File.Exists("Assets/Plugins/UnityPurchasing/ETag"))
             {
-                return File.ReadAllText("Assets/Plugins/UnityPurchasing/ETag");
+                return System.IO.File.ReadAllText("Assets/Plugins/UnityPurchasing/ETag");
             }
             if (Directory.Exists(Path.GetDirectoryName("Assets/Plugins/UnityPurchasing/ETag")))
             {
@@ -89,7 +89,7 @@
             if (contents != null)
             {
                 Directory.CreateDirectory(Path.GetDirectoryName("Assets/Plugins/UnityPurchasing/ETag"));
-                File.WriteAllText("Assets/Plugins/UnityPurchasing/ETag", contents);
+                System.IO.File.WriteAllText("Assets/Plugins/UnityPurchasing/ETag", contents);
             }
         }
 

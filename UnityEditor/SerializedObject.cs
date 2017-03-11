@@ -15,9 +15,9 @@
         /// <para>Create SerializedObject for inspected object.</para>
         /// </summary>
         /// <param name="obj"></param>
-        public SerializedObject(Object obj)
+        public SerializedObject(UnityEngine.Object obj)
         {
-            Object[] monoObjs = new Object[] { obj };
+            UnityEngine.Object[] monoObjs = new UnityEngine.Object[] { obj };
             this.InternalCreate(monoObjs);
         }
 
@@ -25,7 +25,7 @@
         /// <para>Create SerializedObject for inspected object.</para>
         /// </summary>
         /// <param name="objs"></param>
-        public SerializedObject(Object[] objs)
+        public SerializedObject(UnityEngine.Object[] objs)
         {
             this.InternalCreate(objs);
         }
@@ -85,7 +85,7 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern SerializedProperty GetIterator_Internal();
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern void InternalCreate(Object[] monoObjs);
+        private extern void InternalCreate(UnityEngine.Object[] monoObjs);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern SerializedObject LoadFromCache(int instanceID);
         /// <summary>
@@ -121,12 +121,12 @@
         /// <summary>
         /// <para>The inspected object (Read Only).</para>
         /// </summary>
-        public Object targetObject { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public UnityEngine.Object targetObject { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
         /// <summary>
         /// <para>The inspected objects (Read Only).</para>
         /// </summary>
-        public Object[] targetObjects { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public UnityEngine.Object[] targetObjects { [MethodImpl(MethodImplOptions.InternalCall)] get; }
     }
 }
 

@@ -54,7 +54,7 @@
             {
                 message = message + string.Format("{0,6:0.0} ms: {1} in {2} calls\n", pair.Value * 1000f, pair.Key, m_Calls[pair.Key]);
             }
-            Debug.Log(message);
+            UnityEngine.Debug.Log(message);
             m_Names.Clear();
             m_StartTime.Clear();
             m_Timers.Clear();

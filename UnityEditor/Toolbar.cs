@@ -86,7 +86,7 @@
         private void DoPivotButtons(Rect rect)
         {
             Tools.pivotMode = (PivotMode) EditorGUI.CycleButton(new Rect(rect.x, rect.y, rect.width / 2f, rect.height), (int) Tools.pivotMode, s_PivotIcons, "ButtonLeft");
-            if ((Tools.current == Tool.Scale) && (Selection.transforms.Length < 2))
+            if ((Tools.current == UnityEditor.Tool.Scale) && (Selection.transforms.Length < 2))
             {
                 GUI.enabled = false;
             }
@@ -99,7 +99,7 @@
                     Tools.ResetGlobalHandleRotation();
                 }
             }
-            if (Tools.current == Tool.Scale)
+            if (Tools.current == UnityEditor.Tool.Scale)
             {
                 GUI.enabled = true;
             }
@@ -114,7 +114,7 @@
             bool isPlaying = EditorApplication.isPlaying;
             GUI.changed = false;
             int index = !isPlaying ? 0 : 4;
-            if (AnimationMode.InAnimationMode())
+            if (UnityEditor.AnimationMode.InAnimationMode())
             {
                 index = 8;
             }
@@ -154,7 +154,7 @@
             selected = GUI.Toolbar(rect, selected, s_ShownToolIcons, "Command");
             if (GUI.changed)
             {
-                Tools.current = (Tool) selected;
+                Tools.current = (UnityEditor.Tool) selected;
             }
         }
 
@@ -194,9 +194,9 @@
         {
             EditorApplication.modifierKeysChanged = (EditorApplication.CallbackFunction) Delegate.Remove(EditorApplication.modifierKeysChanged, new EditorApplication.CallbackFunction(this.Repaint));
             Undo.undoRedoPerformed = (Undo.UndoRedoCallback) Delegate.Remove(Undo.undoRedoPerformed, new Undo.UndoRedoCallback(this.OnSelectionChange));
-            UnityConnect.instance.StateChanged -= new StateChangedDelegate(this.OnUnityConnectStateChanged);
+            UnityConnect.instance.StateChanged -= new UnityEditor.Connect.StateChangedDelegate(this.OnUnityConnectStateChanged);
             UnityConnect.instance.UserStateChanged -= new UserStateChangedDelegate(this.OnUnityConnectUserStateChanged);
-            Collab.instance.StateChanged -= new StateChangedDelegate(this.OnCollabStateChanged);
+            Collab.instance.StateChanged -= new UnityEditor.Collaboration.StateChangedDelegate(this.OnCollabStateChanged);
             if (this.m_CollabButton != null)
             {
                 this.m_CollabButton.Clear();
@@ -207,17 +207,17 @@
         {
             EditorApplication.modifierKeysChanged = (EditorApplication.CallbackFunction) Delegate.Combine(EditorApplication.modifierKeysChanged, new EditorApplication.CallbackFunction(this.Repaint));
             Undo.undoRedoPerformed = (Undo.UndoRedoCallback) Delegate.Combine(Undo.undoRedoPerformed, new Undo.UndoRedoCallback(this.OnSelectionChange));
-            UnityConnect.instance.StateChanged += new StateChangedDelegate(this.OnUnityConnectStateChanged);
+            UnityConnect.instance.StateChanged += new UnityEditor.Connect.StateChangedDelegate(this.OnUnityConnectStateChanged);
             UnityConnect.instance.UserStateChanged += new UserStateChangedDelegate(this.OnUnityConnectUserStateChanged);
             get = this;
-            Collab.instance.StateChanged += new StateChangedDelegate(this.OnCollabStateChanged);
+            Collab.instance.StateChanged += new UnityEditor.Collaboration.StateChangedDelegate(this.OnCollabStateChanged);
             if (this.m_CollabButton == null)
             {
                 if (<>f__am$cache0 == null)
                 {
                     <>f__am$cache0 = () => ((float) EditorApplication.timeSinceStartup) * 500f;
                 }
-                this.m_CollabButton = new ButtonWithAnimatedIconRotation(<>f__am$cache0, new Action(this.Repaint), 20f, true);
+                this.m_CollabButton = new ButtonWithAnimatedIconRotation(<>f__am$cache0, new System.Action(this.Repaint), 20f, true);
             }
         }
 

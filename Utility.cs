@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using UnityEditor;
+using UnityEditor.Scripting.Compilers;
 using UnityEditor.Utils;
 using UnityEditorInternal;
 
@@ -76,6 +77,24 @@ internal static class Utility
 
     [DllImport("Psapi.dll")]
     private static extern bool EnumProcesses([In, Out, MarshalAs(UnmanagedType.LPArray, ArraySubType=UnmanagedType.U4)] uint[] processIds, uint arraySizeBytes, [MarshalAs(UnmanagedType.U4)] out uint bytesCopied);
+    internal static Version GetDesiredUWPSDK() => 
+        UWPReferences.GetDesiredSDKVersion();
+
+    public static string GetDesiredUWPSDKString()
+    {
+        Version desiredUWPSDK = GetDesiredUWPSDK();
+        string str = desiredUWPSDK.ToString();
+        if (desiredUWPSDK.Build == -1)
+        {
+            str = str + ".0";
+        }
+        if (desiredUWPSDK.Revision == -1)
+        {
+            str = str + ".0";
+        }
+        return str;
+    }
+
     public static string GetFrameworkPath()
     {
         if (frameworkPath == null)

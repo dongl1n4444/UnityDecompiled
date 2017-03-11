@@ -16,7 +16,7 @@
         private AnimationWindowPolicy m_Policy;
         private static List<AnimationWindow> s_AnimationWindows = new List<AnimationWindow>();
 
-        public void EditAnimationClip(AnimationClip animationClip, Object sourceObject)
+        public void EditAnimationClip(AnimationClip animationClip, UnityEngine.Object sourceObject)
         {
             AnimationClipSelectionItem selectedItem = AnimationClipSelectionItem.Create(animationClip, sourceObject);
             if (this.ShouldUpdateSelection(selectedItem))
@@ -26,7 +26,7 @@
             }
             else
             {
-                Object.DestroyImmediate(selectedItem);
+                UnityEngine.Object.DestroyImmediate(selectedItem);
             }
         }
 
@@ -42,7 +42,7 @@
                 }
                 else
                 {
-                    Object.DestroyImmediate(selectedItem);
+                    UnityEngine.Object.DestroyImmediate(selectedItem);
                 }
             }
         }
@@ -65,7 +65,7 @@
 
         public void OnDestroy()
         {
-            Object.DestroyImmediate(this.m_AnimEditor);
+            UnityEngine.Object.DestroyImmediate(this.m_AnimEditor);
         }
 
         public void OnDisable()

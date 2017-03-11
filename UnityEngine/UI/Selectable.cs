@@ -665,6 +665,10 @@
                     {
                         EventSystem.current.SetSelectedGameObject(null);
                     }
+                    if (this.m_Interactable)
+                    {
+                        this.UpdateSelectionState(null);
+                    }
                     this.OnSetProperty();
                 }
             }

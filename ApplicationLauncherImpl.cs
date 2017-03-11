@@ -221,7 +221,7 @@ internal class ApplicationLauncherImpl
     }
 
     private string GetProjectExt() => 
-        "csproj";
+        ((this.scriptingBackend != ScriptingImplementation.WinRTDotNET) ? "vcxproj" : "csproj");
 
     private string GetProjectName()
     {
@@ -330,7 +330,6 @@ internal class ApplicationLauncherImpl
                         return;
 
                     case WSABuildAndRunDeployTarget.WindowsPhone:
-                        this.BuildUsingMSBuild(false);
                         commandLine = commandLine + " -noMDIL";
                         this.RunOnPhone(commandLine);
                         return;

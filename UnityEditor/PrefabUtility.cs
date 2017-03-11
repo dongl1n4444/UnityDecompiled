@@ -29,7 +29,7 @@
         /// </summary>
         /// <param name="path"></param>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern Object CreateEmptyPrefab(string path);
+        public static extern UnityEngine.Object CreateEmptyPrefab(string path);
         /// <summary>
         /// <para>Creates a prefab from a game object hierarchy.</para>
         /// </summary>
@@ -56,7 +56,7 @@
         /// </summary>
         /// <param name="targetObject"></param>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void DisconnectPrefabInstance(Object targetObject);
+        public static extern void DisconnectPrefabInstance(UnityEngine.Object targetObject);
         /// <summary>
         /// <para>Helper function to find the prefab root of an object (used for picking niceness).</para>
         /// </summary>
@@ -93,31 +93,31 @@
         /// <para>The prefab the object is contained in.</para>
         /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern Object GetPrefabObject(Object targetObject);
+        public static extern UnityEngine.Object GetPrefabObject(UnityEngine.Object targetObject);
         /// <summary>
         /// <para>Returns the parent asset object of source, or null if it can't be found.</para>
         /// </summary>
         /// <param name="source"></param>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern Object GetPrefabParent(Object source);
+        public static extern UnityEngine.Object GetPrefabParent(UnityEngine.Object source);
         /// <summary>
         /// <para>Given an object, returns its prefab type (None, if it's not a prefab).</para>
         /// </summary>
         /// <param name="target"></param>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern PrefabType GetPrefabType(Object target);
+        public static extern PrefabType GetPrefabType(UnityEngine.Object target);
         /// <summary>
         /// <para>Extract all modifications that are applied to the prefab instance compared to the parent prefab.</para>
         /// </summary>
         /// <param name="targetPrefab"></param>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern PropertyModification[] GetPropertyModifications(Object targetPrefab);
+        public static extern PropertyModification[] GetPropertyModifications(UnityEngine.Object targetPrefab);
         /// <summary>
         /// <para>Instantiate an asset that is referenced by a prefab and use it on the prefab instance.</para>
         /// </summary>
         /// <param name="targetObject"></param>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern Object InstantiateAttachedAsset(Object targetObject);
+        public static extern UnityEngine.Object InstantiateAttachedAsset(UnityEngine.Object targetObject);
         /// <summary>
         /// <para>Instantiates the given prefab in a given scene.</para>
         /// </summary>
@@ -126,7 +126,7 @@
         /// <returns>
         /// <para>The GameObject at the root of the prefab.</para>
         /// </returns>
-        public static Object InstantiatePrefab(Object target) => 
+        public static UnityEngine.Object InstantiatePrefab(UnityEngine.Object target) => 
             InternalInstantiatePrefab(target, EditorSceneManager.GetTargetSceneForNewGameObjects());
 
         /// <summary>
@@ -137,11 +137,11 @@
         /// <returns>
         /// <para>The GameObject at the root of the prefab.</para>
         /// </returns>
-        public static Object InstantiatePrefab(Object target, Scene destinationScene) => 
+        public static UnityEngine.Object InstantiatePrefab(UnityEngine.Object target, Scene destinationScene) => 
             InternalInstantiatePrefab(target, destinationScene);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern Object INTERNAL_CALL_InternalInstantiatePrefab(Object target, ref Scene destinationScene);
+        private static extern UnityEngine.Object INTERNAL_CALL_InternalInstantiatePrefab(UnityEngine.Object target, ref Scene destinationScene);
         private static void Internal_CallPrefabInstanceUpdated(GameObject instance)
         {
             if (prefabInstanceUpdated != null)
@@ -150,17 +150,17 @@
             }
         }
 
-        private static Object InternalInstantiatePrefab(Object target, Scene destinationScene) => 
+        private static UnityEngine.Object InternalInstantiatePrefab(UnityEngine.Object target, Scene destinationScene) => 
             INTERNAL_CALL_InternalInstantiatePrefab(target, ref destinationScene);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern bool IsComponentAddedToPrefabInstance(Object source);
+        public static extern bool IsComponentAddedToPrefabInstance(UnityEngine.Object source);
         /// <summary>
         /// <para>Force re-merging all prefab instances of this prefab.</para>
         /// </summary>
         /// <param name="targetObject"></param>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void MergeAllPrefabInstances(Object targetObject);
+        public static extern void MergeAllPrefabInstances(UnityEngine.Object targetObject);
         /// <summary>
         /// <para>Connects the game object to the prefab that it was last connected to.</para>
         /// </summary>
@@ -172,7 +172,7 @@
         /// </summary>
         /// <param name="targetObject">Object to process</param>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void RecordPrefabInstancePropertyModifications(Object targetObject);
+        public static extern void RecordPrefabInstancePropertyModifications(UnityEngine.Object targetObject);
         /// <summary>
         /// <para>Replaces the targetPrefab with a copy of the game object hierarchy go.</para>
         /// </summary>
@@ -180,7 +180,7 @@
         /// <param name="targetPrefab"></param>
         /// <param name="options"></param>
         [ExcludeFromDocs]
-        public static GameObject ReplacePrefab(GameObject go, Object targetPrefab)
+        public static GameObject ReplacePrefab(GameObject go, UnityEngine.Object targetPrefab)
         {
             ReplacePrefabOptions options = ReplacePrefabOptions.Default;
             return ReplacePrefab(go, targetPrefab, options);
@@ -193,13 +193,13 @@
         /// <param name="targetPrefab"></param>
         /// <param name="options"></param>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern GameObject ReplacePrefab(GameObject go, Object targetPrefab, [DefaultValue("ReplacePrefabOptions.Default")] ReplacePrefabOptions options);
+        public static extern GameObject ReplacePrefab(GameObject go, UnityEngine.Object targetPrefab, [DefaultValue("ReplacePrefabOptions.Default")] ReplacePrefabOptions options);
         /// <summary>
         /// <para>Resets the properties of the component or game object to the parent prefab state.</para>
         /// </summary>
         /// <param name="obj"></param>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern bool ResetToPrefabState(Object obj);
+        public static extern bool ResetToPrefabState(UnityEngine.Object obj);
         /// <summary>
         /// <para>Resets the properties of all objects in the prefab, including child game objects and components that were added to the prefab instance.</para>
         /// </summary>
@@ -212,7 +212,7 @@
         /// <param name="targetPrefab"></param>
         /// <param name="modifications"></param>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void SetPropertyModifications(Object targetPrefab, PropertyModification[] modifications);
+        public static extern void SetPropertyModifications(UnityEngine.Object targetPrefab, PropertyModification[] modifications);
 
         /// <summary>
         /// <para>Delegate for method that is called after prefab instances in the scene have been updated.</para>

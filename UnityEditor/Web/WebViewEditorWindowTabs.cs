@@ -38,7 +38,7 @@
         {
             if ((this.m_GlobalObject == null) && !string.IsNullOrEmpty(base.m_GlobalObjectTypeName))
             {
-                Type type = Type.GetType(base.m_GlobalObjectTypeName);
+                System.Type type = System.Type.GetType(base.m_GlobalObjectTypeName);
                 if (type != null)
                 {
                     this.m_GlobalObject = ScriptableObject.CreateInstance(type);
@@ -131,14 +131,14 @@
         {
             if (this.webView != null)
             {
-                Object.DestroyImmediate(this.webView);
+                UnityEngine.Object.DestroyImmediate(this.webView);
             }
             this.m_GlobalObject = null;
             foreach (WebView view in this.m_RegisteredViews.Values)
             {
                 if (view != null)
                 {
-                    Object.DestroyImmediate(view);
+                    UnityEngine.Object.DestroyImmediate(view);
                 }
             }
             this.m_RegisteredViews.Clear();

@@ -21,7 +21,7 @@
 
         public static void Mark(Method node)
         {
-            AnnotateEval(node.get_DeclaringType());
+            AnnotateEval(node.DeclaringType);
             AnnotateEval(node);
         }
     }

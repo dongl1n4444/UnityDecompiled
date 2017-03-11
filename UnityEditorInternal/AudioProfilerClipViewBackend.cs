@@ -7,7 +7,7 @@
 
     internal class AudioProfilerClipViewBackend
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private List<AudioProfilerClipInfoWrapper> <items>k__BackingField;
         public AudioProfilerClipTreeViewState m_TreeViewState;
         public DataUpdateDelegate OnUpdate;

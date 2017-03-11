@@ -127,7 +127,7 @@
         {
             if (selectedItem.rootGameObject != null)
             {
-                Object animatedObject = AnimationUtility.GetAnimatedObject(selectedItem.rootGameObject, curveBinding);
+                UnityEngine.Object animatedObject = AnimationUtility.GetAnimatedObject(selectedItem.rootGameObject, curveBinding);
                 if (animatedObject != null)
                 {
                     return AssetPreview.GetMiniThumbnail(animatedObject);

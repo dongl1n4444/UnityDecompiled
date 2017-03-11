@@ -13,7 +13,7 @@
         /// <para>The transform path of the object that is animated.</para>
         /// </summary>
         public string path;
-        private Type m_type;
+        private System.Type m_type;
         /// <summary>
         /// <para>The property of the object that is animated.</para>
         /// </summary>
@@ -61,7 +61,7 @@
             return (this == binding);
         }
 
-        public Type type
+        public System.Type type
         {
             get => 
                 this.m_type;
@@ -72,7 +72,7 @@
                 this.m_ScriptInstanceID = 0;
             }
         }
-        public static EditorCurveBinding FloatCurve(string inPath, Type inType, string inPropertyName) => 
+        public static EditorCurveBinding FloatCurve(string inPath, System.Type inType, string inPropertyName) => 
             new EditorCurveBinding { 
                 path = inPath,
                 type = inType,
@@ -81,7 +81,7 @@
                 m_isPhantom = 0
             };
 
-        public static EditorCurveBinding PPtrCurve(string inPath, Type inType, string inPropertyName) => 
+        public static EditorCurveBinding PPtrCurve(string inPath, System.Type inType, string inPropertyName) => 
             new EditorCurveBinding { 
                 path = inPath,
                 type = inType,

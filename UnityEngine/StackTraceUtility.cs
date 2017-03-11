@@ -87,7 +87,7 @@
             return (message + "\n" + stackTrace);
         }
 
-        [RequiredByNativeCode, SecuritySafeCritical]
+        [SecuritySafeCritical, RequiredByNativeCode]
         internal static void ExtractStringFromExceptionInternal(object exceptiono, out string message, out string stackTrace)
         {
             if (exceptiono == null)

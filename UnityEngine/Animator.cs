@@ -411,7 +411,7 @@
         /// <para>Gets the list of AnimatorClipInfo currently played by the next state.</para>
         /// </summary>
         /// <param name="layerIndex">The layer's index.</param>
-        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("GetNextAnimationClipState is obsolete. Use GetNextAnimatorClipInfo instead (UnityUpgradable) -> GetNextAnimatorClipInfo(*)", true)]
+        [Obsolete("GetNextAnimationClipState is obsolete. Use GetNextAnimatorClipInfo instead (UnityUpgradable) -> GetNextAnimatorClipInfo(*)", true), EditorBrowsable(EditorBrowsableState.Never)]
         public AnimationInfo[] GetNextAnimationClipState(int layerIndex) => 
             null;
 

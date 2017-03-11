@@ -11,7 +11,7 @@
     internal class ScriptAttributeUtility
     {
         [CompilerGenerated]
-        private static Func<Assembly, IEnumerable<Type>> <>f__am$cache0;
+        private static Func<Assembly, IEnumerable<System.Type>> <>f__am$cache0;
         [CompilerGenerated]
         private static Func<object, PropertyAttribute> <>f__am$cache1;
         [CompilerGenerated]
@@ -19,7 +19,7 @@
         private static Dictionary<string, List<PropertyAttribute>> s_BuiltinAttributes = null;
         private static PropertyHandlerCache s_CurrentCache = null;
         internal static Stack<PropertyDrawer> s_DrawerStack = new Stack<PropertyDrawer>();
-        private static Dictionary<Type, DrawerKeySet> s_DrawerTypeForType = null;
+        private static Dictionary<System.Type, DrawerKeySet> s_DrawerTypeForType = null;
         private static PropertyHandlerCache s_GlobalCache = new PropertyHandlerCache();
         private static PropertyHandler s_NextHandler = new PropertyHandler();
         private static PropertyHandler s_SharedNullHandler = new PropertyHandler();
@@ -36,13 +36,13 @@
 
         private static void BuildDrawerTypeForTypeDictionary()
         {
-            s_DrawerTypeForType = new Dictionary<Type, DrawerKeySet>();
+            s_DrawerTypeForType = new Dictionary<System.Type, DrawerKeySet>();
             if (<>f__am$cache0 == null)
             {
                 <>f__am$cache0 = x => AssemblyHelper.GetTypesFromAssembly(x);
             }
-            Type[] typeArray = Enumerable.SelectMany<Assembly, Type>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache0).ToArray<Type>();
-            foreach (Type type in EditorAssemblies.SubclassesOf(typeof(GUIDrawer)))
+            System.Type[] typeArray = Enumerable.SelectMany<Assembly, System.Type>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache0).ToArray<System.Type>();
+            foreach (System.Type type in EditorAssemblies.SubclassesOf(typeof(GUIDrawer)))
             {
                 object[] objArray2 = type.GetCustomAttributes(typeof(CustomPropertyDrawer), true);
                 for (int i = 0; i < objArray2.Length; i++)
@@ -57,8 +57,8 @@
                     s_DrawerTypeForType[storey.editor.m_Type] = set;
                     if (storey.editor.m_UseForChildren)
                     {
-                        IEnumerable<Type> enumerable = Enumerable.Where<Type>(typeArray, new Func<Type, bool>(storey.<>m__0));
-                        foreach (Type type2 in enumerable)
+                        IEnumerable<System.Type> enumerable = Enumerable.Where<System.Type>(typeArray, new Func<System.Type, bool>(storey.<>m__0));
+                        foreach (System.Type type2 in enumerable)
                         {
                             if (s_DrawerTypeForType.ContainsKey(type2))
                             {
@@ -90,7 +90,7 @@
             {
                 return null;
             }
-            Type type = property.serializedObject.targetObject.GetType();
+            System.Type type = property.serializedObject.targetObject.GetType();
             if (type == null)
             {
                 return null;
@@ -101,7 +101,7 @@
             return list2;
         }
 
-        internal static Type GetDrawerTypeForType(Type type)
+        internal static System.Type GetDrawerTypeForType(System.Type type)
         {
             DrawerKeySet set;
             if (s_DrawerTypeForType == null)
@@ -116,7 +116,7 @@
             return set.drawer;
         }
 
-        private static List<PropertyAttribute> GetFieldAttributes(FieldInfo field)
+        private static List<PropertyAttribute> GetFieldAttributes(System.Reflection.FieldInfo field)
         {
             if (field != null)
             {
@@ -137,9 +137,9 @@
             return null;
         }
 
-        private static FieldInfo GetFieldInfoFromProperty(SerializedProperty property, out Type type)
+        private static System.Reflection.FieldInfo GetFieldInfoFromProperty(SerializedProperty property, out System.Type type)
         {
-            Type scriptTypeFromProperty = GetScriptTypeFromProperty(property);
+            System.Type scriptTypeFromProperty = GetScriptTypeFromProperty(property);
             if (scriptTypeFromProperty == null)
             {
                 type = null;
@@ -148,9 +148,9 @@
             return GetFieldInfoFromPropertyPath(scriptTypeFromProperty, property.propertyPath, out type);
         }
 
-        private static FieldInfo GetFieldInfoFromPropertyPath(Type host, string path, out Type type)
+        private static System.Reflection.FieldInfo GetFieldInfoFromPropertyPath(System.Type host, string path, out System.Type type)
         {
-            FieldInfo info = null;
+            System.Reflection.FieldInfo info = null;
             type = host;
             char[] separator = new char[] { '.' };
             string[] strArray = path.Split(separator);
@@ -167,8 +167,8 @@
                 }
                 else
                 {
-                    FieldInfo field = null;
-                    for (Type type2 = type; (field == null) && (type2 != null); type2 = type2.BaseType)
+                    System.Reflection.FieldInfo field = null;
+                    for (System.Type type2 = type; (field == null) && (type2 != null); type2 = type2.BaseType)
                     {
                         field = type2.GetField(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
                     }
@@ -197,10 +197,10 @@
             PropertyHandler handler = propertyHandlerCache.GetHandler(property);
             if (handler == null)
             {
-                Type type = null;
+                System.Type type = null;
                 List<PropertyAttribute> fieldAttributes = null;
-                FieldInfo field = null;
-                Object targetObject = property.serializedObject.targetObject;
+                System.Reflection.FieldInfo field = null;
+                UnityEngine.Object targetObject = property.serializedObject.targetObject;
                 if ((targetObject is MonoBehaviour) || (targetObject is ScriptableObject))
                 {
                     field = GetFieldInfoFromProperty(property, out type);
@@ -243,7 +243,7 @@
             return handler;
         }
 
-        private static Type GetScriptTypeFromProperty(SerializedProperty property)
+        private static System.Type GetScriptTypeFromProperty(SerializedProperty property)
         {
             SerializedProperty property2 = property.serializedObject.FindProperty("m_Script");
             if (property2 == null)
@@ -287,15 +287,15 @@
         {
             internal CustomPropertyDrawer editor;
 
-            internal bool <>m__0(Type x) => 
+            internal bool <>m__0(System.Type x) => 
                 x.IsSubclassOf(this.editor.m_Type);
         }
 
         [StructLayout(LayoutKind.Sequential)]
         private struct DrawerKeySet
         {
-            public Type drawer;
-            public Type type;
+            public System.Type drawer;
+            public System.Type type;
         }
     }
 }

@@ -936,15 +936,26 @@
                             {
                                 this.m_Text = this.m_Text.Substring(0, this.characterLimit);
                             }
-                            int length = this.m_Text.Length;
-                            this.caretSelectPositionInternal = length;
-                            this.caretPositionInternal = length;
+                            if (this.m_Keyboard.canGetSelection)
+                            {
+                                this.UpdateCaretFromKeyboard();
+                            }
+                            else
+                            {
+                                int length = this.m_Text.Length;
+                                this.caretSelectPositionInternal = length;
+                                this.caretPositionInternal = length;
+                            }
                             if (this.m_Text != text)
                             {
                                 this.m_Keyboard.text = this.m_Text;
                             }
                             this.SendOnValueChangedAndUpdateLabel();
                         }
+                    }
+                    else if (this.m_Keyboard.canGetSelection)
+                    {
+                        this.UpdateCaretFromKeyboard();
                     }
                     if (this.m_Keyboard.done)
                     {
@@ -1689,6 +1700,29 @@
 
         Transform ICanvasElement.get_transform() => 
             base.transform;
+
+        private void UpdateCaretFromKeyboard()
+        {
+            RangeInt selection = this.m_Keyboard.selection;
+            int start = selection.start;
+            int end = selection.end;
+            bool flag = false;
+            if (this.caretPositionInternal != start)
+            {
+                flag = true;
+                this.caretPositionInternal = start;
+            }
+            if (this.caretSelectPositionInternal != end)
+            {
+                this.caretSelectPositionInternal = end;
+                flag = true;
+            }
+            if (flag)
+            {
+                this.m_BlinkStartTime = Time.unscaledTime;
+                this.UpdateLabel();
+            }
+        }
 
         private void UpdateGeometry()
         {

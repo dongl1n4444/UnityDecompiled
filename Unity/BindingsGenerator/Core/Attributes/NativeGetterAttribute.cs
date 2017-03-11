@@ -7,7 +7,7 @@
     [AttributeUsage(AttributeTargets.Method)]
     internal class NativeGetterAttribute : Attribute
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private string <Name>k__BackingField;
 
         public string Name { get; set; }

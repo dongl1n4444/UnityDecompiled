@@ -12,7 +12,7 @@
     internal static class EditorAssemblies
     {
         [CompilerGenerated]
-        private static Func<Assembly, IEnumerable<Type>> <>f__am$cache0;
+        private static Func<Assembly, IEnumerable<System.Type>> <>f__am$cache0;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static Assembly[] <loadedAssemblies>k__BackingField;
         internal static List<RuntimeInitializeClassInfo> m_RuntimeInitializeClassInfoList;
@@ -26,7 +26,7 @@
         private static int GetTotalNumRuntimeInitializeMethods() => 
             m_TotalNumRuntimeInitializeMethods;
 
-        private static void ProcessEditorInitializeOnLoad(Type type)
+        private static void ProcessEditorInitializeOnLoad(System.Type type)
         {
             try
             {
@@ -34,7 +34,7 @@
             }
             catch (TypeInitializationException exception)
             {
-                Debug.LogError(exception.InnerException);
+                UnityEngine.Debug.LogError(exception.InnerException);
             }
         }
 
@@ -51,8 +51,8 @@
                 int count = m_RuntimeInitializeClassInfoList.Count;
                 try
                 {
-                    Type[] typesFromAssembly = AssemblyHelper.GetTypesFromAssembly(loadedAssemblies[i]);
-                    foreach (Type type in typesFromAssembly)
+                    System.Type[] typesFromAssembly = AssemblyHelper.GetTypesFromAssembly(loadedAssemblies[i]);
+                    foreach (System.Type type in typesFromAssembly)
                     {
                         if (type.IsDefined(typeof(InitializeOnLoadAttribute), false))
                         {
@@ -63,7 +63,7 @@
                 }
                 catch (Exception exception)
                 {
-                    Debug.LogException(exception);
+                    UnityEngine.Debug.LogException(exception);
                     if (list == null)
                     {
                         list = new List<int>();
@@ -82,7 +82,7 @@
             return list?.ToArray();
         }
 
-        private static void ProcessStaticMethodAttributes(Type type)
+        private static void ProcessStaticMethodAttributes(System.Type type)
         {
             List<string> methodNames = null;
             List<RuntimeInitializeLoadType> loadTypes = null;
@@ -114,7 +114,7 @@
                     }
                     catch (TargetInvocationException exception)
                     {
-                        Debug.LogError(exception.InnerException);
+                        UnityEngine.Debug.LogError(exception.InnerException);
                     }
                 }
             }
@@ -130,7 +130,7 @@
             loadedAssemblies = assemblies;
         }
 
-        private static void StoreRuntimeInitializeClassInfo(Type type, List<string> methodNames, List<RuntimeInitializeLoadType> loadTypes)
+        private static void StoreRuntimeInitializeClassInfo(System.Type type, List<string> methodNames, List<RuntimeInitializeLoadType> loadTypes)
         {
             RuntimeInitializeClassInfo item = new RuntimeInitializeClassInfo {
                 assemblyName = type.Assembly.GetName().Name.ToString(),
@@ -142,12 +142,12 @@
             m_TotalNumRuntimeInitializeMethods += methodNames.Count;
         }
 
-        internal static IEnumerable<Type> SubclassesOf(Type parent)
+        internal static IEnumerable<System.Type> SubclassesOf(System.Type parent)
         {
             <SubclassesOf>c__AnonStorey0 storey = new <SubclassesOf>c__AnonStorey0 {
                 parent = parent
             };
-            return Enumerable.Where<Type>(loadedTypes, new Func<Type, bool>(storey.<>m__0));
+            return Enumerable.Where<System.Type>(loadedTypes, new Func<System.Type, bool>(storey.<>m__0));
         }
 
         internal static Assembly[] loadedAssemblies
@@ -162,7 +162,7 @@
             }
         }
 
-        internal static IEnumerable<Type> loadedTypes
+        internal static IEnumerable<System.Type> loadedTypes
         {
             get
             {
@@ -170,16 +170,16 @@
                 {
                     <>f__am$cache0 = assembly => AssemblyHelper.GetTypesFromAssembly(assembly);
                 }
-                return Enumerable.SelectMany<Assembly, Type>(loadedAssemblies, <>f__am$cache0);
+                return Enumerable.SelectMany<Assembly, System.Type>(loadedAssemblies, <>f__am$cache0);
             }
         }
 
         [CompilerGenerated]
         private sealed class <SubclassesOf>c__AnonStorey0
         {
-            internal Type parent;
+            internal System.Type parent;
 
-            internal bool <>m__0(Type klass) => 
+            internal bool <>m__0(System.Type klass) => 
                 klass.IsSubclassOf(this.parent);
         }
     }

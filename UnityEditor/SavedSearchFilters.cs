@@ -11,7 +11,7 @@
         private bool m_AllowHierarchy = false;
         [SerializeField]
         private List<SavedFilter> m_SavedFilters;
-        private Action m_SavedFiltersChanged;
+        private System.Action m_SavedFiltersChanged;
 
         private int Add(string displayName, SearchFilter filter, float previewSize, int insertAfterInstanceID, bool addAsChild)
         {
@@ -50,12 +50,12 @@
             return item.m_ID;
         }
 
-        public static void AddChangeListener(Action callback)
+        public static void AddChangeListener(System.Action callback)
         {
             SavedSearchFilters instance = ScriptableSingleton<SavedSearchFilters>.instance;
-            instance.m_SavedFiltersChanged = (Action) Delegate.Remove(instance.m_SavedFiltersChanged, callback);
+            instance.m_SavedFiltersChanged = (System.Action) Delegate.Remove(instance.m_SavedFiltersChanged, callback);
             SavedSearchFilters local2 = ScriptableSingleton<SavedSearchFilters>.instance;
-            local2.m_SavedFiltersChanged = (Action) Delegate.Combine(local2.m_SavedFiltersChanged, callback);
+            local2.m_SavedFiltersChanged = (System.Action) Delegate.Combine(local2.m_SavedFiltersChanged, callback);
         }
 
         public static int AddSavedFilter(string displayName, SearchFilter filter, float previewSize) => 

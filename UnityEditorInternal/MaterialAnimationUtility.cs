@@ -8,7 +8,7 @@
     {
         private const string kMaterialPrefix = "material.";
 
-        private static void ApplyMaterialModificationToAnimationRecording(string name, Object target, Vector4 vec)
+        private static void ApplyMaterialModificationToAnimationRecording(string name, UnityEngine.Object target, Vector4 vec)
         {
             UndoPropertyModification[] modifications = CreateUndoPropertyModifications(4, target);
             SetupPropertyModification(name + ".x", vec.x, modifications[0]);
@@ -18,14 +18,14 @@
             Undo.postprocessModifications(modifications);
         }
 
-        private static void ApplyMaterialModificationToAnimationRecording(MaterialProperty materialProp, Object target, float value)
+        private static void ApplyMaterialModificationToAnimationRecording(MaterialProperty materialProp, UnityEngine.Object target, float value)
         {
             UndoPropertyModification[] modifications = CreateUndoPropertyModifications(1, target);
             SetupPropertyModification(materialProp.name, value, modifications[0]);
             Undo.postprocessModifications(modifications);
         }
 
-        private static void ApplyMaterialModificationToAnimationRecording(MaterialProperty materialProp, Object target, Color color)
+        private static void ApplyMaterialModificationToAnimationRecording(MaterialProperty materialProp, UnityEngine.Object target, Color color)
         {
             UndoPropertyModification[] modifications = CreateUndoPropertyModifications(4, target);
             SetupPropertyModification(materialProp.name + ".r", color.r, modifications[0]);
@@ -70,7 +70,7 @@
             return false;
         }
 
-        private static UndoPropertyModification[] CreateUndoPropertyModifications(int count, Object target)
+        private static UndoPropertyModification[] CreateUndoPropertyModifications(int count, UnityEngine.Object target)
         {
             UndoPropertyModification[] modificationArray = new UndoPropertyModification[count];
             for (int i = 0; i < modificationArray.Length; i++)
@@ -85,9 +85,9 @@
         {
             if (materialProp.type == MaterialProperty.PropType.Texture)
             {
-                return AnimationMode.IsPropertyAnimated(target, "material." + materialProp.name + "_ST");
+                return UnityEditor.AnimationMode.IsPropertyAnimated(target, "material." + materialProp.name + "_ST");
             }
-            return AnimationMode.IsPropertyAnimated(target, "material." + materialProp.name);
+            return UnityEditor.AnimationMode.IsPropertyAnimated(target, "material." + materialProp.name);
         }
 
         public static void SetupMaterialPropertyBlock(MaterialProperty materialProp, int changedMask, Renderer target)

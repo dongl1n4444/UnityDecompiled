@@ -45,7 +45,7 @@
                 }
                 if (perform)
                 {
-                    Object[] objectReferences = DragAndDrop.objectReferences;
+                    UnityEngine.Object[] objectReferences = DragAndDrop.objectReferences;
                     if (objectReferences.Length > 0)
                     {
                         string assetPath = AssetDatabase.GetAssetPath(objectReferences[0].GetInstanceID());

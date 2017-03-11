@@ -141,6 +141,20 @@
         private extern Array GetAllocArrayFromChannelImpl(InternalShaderChannel channel, InternalVertexChannelType format, int dim);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern void GetArrayFromChannelImpl(InternalShaderChannel channel, InternalVertexChannelType format, int dim, Array values);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern int GetBindposeCount();
+        public void GetBindposes(List<Matrix4x4> bindposes)
+        {
+            if (bindposes == null)
+            {
+                throw new ArgumentNullException("The result bindposes list cannot be null.", "bindposes");
+            }
+            this.PrepareUserBuffer<Matrix4x4>(bindposes, this.GetBindposeCount());
+            this.GetBindposesNonAllocImpl(bindposes);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void GetBindposesNonAllocImpl(object values);
         /// <summary>
         /// <para>Returns the frame count for a blend shape.</para>
         /// </summary>
@@ -176,15 +190,94 @@
         /// <param name="shapeIndex"></param>
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern string GetBlendShapeName(int shapeIndex);
+        public void GetBoneWeights(List<BoneWeight> boneWeights)
+        {
+            if (boneWeights == null)
+            {
+                throw new ArgumentNullException("The result boneWeights list cannot be null.", "boneWeights");
+            }
+            this.PrepareUserBuffer<BoneWeight>(boneWeights, this.vertexCount);
+            this.GetBoneWeightsNonAllocImpl(boneWeights);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void GetBoneWeightsNonAllocImpl(object values);
+        public void GetColors(List<Color> colors)
+        {
+            if (colors == null)
+            {
+                throw new ArgumentNullException("The result colors list cannot be null.", "colors");
+            }
+            this.GetListForChannel<Color>(colors, this.vertexCount, InternalShaderChannel.Color, DefaultDimensionForChannel(InternalShaderChannel.Color));
+        }
+
+        public void GetColors(List<Color32> colors)
+        {
+            if (colors == null)
+            {
+                throw new ArgumentNullException("The result colors list cannot be null.", "colors");
+            }
+            this.GetListForChannel<Color32>(colors, this.vertexCount, InternalShaderChannel.Color, 1, InternalVertexChannelType.Color);
+        }
+
         /// <summary>
-        /// <para>Returns the index buffer for the sub-Mesh.</para>
+        /// <para>Gets the index count of the given submesh.</para>
         /// </summary>
         /// <param name="submesh"></param>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern uint GetIndexCount(int submesh);
+        /// <summary>
+        /// <para>Gets the starting index location within the Mesh's index buffer, for the given submesh.</para>
+        /// </summary>
+        /// <param name="submesh"></param>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern uint GetIndexStart(int submesh);
+        /// <summary>
+        /// <para>Gets the index buffer for the specified sub mesh on this instance.</para>
+        /// </summary>
+        /// <param name="indices">A list of indices to populate.</param>
+        /// <param name="submesh">The sub mesh on this instance. See subMeshCount.</param>
         public int[] GetIndices(int submesh) => 
             (!this.CheckCanAccessSubmeshIndices(submesh) ? new int[0] : this.GetIndicesImpl(submesh));
 
+        public void GetIndices(List<int> indices, int submesh)
+        {
+            if (indices == null)
+            {
+                throw new ArgumentNullException("The result indices list cannot be null.", "indices");
+            }
+            if ((submesh < 0) || (submesh >= this.subMeshCount))
+            {
+                throw new IndexOutOfRangeException("Specified sub mesh is out of range. Must be greater or equal to 0 and less than subMeshCount.");
+            }
+            this.PrepareUserBuffer<int>(indices, (int) this.GetIndexCount(submesh));
+            indices.Clear();
+            this.GetIndicesNonAllocImpl(indices, submesh);
+        }
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern int[] GetIndicesImpl(int submesh);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void GetIndicesNonAllocImpl(object values, int submesh);
+        private void GetListForChannel<T>(List<T> buffer, int capacity, InternalShaderChannel channel, int dim)
+        {
+            this.GetListForChannel<T>(buffer, capacity, channel, dim, InternalVertexChannelType.Float);
+        }
+
+        private void GetListForChannel<T>(List<T> buffer, int capacity, InternalShaderChannel channel, int dim, InternalVertexChannelType channelType)
+        {
+            buffer.Clear();
+            if (!this.canAccess)
+            {
+                this.PrintErrorCantAccessMesh(channel);
+            }
+            else if (this.HasChannel(channel))
+            {
+                this.PrepareUserBuffer<T>(buffer, capacity);
+                this.GetArrayFromChannelImpl(channel, channelType, dim, ExtractArrayFromList(buffer));
+            }
+        }
+
         /// <summary>
         /// <para>Retrieves a native (underlying graphics API) pointer to the index buffer.</para>
         /// </summary>
@@ -212,6 +305,24 @@
             return ptr;
         }
 
+        public void GetNormals(List<Vector3> normals)
+        {
+            if (normals == null)
+            {
+                throw new ArgumentNullException("The result normals list cannot be null.", "normals");
+            }
+            this.GetListForChannel<Vector3>(normals, this.vertexCount, InternalShaderChannel.Normal, DefaultDimensionForChannel(InternalShaderChannel.Normal));
+        }
+
+        public void GetTangents(List<Vector4> tangents)
+        {
+            if (tangents == null)
+            {
+                throw new ArgumentNullException("The result tangents list cannot be null.", "tangents");
+            }
+            this.GetListForChannel<Vector4>(tangents, this.vertexCount, InternalShaderChannel.Tangent, DefaultDimensionForChannel(InternalShaderChannel.Tangent));
+        }
+
         /// <summary>
         /// <para>Gets the topology of a sub-Mesh.</para>
         /// </summary>
@@ -219,14 +330,31 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern MeshTopology GetTopology(int submesh);
         /// <summary>
-        /// <para>Returns the triangle list for the sub-Mesh.</para>
+        /// <para>Gets the triangle list for the specified sub mesh on this instance.</para>
         /// </summary>
-        /// <param name="submesh"></param>
+        /// <param name="triangles">A list of vertex indices to populate.</param>
+        /// <param name="submesh">The sub mesh on this instance. See subMeshCount.</param>
         public int[] GetTriangles(int submesh) => 
             (!this.CheckCanAccessSubmeshTriangles(submesh) ? new int[0] : this.GetTrianglesImpl(submesh));
 
+        public void GetTriangles(List<int> triangles, int submesh)
+        {
+            if (triangles == null)
+            {
+                throw new ArgumentNullException("The result triangles list cannot be null.", "triangles");
+            }
+            if ((submesh < 0) || (submesh >= this.subMeshCount))
+            {
+                throw new IndexOutOfRangeException("Specified sub mesh is out of range. Must be greater or equal to 0 and less than subMeshCount.");
+            }
+            this.PrepareUserBuffer<int>(triangles, (int) this.GetIndexCount(submesh));
+            this.GetTrianglesNonAllocImpl(triangles, submesh);
+        }
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern int[] GetTrianglesImpl(int submesh);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void GetTrianglesNonAllocImpl(object values, int submesh);
         internal InternalShaderChannel GetUVChannel(int uvIndex)
         {
             if ((uvIndex < 0) || (uvIndex > 3))
@@ -255,33 +383,22 @@
         {
             if (uvs == null)
             {
-                throw new ArgumentException("The result uvs list cannot be null", "uvs");
+                throw new ArgumentNullException("The result uvs list cannot be null.", "uvs");
             }
             if ((uvIndex < 0) || (uvIndex > 3))
             {
-                throw new ArgumentException("The uv index is invalid (must be in [0..3]", "uvIndex");
+                throw new IndexOutOfRangeException("Specified uv index is out of range. Must be in the range [0, 3].");
             }
-            uvs.Clear();
-            InternalShaderChannel uVChannel = this.GetUVChannel(uvIndex);
-            if (!this.canAccess)
-            {
-                this.PrintErrorCantAccessMesh(uVChannel);
-            }
-            else if (this.HasChannel(uVChannel))
-            {
-                if (this.vertexCount > uvs.Capacity)
-                {
-                    uvs.Capacity = this.vertexCount;
-                }
-                this.GetUVsInternal<T>(uvs, uvIndex, dim);
-            }
+            this.GetListForChannel<T>(uvs, this.vertexCount, this.GetUVChannel(uvIndex), dim);
         }
 
-        private void GetUVsInternal<T>(List<T> uvs, int uvIndex, int dim)
+        public void GetVertices(List<Vector3> vertices)
         {
-            InternalShaderChannel uVChannel = this.GetUVChannel(uvIndex);
-            ResizeList(uvs, this.vertexCount);
-            this.GetArrayFromChannelImpl(uVChannel, InternalVertexChannelType.Float, dim, ExtractArrayFromList(uvs));
+            if (vertices == null)
+            {
+                throw new ArgumentNullException("The result vertices list cannot be null.", "vertices");
+            }
+            this.GetListForChannel<Vector3>(vertices, this.vertexCount, InternalShaderChannel.Vertex, DefaultDimensionForChannel(InternalShaderChannel.Vertex));
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -306,6 +423,16 @@
         /// </summary>
         [MethodImpl(MethodImplOptions.InternalCall), EditorBrowsable(EditorBrowsableState.Never), Obsolete("This method is no longer supported (UnityUpgradable)", true)]
         public extern void Optimize();
+        private void PrepareUserBuffer<T>(List<T> buffer, int capacity)
+        {
+            buffer.Clear();
+            if (buffer.Capacity < capacity)
+            {
+                buffer.Capacity = capacity;
+            }
+            ResizeList(buffer, capacity);
+        }
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern void PrintErrorBadSubmeshIndexIndices();
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -638,7 +765,7 @@
             }
         }
 
-        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property Mesh.uv1 has been deprecated. Use Mesh.uv2 instead (UnityUpgradable) -> uv2", true)]
+        [Obsolete("Property Mesh.uv1 has been deprecated. Use Mesh.uv2 instead (UnityUpgradable) -> uv2", true), EditorBrowsable(EditorBrowsableState.Never)]
         public Vector2[] uv1
         {
             get => 

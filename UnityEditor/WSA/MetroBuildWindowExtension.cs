@@ -3,9 +3,11 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Text;
     using UnityEditor;
     using UnityEditor.Modules;
+    using UnityEditor.Scripting.Compilers;
     using UnityEditorInternal;
     using UnityEngine;
 
@@ -17,6 +19,9 @@
         private GUIContent uapBuildType = EditorGUIUtility.TextContent("UWP Build Type");
         private WSAUWPBuildType[] uwpBuildTypes;
         private GUIContent[] uwpBuildTypeStrings;
+        private GUIContent uwpSDK = EditorGUIUtility.TextContent("UWP SDK|Which specific Windows 10 SDK should the build process use?");
+        private string[] uwpSDKs;
+        private GUIContent[] uwpSDKStrings;
         private GUIContent wsaBuildAndRunDeployTarget = EditorGUIUtility.TextContent("Build and Run on|On which device the application should run when you click Build And Run button. Note: this option is ignored when you click Build button.");
         public WSABuildAndRunDeployTarget[] wsaBuildAndRunDeployTargets;
         public GUIContent[] wsaBuildAndRunDeployTargetStrings;
@@ -65,6 +70,16 @@
             for (int i = 0; i < this.wsaSDKs.Length; i++)
             {
                 this.wsaSDKStrings[i] = dictionary[this.wsaSDKs[i]];
+            }
+            Version[] versionArray = UWPReferences.GetInstalledSDKVersions().ToArray<Version>();
+            this.uwpSDKs = new string[versionArray.Length + 1];
+            this.uwpSDKStrings = new GUIContent[versionArray.Length + 1];
+            this.uwpSDKs[0] = string.Empty;
+            this.uwpSDKStrings[0] = EditorGUIUtility.TextContent("Latest installed");
+            for (int j = 0; j < versionArray.Length; j++)
+            {
+                this.uwpSDKs[j + 1] = versionArray[j].ToString();
+                this.uwpSDKStrings[j + 1] = EditorGUIUtility.TextContent(this.uwpSDKs[j + 1]);
             }
             this.targetExtension = targetExtension;
         }
@@ -144,6 +159,9 @@
             selectedIndex = Math.Max(0, Array.IndexOf<WSAUWPBuildType>(this.uwpBuildTypes, EditorUserBuildSettings.wsaUWPBuildType));
             selectedIndex = EditorGUILayout.Popup(this.uapBuildType, selectedIndex, this.uwpBuildTypeStrings, new GUILayoutOption[0]);
             EditorUserBuildSettings.wsaUWPBuildType = this.uwpBuildTypes[selectedIndex];
+            selectedIndex = Math.Max(0, Array.IndexOf<string>(this.uwpSDKs, EditorUserBuildSettings.wsaUWPSDK));
+            selectedIndex = EditorGUILayout.Popup(this.uwpSDK, selectedIndex, this.uwpSDKStrings, new GUILayoutOption[0]);
+            EditorUserBuildSettings.wsaUWPSDK = this.uwpSDKs[selectedIndex];
             GUI.enabled = (EditorUserBuildSettings.wsaSDK == WSASDK.UniversalSDK81) || (EditorUserBuildSettings.wsaSDK == WSASDK.UWP);
             selectedIndex = Math.Max(0, Array.IndexOf<WSABuildAndRunDeployTarget>(this.wsaBuildAndRunDeployTargets, EditorUserBuildSettings.wsaBuildAndRunDeployTarget));
             selectedIndex = EditorGUILayout.Popup(this.wsaBuildAndRunDeployTarget, selectedIndex, this.wsaBuildAndRunDeployTargetStrings, new GUILayoutOption[0]);

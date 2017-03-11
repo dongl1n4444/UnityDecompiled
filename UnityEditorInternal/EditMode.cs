@@ -9,7 +9,7 @@
     public class EditMode
     {
         [CompilerGenerated]
-        private static Action <>f__mg$cache0;
+        private static System.Action <>f__mg$cache0;
         private const float k_EditColliderbuttonHeight = 23f;
         private const float k_EditColliderbuttonWidth = 33f;
         private const float k_SpaceBetweenLabelAndButton = 5f;
@@ -23,18 +23,18 @@
         private static SceneViewEditMode s_EditMode;
         private static int s_OwnerID;
         private static GUIStyle s_ToolbarBaseStyle;
-        private static Tool s_ToolBeforeEnteringEditMode = Tool.Move;
+        private static UnityEditor.Tool s_ToolBeforeEnteringEditMode = UnityEditor.Tool.Move;
 
         static EditMode()
         {
             ownerID = SessionState.GetInt("EditModeOwner", ownerID);
             editMode = (SceneViewEditMode) SessionState.GetInt("EditModeState", (int) editMode);
-            toolBeforeEnteringEditMode = (Tool) SessionState.GetInt("EditModePrevTool", (int) toolBeforeEnteringEditMode);
+            toolBeforeEnteringEditMode = (UnityEditor.Tool) SessionState.GetInt("EditModePrevTool", (int) toolBeforeEnteringEditMode);
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Action(EditMode.OnSelectionChange);
+                <>f__mg$cache0 = new System.Action(UnityEditorInternal.EditMode.OnSelectionChange);
             }
-            Selection.selectionChanged = (Action) Delegate.Combine(Selection.selectionChanged, <>f__mg$cache0);
+            Selection.selectionChanged = (System.Action) Delegate.Combine(Selection.selectionChanged, <>f__mg$cache0);
             if (s_Debug)
             {
                 Debug.Log(string.Concat(new object[] { "EditMode static constructor: ", ownerID, " ", editMode, " ", toolBeforeEnteringEditMode }));
@@ -75,7 +75,7 @@
 
         private static void DetectMainToolChange()
         {
-            if ((Tools.current != Tool.None) && (editMode != SceneViewEditMode.None))
+            if ((Tools.current != UnityEditor.Tool.None) && (editMode != SceneViewEditMode.None))
             {
                 EndSceneViewEditing();
             }
@@ -167,7 +167,7 @@
 
         public static void QuitEditMode()
         {
-            if ((Tools.current == Tool.None) && (editMode != SceneViewEditMode.None))
+            if ((Tools.current == UnityEditor.Tool.None) && (editMode != SceneViewEditMode.None))
             {
                 ResetToolToPrevious();
             }
@@ -176,7 +176,7 @@
 
         public static void ResetToolToPrevious()
         {
-            if (Tools.current == Tool.None)
+            if (Tools.current == UnityEditor.Tool.None)
             {
                 Tools.current = toolBeforeEnteringEditMode;
             }
@@ -193,8 +193,8 @@
             {
                 if ((s_EditMode == SceneViewEditMode.None) && (value != SceneViewEditMode.None))
                 {
-                    toolBeforeEnteringEditMode = (Tools.current == Tool.None) ? Tool.Move : Tools.current;
-                    Tools.current = Tool.None;
+                    toolBeforeEnteringEditMode = (Tools.current == UnityEditor.Tool.None) ? UnityEditor.Tool.Move : Tools.current;
+                    Tools.current = UnityEditor.Tool.None;
                 }
                 else if ((s_EditMode != SceneViewEditMode.None) && (value == SceneViewEditMode.None))
                 {
@@ -224,7 +224,7 @@
             }
         }
 
-        private static Tool toolBeforeEnteringEditMode
+        private static UnityEditor.Tool toolBeforeEnteringEditMode
         {
             get => 
                 s_ToolBeforeEnteringEditMode;
@@ -239,7 +239,7 @@
             }
         }
 
-        public delegate void OnEditModeStartFunc(Editor editor, EditMode.SceneViewEditMode mode);
+        public delegate void OnEditModeStartFunc(Editor editor, UnityEditorInternal.EditMode.SceneViewEditMode mode);
 
         public delegate void OnEditModeStopFunc(Editor editor);
 

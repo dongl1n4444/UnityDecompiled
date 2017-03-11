@@ -164,7 +164,7 @@
         /// <param name="transform">A transform to measure the distance from. The transform's position will be automatically tracked.</param>
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void SetDistanceReferencePoint(Transform transform);
-        [SecuritySafeCritical, RequiredByNativeCode]
+        [RequiredByNativeCode, SecuritySafeCritical]
         private static unsafe void SendEvents(CullingGroup cullingGroup, IntPtr eventsPtr, int count)
         {
             CullingGroupEvent* eventPtr = (CullingGroupEvent*) eventsPtr.ToPointer();

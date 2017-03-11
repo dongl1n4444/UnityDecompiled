@@ -7,7 +7,7 @@
     internal class OcclusionCullingWindow : EditorWindow
     {
         private Mode m_Mode = Mode.AreaSettings;
-        private Object[] m_Objects;
+        private UnityEngine.Object[] m_Objects;
         private bool m_PreVis;
         private Vector2 m_ScrollPosition = Vector2.zero;
         private string m_Warning;
@@ -19,10 +19,10 @@
         {
             GameObject[] objArray;
             bool flag = true;
-            Type[] types = new Type[] { typeof(Renderer), typeof(OcclusionArea) };
-            Type type = SceneModeUtility.SearchBar(types);
+            System.Type[] types = new System.Type[] { typeof(Renderer), typeof(OcclusionArea) };
+            System.Type type = SceneModeUtility.SearchBar(types);
             EditorGUILayout.Space();
-            OcclusionArea[] selectedObjectsOfType = SceneModeUtility.GetSelectedObjectsOfType<OcclusionArea>(out objArray, new Type[0]);
+            OcclusionArea[] selectedObjectsOfType = SceneModeUtility.GetSelectedObjectsOfType<OcclusionArea>(out objArray, new System.Type[0]);
             if (objArray.Length > 0)
             {
                 flag = false;
@@ -31,7 +31,7 @@
                 EditorGUILayout.PropertyField(obj2.FindProperty("m_IsViewVolume"), new GUILayoutOption[0]);
                 obj2.ApplyModifiedProperties();
             }
-            Type[] typeArray2 = new Type[] { typeof(MeshRenderer), typeof(SkinnedMeshRenderer) };
+            System.Type[] typeArray2 = new System.Type[] { typeof(MeshRenderer), typeof(SkinnedMeshRenderer) };
             Renderer[] objects = SceneModeUtility.GetSelectedObjectsOfType<Renderer>(out objArray, typeArray2);
             if (objArray.Length > 0)
             {
@@ -134,7 +134,7 @@
 
         private void CameraSelectionGUI()
         {
-            Type[] types = new Type[] { typeof(Camera) };
+            System.Type[] types = new System.Type[] { typeof(Camera) };
             SceneModeUtility.SearchBar(types);
             EditorGUILayout.Space();
             Camera component = null;
@@ -162,7 +162,7 @@
             return area;
         }
 
-        private void DisplayControls(Object target, SceneView sceneView)
+        private void DisplayControls(UnityEngine.Object target, SceneView sceneView)
         {
             if ((sceneView != null) && s_IsVisible)
             {
@@ -248,10 +248,10 @@
             }
         }
 
-        [MenuItem("Window/Occlusion Culling", false, 0x833)]
+        [UnityEditor.MenuItem("Window/Occlusion Culling", false, 0x833)]
         private static void GenerateWindow()
         {
-            Type[] desiredDockNextTo = new Type[] { typeof(InspectorWindow) };
+            System.Type[] desiredDockNextTo = new System.Type[] { typeof(InspectorWindow) };
             EditorWindow.GetWindow<OcclusionCullingWindow>(desiredDockNextTo).minSize = new Vector2(300f, 250f);
         }
 

@@ -194,9 +194,9 @@
             this.AddScriptToCustomOrder(this.m_DefaultTimeScripts[selected]);
         }
 
-        private static Object MonoScriptValidatorCallback(Object[] references, Type objType, SerializedProperty property)
+        private static UnityEngine.Object MonoScriptValidatorCallback(UnityEngine.Object[] references, System.Type objType, SerializedProperty property)
         {
-            foreach (Object obj2 in references)
+            foreach (UnityEngine.Object obj2 in references)
             {
                 MonoScript script = obj2 as MonoScript;
                 if ((script != null) && IsValidScript(script))

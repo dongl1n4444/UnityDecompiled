@@ -293,7 +293,7 @@
             {
                 for (int i = 0; i < this.m_ShownPlanes.Length; i++)
                 {
-                    Object objectReferenceValue = this.m_ShownPlanes[i].objectReferenceValue;
+                    UnityEngine.Object objectReferenceValue = this.m_ShownPlanes[i].objectReferenceValue;
                     if (objectReferenceValue != null)
                     {
                         Transform objB = objectReferenceValue as Transform;
@@ -308,11 +308,11 @@
                             {
                                 Tools.s_Hidden = true;
                                 EditorGUI.BeginChangeCheck();
-                                if (Tools.current == Tool.Move)
+                                if (Tools.current == UnityEditor.Tool.Move)
                                 {
                                     objB.position = Handles.PositionHandle(position, rotation);
                                 }
-                                else if (Tools.current == Tool.Rotate)
+                                else if (Tools.current == UnityEditor.Tool.Rotate)
                                 {
                                     objB.rotation = Handles.RotationHandle(rotation, position);
                                 }
@@ -415,7 +415,7 @@
             {
                 for (int i = 0; i < this.m_ShownPlanes.Length; i++)
                 {
-                    Object objectReferenceValue = this.m_ShownPlanes[i].objectReferenceValue;
+                    UnityEngine.Object objectReferenceValue = this.m_ShownPlanes[i].objectReferenceValue;
                     if (objectReferenceValue == null)
                     {
                         ParticleEffectUtils.HidePlaneIfExists(i);

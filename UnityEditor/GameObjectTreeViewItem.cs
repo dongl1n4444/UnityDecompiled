@@ -12,7 +12,7 @@
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <isSceneHeader>k__BackingField;
         private int m_ColorCode;
-        private Object m_ObjectPPTR;
+        private UnityEngine.Object m_ObjectPPTR;
         private bool m_ShouldDisplay;
         private Scene m_UnityScene;
 
@@ -55,7 +55,7 @@
 
         public bool isSceneHeader { get; set; }
 
-        public virtual Object objectPPTR
+        public virtual UnityEngine.Object objectPPTR
         {
             get => 
                 this.m_ObjectPPTR;

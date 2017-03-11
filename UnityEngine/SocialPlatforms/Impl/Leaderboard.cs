@@ -13,7 +13,7 @@
         private Range <range>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private TimeScope <timeScope>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private UserScope <userScope>k__BackingField;
         private bool m_Loading;
         private IScore m_LocalUserScore;

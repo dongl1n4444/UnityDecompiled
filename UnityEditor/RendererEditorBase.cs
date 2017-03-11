@@ -28,7 +28,7 @@
         protected void RenderCommonProbeFields(bool useMiniStyle)
         {
             bool isDeferredRenderingPath = SceneView.IsUsingDeferredRenderingPath();
-            bool isDeferredReflections = isDeferredRenderingPath && (GraphicsSettings.GetShaderMode(BuiltinShaderType.DeferredReflections) != BuiltinShaderMode.Disabled);
+            bool isDeferredReflections = isDeferredRenderingPath && (UnityEngine.Rendering.GraphicsSettings.GetShaderMode(BuiltinShaderType.DeferredReflections) != UnityEngine.Rendering.BuiltinShaderMode.Disabled);
             this.m_Probes.RenderReflectionProbeUsage(useMiniStyle, isDeferredRenderingPath, isDeferredReflections);
             this.m_Probes.RenderProbeAnchor(useMiniStyle);
         }
@@ -156,15 +156,15 @@
             internal bool IsUsingLightProbeProxyVolume(int selectionCount) => 
                 (((selectionCount == 1) && (this.m_LightProbeUsage.intValue == 2)) || (((selectionCount > 1) && !this.m_LightProbeUsage.hasMultipleDifferentValues) && (this.m_LightProbeUsage.intValue == 2)));
 
-            internal void OnGUI(Object[] selection, Renderer renderer, bool useMiniStyle)
+            internal void OnGUI(UnityEngine.Object[] selection, Renderer renderer, bool useMiniStyle)
             {
                 int selectionCount = 1;
                 bool isDeferredRenderingPath = SceneView.IsUsingDeferredRenderingPath();
-                bool isDeferredReflections = isDeferredRenderingPath && (GraphicsSettings.GetShaderMode(BuiltinShaderType.DeferredReflections) != BuiltinShaderMode.Disabled);
+                bool isDeferredReflections = isDeferredRenderingPath && (UnityEngine.Rendering.GraphicsSettings.GetShaderMode(BuiltinShaderType.DeferredReflections) != UnityEngine.Rendering.BuiltinShaderMode.Disabled);
                 bool usesLightMaps = false;
                 if (selection != null)
                 {
-                    foreach (Object obj2 in selection)
+                    foreach (UnityEngine.Object obj2 in selection)
                     {
                         if (LightmapEditorSettings.IsLightmappedOrDynamicLightmappedForRendering((Renderer) obj2))
                         {

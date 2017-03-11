@@ -8,7 +8,7 @@
 
     internal class GradientPicker : EditorWindow
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <gradientChanged>k__BackingField;
         private const int k_DefaultNumSteps = 0;
         private GUIView m_DelegateView;
@@ -115,7 +115,7 @@
             Gradient gradient = presetObject as Gradient;
             if (gradient == null)
             {
-                Debug.LogError("Incorrect object passed " + presetObject);
+                UnityEngine.Debug.LogError("Incorrect object passed " + presetObject);
             }
             SetCurrentGradient(gradient);
             this.gradientChanged = true;
@@ -216,7 +216,7 @@
             {
                 if (s_GradientPicker == null)
                 {
-                    Debug.LogError("Gradient Picker not initalized, did you call Show first?");
+                    UnityEngine.Debug.LogError("Gradient Picker not initalized, did you call Show first?");
                 }
                 return s_GradientPicker;
             }

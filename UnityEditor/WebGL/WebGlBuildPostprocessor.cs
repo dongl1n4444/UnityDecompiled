@@ -685,7 +685,7 @@
             this.m_PlatformProvider.Libs = GetModules(args);
             this.m_PlatformProvider.JsPre = GetJSPre(args);
             this.m_PlatformProvider.JsLib = GetJSLib(args);
-            IL2CPPUtils.RunIl2Cpp(args.stagingAreaData, this.m_PlatformProvider, new Action<string>(this.ModifyIl2CppOutputDirBeforeCompile), this.m_RCR, developmentBuild);
+            IL2CPPUtils.RunIl2Cpp(args.stagingAreaData, this.m_PlatformProvider, new Action<string>(this.ModifyIl2CppOutputDirBeforeCompile), this.m_RCR, false);
             string[] textArray7 = new string[] { args.stagingAreaData, "Native" };
             string str4 = Paths.Combine(textArray7);
             if (Application.platform != RuntimePlatform.WindowsEditor)

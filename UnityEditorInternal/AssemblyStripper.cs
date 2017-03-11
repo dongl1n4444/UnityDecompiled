@@ -123,7 +123,7 @@
             return true;
         }
 
-        private static void RunAssemblyStripper(string stagingAreaData, IEnumerable assemblies, string managedAssemblyFolderPath, string[] assembliesToStrip, string[] searchDirs, string monoLinkerPath, IIl2CppPlatformProvider platformProvider, RuntimeClassRegistry rcr, bool developmentBuild)
+        private static void RunAssemblyStripper(string stagingAreaData, IEnumerable assemblies, string managedAssemblyFolderPath, string[] assembliesToStrip, string[] searchDirs, string monoLinkerPath, IIl2CppPlatformProvider platformProvider, RuntimeClassRegistry rcr)
         {
             bool flag2;
             bool doStripping = ((rcr != null) && PlayerSettings.stripEngineCode) && platformProvider.supportsEngineStripping;
@@ -151,7 +151,7 @@
                 {
                     throw new OperationCanceledException();
                 }
-                if (!StripAssembliesTo(assembliesToStrip, searchDirs, fullPath, managedAssemblyFolderPath, out str, out str2, monoLinkerPath, platformProvider, first, developmentBuild))
+                if (!StripAssembliesTo(assembliesToStrip, searchDirs, fullPath, managedAssemblyFolderPath, out str, out str2, monoLinkerPath, platformProvider, first))
                 {
                     object[] objArray1 = new object[] { "Error in stripping assemblies: ", assemblies, ", ", str2 };
                     throw new Exception(string.Concat(objArray1));
@@ -184,16 +184,16 @@
             Directory.Delete(fullPath);
         }
 
-        internal static void StripAssemblies(string stagingAreaData, IIl2CppPlatformProvider platformProvider, RuntimeClassRegistry rcr, bool developmentBuild)
+        internal static void StripAssemblies(string stagingAreaData, IIl2CppPlatformProvider platformProvider, RuntimeClassRegistry rcr)
         {
             string fullPath = Path.GetFullPath(Path.Combine(stagingAreaData, "Managed"));
             List<string> userAssemblies = GetUserAssemblies(rcr, fullPath);
             string[] assembliesToStrip = userAssemblies.ToArray();
             string[] searchDirs = new string[] { fullPath };
-            RunAssemblyStripper(stagingAreaData, userAssemblies, fullPath, assembliesToStrip, searchDirs, MonoLinker2Path, platformProvider, rcr, developmentBuild);
+            RunAssemblyStripper(stagingAreaData, userAssemblies, fullPath, assembliesToStrip, searchDirs, MonoLinker2Path, platformProvider, rcr);
         }
 
-        private static bool StripAssembliesTo(string[] assemblies, string[] searchDirs, string outputFolder, string workingDirectory, out string output, out string error, string linkerPath, IIl2CppPlatformProvider platformProvider, IEnumerable<string> additionalBlacklist, bool developmentBuild)
+        private static bool StripAssembliesTo(string[] assemblies, string[] searchDirs, string outputFolder, string workingDirectory, out string output, out string error, string linkerPath, IIl2CppPlatformProvider platformProvider, IEnumerable<string> additionalBlacklist)
         {
             <StripAssembliesTo>c__AnonStorey0 storey = new <StripAssembliesTo>c__AnonStorey0 {
                 workingDirectory = workingDirectory
@@ -218,7 +218,7 @@
                 "-out \"" + outputFolder + "\"",
                 "-l none",
                 "-c link",
-                "-b " + developmentBuild,
+                "-b " + platformProvider.developmentMode,
                 "-x \"" + GetModuleWhitelist("Core", platformProvider.moduleStrippingInformationFolder) + "\"",
                 "-f \"" + Path.Combine(platformProvider.il2CppFolder, "LinkerDescriptors") + "\""
             };

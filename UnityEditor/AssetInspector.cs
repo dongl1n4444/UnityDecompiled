@@ -130,7 +130,7 @@
         internal static bool IsAssetServerSetUp() => 
             (InternalEditorUtility.HasTeamLicense() && ASEditorBackend.SettingsAreValid());
 
-        public void OnAssetStatusGUI(Rect r, int id, Object target, GUIStyle style)
+        public void OnAssetStatusGUI(Rect r, int id, UnityEngine.Object target, GUIStyle style)
         {
             if (target != null)
             {

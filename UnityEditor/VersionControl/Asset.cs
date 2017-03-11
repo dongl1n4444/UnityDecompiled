@@ -90,7 +90,7 @@
         /// </summary>
         public void Edit()
         {
-            Object target = this.Load();
+            UnityEngine.Object target = this.Load();
             if (target != null)
             {
                 AssetDatabase.OpenAsset(target);
@@ -127,13 +127,13 @@
         /// <summary>
         /// <para>Loads the asset to memory.</para>
         /// </summary>
-        public Object Load()
+        public UnityEngine.Object Load()
         {
             if ((this.state == States.DeletedLocal) || this.isMeta)
             {
                 return null;
             }
-            return AssetDatabase.LoadAssetAtPath(this.path, typeof(Object));
+            return AssetDatabase.LoadAssetAtPath(this.path, typeof(UnityEngine.Object));
         }
 
         internal string StateToString() => 

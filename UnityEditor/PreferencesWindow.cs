@@ -69,8 +69,8 @@
         {
             foreach (Assembly assembly in EditorAssemblies.loadedAssemblies)
             {
-                Type[] typesFromAssembly = AssemblyHelper.GetTypesFromAssembly(assembly);
-                foreach (Type type in typesFromAssembly)
+                System.Type[] typesFromAssembly = AssemblyHelper.GetTypesFromAssembly(assembly);
+                foreach (System.Type type in typesFromAssembly)
                 {
                     foreach (MethodInfo info in type.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static))
                     {
@@ -193,7 +193,7 @@
             }
         }
 
-        private void FilePopup(string label, string selectedString, ref string[] names, ref string[] paths, RefString outString, string defaultString, Action onChanged)
+        private void FilePopup(string label, string selectedString, ref string[] names, ref string[] paths, RefString outString, string defaultString, System.Action onChanged)
         {
             GUIStyle popup = EditorStyles.popup;
             GUILayout.BeginHorizontal(new GUILayoutOption[0]);
@@ -496,7 +496,7 @@
         private void ShowExternalApplications()
         {
             GUILayout.Space(10f);
-            this.FilePopup("External Script Editor", (string) this.m_ScriptEditorPath, ref this.m_ScriptAppDisplayNames, ref this.m_ScriptApps, this.m_ScriptEditorPath, "internal", new Action(this.OnScriptEditorChanged));
+            this.FilePopup("External Script Editor", (string) this.m_ScriptEditorPath, ref this.m_ScriptAppDisplayNames, ref this.m_ScriptApps, this.m_ScriptEditorPath, "internal", new System.Action(this.OnScriptEditorChanged));
             if (!this.IsSelectedScriptEditorSpecial())
             {
                 string scriptEditorArgs = this.m_ScriptEditorArgs;
@@ -978,11 +978,11 @@
 
         private class AppsListUserData
         {
-            public Action onChanged;
+            public System.Action onChanged;
             public string[] paths;
             public PreferencesWindow.RefString str;
 
-            public AppsListUserData(string[] paths, PreferencesWindow.RefString str, Action onChanged)
+            public AppsListUserData(string[] paths, PreferencesWindow.RefString str, System.Action onChanged)
             {
                 this.paths = paths;
                 this.str = str;

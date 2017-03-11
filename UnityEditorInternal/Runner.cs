@@ -53,10 +53,10 @@
                         IEnumerable<CompilerMessage> enumerable = parser.Parse(errorOutput, standardOutput, true);
                         foreach (CompilerMessage message in enumerable)
                         {
-                            Debug.LogPlayerBuildError(message.message, message.file, message.line, message.column);
+                            UnityEngine.Debug.LogPlayerBuildError(message.message, message.file, message.line, message.column);
                         }
                     }
-                    Debug.LogError("Failed running " + exe + " " + args + "\n\n" + program.GetAllOutput());
+                    UnityEngine.Debug.LogError("Failed running " + exe + " " + args + "\n\n" + program.GetAllOutput());
                     throw new Exception($"{exe} did not run properly!");
                 }
             }
@@ -70,7 +70,7 @@
                 program.WaitForExit();
                 if (program.ExitCode != 0)
                 {
-                    Debug.LogError("Failed running " + exe + " " + args + "\n\n" + program.GetAllOutput());
+                    UnityEngine.Debug.LogError("Failed running " + exe + " " + args + "\n\n" + program.GetAllOutput());
                     throw new Exception($"{exe} did not run properly!");
                 }
             }

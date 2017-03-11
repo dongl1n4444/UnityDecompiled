@@ -244,7 +244,7 @@
         /// <summary>
         /// <para>Filtering mode of the texture.</para>
         /// </summary>
-        public FilterMode filterMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public UnityEngine.FilterMode filterMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
         /// <summary>
         /// <para>Cubemap generation mode.</para>

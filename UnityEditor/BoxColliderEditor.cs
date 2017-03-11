@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(BoxCollider))]
+    [CustomEditor(typeof(BoxCollider)), CanEditMultipleObjects]
     internal class BoxColliderEditor : Collider3DEditorBase
     {
         private readonly BoxEditor m_BoxEditor = new BoxEditor(true, s_BoxHash);

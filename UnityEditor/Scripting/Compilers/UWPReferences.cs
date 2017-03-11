@@ -9,22 +9,67 @@
     using System.Runtime.InteropServices;
     using System.Xml.Linq;
     using UnityEditor;
+    using UnityEditor.Utils;
     using UnityEditorInternal;
 
     internal static class UWPReferences
     {
-        private static string CombinePaths(params string[] paths) => 
-            FileUtil.CombinePaths(paths);
+        [CompilerGenerated]
+        private static Func<string, bool> <>f__am$cache0;
 
-        private static UWPExtension[] GetExtensions(string folder, string version)
+        private static string CombinePaths(params string[] paths) => 
+            Paths.Combine(paths);
+
+        private static bool FindVersionInNode(XElement node, out Version version)
+        {
+            for (XAttribute attribute = node.FirstAttribute; attribute != null; attribute = attribute.NextAttribute)
+            {
+                if (string.Equals(attribute.Name.LocalName, "version", StringComparison.OrdinalIgnoreCase))
+                {
+                    try
+                    {
+                        version = new Version(attribute.Value);
+                        return true;
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+            version = null;
+            return false;
+        }
+
+        public static Version GetDesiredSDKVersion()
+        {
+            Version[] source = GetInstalledSDKVersions().ToArray<Version>();
+            if (source.Length == 0)
+            {
+                return new Version(10, 0, 0x2800, 0);
+            }
+            Version version2 = source.Max<Version>();
+            string wsaUWPSDK = EditorUserBuildSettings.wsaUWPSDK;
+            if (!string.IsNullOrEmpty(wsaUWPSDK))
+            {
+                foreach (Version version3 in source)
+                {
+                    if (version3.ToString() == wsaUWPSDK)
+                    {
+                        return version3;
+                    }
+                }
+            }
+            return version2;
+        }
+
+        private static UWPExtension[] GetExtensions(string windowsKitsFolder, string version)
         {
             List<UWPExtension> list = new List<UWPExtension>();
-            string referencesFolder = Path.Combine(folder, "References");
-            foreach (UWPExtensionSDK nsdk in GetExtensionSDKs(folder, version))
+            foreach (UWPExtensionSDK nsdk in GetExtensionSDKs(windowsKitsFolder, version))
             {
                 try
                 {
-                    UWPExtension item = new UWPExtension(nsdk.ManifestPath, referencesFolder);
+                    UWPExtension item = new UWPExtension(nsdk.ManifestPath, windowsKitsFolder, version);
                     list.Add(item);
                 }
                 catch
@@ -34,18 +79,24 @@
             return list.ToArray();
         }
 
-        public static IEnumerable<UWPExtensionSDK> GetExtensionSDKs()
+        public static IEnumerable<UWPExtensionSDK> GetExtensionSDKs(Version sdkVersion)
         {
-            string str;
-            string str2;
-            GetSDKFolderAndVersion(out str, out str2);
-            return GetExtensionSDKs(str, str2);
+            string str = GetWindowsKit10();
+            if (string.IsNullOrEmpty(str))
+            {
+                return new UWPExtensionSDK[0];
+            }
+            return GetExtensionSDKs(str, SdkVersionToString(sdkVersion));
         }
 
         private static IEnumerable<UWPExtensionSDK> GetExtensionSDKs(string sdkFolder, string sdkVersion)
         {
             List<UWPExtensionSDK> list = new List<UWPExtensionSDK>();
             string path = Path.Combine(sdkFolder, "Extension SDKs");
+            if (!Directory.Exists(path))
+            {
+                return new UWPExtensionSDK[0];
+            }
             foreach (string str2 in Directory.GetDirectories(path))
             {
                 string[] paths = new string[] { str2, sdkVersion, "SDKManifest.xml" };
@@ -68,9 +119,46 @@
             return list;
         }
 
+        public static IEnumerable<Version> GetInstalledSDKVersions()
+        {
+            string str = GetWindowsKit10();
+            if (string.IsNullOrEmpty(str))
+            {
+                return new Version[0];
+            }
+            string[] paths = new string[] { str, "Platforms", "UAP" };
+            if (<>f__am$cache0 == null)
+            {
+                <>f__am$cache0 = f => string.Equals("Platform.xml", Path.GetFileName(f), StringComparison.OrdinalIgnoreCase);
+            }
+            IEnumerable<string> enumerable2 = Enumerable.Where<string>(Directory.GetFiles(CombinePaths(paths), "*", SearchOption.AllDirectories), <>f__am$cache0);
+            List<Version> list = new List<Version>();
+            foreach (string str2 in enumerable2)
+            {
+                XDocument document;
+                try
+                {
+                    document = XDocument.Load(str2);
+                }
+                catch
+                {
+                    continue;
+                }
+                foreach (XNode node in document.Nodes())
+                {
+                    Version version;
+                    XElement element = node as XElement;
+                    if ((element != null) && FindVersionInNode(element, out version))
+                    {
+                        list.Add(version);
+                    }
+                }
+            }
+            return list;
+        }
+
         private static string[] GetPlatform(string folder, string version)
         {
-            string referencesFolder = Path.Combine(folder, "References");
             string[] paths = new string[] { folder, @"Platforms\UAP", version, "Platform.xml" };
             string uri = FileUtil.CombinePaths(paths);
             XElement element = XDocument.Load(uri).Element("ApplicationPlatform");
@@ -79,22 +167,31 @@
                 throw new Exception($"Invalid platform manifest at "{uri}".");
             }
             XElement containedApiContractsElement = element.Element("ContainedApiContracts");
-            return GetReferences(referencesFolder, containedApiContractsElement);
+            return GetReferences(folder, version, containedApiContractsElement);
         }
 
-        public static string[] GetReferences()
+        public static string[] GetReferences(Version sdkVersion)
         {
-            string str;
-            string str2;
-            GetSDKFolderAndVersion(out str, out str2);
+            string str = GetWindowsKit10();
+            if (string.IsNullOrEmpty(str))
+            {
+                return new string[0];
+            }
+            string version = SdkVersionToString(sdkVersion);
             HashSet<string> source = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
-            string item = Path.Combine(str, @"UnionMetadata\Facade\Windows.winmd");
-            source.Add(item);
-            foreach (string str4 in GetPlatform(str, str2))
+            string[] paths = new string[] { str, "UnionMetadata", version, "Facade", "Windows.winmd" };
+            string path = CombinePaths(paths);
+            if (!File.Exists(path))
+            {
+                string[] textArray2 = new string[] { str, "UnionMetadata", "Facade", "Windows.winmd" };
+                path = CombinePaths(textArray2);
+            }
+            source.Add(path);
+            foreach (string str4 in GetPlatform(str, version))
             {
                 source.Add(str4);
             }
-            foreach (UWPExtension extension in GetExtensions(str, str2))
+            foreach (UWPExtension extension in GetExtensions(str, version))
             {
                 foreach (string str5 in extension.References)
                 {
@@ -104,66 +201,72 @@
             return source.ToArray<string>();
         }
 
-        private static string[] GetReferences(string referencesFolder, XElement containedApiContractsElement)
+        private static string[] GetReferences(string windowsKitsFolder, string sdkVersion, XElement containedApiContractsElement)
         {
             List<string> list = new List<string>();
             foreach (XElement element in containedApiContractsElement.Elements("ApiContract"))
             {
                 string str = element.Attribute("name").Value;
                 string str2 = element.Attribute("version").Value;
-                string[] paths = new string[] { referencesFolder, str, str2, str + ".winmd" };
-                string path = FileUtil.CombinePaths(paths);
-                if (File.Exists(path))
+                string[] paths = new string[] { windowsKitsFolder, "References", sdkVersion, str, str2, str + ".winmd" };
+                string path = CombinePaths(paths);
+                if (!File.Exists(path))
                 {
-                    list.Add(path);
+                    string[] textArray2 = new string[] { windowsKitsFolder, "References", str, str2, str + ".winmd" };
+                    path = CombinePaths(textArray2);
+                    if (!File.Exists(path))
+                    {
+                        continue;
+                    }
                 }
+                list.Add(path);
             }
             return list.ToArray();
         }
 
-        private static void GetSDKFolderAndVersion(out string sdkFolder, out string sdkVersion)
+        private static string GetWindowsKit10()
         {
-            Version version;
-            GetWindowsKit10(out sdkFolder, out version);
-            sdkVersion = version.ToString();
-            if (version.Minor == -1)
-            {
-                sdkVersion = sdkVersion + ".0";
-            }
-            if (version.Build == -1)
-            {
-                sdkVersion = sdkVersion + ".0";
-            }
-            if (version.Revision == -1)
-            {
-                sdkVersion = sdkVersion + ".0";
-            }
-        }
-
-        private static void GetWindowsKit10(out string folder, out Version version)
-        {
-            string environmentVariable = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
-            folder = Path.Combine(environmentVariable, @"Windows Kits\10\");
-            version = new Version(10, 0, 0x2800);
+            string defaultValue = Path.Combine(Environment.GetEnvironmentVariable("ProgramFiles(x86)"), @"Windows Kits\10\");
             try
             {
-                folder = RegistryUtil.GetRegistryStringValue32(@"SOFTWARE\Microsoft\Microsoft SDKs\Windows\v10.0", "InstallationFolder", folder);
-                string str2 = RegistryUtil.GetRegistryStringValue32(@"SOFTWARE\Microsoft\Microsoft SDKs\Windows\v10.0", "ProductVersion", version.ToString());
-                version = new Version(str2);
+                defaultValue = RegistryUtil.GetRegistryStringValue32(@"SOFTWARE\Microsoft\Microsoft SDKs\Windows\v10.0", "InstallationFolder", defaultValue);
             }
             catch
             {
             }
+            if (!Directory.Exists(defaultValue))
+            {
+                return string.Empty;
+            }
+            return defaultValue;
+        }
+
+        internal static string SdkVersionToString(Version version)
+        {
+            string str = version.ToString();
+            if (version.Minor == -1)
+            {
+                str = str + ".0";
+            }
+            if (version.Build == -1)
+            {
+                str = str + ".0";
+            }
+            if (version.Revision == -1)
+            {
+                str = str + ".0";
+            }
+            return str;
         }
 
         private sealed class UWPExtension
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private string <Name>k__BackingField;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private string[] <References>k__BackingField;
 
-            public UWPExtension(string manifest, string referencesFolder)
+            public UWPExtension(string manifest, string windowsKitsFolder, string sdkVersion)
             {
                 XElement element = XDocument.Load(manifest).Element("FileList");
                 if (element.Attribute("TargetPlatform").Value != "UAP")
@@ -172,7 +275,7 @@
                 }
                 this.Name = element.Attribute("DisplayName").Value;
                 XElement containedApiContractsElement = element.Element("ContainedApiContracts");
-                this.References = UWPReferences.GetReferences(referencesFolder, containedApiContractsElement);
+                this.References = UWPReferences.GetReferences(windowsKitsFolder, sdkVersion, containedApiContractsElement);
             }
 
             public string Name { get; private set; }

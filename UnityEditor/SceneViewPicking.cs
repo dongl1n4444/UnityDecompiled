@@ -12,7 +12,7 @@
     internal class SceneViewPicking
     {
         [CompilerGenerated]
-        private static Action <>f__mg$cache0;
+        private static System.Action <>f__mg$cache0;
         private static int s_PreviousPrefixHash = 0;
         private static int s_PreviousTopmostHash = 0;
         private static bool s_RetainHashes = false;
@@ -21,9 +21,9 @@
         {
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Action(SceneViewPicking.ResetHashes);
+                <>f__mg$cache0 = new System.Action(SceneViewPicking.ResetHashes);
             }
-            Selection.selectionChanged = (Action) Delegate.Combine(Selection.selectionChanged, <>f__mg$cache0);
+            Selection.selectionChanged = (System.Action) Delegate.Combine(Selection.selectionChanged, <>f__mg$cache0);
         }
 
         [DebuggerHidden]
@@ -166,7 +166,7 @@
                         }
                         return true;
                     }
-                    Debug.LogError("GetAllOverlapping failed, could not ignore game object '" + this.<go>__1.name + "' when picking");
+                    UnityEngine.Debug.LogError("GetAllOverlapping failed, could not ignore game object '" + this.<go>__1.name + "' when picking");
                 }
                 this.$PC = -1;
             Label_00F1:

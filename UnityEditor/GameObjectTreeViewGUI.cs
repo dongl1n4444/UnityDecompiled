@@ -14,11 +14,11 @@
         private float m_PrevTotalHeight;
         protected static GameObjectStyles s_GOStyles;
 
-        public event Action mouseAndKeyboardInput;
+        public event System.Action mouseAndKeyboardInput;
 
-        public event Action scrollHeightChanged;
+        public event System.Action scrollHeightChanged;
 
-        public event Action scrollPositionChanged;
+        public event System.Action scrollPositionChanged;
 
         public GameObjectTreeViewGUI(TreeViewController treeView, bool useHorizontalScroll) : base(treeView, useHorizontalScroll)
         {

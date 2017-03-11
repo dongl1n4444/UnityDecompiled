@@ -65,7 +65,7 @@
                 {
                     s_PreviewTexture = new Texture2D(0x60, 0x60, TextureFormat.RGBA32, false, true);
                     s_PreviewTexture.name = "ParticleNoisePreview";
-                    s_PreviewTexture.filterMode = FilterMode.Bilinear;
+                    s_PreviewTexture.filterMode = UnityEngine.FilterMode.Bilinear;
                     s_PreviewTexture.hideFlags = HideFlags.HideAndDontSave;
                     s_Texts.previewTexture.image = s_PreviewTexture;
                 }

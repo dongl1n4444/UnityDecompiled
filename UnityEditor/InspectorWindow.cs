@@ -17,11 +17,11 @@
     internal class InspectorWindow : EditorWindow, IHasCustomMenu
     {
         [CompilerGenerated]
-        private static Func<Object, bool> <>f__am$cache0;
+        private static Func<UnityEngine.Object, bool> <>f__am$cache0;
         [CompilerGenerated]
-        private static Func<Object, bool> <>f__am$cache1;
+        private static Func<UnityEngine.Object, bool> <>f__am$cache1;
         [CompilerGenerated]
-        private static Func<Object, GameObject> <>f__am$cache2;
+        private static Func<UnityEngine.Object, GameObject> <>f__am$cache2;
         private const long delayRepaintWhilePlayingAnimation = 150L;
         private const float kBottomToolbarHeight = 17f;
         internal const int kInspectorPaddingLeft = 14;
@@ -75,7 +75,7 @@
                     {
                         <>f__am$cache2 = o => (GameObject) o;
                     }
-                    if (AddComponentWindow.Show(position, Enumerable.Select<Object, GameObject>(firstNonImportInspectorEditor.targets, <>f__am$cache2).ToArray<GameObject>()))
+                    if (AddComponentWindow.Show(position, Enumerable.Select<UnityEngine.Object, GameObject>(firstNonImportInspectorEditor.targets, <>f__am$cache2).ToArray<GameObject>()))
                     {
                         GUIUtility.ExitGUI();
                     }
@@ -207,7 +207,7 @@
             }
         }
 
-        private static void DoInspectorDragAndDrop(Rect rect, Object[] targets)
+        private static void DoInspectorDragAndDrop(Rect rect, UnityEngine.Object[] targets)
         {
             if (Dragging(rect))
             {
@@ -227,7 +227,7 @@
             if (editor != null)
             {
                 bool isInspectorExpanded;
-                Object target = editor.target;
+                UnityEngine.Object target = editor.target;
                 GUIUtility.GetControlID(target.GetInstanceID(), FocusType.Passive);
                 EditorGUIUtility.ResetGUIState();
                 GUILayoutGroup topLevel = GUILayoutUtility.current.topLevel;
@@ -390,7 +390,7 @@
         {
             if (editors.Length != 0)
             {
-                Object inspectedObject = this.GetInspectedObject();
+                UnityEngine.Object inspectedObject = this.GetInspectedObject();
                 string message = string.Empty;
                 GUILayout.Space(0f);
                 if (inspectedObject is Material)
@@ -464,13 +464,13 @@
             IPreviewable[] editorsWithPreviews = this.GetEditorsWithPreviews(this.tracker.activeEditors);
             IPreviewable editorThatControlsPreview = this.GetEditorThatControlsPreview(editorsWithPreviews);
             bool flag = ((editorThatControlsPreview != null) && editorThatControlsPreview.HasPreviewGUI()) && (this.m_PreviewWindow == null);
-            Object[] inspectedAssets = this.GetInspectedAssets();
+            UnityEngine.Object[] inspectedAssets = this.GetInspectedAssets();
             bool flag2 = inspectedAssets.Length > 0;
             if (<>f__am$cache0 == null)
             {
                 <>f__am$cache0 = a => !(a is MonoScript) && AssetDatabase.IsMainAsset(a);
             }
-            bool flag3 = Enumerable.Any<Object>(inspectedAssets, <>f__am$cache0);
+            bool flag3 = Enumerable.Any<UnityEngine.Object>(inspectedAssets, <>f__am$cache0);
             if (flag || flag2)
             {
                 GUIContent preTitle;
@@ -599,7 +599,7 @@
                         {
                             <>f__am$cache1 = a => EditorUtility.IsPersistent(a) && !Editor.IsAppropriateFileOpenForEdit(a);
                         }
-                        using (new EditorGUI.DisabledScope(Enumerable.Any<Object>(inspectedAssets, <>f__am$cache1)))
+                        using (new EditorGUI.DisabledScope(Enumerable.Any<UnityEngine.Object>(inspectedAssets, <>f__am$cache1)))
                         {
                             this.m_LabelGUI.OnLabelGUI(inspectedAssets);
                         }
@@ -657,7 +657,7 @@
                 GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Height(17f) };
                 EditorGUILayout.BeginHorizontal(GUIContent.none, styles.preToolbar, options);
                 Editor firstNonImportInspectorEditor = this.GetFirstNonImportInspectorEditor(this.tracker.activeEditors);
-                Object target = firstNonImportInspectorEditor?.target;
+                UnityEngine.Object target = firstNonImportInspectorEditor?.target;
                 int controlID = GUIUtility.GetControlID(FocusType.Passive);
                 GUILayout.FlexibleSpace();
                 Rect lastRect = GUILayoutUtility.GetLastRect();
@@ -831,7 +831,7 @@
                     return this.m_SelectedPreview;
                 }
                 IPreviewable lastInteractedEditor = this.GetLastInteractedEditor();
-                Type type = lastInteractedEditor?.GetType();
+                System.Type type = lastInteractedEditor?.GetType();
                 IPreviewable previewable3 = null;
                 IPreviewable previewable4 = null;
                 foreach (IPreviewable previewable5 in editors)
@@ -876,7 +876,7 @@
             return null;
         }
 
-        private Object[] GetInspectedAssets()
+        private UnityEngine.Object[] GetInspectedAssets()
         {
             Editor firstNonImportInspectorEditor = this.GetFirstNonImportInspectorEditor(this.tracker.activeEditors);
             if ((firstNonImportInspectorEditor != null) && ((firstNonImportInspectorEditor != null) && (firstNonImportInspectorEditor.targets.Length == 1)))
@@ -887,10 +887,10 @@
                     return firstNonImportInspectorEditor.targets;
                 }
             }
-            return Selection.GetFiltered(typeof(Object), SelectionMode.Assets);
+            return Selection.GetFiltered(typeof(UnityEngine.Object), UnityEditor.SelectionMode.Assets);
         }
 
-        public Object GetInspectedObject()
+        public UnityEngine.Object GetInspectedObject()
         {
             Editor firstNonImportInspectorEditor = this.GetFirstNonImportInspectorEditor(this.tracker.activeEditors);
             return firstNonImportInspectorEditor?.target;
@@ -907,8 +907,8 @@
             List<IPreviewable> list = new List<IPreviewable>();
             foreach (Assembly assembly in EditorAssemblies.loadedAssemblies)
             {
-                Type[] typesFromAssembly = AssemblyHelper.GetTypesFromAssembly(assembly);
-                foreach (Type type in typesFromAssembly)
+                System.Type[] typesFromAssembly = AssemblyHelper.GetTypesFromAssembly(assembly);
+                foreach (System.Type type in typesFromAssembly)
                 {
                     if (typeof(IPreviewable).IsAssignableFrom(type) && !typeof(Editor).IsAssignableFrom(type))
                     {
@@ -928,7 +928,7 @@
             return list;
         }
 
-        protected Object[] GetTargetsForPreview(IPreviewable previewEditor)
+        protected UnityEngine.Object[] GetTargetsForPreview(IPreviewable previewEditor)
         {
             Editor editor = null;
             foreach (Editor editor2 in this.tracker.activeEditors)
@@ -1101,7 +1101,7 @@
 
         private bool ReadyToRepaint()
         {
-            if (AnimationMode.InAnimationPlaybackMode())
+            if (UnityEditor.AnimationMode.InAnimationPlaybackMode())
             {
                 long num = DateTime.Now.Ticks / 0x2710L;
                 if ((num - this.s_LastUpdateWhilePlayingAnimation) < 150L)
@@ -1172,7 +1172,7 @@
             {
                 return true;
             }
-            Object target = editors[editorIndex].target;
+            UnityEngine.Object target = editors[editorIndex].target;
             if ((target is SubstanceImporter) || (target is ParticleSystemRenderer))
             {
                 return true;

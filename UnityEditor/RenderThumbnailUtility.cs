@@ -60,7 +60,7 @@
                             string dependency = ShaderUtil.GetDependency(original.shader, "BillboardShader");
                             if ((dependency != null) && (dependency != ""))
                             {
-                                original = Object.Instantiate<Material>(original);
+                                original = UnityEngine.Object.Instantiate<Material>(original);
                                 original.shader = Shader.Find(dependency);
                                 original.hideFlags = HideFlags.HideAndDontSave;
                             }
@@ -73,7 +73,7 @@
                             }
                             if (original != sharedMaterials[i])
                             {
-                                Object.DestroyImmediate(original);
+                                UnityEngine.Object.DestroyImmediate(original);
                             }
                         }
                     }
@@ -81,7 +81,7 @@
             }
             textured2.ReadPixels(new Rect(0f, 0f, (float) textured2.width, (float) textured2.height), 0, 0);
             RenderTexture.ReleaseTemporary(temporary);
-            Object.DestroyImmediate(obj2);
+            UnityEngine.Object.DestroyImmediate(obj2);
             Camera.SetupCurrent(current);
             return textured2;
         }

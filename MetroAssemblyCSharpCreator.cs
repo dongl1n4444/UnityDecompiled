@@ -64,11 +64,8 @@ internal static class MetroAssemblyCSharpCreator
                 builder.AppendFormat(@";{0}\{1}\**\*.cs", str4, str6);
             }
             builder.AppendLine("\">");
-            if (str4.StartsWith(".."))
-            {
-                builder.AppendFormat("      <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>", new object[0]);
-                builder.AppendLine();
-            }
+            builder.AppendFormat("      <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>", new object[0]);
+            builder.AppendLine();
             builder.AppendLine("    </Compile>");
             additionalReferencePath = $"-additionalAssemblyPath="{MetroVisualStudioSolutionHelper.GetAssemblyCSharpFirstpassDllDir(wsaSDK)}"";
         }
@@ -78,11 +75,8 @@ internal static class MetroAssemblyCSharpCreator
             {
                 builder.AppendFormat("    <Compile Include=\"{0}\\{1}\\**\\*.cs\" Exclude=\"{0}\\{1}\\**\\Editor\\**\\*.cs\">", str4, str7);
                 builder.AppendLine();
-                if (str4.StartsWith(".."))
-                {
-                    builder.AppendFormat(@"      <Link>{0}\%(RecursiveDir)%(Filename)%(Extension)</Link>", str7);
-                    builder.AppendLine();
-                }
+                builder.AppendFormat(@"      <Link>{0}\%(RecursiveDir)%(Filename)%(Extension)</Link>", str7);
+                builder.AppendLine();
                 builder.AppendLine("    </Compile>");
             }
         }
@@ -128,7 +122,7 @@ internal static class MetroAssemblyCSharpCreator
         }
         if (wsaSDK == WSASDK.UWP)
         {
-            foreach (UWPExtensionSDK nsdk in UWPReferences.GetExtensionSDKs())
+            foreach (UWPExtensionSDK nsdk in UWPReferences.GetExtensionSDKs(Utility.GetDesiredUWPSDK()))
             {
                 builder.AppendLine();
                 builder.AppendFormat("    <SDKReference Include=\"{0}, Version={1}\"/>", nsdk.Name, nsdk.Version);
@@ -146,7 +140,7 @@ internal static class MetroAssemblyCSharpCreator
                 break;
 
             case WSASDK.UWP:
-                contents = string.Format(GetAssemblyCSharpTemplateUWP(MetroVisualStudioSolutionHelper.GetUWPSDKVersion()), new object[] { assemblyName, assemblyCSharpConfigs, builder, files, postTargets, project.Guid, preTargets });
+                contents = string.Format(GetAssemblyCSharpTemplateUWP(Utility.GetDesiredUWPSDKString()), new object[] { assemblyName, assemblyCSharpConfigs, builder, files, postTargets, project.Guid, preTargets });
                 break;
 
             default:

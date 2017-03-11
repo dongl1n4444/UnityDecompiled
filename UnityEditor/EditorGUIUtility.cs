@@ -348,7 +348,7 @@
             (s_FontIsBold == 1);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Object GetBuiltinExtraResource(Type type, string path);
+        internal static extern UnityEngine.Object GetBuiltinExtraResource(System.Type type, string path);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern BuiltinResource[] GetBuiltinResourceList(int classID);
         /// <summary>
@@ -402,7 +402,7 @@
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Texture2D GetIconForObject(Object obj);
+        internal static extern Texture2D GetIconForObject(UnityEngine.Object obj);
         /// <summary>
         /// <para>Get the size that has been set using SetIconSize.</para>
         /// </summary>
@@ -442,7 +442,7 @@
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern string GetObjectNameWithInfo(Object obj);
+        private static extern string GetObjectNameWithInfo(UnityEngine.Object obj);
         /// <summary>
         /// <para>The controlID of the currently showing object picker.</para>
         /// </summary>
@@ -452,7 +452,7 @@
         /// <summary>
         /// <para>The object currently selected in the object picker.</para>
         /// </summary>
-        public static Object GetObjectPickerObject() => 
+        public static UnityEngine.Object GetObjectPickerObject() => 
             ObjectSelector.GetCurrentObject();
 
         internal static Color GetPasteboardColor()
@@ -463,7 +463,7 @@
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Object GetScript(string scriptClass);
+        internal static extern UnityEngine.Object GetScript(string scriptClass);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int GetSearchIndexOfControlIDList();
         private static GUIStyle GetStyle(string styleName)
@@ -527,7 +527,7 @@
         /// <para>Does a given class have per-object thumbnails?</para>
         /// </summary>
         /// <param name="objType"></param>
-        public static bool HasObjectThumbnail(Type objType) => 
+        public static bool HasObjectThumbnail(System.Type objType) => 
             ((objType != null) && ((objType.IsSubclassOf(typeof(Texture)) || (objType == typeof(Texture))) || (objType == typeof(Sprite))));
 
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -621,18 +621,18 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool IsDisplayReferencedByCameras(int displayIndex);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool IsGizmosAllowedForObject(Object obj);
+        internal static extern bool IsGizmosAllowedForObject(UnityEngine.Object obj);
         /// <summary>
         /// <para>Load a built-in resource.</para>
         /// </summary>
         /// <param name="path"></param>
-        public static Object Load(string path) => 
-            Load(path, typeof(Object));
+        public static UnityEngine.Object Load(string path) => 
+            Load(path, typeof(UnityEngine.Object));
 
         [TypeInferenceRule(TypeInferenceRules.TypeReferencedBySecondArgument)]
-        private static Object Load(string filename, Type type)
+        private static UnityEngine.Object Load(string filename, System.Type type)
         {
-            Object obj2 = AssetDatabase.LoadAssetAtPath("Assets/Editor Default Resources/" + filename, type);
+            UnityEngine.Object obj2 = AssetDatabase.LoadAssetAtPath("Assets/Editor Default Resources/" + filename, type);
             if (obj2 != null)
             {
                 return obj2;
@@ -710,9 +710,9 @@
         /// <para>Load a required built-in resource.</para>
         /// </summary>
         /// <param name="path"></param>
-        public static Object LoadRequired(string path)
+        public static UnityEngine.Object LoadRequired(string path)
         {
-            Object obj2 = Load(path, typeof(Object));
+            UnityEngine.Object obj2 = Load(path, typeof(UnityEngine.Object));
             if (obj2 == null)
             {
                 Debug.LogError("Unable to find required resource at 'Editor Default Resources/" + path + "'");
@@ -725,7 +725,7 @@
             s_ContextWidth = CalcContextWidth();
         }
 
-        [ExcludeFromDocs, Obsolete("LookLikeControls and LookLikeInspector modes are deprecated. Use EditorGUIUtility.labelWidth and EditorGUIUtility.fieldWidth to control label and field widths.")]
+        [Obsolete("LookLikeControls and LookLikeInspector modes are deprecated. Use EditorGUIUtility.labelWidth and EditorGUIUtility.fieldWidth to control label and field widths."), ExcludeFromDocs]
         public static void LookLikeControls()
         {
             float fieldWidth = 0f;
@@ -790,7 +790,7 @@
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="type"></param>
-        public static GUIContent ObjectContent(Object obj, Type type)
+        public static GUIContent ObjectContent(UnityEngine.Object obj, System.Type type)
         {
             if (obj != null)
             {
@@ -834,7 +834,7 @@
         /// </summary>
         /// <param name="obj">The object to be pinged.</param>
         /// <param name="targetInstanceID"></param>
-        public static void PingObject(Object obj)
+        public static void PingObject(UnityEngine.Object obj)
         {
             if (obj != null)
             {
@@ -1012,7 +1012,7 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void SetDefaultFont(Font font);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void SetIconForObject(Object obj, Texture2D icon);
+        internal static extern void SetIconForObject(UnityEngine.Object obj, Texture2D icon);
         /// <summary>
         /// <para>Set icons rendered as part of GUIContent to be rendered at a specific size.</para>
         /// </summary>
@@ -1039,9 +1039,9 @@
         internal static extern void SetVisibleLayers(int layers);
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetWantsMouseJumping(int wantz);
-        public static void ShowObjectPicker<T>(Object obj, bool allowSceneObjects, string searchFilter, int controlID) where T: Object
+        public static void ShowObjectPicker<T>(UnityEngine.Object obj, bool allowSceneObjects, string searchFilter, int controlID) where T: UnityEngine.Object
         {
-            Type requiredType = typeof(T);
+            System.Type requiredType = typeof(T);
             ObjectSelector.get.Show(obj, requiredType, null, allowSceneObjects);
             ObjectSelector.get.objectSelectorID = controlID;
             ObjectSelector.get.searchFilter = searchFilter;

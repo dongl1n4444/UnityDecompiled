@@ -245,7 +245,7 @@
         {
             get
             {
-                UnityConnectEditorWindow[] windowArray = Resources.FindObjectsOfTypeAll(typeof(UnityConnectEditorWindow)) as UnityConnectEditorWindow[];
+                UnityConnectEditorWindow[] windowArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(UnityConnectEditorWindow)) as UnityConnectEditorWindow[];
                 if (windowArray == null)
                 {
                 }

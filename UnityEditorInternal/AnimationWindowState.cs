@@ -50,10 +50,10 @@
         [SerializeField]
         private TimeArea.TimeFormat m_TimeFormat = TimeArea.TimeFormat.TimeFrame;
         [NonSerialized]
-        public Action onEndLiveEdit;
+        public System.Action onEndLiveEdit;
         public Action<float> onFrameRateChange;
         [NonSerialized]
-        public Action onStartLiveEdit;
+        public System.Action onStartLiveEdit;
         private static List<AnimationWindowKeyframe> s_KeyframeClipboard;
         [SerializeField]
         public bool showCurveEditor;
@@ -358,7 +358,7 @@
             {
                 this.m_Selection.Clear();
             }
-            Object.DestroyImmediate(this.m_KeySelection);
+            UnityEngine.Object.DestroyImmediate(this.m_KeySelection);
         }
 
         public void OnDisable()
@@ -540,7 +540,7 @@
 
         private UndoPropertyModification[] PostprocessAnimationRecordingModifications(UndoPropertyModification[] modifications)
         {
-            if (!AnimationMode.InAnimationMode())
+            if (!UnityEditor.AnimationMode.InAnimationMode())
             {
                 Undo.postprocessModifications = (Undo.PostprocessModifications) Delegate.Remove(Undo.postprocessModifications, new Undo.PostprocessModifications(this.PostprocessAnimationRecordingModifications));
                 return modifications;
@@ -706,9 +706,9 @@
                             this.recording = true;
                         }
                         Undo.FlushUndoRecordObjects();
-                        AnimationMode.BeginSampling();
-                        AnimationMode.SampleAnimationClip(item.rootGameObject, item.animationClip, this.currentTime - item.timeOffset);
-                        AnimationMode.EndSampling();
+                        UnityEditor.AnimationMode.BeginSampling();
+                        UnityEditor.AnimationMode.SampleAnimationClip(item.rootGameObject, item.animationClip, this.currentTime - item.timeOffset);
+                        UnityEditor.AnimationMode.EndSampling();
                         flag = true;
                     }
                 }
@@ -944,8 +944,8 @@
                         keyframe.key.time = Mathf.Max(!snapToFrame ? v.x : this.SnapToFrame(v.x, curve.curve.clip.frameRate), 0f);
                         if (flipX)
                         {
-                            keyframe.key.inTangent = -keyframe.keySnapshot.outTangent;
-                            keyframe.key.outTangent = -keyframe.keySnapshot.inTangent;
+                            keyframe.key.inTangent = (keyframe.keySnapshot.outTangent == float.PositiveInfinity) ? float.PositiveInfinity : -keyframe.keySnapshot.outTangent;
+                            keyframe.key.outTangent = (keyframe.keySnapshot.inTangent == float.PositiveInfinity) ? float.PositiveInfinity : -keyframe.keySnapshot.inTangent;
                         }
                     }
                     this.SelectKey(keyframe.key);
@@ -1012,16 +1012,16 @@
                         keyframe.key.time = Mathf.Max(!snapToFrame ? v.x : this.SnapToFrame(v.x, curve.curve.clip.frameRate), 0f);
                         if (flipX)
                         {
-                            keyframe.key.inTangent = -keyframe.keySnapshot.outTangent;
-                            keyframe.key.outTangent = -keyframe.keySnapshot.inTangent;
+                            keyframe.key.inTangent = (keyframe.keySnapshot.outTangent == float.PositiveInfinity) ? float.PositiveInfinity : -keyframe.keySnapshot.outTangent;
+                            keyframe.key.outTangent = (keyframe.keySnapshot.inTangent == float.PositiveInfinity) ? float.PositiveInfinity : -keyframe.keySnapshot.inTangent;
                         }
                         if (!keyframe.key.isPPtrCurve)
                         {
                             keyframe.key.value = v.y;
                             if (flipY)
                             {
-                                keyframe.key.inTangent = -keyframe.key.inTangent;
-                                keyframe.key.outTangent = -keyframe.key.outTangent;
+                                keyframe.key.inTangent = (keyframe.key.inTangent == float.PositiveInfinity) ? float.PositiveInfinity : -keyframe.key.inTangent;
+                                keyframe.key.outTangent = (keyframe.key.outTangent == float.PositiveInfinity) ? float.PositiveInfinity : -keyframe.key.outTangent;
                             }
                         }
                     }
@@ -1387,17 +1387,17 @@
         public bool playing
         {
             get => 
-                AnimationMode.InAnimationPlaybackMode();
+                UnityEditor.AnimationMode.InAnimationPlaybackMode();
             set
             {
-                if (value && !AnimationMode.InAnimationPlaybackMode())
+                if (value && !UnityEditor.AnimationMode.InAnimationPlaybackMode())
                 {
-                    AnimationMode.StartAnimationPlaybackMode();
+                    UnityEditor.AnimationMode.StartAnimationPlaybackMode();
                     this.recording = true;
                 }
-                if (!value && AnimationMode.InAnimationPlaybackMode())
+                if (!value && UnityEditor.AnimationMode.InAnimationPlaybackMode())
                 {
-                    AnimationMode.StopAnimationPlaybackMode();
+                    UnityEditor.AnimationMode.StopAnimationPlaybackMode();
                     this.currentTime = this.FrameToTime((float) this.frame);
                 }
             }

@@ -13,7 +13,7 @@
     {
         private InvokableCallList m_Calls = new InvokableCallList();
         private bool m_CallsDirty = true;
-        [SerializeField, FormerlySerializedAs("m_PersistentListeners")]
+        [FormerlySerializedAs("m_PersistentListeners"), SerializeField]
         private PersistentCallGroup m_PersistentCalls = new PersistentCallGroup();
         [SerializeField]
         private string m_TypeName;

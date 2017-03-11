@@ -44,7 +44,7 @@
         /// <param name="ip">IP address of server.</param>
         /// <param name="atPort">Port from where socket policy is read.</param>
         /// <param name="timeout">Time to wait for response.</param>
-        [Obsolete("Security.PrefetchSocketPolicy is no longer supported, since the Unity Web Player is no longer supported by Unity."), ExcludeFromDocs]
+        [ExcludeFromDocs, Obsolete("Security.PrefetchSocketPolicy is no longer supported, since the Unity Web Player is no longer supported by Unity.")]
         public static bool PrefetchSocketPolicy(string ip, int atPort)
         {
             int timeout = 0xbb8;

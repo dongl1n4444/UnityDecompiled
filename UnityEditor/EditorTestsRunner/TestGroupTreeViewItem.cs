@@ -20,9 +20,9 @@
         public TestGroupTreeViewItem(EditorTestResultGroup result, TestSuite suite, int depth, TreeViewItem parent) : base(suite, depth, parent)
         {
             this.m_EditorTestGroupResult = result;
-            this.GroupName = suite.get_TestName().get_Name();
-            this.GroupFullName = suite.get_TestName().get_FullName();
-            this.GroupDescription = suite.get_Description();
+            this.GroupName = suite.TestName.Name;
+            this.GroupFullName = suite.TestName.FullName;
+            this.GroupDescription = suite.Description;
         }
 
         public override bool IsVisible(FilteringOptions options)

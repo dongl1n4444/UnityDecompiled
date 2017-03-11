@@ -9,7 +9,7 @@
         string GetInfoString();
         GUIContent GetPreviewTitle();
         bool HasPreviewGUI();
-        void Initialize(Object[] targets);
+        void Initialize(UnityEngine.Object[] targets);
         bool MoveNextTarget();
         void OnInteractivePreviewGUI(Rect r, GUIStyle background);
         void OnPreviewGUI(Rect r, GUIStyle background);
@@ -17,7 +17,7 @@
         void ReloadPreviewInstances();
         void ResetTarget();
 
-        Object target { get; }
+        UnityEngine.Object target { get; }
     }
 }
 

@@ -361,7 +361,7 @@
             }
             if (EditorGUI.EndChangeCheck())
             {
-                foreach (Object obj2 in this.blendMode.targets)
+                foreach (UnityEngine.Object obj2 in this.blendMode.targets)
                 {
                     MaterialChanged((Material) obj2, this.m_WorkflowMode);
                 }

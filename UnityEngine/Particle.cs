@@ -7,7 +7,7 @@
     /// <summary>
     /// <para>(Legacy Particle system).</para>
     /// </summary>
-    [StructLayout(LayoutKind.Sequential), UsedByNativeCode, Obsolete("This is part of the legacy particle system, which is deprecated and will be removed in a future release. Use the ParticleSystem component instead.", false)]
+    [StructLayout(LayoutKind.Sequential), Obsolete("This is part of the legacy particle system, which is deprecated and will be removed in a future release. Use the ParticleSystem component instead.", false), UsedByNativeCode]
     public struct Particle
     {
         private Vector3 m_Position;

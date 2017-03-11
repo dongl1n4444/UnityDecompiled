@@ -38,12 +38,12 @@
 
         internal static void CheckWindowConsistency()
         {
-            Object[] objArray = Resources.FindObjectsOfTypeAll(typeof(EditorWindow));
+            UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(EditorWindow));
             foreach (EditorWindow window in objArray)
             {
                 if (window.m_Parent == null)
                 {
-                    Debug.LogError("Invalid editor window " + window.GetType());
+                    UnityEngine.Debug.LogError("Invalid editor window " + window.GetType());
                 }
             }
         }
@@ -57,7 +57,7 @@
             catch (Exception)
             {
             }
-            Object[] objArray = Resources.FindObjectsOfTypeAll(typeof(ContainerWindow));
+            UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(ContainerWindow));
             foreach (ContainerWindow window in objArray)
             {
                 try
@@ -68,27 +68,27 @@
                 {
                 }
             }
-            Object[] objArray3 = Resources.FindObjectsOfTypeAll(typeof(EditorWindow));
+            UnityEngine.Object[] objArray3 = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(EditorWindow));
             if (objArray3.Length != 0)
             {
                 string str = "";
                 foreach (EditorWindow window2 in objArray3)
                 {
                     str = str + "\n" + window2.GetType().Name;
-                    Object.DestroyImmediate(window2, true);
+                    UnityEngine.Object.DestroyImmediate(window2, true);
                 }
-                Debug.LogError("Failed to destroy editor windows: #" + objArray3.Length + str);
+                UnityEngine.Debug.LogError("Failed to destroy editor windows: #" + objArray3.Length + str);
             }
-            Object[] objArray5 = Resources.FindObjectsOfTypeAll(typeof(View));
+            UnityEngine.Object[] objArray5 = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(View));
             if (objArray5.Length != 0)
             {
                 string str2 = "";
                 foreach (View view in objArray5)
                 {
                     str2 = str2 + "\n" + view.GetType().Name;
-                    Object.DestroyImmediate(view, true);
+                    UnityEngine.Object.DestroyImmediate(view, true);
                 }
-                Debug.LogError("Failed to destroy views: #" + objArray5.Length + str2);
+                UnityEngine.Debug.LogError("Failed to destroy views: #" + objArray5.Length + str2);
             }
         }
 
@@ -100,15 +100,15 @@
 
         public static void EnsureMainWindowHasBeenLoaded()
         {
-            if (Resources.FindObjectsOfTypeAll<MainView>().Length == 0)
+            if (UnityEngine.Resources.FindObjectsOfTypeAll<MainView>().Length == 0)
             {
                 MainView.MakeMain();
             }
         }
 
-        internal static EditorWindow FindEditorWindowOfType(Type type)
+        internal static EditorWindow FindEditorWindowOfType(System.Type type)
         {
-            Object[] objArray = Resources.FindObjectsOfTypeAll(type);
+            UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(type);
             if (objArray.Length > 0)
             {
                 return (objArray[0] as EditorWindow);
@@ -131,10 +131,10 @@
 
         internal static MainView FindMainView()
         {
-            MainView[] viewArray = Resources.FindObjectsOfTypeAll<MainView>();
+            MainView[] viewArray = UnityEngine.Resources.FindObjectsOfTypeAll<MainView>();
             if (viewArray.Length == 0)
             {
-                Debug.LogError("No Main View found!");
+                UnityEngine.Debug.LogError("No Main View found!");
                 return null;
             }
             return viewArray[0];
@@ -142,7 +142,7 @@
 
         internal static EditorWindow GetMaximizedWindow()
         {
-            Object[] objArray = Resources.FindObjectsOfTypeAll(typeof(MaximizedHostView));
+            UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(MaximizedHostView));
             if (objArray.Length != 0)
             {
                 MaximizedHostView view = objArray[0] as MaximizedHostView;
@@ -165,7 +165,7 @@
         public static bool LoadWindowLayout(string path, bool newProjectLayoutWasCreated)
         {
             Rect position = new Rect();
-            Object[] objArray = Resources.FindObjectsOfTypeAll(typeof(ContainerWindow));
+            UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(ContainerWindow));
             foreach (ContainerWindow window in objArray)
             {
                 if (window.showMode == ShowMode.MainWindow)
@@ -177,18 +177,18 @@
             {
                 ContainerWindow.SetFreezeDisplay(true);
                 CloseWindows();
-                Object[] objArray3 = InternalEditorUtility.LoadSerializedFileAndForget(path);
-                List<Object> list = new List<Object>();
+                UnityEngine.Object[] objArray3 = InternalEditorUtility.LoadSerializedFileAndForget(path);
+                List<UnityEngine.Object> list = new List<UnityEngine.Object>();
                 for (int i = 0; i < objArray3.Length; i++)
                 {
-                    Object item = objArray3[i];
+                    UnityEngine.Object item = objArray3[i];
                     EditorWindow window2 = item as EditorWindow;
                     if (window2 != null)
                     {
                         if (window2.m_Parent == null)
                         {
-                            Object.DestroyImmediate(window2, true);
-                            Debug.LogError(string.Concat(new object[] { "Removed unparented EditorWindow while reading window layout: window #", i, ", type=", item.GetType().ToString(), ", instanceID=", item.GetInstanceID() }));
+                            UnityEngine.Object.DestroyImmediate(window2, true);
+                            UnityEngine.Debug.LogError(string.Concat(new object[] { "Removed unparented EditorWindow while reading window layout: window #", i, ", type=", item.GetType().ToString(), ", instanceID=", item.GetInstanceID() }));
                             continue;
                         }
                     }
@@ -198,7 +198,7 @@
                         if ((area != null) && (area.m_Panes.Count == 0))
                         {
                             area.Close(null);
-                            Debug.LogError(string.Concat(new object[] { "Removed empty DockArea while reading window layout: window #", i, ", instanceID=", item.GetInstanceID() }));
+                            UnityEngine.Debug.LogError(string.Concat(new object[] { "Removed empty DockArea while reading window layout: window #", i, ", instanceID=", item.GetInstanceID() }));
                             continue;
                         }
                     }
@@ -221,14 +221,14 @@
                 }
                 for (int k = 0; k < list.Count; k++)
                 {
-                    Object obj3 = list[k];
+                    UnityEngine.Object obj3 = list[k];
                     if (obj3 == null)
                     {
-                        Debug.LogError("Error while reading window layout: window #" + k + " is null");
+                        UnityEngine.Debug.LogError("Error while reading window layout: window #" + k + " is null");
                     }
                     else if (obj3.GetType() == null)
                     {
-                        Debug.LogError(string.Concat(new object[] { "Error while reading window layout: window #", k, " type is null, instanceID=", obj3.GetInstanceID() }));
+                        UnityEngine.Debug.LogError(string.Concat(new object[] { "Error while reading window layout: window #", k, " type is null, instanceID=", obj3.GetInstanceID() }));
                     }
                     else if (newProjectLayoutWasCreated)
                     {
@@ -246,7 +246,7 @@
                 }
                 if (window4 == null)
                 {
-                    Debug.LogError("Error while reading window layout: no main window found");
+                    UnityEngine.Debug.LogError("Error while reading window layout: no main window found");
                     throw new Exception();
                 }
                 window4.Show(window4.showMode, true, true);
@@ -282,7 +282,7 @@
             }
             catch (Exception exception)
             {
-                Debug.LogError("Failed to load window layout: " + exception);
+                UnityEngine.Debug.LogError("Failed to load window layout: " + exception);
                 int num6 = 0;
                 if (!Application.isTestRun)
                 {
@@ -403,7 +403,7 @@
             parent.AddChild(child, idx);
             child.actualView = win;
             child.position = position;
-            Object.DestroyImmediate(splitview, true);
+            UnityEngine.Object.DestroyImmediate(splitview, true);
             return true;
         }
 
@@ -449,16 +449,16 @@
             list.Remove(win);
             list.Insert(0, splitview);
             list.Insert(1, win);
-            InternalEditorUtility.SaveToSerializedFileAndForget(list.ToArray(typeof(Object)) as Object[], path, false);
+            InternalEditorUtility.SaveToSerializedFileAndForget(list.ToArray(typeof(UnityEngine.Object)) as UnityEngine.Object[], path, false);
         }
 
         public static void SaveWindowLayout(string path)
         {
             TooltipView.Close();
             ArrayList list = new ArrayList();
-            Object[] objArray = Resources.FindObjectsOfTypeAll(typeof(EditorWindow));
-            Object[] objArray2 = Resources.FindObjectsOfTypeAll(typeof(ContainerWindow));
-            Object[] objArray3 = Resources.FindObjectsOfTypeAll(typeof(View));
+            UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(EditorWindow));
+            UnityEngine.Object[] objArray2 = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(ContainerWindow));
+            UnityEngine.Object[] objArray3 = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(View));
             foreach (ContainerWindow window in objArray2)
             {
                 if (!window.m_DontSaveToLayout)
@@ -480,7 +480,7 @@
                     list.Add(window2);
                 }
             }
-            InternalEditorUtility.SaveToSerializedFileAndForget(list.ToArray(typeof(Object)) as Object[], path, false);
+            InternalEditorUtility.SaveToSerializedFileAndForget(list.ToArray(typeof(UnityEngine.Object)) as UnityEngine.Object[], path, false);
         }
 
         internal static EditorWindow ShowAppropriateViewOnEnterExitPlaymode(bool entering)
@@ -563,16 +563,16 @@
 
         internal static EditorWindow TryGetLastFocusedWindowInSameDock()
         {
-            Type type = null;
+            System.Type type = null;
             string lastWindowTypeInSameDock = WindowFocusState.instance.m_LastWindowTypeInSameDock;
             if (lastWindowTypeInSameDock != "")
             {
-                type = Type.GetType(lastWindowTypeInSameDock);
+                type = System.Type.GetType(lastWindowTypeInSameDock);
             }
             GameView view = FindEditorWindowOfType(typeof(GameView)) as GameView;
             if (((type != null) && (view != null)) && ((view.m_Parent != null) && (view.m_Parent is DockArea)))
             {
-                object[] objArray = Resources.FindObjectsOfTypeAll(type);
+                object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(type);
                 DockArea parent = view.m_Parent as DockArea;
                 for (int i = 0; i < objArray.Length; i++)
                 {
@@ -591,15 +591,15 @@
             HostView parent = win.m_Parent;
             if (parent == null)
             {
-                Debug.LogError("Host view was not found");
+                UnityEngine.Debug.LogError("Host view was not found");
                 RevertFactorySettings();
             }
             else
             {
-                Object[] objArray = InternalEditorUtility.LoadSerializedFileAndForget(Path.Combine(layoutsProjectPath, "CurrentMaximizeLayout.dwlt"));
+                UnityEngine.Object[] objArray = InternalEditorUtility.LoadSerializedFileAndForget(Path.Combine(layoutsProjectPath, "CurrentMaximizeLayout.dwlt"));
                 if (objArray.Length < 2)
                 {
-                    Debug.Log("Maximized serialized file backup not found");
+                    UnityEngine.Debug.Log("Maximized serialized file backup not found");
                     RevertFactorySettings();
                 }
                 else
@@ -608,7 +608,7 @@
                     EditorWindow item = objArray[1] as EditorWindow;
                     if (child == null)
                     {
-                        Debug.Log("Maximization failed because the root split view was not found");
+                        UnityEngine.Debug.Log("Maximization failed because the root split view was not found");
                         RevertFactorySettings();
                     }
                     else
@@ -616,7 +616,7 @@
                         ContainerWindow window = win.m_Parent.window;
                         if (window == null)
                         {
-                            Debug.Log("Maximization failed because the root split view has no container window");
+                            UnityEngine.Debug.Log("Maximization failed because the root split view has no container window");
                             RevertFactorySettings();
                         }
                         else
@@ -640,8 +640,8 @@
                                 win.m_Parent = null;
                                 area.AddTab(index, win);
                                 area.RemoveTab(item);
-                                Object.DestroyImmediate(item);
-                                foreach (Object obj2 in objArray)
+                                UnityEngine.Object.DestroyImmediate(item);
+                                foreach (UnityEngine.Object obj2 in objArray)
                                 {
                                     EditorWindow window3 = obj2 as EditorWindow;
                                     if (window3 != null)
@@ -652,21 +652,21 @@
                                 view3.Initialize(view3.window);
                                 view3.position = view3.position;
                                 child.Reflow();
-                                Object.DestroyImmediate(parent);
+                                UnityEngine.Object.DestroyImmediate(parent);
                                 win.Focus();
                                 window.DisplayAllViews();
                                 win.m_Parent.MakeVistaDWMHappyDance();
                             }
                             catch (Exception exception)
                             {
-                                Debug.Log("Maximization failed: " + exception);
+                                UnityEngine.Debug.Log("Maximization failed: " + exception);
                                 RevertFactorySettings();
                             }
                             try
                             {
                                 if (((Application.platform == RuntimePlatform.OSXEditor) && SystemInfo.operatingSystem.Contains("10.7")) && SystemInfo.graphicsDeviceVendor.Contains("ATI"))
                                 {
-                                    foreach (GUIView view4 in Resources.FindObjectsOfTypeAll(typeof(GUIView)))
+                                    foreach (GUIView view4 in UnityEngine.Resources.FindObjectsOfTypeAll(typeof(GUIView)))
                                     {
                                         view4.Repaint();
                                     }
@@ -693,10 +693,10 @@
         {
             internal T $current;
             internal bool $disposing;
-            internal Object[] $locvar0;
+            internal UnityEngine.Object[] $locvar0;
             internal int $locvar1;
             internal int $PC;
-            internal Object <obj>__0;
+            internal UnityEngine.Object <obj>__0;
 
             [DebuggerHidden]
             public void Dispose()
@@ -712,7 +712,7 @@
                 switch (num)
                 {
                     case 0:
-                        this.$locvar0 = Resources.FindObjectsOfTypeAll(typeof(T));
+                        this.$locvar0 = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(T));
                         this.$locvar1 = 0;
                         goto Label_00A4;
 

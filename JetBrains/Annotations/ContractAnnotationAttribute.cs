@@ -7,9 +7,9 @@
     [AttributeUsage(AttributeTargets.Method, AllowMultiple=true, Inherited=true)]
     public sealed class ContractAnnotationAttribute : Attribute
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private string <Contract>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <ForceFullStates>k__BackingField;
 
         public ContractAnnotationAttribute([NotNull] string contract) : this(contract, false)

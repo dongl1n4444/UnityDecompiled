@@ -466,10 +466,10 @@
                             GUIUtility.hotControl = num5;
                             if (current.shift)
                             {
-                                Object[] objects = Selection.objects;
-                                if (!ArrayUtility.Contains<Object>(objects, target))
+                                UnityEngine.Object[] objects = Selection.objects;
+                                if (!ArrayUtility.Contains<UnityEngine.Object>(objects, target))
                                 {
-                                    ArrayUtility.Add<Object>(ref objects, target);
+                                    ArrayUtility.Add<UnityEngine.Object>(ref objects, target);
                                     Selection.objects = objects;
                                 }
                             }
@@ -503,7 +503,7 @@
                         if (!current.alt && (GUIUtility.hotControl == hashCode))
                         {
                             DragAndDrop.PrepareStartDrag();
-                            DragAndDrop.objectReferences = new Object[] { target };
+                            DragAndDrop.objectReferences = new UnityEngine.Object[] { target };
                             DragAndDrop.StartDrag(ObjectNames.GetDragAndDropTitle(target));
                             current.Use();
                         }
@@ -937,7 +937,7 @@
             num2 = SizeSlider(position, -d, num2);
             r = SizeSlider(position, vector3, r);
             r = SizeSlider(position, -vector3, r);
-            if (((Tools.current != Tool.Move) && (Tools.current != Tool.Scale)) || (Tools.pivotRotation != PivotRotation.Local))
+            if (((Tools.current != UnityEditor.Tool.Move) && (Tools.current != UnityEditor.Tool.Scale)) || (Tools.pivotRotation != PivotRotation.Local))
             {
                 DrawLine(position, position + vector);
             }
@@ -2280,7 +2280,7 @@
 
         internal static void SetupIgnoreRaySnapObjects()
         {
-            HandleUtility.ignoreRaySnapObjects = Selection.GetTransforms(SelectionMode.Editable | SelectionMode.Deep);
+            HandleUtility.ignoreRaySnapObjects = Selection.GetTransforms(UnityEditor.SelectionMode.Editable | UnityEditor.SelectionMode.Deep);
         }
 
         internal static void ShowStaticLabelIfNeeded(Vector3 pos)

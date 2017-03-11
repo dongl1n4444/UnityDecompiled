@@ -126,7 +126,7 @@
         {
             int num = (int) userData;
             ArrayList list = new ArrayList();
-            MeshRenderer[] rendererArray = Object.FindObjectsOfType(typeof(MeshRenderer)) as MeshRenderer[];
+            MeshRenderer[] rendererArray = UnityEngine.Object.FindObjectsOfType(typeof(MeshRenderer)) as MeshRenderer[];
             foreach (MeshRenderer renderer in rendererArray)
             {
                 if ((renderer != null) && (renderer.lightmapIndex == num))
@@ -134,7 +134,7 @@
                     list.Add(renderer.gameObject);
                 }
             }
-            Terrain[] terrainArray = Object.FindObjectsOfType(typeof(Terrain)) as Terrain[];
+            Terrain[] terrainArray = UnityEngine.Object.FindObjectsOfType(typeof(Terrain)) as Terrain[];
             foreach (Terrain terrain in terrainArray)
             {
                 if ((terrain != null) && (terrain.lightmapIndex == num))
@@ -142,7 +142,7 @@
                     list.Add(terrain.gameObject);
                 }
             }
-            Selection.objects = list.ToArray(typeof(Object)) as Object[];
+            Selection.objects = list.ToArray(typeof(UnityEngine.Object)) as UnityEngine.Object[];
         }
 
         public void UpdateLightmapSelection()

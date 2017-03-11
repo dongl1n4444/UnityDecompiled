@@ -6,7 +6,7 @@
     using UnityEditorInternal;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(Sprite))]
+    [CustomEditor(typeof(Sprite)), CanEditMultipleObjects]
     internal class SpriteInspector : Editor
     {
         public static Texture2D BuildPreviewTexture(int width, int height, Sprite sprite, Material spriteRendererMaterial, bool isPolygon)
@@ -17,7 +17,7 @@
             }
             float num = sprite.rect.width;
             float num2 = sprite.rect.height;
-            Texture2D spriteTexture = SpriteUtility.GetSpriteTexture(sprite, false);
+            Texture2D spriteTexture = UnityEditor.Sprites.SpriteUtility.GetSpriteTexture(sprite, false);
             if (!isPolygon)
             {
                 PreviewHelpers.AdjustWidthAndHeightForStaticPreview((int) num, (int) num2, ref width, ref height);
@@ -103,7 +103,7 @@
             state.Restore();
             if (material != null)
             {
-                Object.DestroyImmediate(material);
+                UnityEngine.Object.DestroyImmediate(material);
             }
             return textured3;
         }
@@ -124,7 +124,7 @@
                     SpriteEditorUtility.BeginLines(new Color(0f, 1f, 0f, 0.7f));
                     SpriteEditorUtility.EndLines();
                 }
-                Object.DestroyImmediate(image);
+                UnityEngine.Object.DestroyImmediate(image);
             }
         }
 
@@ -230,7 +230,7 @@
             }
         }
 
-        public override Texture2D RenderStaticPreview(string assetPath, Object[] subAssets, int width, int height)
+        public override Texture2D RenderStaticPreview(string assetPath, UnityEngine.Object[] subAssets, int width, int height)
         {
             bool isPolygon = false;
             TextureImporter atPath = AssetImporter.GetAtPath(assetPath) as TextureImporter;

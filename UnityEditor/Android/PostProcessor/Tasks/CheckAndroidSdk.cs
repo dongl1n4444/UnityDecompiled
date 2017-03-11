@@ -96,7 +96,7 @@
             this._sdkTools = AndroidSDKTools.GetInstance();
             if (this._sdkTools == null)
             {
-                CancelPostProcess.AbortBuild("Build failure!", "Unable to locate Android SDK");
+                CancelPostProcess.AbortBuild("Build failure!", "Unable to locate Android SDK", null);
             }
             context.Set<AndroidSDKTools>("SDKTools", this._sdkTools);
             this.EnsureSDKComponentVersion(0x18, new SDKToolsDetector(this));
@@ -115,7 +115,7 @@
             {
                 EditorPrefs.SetString("AndroidSdkRoot", "");
                 string message = "Android SDK does not include any platforms! Did you run Android SDK setup to install the platform(s)?\nMinimum platform required for build is Android 5.0 (API level 21)\n";
-                CancelPostProcess.AbortBuild("No platforms found", message);
+                CancelPostProcess.AbortBuild("No platforms found", message, null);
             }
             str = Path.Combine(androidPlatformPath, str);
             context.Set<string>("AndroidJarPath", str);

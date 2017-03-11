@@ -98,7 +98,7 @@
                     {
                         Debug.LogError("Unexpected invalid mixer list used for dragging");
                     }
-                    Object currentObject = ObjectSelector.GetCurrentObject();
+                    UnityEngine.Object currentObject = ObjectSelector.GetCurrentObject();
                     AudioMixerGroup group = (currentObject == null) ? null : (currentObject as AudioMixerGroup);
                     Undo.RecordObjects(this.m_DraggedMixers.ToArray(), "Set output group for mixer" + ((this.m_DraggedMixers.Count <= 1) ? "" : "s"));
                     foreach (AudioMixerController controller in this.m_DraggedMixers)
@@ -188,7 +188,7 @@
             else
             {
                 this.m_DraggedMixers = draggedMixers;
-                Object obj2 = (draggedMixers.Count != 1) ? null : draggedMixers[0].outputAudioMixerGroup;
+                UnityEngine.Object obj2 = (draggedMixers.Count != 1) ? null : draggedMixers[0].outputAudioMixerGroup;
                 List<int> allowedInstanceIDs = new List<int> {
                     droppedUponMixer.GetInstanceID()
                 };

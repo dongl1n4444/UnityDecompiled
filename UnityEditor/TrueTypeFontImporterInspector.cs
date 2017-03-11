@@ -6,7 +6,7 @@
     using System.Runtime.CompilerServices;
     using UnityEngine;
 
-    [CustomEditor(typeof(TrueTypeFontImporter)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(TrueTypeFontImporter))]
     internal class TrueTypeFontImporterInspector : AssetImporterInspector
     {
         [CompilerGenerated]
@@ -39,7 +39,7 @@
             kAscentCalculationModeValues = numArray1;
         }
 
-        [MenuItem("CONTEXT/TrueTypeFontImporter/Create Editable Copy")]
+        [UnityEditor.MenuItem("CONTEXT/TrueTypeFontImporter/Create Editable Copy")]
         private static void CreateEditableCopy(MenuCommand command)
         {
             TrueTypeFontImporter context = (TrueTypeFontImporter) command.context;
@@ -103,7 +103,7 @@
             if (!this.m_FormatSupported.HasValue)
             {
                 this.m_FormatSupported = true;
-                foreach (Object obj2 in base.targets)
+                foreach (UnityEngine.Object obj2 in base.targets)
                 {
                     TrueTypeFontImporter importer = obj2 as TrueTypeFontImporter;
                     if ((importer == null) || !importer.IsFormatSupported())

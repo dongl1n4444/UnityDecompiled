@@ -23,27 +23,27 @@
         /// <para>The documentation URL for the object. Note that this could use the http: or file: schemas.</para>
         /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern string GetHelpURLForObject(Object obj);
-        internal static string GetNiceHelpNameForObject(Object obj) => 
+        public static extern string GetHelpURLForObject(UnityEngine.Object obj);
+        internal static string GetNiceHelpNameForObject(UnityEngine.Object obj) => 
             GetNiceHelpNameForObject(obj, true);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern string GetNiceHelpNameForObject(Object obj, bool defaultToMonoBehaviour);
+        internal static extern string GetNiceHelpNameForObject(UnityEngine.Object obj, bool defaultToMonoBehaviour);
         /// <summary>
         /// <para>Is there a help page for this object?</para>
         /// </summary>
         /// <param name="obj"></param>
-        public static bool HasHelpForObject(Object obj) => 
+        public static bool HasHelpForObject(UnityEngine.Object obj) => 
             HasHelpForObject(obj, true);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool HasHelpForObject(Object obj, bool defaultToMonoBehaviour);
+        internal static extern bool HasHelpForObject(UnityEngine.Object obj, bool defaultToMonoBehaviour);
         /// <summary>
         /// <para>Show help page for this object.</para>
         /// </summary>
         /// <param name="obj"></param>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void ShowHelpForObject(Object obj);
+        public static extern void ShowHelpForObject(UnityEngine.Object obj);
         /// <summary>
         /// <para>Show a help page.</para>
         /// </summary>

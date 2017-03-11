@@ -9,7 +9,7 @@
 
     internal abstract class TreeViewDataSource : ITreeViewDataSource
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <alwaysAddFirstItemToSearchResult>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <rootIsCollapsable>k__BackingField;
@@ -108,7 +108,7 @@
                 }
                 else
                 {
-                    Debug.LogError("TreeView root item is null. Ensure that your TreeViewDataSource sets up at least a root item.");
+                    UnityEngine.Debug.LogError("TreeView root item is null. Ensure that your TreeViewDataSource sets up at least a root item.");
                     this.m_Rows = new List<TreeViewItem>();
                 }
                 this.m_NeedRefreshRows = false;
@@ -122,7 +122,7 @@
 
         public virtual void InsertFakeItem(int id, int parentID, string name, Texture2D icon)
         {
-            Debug.LogError("InsertFakeItem missing implementation");
+            UnityEngine.Debug.LogError("InsertFakeItem missing implementation");
         }
 
         public virtual bool IsExpandable(TreeViewItem item)
@@ -281,7 +281,7 @@
         {
             if (fromItem == null)
             {
-                Debug.LogError("item is null");
+                UnityEngine.Debug.LogError("item is null");
             }
             else
             {

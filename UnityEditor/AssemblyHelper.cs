@@ -92,7 +92,7 @@
             string str2 = ExtractInternalAssemblyName(assemblyPath);
             if (fileNameWithoutExtension != str2)
             {
-                Debug.LogWarning("Assembly '" + str2 + "' has non matching file name: '" + Path.GetFileName(assemblyPath) + "'. This can cause build issues on some platforms.");
+                UnityEngine.Debug.LogWarning("Assembly '" + str2 + "' has non matching file name: '" + Path.GetFileName(assemblyPath) + "'. This can cause build issues on some platforms.");
             }
         }
 
@@ -120,7 +120,7 @@
                     }
                     catch (Exception)
                     {
-                        Debug.LogError("Failed to extract " + definition3.FullName + " class of base type " + baseType.FullName + " when inspecting " + path);
+                        UnityEngine.Debug.LogError("Failed to extract " + definition3.FullName + " class of base type " + baseType.FullName + " when inspecting " + path);
                     }
                 }
             }
@@ -289,11 +289,11 @@
             return list.ToArray();
         }
 
-        internal static Type[] GetTypesFromAssembly(Assembly assembly)
+        internal static System.Type[] GetTypesFromAssembly(Assembly assembly)
         {
             if (assembly == null)
             {
-                return new Type[0];
+                return new System.Type[0];
             }
             try
             {
@@ -301,7 +301,7 @@
             }
             catch (ReflectionTypeLoadException)
             {
-                return new Type[0];
+                return new System.Type[0];
             }
         }
 
@@ -348,7 +348,7 @@
             if (assembly2 != null)
             {
                 string name = !type.IsGenericInstance ? type.FullName : (type.Namespace + "." + type.Name);
-                Type type2 = assembly2.GetType(name);
+                System.Type type2 = assembly2.GetType(name);
                 if ((type2 == typeof(MonoBehaviour)) || type2.IsSubclassOf(typeof(MonoBehaviour)))
                 {
                     return true;
@@ -402,12 +402,12 @@
         {
             internal T $current;
             internal bool $disposing;
-            internal Type[] $locvar0;
+            internal System.Type[] $locvar0;
             internal int $locvar1;
             internal int $PC;
-            internal Type <interfaze>__0;
+            internal System.Type <interfaze>__0;
             internal T <module>__2;
-            internal Type <type>__1;
+            internal System.Type <type>__1;
             internal Assembly assembly;
 
             [DebuggerHidden]

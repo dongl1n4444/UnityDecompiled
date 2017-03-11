@@ -135,21 +135,21 @@
         private extern void INTERNAL_get_size(out Vector3 value);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern void INTERNAL_get_wavingGrassTint(out Color value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
         private static extern int Internal_GetMaximumAlphamapResolution();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
         private static extern int Internal_GetMaximumBaseMapResolution();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
         private static extern int Internal_GetMaximumDetailPatchCount();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
         private static extern int Internal_GetMaximumDetailResolutionPerPatch();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
         private static extern int Internal_GetMaximumResolution();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
         private static extern int Internal_GetMinimumAlphamapResolution();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
         private static extern int Internal_GetMinimumBaseMapResolution();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
         private static extern int Internal_GetMinimumDetailResolutionPerPatch();
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern void INTERNAL_set_size(ref Vector3 value);

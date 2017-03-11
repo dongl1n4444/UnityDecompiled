@@ -16,35 +16,35 @@
     {
         [CompilerGenerated]
         private static Func<TreeViewItem, int> <>f__am$cache0;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private Action<int> <contextClickItemCallback>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Action <contextClickOutsideItemsCallback>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private System.Action <contextClickOutsideItemsCallback>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ITreeViewDataSource <data>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <deselectOnUnhandledMouseDown>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Action<int[], bool> <dragEndedCallback>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private ITreeViewDragging <dragging>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Action <expandedStateChanged>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private System.Action <expandedStateChanged>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private ITreeViewGUI <gui>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Action<int> <itemDoubleClickedCallback>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-        private Action <keyboardInputCallback>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private System.Action <keyboardInputCallback>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private Action<int, Rect> <onGUIRowCallback>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Action<Vector2> <scrollChanged>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-        private Action<string> <searchChanged>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-        private Action<int[]> <selectionChangedCallback>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Action<string> <searchChanged>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Action<int[]> <selectionChangedCallback>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private TreeViewState <state>k__BackingField;
         internal const string kExpansionAnimationPrefKey = "TreeViewExpansionAnimation";
         private const float kSpaceForScrollBar = 16f;
@@ -200,7 +200,7 @@
         {
             if ((row < 0) || (row >= this.data.rowCount))
             {
-                Debug.LogError(string.Concat(new object[] { "Invalid. Org row: ", row, " Num rows ", this.data.rowCount }));
+                UnityEngine.Debug.LogError(string.Concat(new object[] { "Invalid. Org row: ", row, " Num rows ", this.data.rowCount }));
             }
             else
             {
@@ -655,7 +655,7 @@
             {
                 dragging.OnInitialize();
             }
-            this.expandedStateChanged = (Action) Delegate.Combine(this.expandedStateChanged, new Action(this.ExpandedStateHasChanged));
+            this.expandedStateChanged = (System.Action) Delegate.Combine(this.expandedStateChanged, new System.Action(this.ExpandedStateHasChanged));
             this.m_FramingAnimFloat = new AnimFloat(this.state.scrollPos.y, new UnityAction(this.AnimatedScrollChanged));
         }
 
@@ -1034,7 +1034,7 @@
                 second.AddRange(ids.Except<int>(second));
                 if (ids.Count != second.Count)
                 {
-                    Debug.LogError(string.Concat(new object[] { "SortIDsInVisiblityOrder failed: ", ids.Count, " != ", second.Count }));
+                    UnityEngine.Debug.LogError(string.Concat(new object[] { "SortIDsInVisiblityOrder failed: ", ids.Count, " != ", second.Count }));
                 }
             }
             return second;
@@ -1078,7 +1078,7 @@
 
         public Action<int> contextClickItemCallback { get; set; }
 
-        public Action contextClickOutsideItemsCallback { get; set; }
+        public System.Action contextClickOutsideItemsCallback { get; set; }
 
         public ITreeViewDataSource data { get; set; }
 
@@ -1088,7 +1088,7 @@
 
         public ITreeViewDragging dragging { get; set; }
 
-        public Action expandedStateChanged { get; set; }
+        public System.Action expandedStateChanged { get; set; }
 
         public TreeViewItemExpansionAnimator expansionAnimator =>
             this.m_ExpansionAnimator;
@@ -1103,7 +1103,7 @@
 
         public Action<int> itemDoubleClickedCallback { get; set; }
 
-        public Action keyboardInputCallback { get; set; }
+        public System.Action keyboardInputCallback { get; set; }
 
         public Action<int, Rect> onGUIRowCallback { get; set; }
 

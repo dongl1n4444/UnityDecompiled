@@ -12,7 +12,7 @@
         private SerializedProperty m_Rotation;
         private GUIContent rotationContent = new GUIContent("Rotation", "The local rotation of this Game Object relative to the parent.");
         private static int s_FoldoutHash = "Foldout".GetHashCode();
-        private Object[] targets;
+        private UnityEngine.Object[] targets;
 
         public void OnEnable(SerializedProperty m_Rotation, GUIContent label)
         {
@@ -51,7 +51,7 @@
             EditorGUI.BeginChangeCheck();
             int id = GUIUtility.GetControlID(s_FoldoutHash, FocusType.Keyboard, totalPosition);
             string str = "";
-            if (AnimationMode.InAnimationMode() && (transform.rotationOrder != RotationOrder.OrderZXY))
+            if (UnityEditor.AnimationMode.InAnimationMode() && (transform.rotationOrder != RotationOrder.OrderZXY))
             {
                 if (flag2)
                 {

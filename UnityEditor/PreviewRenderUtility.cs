@@ -22,7 +22,7 @@
         {
             this.m_CameraFieldOfView = 15f;
             this.m_Light = new Light[2];
-            Type[] components = new Type[] { typeof(Camera) };
+            System.Type[] components = new System.Type[] { typeof(Camera) };
             this.m_Camera = EditorUtility.CreateGameObjectWithHideFlags("PreRenderCamera", HideFlags.HideAndDontSave, components).GetComponent<Camera>();
             this.m_Camera.cameraType = CameraType.Preview;
             this.m_Camera.fieldOfView = this.m_CameraFieldOfView;
@@ -39,7 +39,7 @@
             }
             for (int i = 0; i < 2; i++)
             {
-                Type[] typeArray2 = new Type[] { typeof(Light) };
+                System.Type[] typeArray2 = new System.Type[] { typeof(Light) };
                 this.m_Light[i] = EditorUtility.CreateGameObjectWithHideFlags("PreRenderLight", HideFlags.HideAndDontSave, typeArray2).GetComponent<Light>();
                 this.m_Light[i].type = LightType.Directional;
                 this.m_Light[i].intensity = 1f;
@@ -82,7 +82,7 @@
             texture.SetPixel(0, 0, color);
             texture.Apply();
             Graphics.DrawTexture(new Rect(0f, 0f, (float) this.m_RenderTexture.width, (float) this.m_RenderTexture.height), texture);
-            Object.DestroyImmediate(texture);
+            UnityEngine.Object.DestroyImmediate(texture);
         }
 
         public void BeginStaticPreviewHDR(Rect r)
@@ -94,18 +94,18 @@
         {
             if (this.m_Camera != null)
             {
-                Object.DestroyImmediate(this.m_Camera.gameObject, true);
+                UnityEngine.Object.DestroyImmediate(this.m_Camera.gameObject, true);
             }
             if (this.m_RenderTexture != null)
             {
-                Object.DestroyImmediate(this.m_RenderTexture);
+                UnityEngine.Object.DestroyImmediate(this.m_RenderTexture);
                 this.m_RenderTexture = null;
             }
             foreach (Light light in this.m_Light)
             {
                 if (light != null)
                 {
-                    Object.DestroyImmediate(light.gameObject, true);
+                    UnityEngine.Object.DestroyImmediate(light.gameObject, true);
                 }
             }
         }
@@ -208,7 +208,7 @@
             {
                 if (this.m_RenderTexture != null)
                 {
-                    Object.DestroyImmediate(this.m_RenderTexture);
+                    UnityEngine.Object.DestroyImmediate(this.m_RenderTexture);
                     this.m_RenderTexture = null;
                 }
                 this.m_RenderTexture = new RenderTexture(width, height, 0x10, !hdr ? RenderTextureFormat.ARGB32 : RenderTextureFormat.ARGBHalf, RenderTextureReadWrite.Default);

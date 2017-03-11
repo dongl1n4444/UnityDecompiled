@@ -314,7 +314,7 @@ internal class MetroIl2CppVisualStudioSolutionCreator
         {
             <>f__am$cache3 = (x, y) => x + ";" + y;
         }
-        string contents = string.Format(MetroIl2CppTemplates.GetIl2CppOutputProjectTemplate(MetroVisualStudioSolutionHelper.GetUWPSDKVersion()), str2, Enumerable.Aggregate<string>(BaseDefines, <>f__am$cache3) + ";WINDOWS_UWP;UNITY_UWP;UNITY_WSA_10_0;UNITY_WSA;UNITY_WINRT", str4);
+        string contents = string.Format(MetroIl2CppTemplates.GetIl2CppOutputProjectTemplate(Utility.GetDesiredUWPSDKString()), str2, Enumerable.Aggregate<string>(BaseDefines, <>f__am$cache3) + ";WINDOWS_UWP;UNITY_UWP;UNITY_WSA_10_0;UNITY_WSA;UNITY_WINRT", str4);
         File.WriteAllText(str, contents, Encoding.UTF8);
         string str7 = string.Format(MetroIl2CppTemplates.GetFiltersTemplate(), str3);
         File.WriteAllText(str + ".filters", str7, Encoding.UTF8);
@@ -374,14 +374,14 @@ internal class MetroIl2CppVisualStudioSolutionCreator
                 throw new Exception("Failed to find package certificate (.pfx) file in the project!");
             }
             string str5 = MakeRelativePath(this.UserProjectDirectory, filePath);
-            string uWPSDKVersion = MetroVisualStudioSolutionHelper.GetUWPSDKVersion();
+            string desiredUWPSDKString = Utility.GetDesiredUWPSDKString();
             string str7 = "_UNICODE;UNICODE;%(PreprocessorDefinitions)";
             if (VREditor.GetVREnabledOnTargetGroup(BuildTargetGroup.WSA) && (Array.IndexOf<string>(VREditor.GetVREnabledDevicesOnTargetGroup(BuildTargetGroup.WSA), "HoloLens") > -1))
             {
                 str7 = str7 + ";UNITY_HOLOGRAPHIC=1";
             }
             string str8 = !VisualStudioUtil.CanVS2017BuildCppCode() ? "v140" : "v141";
-            string contents = string.Format(MetroIl2CppTemplates.GetUserProjectTemplate(uWPSDKVersion), new object[] { Utility.GetVsNamespace(), str3, str5, str7, str8 });
+            string contents = string.Format(MetroIl2CppTemplates.GetUserProjectTemplate(desiredUWPSDKString), new object[] { Utility.GetVsNamespace(), str3, str5, str7, str8 });
             File.WriteAllText(path, contents, Encoding.UTF8);
         }
         if (!File.Exists(str2))

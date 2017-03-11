@@ -258,7 +258,7 @@
         {
             if (this.m_PreviewCamera != null)
             {
-                Object.DestroyImmediate(this.m_PreviewCamera.gameObject, true);
+                UnityEngine.Object.DestroyImmediate(this.m_PreviewCamera.gameObject, true);
             }
         }
 
@@ -383,7 +383,7 @@
             base.serializedObject.ApplyModifiedProperties();
         }
 
-        public void OnOverlayGUI(Object target, SceneView sceneView)
+        public void OnOverlayGUI(UnityEngine.Object target, SceneView sceneView)
         {
             if (target != null)
             {
@@ -536,7 +536,7 @@
             {
                 if (this.m_PreviewCamera == null)
                 {
-                    Type[] components = new Type[] { typeof(Camera), typeof(Skybox) };
+                    System.Type[] components = new System.Type[] { typeof(Camera), typeof(Skybox) };
                     this.m_PreviewCamera = EditorUtility.CreateGameObjectWithHideFlags("Preview Camera", HideFlags.HideAndDontSave, components).GetComponent<Camera>();
                 }
                 this.m_PreviewCamera.enabled = false;

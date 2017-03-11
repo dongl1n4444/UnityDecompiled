@@ -112,7 +112,7 @@ internal abstract class NativeCompiler : INativeCompiler
             }
             if (program.ExitCode != 0)
             {
-                Debug.LogError("Failed running " + startInfo.FileName + " " + startInfo.Arguments + "\n\n" + str);
+                UnityEngine.Debug.LogError("Failed running " + startInfo.FileName + " " + startInfo.Arguments + "\n\n" + str);
                 throw new Exception("IL2CPP compile failed.");
             }
         }

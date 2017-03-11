@@ -17,7 +17,7 @@
                 $signature = type.GetSignature()
             };
             string str = Builtins.join(new $FormatCallableType$335(this, s$), ", ");
-            string str2 = this.FormatType(s$.$signature.get_ReturnType());
+            string str2 = this.FormatType(s$.$signature.ReturnType);
             return new StringBuilder("function(").Append(str).Append("): ").Append(str2).ToString();
         }
 
@@ -32,13 +32,13 @@
             if (type2 is IArrayType)
             {
                 IArrayType type3;
-                IArrayType type1 = type3 = type2;
+                IArrayType type1 = type3 = (IArrayType) type2;
                 if (1 != 0)
                 {
-                    IType type5 = type4 = type3.get_ElementType();
+                    IType type5 = type4 = type3.ElementType;
                     if (1 != 0)
                     {
-                        int num1 = num = type3.get_Rank();
+                        int num1 = num = type3.Rank;
                     }
                 }
             }
@@ -88,7 +88,7 @@
 
                 public override void Reset()
                 {
-                    this.$$enumerator = this.$$locals$337.$signature.get_Parameters().GetEnumerator();
+                    this.$$enumerator = this.$$locals$337.$signature.Parameters.GetEnumerator();
                 }
 
                 public override string Current =>

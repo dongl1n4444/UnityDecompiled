@@ -170,7 +170,7 @@
                     EditorUserBuildSettings.selectedBuildTargetGroup = platforms[index].targetGroup;
                     s_SelectedDefault.value = false;
                 }
-                Object[] objArray = Resources.FindObjectsOfTypeAll(typeof(BuildPlayerWindow));
+                UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(BuildPlayerWindow));
                 for (int k = 0; k < objArray.Length; k++)
                 {
                     BuildPlayerWindow window = objArray[k] as BuildPlayerWindow;
@@ -2032,7 +2032,7 @@
             return EditorGUI.IconButton(id, s_LastRect, content, style);
         }
 
-        public static void InspectorTitlebar(Object[] targetObjs)
+        public static void InspectorTitlebar(UnityEngine.Object[] targetObjs)
         {
             EditorGUI.InspectorTitlebar(GUILayoutUtility.GetRect(GUIContent.none, EditorStyles.inspectorTitlebar), targetObjs);
         }
@@ -2046,7 +2046,7 @@
         /// <returns>
         /// <para>The foldout state selected by the user.</para>
         /// </returns>
-        public static bool InspectorTitlebar(bool foldout, Object targetObj) => 
+        public static bool InspectorTitlebar(bool foldout, UnityEngine.Object targetObj) => 
             InspectorTitlebar(foldout, targetObj, true);
 
         /// <summary>
@@ -2058,13 +2058,13 @@
         /// <returns>
         /// <para>The foldout state selected by the user.</para>
         /// </returns>
-        public static bool InspectorTitlebar(bool foldout, Object[] targetObjs) => 
+        public static bool InspectorTitlebar(bool foldout, UnityEngine.Object[] targetObjs) => 
             InspectorTitlebar(foldout, targetObjs, true);
 
-        public static bool InspectorTitlebar(bool foldout, Object targetObj, bool expandable) => 
+        public static bool InspectorTitlebar(bool foldout, UnityEngine.Object targetObj, bool expandable) => 
             EditorGUI.InspectorTitlebar(GUILayoutUtility.GetRect(GUIContent.none, EditorStyles.inspectorTitlebar), foldout, targetObj, expandable);
 
-        public static bool InspectorTitlebar(bool foldout, Object[] targetObjs, bool expandable) => 
+        public static bool InspectorTitlebar(bool foldout, UnityEngine.Object[] targetObjs, bool expandable) => 
             EditorGUI.InspectorTitlebar(GUILayoutUtility.GetRect(GUIContent.none, EditorStyles.inspectorTitlebar), foldout, targetObjs, expandable);
 
         /// <summary>
@@ -2940,7 +2940,7 @@
             return EditorGUI.MaskField(position, label, mask, displayedOptions, style);
         }
 
-        internal static Object MiniThumbnailObjectField(GUIContent label, Object obj, Type objType, EditorGUI.ObjectFieldValidator validator, params GUILayoutOption[] options)
+        internal static UnityEngine.Object MiniThumbnailObjectField(GUIContent label, UnityEngine.Object obj, System.Type objType, EditorGUI.ObjectFieldValidator validator, params GUILayoutOption[] options)
         {
             Rect position = s_LastRect = GetControlRect(true, 16f, options);
             return EditorGUI.MiniThumbnailObjectField(position, label, obj, objType, validator);
@@ -2964,7 +2964,7 @@
             EditorGUI.MinMaxSlider(position, label, ref minValue, ref maxValue, minLimit, maxLimit);
         }
 
-        internal static void MultiSelectionObjectTitleBar(Object[] objects)
+        internal static void MultiSelectionObjectTitleBar(UnityEngine.Object[] objects)
         {
             string t = objects[0].name + " (" + ObjectNames.NicifyVariableName(ObjectNames.GetTypeName(objects[0])) + ")";
             if (objects.Length > 1)
@@ -3002,7 +3002,7 @@
         /// properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
-        public static void ObjectField(SerializedProperty property, Type objType, params GUILayoutOption[] options)
+        public static void ObjectField(SerializedProperty property, System.Type objType, params GUILayoutOption[] options)
         {
             ObjectField(property, objType, null, options);
         }
@@ -3034,7 +3034,7 @@
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         [Obsolete("Check the docs for the usage of the new parameter 'allowSceneObjects'.")]
-        public static Object ObjectField(Object obj, Type objType, params GUILayoutOption[] options) => 
+        public static UnityEngine.Object ObjectField(UnityEngine.Object obj, System.Type objType, params GUILayoutOption[] options) => 
             ObjectField(obj, objType, true, options);
 
         /// <summary>
@@ -3048,7 +3048,7 @@
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         [Obsolete("Check the docs for the usage of the new parameter 'allowSceneObjects'.")]
-        public static Object ObjectField(string label, Object obj, Type objType, params GUILayoutOption[] options) => 
+        public static UnityEngine.Object ObjectField(string label, UnityEngine.Object obj, System.Type objType, params GUILayoutOption[] options) => 
             ObjectField(label, obj, objType, true, options);
 
         /// <summary>
@@ -3061,7 +3061,7 @@
         /// properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
-        public static void ObjectField(SerializedProperty property, Type objType, GUIContent label, params GUILayoutOption[] options)
+        public static void ObjectField(SerializedProperty property, System.Type objType, GUIContent label, params GUILayoutOption[] options)
         {
             Rect position = s_LastRect = GetControlRect(true, 16f, EditorStyles.objectField, options);
             EditorGUI.ObjectField(position, property, objType, label);
@@ -3078,7 +3078,7 @@
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         [Obsolete("Check the docs for the usage of the new parameter 'allowSceneObjects'.")]
-        public static Object ObjectField(GUIContent label, Object obj, Type objType, params GUILayoutOption[] options) => 
+        public static UnityEngine.Object ObjectField(GUIContent label, UnityEngine.Object obj, System.Type objType, params GUILayoutOption[] options) => 
             ObjectField(label, obj, objType, true, options);
 
         /// <summary>
@@ -3094,7 +3094,7 @@
         /// <returns>
         /// <para>The object that has been set by the user.</para>
         /// </returns>
-        public static Object ObjectField(Object obj, Type objType, bool allowSceneObjects, params GUILayoutOption[] options)
+        public static UnityEngine.Object ObjectField(UnityEngine.Object obj, System.Type objType, bool allowSceneObjects, params GUILayoutOption[] options)
         {
             Rect position = s_LastRect = GetControlRect(false, 16f, options);
             return EditorGUI.ObjectField(position, obj, objType, allowSceneObjects);
@@ -3113,7 +3113,7 @@
         /// <returns>
         /// <para>The object that has been set by the user.</para>
         /// </returns>
-        public static Object ObjectField(string label, Object obj, Type objType, bool allowSceneObjects, params GUILayoutOption[] options) => 
+        public static UnityEngine.Object ObjectField(string label, UnityEngine.Object obj, System.Type objType, bool allowSceneObjects, params GUILayoutOption[] options) => 
             ObjectField(EditorGUIUtility.TempContent(label), obj, objType, allowSceneObjects, options);
 
         /// <summary>
@@ -3129,7 +3129,7 @@
         /// <returns>
         /// <para>The object that has been set by the user.</para>
         /// </returns>
-        public static Object ObjectField(GUIContent label, Object obj, Type objType, bool allowSceneObjects, params GUILayoutOption[] options)
+        public static UnityEngine.Object ObjectField(GUIContent label, UnityEngine.Object obj, System.Type objType, bool allowSceneObjects, params GUILayoutOption[] options)
         {
             float num;
             if (EditorGUIUtility.HasObjectThumbnail(objType))
@@ -4342,7 +4342,7 @@
         /// </summary>
         public class HorizontalScope : GUI.Scope
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private Rect <rect>k__BackingField;
 
             /// <summary>
@@ -4387,7 +4387,7 @@
 
         internal class HorizontalScrollViewScope : GUI.Scope
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private bool <handleScrollWheel>k__BackingField;
             [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private Vector2 <scrollPosition>k__BackingField;
@@ -4419,9 +4419,9 @@
         /// </summary>
         public class ScrollViewScope : GUI.Scope
         {
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            private bool <handleScrollWheel>k__BackingField;
             [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            private bool <handleScrollWheel>k__BackingField;
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private Vector2 <scrollPosition>k__BackingField;
 
             /// <summary>
@@ -4620,9 +4620,9 @@
 
         internal class VerticalScrollViewScope : GUI.Scope
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private bool <handleScrollWheel>k__BackingField;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private Vector2 <scrollPosition>k__BackingField;
 
             public VerticalScrollViewScope(Vector2 scrollPosition, params GUILayoutOption[] options)

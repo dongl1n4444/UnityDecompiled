@@ -9,7 +9,6 @@ using System.Security.Cryptography;
 using System.Text;
 using UnityEditor;
 using UnityEditor.WSA;
-using UnityEditorInternal;
 using UnityEngine;
 
 internal static class MetroVisualStudioSolutionHelper
@@ -384,22 +383,6 @@ internal static class MetroVisualStudioSolutionHelper
             Debug.LogWarning($"Splash screen style {PlayerSettings.SplashScreen.unityLogoStyle} not fully supported, please report a bug");
         }
         return nullable;
-    }
-
-    public static string GetUWPSDKVersion()
-    {
-        string str = RegistryUtil.GetRegistryStringValue32(@"SOFTWARE\Microsoft\Microsoft SDKs\Windows\v10.0", "ProductVersion", null);
-        str = !string.IsNullOrEmpty(str) ? str : "10.0.10240";
-        Version version = new Version(str);
-        if (version.Build == -1)
-        {
-            str = str + ".0";
-        }
-        if (version.Revision == -1)
-        {
-            str = str + ".0";
-        }
-        return str;
     }
 
     internal static bool IsManifestFileName(this string file) => 
@@ -824,7 +807,7 @@ internal static class MetroVisualStudioSolutionHelper
             modifyAppXPackage.Append(MetroVisualStudioSolutionHelper._assemblyConverterPlatform[this.wsaSDK]);
             if (this.wsaSDK == WSASDK.UWP)
             {
-                modifyAppXPackage.Append(" -lock=&quot;$(ProjectDir)project.lock.json&quot; -bits=$(UnityBits) -configuration=$(Configuration) -removeDebuggableAttribute=$(RemoveDebuggableAttribute)");
+                modifyAppXPackage.Append(" -lock=&quot;$(ProjectDir)project.lock.json&quot; -bits=$(UnityBits) -configuration=$(Configuration) -removeDebuggableAttribute=$(RemoveDebuggableAttribute) -uwpsdk=$(TargetPlatformVersion)");
             }
             string playersRootPath = MetroVisualStudioSolutionHelper.GetPlayersRootPath(this.wsaSDK, this.sourceBuild);
             modifyAppXPackage.Append(" -path=&quot;.&quot; -path=&quot;");

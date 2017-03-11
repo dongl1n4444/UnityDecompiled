@@ -7,8 +7,10 @@
     /// </summary>
     public enum TizenOSVersion
     {
-        Version23,
-        Version24
+        /// <summary>
+        /// <para></para>
+        /// </summary>
+        Version24 = 1
     }
 }
 

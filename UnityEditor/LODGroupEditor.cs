@@ -17,13 +17,13 @@
         [CompilerGenerated]
         private static Func<int, string> <>f__am$cache1;
         [CompilerGenerated]
-        private static Func<Object, bool> <>f__am$cache2;
+        private static Func<UnityEngine.Object, bool> <>f__am$cache2;
         [CompilerGenerated]
-        private static Func<Object, GameObject> <>f__am$cache3;
+        private static Func<UnityEngine.Object, GameObject> <>f__am$cache3;
         [CompilerGenerated]
-        private static Func<Object, bool> <>f__am$cache4;
+        private static Func<UnityEngine.Object, bool> <>f__am$cache4;
         [CompilerGenerated]
-        private static Func<Object, Renderer> <>f__am$cache5;
+        private static Func<UnityEngine.Object, Renderer> <>f__am$cache5;
         [CompilerGenerated]
         private static Func<LODGroupGUI.LODInfo, bool> <>f__am$cache6;
         [CompilerGenerated]
@@ -33,9 +33,9 @@
         [CompilerGenerated]
         private static Func<LODGroupGUI.LODInfo, int> <>f__am$cache9;
         [CompilerGenerated]
-        private static Func<Object, bool> <>f__am$cacheA;
+        private static Func<UnityEngine.Object, bool> <>f__am$cacheA;
         [CompilerGenerated]
-        private static Func<Object, GameObject> <>f__am$cacheB;
+        private static Func<UnityEngine.Object, GameObject> <>f__am$cacheB;
         private const string kFadeTransitionWidthDataPath = "m_LODs.Array.data[{0}].fadeTransitionWidth";
         private const string kLODDataPath = "m_LODs.Array.data[{0}]";
         private const string kPixelHeightDataPath = "m_LODs.Array.data[{0}].screenRelativeHeight";
@@ -337,7 +337,7 @@
                     if (lODLevel >= -1)
                     {
                         this.m_SelectedLOD = lODLevel;
-                        if (DragAndDrop.objectReferences.Count<Object>() > 0)
+                        if (DragAndDrop.objectReferences.Count<UnityEngine.Object>() > 0)
                         {
                             DragAndDrop.visualMode = !this.m_IsPrefab ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.None;
                             if (current.type == EventType.DragPerform)
@@ -350,7 +350,7 @@
                                 {
                                     <>f__am$cacheB = go => go as GameObject;
                                 }
-                                IEnumerable<GameObject> selectedGameObjects = Enumerable.Select<Object, GameObject>(Enumerable.Where<Object>(DragAndDrop.objectReferences, <>f__am$cacheA), <>f__am$cacheB);
+                                IEnumerable<GameObject> selectedGameObjects = Enumerable.Select<UnityEngine.Object, GameObject>(Enumerable.Where<UnityEngine.Object>(DragAndDrop.objectReferences, <>f__am$cacheA), <>f__am$cacheB);
                                 IEnumerable<Renderer> renderers = this.GetRenderers(selectedGameObjects, true);
                                 if (lODLevel == -1)
                                 {
@@ -595,7 +595,7 @@
                 {
                     if (EditorUtility.IsPersistent(obj2))
                     {
-                        GameObject item = Object.Instantiate<GameObject>(obj2);
+                        GameObject item = UnityEngine.Object.Instantiate<GameObject>(obj2);
                         if (item != null)
                         {
                             item.transform.parent = this.m_LODGroup.transform;
@@ -632,7 +632,7 @@
             {
                 <>f__am$cache5 = go => go as Renderer;
             }
-            IEnumerable<Renderer> collection = Enumerable.Select<Object, Renderer>(Enumerable.Where<Object>(DragAndDrop.objectReferences, <>f__am$cache4), <>f__am$cache5);
+            IEnumerable<Renderer> collection = Enumerable.Select<UnityEngine.Object, Renderer>(Enumerable.Where<UnityEngine.Object>(DragAndDrop.objectReferences, <>f__am$cache4), <>f__am$cache5);
             list2.AddRange(collection);
             return list2;
         }
@@ -660,7 +660,7 @@
                     }
                     if (flag)
                     {
-                        if (DragAndDrop.objectReferences.Count<Object>() > 0)
+                        if (DragAndDrop.objectReferences.Count<UnityEngine.Object>() > 0)
                         {
                             DragAndDrop.visualMode = !this.m_IsPrefab ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.None;
                             if (storey.evt.type == EventType.DragPerform)
@@ -673,7 +673,7 @@
                                 {
                                     <>f__am$cache3 = go => go as GameObject;
                                 }
-                                IEnumerable<GameObject> selectedGameObjects = Enumerable.Select<Object, GameObject>(Enumerable.Where<Object>(DragAndDrop.objectReferences, <>f__am$cache2), <>f__am$cache3);
+                                IEnumerable<GameObject> selectedGameObjects = Enumerable.Select<UnityEngine.Object, GameObject>(Enumerable.Where<UnityEngine.Object>(DragAndDrop.objectReferences, <>f__am$cache2), <>f__am$cache3);
                                 IEnumerable<Renderer> renderers = this.GetRenderers(selectedGameObjects, true);
                                 this.AddGameObjectRenderers(renderers, true);
                                 DragAndDrop.AcceptDrag();

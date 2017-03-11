@@ -29,7 +29,7 @@
 
         public static void CloseToolbarWindowsImmediately()
         {
-            foreach (CollabToolbarWindow window in Resources.FindObjectsOfTypeAll<CollabToolbarWindow>())
+            foreach (CollabToolbarWindow window in UnityEngine.Resources.FindObjectsOfTypeAll<CollabToolbarWindow>())
             {
                 window.Close();
             }
@@ -102,11 +102,11 @@
             return false;
         }
 
-        [MenuItem("Window/Collab Toolbar", false, 0x7db, true)]
+        [UnityEditor.MenuItem("Window/Collab Toolbar", false, 0x7db, true)]
         public static CollabToolbarWindow ShowToolbarWindow() => 
             EditorWindow.GetWindow<CollabToolbarWindow>(false, "Unity Collab Toolbar");
 
-        [MenuItem("Window/Collab Toolbar", true)]
+        [UnityEditor.MenuItem("Window/Collab Toolbar", true)]
         public static bool ValidateShowToolbarWindow() => 
             (UnityConnect.instance.userInfo.whitelisted && Collab.instance.collabInfo.whitelisted);
 

@@ -142,7 +142,7 @@
                     Texture texture = this.textures[i];
                     Texture texture2 = null;
                     EditorGUI.BeginChangeCheck();
-                    Type textureTypeFromDimension = MaterialEditor.GetTextureTypeFromDimension(this.dimensions[i]);
+                    System.Type textureTypeFromDimension = MaterialEditor.GetTextureTypeFromDimension(this.dimensions[i]);
                     if (textureTypeFromDimension != null)
                     {
                         string t = !string.IsNullOrEmpty(this.displayNames[i]) ? this.displayNames[i] : ObjectNames.NicifyVariableName(this.propertyNames[i]);

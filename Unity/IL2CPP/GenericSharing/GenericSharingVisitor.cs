@@ -176,7 +176,7 @@
             switch (code)
             {
                 case Code.Callvirt:
-                    goto Label_028A;
+                    goto Label_0292;
 
                 case Code.Ldobj:
                 case Code.Ldfld:
@@ -185,7 +185,7 @@
                 case Code.Stobj:
                 case Code.Ldelema:
                 case Code.Unbox:
-                    goto Label_03CA;
+                    goto Label_03D2;
 
                 case Code.Newobj:
                 {
@@ -199,7 +199,7 @@
                         this.AddClassUsage(genericMethod.DeclaringType);
                         this.AddMethodUsage(genericMethod);
                     }
-                    goto Label_03CA;
+                    goto Label_03D2;
                 }
                 case Code.Castclass:
                 case Code.Isinst:
@@ -213,13 +213,13 @@
                     FieldReference reference3 = (FieldReference) instruction.Operand;
                     TypeReference declaringType = reference3.DeclaringType;
                     this.AddStaticUsage(declaringType);
-                    goto Label_03CA;
+                    goto Label_03D2;
                 }
                 case Code.Newarr:
                 {
                     TypeReference genericType = (TypeReference) instruction.Operand;
                     this.AddArrayUsage(genericType);
-                    goto Label_03CA;
+                    goto Label_03D2;
                 }
                 default:
                     switch (code)
@@ -227,7 +227,7 @@
                         case Code.Ldelem_Any:
                         case Code.Stelem_Any:
                         case Code.Initobj:
-                            goto Label_03CA;
+                            goto Label_03D2;
 
                         case Code.Unbox_Any:
                         case Code.Constrained:
@@ -253,45 +253,46 @@
                             {
                                 this.AddClassUsage(reference9.DeclaringType);
                             }
-                            goto Label_03CA;
+                            goto Label_03D2;
                         }
                         case Code.Ldftn:
                         {
                             MethodReference reference10 = (MethodReference) instruction.Operand;
                             this.AddMethodUsage(reference10);
-                            goto Label_03CA;
+                            goto Label_03D2;
                         }
                         case Code.Ldvirtftn:
                         {
                             MethodReference reference11 = (MethodReference) instruction.Operand;
+                            this.AddMethodUsage(reference11);
                             if (reference11.DeclaringType.IsInterface())
                             {
                                 this.AddClassUsage(reference11.DeclaringType);
                             }
-                            goto Label_03CA;
+                            goto Label_03D2;
                         }
                         case Code.Call:
-                            goto Label_028A;
+                            goto Label_0292;
 
                         case Code.Sizeof:
                         {
                             TypeReference reference6 = (TypeReference) instruction.Operand;
                             this.AddClassUsage(reference6);
-                            goto Label_03CA;
+                            goto Label_03D2;
                         }
                         default:
                             if (instruction.Operand is MemberReference)
                             {
                                 throw new NotImplementedException();
                             }
-                            goto Label_03CA;
+                            goto Label_03D2;
                     }
                     break;
             }
             TypeReference operand = (TypeReference) instruction.Operand;
             this.AddClassUsage(operand);
-            goto Label_03CA;
-        Label_028A:
+            goto Label_03D2;
+        Label_0292:
             reference12 = (MethodReference) instruction.Operand;
             if (!Naming.IsSpecialArrayMethod(reference12) && (!reference12.DeclaringType.IsSystemArray() || ((reference12.Name != "GetGenericValueImpl") && (reference12.Name != "SetGenericValueImpl"))))
             {
@@ -313,7 +314,7 @@
             {
                 this.AddStaticUsage(reference12.DeclaringType);
             }
-        Label_03CA:
+        Label_03D2:
             base.Visit(instruction, context);
         }
 

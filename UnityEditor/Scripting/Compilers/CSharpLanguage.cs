@@ -10,7 +10,7 @@
     using UnityEditor.Modules;
     using UnityEditor.Scripting;
 
-    internal class CSharpLanguage : SupportedLanguage
+    internal class CSharpLanguage : UnityEditor.Scripting.Compilers.SupportedLanguage
     {
         public override ScriptCompilerBase CreateCompiler(MonoIsland island, bool buildingForEditor, BuildTarget targetPlatform, bool runUpdater)
         {

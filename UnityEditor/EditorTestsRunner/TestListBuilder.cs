@@ -71,7 +71,7 @@
 
         private void ParseTestList(TreeViewItem parent, EditorTestResultGroup parentResult, int depth, Test test, FilteringOptions renderingOptions)
         {
-            IEnumerator enumerator = test.get_Categories().GetEnumerator();
+            IEnumerator enumerator = test.Categories.GetEnumerator();
             try
             {
                 while (enumerator.MoveNext())
@@ -90,7 +90,7 @@
             }
             if (test is TestMethod)
             {
-                EditorTestResult result = this.FindExistingResult(test.get_TestName().get_FullName(), test.get_TestName().get_TestID().ToString());
+                EditorTestResult result = this.FindExistingResult(test.TestName.FullName, test.TestName.TestID.ToString());
                 if (result == null)
                 {
                     result = new EditorTestResult();
@@ -126,7 +126,7 @@
                 }
                 else if (test is NUnitTestFixture)
                 {
-                    if (test.get_Tests().Count > 0)
+                    if (test.Tests.Count > 0)
                     {
                         item2 = new TestGroupTreeViewItem(group, test as TestSuite, depth, parent);
                         parent.AddChild(item2);
@@ -138,7 +138,7 @@
                     parent.AddChild(item2);
                 }
                 depth++;
-                IEnumerator enumerator2 = test.get_Tests().GetEnumerator();
+                IEnumerator enumerator2 = test.Tests.GetEnumerator();
                 try
                 {
                     while (enumerator2.MoveNext())

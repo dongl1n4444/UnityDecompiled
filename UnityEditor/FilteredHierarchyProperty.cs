@@ -112,7 +112,7 @@
         public string name =>
             this.m_Hierarchy.results[this.m_Position].name;
 
-        public Object pptrValue =>
+        public UnityEngine.Object pptrValue =>
             EditorUtility.InstanceIDToObject(this.instanceID);
 
         public int row =>

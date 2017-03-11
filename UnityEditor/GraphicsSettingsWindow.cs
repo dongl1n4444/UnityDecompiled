@@ -19,15 +19,15 @@
 
         private void OnDisable()
         {
-            Object.DestroyImmediate(this.m_TierSettingsEditor);
+            UnityEngine.Object.DestroyImmediate(this.m_TierSettingsEditor);
             this.m_TierSettingsEditor = null;
-            Object.DestroyImmediate(this.m_BuiltinShadersEditor);
+            UnityEngine.Object.DestroyImmediate(this.m_BuiltinShadersEditor);
             this.m_BuiltinShadersEditor = null;
-            Object.DestroyImmediate(this.m_AlwaysIncludedShadersEditor);
+            UnityEngine.Object.DestroyImmediate(this.m_AlwaysIncludedShadersEditor);
             this.m_AlwaysIncludedShadersEditor = null;
-            Object.DestroyImmediate(this.m_ShaderStrippingEditor);
+            UnityEngine.Object.DestroyImmediate(this.m_ShaderStrippingEditor);
             this.m_ShaderStrippingEditor = null;
-            Object.DestroyImmediate(this.m_ShaderPreloadEditor);
+            UnityEngine.Object.DestroyImmediate(this.m_ShaderPreloadEditor);
             this.m_ShaderPreloadEditor = null;
         }
 
@@ -98,8 +98,8 @@
             }
         }
 
-        private Object graphicsSettings =>
-            GraphicsSettings.GetGraphicsSettings();
+        private UnityEngine.Object graphicsSettings =>
+            UnityEngine.Rendering.GraphicsSettings.GetGraphicsSettings();
 
         private Editor shaderPreloadEditor
         {
@@ -129,7 +129,7 @@
             }
         }
 
-        [CustomEditor(typeof(GraphicsSettings))]
+        [CustomEditor(typeof(UnityEditor.GraphicsSettings))]
         internal class AlwaysIncludedShadersEditor : Editor
         {
             private SerializedProperty m_AlwaysIncludedShaders;
@@ -148,7 +148,7 @@
             }
         }
 
-        [CustomEditor(typeof(GraphicsSettings))]
+        [CustomEditor(typeof(UnityEditor.GraphicsSettings))]
         internal class BuiltinShadersEditor : Editor
         {
             private GraphicsSettingsWindow.BuiltinShaderSettings m_Deferred;
@@ -234,7 +234,7 @@
             Shaders
         }
 
-        [CustomEditor(typeof(GraphicsSettings))]
+        [CustomEditor(typeof(UnityEditor.GraphicsSettings))]
         internal class ShaderPreloadEditor : Editor
         {
             private SerializedProperty m_PreloadedShaders;
@@ -278,7 +278,7 @@
             }
         }
 
-        [CustomEditor(typeof(GraphicsSettings))]
+        [CustomEditor(typeof(UnityEditor.GraphicsSettings))]
         internal class ShaderStrippingEditor : Editor
         {
             private SerializedProperty m_FogKeepExp;
@@ -393,7 +393,7 @@
             public static readonly GUIContent[] Tabs = new GUIContent[] { EditorGUIUtility.TextContent("Tiers|Preliminary name."), EditorGUIUtility.TextContent("Shaders|Preliminary name.") };
         }
 
-        [CustomEditor(typeof(GraphicsSettings))]
+        [CustomEditor(typeof(UnityEditor.GraphicsSettings))]
         internal class TierSettingsEditor : Editor
         {
             public bool verticalLayout = false;

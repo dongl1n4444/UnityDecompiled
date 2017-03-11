@@ -91,7 +91,7 @@
             }
             if (this.m_FinalCompositionTexture != null)
             {
-                Object.DestroyImmediate(this.m_FinalCompositionTexture);
+                UnityEngine.Object.DestroyImmediate(this.m_FinalCompositionTexture);
                 this.m_FinalCompositionTexture = null;
             }
         }
@@ -112,7 +112,7 @@
 
         public void CreateNewLibrary(string assetPath)
         {
-            AssetDatabase.CreateAsset(Object.Instantiate<LookDevEnvironmentLibrary>(this.envLibrary), assetPath);
+            AssetDatabase.CreateAsset(UnityEngine.Object.Instantiate<LookDevEnvironmentLibrary>(this.envLibrary), assetPath);
             this.envLibrary = AssetDatabase.LoadAssetAtPath(assetPath, typeof(LookDevEnvironmentLibrary)) as LookDevEnvironmentLibrary;
         }
 
@@ -651,7 +651,7 @@
                 {
                     this.m_LookDevConfig.cameraState[index].Copy(this.m_LookDevConfig.cameraState[currentEditionContextIndex]);
                 }
-                if (((this.m_CameraController.currentViewTool == ViewTool.None) && ((Event.current.type == EventType.KeyUp) && (Event.current.keyCode == KeyCode.F))) && !EditorGUIUtility.editingTextField)
+                if (((this.m_CameraController.currentViewTool == UnityEditor.ViewTool.None) && ((Event.current.type == EventType.KeyUp) && (Event.current.keyCode == KeyCode.F))) && !EditorGUIUtility.editingTextField)
                 {
                     this.Frame(this.m_LookDevConfig.currentEditionContext, true);
                     Event.current.Use();
@@ -675,7 +675,7 @@
                 case EventType.DragUpdated:
                 {
                     bool flag3 = false;
-                    foreach (Object obj4 in DragAndDrop.objectReferences)
+                    foreach (UnityEngine.Object obj4 in DragAndDrop.objectReferences)
                     {
                         Cubemap cubemap3 = obj4 as Cubemap;
                         if (cubemap3 != null)
@@ -708,7 +708,7 @@
                     bool flag = false;
                     if (this.m_PreviewRects[2].Contains(current.mousePosition))
                     {
-                        foreach (Object obj2 in DragAndDrop.objectReferences)
+                        foreach (UnityEngine.Object obj2 in DragAndDrop.objectReferences)
                         {
                             Cubemap cubemap = obj2 as Cubemap;
                             if (cubemap != null)
@@ -989,7 +989,7 @@
             {
                 if (this.m_LookDevUserEnvLibrary != null)
                 {
-                    this.m_LookDevEnvLibrary = Object.Instantiate<LookDevEnvironmentLibrary>(this.m_LookDevUserEnvLibrary);
+                    this.m_LookDevEnvLibrary = UnityEngine.Object.Instantiate<LookDevEnvironmentLibrary>(this.m_LookDevUserEnvLibrary);
                 }
                 else
                 {
@@ -1102,7 +1102,7 @@
             base.Repaint();
         }
 
-        public static void OpenInLookDevTool(Object go)
+        public static void OpenInLookDevTool(UnityEngine.Object go)
         {
             LookDevView window = EditorWindow.GetWindow<LookDevView>();
             window.m_LookDevConfig.SetCurrentPreviewObject(go as GameObject, LookDevEditionContext.Left);
@@ -1307,20 +1307,21 @@
                 }
             }
             Color ambient = new Color(0f, 0f, 0f, 0f);
-            DefaultReflectionMode defaultReflectionMode = RenderSettings.defaultReflectionMode;
+            UnityEngine.Rendering.DefaultReflectionMode defaultReflectionMode = RenderSettings.defaultReflectionMode;
             AmbientMode ambientMode = RenderSettings.ambientMode;
             Cubemap customReflection = RenderSettings.customReflection;
             Material skybox = RenderSettings.skybox;
             float ambientIntensity = RenderSettings.ambientIntensity;
             SphericalHarmonicsL2 ambientProbe = RenderSettings.ambientProbe;
             float reflectionIntensity = RenderSettings.reflectionIntensity;
-            RenderSettings.defaultReflectionMode = DefaultReflectionMode.Custom;
+            RenderSettings.defaultReflectionMode = UnityEngine.Rendering.DefaultReflectionMode.Custom;
             Cubemap texture = (cubemapInfo == null) ? null : cubemapInfo.cubemap;
             LookDevResources.m_SkyboxMaterial.SetTexture("_Tex", texture);
             LookDevResources.m_SkyboxMaterial.SetFloat("_Exposure", 1f);
             RenderSettings.customReflection = texture;
             if (((cubemapInfo != null) && !cubemapInfo.alreadyComputed) && !flag)
             {
+                RenderSettings.ambientMode = AmbientMode.Skybox;
                 RenderSettings.skybox = LookDevResources.m_SkyboxMaterial;
                 DynamicGI.UpdateEnvironment();
                 cubemapInfo.ambientProbe = RenderSettings.ambientProbe;
@@ -1421,7 +1422,7 @@
         public void ResetView()
         {
             Undo.RecordObject(this.m_LookDevConfig, "Reset View");
-            Object.DestroyImmediate(this.m_LookDevConfig);
+            UnityEngine.Object.DestroyImmediate(this.m_LookDevConfig);
             this.m_LookDevConfig = ScriptableObject.CreateInstance<LookDevConfig>();
             this.m_LookDevConfig.SetLookDevView(this);
             this.UpdateLookDevModeToggle(this.m_LookDevConfig.lookDevMode, true);
@@ -1531,7 +1532,7 @@
             {
                 if (this.m_FinalCompositionTexture != null)
                 {
-                    Object.DestroyImmediate(this.m_FinalCompositionTexture);
+                    UnityEngine.Object.DestroyImmediate(this.m_FinalCompositionTexture);
                     this.m_FinalCompositionTexture = null;
                 }
                 this.m_FinalCompositionTexture = new RenderTexture(width, height, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
@@ -1566,7 +1567,7 @@
                 else if (value != this.m_LookDevUserEnvLibrary)
                 {
                     this.m_LookDevUserEnvLibrary = value;
-                    this.m_LookDevEnvLibrary = Object.Instantiate<LookDevEnvironmentLibrary>(value);
+                    this.m_LookDevEnvLibrary = UnityEngine.Object.Instantiate<LookDevEnvironmentLibrary>(value);
                     this.m_LookDevEnvLibrary.SetLookDevView(this);
                 }
                 int hdriCount = this.m_LookDevEnvLibrary.hdriCount;

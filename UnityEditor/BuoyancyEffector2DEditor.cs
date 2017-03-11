@@ -8,7 +8,7 @@
     using UnityEngine;
     using UnityEngine.Events;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(BuoyancyEffector2D), true)]
+    [CustomEditor(typeof(BuoyancyEffector2D), true), CanEditMultipleObjects]
     internal class BuoyancyEffector2DEditor : Effector2DEditor
     {
         [CompilerGenerated]

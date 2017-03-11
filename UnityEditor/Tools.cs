@@ -14,7 +14,7 @@
         private static EditorApplication.CallbackFunction <>f__mg$cache0;
         [CompilerGenerated]
         private static EditorApplication.CallbackFunction <>f__mg$cache1;
-        private Tool currentTool = Tool.Move;
+        private UnityEditor.Tool currentTool = UnityEditor.Tool.Move;
         internal static Vector3 handleOffset;
         private static PrefKey kMoveKey = new PrefKey("Tools/Move", "w");
         private static PrefKey kPivotMode = new PrefKey("Tools/Pivot Mode", "z");
@@ -29,14 +29,14 @@
         private PivotMode m_PivotMode;
         private PivotRotation m_PivotRotation;
         private bool m_RectBlueprintMode;
-        private ViewTool m_ViewTool = ViewTool.Pan;
+        private UnityEditor.ViewTool m_ViewTool = UnityEditor.ViewTool.Pan;
         private int m_VisibleLayers = -1;
         internal static OnToolChangedFunc onToolChanged;
         private static int originalTool;
         internal static int s_ButtonDown = -1;
         private static Tools s_Get;
         internal static bool s_Hidden = false;
-        internal static ViewTool s_LockedViewTool = ViewTool.None;
+        internal static UnityEditor.ViewTool s_LockedViewTool = UnityEditor.ViewTool.None;
         private static Vector3 s_LockHandlePosition;
         private static bool s_LockHandlePositionActive = false;
         private static int s_LockHandleRectAxis;
@@ -48,7 +48,7 @@
             Event current = Event.current;
             if (kViewKey.activated)
             {
-                Tools.current = Tool.View;
+                Tools.current = UnityEditor.Tool.View;
                 ResetGlobalHandleRotation();
                 current.Use();
                 if (Toolbar.get != null)
@@ -62,7 +62,7 @@
             }
             if (kMoveKey.activated)
             {
-                Tools.current = Tool.Move;
+                Tools.current = UnityEditor.Tool.Move;
                 ResetGlobalHandleRotation();
                 current.Use();
                 if (Toolbar.get != null)
@@ -76,7 +76,7 @@
             }
             if (kRotateKey.activated)
             {
-                Tools.current = Tool.Rotate;
+                Tools.current = UnityEditor.Tool.Rotate;
                 ResetGlobalHandleRotation();
                 current.Use();
                 if (Toolbar.get != null)
@@ -90,7 +90,7 @@
             }
             if (kScaleKey.activated)
             {
-                Tools.current = Tool.Scale;
+                Tools.current = UnityEditor.Tool.Scale;
                 ResetGlobalHandleRotation();
                 current.Use();
                 if (Toolbar.get != null)
@@ -104,7 +104,7 @@
             }
             if (kRectKey.activated)
             {
-                Tools.current = Tool.Rect;
+                Tools.current = UnityEditor.Tool.Rect;
                 ResetGlobalHandleRotation();
                 current.Use();
                 if (Toolbar.get != null)
@@ -150,13 +150,13 @@
             }
             else
             {
-                if (current == Tool.Rect)
+                if (current == UnityEditor.Tool.Rect)
                 {
                     return (((Vector3) (handleRotation * InternalEditorUtility.CalculateSelectionBoundsInSpace(Vector3.zero, handleRotation, rectBlueprintMode).center)) + vector2);
                 }
                 return (InternalEditorUtility.CalculateSelectionBounds(true, false).center + vector2);
             }
-            if (((current == Tool.Rect) && rectBlueprintMode) && InternalEditorUtility.SupportsRectLayout(activeTransform))
+            if (((current == UnityEditor.Tool.Rect) && rectBlueprintMode) && InternalEditorUtility.SupportsRectLayout(activeTransform))
             {
                 return (activeTransform.parent.TransformPoint(new Vector3(activeTransform.localPosition.x, activeTransform.localPosition.y, 0f)) + vector2);
             }
@@ -309,7 +309,7 @@
         /// <summary>
         /// <para>The tool that is currently selected for the Scene View.</para>
         /// </summary>
-        public static Tool current
+        public static UnityEditor.Tool current
         {
             get => 
                 get.currentTool;
@@ -317,7 +317,7 @@
             {
                 if (get.currentTool != value)
                 {
-                    Tool currentTool = get.currentTool;
+                    UnityEditor.Tool currentTool = get.currentTool;
                     get.currentTool = value;
                     if (onToolChanged != null)
                     {
@@ -510,39 +510,39 @@
         /// <summary>
         /// <para>The option that is currently active for the View tool in the Scene view.</para>
         /// </summary>
-        public static ViewTool viewTool
+        public static UnityEditor.ViewTool viewTool
         {
             get
             {
                 Event current = Event.current;
                 if ((current != null) && viewToolActive)
                 {
-                    if (s_LockedViewTool == ViewTool.None)
+                    if (s_LockedViewTool == UnityEditor.ViewTool.None)
                     {
                         bool flag = current.control && (Application.platform == RuntimePlatform.OSXEditor);
                         bool actionKey = EditorGUI.actionKey;
                         bool flag3 = (!actionKey && !flag) && !current.alt;
                         if (((((s_ButtonDown <= 0) && flag3) || ((s_ButtonDown <= 0) && actionKey)) || (s_ButtonDown == 2)) || ((((SceneView.lastActiveSceneView != null) && (SceneView.lastActiveSceneView.in2DMode || SceneView.lastActiveSceneView.isRotationLocked)) && ((s_ButtonDown != 1) || !current.alt)) && ((s_ButtonDown > 0) || !flag)))
                         {
-                            get.m_ViewTool = ViewTool.Pan;
+                            get.m_ViewTool = UnityEditor.ViewTool.Pan;
                         }
                         else if (((s_ButtonDown <= 0) && flag) || ((s_ButtonDown == 1) && current.alt))
                         {
-                            get.m_ViewTool = ViewTool.Zoom;
+                            get.m_ViewTool = UnityEditor.ViewTool.Zoom;
                         }
                         else if ((s_ButtonDown <= 0) && current.alt)
                         {
-                            get.m_ViewTool = ViewTool.Orbit;
+                            get.m_ViewTool = UnityEditor.ViewTool.Orbit;
                         }
                         else if ((s_ButtonDown == 1) && !current.alt)
                         {
-                            get.m_ViewTool = ViewTool.FPS;
+                            get.m_ViewTool = UnityEditor.ViewTool.FPS;
                         }
                     }
                 }
                 else
                 {
-                    get.m_ViewTool = ViewTool.Pan;
+                    get.m_ViewTool = UnityEditor.ViewTool.Pan;
                 }
                 return get.m_ViewTool;
             }
@@ -556,11 +556,11 @@
         {
             get
             {
-                if ((GUIUtility.hotControl != 0) && (s_LockedViewTool == ViewTool.None))
+                if ((GUIUtility.hotControl != 0) && (s_LockedViewTool == UnityEditor.ViewTool.None))
                 {
                     return false;
                 }
-                return ((((s_LockedViewTool != ViewTool.None) || (current == Tool.View)) || (Event.current.alt || (s_ButtonDown == 1))) || (s_ButtonDown == 2));
+                return ((((s_LockedViewTool != UnityEditor.ViewTool.None) || (current == UnityEditor.Tool.View)) || (Event.current.alt || (s_ButtonDown == 1))) || (s_ButtonDown == 2));
             }
         }
 
@@ -582,7 +582,7 @@
             }
         }
 
-        internal delegate void OnToolChangedFunc(Tool from, Tool to);
+        internal delegate void OnToolChangedFunc(UnityEditor.Tool from, UnityEditor.Tool to);
     }
 }
 

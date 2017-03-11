@@ -94,7 +94,7 @@ internal class PostProcessUAPDotNet : PostProcessUAP
     {
         string str6;
         string fileName = Utility.CombinePath(base.PlayerPackage, @"Tools\AssemblyConverter.exe");
-        string arguments = $"-metadata=0 -platform={this.GetAssemblyConverterPlatform()} -lock="{@"UWP\project.lock.json"}" {assembly}";
+        string arguments = $"-metadata=0 -platform={this.GetAssemblyConverterPlatform()} -lock="{@"UWP\project.lock.json"}" -uwpsdk={Utility.GetDesiredUWPSDK()} {assembly}";
         HashSet<string> set = new HashSet<string> {
             Path.GetDirectoryName(assembly)
         };
@@ -109,8 +109,8 @@ internal class PostProcessUAPDotNet : PostProcessUAP
         foreach (string str4 in set)
         {
             string str5 = arguments;
-            object[] objArray1 = new object[] { str5, " -path=\"", str4, '"' };
-            arguments = string.Concat(objArray1);
+            object[] objArray2 = new object[] { str5, " -path=\"", str4, '"' };
+            arguments = string.Concat(objArray2);
         }
         if (Utility.RunAndWait(fileName, arguments, out str6, null) != 0)
         {

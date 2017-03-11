@@ -206,7 +206,7 @@
         private void DrawCascadeSplitGUI<T>(ref SerializedProperty shadowCascadeSplit)
         {
             float[] normalizedCascadePartitions = null;
-            Type type = typeof(T);
+            System.Type type = typeof(T);
             if (type == typeof(float))
             {
                 normalizedCascadePartitions = new float[] { shadowCascadeSplit.floatValue };

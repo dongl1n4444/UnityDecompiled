@@ -20,7 +20,7 @@
 
         private static Color GetTreeColor()
         {
-            Color color = (Color) (Color.white * Random.Range((float) 1f, (float) (1f - treeColorAdjustment)));
+            Color color = (Color) (Color.white * UnityEngine.Random.Range((float) 1f, (float) (1f - treeColorAdjustment)));
             color.a = 1f;
             return color;
         }
@@ -28,16 +28,16 @@
         private static float GetTreeHeight()
         {
             float num = !allowHeightVar ? 0f : treeHeightVariation;
-            return (treeHeight * Random.Range((float) (1f - num), (float) (1f + num)));
+            return (treeHeight * UnityEngine.Random.Range((float) (1f - num), (float) (1f + num)));
         }
 
         private static float GetTreeRotation() => 
-            (!randomRotation ? 0f : Random.Range((float) 0f, (float) 6.283185f));
+            (!randomRotation ? 0f : UnityEngine.Random.Range((float) 0f, (float) 6.283185f));
 
         private static float GetTreeWidth()
         {
             float num = !allowWidthVar ? 0f : treeWidthVariation;
-            return (treeWidth * Random.Range((float) (1f - num), (float) (1f + num)));
+            return (treeWidth * UnityEngine.Random.Range((float) (1f - num), (float) (1f + num)));
         }
 
         public static void MassPlaceTrees(TerrainData terrainData, int numberOfTrees, bool randomTreeColor, bool keepExistingTrees)
@@ -55,13 +55,13 @@
                 while (num2 < sourceArray.Length)
                 {
                     TreeInstance instance = new TreeInstance {
-                        position = new Vector3(Random.value, 0f, Random.value)
+                        position = new Vector3(UnityEngine.Random.value, 0f, UnityEngine.Random.value)
                     };
                     if (terrainData.GetSteepness(instance.position.x, instance.position.z) < 30f)
                     {
                         instance.color = !randomTreeColor ? Color.white : GetTreeColor();
                         instance.lightmapColor = Color.white;
-                        instance.prototypeIndex = Random.Range(0, length);
+                        instance.prototypeIndex = UnityEngine.Random.Range(0, length);
                         instance.heightScale = GetTreeHeight();
                         instance.widthScale = !lockWidthToHeight ? GetTreeWidth() : instance.heightScale;
                         instance.rotation = GetTreeRotation();
@@ -108,7 +108,7 @@
                 num4 = Mathf.Clamp(num4, 0, 100);
                 for (int i = 1; (i < num4) && (num2 < num4); i++)
                 {
-                    Vector2 insideUnitCircle = Random.insideUnitCircle;
+                    Vector2 insideUnitCircle = UnityEngine.Random.insideUnitCircle;
                     insideUnitCircle.x *= brushSize / terrain.terrainData.size.x;
                     insideUnitCircle.y *= brushSize / terrain.terrainData.size.z;
                     Vector3 position = new Vector3(xBase + insideUnitCircle.x, 0f, yBase + insideUnitCircle.y);

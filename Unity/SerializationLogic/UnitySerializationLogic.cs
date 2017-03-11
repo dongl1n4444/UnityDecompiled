@@ -108,26 +108,14 @@
         private static bool IsFieldTypeSerializable(TypeReference typeReference) => 
             (IsTypeSerializable(typeReference) || IsSupportedCollection(typeReference));
 
+        private static bool IsGenericDictionary(TypeReference typeReference)
+        {
+            TypeReference type = typeReference;
+            return ((type != null) && CecilUtils.IsGenericDictionary(type));
+        }
+
         public static bool IsNonSerialized(TypeReference typeDeclaration) => 
             ((typeDeclaration == null) || (typeDeclaration.IsEnum() || (typeDeclaration.HasGenericParameters || ((typeDeclaration.MetadataType == MetadataType.Object) || (typeDeclaration.FullName.StartsWith("System.") || (typeDeclaration.IsArray || ((typeDeclaration.FullName == "UnityEngine.MonoBehaviour") || (typeDeclaration.FullName == "UnityEngine.ScriptableObject"))))))));
-
-        private static bool IsOrExtendsGenericDictionary(TypeReference typeReference)
-        {
-            TypeDefinition definition;
-            for (TypeReference reference = typeReference; reference != null; reference = definition.BaseType)
-            {
-                if (CecilUtils.IsGenericDictionary(reference))
-                {
-                    return true;
-                }
-                definition = reference.CheckedResolve();
-                if (definition == null)
-                {
-                    break;
-                }
-            }
-            return false;
-        }
 
         private static bool IsSerializablePrimitive(TypeReference typeReference)
         {
@@ -170,7 +158,7 @@
             {
                 return false;
             }
-            if (IsOrExtendsGenericDictionary(typeReference))
+            if (IsGenericDictionary(typeReference))
             {
                 return false;
             }

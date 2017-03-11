@@ -32,7 +32,7 @@
 
         public static void CloseAllWindows()
         {
-            WindowPending[] pendingArray = Resources.FindObjectsOfTypeAll(typeof(WindowPending)) as WindowPending[];
+            WindowPending[] pendingArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(WindowPending)) as WindowPending[];
             WindowPending pending = (pendingArray.Length <= 0) ? null : pendingArray[0];
             if (pending != null)
             {
@@ -86,7 +86,7 @@
 
         public static void ExpandLatestChangeSet()
         {
-            WindowPending[] pendingArray = Resources.FindObjectsOfTypeAll(typeof(WindowPending)) as WindowPending[];
+            WindowPending[] pendingArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(WindowPending)) as WindowPending[];
             foreach (WindowPending pending in pendingArray)
             {
                 pending.pendingList.ExpandLastItem();
@@ -375,7 +375,7 @@
 
         private static void OnVCTaskCompletedEvent(Task task, CompletionAction completionAction)
         {
-            WindowPending[] pendingArray = Resources.FindObjectsOfTypeAll(typeof(WindowPending)) as WindowPending[];
+            WindowPending[] pendingArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(WindowPending)) as WindowPending[];
             foreach (WindowPending pending in pendingArray)
             {
                 switch (completionAction)
@@ -491,7 +491,7 @@
 
         public static void UpdateAllWindows()
         {
-            WindowPending[] pendingArray = Resources.FindObjectsOfTypeAll(typeof(WindowPending)) as WindowPending[];
+            WindowPending[] pendingArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(WindowPending)) as WindowPending[];
             foreach (WindowPending pending in pendingArray)
             {
                 pending.UpdateWindow();

@@ -5,12 +5,12 @@
 
     internal sealed class EditorGUIInternal : GUI
     {
-        internal static void AssetPopup<T>(SerializedProperty serializedProperty, GUIContent content, string fileExtension) where T: Object, new()
+        internal static void AssetPopup<T>(SerializedProperty serializedProperty, GUIContent content, string fileExtension) where T: UnityEngine.Object, new()
         {
             AssetPopup<T>(serializedProperty, content, fileExtension, "Default");
         }
 
-        internal static void AssetPopup<T>(SerializedProperty serializedProperty, GUIContent content, string fileExtension, string defaultFieldName) where T: Object, new()
+        internal static void AssetPopup<T>(SerializedProperty serializedProperty, GUIContent content, string fileExtension, string defaultFieldName) where T: UnityEngine.Object, new()
         {
             AssetPopupBackend.AssetPopup<T>(serializedProperty, content, fileExtension, defaultFieldName);
         }

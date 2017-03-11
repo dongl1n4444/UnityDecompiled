@@ -39,7 +39,7 @@
             this.AddManagedDependenciesForFunctionalityGroup(groupName, depClassName, null);
         }
 
-        protected void AddManagedDependenciesForFunctionalityGroup(string groupName, Type depClass)
+        protected void AddManagedDependenciesForFunctionalityGroup(string groupName, System.Type depClass)
         {
             this.AddManagedDependenciesForFunctionalityGroup(groupName, this.ResolveTypeName(depClass));
         }
@@ -53,7 +53,7 @@
             }
         }
 
-        protected void AddManagedDependenciesForFunctionalityGroup(string groupName, Type depClass, string retain)
+        protected void AddManagedDependenciesForFunctionalityGroup(string groupName, System.Type depClass, string retain)
         {
             this.AddManagedDependenciesForFunctionalityGroup(groupName, this.ResolveTypeName(depClass), retain);
         }
@@ -227,13 +227,13 @@
             this.AddManagedDependenciesForFunctionalityGroup("Runtime", typeof(AnimationClip), "all");
             this.AddManagedDependenciesForFunctionalityGroup("Runtime", typeof(AnimationEvent));
             this.AddManagedDependenciesForFunctionalityGroup("Runtime", typeof(AsyncOperation));
-            this.AddManagedDependenciesForFunctionalityGroup("Runtime", typeof(Resources), "all");
+            this.AddManagedDependenciesForFunctionalityGroup("Runtime", typeof(UnityEngine.Resources), "all");
             this.AddManagedDependenciesForFunctionalityGroup("Runtime", typeof(CacheIndex));
             this.AddManagedDependenciesForFunctionalityGroup("Runtime", typeof(Keyframe));
             this.AddManagedDependenciesForFunctionalityGroup("Runtime", typeof(RenderTexture));
             this.AddManagedDependenciesForFunctionalityGroup("Runtime", typeof(AnimationCurve), "all");
             this.AddManagedDependenciesForFunctionalityGroup("Runtime", typeof(BoneWeight));
-            this.AddManagedDependenciesForFunctionalityGroup("Runtime", typeof(Particle));
+            this.AddManagedDependenciesForFunctionalityGroup("Runtime", typeof(UnityEngine.Particle));
             this.AddManagedDependenciesForFunctionalityGroup("Runtime", typeof(SliderState), "all");
             this.AddManagedDependenciesForFunctionalityGroup("Runtime", typeof(GUI.ScrollViewState), "all");
             this.AddManagedDependenciesForFunctionalityGroup("Runtime", typeof(GUIScrollGroup), "all");
@@ -389,7 +389,7 @@
         public bool IsDLLUsed(string dll) => 
             ((this.m_UsedTypesPerUserAssembly == null) || ((Array.IndexOf<string>(CodeStrippingUtils.UserAssemblies, dll) != -1) || this.m_UsedTypesPerUserAssembly.ContainsKey(dll)));
 
-        protected string ResolveTypeName(Type type)
+        protected string ResolveTypeName(System.Type type)
         {
             string fullName = type.FullName;
             return fullName.Substring(fullName.LastIndexOf(".") + 1).Replace("+", "/");

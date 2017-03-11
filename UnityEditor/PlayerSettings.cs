@@ -14,7 +14,7 @@
     /// <summary>
     /// <para>Player Settings is where you define various parameters for the final game that you will build in Unity. Some of these values are used in the Resolution Dialog that launches when you open a standalone game.</para>
     /// </summary>
-    public sealed class PlayerSettings : Object
+    public sealed class PlayerSettings : UnityEngine.Object
     {
         private static SerializedObject _serializedObject;
         internal static readonly char[] defineSplits = new char[] { ';', ',', ' ', '\0' };
@@ -86,7 +86,7 @@
             return ((platform != null) ? platform.name : string.Empty);
         }
 
-        [Obsolete("Use explicit API instead."), ExcludeFromDocs]
+        [ExcludeFromDocs, Obsolete("Use explicit API instead.")]
         public static bool GetPropertyBool(string name)
         {
             BuildTargetGroup unknown = BuildTargetGroup.Unknown;
@@ -102,7 +102,7 @@
         /// <para>The current value of the property.</para>
         /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use explicit API instead.")]
-        public static extern bool GetPropertyBool(string name, [DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
+        public static extern bool GetPropertyBool(string name, [UnityEngine.Internal.DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
         [ExcludeFromDocs, Obsolete("Use explicit API instead.")]
         public static int GetPropertyInt(string name)
         {
@@ -119,8 +119,8 @@
         /// <para>The current value of the property.</para>
         /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use explicit API instead.")]
-        public static extern int GetPropertyInt(string name, [DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
-        [ExcludeFromDocs, Obsolete("Use explicit API instead.")]
+        public static extern int GetPropertyInt(string name, [UnityEngine.Internal.DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
+        [Obsolete("Use explicit API instead."), ExcludeFromDocs]
         public static bool GetPropertyOptionalBool(string name, ref bool value)
         {
             BuildTargetGroup unknown = BuildTargetGroup.Unknown;
@@ -128,7 +128,7 @@
         }
 
         [Obsolete("Use explicit API instead.")]
-        public static bool GetPropertyOptionalBool(string name, ref bool value, [DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target)
+        public static bool GetPropertyOptionalBool(string name, ref bool value, [UnityEngine.Internal.DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target)
         {
             value = GetPropertyBool(name, target);
             return true;
@@ -142,7 +142,7 @@
         }
 
         [Obsolete("Use explicit API instead.")]
-        public static bool GetPropertyOptionalInt(string name, ref int value, [DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target)
+        public static bool GetPropertyOptionalInt(string name, ref int value, [UnityEngine.Internal.DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target)
         {
             value = GetPropertyInt(name, target);
             return true;
@@ -156,7 +156,7 @@
         }
 
         [Obsolete("Use explicit API instead.")]
-        public static bool GetPropertyOptionalString(string name, ref string value, [DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target)
+        public static bool GetPropertyOptionalString(string name, ref string value, [UnityEngine.Internal.DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target)
         {
             value = GetPropertyString(name, target);
             return true;
@@ -178,7 +178,7 @@
         /// <para>The current value of the property.</para>
         /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use explicit API instead.")]
-        public static extern string GetPropertyString(string name, [DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
+        public static extern string GetPropertyString(string name, [UnityEngine.Internal.DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern ScriptingImplementation GetScriptingBackend(BuildTargetGroup targetGroup);
         /// <summary>
@@ -226,7 +226,7 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void INTERNAL_set_cursorHotspot(ref Vector2 value);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern Object InternalGetPlayerSettingsObject();
+        private static extern UnityEngine.Object InternalGetPlayerSettingsObject();
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetAdditionalIl2CppArgs(string additionalArgs);
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -267,7 +267,7 @@
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetIncrementalIl2CppBuild(BuildTargetGroup targetGroup, bool enabled);
-        [ExcludeFromDocs, Obsolete("Use explicit API instead.")]
+        [Obsolete("Use explicit API instead."), ExcludeFromDocs]
         public static void SetPropertyBool(string name, bool value)
         {
             BuildTargetGroup unknown = BuildTargetGroup.Unknown;
@@ -287,8 +287,8 @@
         /// <param name="value">Value of the property (bool).</param>
         /// <param name="target">BuildTarget for which the property should apply (use default value BuildTargetGroup.Unknown to apply to all targets).</param>
         [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use explicit API instead.")]
-        public static extern void SetPropertyBool(string name, bool value, [DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
-        [Obsolete("Use explicit API instead."), ExcludeFromDocs]
+        public static extern void SetPropertyBool(string name, bool value, [UnityEngine.Internal.DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
+        [ExcludeFromDocs, Obsolete("Use explicit API instead.")]
         public static void SetPropertyInt(string name, int value)
         {
             BuildTargetGroup unknown = BuildTargetGroup.Unknown;
@@ -308,7 +308,7 @@
         /// <param name="value">Value of the property (int).</param>
         /// <param name="target">BuildTarget for which the property should apply (use default value BuildTargetGroup.Unknown to apply to all targets).</param>
         [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use explicit API instead.")]
-        public static extern void SetPropertyInt(string name, int value, [DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
+        public static extern void SetPropertyInt(string name, int value, [UnityEngine.Internal.DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
         [Obsolete("Use explicit API instead."), ExcludeFromDocs]
         public static void SetPropertyString(string name, string value)
         {
@@ -329,7 +329,7 @@
         /// <param name="value">Value of the property (string).</param>
         /// <param name="target">BuildTarget for which the property should apply (use default value BuildTargetGroup.Unknown to apply to all targets).</param>
         [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use explicit API instead.")]
-        public static extern void SetPropertyString(string name, string value, [DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
+        public static extern void SetPropertyString(string name, string value, [UnityEngine.Internal.DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetScriptingBackend(BuildTargetGroup targetGroup, ScriptingImplementation backend);
         /// <summary>
@@ -574,6 +574,11 @@
         public static bool gpuSkinning { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
         /// <summary>
+        /// <para>Selects the graphics job mode to use on platforms that support both Native and Legacy graphics jobs.</para>
+        /// </summary>
+        public static GraphicsJobMode graphicsJobMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+
+        /// <summary>
         /// <para>Enable graphics jobs (multi threaded rendering).</para>
         /// </summary>
         public static bool graphicsJobs { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
@@ -635,7 +640,7 @@
         public static bool MTRendering { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
         /// <summary>
-        /// <para>Mute or allow audio from other applications to play in the background while the Unity application is running.</para>
+        /// <para>Stops or allows audio from other applications to play in the background while your Unity application is running.</para>
         /// </summary>
         public static bool muteOtherAudioSources { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
@@ -1499,7 +1504,8 @@
             public enum PS4AppCategory
             {
                 Application,
-                Patch
+                Patch,
+                Remaster
             }
 
             /// <summary>
@@ -1996,7 +2002,7 @@
             private float m_Duration;
             static SplashScreenLogo()
             {
-                s_UnityLogo = Resources.GetBuiltinResource<Sprite>("UnitySplash-cube.png");
+                s_UnityLogo = UnityEngine.Resources.GetBuiltinResource<Sprite>("UnitySplash-cube.png");
             }
 
             [ExcludeFromDocs]
@@ -2022,7 +2028,7 @@
             /// <returns>
             /// <para>The new logo.</para>
             /// </returns>
-            public static PlayerSettings.SplashScreenLogo Create([DefaultValue("k_MinLogoTime")] float duration, [DefaultValue("null")] Sprite logo) => 
+            public static PlayerSettings.SplashScreenLogo Create([UnityEngine.Internal.DefaultValue("k_MinLogoTime")] float duration, [UnityEngine.Internal.DefaultValue("null")] Sprite logo) => 
                 new PlayerSettings.SplashScreenLogo { 
                     m_Duration = duration,
                     m_Logo = logo
@@ -2042,7 +2048,7 @@
             /// <returns>
             /// <para>The new logo.</para>
             /// </returns>
-            public static PlayerSettings.SplashScreenLogo CreateWithUnityLogo([DefaultValue("k_MinLogoTime")] float duration) => 
+            public static PlayerSettings.SplashScreenLogo CreateWithUnityLogo([UnityEngine.Internal.DefaultValue("k_MinLogoTime")] float duration) => 
                 new PlayerSettings.SplashScreenLogo { 
                     m_Duration = duration,
                     m_Logo = s_UnityLogo

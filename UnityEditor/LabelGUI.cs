@@ -16,10 +16,10 @@
         private PopupList.InputData m_AssetLabels;
         private string m_ChangedLabel;
         private bool m_ChangeWasAdd = false;
-        private HashSet<Object> m_CurrentAssetsSet;
+        private HashSet<UnityEngine.Object> m_CurrentAssetsSet;
         private bool m_CurrentChanged = false;
         private bool m_IgnoreNextAssetLabelsChangedCall = false;
-        private static Action<Object> s_AssetLabelsForObjectChangedDelegates;
+        private static Action<UnityEngine.Object> s_AssetLabelsForObjectChangedDelegates;
         private static int s_MaxShownLabels = 10;
 
         public void AssetLabelListCallback(PopupList.ListElement element)
@@ -33,7 +33,7 @@
             InspectorWindow.RepaintAllInspectors();
         }
 
-        public void AssetLabelsChangedForObject(Object asset)
+        public void AssetLabelsChangedForObject(UnityEngine.Object asset)
         {
             if ((!this.m_IgnoreNextAssetLabelsChangedCall && (this.m_CurrentAssetsSet != null)) && this.m_CurrentAssetsSet.Contains(asset))
             {
@@ -74,12 +74,12 @@
             }
         }
 
-        private void GetLabelsForAssets(Object[] assets, out List<string> all, out List<string> partial)
+        private void GetLabelsForAssets(UnityEngine.Object[] assets, out List<string> all, out List<string> partial)
         {
             all = new List<string>();
             partial = new List<string>();
             Dictionary<string, int> dictionary = new Dictionary<string, int>();
-            foreach (Object obj2 in assets)
+            foreach (UnityEngine.Object obj2 in assets)
             {
                 string[] labels = AssetDatabase.GetLabels(obj2);
                 foreach (string str in labels)
@@ -93,9 +93,9 @@
             }
         }
 
-        public void InitLabelCache(Object[] assets)
+        public void InitLabelCache(UnityEngine.Object[] assets)
         {
-            HashSet<Object> other = new HashSet<Object>(assets);
+            HashSet<UnityEngine.Object> other = new HashSet<UnityEngine.Object>(assets);
             if ((this.m_CurrentAssetsSet == null) || !this.m_CurrentAssetsSet.SetEquals(other))
             {
                 List<string> list;
@@ -139,18 +139,18 @@
 
         public void OnDisable()
         {
-            s_AssetLabelsForObjectChangedDelegates = (Action<Object>) Delegate.Remove(s_AssetLabelsForObjectChangedDelegates, new Action<Object>(this.AssetLabelsChangedForObject));
+            s_AssetLabelsForObjectChangedDelegates = (Action<UnityEngine.Object>) Delegate.Remove(s_AssetLabelsForObjectChangedDelegates, new Action<UnityEngine.Object>(this.AssetLabelsChangedForObject));
             EditorApplication.projectWindowChanged = (EditorApplication.CallbackFunction) Delegate.Remove(EditorApplication.projectWindowChanged, new EditorApplication.CallbackFunction(this.InvalidateLabels));
             this.SaveLabels();
         }
 
         public void OnEnable()
         {
-            s_AssetLabelsForObjectChangedDelegates = (Action<Object>) Delegate.Combine(s_AssetLabelsForObjectChangedDelegates, new Action<Object>(this.AssetLabelsChangedForObject));
+            s_AssetLabelsForObjectChangedDelegates = (Action<UnityEngine.Object>) Delegate.Combine(s_AssetLabelsForObjectChangedDelegates, new Action<UnityEngine.Object>(this.AssetLabelsChangedForObject));
             EditorApplication.projectWindowChanged = (EditorApplication.CallbackFunction) Delegate.Combine(EditorApplication.projectWindowChanged, new EditorApplication.CallbackFunction(this.InvalidateLabels));
         }
 
-        public void OnLabelGUI(Object[] assets)
+        public void OnLabelGUI(UnityEngine.Object[] assets)
         {
             this.InitLabelCache(assets);
             float minWidth = 1f;
@@ -186,7 +186,7 @@
             if ((this.m_CurrentChanged && (this.m_AssetLabels != null)) && (this.m_CurrentAssetsSet != null))
             {
                 bool flag = false;
-                foreach (Object obj2 in this.m_CurrentAssetsSet)
+                foreach (UnityEngine.Object obj2 in this.m_CurrentAssetsSet)
                 {
                     bool flag2 = false;
                     List<string> list = AssetDatabase.GetLabels(obj2).ToList<string>();

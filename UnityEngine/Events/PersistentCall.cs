@@ -8,15 +8,15 @@
     [Serializable]
     internal class PersistentCall
     {
-        [FormerlySerializedAs("arguments"), SerializeField]
+        [SerializeField, FormerlySerializedAs("arguments")]
         private ArgumentCache m_Arguments = new ArgumentCache();
-        [FormerlySerializedAs("m_Enabled"), SerializeField, FormerlySerializedAs("enabled")]
+        [SerializeField, FormerlySerializedAs("enabled"), FormerlySerializedAs("m_Enabled")]
         private UnityEventCallState m_CallState = UnityEventCallState.RuntimeOnly;
         [FormerlySerializedAs("methodName"), SerializeField]
         private string m_MethodName;
-        [SerializeField, FormerlySerializedAs("mode")]
+        [FormerlySerializedAs("mode"), SerializeField]
         private PersistentListenerMode m_Mode = PersistentListenerMode.EventDefined;
-        [FormerlySerializedAs("instance"), SerializeField]
+        [SerializeField, FormerlySerializedAs("instance")]
         private UnityEngine.Object m_Target;
 
         private static BaseInvokableCall GetObjectCall(UnityEngine.Object target, MethodInfo method, ArgumentCache arguments)

@@ -148,7 +148,7 @@
                     rect5.width = 9f;
                     if (GUI.Button(rect5, this.iconSelectContent, m_Styles.iconDropDown))
                     {
-                        Object script = EditorGUIUtility.GetScript(ainfo.m_ScriptClass);
+                        UnityEngine.Object script = EditorGUIUtility.GetScript(ainfo.m_ScriptClass);
                         if (script != null)
                         {
                             this.m_LastScriptThatHasShownTheIconSelector = ainfo.m_ScriptClass;

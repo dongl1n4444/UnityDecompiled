@@ -207,7 +207,7 @@
         {
             if (this.webView != null)
             {
-                Object.DestroyImmediate(this.webView);
+                UnityEngine.Object.DestroyImmediate(this.webView);
             }
         }
 

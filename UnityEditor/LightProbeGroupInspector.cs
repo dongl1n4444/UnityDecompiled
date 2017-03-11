@@ -19,9 +19,9 @@
             }
         }
 
-        private void EditModeStarted(Editor editor, EditMode.SceneViewEditMode mode)
+        private void EditModeStarted(Editor editor, UnityEditorInternal.EditMode.SceneViewEditMode mode)
         {
-            if ((editor == this) && (mode == EditMode.SceneViewEditMode.LightProbeGroup))
+            if ((editor == this) && (mode == UnityEditorInternal.EditMode.SceneViewEditMode.LightProbeGroup))
             {
                 this.StartEditProbes();
             }
@@ -89,8 +89,8 @@
             this.m_Editor.PushProbePositions();
             SceneView.onSceneGUIDelegate = (SceneView.OnSceneFunc) Delegate.Combine(SceneView.onSceneGUIDelegate, new SceneView.OnSceneFunc(this.OnSceneGUIDelegate));
             Undo.undoRedoPerformed = (Undo.UndoRedoCallback) Delegate.Combine(Undo.undoRedoPerformed, new Undo.UndoRedoCallback(this.UndoRedoPerformed));
-            EditMode.onEditModeStartDelegate = (EditMode.OnEditModeStartFunc) Delegate.Combine(EditMode.onEditModeStartDelegate, new EditMode.OnEditModeStartFunc(this.EditModeStarted));
-            EditMode.onEditModeEndDelegate = (EditMode.OnEditModeStopFunc) Delegate.Combine(EditMode.onEditModeEndDelegate, new EditMode.OnEditModeStopFunc(this.EditModeEnded));
+            UnityEditorInternal.EditMode.onEditModeStartDelegate = (UnityEditorInternal.EditMode.OnEditModeStartFunc) Delegate.Combine(UnityEditorInternal.EditMode.onEditModeStartDelegate, new UnityEditorInternal.EditMode.OnEditModeStartFunc(this.EditModeStarted));
+            UnityEditorInternal.EditMode.onEditModeEndDelegate = (UnityEditorInternal.EditMode.OnEditModeStopFunc) Delegate.Combine(UnityEditorInternal.EditMode.onEditModeEndDelegate, new UnityEditorInternal.EditMode.OnEditModeStopFunc(this.EditModeEnded));
         }
 
         public Bounds OnGetFrameBounds() => 
@@ -100,9 +100,9 @@
         {
             EditorGUI.BeginChangeCheck();
             this.m_Editor.PullProbePositions();
-            EditMode.DoEditModeInspectorModeButton(EditMode.SceneViewEditMode.LightProbeGroup, "Edit Light Probes", EditorGUIUtility.IconContent("EditCollider"), this.m_Editor.bounds, this);
+            UnityEditorInternal.EditMode.DoEditModeInspectorModeButton(UnityEditorInternal.EditMode.SceneViewEditMode.LightProbeGroup, "Edit Light Probes", EditorGUIUtility.IconContent("EditCollider"), this.m_Editor.bounds, this);
             GUILayout.Space(3f);
-            EditorGUI.BeginDisabledGroup(EditMode.editMode != EditMode.SceneViewEditMode.LightProbeGroup);
+            EditorGUI.BeginDisabledGroup(UnityEditorInternal.EditMode.editMode != UnityEditorInternal.EditMode.SceneViewEditMode.LightProbeGroup);
             this.m_Editor.drawTetrahedra = EditorGUILayout.Toggle(Styles.showWireframe, this.m_Editor.drawTetrahedra, new GUILayoutOption[0]);
             EditorGUI.BeginDisabledGroup(this.m_Editor.SelectedCount == 0);
             Vector3 vector = (this.m_Editor.SelectedCount <= 0) ? Vector3.zero : this.m_Editor.GetSelectedPositions()[0];
@@ -182,7 +182,7 @@
 
         public void StartEditMode()
         {
-            EditMode.ChangeEditMode(EditMode.SceneViewEditMode.LightProbeGroup, this.m_Editor.bounds, this);
+            UnityEditorInternal.EditMode.ChangeEditMode(UnityEditorInternal.EditMode.SceneViewEditMode.LightProbeGroup, this.m_Editor.bounds, this);
         }
 
         private void StartEditProbes()

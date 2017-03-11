@@ -37,12 +37,11 @@
 
         private Expression AssemblyReferencesArray()
         {
-            object obj2 = this.get_CompileUnit().get_Item($CompileUnit$31);
+            object obj2 = this.CompileUnit[$CompileUnit$31];
             if (obj2 == null)
             {
             }
-            MemberReferenceExpression expression = this.get_CodeBuilder().CreateReference(this.CreateAssemblyReferencesArray());
-            this.get_CompileUnit().set_Item($CompileUnit$31, expression);
+            MemberReferenceExpression expression = this.CodeBuilder.CreateReference(this.CreateAssemblyReferencesArray());
             return ((obj2 is Expression) ? expression : ((Expression) RuntimeServices.Coerce(obj2, typeof(Expression))));
         }
 
@@ -57,23 +56,23 @@
             Field field;
             ClassDefinition definition;
             ArrayLiteralExpression expression1 = expression6 = new ArrayLiteralExpression(LexicalInfo.Empty);
-            Expression[] expressionArray1 = new Expression[1];
+            Expression[] items = new Expression[1];
             MethodInvocationExpression expression16 = expression5 = new MethodInvocationExpression(LexicalInfo.Empty);
             MemberReferenceExpression expression17 = expression4 = new MemberReferenceExpression(LexicalInfo.Empty);
-            expression4.set_Name("GetExecutingAssembly");
+            string text1 = expression4.Name = "GetExecutingAssembly";
             MemberReferenceExpression expression18 = expression3 = new MemberReferenceExpression(LexicalInfo.Empty);
-            expression3.set_Name("Assembly");
+            string text2 = expression3.Name = "Assembly";
             MemberReferenceExpression expression19 = expression2 = new MemberReferenceExpression(LexicalInfo.Empty);
-            expression2.set_Name("Reflection");
+            string text3 = expression2.Name = "Reflection";
             ReferenceExpression expression20 = expression = new ReferenceExpression(LexicalInfo.Empty);
-            expression.set_Name("System");
-            expression2.set_Target(expression);
-            expression3.set_Target(expression2);
-            expression4.set_Target(expression3);
-            expression5.set_Target(expression4);
-            expressionArray1[0] = expression5;
-            expression6.set_Items(ExpressionCollection.FromArray(expressionArray1));
-            ArrayLiteralExpression expression7 = expression6;
+            string text4 = expression.Name = "System";
+            ReferenceExpression expression21 = expression2.Target = expression;
+            MemberReferenceExpression expression22 = expression3.Target = expression2;
+            MemberReferenceExpression expression23 = expression4.Target = expression3;
+            MemberReferenceExpression expression24 = expression5.Target = expression4;
+            items[0] = expression5;
+            ExpressionCollection collection1 = expression6.Items = ExpressionCollection.FromArray(items);
+            ArrayLiteralExpression e = expression6;
             foreach (Assembly assembly in this.ReferencedAssemblies())
             {
                 Type type = this.AnyPublicTypeOf(assembly);
@@ -81,28 +80,28 @@
                 {
                     TypeofExpression expression8;
                     MemberReferenceExpression expression9;
-                    MemberReferenceExpression expression21 = expression9 = new MemberReferenceExpression(LexicalInfo.Empty);
-                    expression9.set_Name("Assembly");
-                    TypeofExpression expression22 = expression8 = new TypeofExpression(LexicalInfo.Empty);
-                    expression8.set_Type(TypeReference.Lift(type));
-                    expression9.set_Target(expression8);
-                    expression7.get_Items().Add(expression9);
+                    MemberReferenceExpression expression25 = expression9 = new MemberReferenceExpression(LexicalInfo.Empty);
+                    string text5 = expression9.Name = "Assembly";
+                    TypeofExpression expression26 = expression8 = new TypeofExpression(LexicalInfo.Empty);
+                    TypeReference reference1 = expression8.Type = TypeReference.Lift(type);
+                    TypeofExpression expression27 = expression9.Target = expression8;
+                    e.Items.Add(expression9);
                 }
             }
             ClassDefinition definition1 = definition = new ClassDefinition(LexicalInfo.Empty);
-            definition.set_Modifiers(2);
-            definition.set_Name("EvalAssemblyReferences");
+            int num1 = (int) (definition.Modifiers = TypeMemberModifiers.Internal);
+            string text6 = definition.Name = "EvalAssemblyReferences";
             TypeMember[] memberArray1 = new TypeMember[1];
             Field field1 = field = new Field(LexicalInfo.Empty);
-            field.set_Modifiers(0x68);
-            field.set_Name("Value");
-            field.set_Initializer(Expression.Lift(expression7));
-            field.set_IsVolatile(false);
+            int num2 = (int) (field.Modifiers = TypeMemberModifiers.Final | TypeMemberModifiers.Static | TypeMemberModifiers.Public);
+            string text7 = field.Name = "Value";
+            Expression expression28 = field.Initializer = Expression.Lift(e);
+            int num3 = (int) (field.IsVolatile = false);
             memberArray1[0] = field;
-            definition.set_Members(TypeMemberCollection.FromArray(memberArray1));
-            ClassDefinition definition2 = definition;
-            My<CodeReifier>.Instance.ReifyInto(this.get_CompileUnit().get_Modules().get_Item(0), definition2);
-            return (IField) definition2.get_Members().get_Item("Value").get_Entity();
+            TypeMemberCollection collection2 = definition.Members = TypeMemberCollection.FromArray(memberArray1);
+            ClassDefinition member = definition;
+            My<CodeReifier>.Instance.ReifyInto(this.CompileUnit.Modules[0], member);
+            return (IField) member.Members["Value"].Entity;
         }
 
         private IEntity CreateStaticEvaluationDomainProviderReferenceOn(ClassDefinition node)
@@ -118,48 +117,48 @@
             Method method;
             ClassDefinition definition;
             ClassDefinition definition1 = definition = new ClassDefinition(LexicalInfo.Empty);
-            definition.set_Modifiers(8);
-            definition.set_Name("StaticEvaluationDomainProvider");
-            TypeMember[] memberArray1 = new TypeMember[3];
+            int num1 = (int) (definition.Modifiers = TypeMemberModifiers.Public);
+            string text1 = definition.Name = "StaticEvaluationDomainProvider";
+            TypeMember[] items = new TypeMember[3];
             Field field1 = field = new Field(LexicalInfo.Empty);
-            field.set_Modifiers(0x68);
-            field.set_Name("Instance");
+            int num2 = (int) (field.Modifiers = TypeMemberModifiers.Final | TypeMemberModifiers.Static | TypeMemberModifiers.Public);
+            string text2 = field.Name = "Instance";
             MethodInvocationExpression expression1 = expression2 = new MethodInvocationExpression(LexicalInfo.Empty);
             ReferenceExpression expression8 = expression = new ReferenceExpression(LexicalInfo.Empty);
-            expression.set_Name("StaticEvaluationDomainProvider");
-            expression2.set_Target(expression);
-            field.set_Initializer(expression2);
-            field.set_IsVolatile(false);
-            memberArray1[0] = field;
+            string text3 = expression.Name = "StaticEvaluationDomainProvider";
+            ReferenceExpression expression9 = expression2.Target = expression;
+            MethodInvocationExpression expression10 = field.Initializer = expression2;
+            int num3 = (int) (field.IsVolatile = false);
+            items[0] = field;
             Constructor constructor1 = constructor = new Constructor(LexicalInfo.Empty);
-            constructor.set_Name("constructor");
+            string text4 = constructor.Name = "constructor";
             Block block1 = block = new Block(LexicalInfo.Empty);
             Statement[] statementArray1 = new Statement[1];
-            MethodInvocationExpression expression9 = expression3 = new MethodInvocationExpression(LexicalInfo.Empty);
-            expression3.set_Target(new SuperLiteralExpression(LexicalInfo.Empty));
+            MethodInvocationExpression expression11 = expression3 = new MethodInvocationExpression(LexicalInfo.Empty);
+            SuperLiteralExpression expression12 = expression3.Target = new SuperLiteralExpression(LexicalInfo.Empty);
             Expression[] expressionArray1 = new Expression[] { Expression.Lift(this.ImportsArrayFor(node)) };
-            expression3.set_Arguments(ExpressionCollection.FromArray(expressionArray1));
+            ExpressionCollection collection1 = expression3.Arguments = ExpressionCollection.FromArray(expressionArray1);
             statementArray1[0] = Statement.Lift(expression3);
-            block.set_Statements(StatementCollection.FromArray(statementArray1));
-            constructor.set_Body(block);
-            memberArray1[1] = constructor;
+            StatementCollection collection2 = block.Statements = StatementCollection.FromArray(statementArray1);
+            Block block5 = constructor.Body = block;
+            items[1] = constructor;
             Method method1 = method = new Method(LexicalInfo.Empty);
-            method.set_Modifiers(0x100);
-            method.set_Name("GetAssemblyReferences");
-            Block block5 = block2 = new Block(LexicalInfo.Empty);
+            int num4 = (int) (method.Modifiers = TypeMemberModifiers.Override);
+            string text5 = method.Name = "GetAssemblyReferences";
+            Block block6 = block2 = new Block(LexicalInfo.Empty);
             Statement[] statementArray2 = new Statement[1];
             ReturnStatement statement1 = statement = new ReturnStatement(LexicalInfo.Empty);
-            statement.set_Expression(Expression.Lift(this.AssemblyReferencesArray()));
+            Expression expression13 = statement.Expression = Expression.Lift(this.AssemblyReferencesArray());
             statementArray2[0] = Statement.Lift(statement);
-            block2.set_Statements(StatementCollection.FromArray(statementArray2));
-            method.set_Body(block2);
-            memberArray1[2] = method;
-            definition.set_Members(TypeMemberCollection.FromArray(memberArray1));
+            StatementCollection collection3 = block2.Statements = StatementCollection.FromArray(statementArray2);
+            Block block7 = method.Body = block2;
+            items[2] = method;
+            TypeMemberCollection collection4 = definition.Members = TypeMemberCollection.FromArray(items);
             TypeReference[] referenceArray1 = new TypeReference[] { TypeReference.Lift(typeof(SimpleEvaluationDomainProvider)) };
-            definition.set_BaseTypes(TypeReferenceCollection.FromArray(referenceArray1));
-            ClassDefinition definition2 = definition;
-            My<CodeReifier>.Instance.ReifyInto(node, definition2);
-            return definition2.get_Members().get_Item("Instance").get_Entity();
+            TypeReferenceCollection collection5 = definition.BaseTypes = TypeReferenceCollection.FromArray(referenceArray1);
+            ClassDefinition member = definition;
+            My<CodeReifier>.Instance.ReifyInto(node, member);
+            return member.Members["Instance"].Entity;
         }
 
         public void ImplementIEvaluationDomainProviderOn(ClassDefinition node)
@@ -178,66 +177,66 @@
             Block block3;
             Method method3;
             ClassDefinition definition;
-            string[] textArray1 = new string[] { "domain" };
-            ReferenceExpression expression = new ReferenceExpression(this.get_Context().GetUniqueName(textArray1));
+            string[] components = new string[] { "domain" };
+            ReferenceExpression expression = new ReferenceExpression(this.Context.GetUniqueName(components));
             ClassDefinition definition1 = definition = new ClassDefinition(LexicalInfo.Empty);
-            definition.set_Name("_");
-            TypeMember[] memberArray1 = new TypeMember[4];
+            string text1 = definition.Name = "_";
+            TypeMember[] items = new TypeMember[4];
             Field field1 = field = new Field(LexicalInfo.Empty);
-            field.set_Modifiers(1);
-            field.set_Name("$");
-            field.set_Type(TypeReference.Lift(typeof(EvaluationDomain)));
-            field.set_IsVolatile(false);
-            field.set_Name(CodeSerializer.LiftName(expression));
-            memberArray1[0] = field;
+            int num1 = (int) (field.Modifiers = TypeMemberModifiers.Private);
+            string text2 = field.Name = "$";
+            TypeReference reference1 = field.Type = TypeReference.Lift(typeof(EvaluationDomain));
+            int num2 = (int) (field.IsVolatile = false);
+            string text3 = field.Name = CodeSerializer.LiftName(expression);
+            items[0] = field;
             Method method1 = method = new Method(LexicalInfo.Empty);
-            method.set_Modifiers(8);
-            method.set_Name("GetEvaluationDomain");
+            int num3 = (int) (method.Modifiers = TypeMemberModifiers.Public);
+            string text4 = method.Name = "GetEvaluationDomain";
             Block block1 = block = new Block(LexicalInfo.Empty);
             Statement[] statementArray1 = new Statement[1];
             ReturnStatement statement1 = statement = new ReturnStatement(LexicalInfo.Empty);
             BinaryExpression expression1 = expression4 = new BinaryExpression(LexicalInfo.Empty);
-            expression4.set_Operator(0x1c);
-            expression4.set_Left(Expression.Lift(expression));
-            BinaryExpression expression13 = expression3 = new BinaryExpression(LexicalInfo.Empty);
-            expression3.set_Operator(15);
-            expression3.set_Left(Expression.Lift(expression));
-            MethodInvocationExpression expression14 = expression2 = new MethodInvocationExpression(LexicalInfo.Empty);
-            expression2.set_Target(Expression.Lift(typeof(EvaluationDomain)));
-            expression3.set_Right(expression2);
-            expression4.set_Right(expression3);
-            statement.set_Expression(expression4);
+            int num4 = (int) (expression4.Operator = BinaryOperatorType.Or);
+            Expression expression13 = expression4.Left = Expression.Lift(expression);
+            BinaryExpression expression14 = expression3 = new BinaryExpression(LexicalInfo.Empty);
+            int num5 = (int) (expression3.Operator = BinaryOperatorType.Assign);
+            Expression expression15 = expression3.Left = Expression.Lift(expression);
+            MethodInvocationExpression expression16 = expression2 = new MethodInvocationExpression(LexicalInfo.Empty);
+            Expression expression17 = expression2.Target = Expression.Lift(typeof(EvaluationDomain));
+            MethodInvocationExpression expression18 = expression3.Right = expression2;
+            BinaryExpression expression19 = expression4.Right = expression3;
+            BinaryExpression expression20 = statement.Expression = expression4;
             statementArray1[0] = Statement.Lift(statement);
-            block.set_Statements(StatementCollection.FromArray(statementArray1));
-            method.set_Body(block);
-            memberArray1[1] = method;
+            StatementCollection collection1 = block.Statements = StatementCollection.FromArray(statementArray1);
+            Block block7 = method.Body = block;
+            items[1] = method;
             Method method4 = method2 = new Method(LexicalInfo.Empty);
-            method2.set_Modifiers(8);
-            method2.set_Name("GetImports");
-            Block block7 = block2 = new Block(LexicalInfo.Empty);
+            int num6 = (int) (method2.Modifiers = TypeMemberModifiers.Public);
+            string text5 = method2.Name = "GetImports";
+            Block block8 = block2 = new Block(LexicalInfo.Empty);
             Statement[] statementArray2 = new Statement[1];
             ReturnStatement statement4 = statement2 = new ReturnStatement(LexicalInfo.Empty);
-            statement2.set_Expression(Expression.Lift(this.ImportsArrayFor(node)));
+            Expression expression21 = statement2.Expression = Expression.Lift(this.ImportsArrayFor(node));
             statementArray2[0] = Statement.Lift(statement2);
-            block2.set_Statements(StatementCollection.FromArray(statementArray2));
-            method2.set_Body(block2);
-            memberArray1[2] = method2;
+            StatementCollection collection2 = block2.Statements = StatementCollection.FromArray(statementArray2);
+            Block block9 = method2.Body = block2;
+            items[2] = method2;
             Method method5 = method3 = new Method(LexicalInfo.Empty);
-            method3.set_Modifiers(8);
-            method3.set_Name("GetAssemblyReferences");
-            Block block8 = block3 = new Block(LexicalInfo.Empty);
+            int num7 = (int) (method3.Modifiers = TypeMemberModifiers.Public);
+            string text6 = method3.Name = "GetAssemblyReferences";
+            Block block10 = block3 = new Block(LexicalInfo.Empty);
             Statement[] statementArray3 = new Statement[1];
             ReturnStatement statement5 = statement3 = new ReturnStatement(LexicalInfo.Empty);
-            statement3.set_Expression(Expression.Lift(this.AssemblyReferencesArray()));
+            Expression expression22 = statement3.Expression = Expression.Lift(this.AssemblyReferencesArray());
             statementArray3[0] = Statement.Lift(statement3);
-            block3.set_Statements(StatementCollection.FromArray(statementArray3));
-            method3.set_Body(block3);
-            memberArray1[3] = method3;
-            definition.set_Members(TypeMemberCollection.FromArray(memberArray1));
+            StatementCollection collection3 = block3.Statements = StatementCollection.FromArray(statementArray3);
+            Block block11 = method3.Body = block3;
+            items[3] = method3;
+            TypeMemberCollection collection4 = definition.Members = TypeMemberCollection.FromArray(items);
             TypeReference[] referenceArray1 = new TypeReference[] { TypeReference.Lift(typeof(IEvaluationDomainProvider)) };
-            definition.set_BaseTypes(TypeReferenceCollection.FromArray(referenceArray1));
-            ClassDefinition definition2 = definition;
-            My<CodeReifier>.Instance.MergeInto(node, definition2);
+            TypeReferenceCollection collection5 = definition.BaseTypes = TypeReferenceCollection.FromArray(referenceArray1);
+            ClassDefinition mixin = definition;
+            My<CodeReifier>.Instance.MergeInto(node, mixin);
         }
 
         private ArrayLiteralExpression ImportsArrayFor(ClassDefinition node)
@@ -250,33 +249,32 @@
             };
             ArrayLiteralExpression expression1 = expression2 = new ArrayLiteralExpression(LexicalInfo.Empty);
             ArrayTypeReference reference1 = reference = new ArrayTypeReference(LexicalInfo.Empty);
-            reference.set_IsPointer(false);
-            reference.set_ElementType(TypeReference.Lift(typeof(string)));
+            int num1 = (int) (reference.IsPointer = false);
+            TypeReference reference4 = reference.ElementType = TypeReference.Lift(typeof(string));
             IntegerLiteralExpression expression5 = expression = new IntegerLiteralExpression(LexicalInfo.Empty);
-            expression.set_Value(1L);
-            expression.set_IsLong(false);
-            reference.set_Rank(expression);
-            expression2.set_Type(reference);
+            long num2 = expression.Value = 1L;
+            int num3 = (int) (expression.IsLong = false);
+            IntegerLiteralExpression expression6 = reference.Rank = expression;
+            ArrayTypeReference reference5 = expression2.Type = reference;
             ArrayLiteralExpression expression3 = expression2;
-            expression3.get_Items().AddRange(new $ImportsArrayFor$332(s$));
+            expression3.Items.AddRange(new $ImportsArrayFor$332(s$));
             return expression3;
         }
 
         private Set<Assembly> ReferencedAssemblies()
         {
-            ReferencedAssemblyCollector collector = new ReferencedAssemblyCollector();
-            this.get_CompileUnit().Accept(collector);
-            return collector.ReferencedAssemblies;
+            ReferencedAssemblyCollector visitor = new ReferencedAssemblyCollector();
+            this.CompileUnit.Accept(visitor);
+            return visitor.ReferencedAssemblies;
         }
 
         public IField StaticEvaluationDomainProviderFor(ClassDefinition node)
         {
-            object obj2 = node.get_Item($node$30);
+            object obj2 = node[$node$30];
             if (obj2 == null)
             {
             }
             IEntity entity = this.CreateStaticEvaluationDomainProviderReferenceOn(node);
-            node.set_Item($node$30, entity);
             return ((obj2 is IField) ? ((IField) entity) : ((IField) RuntimeServices.Coerce(obj2, typeof(IField))));
         }
 
@@ -319,7 +317,7 @@
 
                 public override void Reset()
                 {
-                    this.$$enumerator = this.$$locals$333.$node.get_EnclosingModule().get_Imports().GetEnumerator();
+                    this.$$enumerator = this.$$locals$333.$node.EnclosingModule.Imports.GetEnumerator();
                 }
 
                 public override Expression Current =>

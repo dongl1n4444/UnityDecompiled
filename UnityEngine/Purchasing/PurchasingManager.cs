@@ -253,6 +253,7 @@
             {
                 this.m_Logger.Log("Already recorded transaction " + product.transactionID);
                 this.m_Store.FinishTransaction(product.definition, product.transactionID);
+                this.m_Listener.OnPurchaseFailed(product, PurchaseFailureReason.DuplicateTransaction);
             }
             else
             {

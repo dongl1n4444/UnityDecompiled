@@ -56,7 +56,7 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void CalculateAmbientProbeFromSkybox();
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern string CalculateHashForObjectsAndDependencies(Object[] objects);
+        public static extern string CalculateHashForObjectsAndDependencies(UnityEngine.Object[] objects);
         public static Bounds CalculateSelectionBounds(bool usePivotOnlyForParticles, bool onlyUseActiveSelection)
         {
             Bounds bounds;
@@ -870,7 +870,7 @@
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern bool GetIsInspectorExpanded(Object obj);
+        public static extern bool GetIsInspectorExpanded(UnityEngine.Object obj);
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern string GetLayerName(int layer);
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -878,7 +878,7 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern string GetLicenseInfo();
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern Object GetLoadedObjectFromInstanceID(int instanceID);
+        public static extern UnityEngine.Object GetLoadedObjectFromInstanceID(int instanceID);
         private static Bounds GetLocalBounds(GameObject gameObject)
         {
             RectTransform component = gameObject.GetComponent<RectTransform>();
@@ -1000,7 +1000,7 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern string GetNoDiffToolsDetectedMessage();
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern Object GetObjectFromInstanceID(int instanceID);
+        public static extern UnityEngine.Object GetObjectFromInstanceID(int instanceID);
         public static Camera[] GetSceneViewCameras() => 
             SceneView.GetAllSceneCameras();
 
@@ -1097,7 +1097,7 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern DragAndDropVisualMode HierarchyWindowDrag(HierarchyProperty property, bool perform, HierarchyDropMode dropMode);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern DragAndDropVisualMode InspectorWindowDrag(Object[] targets, bool perform);
+        internal static extern DragAndDropVisualMode InspectorWindowDrag(UnityEngine.Object[] targets, bool perform);
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern Material[] InstantiateMaterialsInEditMode(Renderer renderer);
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -1115,7 +1115,7 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool INTERNAL_CALL_SaveCursorToFile(string path, Texture2D image, ref Vector2 hotSpot);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern DragAndDropVisualMode INTERNAL_CALL_SceneViewDrag(Object dropUpon, ref Vector3 worldPosition, ref Vector2 viewportPosition, bool perform);
+        private static extern DragAndDropVisualMode INTERNAL_CALL_SceneViewDrag(UnityEngine.Object dropUpon, ref Vector3 worldPosition, ref Vector2 viewportPosition, bool perform);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void INTERNAL_CALL_SetCustomLighting(Light[] lights, ref Color ambient);
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -1184,7 +1184,7 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void LoadDefaultLayout();
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern Object[] LoadSerializedFileAndForget(string path);
+        public static extern UnityEngine.Object[] LoadSerializedFileAndForget(string path);
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void OnGameViewFocus(bool focus);
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -1329,8 +1329,8 @@
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void SaveToSerializedFileAndForget(Object[] obj, string path, bool allowTextSerialization);
-        public static DragAndDropVisualMode SceneViewDrag(Object dropUpon, Vector3 worldPosition, Vector2 viewportPosition, bool perform) => 
+        public static extern void SaveToSerializedFileAndForget(UnityEngine.Object[] obj, string path, bool allowTextSerialization);
+        public static DragAndDropVisualMode SceneViewDrag(UnityEngine.Object dropUpon, Vector3 worldPosition, Vector2 viewportPosition, bool perform) => 
             INTERNAL_CALL_SceneViewDrag(dropUpon, ref worldPosition, ref viewportPosition, perform);
 
         public static void SetCustomLighting(Light[] lights, Color ambient)
@@ -1349,7 +1349,7 @@
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void SetIsInspectorExpanded(Object obj, bool isExpanded);
+        public static extern void SetIsInspectorExpanded(UnityEngine.Object obj, bool isExpanded);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void SetPlatformPath(string path);
         public static void SetRectTransformTemporaryRect(RectTransform rectTransform, Rect rect)

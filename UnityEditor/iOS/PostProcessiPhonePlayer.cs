@@ -884,7 +884,7 @@
             FileUtil.CopyFileOrDirectory(storey.paths.playerPackage + "/il2cpp/ios_il2cpp_link.xml", storey.paths.stagingAreaData + "/platform_native_link.xml");
             storey2.platformProvider = new iOSIl2CppPlatformProvider(BuildTarget.iOS, bs.isDevelopmentPlayer, storey.paths.stagingAreaData);
             Action<string> modifyOutputBeforeCompile = new Action<string>(storey2.<>m__0);
-            storey.paths.SetInternalIl2cppOutputPath(IL2CPPUtils.RunIl2Cpp("Temp/il2cppOutput", storey.paths.stagingAreaData, storey2.platformProvider, modifyOutputBeforeCompile, storey.usedClassRegistry, bs.isDevelopmentPlayer).GetCppOutputDirectoryInStagingArea());
+            storey.paths.SetInternalIl2cppOutputPath(IL2CPPUtils.RunIl2Cpp("Temp/il2cppOutput", storey.paths.stagingAreaData, storey2.platformProvider, modifyOutputBeforeCompile, storey.usedClassRegistry, false).GetCppOutputDirectoryInStagingArea());
             AddIl2CppOutputFiles(includedFiles, storey.paths.InternalIl2cppOutputPath());
             string dir = storey.paths.stagingAreaDataManaged + "/Resources";
             FileUtil.CreateOrCleanDirectory(dir);

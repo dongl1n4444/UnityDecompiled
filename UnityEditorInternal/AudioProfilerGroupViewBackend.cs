@@ -7,7 +7,7 @@
 
     internal class AudioProfilerGroupViewBackend
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private List<AudioProfilerGroupInfoWrapper> <items>k__BackingField;
         public AudioProfilerGroupTreeViewState m_TreeViewState;
         public DataUpdateDelegate OnUpdate;

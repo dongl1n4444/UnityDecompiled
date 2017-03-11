@@ -57,7 +57,7 @@
             return iconKey;
         }
 
-        public static int GetPathAndTypeID(string path, Type type) => 
+        public static int GetPathAndTypeID(string path, System.Type type) => 
             ((path.GetHashCode() * 0x1b) ^ type.GetHashCode());
 
         public static Color GetPropertyColor(string name)

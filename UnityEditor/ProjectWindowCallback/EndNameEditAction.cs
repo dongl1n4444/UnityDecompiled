@@ -12,7 +12,7 @@
         public abstract void Action(int instanceId, string pathName, string resourceFile);
         public virtual void CleanUp()
         {
-            Object.DestroyImmediate(this);
+            UnityEngine.Object.DestroyImmediate(this);
         }
 
         public virtual void OnEnable()

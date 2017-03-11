@@ -256,11 +256,11 @@
             {
                 foreach (Mesh mesh in this.m_SelectionMesh)
                 {
-                    Object.DestroyImmediate(mesh);
+                    UnityEngine.Object.DestroyImmediate(mesh);
                 }
                 foreach (Mesh mesh2 in this.m_SelectedMesh)
                 {
-                    Object.DestroyImmediate(mesh2);
+                    UnityEngine.Object.DestroyImmediate(mesh2);
                 }
             }
             int num4 = (length / s_MaxVertices) + 1;
@@ -344,7 +344,7 @@
 
         private int GetMouseVertex(Event e)
         {
-            if (Tools.current != Tool.None)
+            if (Tools.current != UnityEditor.Tool.None)
             {
                 return -1;
             }
@@ -392,15 +392,15 @@
             {
                 foreach (Mesh mesh in this.m_SelectionMesh)
                 {
-                    Object.DestroyImmediate(mesh);
+                    UnityEngine.Object.DestroyImmediate(mesh);
                 }
                 foreach (Mesh mesh2 in this.m_SelectedMesh)
                 {
-                    Object.DestroyImmediate(mesh2);
+                    UnityEngine.Object.DestroyImmediate(mesh2);
                 }
             }
-            Object.DestroyImmediate(this.m_VertexMesh);
-            Object.DestroyImmediate(this.m_VertexMeshSelected);
+            UnityEngine.Object.DestroyImmediate(this.m_VertexMesh);
+            UnityEngine.Object.DestroyImmediate(this.m_VertexMeshSelected);
         }
 
         private void OnEnable()
@@ -429,7 +429,7 @@
             }
             this.m_VertexMesh = new Mesh();
             this.m_VertexMesh.hideFlags |= HideFlags.DontSave;
-            Mesh builtinResource = (Mesh) Resources.GetBuiltinResource(typeof(Mesh), "Cube.fbx");
+            Mesh builtinResource = (Mesh) UnityEngine.Resources.GetBuiltinResource(typeof(Mesh), "Cube.fbx");
             this.m_VertexMesh.vertices = new Vector3[builtinResource.vertices.Length];
             this.m_VertexMesh.normals = builtinResource.normals;
             Vector4[] vectorArray = new Vector4[builtinResource.vertices.Length];
@@ -459,7 +459,7 @@
         public override void OnInspectorGUI()
         {
             EditorGUI.BeginDisabledGroup(base.targets.Length > 1);
-            EditMode.DoEditModeInspectorModeButton(EditMode.SceneViewEditMode.Cloth, "Edit Constraints", EditorGUIUtility.IconContent("EditCollider"), this.GetClothBounds(), this);
+            UnityEditorInternal.EditMode.DoEditModeInspectorModeButton(UnityEditorInternal.EditMode.SceneViewEditMode.Cloth, "Edit Constraints", EditorGUIUtility.IconContent("EditCollider"), this.GetClothBounds(), this);
             EditorGUI.EndDisabledGroup();
             base.OnInspectorGUI();
             if (this.cloth.GetComponent<MeshRenderer>() != null)
@@ -472,7 +472,7 @@
         {
             if (this.editing && (base.targets.Length <= 1))
             {
-                Tools.current = Tool.None;
+                Tools.current = UnityEditor.Tool.None;
                 if (this.state.ToolMode == ~ToolMode.Select)
                 {
                     this.state.ToolMode = ToolMode.Select;
@@ -1079,7 +1079,7 @@
             return flag;
         }
 
-        private void VertexEditing(Object unused, SceneView sceneView)
+        private void VertexEditing(UnityEngine.Object unused, SceneView sceneView)
         {
             GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(300f) };
             GUILayout.BeginVertical(options);
@@ -1113,7 +1113,7 @@
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
             GUILayout.BeginVertical("Box", new GUILayoutOption[0]);
-            if (Tools.current != Tool.None)
+            if (Tools.current != UnityEditor.Tool.None)
             {
                 this.state.ToolMode = ~ToolMode.Select;
             }
@@ -1129,12 +1129,12 @@
             switch (this.state.ToolMode)
             {
                 case ToolMode.Select:
-                    Tools.current = Tool.None;
+                    Tools.current = UnityEditor.Tool.None;
                     this.SelectionGUI();
                     break;
 
                 case ToolMode.Paint:
-                    Tools.current = Tool.None;
+                    Tools.current = UnityEditor.Tool.None;
                     this.PaintGUI();
                     break;
             }
@@ -1191,7 +1191,7 @@
         }
 
         public bool editing =>
-            ((EditMode.editMode == EditMode.SceneViewEditMode.Cloth) && EditMode.IsOwner(this));
+            ((UnityEditorInternal.EditMode.editMode == UnityEditorInternal.EditMode.SceneViewEditMode.Cloth) && UnityEditorInternal.EditMode.IsOwner(this));
 
         private ClothInspectorState state =>
             ScriptableSingleton<ClothInspectorState>.instance;

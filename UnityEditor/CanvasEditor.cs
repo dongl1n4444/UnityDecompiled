@@ -81,7 +81,7 @@
                 {
                     this.m_AllRoot = false;
                 }
-                if (canvas.renderMode == RenderMode.ScreenSpaceOverlay)
+                if (canvas.renderMode == UnityEngine.RenderMode.ScreenSpaceOverlay)
                 {
                     this.m_NoneOverlay = false;
                 }

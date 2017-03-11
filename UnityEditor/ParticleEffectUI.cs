@@ -98,7 +98,7 @@
 
         public GameObject CreateParticleSystem(ParticleSystem parentOfNewParticleSystem, SubModuleUI.SubEmitterType defaultType)
         {
-            Type[] components = new Type[] { typeof(ParticleSystem) };
+            System.Type[] components = new System.Type[] { typeof(ParticleSystem) };
             GameObject obj2 = new GameObject(this.GetNextParticleSystemName(), components);
             if (obj2 != null)
             {
@@ -747,7 +747,7 @@
             return lastRect;
         }
 
-        private void SceneViewGUICallback(Object target, SceneView sceneView)
+        private void SceneViewGUICallback(UnityEngine.Object target, SceneView sceneView)
         {
             this.PlayStopGUI();
         }

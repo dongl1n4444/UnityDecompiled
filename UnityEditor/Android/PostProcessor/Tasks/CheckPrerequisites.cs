@@ -20,7 +20,7 @@
             string path = Paths.Combine(components);
             if (!File.Exists(path))
             {
-                CancelPostProcess.AbortBuild("Unable to package apk", "Unity library missing for the selected architecture '" + arch + " (" + path + ") !");
+                CancelPostProcess.AbortBuild("Unable to package apk", "Unity library missing for the selected architecture '" + arch + " (" + path + ") !", null);
             }
         }
 
@@ -49,7 +49,7 @@
             this.EnsureUnityLibrariesAreAvailable(context);
             if (!context.Get<bool>("ExportAndroidProject") && !this.ArePasswordsProvided())
             {
-                CancelPostProcess.AbortBuild("Can not sign application", "Unable to sign application; please provide passwords!");
+                CancelPostProcess.AbortBuild("Can not sign application", "Unable to sign application; please provide passwords!", null);
             }
         }
 

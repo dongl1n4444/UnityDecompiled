@@ -17,7 +17,7 @@
         private bool m_ShowAssetBundleNameTextField = false;
         private bool m_ShowAssetBundleVariantTextField = false;
 
-        private void AssetBundlePopup(Rect rect, int id, IEnumerable<Object> assets, bool isVariant)
+        private void AssetBundlePopup(Rect rect, int id, IEnumerable<UnityEngine.Object> assets, bool isVariant)
         {
             bool flag;
             List<string> list = new List<string> { 
@@ -77,7 +77,7 @@
             }
         }
 
-        private void AssetBundleTextField(Rect rect, int id, IEnumerable<Object> assets, bool isVariant)
+        private void AssetBundleTextField(Rect rect, int id, IEnumerable<UnityEngine.Object> assets, bool isVariant)
         {
             Color cursorColor = GUI.skin.settings.cursorColor;
             GUI.skin.settings.cursorColor = Styles.cursorColor;
@@ -113,12 +113,12 @@
             }
         }
 
-        private IEnumerable<string> GetAssetBundlesFromAssets(IEnumerable<Object> assets, bool isVariant, out bool isMixed)
+        private IEnumerable<string> GetAssetBundlesFromAssets(IEnumerable<UnityEngine.Object> assets, bool isVariant, out bool isMixed)
         {
             HashSet<string> set = new HashSet<string>();
             string str = null;
             isMixed = false;
-            foreach (Object obj2 in assets)
+            foreach (UnityEngine.Object obj2 in assets)
             {
                 if (!(obj2 is MonoScript))
                 {
@@ -141,7 +141,7 @@
             return set;
         }
 
-        public void OnAssetBundleNameGUI(IEnumerable<Object> assets)
+        public void OnAssetBundleNameGUI(IEnumerable<UnityEngine.Object> assets)
         {
             EditorGUIUtility.labelWidth = 90f;
             Rect position = EditorGUILayout.GetControlRect(true, 16f, new GUILayoutOption[0]);
@@ -169,10 +169,10 @@
             }
         }
 
-        private void SetAssetBundleForAssets(IEnumerable<Object> assets, string name, bool isVariant)
+        private void SetAssetBundleForAssets(IEnumerable<UnityEngine.Object> assets, string name, bool isVariant)
         {
             bool flag = false;
-            foreach (Object obj2 in assets)
+            foreach (UnityEngine.Object obj2 in assets)
             {
                 if (!(obj2 is MonoScript))
                 {

@@ -531,7 +531,7 @@
         }
 
         /// <summary>
-        /// <para>Compares two floating point values if they are similar.</para>
+        /// <para>Compares two floating point values and returns true if they are similar.</para>
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>

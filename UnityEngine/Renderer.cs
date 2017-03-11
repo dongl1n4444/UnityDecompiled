@@ -103,7 +103,7 @@
             }
         }
 
-        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property lightmapTilingOffset has been deprecated. Use lightmapScaleOffset (UnityUpgradable) -> lightmapScaleOffset", true)]
+        [Obsolete("Property lightmapTilingOffset has been deprecated. Use lightmapScaleOffset (UnityUpgradable) -> lightmapScaleOffset", true), EditorBrowsable(EditorBrowsableState.Never)]
         public Vector4 lightmapTilingOffset
         {
             get => 

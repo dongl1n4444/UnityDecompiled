@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(LightmapParameters))]
+    [CustomEditor(typeof(LightmapParameters)), CanEditMultipleObjects]
     internal class LightmapParametersEditor : Editor
     {
         private SerializedProperty m_AntiAliasingSamples;

@@ -152,7 +152,6 @@
                     this.$PC = 1;
                 }
                 return true;
-                this.$PC = -1;
             Label_008E:
                 return false;
             }

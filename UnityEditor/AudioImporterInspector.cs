@@ -10,7 +10,7 @@
     using System.Threading;
     using UnityEngine;
 
-    [CustomEditor(typeof(AudioImporter)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(AudioImporter))]
     internal class AudioImporterInspector : AssetImporterInspector
     {
         [CompilerGenerated]
@@ -550,12 +550,12 @@
         {
             internal AudioImporter $current;
             internal bool $disposing;
-            internal Object[] $locvar0;
+            internal UnityEngine.Object[] $locvar0;
             internal int $locvar1;
             internal int $PC;
             internal AudioImporterInspector $this;
             internal AudioImporter <audioImporter>__1;
-            internal Object <importer>__0;
+            internal UnityEngine.Object <importer>__0;
 
             [DebuggerHidden]
             public void Dispose()

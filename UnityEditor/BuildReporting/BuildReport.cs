@@ -6,12 +6,12 @@
     using UnityEditor;
     using UnityEngine;
 
-    internal sealed class BuildReport : Object
+    internal sealed class BuildReport : UnityEngine.Object
     {
         public event Action<BuildReport> Changed;
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern void AddAppendix(Object obj);
+        public extern void AddAppendix(UnityEngine.Object obj);
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void AddFile(string path, string role);
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -27,11 +27,11 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void DeleteFilesRecursive(string rootDir);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern Object[] GetAllAppendices();
+        internal extern UnityEngine.Object[] GetAllAppendices();
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern Object[] GetAppendices(Type type);
+        public extern UnityEngine.Object[] GetAppendices(System.Type type);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern Object[] GetAppendicesByClassID(int classID);
+        internal extern UnityEngine.Object[] GetAppendicesByClassID(int classID);
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern BuildReport GetLatestReport();
         [MethodImpl(MethodImplOptions.InternalCall)]

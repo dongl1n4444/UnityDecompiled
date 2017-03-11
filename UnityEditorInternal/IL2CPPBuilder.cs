@@ -19,7 +19,7 @@
         private static Func<string, string> <>f__am$cache2;
         [CompilerGenerated]
         private static Func<string, string, string> <>f__am$cache3;
-        private readonly bool m_DevelopmentBuild;
+        private readonly bool m_DebugBuild;
         private readonly LinkXmlReader m_linkXmlReader = new LinkXmlReader();
         private readonly Action<string> m_ModifyOutputBeforeCompile;
         private readonly IIl2CppPlatformProvider m_PlatformProvider;
@@ -27,14 +27,14 @@
         private readonly string m_StagingAreaData;
         private readonly string m_TempFolder;
 
-        public IL2CPPBuilder(string tempFolder, string stagingAreaData, IIl2CppPlatformProvider platformProvider, Action<string> modifyOutputBeforeCompile, RuntimeClassRegistry runtimeClassRegistry, bool developmentBuild)
+        public IL2CPPBuilder(string tempFolder, string stagingAreaData, IIl2CppPlatformProvider platformProvider, Action<string> modifyOutputBeforeCompile, RuntimeClassRegistry runtimeClassRegistry, bool debugBuild)
         {
             this.m_TempFolder = tempFolder;
             this.m_StagingAreaData = stagingAreaData;
             this.m_PlatformProvider = platformProvider;
             this.m_ModifyOutputBeforeCompile = modifyOutputBeforeCompile;
             this.m_RuntimeClassRegistry = runtimeClassRegistry;
-            this.m_DevelopmentBuild = developmentBuild;
+            this.m_DebugBuild = debugBuild;
         }
 
         private void ConvertPlayerDlltoCpp(ICollection<string> userAssemblies, string outputDirectory, string workingDirectory)
@@ -75,7 +75,7 @@
                 if (builder != null)
                 {
                     Il2CppNativeCodeBuilderUtils.ClearAndPrepareCacheDirectory(builder);
-                    arguments.AddRange(Il2CppNativeCodeBuilderUtils.AddBuilderArguments(builder, this.OutputFileRelativePath(), this.m_PlatformProvider.includePaths));
+                    arguments.AddRange(Il2CppNativeCodeBuilderUtils.AddBuilderArguments(builder, this.OutputFileRelativePath(), this.m_PlatformProvider.includePaths, this.m_DebugBuild));
                 }
                 arguments.Add($"--map-file-parser="{GetMapFileParserPath()}"");
                 if (strArray.Length > 0)
@@ -178,7 +178,7 @@
                     IsReadOnly = false
                 };
             }
-            AssemblyStripper.StripAssemblies(this.m_StagingAreaData, this.m_PlatformProvider, this.m_RuntimeClassRegistry, this.m_DevelopmentBuild);
+            AssemblyStripper.StripAssemblies(this.m_StagingAreaData, this.m_PlatformProvider, this.m_RuntimeClassRegistry);
             FileUtil.CreateOrCleanDirectory(cppOutputDirectoryInStagingArea);
             if (this.m_ModifyOutputBeforeCompile != null)
             {
@@ -201,7 +201,7 @@
             if (builder != null)
             {
                 Il2CppNativeCodeBuilderUtils.ClearAndPrepareCacheDirectory(builder);
-                List<string> arguments = Il2CppNativeCodeBuilderUtils.AddBuilderArguments(builder, this.OutputFileRelativePath(), this.m_PlatformProvider.includePaths).ToList<string>();
+                List<string> arguments = Il2CppNativeCodeBuilderUtils.AddBuilderArguments(builder, this.OutputFileRelativePath(), this.m_PlatformProvider.includePaths, this.m_DebugBuild).ToList<string>();
                 arguments.Add($"--map-file-parser="{GetMapFileParserPath()}"");
                 arguments.Add($"--generatedcppdir="{Path.GetFullPath(this.GetCppOutputDirectoryInStagingArea())}"");
                 Action<ProcessStartInfo> setupStartInfo = new Action<ProcessStartInfo>(builder.SetupStartInfo);

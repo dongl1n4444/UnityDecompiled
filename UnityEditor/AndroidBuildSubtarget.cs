@@ -3,7 +3,7 @@
     using System;
     using System.ComponentModel;
 
-    [EditorBrowsable(EditorBrowsableState.Never), Obsolete("UnityEditor.AndroidBuildSubtarget has been deprecated. Use UnityEditor.MobileTextureSubtarget instead (UnityUpgradable) -> MobileTextureSubtarget", true)]
+    [Obsolete("UnityEditor.AndroidBuildSubtarget has been deprecated. Use UnityEditor.MobileTextureSubtarget instead (UnityUpgradable) -> MobileTextureSubtarget", true), EditorBrowsable(EditorBrowsableState.Never)]
     public enum AndroidBuildSubtarget
     {
         ASTC = -1,

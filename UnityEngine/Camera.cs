@@ -121,11 +121,11 @@
         public extern CommandBuffer[] GetCommandBuffers(CameraEvent evt);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern string[] GetHDRWarnings();
-        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property GetScreenHeight() has been deprecated. Use Screen.height instead (UnityUpgradable) -> Screen.height", true)]
+        [Obsolete("Property GetScreenHeight() has been deprecated. Use Screen.height instead (UnityUpgradable) -> Screen.height", true), EditorBrowsable(EditorBrowsableState.Never)]
         public float GetScreenHeight() => 
             0f;
 
-        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property GetScreenWidth() has been deprecated. Use Screen.width instead (UnityUpgradable) -> Screen.width", true)]
+        [Obsolete("Property GetScreenWidth() has been deprecated. Use Screen.width instead (UnityUpgradable) -> Screen.width", true), EditorBrowsable(EditorBrowsableState.Never)]
         public float GetScreenWidth() => 
             0f;
 
@@ -685,7 +685,7 @@
         /// </summary>
         public bool hdr { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property isOrthoGraphic has been deprecated. Use orthographic (UnityUpgradable) -> orthographic", true)]
+        [Obsolete("Property isOrthoGraphic has been deprecated. Use orthographic (UnityUpgradable) -> orthographic", true), EditorBrowsable(EditorBrowsableState.Never)]
         public bool isOrthoGraphic
         {
             get => 

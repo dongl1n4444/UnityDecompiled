@@ -23,7 +23,7 @@
                 }
                 catch (IOException)
                 {
-                    CancelPostProcess.AbortBuild("Unable to create new apk!", $"Unable to write target apk because {this._installPath} is a non-empty directory");
+                    CancelPostProcess.AbortBuild("Unable to create new apk!", $"Unable to write target apk because {this._installPath} is a non-empty directory", null);
                 }
             }
             else
@@ -34,7 +34,7 @@
                 }
                 if (File.Exists(this._installPath))
                 {
-                    CancelPostProcess.AbortBuild("Unable to delete old apk!", $"Target apk could not be overwritten: {this._installPath}");
+                    CancelPostProcess.AbortBuild("Unable to delete old apk!", $"Target apk could not be overwritten: {this._installPath}", null);
                 }
             }
             if (!Directory.Exists(this._installDirectory))
@@ -62,7 +62,7 @@
             FileUtil.MoveFileOrDirectory(Path.Combine(str, "Package.apk"), this._installPath);
             if (!File.Exists(this._installPath))
             {
-                CancelPostProcess.AbortBuild("Unable to create new apk!", $"Unable to move file '{Path.Combine(str, "Package.apk")}' -> '{this._installPath}");
+                CancelPostProcess.AbortBuild("Unable to create new apk!", $"Unable to move file '{Path.Combine(str, "Package.apk")}' -> '{this._installPath}", null);
             }
             if (flag && File.Exists(Path.Combine(str, "main.obb")))
             {

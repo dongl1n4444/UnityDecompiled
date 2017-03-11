@@ -82,7 +82,7 @@
             searchableWindows.Add(this);
         }
 
-        [MenuItem("Assets/Find References In Scene", false, 0x19)]
+        [UnityEditor.MenuItem("Assets/Find References In Scene", false, 0x19)]
         private static void OnSearchForReferences()
         {
             string str;
@@ -112,10 +112,10 @@
             }
         }
 
-        [MenuItem("Assets/Find References In Scene", true)]
+        [UnityEditor.MenuItem("Assets/Find References In Scene", true)]
         private static bool OnSearchForReferencesValidate()
         {
-            Object activeObject = Selection.activeObject;
+            UnityEngine.Object activeObject = Selection.activeObject;
             return (((activeObject != null) && AssetDatabase.Contains(activeObject)) && !Directory.Exists(AssetDatabase.GetAssetPath(activeObject)));
         }
 

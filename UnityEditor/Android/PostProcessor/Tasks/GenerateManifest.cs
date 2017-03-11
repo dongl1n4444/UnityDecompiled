@@ -9,8 +9,10 @@
     using System.Threading;
     using System.Xml;
     using UnityEditor;
+    using UnityEditor.Analytics;
     using UnityEditor.Android;
     using UnityEditor.Android.PostProcessor;
+    using UnityEditor.CrashReporting;
     using UnityEditor.Utils;
     using UnityEngine;
     using UnityEngine.Networking;
@@ -84,7 +86,7 @@
         }
 
         private bool doesReferenceNetworkClasses(AssemblyReferenceChecker checker) => 
-            ((((checker.HasReferenceToType("UnityEngine.Networking") || checker.HasReferenceToType("System.Net.Sockets")) || (checker.HasReferenceToType("UnityEngine.Network") || checker.HasReferenceToType("UnityEngine.RPC"))) || (checker.HasReferenceToType("UnityEngine.WWW") || checker.HasReferenceToType(typeof(Ping).FullName))) || checker.HasReferenceToType(typeof(UnityWebRequest).FullName));
+            (((((checker.HasReferenceToType("UnityEngine.Networking") || checker.HasReferenceToType("System.Net.Sockets")) || (checker.HasReferenceToType("UnityEngine.Network") || checker.HasReferenceToType("UnityEngine.RPC"))) || ((checker.HasReferenceToType("UnityEngine.WWW") || checker.HasReferenceToType(typeof(Ping).FullName)) || (checker.HasReferenceToType(typeof(UnityWebRequest).FullName) || PlayerSettings.submitAnalytics))) || AnalyticsSettings.enabled) || CrashReportingSettings.enabled);
 
         public void Execute(PostProcessorContext context)
         {
@@ -444,7 +446,7 @@
                 string message = "Please set the Bundle Identifier in the Player Settings.";
                 message = (message + " The value must follow the convention 'com.YourCompanyName.YourProductName'") + " and can contain alphanumeric characters and underscore." + "\nEach segment must not start with a numeric character or underscore.";
                 Selection.activeObject = Unsupported.GetSerializedAssetInterfaceSingleton("PlayerSettings");
-                CancelPostProcess.AbortBuild("Bundle Identifier has not been set up correctly", message);
+                CancelPostProcess.AbortBuild("Bundle Identifier has not been set up correctly", message, null);
             }
             if (!this.IsValidJavaPackageName(packageName))
             {

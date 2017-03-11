@@ -11,12 +11,12 @@
 
     internal class AssetModificationProcessorInternal
     {
-        private static IEnumerable<Type> assetModificationProcessors = null;
+        private static IEnumerable<System.Type> assetModificationProcessors = null;
         internal static MethodInfo[] isOpenForEditMethods = null;
 
         private static bool CheckArguments(object[] args, MethodInfo method)
         {
-            Type[] types = new Type[args.Length];
+            System.Type[] types = new System.Type[args.Length];
             for (int i = 0; i < args.Length; i++)
             {
                 types[i] = args[i].GetType();
@@ -24,9 +24,9 @@
             return CheckArgumentTypes(types, method);
         }
 
-        private static bool CheckArgumentsAndReturnType(object[] args, MethodInfo method, Type returnType)
+        private static bool CheckArgumentsAndReturnType(object[] args, MethodInfo method, System.Type returnType)
         {
-            Type[] types = new Type[args.Length];
+            System.Type[] types = new System.Type[args.Length];
             for (int i = 0; i < args.Length; i++)
             {
                 types[i] = args[i].GetType();
@@ -34,9 +34,9 @@
             return CheckArgumentTypesAndReturnType(types, method, returnType);
         }
 
-        private static bool CheckArgumentTypes(Type[] types, MethodInfo method)
+        private static bool CheckArgumentTypes(System.Type[] types, MethodInfo method)
         {
-            ParameterInfo[] parameters = method.GetParameters();
+            System.Reflection.ParameterInfo[] parameters = method.GetParameters();
             if (types.Length != parameters.Length)
             {
                 string[] textArray1 = new string[] { "Parameter count did not match. Expected: ", types.Length.ToString(), " Got: ", parameters.Length.ToString(), " in ", method.DeclaringType.ToString(), ".", method.Name };
@@ -44,9 +44,9 @@
                 return false;
             }
             int index = 0;
-            foreach (Type type in types)
+            foreach (System.Type type in types)
             {
-                ParameterInfo info = parameters[index];
+                System.Reflection.ParameterInfo info = parameters[index];
                 if (type != info.ParameterType)
                 {
                     Debug.LogWarning(string.Concat(new object[] { "Parameter type mismatch at parameter ", index, ". Expected: ", type.ToString(), " Got: ", info.ParameterType.ToString(), " in ", method.DeclaringType.ToString(), ".", method.Name }));
@@ -57,7 +57,7 @@
             return true;
         }
 
-        private static bool CheckArgumentTypesAndReturnType(Type[] types, MethodInfo method, Type returnType)
+        private static bool CheckArgumentTypesAndReturnType(System.Type[] types, MethodInfo method, System.Type returnType)
         {
             if (returnType != method.ReturnType)
             {
@@ -67,7 +67,7 @@
             return CheckArgumentTypes(types, method);
         }
 
-        private static void FileModeChanged(string[] assets, FileMode mode)
+        private static void FileModeChanged(string[] assets, UnityEditor.VersionControl.FileMode mode)
         {
             if (Provider.enabled && Provider.PromptAndCheckoutIfNeeded(assets, ""))
             {
@@ -80,7 +80,7 @@
             if (isOpenForEditMethods == null)
             {
                 List<MethodInfo> list = new List<MethodInfo>();
-                foreach (Type type in AssetModificationProcessors)
+                foreach (System.Type type in AssetModificationProcessors)
                 {
                     MethodInfo method = type.GetMethod("IsOpenForEdit", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
                     if (method != null)
@@ -88,7 +88,7 @@
                         RequireTeamLicense();
                         string str = "";
                         bool flag = false;
-                        Type[] types = new Type[] { str.GetType(), str.GetType().MakeByRefType() };
+                        System.Type[] types = new System.Type[] { str.GetType(), str.GetType().MakeByRefType() };
                         if (CheckArgumentTypesAndReturnType(types, method, flag.GetType()))
                         {
                             list.Add(method);
@@ -100,14 +100,14 @@
             return isOpenForEditMethods;
         }
 
-        internal static bool IsOpenForEdit(string assetPath, out string message)
+        internal static bool IsOpenForEdit(string assetPath, out string message, StatusQueryOptions statusOptions)
         {
             message = "";
             if (string.IsNullOrEmpty(assetPath))
             {
                 return true;
             }
-            bool flag2 = AssetModificationHook.IsOpenForEdit(assetPath, out message);
+            bool flag2 = AssetModificationHook.IsOpenForEdit(assetPath, out message, statusOptions);
             foreach (MethodInfo info in GetIsOpenForEditMethods())
             {
                 object[] parameters = new object[] { assetPath, message };
@@ -123,7 +123,7 @@
         internal static void OnStatusUpdated()
         {
             WindowPending.OnStatusUpdated();
-            foreach (Type type in AssetModificationProcessors)
+            foreach (System.Type type in AssetModificationProcessors)
             {
                 MethodInfo method = type.GetMethod("OnStatusUpdated", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
                 if (method != null)
@@ -140,7 +140,7 @@
 
         private static void OnWillCreateAsset(string path)
         {
-            foreach (Type type in AssetModificationProcessors)
+            foreach (System.Type type in AssetModificationProcessors)
             {
                 MethodInfo method = type.GetMethod("OnWillCreateAsset", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
                 if (method != null)
@@ -161,7 +161,7 @@
             {
                 return didNotDelete;
             }
-            foreach (Type type in AssetModificationProcessors)
+            foreach (System.Type type in AssetModificationProcessors)
             {
                 MethodInfo method = type.GetMethod("OnWillDeleteAsset", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
                 if (method != null)
@@ -187,7 +187,7 @@
             if (InternalEditorUtility.HasTeamLicense())
             {
                 didNotMove = AssetModificationHook.OnWillMoveAsset(fromPath, toPath);
-                foreach (Type type in AssetModificationProcessors)
+                foreach (System.Type type in AssetModificationProcessors)
                 {
                     MethodInfo method = type.GetMethod("OnWillMoveAsset", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
                     if (method != null)
@@ -221,7 +221,7 @@
             {
                 assetsThatShouldBeSaved = assets;
             }
-            foreach (Type type in AssetModificationProcessors)
+            foreach (System.Type type in AssetModificationProcessors)
             {
                 MethodInfo method = type.GetMethod("OnWillSaveAssets", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
                 if (method != null)
@@ -242,7 +242,7 @@
                 List<string> list = new List<string>();
                 foreach (string str in assetsThatShouldBeSaved)
                 {
-                    if (!AssetDatabase.IsOpenForEdit(str))
+                    if (!AssetDatabase.IsOpenForEdit(str, StatusQueryOptions.ForceUpdate))
                     {
                         list.Add(str);
                     }
@@ -264,14 +264,14 @@
             }
         }
 
-        private static IEnumerable<Type> AssetModificationProcessors
+        private static IEnumerable<System.Type> AssetModificationProcessors
         {
             get
             {
                 if (assetModificationProcessors == null)
                 {
-                    List<Type> list = new List<Type>();
-                    list.AddRange(EditorAssemblies.SubclassesOf(typeof(AssetModificationProcessor)));
+                    List<System.Type> list = new List<System.Type>();
+                    list.AddRange(EditorAssemblies.SubclassesOf(typeof(UnityEditor.AssetModificationProcessor)));
                     list.AddRange(EditorAssemblies.SubclassesOf(typeof(AssetModificationProcessor)));
                     assetModificationProcessors = list.ToArray();
                 }

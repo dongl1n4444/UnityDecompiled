@@ -24,7 +24,7 @@
                 AvatarMask mask = new AvatarMask();
                 this.defaultClipAnimations[0].ConfigureMaskFromClip(ref mask);
                 clip.ConfigureClipFromMask(mask);
-                Object.DestroyImmediate(mask);
+                UnityEngine.Object.DestroyImmediate(mask);
             }
             else
             {

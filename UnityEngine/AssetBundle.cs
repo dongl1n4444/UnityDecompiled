@@ -35,7 +35,7 @@
         /// <para>Asynchronously create an AssetBundle from a memory region.</para>
         /// </summary>
         /// <param name="binary"></param>
-        [Obsolete("Method CreateFromMemory has been renamed to LoadFromMemoryAsync (UnityUpgradable) -> LoadFromMemoryAsync(*)", true), EditorBrowsable(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Method CreateFromMemory has been renamed to LoadFromMemoryAsync (UnityUpgradable) -> LoadFromMemoryAsync(*)", true)]
         public static AssetBundleCreateRequest CreateFromMemory(byte[] binary) => 
             null;
 
@@ -65,7 +65,7 @@
         public T Load<T>(string name) where T: UnityEngine.Object => 
             null;
 
-        [MethodImpl(MethodImplOptions.InternalCall), TypeInferenceRule(TypeInferenceRules.TypeReferencedBySecondArgument), Obsolete("Method Load has been deprecated. Script updater cannot update it as the loading behaviour has changed. Please use LoadAsset instead and check the documentation for details.", true)]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Method Load has been deprecated. Script updater cannot update it as the loading behaviour has changed. Please use LoadAsset instead and check the documentation for details.", true), TypeInferenceRule(TypeInferenceRules.TypeReferencedBySecondArgument)]
         public extern UnityEngine.Object Load(string name, System.Type type);
         [Obsolete("Method LoadAll has been deprecated. Script updater cannot update it as the loading behaviour has changed. Please use LoadAllAssets instead and check the documentation for details.", true)]
         public UnityEngine.Object[] LoadAll() => 

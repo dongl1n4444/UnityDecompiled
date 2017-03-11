@@ -8,7 +8,7 @@
 
     internal class AudioMixerTreeViewNode : TreeViewItem
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private AudioMixerGroupController <group>k__BackingField;
 
         public AudioMixerTreeViewNode(int instanceID, int depth, TreeViewItem parent, string displayName, AudioMixerGroupController group) : base(instanceID, depth, parent, displayName)

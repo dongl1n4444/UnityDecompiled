@@ -41,9 +41,9 @@
         /// <para>The string "DELETE", commonly used as the verb for an HTTP DELETE request.</para>
         /// </summary>
         public const string kHttpVerbDELETE = "DELETE";
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private bool <disposeDownloadHandlerOnDispose>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private bool <disposeDownloadHandlerOnDispose>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <disposeUploadHandlerOnDispose>k__BackingField;
         private static readonly string[] forbiddenHeaderKeys = new string[] { 
             "accept-charset", "access-control-request-headers", "access-control-request-method", "connection", "content-length", "date", "dnt", "expect", "host", "keep-alive", "origin", "referer", "te", "trailer", "transfer-encoding", "upgrade",
@@ -835,7 +835,8 @@
             SSLCACertError,
             UnrecognizedContentEncoding,
             LoginFailed,
-            SSLShutdownFailed
+            SSLShutdownFailed,
+            NoInternetConnection
         }
 
         internal enum UnityWebRequestMethod

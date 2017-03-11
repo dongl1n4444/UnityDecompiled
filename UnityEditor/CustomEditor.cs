@@ -10,21 +10,21 @@
     /// </summary>
     public sealed class CustomEditor : Attribute
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <isFallback>k__BackingField;
         internal bool m_EditorForChildClasses;
-        internal Type m_InspectedType;
+        internal System.Type m_InspectedType;
 
         /// <summary>
         /// <para>Defines which object type the custom editor class can edit.</para>
         /// </summary>
         /// <param name="inspectedType">Type that this editor can edit.</param>
         /// <param name="editorForChildClasses">If true, child classes of inspectedType will also show this editor. Defaults to false.</param>
-        public CustomEditor(Type inspectedType)
+        public CustomEditor(System.Type inspectedType)
         {
             if (inspectedType == null)
             {
-                Debug.LogError("Failed to load CustomEditor inspected type");
+                UnityEngine.Debug.LogError("Failed to load CustomEditor inspected type");
             }
             this.m_InspectedType = inspectedType;
             this.m_EditorForChildClasses = false;
@@ -35,11 +35,11 @@
         /// </summary>
         /// <param name="inspectedType">Type that this editor can edit.</param>
         /// <param name="editorForChildClasses">If true, child classes of inspectedType will also show this editor. Defaults to false.</param>
-        public CustomEditor(Type inspectedType, bool editorForChildClasses)
+        public CustomEditor(System.Type inspectedType, bool editorForChildClasses)
         {
             if (inspectedType == null)
             {
-                Debug.LogError("Failed to load CustomEditor inspected type");
+                UnityEngine.Debug.LogError("Failed to load CustomEditor inspected type");
             }
             this.m_InspectedType = inspectedType;
             this.m_EditorForChildClasses = editorForChildClasses;

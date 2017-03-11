@@ -30,7 +30,7 @@
             return null;
         }
 
-        internal static bool HandleDelayedDrag(Rect position, int id, Object objectToDrag)
+        internal static bool HandleDelayedDrag(Rect position, int id, UnityEngine.Object objectToDrag)
         {
             Event current = Event.current;
             EventType typeForControl = current.GetTypeForControl(id);
@@ -43,7 +43,7 @@
                     {
                         GUIUtility.hotControl = 0;
                         PrepareStartDrag();
-                        Object[] objArray = new Object[] { objectToDrag };
+                        UnityEngine.Object[] objArray = new UnityEngine.Object[] { objectToDrag };
                         objectReferences = objArray;
                         StartDrag(ObjectNames.GetDragAndDropTitle(objectToDrag));
                         return true;
@@ -112,7 +112,7 @@
         /// <summary>
         /// <para>References to Object|objects being dragged.</para>
         /// </summary>
-        public static Object[] objectReferences { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static UnityEngine.Object[] objectReferences { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
         /// <summary>
         /// <para>The file names being dragged.</para>

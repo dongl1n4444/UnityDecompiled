@@ -11,9 +11,9 @@
 
     internal class ModelImporterClipEditor : AssetImporterInspector
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-        private int <motionNodeIndex>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private int <motionNodeIndex>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private int <pivotNodeIndex>k__BackingField;
         private static bool importMessageFoldout = false;
         private const int kFrameColumnWidth = 0x2d;
@@ -327,17 +327,17 @@
         {
             if (this.m_AnimationClipEditor != null)
             {
-                Object.DestroyImmediate(this.m_AnimationClipEditor);
+                UnityEngine.Object.DestroyImmediate(this.m_AnimationClipEditor);
                 this.m_AnimationClipEditor = null;
             }
             if (this.m_MaskInspector != null)
             {
-                Object.DestroyImmediate(this.m_MaskInspector);
+                UnityEngine.Object.DestroyImmediate(this.m_MaskInspector);
                 this.m_MaskInspector = null;
             }
             if (this.m_Mask != null)
             {
-                Object.DestroyImmediate(this.m_Mask);
+                UnityEngine.Object.DestroyImmediate(this.m_Mask);
                 this.m_Mask = null;
             }
         }
@@ -687,7 +687,7 @@
             {
                 if (base.serializedObject.FindProperty("m_ClipAnimations").arraySize != 0)
                 {
-                    Debug.LogError("Transferring default clips failed, target already has clips");
+                    UnityEngine.Debug.LogError("Transferring default clips failed, target already has clips");
                 }
                 base.serializedObject.CopyFromSerializedProperty(this.m_ClipAnimations);
                 this.m_ClipAnimations = base.serializedObject.FindProperty("m_ClipAnimations");

@@ -85,7 +85,7 @@
         /// </summary>
         /// <param name="assetPath">Pathname of the target asset.</param>
         /// <param name="type">Type filter for objects returned.</param>
-        [Obsolete("Use AssetDatabase.LoadAssetAtPath instead (UnityUpgradable) -> * [UnityEditor] UnityEditor.AssetDatabase.LoadAssetAtPath(*)", true), TypeInferenceRule(TypeInferenceRules.TypeReferencedBySecondArgument)]
+        [TypeInferenceRule(TypeInferenceRules.TypeReferencedBySecondArgument), Obsolete("Use AssetDatabase.LoadAssetAtPath instead (UnityUpgradable) -> * [UnityEditor] UnityEditor.AssetDatabase.LoadAssetAtPath(*)", true)]
         public static UnityEngine.Object LoadAssetAtPath(string assetPath, System.Type type) => 
             null;
 

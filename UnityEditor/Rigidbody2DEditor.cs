@@ -7,11 +7,11 @@
     using UnityEngine;
     using UnityEngine.Events;
 
-    [CustomEditor(typeof(Rigidbody2D)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(Rigidbody2D))]
     internal class Rigidbody2DEditor : Editor
     {
         [CompilerGenerated]
-        private static Func<Object, bool> <>f__am$cache0;
+        private static Func<UnityEngine.Object, bool> <>f__am$cache0;
         private const int k_ToggleOffset = 30;
         private SerializedProperty m_AngularDrag;
         private SerializedProperty m_BodyType;
@@ -118,7 +118,7 @@
                     {
                         <>f__am$cache0 = x => (PrefabUtility.GetPrefabType(x) == PrefabType.Prefab) || !(x as Rigidbody2D).gameObject.activeInHierarchy;
                     }
-                    if (Enumerable.Any<Object>(base.targets, <>f__am$cache0))
+                    if (Enumerable.Any<UnityEngine.Object>(base.targets, <>f__am$cache0))
                     {
                         EditorGUILayout.HelpBox("The auto mass value cannot be displayed for a prefab or if the object is not active.  The value will be calculated for a prefab instance and when the object is active.", MessageType.Info);
                         goto Label_0162;

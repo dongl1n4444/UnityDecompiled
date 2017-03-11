@@ -84,13 +84,13 @@
         {
             if (s_Preview != null)
             {
-                Object.DestroyImmediate(s_Preview);
+                UnityEngine.Object.DestroyImmediate(s_Preview);
                 s_Preview = null;
                 s_LastPreviewPath = null;
             }
             if (s_PackageIcon != null)
             {
-                Object.DestroyImmediate(s_PackageIcon);
+                UnityEngine.Object.DestroyImmediate(s_PackageIcon);
                 s_PackageIcon = null;
             }
         }

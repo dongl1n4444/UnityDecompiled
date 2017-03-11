@@ -15,11 +15,11 @@
         [CompilerGenerated]
         private static Predicate<MaterialProperty> <>f__am$cache1;
         [CompilerGenerated]
-        private static Func<Object, bool> <>f__am$cache2;
+        private static Func<UnityEngine.Object, bool> <>f__am$cache2;
         [CompilerGenerated]
         private static Predicate<MaterialProperty> <>f__am$cache3;
         [CompilerGenerated]
-        private static Func<Object, bool> <>f__am$cache4;
+        private static Func<UnityEngine.Object, bool> <>f__am$cache4;
         [CompilerGenerated]
         private static Predicate<MaterialProperty> <>f__am$cache5;
         [CompilerGenerated]
@@ -92,7 +92,7 @@
                     {
                         <>f__am$cache2 = t => ((Material) t).shaderKeywords.Contains<string>("EFFECT_BUMP");
                     }
-                    IEnumerable<bool> enumerable = Enumerable.Select<Object, bool>(base.targets, <>f__am$cache2);
+                    IEnumerable<bool> enumerable = Enumerable.Select<UnityEngine.Object, bool>(base.targets, <>f__am$cache2);
                     bool? nullable = this.ToggleShaderProperty(property3, enumerable.First<bool>(), enumerable.Distinct<bool>().Count<bool>() > 1);
                     if (nullable.HasValue)
                     {
@@ -126,7 +126,7 @@
                 {
                     <>f__am$cache4 = t => ((Material) t).shaderKeywords.Contains<string>("EFFECT_HUE_VARIATION");
                 }
-                IEnumerable<bool> enumerable2 = Enumerable.Select<Object, bool>(base.targets, <>f__am$cache4);
+                IEnumerable<bool> enumerable2 = Enumerable.Select<UnityEngine.Object, bool>(base.targets, <>f__am$cache4);
                 if (<>f__am$cache5 == null)
                 {
                     <>f__am$cache5 = prop => prop.name == "_HueVariation";

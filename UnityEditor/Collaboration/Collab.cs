@@ -16,10 +16,10 @@
     internal sealed class Collab : AssetPostprocessor
     {
         [CompilerGenerated]
-        private static StateChangedDelegate <>f__mg$cache0;
+        private static UnityEditor.Connect.StateChangedDelegate <>f__mg$cache0;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <projectBrowserSingleMetaSelectionPath>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <projectBrowserSingleSelectionPath>k__BackingField;
         public static string[] clientType = new string[] { "Cloud Server", "Mock Server" };
         public string[] currentProjectBrowserSelection;
@@ -27,7 +27,7 @@
         private static Collab s_Instance = new Collab();
         private static bool s_IsFirstStateChange = true;
 
-        public event StateChangedDelegate StateChanged;
+        public event UnityEditor.Collaboration.StateChangedDelegate StateChanged;
 
         static Collab()
         {
@@ -46,7 +46,7 @@
             }
             catch (Exception exception)
             {
-                Debug.Log("Cannot cancel job, reason:" + exception.Message);
+                UnityEngine.Debug.Log("Cannot cancel job, reason:" + exception.Message);
             }
         }
 
@@ -111,11 +111,11 @@
                 s_IsFirstStateChange = false;
                 if (<>f__mg$cache0 == null)
                 {
-                    <>f__mg$cache0 = new StateChangedDelegate(Collab.OnUnityConnectStateChanged);
+                    <>f__mg$cache0 = new UnityEditor.Connect.StateChangedDelegate(Collab.OnUnityConnectStateChanged);
                 }
                 UnityConnect.instance.StateChanged += <>f__mg$cache0;
             }
-            StateChangedDelegate stateChanged = instance.StateChanged;
+            UnityEditor.Collaboration.StateChangedDelegate stateChanged = instance.StateChanged;
             if (stateChanged != null)
             {
                 stateChanged(instance.collabInfo);
@@ -166,20 +166,20 @@
             }
         }
 
-        [MenuItem("Window/Collab/Get Revisions", false, 0x3e8, true)]
+        [UnityEditor.MenuItem("Window/Collab/Get Revisions", false, 0x3e8, true)]
         public static void TestGetRevisions()
         {
             Revision[] revisions = instance.GetRevisions();
             if (revisions.Length == 0)
             {
-                Debug.Log("No revisions");
+                UnityEngine.Debug.Log("No revisions");
             }
             else
             {
                 int length = revisions.Length;
                 foreach (Revision revision in revisions)
                 {
-                    Debug.Log(string.Concat(new object[] { "Revision #", length, ": ", revision.revisionID }));
+                    UnityEngine.Debug.Log(string.Concat(new object[] { "Revision #", length, ": ", revision.revisionID }));
                     length--;
                 }
             }

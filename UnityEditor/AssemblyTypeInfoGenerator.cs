@@ -15,12 +15,12 @@
     {
         private AssemblyDefinition assembly_;
         private List<ClassInfo> classes_;
-        private TypeResolver typeResolver;
+        private Unity.SerializationLogic.TypeResolver typeResolver;
 
         public AssemblyTypeInfoGenerator(string assembly, string[] searchDirs)
         {
             this.classes_ = new List<ClassInfo>();
-            this.typeResolver = new TypeResolver(null);
+            this.typeResolver = new Unity.SerializationLogic.TypeResolver(null);
             ReaderParameters parameters = new ReaderParameters {
                 AssemblyResolver = AssemblyResolver.WithSearchDirs(searchDirs)
             };
@@ -30,7 +30,7 @@
         public AssemblyTypeInfoGenerator(string assembly, IAssemblyResolver resolver)
         {
             this.classes_ = new List<ClassInfo>();
-            this.typeResolver = new TypeResolver(null);
+            this.typeResolver = new Unity.SerializationLogic.TypeResolver(null);
             ReaderParameters parameters = new ReaderParameters {
                 AssemblyResolver = resolver
             };

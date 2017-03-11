@@ -15,13 +15,13 @@
         /// <para>Reset "no backup" file flag: file will be synced with iCloud/iTunes backup and can be deleted by OS in low storage situations.</para>
         /// </summary>
         /// <param name="path"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
         public static extern void ResetNoBackupFlag(string path);
         /// <summary>
         /// <para>Set file flag to be excluded from iCloud/iTunes backup.</para>
         /// </summary>
         /// <param name="path"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
         public static extern void SetNoBackupFlag(string path);
 
         /// <summary>

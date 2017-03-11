@@ -11,26 +11,26 @@
     {
         public override void LeaveMethodInvocationExpression(MethodInvocationExpression node)
         {
-            IEntityWithParameters parameters = node.get_Target().get_Entity() as IEntityWithParameters;
-            if (parameters != null)
+            IEntityWithParameters entity = node.Target.Entity as IEntityWithParameters;
+            if (entity != null)
             {
-                ExpressionCollection args = node.get_Arguments();
-                if (parameters.get_AcceptVarArgs() && UnityCallableResolutionServiceModule.IsArrayArgumentExplicitlyProvided(parameters.GetParameters(), args))
+                ExpressionCollection arguments = node.Arguments;
+                if (entity.AcceptVarArgs && UnityCallableResolutionServiceModule.IsArrayArgumentExplicitlyProvided(entity.GetParameters(), arguments))
                 {
                     UnaryExpression expression2;
-                    Expression expression = args.get_Item(-1);
+                    Expression expression = arguments[-1];
                     UnaryExpression expression1 = expression2 = new UnaryExpression();
-                    expression2.set_Operator(7);
-                    expression2.set_Operand(expression);
-                    expression2.set_ExpressionType(this.GetExpressionType(expression));
-                    args.ReplaceAt(-1, expression2);
+                    int num1 = (int) (expression2.Operator = UnaryOperatorType.Explode);
+                    Expression expression4 = expression2.Operand = expression;
+                    IType type1 = expression2.ExpressionType = this.GetExpressionType(expression);
+                    arguments.ReplaceAt(-1, expression2);
                 }
             }
         }
 
         public override void Run()
         {
-            this.Visit(this.get_CompileUnit());
+            this.Visit(this.CompileUnit);
         }
     }
 }

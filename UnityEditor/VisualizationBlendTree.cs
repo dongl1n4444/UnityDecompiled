@@ -21,10 +21,10 @@
             }
             if (this.m_Controller != null)
             {
-                this.m_Controller.OnAnimatorControllerDirty = (Action) Delegate.Remove(this.m_Controller.OnAnimatorControllerDirty, new Action(this.ControllerDirty));
+                this.m_Controller.OnAnimatorControllerDirty = (System.Action) Delegate.Remove(this.m_Controller.OnAnimatorControllerDirty, new System.Action(this.ControllerDirty));
             }
-            Object.DestroyImmediate(this.m_Controller);
-            Object.DestroyImmediate(this.m_State);
+            UnityEngine.Object.DestroyImmediate(this.m_Controller);
+            UnityEngine.Object.DestroyImmediate(this.m_State);
             this.m_StateMachine = null;
             this.m_Controller = null;
             this.m_State = null;
@@ -61,7 +61,7 @@
                 this.m_StateMachine.hideFlags = HideFlags.HideAndDontSave;
                 this.m_Controller.hideFlags = HideFlags.HideAndDontSave;
                 AnimatorController.SetAnimatorController(this.m_Animator, this.m_Controller);
-                this.m_Controller.OnAnimatorControllerDirty = (Action) Delegate.Combine(this.m_Controller.OnAnimatorControllerDirty, new Action(this.ControllerDirty));
+                this.m_Controller.OnAnimatorControllerDirty = (System.Action) Delegate.Combine(this.m_Controller.OnAnimatorControllerDirty, new System.Action(this.ControllerDirty));
                 this.m_ControllerIsDirty = false;
             }
         }

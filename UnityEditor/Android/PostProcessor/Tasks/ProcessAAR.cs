@@ -29,7 +29,7 @@
                 string str7 = Path.Combine(path, fileNameWithoutExtension);
                 if (Directory.Exists(str7))
                 {
-                    CancelPostProcess.AbortBuild("Build failure", "Plugin conflict detected for file " + fileName);
+                    CancelPostProcess.AbortBuild("Build failure", "Plugin conflict detected for file " + fileName, null);
                 }
                 Directory.CreateDirectory(str7);
                 TasksCommon.Exec(AndroidJavaTools.jarPath, "xf \"" + str4 + "\"", str7, "Error unpacking file " + fileName, 0);

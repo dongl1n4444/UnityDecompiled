@@ -140,7 +140,7 @@
             Application.isEditor;
 
         public string version =>
-            "2.0.6";
+            "2.0.8";
 
         [CompilerGenerated]
         private sealed class <Initialize>c__AnonStorey0

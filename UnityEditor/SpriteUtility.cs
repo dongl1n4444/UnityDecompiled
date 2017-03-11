@@ -11,11 +11,11 @@
     internal static class SpriteUtility
     {
         [CompilerGenerated]
-        private static Comparison<Object> <>f__am$cache0;
+        private static Comparison<UnityEngine.Object> <>f__am$cache0;
         [CompilerGenerated]
-        private static Func<Object, bool> <>f__am$cache1;
+        private static Func<UnityEngine.Object, bool> <>f__am$cache1;
         private static DragType s_DragType;
-        private static List<Object> s_SceneDragObjects;
+        private static List<UnityEngine.Object> s_SceneDragObjects;
 
         public static void AddAnimationToGO(GameObject go, Sprite[] frames)
         {
@@ -43,7 +43,7 @@
             }
         }
 
-        private static void AddSpriteAnimationToClip(AnimationClip newClip, Object[] frames)
+        private static void AddSpriteAnimationToClip(AnimationClip newClip, UnityEngine.Object[] frames)
         {
             newClip.frameRate = 12f;
             ObjectReferenceKeyframe[] keyframes = new ObjectReferenceKeyframe[frames.Length];
@@ -65,7 +65,7 @@
                 {
                     foreach (GameObject obj2 in s_SceneDragObjects)
                     {
-                        Object.DestroyImmediate(obj2, false);
+                        UnityEngine.Object.DestroyImmediate(obj2, false);
                     }
                 }
                 s_SceneDragObjects.Clear();
@@ -75,13 +75,13 @@
             s_DragType = DragType.NotInitialized;
         }
 
-        private static bool CreateAnimation(GameObject gameObject, Object[] frames)
+        private static bool CreateAnimation(GameObject gameObject, UnityEngine.Object[] frames)
         {
             if (<>f__am$cache0 == null)
             {
                 <>f__am$cache0 = (a, b) => EditorUtility.NaturalCompare(a.name, b.name);
             }
-            Array.Sort<Object>(frames, <>f__am$cache0);
+            Array.Sort<UnityEngine.Object>(frames, <>f__am$cache0);
             if (AnimationWindowUtility.EnsureActiveAnimationPlayer(gameObject) == null)
             {
                 return false;
@@ -149,14 +149,14 @@
                 AssetDatabase.WriteImportSettingsIfDirty(assetPath);
                 ForcedImportFor(assetPath);
             }
-            Object obj2 = null;
+            UnityEngine.Object obj2 = null;
             try
             {
                 if (<>f__am$cache1 == null)
                 {
                     <>f__am$cache1 = t => t is Sprite;
                 }
-                obj2 = Enumerable.First<Object>(AssetDatabase.LoadAllAssetsAtPath(assetPath), <>f__am$cache1);
+                obj2 = Enumerable.First<UnityEngine.Object>(AssetDatabase.LoadAllAssetsAtPath(assetPath), <>f__am$cache1);
             }
             catch (Exception)
             {
@@ -165,11 +165,11 @@
             return (obj2 as Sprite);
         }
 
-        public static Sprite[] GetSpriteFromPathsOrObjects(Object[] objects, string[] paths, EventType currentEventType)
+        public static Sprite[] GetSpriteFromPathsOrObjects(UnityEngine.Object[] objects, string[] paths, EventType currentEventType)
         {
             List<Sprite> list = new List<Sprite>();
             bool flag = false;
-            foreach (Object obj2 in objects)
+            foreach (UnityEngine.Object obj2 in objects)
             {
                 if (AssetDatabase.Contains(obj2))
                 {
@@ -202,7 +202,7 @@
         public static Sprite[] GetSpritesFromDraggedObjects()
         {
             List<Sprite> list = new List<Sprite>();
-            foreach (Object obj2 in DragAndDrop.objectReferences)
+            foreach (UnityEngine.Object obj2 in DragAndDrop.objectReferences)
             {
                 if (obj2.GetType() == typeof(Sprite))
                 {
@@ -277,7 +277,7 @@
                             CleanUp(true);
                         }
                         s_DragType = type2;
-                        s_SceneDragObjects = new List<Object>();
+                        s_SceneDragObjects = new List<UnityEngine.Object>();
                         if (s_DragType == DragType.CreateMultiple)
                         {
                             foreach (Sprite sprite2 in spriteArray)
@@ -347,7 +347,7 @@
             }
         }
 
-        public static Sprite RemapObjectToSprite(Object obj)
+        public static Sprite RemapObjectToSprite(UnityEngine.Object obj)
         {
             if (obj is Sprite)
             {
@@ -355,7 +355,7 @@
             }
             if (obj is Texture2D)
             {
-                Object[] objArray = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(obj));
+                UnityEngine.Object[] objArray = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(obj));
                 for (int i = 0; i < objArray.Length; i++)
                 {
                     if (objArray[i].GetType() == typeof(Sprite))
@@ -379,7 +379,7 @@
 
         public static Sprite[] TextureToSprites(Texture2D tex)
         {
-            Object[] objArray = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(tex));
+            UnityEngine.Object[] objArray = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(tex));
             List<Sprite> list = new List<Sprite>();
             for (int i = 0; i < objArray.Length; i++)
             {

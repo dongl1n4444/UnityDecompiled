@@ -493,7 +493,7 @@
         public float angularDrag { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
         /// <summary>
-        /// <para>The angular velocity vector of the rigidbody.</para>
+        /// <para>The angular velocity vector of the rigidbody measured in radians per second.</para>
         /// </summary>
         public Vector3 angularVelocity
         {

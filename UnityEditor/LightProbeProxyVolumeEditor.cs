@@ -68,14 +68,14 @@
             {
                 GUILayout.BeginHorizontal(new GUILayoutOption[0]);
                 GUILayout.FlexibleSpace();
-                EditMode.SceneViewEditMode editMode = EditMode.editMode;
+                UnityEditorInternal.EditMode.SceneViewEditMode editMode = UnityEditorInternal.EditMode.editMode;
                 EditorGUI.BeginChangeCheck();
-                EditMode.DoInspectorToolbar(Styles.sceneViewEditModes, Styles.toolContents, this.GetGlobalBounds(), this);
+                UnityEditorInternal.EditMode.DoInspectorToolbar(Styles.sceneViewEditModes, Styles.toolContents, this.GetGlobalBounds(), this);
                 if (EditorGUI.EndChangeCheck())
                 {
                     s_LastInteractedEditor = this;
                 }
-                if ((editMode != EditMode.editMode) && (Toolbar.get != null))
+                if ((editMode != UnityEditorInternal.EditMode.editMode) && (Toolbar.get != null))
                 {
                     Toolbar.get.Repaint();
                 }
@@ -85,7 +85,7 @@
                 string baseSceneEditingToolText = Styles.baseSceneEditingToolText;
                 if (this.sceneViewEditing)
                 {
-                    int index = ArrayUtility.IndexOf<EditMode.SceneViewEditMode>(Styles.sceneViewEditModes, EditMode.editMode);
+                    int index = ArrayUtility.IndexOf<UnityEditorInternal.EditMode.SceneViewEditMode>(Styles.sceneViewEditModes, UnityEditorInternal.EditMode.editMode);
                     if (index >= 0)
                     {
                         baseSceneEditingToolText = Styles.toolNames[index].text;
@@ -107,8 +107,8 @@
             return new Bounds();
         }
 
-        private bool IsLightProbeVolumeProxyEditMode(EditMode.SceneViewEditMode editMode) => 
-            ((editMode == EditMode.SceneViewEditMode.LightProbeProxyVolumeBox) || (editMode == EditMode.SceneViewEditMode.LightProbeProxyVolumeOrigin));
+        private bool IsLightProbeVolumeProxyEditMode(UnityEditorInternal.EditMode.SceneViewEditMode editMode) => 
+            ((editMode == UnityEditorInternal.EditMode.SceneViewEditMode.LightProbeProxyVolumeBox) || (editMode == UnityEditorInternal.EditMode.SceneViewEditMode.LightProbeProxyVolumeOrigin));
 
         public void OnDisable()
         {
@@ -209,15 +209,15 @@
             {
                 if (this.m_BoundingBoxMode.intValue != 2)
                 {
-                    EditMode.QuitEditMode();
+                    UnityEditorInternal.EditMode.QuitEditMode();
                 }
-                switch (EditMode.editMode)
+                switch (UnityEditorInternal.EditMode.editMode)
                 {
-                    case EditMode.SceneViewEditMode.LightProbeProxyVolumeBox:
+                    case UnityEditorInternal.EditMode.SceneViewEditMode.LightProbeProxyVolumeBox:
                         this.DoBoxEditing();
                         break;
 
-                    case EditMode.SceneViewEditMode.LightProbeProxyVolumeOrigin:
+                    case UnityEditorInternal.EditMode.SceneViewEditMode.LightProbeProxyVolumeOrigin:
                         this.DoOriginEditing();
                         break;
                 }
@@ -227,7 +227,7 @@
         [DrawGizmo(GizmoType.Active)]
         private static void RenderBoxGizmo(LightProbeProxyVolume probeProxyVolume, GizmoType gizmoType)
         {
-            if ((s_LastInteractedEditor != null) && (s_LastInteractedEditor.sceneViewEditing && (EditMode.editMode == EditMode.SceneViewEditMode.LightProbeProxyVolumeBox)))
+            if ((s_LastInteractedEditor != null) && (s_LastInteractedEditor.sceneViewEditing && (UnityEditorInternal.EditMode.editMode == UnityEditorInternal.EditMode.SceneViewEditMode.LightProbeProxyVolumeBox)))
             {
                 Color color = Gizmos.color;
                 Gizmos.color = kGizmoLightProbeProxyVolumeColor;
@@ -295,7 +295,7 @@
             (!this.m_ResolutionMode.hasMultipleDifferentValues && (this.m_ResolutionMode.intValue == 1));
 
         private bool sceneViewEditing =>
-            (this.IsLightProbeVolumeProxyEditMode(EditMode.editMode) && EditMode.IsOwner(this));
+            (this.IsLightProbeVolumeProxyEditMode(UnityEditorInternal.EditMode.editMode) && UnityEditorInternal.EditMode.IsOwner(this));
 
         private static class Styles
         {
@@ -319,7 +319,7 @@
             public static GUIContent resolutionZText = new GUIContent("Z");
             public static GUIContent resProbesPerUnit = EditorGUIUtility.TextContent("Density|Density in probes per world unit.");
             public static GUIStyle richTextMiniLabel = new GUIStyle(EditorStyles.miniLabel);
-            public static EditMode.SceneViewEditMode[] sceneViewEditModes = new EditMode.SceneViewEditMode[] { EditMode.SceneViewEditMode.LightProbeProxyVolumeBox, EditMode.SceneViewEditMode.LightProbeProxyVolumeOrigin };
+            public static UnityEditorInternal.EditMode.SceneViewEditMode[] sceneViewEditModes = new UnityEditorInternal.EditMode.SceneViewEditMode[] { UnityEditorInternal.EditMode.SceneViewEditMode.LightProbeProxyVolumeBox, UnityEditorInternal.EditMode.SceneViewEditMode.LightProbeProxyVolumeOrigin };
             public static GUIContent sizeText = EditorGUIUtility.TextContent("Size");
             public static GUIContent[] toolContents = new GUIContent[] { EditorGUIUtility.IconContent("EditCollider"), EditorGUIUtility.IconContent("MoveTool", "|Move the selected objects.") };
             public static GUIContent[] toolNames = new GUIContent[] { new GUIContent(baseSceneEditingToolText + "Box Bounds", ""), new GUIContent(baseSceneEditingToolText + "Box Origin", "") };

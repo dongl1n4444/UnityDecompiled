@@ -724,7 +724,7 @@
             {
                 SpriteRect rect = this.m_RectsCache.RectAt(i);
                 List<Vector2> item = new List<Vector2>();
-                item.AddRange(SpriteUtility.GeneratePolygonOutlineVerticesOfSize(sides, (int) rect.m_Rect.width, (int) rect.m_Rect.height));
+                item.AddRange(UnityEditor.Sprites.SpriteUtility.GeneratePolygonOutlineVerticesOfSize(sides, (int) rect.m_Rect.width, (int) rect.m_Rect.height));
                 rect.m_Outline.Clear();
                 rect.m_Outline.Add(item);
                 this.m_TextureIsDirty = true;
@@ -754,11 +754,11 @@
             }
             else if (Selection.activeObject is Sprite)
             {
-                assetObject = SpriteUtility.GetSpriteTexture(Selection.activeObject as Sprite, false);
+                assetObject = UnityEditor.Sprites.SpriteUtility.GetSpriteTexture(Selection.activeObject as Sprite, false);
             }
             else if (((Selection.activeGameObject != null) && (Selection.activeGameObject.GetComponent<SpriteRenderer>() != null)) && (Selection.activeGameObject.GetComponent<SpriteRenderer>().sprite != null))
             {
-                assetObject = SpriteUtility.GetSpriteTexture(Selection.activeGameObject.GetComponent<SpriteRenderer>().sprite, false);
+                assetObject = UnityEditor.Sprites.SpriteUtility.GetSpriteTexture(Selection.activeGameObject.GetComponent<SpriteRenderer>().sprite, false);
             }
             if (assetObject != null)
             {
@@ -1192,11 +1192,11 @@
             if (this.m_RectsCache != null)
             {
                 this.m_RectsCache.ClearAll();
-                Object.DestroyImmediate(this.m_RectsCache);
+                UnityEngine.Object.DestroyImmediate(this.m_RectsCache);
             }
             if (base.m_Texture != null)
             {
-                Object.DestroyImmediate(base.m_Texture);
+                UnityEngine.Object.DestroyImmediate(base.m_Texture);
             }
             this.m_OriginalTexture = null;
             this.m_TextureImporter = null;
@@ -1373,7 +1373,7 @@
                     base.m_Texture = this.CreateTemporaryDuplicate(AssetDatabase.LoadMainAssetAtPath(this.m_TextureImporter.assetPath) as Texture2D, width, height);
                     if (base.m_Texture != null)
                     {
-                        base.m_Texture.filterMode = FilterMode.Point;
+                        base.m_Texture.filterMode = UnityEngine.FilterMode.Point;
                     }
                 }
             }
@@ -1387,7 +1387,7 @@
                 {
                     this.m_RectsCache.ClearAll();
                     Undo.ClearUndo(this.m_RectsCache);
-                    Object.DestroyImmediate(this.m_RectsCache);
+                    UnityEngine.Object.DestroyImmediate(this.m_RectsCache);
                 }
                 this.m_RectsCache = ScriptableObject.CreateInstance<SpriteRectCache>();
                 if (this.multipleSprites)

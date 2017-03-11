@@ -18,18 +18,18 @@
         private readonly HashSet<string> _referencedMethods = new HashSet<string>();
         private HashSet<string> _referencedTypes = new HashSet<string>();
         private DateTime _startTime = DateTime.MinValue;
-        private Action _updateProgressAction;
+        private System.Action _updateProgressAction;
         private readonly HashSet<string> _userReferencedMethods = new HashSet<string>();
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <HasMouseEvent>k__BackingField;
 
         public AssemblyReferenceChecker()
         {
             this.HasMouseEvent = false;
-            this._updateProgressAction = new Action(this.DisplayProgress);
+            this._updateProgressAction = new System.Action(this.DisplayProgress);
         }
 
-        public static AssemblyReferenceChecker AssemblyReferenceCheckerWithUpdateProgressAction(Action action) => 
+        public static AssemblyReferenceChecker AssemblyReferenceCheckerWithUpdateProgressAction(System.Action action) => 
             new AssemblyReferenceChecker { _updateProgressAction = action };
 
         private static DefaultAssemblyResolver AssemblyResolverFor(string path)
@@ -37,7 +37,7 @@
             DefaultAssemblyResolver resolver = new DefaultAssemblyResolver();
             if (File.Exists(path) || Directory.Exists(path))
             {
-                if ((File.GetAttributes(path) & FileAttributes.Directory) != FileAttributes.Directory)
+                if ((File.GetAttributes(path) & System.IO.FileAttributes.Directory) != System.IO.FileAttributes.Directory)
                 {
                     path = Path.GetDirectoryName(path);
                 }
@@ -55,9 +55,10 @@
         {
             foreach (AssemblyDefinition definition in assemblyDefinitions)
             {
+                bool isSystem = IsIgnoredSystemDll(definition.Name.Name);
                 foreach (TypeDefinition definition2 in definition.MainModule.Types)
                 {
-                    this.CollectReferencedAndDefinedMethods(definition2);
+                    this.CollectReferencedAndDefinedMethods(definition2, isSystem);
                 }
             }
         }
@@ -70,7 +71,7 @@
             }
             foreach (TypeDefinition definition in type.NestedTypes)
             {
-                this.CollectReferencedAndDefinedMethods(definition);
+                this.CollectReferencedAndDefinedMethods(definition, isSystem);
             }
             foreach (MethodDefinition definition2 in type.Methods)
             {

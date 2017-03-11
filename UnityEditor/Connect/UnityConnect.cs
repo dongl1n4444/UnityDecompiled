@@ -149,19 +149,19 @@
         public extern bool SetCOPPACompliance(COPPACompliance compliance);
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void ShowLogin();
-        [MenuItem("Window/Unity Connect/Reset AccessToken", false, 0x3e8, true)]
+        [UnityEditor.MenuItem("Window/Unity Connect/Reset AccessToken", false, 0x3e8, true)]
         public static void TestClearAccessToken()
         {
             instance.ClearAccessToken();
         }
 
-        [MenuItem("Window/Unity Connect/Computer DidWakeUp", false, 0x3e8, true)]
+        [UnityEditor.MenuItem("Window/Unity Connect/Computer DidWakeUp", false, 0x3e8, true)]
         public static void TestComputerDidWakeUp()
         {
             instance.ComputerDidWakeUp();
         }
 
-        [MenuItem("Window/Unity Connect/Computer GoesToSleep", false, 0x3e8, true)]
+        [UnityEditor.MenuItem("Window/Unity Connect/Computer GoesToSleep", false, 0x3e8, true)]
         public static void TestComputerGoesToSleep()
         {
             instance.ComputerGoesToSleep();

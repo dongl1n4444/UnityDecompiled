@@ -5,11 +5,11 @@
     using System.Runtime.CompilerServices;
     using UnityEngine;
 
-    [CustomEditor(typeof(MeshRenderer)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(MeshRenderer))]
     internal class MeshRendererEditor : RendererEditorBase
     {
         [CompilerGenerated]
-        private static Func<Object, GameObject> <>f__am$cache0;
+        private static Func<UnityEngine.Object, GameObject> <>f__am$cache0;
         private SerializedProperty m_CastShadows;
         private SerializedObject m_GameObjectsSerializedObject;
         private SerializedProperty m_GameObjectStaticFlags;
@@ -28,7 +28,7 @@
             {
                 <>f__am$cache0 = t => ((MeshRenderer) t).gameObject;
             }
-            this.m_GameObjectsSerializedObject = new SerializedObject(Enumerable.Select<Object, GameObject>(base.targets, <>f__am$cache0).ToArray<GameObject>());
+            this.m_GameObjectsSerializedObject = new SerializedObject(Enumerable.Select<UnityEngine.Object, GameObject>(base.targets, <>f__am$cache0).ToArray<GameObject>());
             this.m_GameObjectStaticFlags = this.m_GameObjectsSerializedObject.FindProperty("m_StaticEditorFlags");
             base.InitializeProbeFields();
         }

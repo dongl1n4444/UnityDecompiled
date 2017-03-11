@@ -623,7 +623,7 @@ internal class MetroCSharpVisualStudioSolutionCreator
                 break;
 
             case WSASDK.UWP:
-                vSProjTemplate = UAPCSharpTemplates.GetVSProjTemplate(MetroVisualStudioSolutionHelper.GetUWPSDKVersion(), this.EnableDotNetNative);
+                vSProjTemplate = UAPCSharpTemplates.GetVSProjTemplate(Utility.GetDesiredUWPSDKString(), this.EnableDotNetNative);
                 break;
 
             default:

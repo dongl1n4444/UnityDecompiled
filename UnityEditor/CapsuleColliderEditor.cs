@@ -4,7 +4,7 @@
     using System.Runtime.CompilerServices;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(CapsuleCollider))]
+    [CustomEditor(typeof(CapsuleCollider)), CanEditMultipleObjects]
     internal class CapsuleColliderEditor : Collider3DEditorBase
     {
         [CompilerGenerated]

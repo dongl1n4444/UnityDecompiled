@@ -715,7 +715,7 @@
             GUILayout.Space(10f);
             GUILayout.BeginVertical(new GUILayoutOption[0]);
             string message = "";
-            bool disabled = !AssetDatabase.IsOpenForEdit("ProjectSettings/EditorBuildSettings.asset", out message);
+            bool disabled = !AssetDatabase.IsOpenForEdit("ProjectSettings/EditorBuildSettings.asset", out message, StatusQueryOptions.UseCachedIfPossible);
             using (new EditorGUI.DisabledScope(disabled))
             {
                 this.ActiveScenesGUI();
@@ -1029,7 +1029,7 @@
             if (GUI.Toggle(position, on, title.text, styles.platformSelector) && (EditorUserBuildSettings.selectedBuildTargetGroup != bp.targetGroup))
             {
                 EditorUserBuildSettings.selectedBuildTargetGroup = bp.targetGroup;
-                Object[] objArray = Resources.FindObjectsOfTypeAll(typeof(InspectorWindow));
+                UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(InspectorWindow));
                 for (int i = 0; i < objArray.Length; i++)
                 {
                     InspectorWindow window = objArray[i] as InspectorWindow;

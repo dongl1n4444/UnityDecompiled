@@ -153,7 +153,7 @@
             using (SourceCodeWriter writer = new SourceCodeWriter(this._outputDir.Combine(append)))
             {
                 writer.WriteLine("#pragma once");
-                string[] strArray = new string[] { "System.Object", "System.Array", "System.String", "System.Type", "System.IntPtr", "System.Exception", "System.RuntimeTypeHandle", "System.RuntimeFieldHandle", "System.RuntimeArgumentHandle", "System.RuntimeMethodHandle", "System.Text.StringBuilder", "System.MulticastDelegate", "System.Reflection.MethodBase" };
+                string[] strArray = new string[] { "System.Object", "System.Array", "System.String", "System.Type", "System.IntPtr", "System.Exception", "System.RuntimeTypeHandle", "System.RuntimeFieldHandle", "System.RuntimeArgumentHandle", "System.RuntimeMethodHandle", "System.Text.StringBuilder", "System.MulticastDelegate", "System.Reflection.MethodBase", "System.Reflection.Assembly" };
                 foreach (string str in strArray)
                 {
                     TypeDefinition type = TypeProvider.Corlib.MainModule.GetType(str);

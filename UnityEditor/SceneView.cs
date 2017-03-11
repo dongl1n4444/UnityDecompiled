@@ -63,7 +63,7 @@
         [SerializeField]
         private bool m_isRotationLocked = false;
         [SerializeField]
-        private Object m_LastLockedObject;
+        private UnityEngine.Object m_LastLockedObject;
         private double m_lastRenderedTime;
         [SerializeField]
         private bool m_LastSceneViewOrtho;
@@ -73,7 +73,7 @@
         private Light[] m_Light = new Light[3];
         private GUIContent m_Lighting;
         private int m_MainViewControlID;
-        internal Object m_OneClickDragObject;
+        internal UnityEngine.Object m_OneClickDragObject;
         [SerializeField]
         internal AnimBool m_Ortho = new AnimBool();
         [SerializeField]
@@ -108,7 +108,7 @@
         private static SceneView s_AudioSceneView;
         private static Shader s_AuraShader;
         private static SceneView s_CurrentDrawingSceneView;
-        private static Tool s_CurrentTool;
+        private static UnityEditor.Tool s_CurrentTool;
         private static Material s_DeferredOverlayMaterial;
         private bool s_DraggingCursorIsCached;
         private static GUIStyle s_DropDownStyle;
@@ -130,7 +130,7 @@
             base.m_HierarchyType = HierarchyType.GameObjects;
         }
 
-        [MenuItem("GameObject/Toggle Active State &#a")]
+        [UnityEditor.MenuItem("GameObject/Toggle Active State &#a")]
         internal static void ActivateSelection()
         {
             if (Selection.activeTransform != null)
@@ -198,9 +198,9 @@
                 this.m_Rotation.value = Quaternion.identity;
                 this.m_Ortho.value = true;
                 this.m_2DMode = true;
-                if (Tools.current == Tool.Move)
+                if (Tools.current == UnityEditor.Tool.Move)
                 {
-                    Tools.current = Tool.Rect;
+                    Tools.current = UnityEditor.Tool.Rect;
                 }
             }
         }
@@ -226,7 +226,7 @@
                 {
                     this.m_DragEditorCache = new EditorCache(EditorFeatures.OnSceneDrag);
                 }
-                foreach (Object obj2 in DragAndDrop.objectReferences)
+                foreach (UnityEngine.Object obj2 in DragAndDrop.objectReferences)
                 {
                     if (obj2 != null)
                     {
@@ -448,7 +448,7 @@
                         case 7:
                             if (flag)
                             {
-                                Selection.objects = Object.FindObjectsOfType(typeof(GameObject));
+                                Selection.objects = UnityEngine.Object.FindObjectsOfType(typeof(GameObject));
                             }
                             Event.current.Use();
                             break;
@@ -480,7 +480,7 @@
                 bool flag2 = (this.m_SceneTargetTexture != null) && (flag == this.m_SceneTargetTexture.sRGB);
                 if (((this.m_SceneTargetTexture.format != format) || (this.m_SceneTargetTexture.antiAliasing != num)) || !flag2)
                 {
-                    Object.DestroyImmediate(this.m_SceneTargetTexture);
+                    UnityEngine.Object.DestroyImmediate(this.m_SceneTargetTexture);
                     this.m_SceneTargetTexture = null;
                 }
             }
@@ -522,7 +522,7 @@
                     }
                     s_MipColorsTexture.SetPixels(colors, i);
                 }
-                s_MipColorsTexture.filterMode = FilterMode.Trilinear;
+                s_MipColorsTexture.filterMode = UnityEngine.FilterMode.Trilinear;
                 s_MipColorsTexture.Apply(false);
                 Shader.SetGlobalTexture("_SceneViewMipcolorsTexture", s_MipColorsTexture);
             }
@@ -530,7 +530,7 @@
 
         private void CreateSceneCameraAndLights()
         {
-            Type[] components = new Type[] { typeof(Camera) };
+            System.Type[] components = new System.Type[] { typeof(Camera) };
             GameObject obj2 = EditorUtility.CreateGameObjectWithHideFlags("SceneCamera", HideFlags.HideAndDontSave, components);
             obj2.AddComponentInternal("FlareLayer");
             obj2.AddComponentInternal("HaloLayer");
@@ -539,7 +539,7 @@
             this.m_Camera.cameraType = CameraType.SceneView;
             for (int i = 0; i < 3; i++)
             {
-                Type[] typeArray2 = new Type[] { typeof(Light) };
+                System.Type[] typeArray2 = new System.Type[] { typeof(Light) };
                 this.m_Light[i] = EditorUtility.CreateGameObjectWithHideFlags("SceneLight", HideFlags.HideAndDontSave, typeArray2).GetComponent<Light>();
                 this.m_Light[i].type = LightType.Directional;
                 this.m_Light[i].intensity = 1f;
@@ -564,24 +564,24 @@
             bool flag2 = Event.current.GetTypeForControl(GUIUtility.hotControl) == EventType.MouseUp;
             if (GUIUtility.hotControl == 0)
             {
-                s_CurrentTool = !Tools.viewToolActive ? Tools.current : Tool.View;
+                s_CurrentTool = !Tools.viewToolActive ? Tools.current : UnityEditor.Tool.View;
             }
-            Tool tool = (Event.current.type != EventType.Repaint) ? s_CurrentTool : Tools.current;
+            UnityEditor.Tool tool = (Event.current.type != EventType.Repaint) ? s_CurrentTool : Tools.current;
             switch ((tool + 1))
             {
-                case Tool.Rotate:
+                case UnityEditor.Tool.Rotate:
                     MoveTool.OnGUI(this);
                     break;
 
-                case Tool.Scale:
+                case UnityEditor.Tool.Scale:
                     RotateTool.OnGUI(this);
                     break;
 
-                case Tool.Rect:
+                case UnityEditor.Tool.Rect:
                     ScaleTool.OnGUI(this);
                     break;
 
-                case (Tool.Rect | Tool.Move):
+                case (UnityEditor.Tool.Rect | UnityEditor.Tool.Move):
                     RectTool.OnGUI(this);
                     break;
             }
@@ -1035,19 +1035,19 @@
                 MouseCursor arrow = MouseCursor.Arrow;
                 switch (Tools.viewTool)
                 {
-                    case ViewTool.Orbit:
+                    case UnityEditor.ViewTool.Orbit:
                         arrow = MouseCursor.Orbit;
                         break;
 
-                    case ViewTool.Pan:
+                    case UnityEditor.ViewTool.Pan:
                         arrow = MouseCursor.Pan;
                         break;
 
-                    case ViewTool.Zoom:
+                    case UnityEditor.ViewTool.Zoom:
                         arrow = MouseCursor.Zoom;
                         break;
 
-                    case ViewTool.FPS:
+                    case UnityEditor.ViewTool.FPS:
                         arrow = MouseCursor.FPS;
                         break;
                 }
@@ -1149,7 +1149,7 @@
             this.svRot.UpdateGizmoLabel(this, (Vector3) (rot * Vector3.forward), this.m_Ortho.target);
         }
 
-        [MenuItem("GameObject/Align View to Selected")]
+        [UnityEditor.MenuItem("GameObject/Align View to Selected")]
         internal static void MenuAlignViewToSelected()
         {
             if (ValidateAlignViewToSelected())
@@ -1158,7 +1158,7 @@
             }
         }
 
-        [MenuItem("GameObject/Align With View %#f")]
+        [UnityEditor.MenuItem("GameObject/Align With View %#f")]
         internal static void MenuAlignWithView()
         {
             if (ValidateAlignWithView())
@@ -1167,7 +1167,7 @@
             }
         }
 
-        [MenuItem("GameObject/Set as last sibling %-")]
+        [UnityEditor.MenuItem("GameObject/Set as last sibling %-")]
         internal static void MenuMoveToBack()
         {
             foreach (Transform transform in Selection.transforms)
@@ -1177,7 +1177,7 @@
             }
         }
 
-        [MenuItem("GameObject/Set as first sibling %=")]
+        [UnityEditor.MenuItem("GameObject/Set as first sibling %=")]
         internal static void MenuMoveToFront()
         {
             foreach (Transform transform in Selection.transforms)
@@ -1187,7 +1187,7 @@
             }
         }
 
-        [MenuItem("GameObject/Move To View %&f")]
+        [UnityEditor.MenuItem("GameObject/Move To View %&f")]
         internal static void MenuMoveToView()
         {
             if (ValidateMoveToView())
@@ -1219,17 +1219,17 @@
                 this.lastSceneViewRotation = this.rotation;
                 this.m_LastSceneViewOrtho = this.orthographic;
                 this.LookAt(this.pivot, Quaternion.identity, this.size, true);
-                if (Tools.current == Tool.Move)
+                if (Tools.current == UnityEditor.Tool.Move)
                 {
-                    Tools.current = Tool.Rect;
+                    Tools.current = UnityEditor.Tool.Rect;
                 }
             }
             else
             {
                 this.LookAt(this.pivot, this.lastSceneViewRotation, this.size, this.m_LastSceneViewOrtho);
-                if (Tools.current == Tool.Rect)
+                if (Tools.current == UnityEditor.Tool.Rect)
                 {
-                    Tools.current = Tool.Move;
+                    Tools.current = UnityEditor.Tool.Move;
                 }
             }
             HandleUtility.ignoreRaySnapObjects = null;
@@ -1265,23 +1265,23 @@
             EditorApplication.modifierKeysChanged = (EditorApplication.CallbackFunction) Delegate.Remove(EditorApplication.modifierKeysChanged, <>f__mg$cache1);
             if (this.m_Camera != null)
             {
-                Object.DestroyImmediate(this.m_Camera.gameObject, true);
+                UnityEngine.Object.DestroyImmediate(this.m_Camera.gameObject, true);
             }
             if (this.m_Light[0] != null)
             {
-                Object.DestroyImmediate(this.m_Light[0].gameObject, true);
+                UnityEngine.Object.DestroyImmediate(this.m_Light[0].gameObject, true);
             }
             if (this.m_Light[1] != null)
             {
-                Object.DestroyImmediate(this.m_Light[1].gameObject, true);
+                UnityEngine.Object.DestroyImmediate(this.m_Light[1].gameObject, true);
             }
             if (this.m_Light[2] != null)
             {
-                Object.DestroyImmediate(this.m_Light[2].gameObject, true);
+                UnityEngine.Object.DestroyImmediate(this.m_Light[2].gameObject, true);
             }
             if (s_MipColorsTexture != null)
             {
-                Object.DestroyImmediate(s_MipColorsTexture, true);
+                UnityEngine.Object.DestroyImmediate(s_MipColorsTexture, true);
             }
             s_SceneViews.Remove(this);
             if (s_LastActiveSceneView == this)
@@ -1551,7 +1551,7 @@
                 s_AudioSceneView.m_AudioPlay = false;
                 s_AudioSceneView.Repaint();
             }
-            AudioSource[] sourceArray = (AudioSource[]) Object.FindObjectsOfType(typeof(AudioSource));
+            AudioSource[] sourceArray = (AudioSource[]) UnityEngine.Object.FindObjectsOfType(typeof(AudioSource));
             foreach (AudioSource source in sourceArray)
             {
                 if (source.playOnAwake)
@@ -1600,7 +1600,7 @@
 
         internal static void Report2DAnalytics()
         {
-            Object[] objArray = Resources.FindObjectsOfTypeAll(typeof(SceneView));
+            UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(SceneView));
             if (objArray.Length == 1)
             {
                 SceneView view = objArray[0] as SceneView;
@@ -1844,7 +1844,7 @@
 
         internal static void ShowNotification(string notificationText)
         {
-            Object[] objArray = Resources.FindObjectsOfTypeAll(typeof(SceneView));
+            UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(SceneView));
             List<EditorWindow> list = new List<EditorWindow>();
             foreach (SceneView view in objArray)
             {
@@ -1919,19 +1919,19 @@
         private bool UseSceneFiltering() => 
             (!string.IsNullOrEmpty(base.m_SearchFilter) || this.m_RequestedSceneViewFiltering);
 
-        [MenuItem("GameObject/Toggle Active State &#a", true)]
+        [UnityEditor.MenuItem("GameObject/Toggle Active State &#a", true)]
         internal static bool ValidateActivateSelection() => 
             (Selection.activeTransform != null);
 
-        [MenuItem("GameObject/Align View to Selected", true)]
+        [UnityEditor.MenuItem("GameObject/Align View to Selected", true)]
         internal static bool ValidateAlignViewToSelected() => 
             ((s_LastActiveSceneView != null) && (Selection.activeTransform != null));
 
-        [MenuItem("GameObject/Align With View %#f", true)]
+        [UnityEditor.MenuItem("GameObject/Align With View %#f", true)]
         internal static bool ValidateAlignWithView() => 
             ((s_LastActiveSceneView != null) && (Selection.activeTransform != null));
 
-        [MenuItem("GameObject/Set as last sibling %-", true)]
+        [UnityEditor.MenuItem("GameObject/Set as last sibling %-", true)]
         internal static bool ValidateMenuMoveToBack()
         {
             if (Selection.activeTransform != null)
@@ -1942,7 +1942,7 @@
             return false;
         }
 
-        [MenuItem("GameObject/Set as first sibling %=", true)]
+        [UnityEditor.MenuItem("GameObject/Set as first sibling %=", true)]
         internal static bool ValidateMenuMoveToFront()
         {
             if (Selection.activeTransform != null)
@@ -1953,7 +1953,7 @@
             return false;
         }
 
-        [MenuItem("GameObject/Move To View %&f", true)]
+        [UnityEditor.MenuItem("GameObject/Move To View %&f", true)]
         private static bool ValidateMoveToView() => 
             ((s_LastActiveSceneView != null) && (Selection.transforms.Length != 0));
 
@@ -2010,7 +2010,7 @@
                 this.m_2DMode;
             set
             {
-                if (((this.m_2DMode != value) && (Tools.viewTool != ViewTool.FPS)) && (Tools.viewTool != ViewTool.Orbit))
+                if (((this.m_2DMode != value) && (Tools.viewTool != UnityEditor.ViewTool.FPS)) && (Tools.viewTool != UnityEditor.ViewTool.Orbit))
                 {
                     this.m_2DMode = value;
                     this.On2DModeChange();

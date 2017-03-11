@@ -202,7 +202,7 @@ internal abstract class DesktopStandalonePostProcessor
                 <>f__am$cache0 = delegate (string s) {
                 };
             }
-            IL2CPPUtils.RunIl2Cpp(stagingAreaData, this.GetPlatformProvider(this.m_PostProcessArgs.target), <>f__am$cache0, this.m_PostProcessArgs.usedClassRegistry, this.Development);
+            IL2CPPUtils.RunIl2Cpp(stagingAreaData, this.GetPlatformProvider(this.m_PostProcessArgs.target), <>f__am$cache0, this.m_PostProcessArgs.usedClassRegistry, false);
             FileUtil.CreateOrCleanDirectory(dir);
             IL2CPPUtils.CopyEmbeddedResourceFiles(stagingAreaData, dir);
             FileUtil.CreateOrCleanDirectory(str4);

@@ -61,30 +61,31 @@
                 switch (num)
                 {
                     case 0:
-                        while (true)
-                        {
-                            this.$locvar0 = Palette._staticColors;
-                            this.$locvar1 = 0;
-                            while (this.$locvar1 < this.$locvar0.Length)
-                            {
-                                this.<color>__0 = this.$locvar0[this.$locvar1];
-                                this.$current = this.<color>__0;
-                                if (!this.$disposing)
-                                {
-                                    this.$PC = 1;
-                                }
-                                return true;
-                            Label_006E:
-                                this.$locvar1++;
-                            }
-                        }
-                        this.$PC = -1;
                         break;
 
                     case 1:
                         goto Label_006E;
+
+                    default:
+                        return false;
                 }
-                return false;
+                while (true)
+                {
+                    this.$locvar0 = Palette._staticColors;
+                    this.$locvar1 = 0;
+                    while (this.$locvar1 < this.$locvar0.Length)
+                    {
+                        this.<color>__0 = this.$locvar0[this.$locvar1];
+                        this.$current = this.<color>__0;
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 1;
+                        }
+                        return true;
+                    Label_006E:
+                        this.$locvar1++;
+                    }
+                }
             }
 
             [DebuggerHidden]

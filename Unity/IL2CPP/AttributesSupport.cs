@@ -499,15 +499,18 @@
                         }
                     }
                     List<PropertyDefinition> source = GatherPropertiesFromTypeAndBaseTypes(attribute.AttributeType.Resolve());
-                    using (Collection<CustomAttributeNamedArgument>.Enumerator enumerator4 = attribute.Properties.GetEnumerator())
+                    if (source.Any<PropertyDefinition>())
                     {
-                        while (enumerator4.MoveNext())
+                        using (Collection<CustomAttributeNamedArgument>.Enumerator enumerator4 = attribute.Properties.GetEnumerator())
                         {
-                            <WriteCustomAttributesCacheGeneratorFor>c__AnonStorey1 storey2 = new <WriteCustomAttributesCacheGeneratorFor>c__AnonStorey1 {
-                                property = enumerator4.Current
-                            };
-                            MethodDefinition setMethod = source.First<PropertyDefinition>(new Func<PropertyDefinition, bool>(storey2.<>m__0)).SetMethod;
-                            this._writer.AddIncludeForMethodDeclarations(setMethod.DeclaringType);
+                            while (enumerator4.MoveNext())
+                            {
+                                <WriteCustomAttributesCacheGeneratorFor>c__AnonStorey1 storey2 = new <WriteCustomAttributesCacheGeneratorFor>c__AnonStorey1 {
+                                    property = enumerator4.Current
+                                };
+                                MethodDefinition setMethod = source.First<PropertyDefinition>(new Func<PropertyDefinition, bool>(storey2.<>m__0)).SetMethod;
+                                this._writer.AddIncludeForMethodDeclarations(setMethod.DeclaringType);
+                            }
                         }
                     }
                 }
@@ -598,16 +601,19 @@
                     }
                 }
                 List<PropertyDefinition> list2 = GatherPropertiesFromTypeAndBaseTypes(variableType);
-                using (Collection<CustomAttributeNamedArgument>.Enumerator enumerator3 = attribute.Properties.GetEnumerator())
+                if (list2.Any<PropertyDefinition>())
                 {
-                    while (enumerator3.MoveNext())
+                    using (Collection<CustomAttributeNamedArgument>.Enumerator enumerator3 = attribute.Properties.GetEnumerator())
                     {
-                        <WriteMethodBody>c__AnonStorey4 storey2 = new <WriteMethodBody>c__AnonStorey4 {
-                            propertyArgument = enumerator3.Current
-                        };
-                        MethodDefinition setMethod = list2.First<PropertyDefinition>(new Func<PropertyDefinition, bool>(storey2.<>m__0)).SetMethod;
-                        object[] objArray4 = new object[] { Naming.ForMethodNameOnly(setMethod), FormatAttributeValue(storey2.propertyArgument.Argument, TempName(storey2.propertyArgument), metadataAccess), metadataAccess.HiddenMethodInfo(setMethod) };
-                        writer.WriteLine("{0}(tmp, {1}, {2});", objArray4);
+                        while (enumerator3.MoveNext())
+                        {
+                            <WriteMethodBody>c__AnonStorey4 storey2 = new <WriteMethodBody>c__AnonStorey4 {
+                                propertyArgument = enumerator3.Current
+                            };
+                            MethodDefinition setMethod = list2.First<PropertyDefinition>(new Func<PropertyDefinition, bool>(storey2.<>m__0)).SetMethod;
+                            object[] objArray4 = new object[] { Naming.ForMethodNameOnly(setMethod), FormatAttributeValue(storey2.propertyArgument.Argument, TempName(storey2.propertyArgument), metadataAccess), metadataAccess.HiddenMethodInfo(setMethod) };
+                            writer.WriteLine("{0}(tmp, {1}, {2});", objArray4);
+                        }
                     }
                 }
                 writer.EndBlock(false);

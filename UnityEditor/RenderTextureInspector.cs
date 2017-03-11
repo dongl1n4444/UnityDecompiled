@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CustomEditor(typeof(RenderTexture)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(RenderTexture))]
     internal class RenderTextureInspector : TextureInspector
     {
         private static readonly GUIContent[] kRenderTextureAntiAliasing = new GUIContent[] { new GUIContent("None"), new GUIContent("2 samples"), new GUIContent("4 samples"), new GUIContent("8 samples") };

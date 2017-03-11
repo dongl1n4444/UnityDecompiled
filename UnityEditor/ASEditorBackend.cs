@@ -89,7 +89,7 @@
 
         public static void CommitItemsChanged()
         {
-            if ((asMainWin != null) || ((asMainWin == null) && (Resources.FindObjectsOfTypeAll(typeof(ASMainWindow)).Length != 0)))
+            if ((asMainWin != null) || ((asMainWin == null) && (UnityEngine.Resources.FindObjectsOfTypeAll(typeof(ASMainWindow)).Length != 0)))
             {
                 ASWin.CommitItemsChanged();
             }
@@ -191,7 +191,7 @@
                 {
                     if ((assembly.GetName().Name != "UnityEditor") && (assembly.GetName().Name != "UnityEngine"))
                     {
-                        foreach (Type type in AssemblyHelper.GetTypesFromAssembly(assembly))
+                        foreach (System.Type type in AssemblyHelper.GetTypesFromAssembly(assembly))
                         {
                             if (type.Name == klass)
                             {

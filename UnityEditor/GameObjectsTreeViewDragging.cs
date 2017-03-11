@@ -15,7 +15,7 @@
     {
         [CompilerGenerated]
         private static Func<Scene, int> <>f__am$cache0;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <allowDragBetween>k__BackingField;
         private const string kSceneHeaderDragString = "SceneHeaderList";
 
@@ -76,7 +76,7 @@
             if (!flag && (DragAndDrop.objectReferences.Length > 0))
             {
                 int num = 0;
-                foreach (Object obj2 in DragAndDrop.objectReferences)
+                foreach (UnityEngine.Object obj2 in DragAndDrop.objectReferences)
                 {
                     if (obj2 is SceneAsset)
                     {
@@ -95,7 +95,7 @@
                 if (flag2)
                 {
                     List<Scene> source = new List<Scene>();
-                    foreach (Object obj3 in DragAndDrop.objectReferences)
+                    foreach (UnityEngine.Object obj3 in DragAndDrop.objectReferences)
                     {
                         string assetPath = AssetDatabase.GetAssetPath(obj3);
                         Scene sceneByPath = SceneManager.GetSceneByPath(assetPath);
@@ -210,7 +210,7 @@
                 };
                 draggedItemIDs = list;
             }
-            Object[] dragAndDropObjects = ProjectWindowUtil.GetDragAndDropObjects(draggedItem.id, draggedItemIDs);
+            UnityEngine.Object[] dragAndDropObjects = ProjectWindowUtil.GetDragAndDropObjects(draggedItem.id, draggedItemIDs);
             DragAndDrop.objectReferences = dragAndDropObjects;
             List<Scene> draggedScenes = this.GetDraggedScenes(draggedItemIDs);
             if (draggedScenes != null)
@@ -246,7 +246,7 @@
             else
             {
                 dragAndDropTitle = "Unhandled dragged item";
-                Debug.LogError("Unhandled dragged item");
+                UnityEngine.Debug.LogError("Unhandled dragged item");
             }
             DragAndDrop.StartDrag(dragAndDropTitle);
             if (base.m_TreeView.data is GameObjectTreeViewDataSource)

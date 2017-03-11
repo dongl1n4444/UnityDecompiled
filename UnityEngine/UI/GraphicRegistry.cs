@@ -71,6 +71,10 @@
             if ((c != null) && instance.m_Graphics.TryGetValue(c, out set))
             {
                 set.Remove(graphic);
+                if (set.Count == 0)
+                {
+                    instance.m_Graphics.Remove(c);
+                }
             }
         }
 

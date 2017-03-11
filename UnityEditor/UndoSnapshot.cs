@@ -6,7 +6,7 @@
     [Obsolete("Use Undo.RecordObject before modifying the object instead")]
     public sealed class UndoSnapshot
     {
-        public UndoSnapshot(Object[] objectsToUndo)
+        public UndoSnapshot(UnityEngine.Object[] objectsToUndo)
         {
         }
 

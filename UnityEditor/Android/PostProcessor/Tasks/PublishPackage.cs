@@ -25,7 +25,10 @@
             this._device = context.Get<AndroidDevice>("AndroidDevice");
             this._developmentPlayer = context.Get<bool>("DevelopmentPlayer");
             this.UploadAPK(false);
-            this.UploadOBB(context);
+            if (context.Get<bool>("UseObb"))
+            {
+                this.UploadOBB();
+            }
             this.StartApplication(context);
         }
 
@@ -43,13 +46,24 @@
             string activityWithLaunchIntent = new AndroidManifest(path).GetActivityWithLaunchIntent();
             if (activityWithLaunchIntent.Length == 0)
             {
-                CancelPostProcess.AbortBuild("Unable to start activity!", "No activity in the manifest with action MAIN and category LAUNCHER. Try launching the application manually on the device.");
+                CancelPostProcess.AbortBuild("Unable to start activity!", "No activity in the manifest with action MAIN and category LAUNCHER. Try launching the application manually on the device.", null);
             }
             if (this.OnProgress != null)
             {
                 this.OnProgress(this, "Attempting to start Unity Player on device " + this._device.Describe());
             }
             this._device.Launch(this._packageName, activityWithLaunchIntent, null);
+        }
+
+        private void TryCleanupTemporaryOBB(string path)
+        {
+            try
+            {
+                this._device.Delete(path, null);
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private void UploadAPK(bool retryUpload)
@@ -85,29 +99,28 @@
             }
         }
 
-        private void UploadOBB(PostProcessorContext context)
+        private void UploadOBB()
         {
             string str = $"{Path.GetFileNameWithoutExtension(this._installPath)}.main.obb";
             string path = Path.Combine(Path.GetDirectoryName(this._installPath), str);
-            if (context.Get<bool>("UseObb") && File.Exists(path))
+            if (File.Exists(path))
             {
-                int bundleVersionCode = PlayerSettings.Android.bundleVersionCode;
-                string[] strArray = new string[] { "/mnt/shell/emulated", "/mnt/shell/emulated/0/Android", this._device.ExternalStorageRoot + "/Android" };
-                bool flag2 = false;
-                Exception exception = null;
                 if (this.OnProgress != null)
                 {
                     this.OnProgress(this, "Copying APK Expansion file to device " + this._device.Describe());
                 }
-                foreach (string str3 in strArray)
+                int bundleVersionCode = PlayerSettings.Android.bundleVersionCode;
+                string[] strArray = new string[] { "/mnt/shell/emulated", "/mnt/shell/emulated/0/Android", this._device.ExternalStorageRoot + "/Android" };
+                bool flag = false;
+                Exception exception = null;
+                string str3 = $"main.{bundleVersionCode.ToString()}.{this._packageName}.obb";
+                foreach (string str4 in strArray)
                 {
-                    string str4 = "obb";
-                    string str5 = $"main.{bundleVersionCode.ToString()}.{this._packageName}.obb";
-                    string dst = $"{str3}/{str4}/{this._packageName}/{str5}";
                     try
                     {
-                        this._device.Push(path, dst, null);
-                        flag2 = true;
+                        string str5 = $"{str4}/{"obb"}/{this._packageName}/{str3}";
+                        this._device.Push(path, str5, null);
+                        flag = true;
                         break;
                     }
                     catch (Exception exception2)
@@ -115,8 +128,26 @@
                         exception = exception2;
                     }
                 }
-                if (!flag2)
+                string dst = $"{this._device.ExternalStorageRoot}/{str3}";
+                if (!flag)
                 {
+                    try
+                    {
+                        this._device.Push(path, dst, null);
+                        string str7 = $"{this._device.ExternalStorageRoot}/{"Android"}/{"obb"}/{this._packageName}";
+                        string destination = $"{str7}/{str3}";
+                        this._device.MakePath(str7, null);
+                        this._device.Move(dst, destination, null);
+                        flag = true;
+                    }
+                    catch (Exception exception3)
+                    {
+                        exception = exception3;
+                    }
+                }
+                if (!flag)
+                {
+                    this.TryCleanupTemporaryOBB(dst);
                     Debug.LogException(exception);
                     CancelPostProcess.AbortBuildPointToConsole("Unable to deploy OBB to device", "Failed pushing OBB file to the device.");
                 }

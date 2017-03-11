@@ -48,14 +48,14 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int GetLOD(Shader s);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern MaterialProperty[] GetMaterialProperties(Object[] mats);
-        internal static MaterialProperty GetMaterialProperty(Object[] mats, int propertyIndex) => 
+        internal static extern MaterialProperty[] GetMaterialProperties(UnityEngine.Object[] mats);
+        internal static MaterialProperty GetMaterialProperty(UnityEngine.Object[] mats, int propertyIndex) => 
             GetMaterialProperty_Index(mats, propertyIndex);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern MaterialProperty GetMaterialProperty(Object[] mats, string name);
+        internal static extern MaterialProperty GetMaterialProperty(UnityEngine.Object[] mats, string name);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern MaterialProperty GetMaterialProperty_Index(Object[] mats, int propertyIndex);
+        internal static extern MaterialProperty GetMaterialProperty_Index(UnityEngine.Object[] mats, int propertyIndex);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int GetMaterialRawRenderQueue(Material mat);
         /// <summary>

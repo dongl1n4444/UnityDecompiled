@@ -142,7 +142,7 @@
         {
             if (this.m_CurrentTransformEditor != null)
             {
-                Object.DestroyImmediate(this.m_CurrentTransformEditor);
+                UnityEngine.Object.DestroyImmediate(this.m_CurrentTransformEditor);
             }
             base.Disable();
         }
@@ -385,7 +385,7 @@
                 this.ValidateMapping();
                 if (this.m_CurrentTransformEditor != null)
                 {
-                    Object.DestroyImmediate(this.m_CurrentTransformEditor);
+                    UnityEngine.Object.DestroyImmediate(this.m_CurrentTransformEditor);
                     this.m_CurrentTransformEditor = null;
                 }
                 this.m_CurrentTransformEditorFoldout = true;
@@ -504,7 +504,7 @@
         {
             if (this.m_CurrentTransformEditor != null)
             {
-                Object.DestroyImmediate(this.m_CurrentTransformEditor);
+                UnityEngine.Object.DestroyImmediate(this.m_CurrentTransformEditor);
             }
             base.OnDestroy();
         }
@@ -558,7 +558,7 @@
             {
                 if ((this.m_CurrentTransformEditor != null) && (this.m_CurrentTransformEditor.target != Selection.activeTransform))
                 {
-                    Object.DestroyImmediate(this.m_CurrentTransformEditor);
+                    UnityEngine.Object.DestroyImmediate(this.m_CurrentTransformEditor);
                 }
                 if (this.m_CurrentTransformEditor == null)
                 {
@@ -573,7 +573,7 @@
             }
             else if (this.m_CurrentTransformEditor != null)
             {
-                Object.DestroyImmediate(this.m_CurrentTransformEditor);
+                UnityEngine.Object.DestroyImmediate(this.m_CurrentTransformEditor);
                 this.m_CurrentTransformEditor = null;
             }
         }

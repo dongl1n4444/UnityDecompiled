@@ -4,7 +4,7 @@
     using System.Runtime.CompilerServices;
     using UnityEngine;
 
-    public sealed class EditorUserSettings : Object
+    public sealed class EditorUserSettings : UnityEngine.Object
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern string GetConfigValue(string name);

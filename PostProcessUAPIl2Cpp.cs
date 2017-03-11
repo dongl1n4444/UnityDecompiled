@@ -136,7 +136,7 @@ internal class PostProcessUAPIl2Cpp : PostProcessUAP
             <>f__am$cache0 = delegate (string s) {
             };
         }
-        IL2CPPUtils.RunIl2Cpp(path, base.StagingAreaData, platformProvider, <>f__am$cache0, this.usedClassRegistry, base.Development);
+        IL2CPPUtils.RunIl2Cpp(path, base.StagingAreaData, platformProvider, <>f__am$cache0, this.usedClassRegistry, false);
         if (EditorUtility.DisplayCancelableProgressBar("Building Player", "Copying IL2CPP related files", 0.1f))
         {
             throw new OperationCanceledException();

@@ -16,7 +16,7 @@
     internal class AttributeHelper
     {
         [DebuggerHidden]
-        internal static IEnumerable<T> CallMethodsWithAttribute<T>(Type attributeType, params object[] arguments) => 
+        internal static IEnumerable<T> CallMethodsWithAttribute<T>(System.Type attributeType, params object[] arguments) => 
             new <CallMethodsWithAttribute>c__Iterator0<T> { 
                 attributeType = attributeType,
                 arguments = arguments,
@@ -24,7 +24,7 @@
             };
 
         [RequiredByNativeCode]
-        private static MonoMenuItem[] ExtractContextMenu(Type type)
+        private static MonoMenuItem[] ExtractContextMenu(System.Type type)
         {
             Dictionary<string, MonoMenuItem> dictionary = new Dictionary<string, MonoMenuItem>();
             MethodInfo[] methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
@@ -66,8 +66,8 @@
         private static MonoCreateAssetItem[] ExtractCreateAssetMenuItems(Assembly assembly)
         {
             List<MonoCreateAssetItem> list = new List<MonoCreateAssetItem>();
-            Type[] typesFromAssembly = AssemblyHelper.GetTypesFromAssembly(assembly);
-            foreach (Type type in typesFromAssembly)
+            System.Type[] typesFromAssembly = AssemblyHelper.GetTypesFromAssembly(assembly);
+            foreach (System.Type type in typesFromAssembly)
             {
                 CreateAssetMenuAttribute customAttribute = (CreateAssetMenuAttribute) Attribute.GetCustomAttribute(type, typeof(CreateAssetMenuAttribute));
                 if (customAttribute != null)
@@ -75,7 +75,7 @@
                     if (!type.IsSubclassOf(typeof(ScriptableObject)))
                     {
                         object[] args = new object[] { type.FullName };
-                        Debug.LogWarningFormat("CreateAssetMenu attribute on {0} will be ignored as {0} is not derived from ScriptableObject.", args);
+                        UnityEngine.Debug.LogWarningFormat("CreateAssetMenu attribute on {0} will be ignored as {0} is not derived from ScriptableObject.", args);
                     }
                     else
                     {
@@ -102,8 +102,8 @@
         private static MonoGizmoMethod[] ExtractGizmos(Assembly assembly)
         {
             List<MonoGizmoMethod> list = new List<MonoGizmoMethod>();
-            Type[] typesFromAssembly = AssemblyHelper.GetTypesFromAssembly(assembly);
-            foreach (Type type in typesFromAssembly)
+            System.Type[] typesFromAssembly = AssemblyHelper.GetTypesFromAssembly(assembly);
+            foreach (System.Type type in typesFromAssembly)
             {
                 MethodInfo[] methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
                 for (int i = 0; i < methods.GetLength(0); i++)
@@ -112,10 +112,10 @@
                     object[] customAttributes = info.GetCustomAttributes(typeof(DrawGizmo), false);
                     foreach (DrawGizmo gizmo in customAttributes)
                     {
-                        ParameterInfo[] parameters = info.GetParameters();
+                        System.Reflection.ParameterInfo[] parameters = info.GetParameters();
                         if (parameters.Length != 2)
                         {
-                            Debug.LogWarning($"Method {info.DeclaringType.FullName}.{info.Name} is marked with the DrawGizmo attribute but does not take parameters (ComponentType, GizmoType) so will be ignored.");
+                            UnityEngine.Debug.LogWarning($"Method {info.DeclaringType.FullName}.{info.Name} is marked with the DrawGizmo attribute but does not take parameters (ComponentType, GizmoType) so will be ignored.");
                         }
                         else
                         {
@@ -130,12 +130,12 @@
                             }
                             else
                             {
-                                Debug.LogWarning($"Method {info.DeclaringType.FullName}.{info.Name} is marked with the DrawGizmo attribute but the component type it applies to could not be determined.");
+                                UnityEngine.Debug.LogWarning($"Method {info.DeclaringType.FullName}.{info.Name} is marked with the DrawGizmo attribute but the component type it applies to could not be determined.");
                                 goto Label_0198;
                             }
                             if ((parameters[1].ParameterType != typeof(GizmoType)) && (parameters[1].ParameterType != typeof(int)))
                             {
-                                Debug.LogWarning($"Method {info.DeclaringType.FullName}.{info.Name} is marked with the DrawGizmo attribute but does not take a second parameter of type GizmoType so will be ignored.");
+                                UnityEngine.Debug.LogWarning($"Method {info.DeclaringType.FullName}.{info.Name} is marked with the DrawGizmo attribute but does not take a second parameter of type GizmoType so will be ignored.");
                             }
                             else
                             {
@@ -161,22 +161,22 @@
             }
             bool @bool = EditorPrefs.GetBool("InternalMode", false);
             Dictionary<string, MonoMenuItem> dictionary = new Dictionary<string, MonoMenuItem>();
-            Type[] typesFromAssembly = AssemblyHelper.GetTypesFromAssembly(assembly);
-            foreach (Type type in typesFromAssembly)
+            System.Type[] typesFromAssembly = AssemblyHelper.GetTypesFromAssembly(assembly);
+            foreach (System.Type type in typesFromAssembly)
             {
                 MethodInfo[] methods = type.GetMethods(bindingAttr);
                 for (int i = 0; i < methods.GetLength(0); i++)
                 {
                     MethodInfo mi = methods[i];
-                    object[] customAttributes = mi.GetCustomAttributes(typeof(MenuItem), false);
+                    object[] customAttributes = mi.GetCustomAttributes(typeof(UnityEditor.MenuItem), false);
                     if ((customAttributes.Length > 0) && type.IsGenericTypeDefinition)
                     {
                         object[] args = new object[] { type.Name, mi.Name };
-                        Debug.LogWarningFormat("Method {0}.{1} cannot be used for menu commands because class {0} is an open generic type.", args);
+                        UnityEngine.Debug.LogWarningFormat("Method {0}.{1} cannot be used for menu commands because class {0} is an open generic type.", args);
                     }
                     else
                     {
-                        foreach (MenuItem item in customAttributes)
+                        foreach (UnityEditor.MenuItem item in customAttributes)
                         {
                             MonoMenuItem item2 = !dictionary.ContainsKey(item.menuItem) ? new MonoMenuItem() : dictionary[item.menuItem];
                             if (!ValidateMethodForMenuCommand(mi, false))
@@ -219,7 +219,7 @@
             return array;
         }
 
-        internal static bool GameObjectContainsAttribute(GameObject go, Type attributeType)
+        internal static bool GameObjectContainsAttribute(GameObject go, System.Type attributeType)
         {
             foreach (Component component in go.GetComponents(typeof(Component)))
             {
@@ -232,7 +232,7 @@
         }
 
         [RequiredByNativeCode]
-        private static string GetComponentMenuName(Type type)
+        private static string GetComponentMenuName(System.Type type)
         {
             object[] customAttributes = type.GetCustomAttributes(typeof(AddComponentMenu), false);
             if (customAttributes.Length > 0)
@@ -244,7 +244,7 @@
         }
 
         [RequiredByNativeCode]
-        private static int GetComponentMenuOrdering(Type type)
+        private static int GetComponentMenuOrdering(System.Type type)
         {
             object[] customAttributes = type.GetCustomAttributes(typeof(AddComponentMenu), false);
             if (customAttributes.Length > 0)
@@ -256,7 +256,7 @@
         }
 
         [RequiredByNativeCode]
-        internal static string GetHelpURLFromAttribute(Type objectType)
+        internal static string GetHelpURLFromAttribute(System.Type objectType)
         {
             HelpURLAttribute customAttribute = (HelpURLAttribute) Attribute.GetCustomAttribute(objectType, typeof(HelpURLAttribute));
             return customAttribute?.URL;
@@ -279,26 +279,26 @@
                 if (mi.IsStatic)
                 {
                     object[] args = new object[] { mi.DeclaringType.FullName, mi.Name };
-                    Debug.LogWarningFormat("Method {0}.{1} is static and cannot be used for context menu commands.", args);
+                    UnityEngine.Debug.LogWarningFormat("Method {0}.{1} is static and cannot be used for context menu commands.", args);
                     return false;
                 }
             }
             else if (!mi.IsStatic)
             {
                 object[] objArray2 = new object[] { mi.DeclaringType.FullName, mi.Name };
-                Debug.LogWarningFormat("Method {0}.{1} is not static and cannot be used for menu commands.", objArray2);
+                UnityEngine.Debug.LogWarningFormat("Method {0}.{1} is not static and cannot be used for menu commands.", objArray2);
                 return false;
             }
             if (mi.IsGenericMethod)
             {
                 object[] objArray3 = new object[] { mi.DeclaringType.FullName, mi.Name };
-                Debug.LogWarningFormat("Method {0}.{1} is generic and cannot be used for menu commands.", objArray3);
+                UnityEngine.Debug.LogWarningFormat("Method {0}.{1} is generic and cannot be used for menu commands.", objArray3);
                 return false;
             }
             if ((mi.GetParameters().Length > 1) || ((mi.GetParameters().Length == 1) && (mi.GetParameters()[0].ParameterType != typeof(MenuCommand))))
             {
                 object[] objArray4 = new object[] { mi.DeclaringType.FullName, mi.Name };
-                Debug.LogWarningFormat("Method {0}.{1} has invalid parameters. MenuCommand is the only optional supported parameter.", objArray4);
+                UnityEngine.Debug.LogWarningFormat("Method {0}.{1} has invalid parameters. MenuCommand is the only optional supported parameter.", objArray4);
                 return false;
             }
             return true;
@@ -311,16 +311,16 @@
             internal bool $disposing;
             internal Assembly[] $locvar0;
             internal int $locvar1;
-            internal Type[] $locvar2;
+            internal System.Type[] $locvar2;
             internal int $locvar3;
             internal MethodInfo[] $locvar4;
             internal int $locvar5;
             internal int $PC;
             internal Assembly <assembly>__0;
             internal MethodInfo <method>__2;
-            internal Type <type>__1;
+            internal System.Type <type>__1;
             internal object[] arguments;
-            internal Type attributeType;
+            internal System.Type attributeType;
 
             [DebuggerHidden]
             public void Dispose()
@@ -341,7 +341,7 @@
                         while (this.$locvar1 < this.$locvar0.Length)
                         {
                             this.<assembly>__0 = this.$locvar0[this.$locvar1];
-                            this.$locvar2 = this.<assembly>__0.GetTypes();
+                            this.$locvar2 = AssemblyHelper.GetTypesFromAssembly(this.<assembly>__0);
                             this.$locvar3 = 0;
                             while (this.$locvar3 < this.$locvar2.Length)
                             {
@@ -426,14 +426,14 @@
             public string menuItem;
             public string fileName;
             public int order;
-            public Type type;
+            public System.Type type;
         }
 
         [StructLayout(LayoutKind.Sequential)]
         private struct MonoGizmoMethod
         {
             public MethodInfo drawGizmo;
-            public Type drawnType;
+            public System.Type drawnType;
             public int options;
         }
 
@@ -443,10 +443,10 @@
             public string menuItem;
             public int index;
             public int priority;
-            public Type executeType;
+            public System.Type executeType;
             public MethodInfo executeMethod;
             public string executeName;
-            public Type validateType;
+            public System.Type validateType;
             public MethodInfo validateMethod;
             public string validateName;
         }

@@ -35,8 +35,8 @@
             {
                 try
                 {
-                    Type[] types = assembly.GetTypes();
-                    foreach (Type type in Enumerable.Where<Type>(types, new Func<Type, bool>(storey.<>m__0)))
+                    System.Type[] types = assembly.GetTypes();
+                    foreach (System.Type type in Enumerable.Where<System.Type>(types, new Func<System.Type, bool>(storey.<>m__0)))
                     {
                         this.RegisterCustomGUI(Activator.CreateInstance(type) as IAudioEffectPluginGUI);
                     }
@@ -367,9 +367,9 @@
         [CompilerGenerated]
         private sealed class <AudioMixerEffectView>c__AnonStorey0
         {
-            internal Type pluginType;
+            internal System.Type pluginType;
 
-            internal bool <>m__0(Type t) => 
+            internal bool <>m__0(System.Type t) => 
                 (!t.IsAbstract && this.pluginType.IsAssignableFrom(t));
         }
 

@@ -4,7 +4,7 @@
     using System.Runtime.InteropServices;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(SpriteRenderer))]
+    [CustomEditor(typeof(SpriteRenderer)), CanEditMultipleObjects]
     internal class SpriteRendererEditor : RendererEditorBase
     {
         private SerializedProperty m_Color;
@@ -117,8 +117,8 @@
             }
             Rect position = GUILayoutUtility.GetRect(EditorGUILayout.kLabelFloatMinW, EditorGUILayout.kLabelFloatMaxW, (float) 16f, (float) 16f);
             EditorGUI.showMixedValue = this.m_Material.hasMultipleDifferentValues;
-            Object objectReferenceValue = this.m_Material.GetArrayElementAtIndex(0).objectReferenceValue;
-            Object obj3 = EditorGUI.ObjectField(position, Contents.materialLabel, objectReferenceValue, typeof(Material), false);
+            UnityEngine.Object objectReferenceValue = this.m_Material.GetArrayElementAtIndex(0).objectReferenceValue;
+            UnityEngine.Object obj3 = EditorGUI.ObjectField(position, Contents.materialLabel, objectReferenceValue, typeof(Material), false);
             if (obj3 != objectReferenceValue)
             {
                 this.m_Material.GetArrayElementAtIndex(0).objectReferenceValue = obj3;

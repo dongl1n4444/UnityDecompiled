@@ -363,7 +363,7 @@
             this.InitTreeViewItem(item, property.instanceID, property.GetScene(), this.IsSceneHeader(property), property.colorCode, property.pptrValue, itemHasChildren, itemDepth);
         }
 
-        private void InitTreeViewItem(GameObjectTreeViewItem item, int itemID, Scene scene, bool isSceneHeader, int colorCode, Object pptrObject, bool hasChildren, int depth)
+        private void InitTreeViewItem(GameObjectTreeViewItem item, int itemID, Scene scene, bool isSceneHeader, int colorCode, UnityEngine.Object pptrObject, bool hasChildren, int depth)
         {
             item.children = null;
             item.userData = null;
@@ -415,9 +415,9 @@
         {
             base.OnInitialize();
             GameObjectTreeViewGUI gui = (GameObjectTreeViewGUI) base.m_TreeView.gui;
-            gui.scrollHeightChanged += new Action(this.EnsureFullyInitialized);
-            gui.scrollPositionChanged += new Action(this.EnsureFullyInitialized);
-            gui.mouseAndKeyboardInput += new Action(this.EnsureFullyInitialized);
+            gui.scrollHeightChanged += new System.Action(this.EnsureFullyInitialized);
+            gui.scrollPositionChanged += new System.Action(this.EnsureFullyInitialized);
+            gui.mouseAndKeyboardInput += new System.Action(this.EnsureFullyInitialized);
         }
 
         private static void Resize(List<TreeViewItem> list, int count)

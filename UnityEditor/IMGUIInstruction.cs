@@ -8,7 +8,7 @@
     [StructLayout(LayoutKind.Sequential), RequiredByNativeCode]
     internal struct IMGUIInstruction
     {
-        public InstructionType type;
+        public UnityEditor.InstructionType type;
         public int level;
         public Rect unclippedRect;
         public StackFrame[] stack;

@@ -11,7 +11,7 @@
     /// </summary>
     public class GUIUtility
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static bool <guiIsExiting>k__BackingField;
         internal static Vector2 s_EditorScreenPointOffset = Vector2.zero;
         internal static bool s_HasKeyboardFocus = false;

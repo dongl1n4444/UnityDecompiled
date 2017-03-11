@@ -35,11 +35,11 @@
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern int GetVisible(int index);
-        public static bool HasCustomEditor(Object obj) => 
+        public static bool HasCustomEditor(UnityEngine.Object obj) => 
             (CustomEditorAttributes.FindCustomEditorType(obj, false) != null);
 
         [Obsolete("Use Editor.CreateEditor instead")]
-        public static Editor MakeCustomEditor(Object obj) => 
+        public static Editor MakeCustomEditor(UnityEngine.Object obj) => 
             Editor.CreateEditor(obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]

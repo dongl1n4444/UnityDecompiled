@@ -42,7 +42,7 @@
             {
                 string message = $"No Android devices found.{(Application.platform != RuntimePlatform.WindowsEditor) ? "" : " If you are sure that device is attached then it might be USB driver problem, for details please check Android SDK Setup section in Unity manual."}
 ";
-                CancelPostProcess.AbortBuild("Couldn't find Android device", message);
+                CancelPostProcess.AbortBuild("Couldn't find Android device", message, null);
             }
             AndroidDevice device2 = new AndroidDevice(list[0]);
             int num = Convert.ToInt32(device2.Properties["ro.build.version.sdk"]);
@@ -50,7 +50,7 @@
             {
                 string str2 = (("Device: " + device2.Describe() + "\n") + "The connected device is not running Android OS 2.3 or later.") + " Unity Android does not support earlier versions of the Android OS;" + " please upgrade your device to a later OS version.";
                 Selection.activeObject = Unsupported.GetSerializedAssetInterfaceSingleton("PlayerSettings");
-                CancelPostProcess.AbortBuild("Device software is not supported", str2);
+                CancelPostProcess.AbortBuild("Device software is not supported", str2, null);
             }
             int num2 = 0;
             try
@@ -94,7 +94,7 @@
                 if (str3 != null)
                 {
                     Selection.activeObject = Unsupported.GetSerializedAssetInterfaceSingleton("PlayerSettings");
-                    CancelPostProcess.AbortBuild("Device hardware is not supported", str3);
+                    CancelPostProcess.AbortBuild("Device hardware is not supported", str3, null);
                 }
             }
             if ((targetDevice == AndroidTargetDevice.x86) && device2.Properties["ro.product.cpu.abi"].Equals("armeabi-v7a"))
@@ -102,7 +102,7 @@
                 string str4 = "You are trying to install x86 APK to ARM device. ";
                 str4 = str4 + "Please select FAT or ARM as device filter under Player Settings, or connect a x86 device.";
                 Selection.activeObject = Unsupported.GetSerializedAssetInterfaceSingleton("PlayerSettings");
-                CancelPostProcess.AbortBuild("Device hardware is not supported", str4);
+                CancelPostProcess.AbortBuild("Device hardware is not supported", str4, null);
             }
             string str5 = device2.Properties["ro.product.manufacturer"];
             string str6 = device2.Properties["ro.product.model"];

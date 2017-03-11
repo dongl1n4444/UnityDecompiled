@@ -56,7 +56,7 @@
         {
             if (!folder.isFolder)
             {
-                Debug.LogError("Should be a folder item!");
+                UnityEngine.Debug.LogError("Should be a folder item!");
             }
             if (!folder.hasChildren)
             {

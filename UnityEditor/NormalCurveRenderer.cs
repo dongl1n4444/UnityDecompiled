@@ -413,7 +413,7 @@
 
         public void FlushCache()
         {
-            Object.DestroyImmediate(this.m_CurveMesh);
+            UnityEngine.Object.DestroyImmediate(this.m_CurveMesh);
         }
 
         public Bounds GetBounds()

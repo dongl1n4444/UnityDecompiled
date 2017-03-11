@@ -3,7 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
 
-    public sealed class NScreenBridge : Object
+    public sealed class NScreenBridge : UnityEngine.Object
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern NScreenBridge();

@@ -103,7 +103,7 @@
 
         public string name { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-        public Object pptrValue { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public UnityEngine.Object pptrValue { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
         public int row { [MethodImpl(MethodImplOptions.InternalCall)] get; }
     }

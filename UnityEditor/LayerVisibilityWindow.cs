@@ -252,7 +252,7 @@
 
         private static void RepaintAllSceneViews()
         {
-            foreach (SceneView view in Resources.FindObjectsOfTypeAll(typeof(SceneView)))
+            foreach (SceneView view in UnityEngine.Resources.FindObjectsOfTypeAll(typeof(SceneView)))
             {
                 view.Repaint();
             }

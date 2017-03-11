@@ -91,8 +91,8 @@
             float num2 = Mathf.Min(this.m_MipLevel, (float) (TextureUtil.GetMipmapCount(this.m_Texture) - 1));
             float mipMapBias = this.m_Texture.mipMapBias;
             TextureUtil.SetMipMapBiasNoDirty(this.m_Texture, num2 - this.Log2(((float) num) / this.m_TextureRect.width));
-            FilterMode filterMode = this.m_Texture.filterMode;
-            TextureUtil.SetFilterModeNoDirty(this.m_Texture, FilterMode.Point);
+            UnityEngine.FilterMode filterMode = this.m_Texture.filterMode;
+            TextureUtil.SetFilterModeNoDirty(this.m_Texture, UnityEngine.FilterMode.Point);
             if (this.m_ShowAlpha)
             {
                 if (this.m_TextureAlphaOverride != null)

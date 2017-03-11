@@ -14,12 +14,12 @@
         public override void Run()
         {
             List<ICompilerInput> enumerable = new List<ICompilerInput>();
-            foreach (ICompilerInput input in this.get_Parameters().get_Input())
+            foreach (ICompilerInput input in this.Parameters.Input)
             {
                 enumerable.Add(this.RunPreProcessorOn(input));
             }
-            this.get_Parameters().get_Input().Clear();
-            this.get_Parameters().get_Input().Extend(enumerable);
+            this.Parameters.Input.Clear();
+            this.Parameters.Input.Extend(enumerable);
         }
 
         private StringInput RunPreProcessorOn(ICompilerInput input)
@@ -27,7 +27,7 @@
             PreProcessor processor;
             TextReader reader;
             StringInput input2;
-            PreProcessor processor1 = processor = new PreProcessor(this.get_Parameters().get_Defines().Keys);
+            PreProcessor processor1 = processor = new PreProcessor(this.Parameters.Defines.Keys);
             int num1 = (int) (processor.PreserveLines = true);
             PreProcessor processor2 = processor;
             IDisposable disposable = (reader = input.Open()) as IDisposable;
@@ -35,7 +35,7 @@
             {
                 StringWriter writer = new StringWriter();
                 processor2.Process(reader, writer);
-                input2 = new StringInput(input.get_Name(), writer.ToString());
+                input2 = new StringInput(input.Name, writer.ToString());
             }
             finally
             {

@@ -13,6 +13,7 @@
         SignatureInvalid,
         UserCancelled,
         PaymentDeclined,
+        DuplicateTransaction,
         Unknown
     }
 }

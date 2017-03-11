@@ -91,7 +91,7 @@
             }
         }
 
-        [Conditional("UNITY_ASSERTIONS"), Obsolete("Assert(bool, string, params object[]) is obsolete. Use AssertFormat(bool, string, params object[]) (UnityUpgradable) -> AssertFormat(*)", true)]
+        [Obsolete("Assert(bool, string, params object[]) is obsolete. Use AssertFormat(bool, string, params object[]) (UnityUpgradable) -> AssertFormat(*)", true), Conditional("UNITY_ASSERTIONS")]
         public static void Assert(bool condition, string format, params object[] args)
         {
             if (!condition)

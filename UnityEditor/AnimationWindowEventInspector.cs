@@ -11,7 +11,7 @@
     internal class AnimationWindowEventInspector : Editor
     {
         [CompilerGenerated]
-        private static Func<ParameterInfo, Type> <>f__am$cache0;
+        private static Func<System.Reflection.ParameterInfo, System.Type> <>f__am$cache0;
         private const string kNoneSelected = "(No Function Selected)";
         private const string kNotSupportedPostFix = " (Function Not Supported)";
 
@@ -26,7 +26,7 @@
                 {
                     if (behaviour != null)
                     {
-                        for (Type type = behaviour.GetType(); (type != typeof(MonoBehaviour)) && (type != null); type = type.BaseType)
+                        for (System.Type type = behaviour.GetType(); (type != typeof(MonoBehaviour)) && (type != null); type = type.BaseType)
                         {
                             MethodInfo[] methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
                             for (int i = 0; i < methods.Length; i++)
@@ -36,14 +36,14 @@
                                 storey.name = info.Name;
                                 if (IsSupportedMethodName(storey.name))
                                 {
-                                    ParameterInfo[] parameters = info.GetParameters();
+                                    System.Reflection.ParameterInfo[] parameters = info.GetParameters();
                                     if (parameters.Length <= 1)
                                     {
-                                        Type parameterType = null;
+                                        System.Type parameterType = null;
                                         if (parameters.Length == 1)
                                         {
                                             parameterType = parameters[0].ParameterType;
-                                            if ((((parameterType != typeof(string)) && (parameterType != typeof(float))) && ((parameterType != typeof(int)) && (parameterType != typeof(AnimationEvent)))) && (((parameterType != typeof(Object)) && !parameterType.IsSubclassOf(typeof(Object))) && !parameterType.IsEnum))
+                                            if ((((parameterType != typeof(string)) && (parameterType != typeof(float))) && ((parameterType != typeof(int)) && (parameterType != typeof(AnimationEvent)))) && (((parameterType != typeof(UnityEngine.Object)) && !parameterType.IsSubclassOf(typeof(UnityEngine.Object))) && !parameterType.IsEnum))
                                             {
                                                 continue;
                                             }
@@ -83,7 +83,7 @@
             return list;
         }
 
-        private static void DoEditRegularParameters(AnimationEvent evt, Type selectedParameter)
+        private static void DoEditRegularParameters(AnimationEvent evt, System.Type selectedParameter)
         {
             if ((selectedParameter == typeof(AnimationEvent)) || (selectedParameter == typeof(float)))
             {
@@ -101,9 +101,9 @@
             {
                 evt.stringParameter = EditorGUILayout.TextField("String", evt.stringParameter, new GUILayoutOption[0]);
             }
-            if (((selectedParameter == typeof(AnimationEvent)) || selectedParameter.IsSubclassOf(typeof(Object))) || (selectedParameter == typeof(Object)))
+            if (((selectedParameter == typeof(AnimationEvent)) || selectedParameter.IsSubclassOf(typeof(UnityEngine.Object))) || (selectedParameter == typeof(UnityEngine.Object)))
             {
-                Type objType = typeof(Object);
+                System.Type objType = typeof(UnityEngine.Object);
                 if (selectedParameter != typeof(AnimationEvent))
                 {
                     objType = selectedParameter;
@@ -113,7 +113,7 @@
             }
         }
 
-        private static int EnumPopup(string label, Type enumType, int selected)
+        private static int EnumPopup(string label, System.Type enumType, int selected)
         {
             if (!enumType.IsEnum)
             {
@@ -146,7 +146,7 @@
                 {
                     if (behaviour != null)
                     {
-                        Type type = behaviour.GetType();
+                        System.Type type = behaviour.GetType();
                         if ((type != typeof(MonoBehaviour)) && ((type.BaseType == null) || (type.BaseType.Name != "GraphBehaviour")))
                         {
                             MethodInfo method = null;
@@ -163,7 +163,7 @@
                                 {
                                     <>f__am$cache0 = p => p.ParameterType;
                                 }
-                                IEnumerable<Type> paramTypes = Enumerable.Select<ParameterInfo, Type>(method.GetParameters(), <>f__am$cache0);
+                                IEnumerable<System.Type> paramTypes = Enumerable.Select<System.Reflection.ParameterInfo, System.Type>(method.GetParameters(), <>f__am$cache0);
                                 return (evt.functionName + FormatEventArguments(paramTypes, evt));
                             }
                         }
@@ -173,15 +173,15 @@
             return (evt.functionName + " (Function Not Supported)");
         }
 
-        private static string FormatEventArguments(IEnumerable<Type> paramTypes, AnimationEvent evt)
+        private static string FormatEventArguments(IEnumerable<System.Type> paramTypes, AnimationEvent evt)
         {
-            if (!paramTypes.Any<Type>())
+            if (!paramTypes.Any<System.Type>())
             {
                 return " ( )";
             }
-            if (paramTypes.Count<Type>() <= 1)
+            if (paramTypes.Count<System.Type>() <= 1)
             {
-                Type enumType = paramTypes.First<Type>();
+                System.Type enumType = paramTypes.First<System.Type>();
                 if (enumType == typeof(string))
                 {
                     return (" ( \"" + evt.stringParameter + "\" )");
@@ -204,7 +204,7 @@
                     object[] objArray1 = new object[] { " ( ", evt.floatParameter, " / ", evt.intParameter, " / \"", evt.stringParameter, "\" / ", (evt.objectReferenceParameter != null) ? evt.objectReferenceParameter.name : "null", " )" };
                     return string.Concat(objArray1);
                 }
-                if (enumType.IsSubclassOf(typeof(Object)) || (enumType == typeof(Object)))
+                if (enumType.IsSubclassOf(typeof(UnityEngine.Object)) || (enumType == typeof(UnityEngine.Object)))
                 {
                     return (" ( " + ((evt.objectReferenceParameter != null) ? evt.objectReferenceParameter.name : "null") + " )");
                 }
@@ -301,7 +301,7 @@
                         storey.evt.stringParameter = string.Empty;
                     }
                     AnimationWindowEventMethod method4 = list[selectedIndex];
-                    Type parameterType = method4.parameterType;
+                    System.Type parameterType = method4.parameterType;
                     if (parameterType != null)
                     {
                         EditorGUILayout.Space();

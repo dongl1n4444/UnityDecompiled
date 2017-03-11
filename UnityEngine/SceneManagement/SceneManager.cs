@@ -148,6 +148,10 @@
         private static extern void INTERNAL_CALL_MoveGameObjectToScene(GameObject go, ref Scene scene);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool INTERNAL_CALL_SetActiveScene(ref Scene scene);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern AsyncOperation INTERNAL_CALL_UnloadSceneAsyncInternal(ref Scene scene);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern bool INTERNAL_CALL_UnloadSceneInternal(ref Scene scene);
         [RequiredByNativeCode]
         private static void Internal_SceneLoaded(Scene scene, LoadSceneMode mode)
         {
@@ -321,12 +325,8 @@
         /// <para>Returns true if the scene is unloaded.</para>
         /// </returns>
         [Obsolete("Use SceneManager.UnloadSceneAsync. This function is not safe to use during triggers and under other circumstances. See Scripting reference for more details.")]
-        public static bool UnloadScene(Scene scene)
-        {
-            bool flag;
-            UnloadSceneNameIndexInternal("", scene.buildIndex, true, out flag);
-            return flag;
-        }
+        public static bool UnloadScene(Scene scene) => 
+            UnloadSceneInternal(scene);
 
         /// <summary>
         /// <para>Destroyes all GameObjects associated with the given scene and removes the scene from the SceneManager.</para>
@@ -367,11 +367,14 @@
         /// <returns>
         /// <para>Use the AsyncOperation to determine if the operation has completed.</para>
         /// </returns>
-        public static AsyncOperation UnloadSceneAsync(Scene scene)
-        {
-            bool flag;
-            return UnloadSceneNameIndexInternal("", scene.buildIndex, false, out flag);
-        }
+        public static AsyncOperation UnloadSceneAsync(Scene scene) => 
+            UnloadSceneAsyncInternal(scene);
+
+        private static AsyncOperation UnloadSceneAsyncInternal(Scene scene) => 
+            INTERNAL_CALL_UnloadSceneAsyncInternal(ref scene);
+
+        private static bool UnloadSceneInternal(Scene scene) => 
+            INTERNAL_CALL_UnloadSceneInternal(ref scene);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern AsyncOperation UnloadSceneNameIndexInternal(string sceneName, int sceneBuildIndex, bool immediately, out bool outSuccess);

@@ -106,66 +106,66 @@
                         case 2:
                         {
                             MacroStatement statement7 = this.$$199$327 = new MacroStatement(LexicalInfo.Empty);
-                            this.$$199$327.set_Name("block");
+                            string text5 = this.$$199$327.Name = "block";
                             Block block4 = this.$$198$326 = new Block(LexicalInfo.Empty);
-                            Statement[] statementArray1 = new Statement[5];
-                            BinaryExpression expression39 = this.$$184$312 = new BinaryExpression(LexicalInfo.Empty);
-                            this.$$184$312.set_Operator(15);
-                            ReferenceExpression expression40 = this.$$181$309 = new ReferenceExpression(LexicalInfo.Empty);
-                            this.$$181$309.set_Name("cached");
-                            this.$$184$312.set_Left(this.$$181$309);
-                            SlicingExpression expression41 = this.$$183$311 = new SlicingExpression(LexicalInfo.Empty);
-                            this.$$183$311.set_Target(Expression.Lift(this.$node$299));
+                            Statement[] items = new Statement[5];
+                            BinaryExpression expression41 = this.$$184$312 = new BinaryExpression(LexicalInfo.Empty);
+                            int num3 = (int) (this.$$184$312.Operator = BinaryOperatorType.Assign);
+                            ReferenceExpression expression42 = this.$$181$309 = new ReferenceExpression(LexicalInfo.Empty);
+                            string text6 = this.$$181$309.Name = "cached";
+                            ReferenceExpression expression43 = this.$$184$312.Left = this.$$181$309;
+                            SlicingExpression expression44 = this.$$183$311 = new SlicingExpression(LexicalInfo.Empty);
+                            Expression expression45 = this.$$183$311.Target = Expression.Lift(this.$node$299);
                             Slice[] sliceArray1 = new Slice[1];
                             Slice slice1 = this.$$182$310 = new Slice(LexicalInfo.Empty);
-                            this.$$182$310.set_Begin(Expression.Lift(this.$key$305));
+                            Expression expression46 = this.$$182$310.Begin = Expression.Lift(this.$key$305);
                             sliceArray1[0] = this.$$182$310;
-                            this.$$183$311.set_Indices(SliceCollection.FromArray(sliceArray1));
-                            this.$$184$312.set_Right(this.$$183$311);
-                            statementArray1[0] = Statement.Lift(this.$$184$312);
+                            SliceCollection collection1 = this.$$183$311.Indices = SliceCollection.FromArray(sliceArray1);
+                            SlicingExpression expression47 = this.$$184$312.Right = this.$$183$311;
+                            items[0] = Statement.Lift(this.$$184$312);
                             ReturnStatement statement8 = this.$$189$317 = new ReturnStatement(LexicalInfo.Empty);
                             StatementModifier modifier1 = this.$$187$315 = new StatementModifier(LexicalInfo.Empty);
-                            this.$$187$315.set_Type(1);
-                            BinaryExpression expression42 = this.$$186$314 = new BinaryExpression(LexicalInfo.Empty);
-                            this.$$186$314.set_Operator(0x18);
-                            ReferenceExpression expression43 = this.$$185$313 = new ReferenceExpression(LexicalInfo.Empty);
-                            this.$$185$313.set_Name("cached");
-                            this.$$186$314.set_Left(this.$$185$313);
-                            this.$$186$314.set_Right(new NullLiteralExpression(LexicalInfo.Empty));
-                            this.$$187$315.set_Condition(this.$$186$314);
-                            this.$$189$317.set_Modifier(this.$$187$315);
-                            ReferenceExpression expression44 = this.$$188$316 = new ReferenceExpression(LexicalInfo.Empty);
-                            this.$$188$316.set_Name("cached");
-                            this.$$189$317.set_Expression(this.$$188$316);
-                            statementArray1[1] = Statement.Lift(this.$$189$317);
-                            BinaryExpression expression45 = this.$$191$319 = new BinaryExpression(LexicalInfo.Empty);
-                            this.$$191$319.set_Operator(15);
-                            ReferenceExpression expression46 = this.$$190$318 = new ReferenceExpression(LexicalInfo.Empty);
-                            this.$$190$318.set_Name("value");
-                            this.$$191$319.set_Left(this.$$190$318);
-                            this.$$191$319.set_Right(Expression.Lift(this.$value$303));
-                            statementArray1[2] = Statement.Lift(this.$$191$319);
-                            BinaryExpression expression47 = this.$$195$323 = new BinaryExpression(LexicalInfo.Empty);
-                            this.$$195$323.set_Operator(15);
-                            SlicingExpression expression48 = this.$$193$321 = new SlicingExpression(LexicalInfo.Empty);
-                            this.$$193$321.set_Target(Expression.Lift(this.$node$299));
+                            int num4 = (int) (this.$$187$315.Type = StatementModifierType.If);
+                            BinaryExpression expression48 = this.$$186$314 = new BinaryExpression(LexicalInfo.Empty);
+                            int num5 = (int) (this.$$186$314.Operator = BinaryOperatorType.ReferenceInequality);
+                            ReferenceExpression expression49 = this.$$185$313 = new ReferenceExpression(LexicalInfo.Empty);
+                            string text7 = this.$$185$313.Name = "cached";
+                            ReferenceExpression expression50 = this.$$186$314.Left = this.$$185$313;
+                            NullLiteralExpression expression51 = this.$$186$314.Right = new NullLiteralExpression(LexicalInfo.Empty);
+                            BinaryExpression expression52 = this.$$187$315.Condition = this.$$186$314;
+                            StatementModifier modifier3 = this.$$189$317.Modifier = this.$$187$315;
+                            ReferenceExpression expression53 = this.$$188$316 = new ReferenceExpression(LexicalInfo.Empty);
+                            string text8 = this.$$188$316.Name = "cached";
+                            ReferenceExpression expression54 = this.$$189$317.Expression = this.$$188$316;
+                            items[1] = Statement.Lift(this.$$189$317);
+                            BinaryExpression expression55 = this.$$191$319 = new BinaryExpression(LexicalInfo.Empty);
+                            int num6 = (int) (this.$$191$319.Operator = BinaryOperatorType.Assign);
+                            ReferenceExpression expression56 = this.$$190$318 = new ReferenceExpression(LexicalInfo.Empty);
+                            string text9 = this.$$190$318.Name = "value";
+                            ReferenceExpression expression57 = this.$$191$319.Left = this.$$190$318;
+                            Expression expression58 = this.$$191$319.Right = Expression.Lift(this.$value$303);
+                            items[2] = Statement.Lift(this.$$191$319);
+                            BinaryExpression expression59 = this.$$195$323 = new BinaryExpression(LexicalInfo.Empty);
+                            int num7 = (int) (this.$$195$323.Operator = BinaryOperatorType.Assign);
+                            SlicingExpression expression60 = this.$$193$321 = new SlicingExpression(LexicalInfo.Empty);
+                            Expression expression61 = this.$$193$321.Target = Expression.Lift(this.$node$299);
                             Slice[] sliceArray2 = new Slice[1];
                             Slice slice3 = this.$$192$320 = new Slice(LexicalInfo.Empty);
-                            this.$$192$320.set_Begin(Expression.Lift(this.$key$305));
+                            Expression expression62 = this.$$192$320.Begin = Expression.Lift(this.$key$305);
                             sliceArray2[0] = this.$$192$320;
-                            this.$$193$321.set_Indices(SliceCollection.FromArray(sliceArray2));
-                            this.$$195$323.set_Left(this.$$193$321);
-                            ReferenceExpression expression49 = this.$$194$322 = new ReferenceExpression(LexicalInfo.Empty);
-                            this.$$194$322.set_Name("value");
-                            this.$$195$323.set_Right(this.$$194$322);
-                            statementArray1[3] = Statement.Lift(this.$$195$323);
+                            SliceCollection collection2 = this.$$193$321.Indices = SliceCollection.FromArray(sliceArray2);
+                            SlicingExpression expression63 = this.$$195$323.Left = this.$$193$321;
+                            ReferenceExpression expression64 = this.$$194$322 = new ReferenceExpression(LexicalInfo.Empty);
+                            string text10 = this.$$194$322.Name = "value";
+                            ReferenceExpression expression65 = this.$$195$323.Right = this.$$194$322;
+                            items[3] = Statement.Lift(this.$$195$323);
                             ReturnStatement statement9 = this.$$197$325 = new ReturnStatement(LexicalInfo.Empty);
-                            ReferenceExpression expression50 = this.$$196$324 = new ReferenceExpression(LexicalInfo.Empty);
-                            this.$$196$324.set_Name("value");
-                            this.$$197$325.set_Expression(this.$$196$324);
-                            statementArray1[4] = Statement.Lift(this.$$197$325);
-                            this.$$198$326.set_Statements(StatementCollection.FromArray(statementArray1));
-                            this.$$199$327.set_Body(this.$$198$326);
+                            ReferenceExpression expression66 = this.$$196$324 = new ReferenceExpression(LexicalInfo.Empty);
+                            string text11 = this.$$196$324.Name = "value";
+                            ReferenceExpression expression67 = this.$$197$325.Expression = this.$$196$324;
+                            items[4] = Statement.Lift(this.$$197$325);
+                            StatementCollection collection3 = this.$$198$326.Statements = StatementCollection.FromArray(items);
+                            Block block5 = this.$$199$327.Body = this.$$198$326;
                             break;
                         }
                         case 3:
@@ -182,37 +182,37 @@
                             if (this.$$match$14$297 is MacroStatement)
                             {
                                 MacroStatement statement1 = this.$$match$15$298 = this.$$match$14$297;
-                                if (((1 != 0) && (this.$$match$15$298.get_Name() == "perNode")) && ((1 == this.$$match$15$298.get_Arguments().Count) && (this.$$match$15$298.get_Arguments().get_Item(0) is ReferenceExpression)))
+                                if (((1 != 0) && (this.$$match$15$298.Name == "perNode")) && ((1 == this.$$match$15$298.Arguments.Count) && (this.$$match$15$298.Arguments[0] is ReferenceExpression)))
                                 {
-                                    ReferenceExpression expression1 = this.$node$299 = (ReferenceExpression) this.$$match$15$298.get_Arguments().get_Item(0);
+                                    ReferenceExpression expression1 = this.$node$299 = (ReferenceExpression) this.$$match$15$298.Arguments[0];
                                     if (1 != 0)
                                     {
-                                        this.$$match$11$300 = this.$perNode$328.get_Body();
+                                        this.$$match$11$300 = this.$perNode$328.Body;
                                         if (this.$$match$11$300 is Block)
                                         {
                                             Block block1 = this.$$match$12$301 = this.$$match$11$300;
-                                            if (((1 != 0) && (1 == this.$$match$12$301.get_Statements().Count)) && (this.$$match$12$301.get_Statements().get_Item(0) is ReturnStatement))
+                                            if (((1 != 0) && (1 == this.$$match$12$301.Statements.Count)) && (this.$$match$12$301.Statements[0] is ReturnStatement))
                                             {
-                                                ReturnStatement statement6 = this.$$match$13$302 = (ReturnStatement) this.$$match$12$301.get_Statements().get_Item(0);
+                                                ReturnStatement statement6 = this.$$match$13$302 = (ReturnStatement) this.$$match$12$301.Statements[0];
                                                 if (1 != 0)
                                                 {
-                                                    Expression expression35 = this.$value$303 = this.$$match$13$302.get_Expression();
+                                                    Expression expression35 = this.$value$303 = this.$$match$13$302.Expression;
                                                     if (1 != 0)
                                                     {
                                                         ReferenceExpression expression36 = this.$$177$304 = new ReferenceExpression();
-                                                        string[] textArray1 = new string[] { this.$node$299.get_Name() };
-                                                        this.$$177$304.set_Name(this.$self_$329.get_Context().GetUniqueName(textArray1));
+                                                        string[] components = new string[] { this.$node$299.Name };
+                                                        string text1 = this.$$177$304.Name = this.$self_$329.Context.GetUniqueName(components);
                                                         this.$key$305 = this.$$177$304;
                                                         Field field1 = this.$$180$308 = new Field(LexicalInfo.Empty);
-                                                        this.$$180$308.set_Modifiers(0x61);
-                                                        this.$$180$308.set_Name("$");
+                                                        int num1 = (int) (this.$$180$308.Modifiers = TypeMemberModifiers.Final | TypeMemberModifiers.Static | TypeMemberModifiers.Private);
+                                                        string text2 = this.$$180$308.Name = "$";
                                                         MethodInvocationExpression expression37 = this.$$179$307 = new MethodInvocationExpression(LexicalInfo.Empty);
                                                         ReferenceExpression expression38 = this.$$178$306 = new ReferenceExpression(LexicalInfo.Empty);
-                                                        this.$$178$306.set_Name("object");
-                                                        this.$$179$307.set_Target(this.$$178$306);
-                                                        this.$$180$308.set_Initializer(this.$$179$307);
-                                                        this.$$180$308.set_IsVolatile(false);
-                                                        this.$$180$308.set_Name(CodeSerializer.LiftName(this.$key$305));
+                                                        string text3 = this.$$178$306.Name = "object";
+                                                        ReferenceExpression expression39 = this.$$179$307.Target = this.$$178$306;
+                                                        MethodInvocationExpression expression40 = this.$$180$308.Initializer = this.$$179$307;
+                                                        int num2 = (int) (this.$$180$308.IsVolatile = false);
+                                                        string text4 = this.$$180$308.Name = CodeSerializer.LiftName(this.$key$305);
                                                         break;
                                                     }
                                                 }

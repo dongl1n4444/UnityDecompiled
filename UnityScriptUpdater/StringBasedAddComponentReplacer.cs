@@ -3,7 +3,7 @@
     using BooUpdater;
     using System;
 
-    public class StringBasedAddComponentReplacer : StringBasedAddComponentReplacer
+    public class StringBasedAddComponentReplacer : BooUpdater.StringBasedAddComponentReplacer
     {
         public StringBasedAddComponentReplacer(BooUpdateContext context) : base(context)
         {

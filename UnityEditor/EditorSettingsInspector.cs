@@ -423,7 +423,7 @@
                     }
                     else
                     {
-                        ASMainWindow[] windowArray = Resources.FindObjectsOfTypeAll(typeof(ASMainWindow)) as ASMainWindow[];
+                        ASMainWindow[] windowArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(ASMainWindow)) as ASMainWindow[];
                         ASMainWindow window = (windowArray.Length <= 0) ? null : windowArray[0];
                         if (window != null)
                         {

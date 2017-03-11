@@ -9,11 +9,11 @@
     /// </summary>
     public class Logger : ILogger, ILogHandler
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private LogType <filterLogType>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <logEnabled>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ILogHandler <logHandler>k__BackingField;
         private const string kNoTagFormat = "{0}";
         private const string kTagFormat = "{0}: {1}";

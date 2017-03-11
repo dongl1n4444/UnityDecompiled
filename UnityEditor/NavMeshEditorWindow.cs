@@ -111,7 +111,7 @@
         private int Bit(int a, int b) => 
             ((a & (1 << (b & 0x1f))) >> b);
 
-        private static void DisplayAgentControls(Object target, SceneView sceneView)
+        private static void DisplayAgentControls(UnityEngine.Object target, SceneView sceneView)
         {
             EditorGUIUtility.labelWidth = 150f;
             bool flag = false;
@@ -172,7 +172,7 @@
             }
         }
 
-        private static void DisplayControls(Object target, SceneView sceneView)
+        private static void DisplayControls(UnityEngine.Object target, SceneView sceneView)
         {
             EditorGUIUtility.labelWidth = 150f;
             bool flag = false;
@@ -225,7 +225,7 @@
             }
         }
 
-        private static void DisplayObstacleControls(Object target, SceneView sceneView)
+        private static void DisplayObstacleControls(UnityEngine.Object target, SceneView sceneView)
         {
             EditorGUIUtility.labelWidth = 150f;
             bool flag = false;
@@ -410,7 +410,7 @@
         {
             if (this.m_NavMeshProjectSettingsObject == null)
             {
-                Object serializedAssetInterfaceSingleton = Unsupported.GetSerializedAssetInterfaceSingleton("NavMeshProjectSettings");
+                UnityEngine.Object serializedAssetInterfaceSingleton = Unsupported.GetSerializedAssetInterfaceSingleton("NavMeshProjectSettings");
                 this.m_NavMeshProjectSettingsObject = new SerializedObject(serializedAssetInterfaceSingleton);
             }
         }
@@ -443,16 +443,16 @@
         {
             GameObject[] objArray;
             bool flag = true;
-            Type[] types = new Type[] { typeof(MeshRenderer), typeof(Terrain) };
+            System.Type[] types = new System.Type[] { typeof(MeshRenderer), typeof(Terrain) };
             SceneModeUtility.SearchBar(types);
             EditorGUILayout.Space();
-            MeshRenderer[] selectedObjectsOfType = SceneModeUtility.GetSelectedObjectsOfType<MeshRenderer>(out objArray, new Type[0]);
+            MeshRenderer[] selectedObjectsOfType = SceneModeUtility.GetSelectedObjectsOfType<MeshRenderer>(out objArray, new System.Type[0]);
             if (objArray.Length > 0)
             {
                 flag = false;
                 ObjectSettings(selectedObjectsOfType, objArray);
             }
-            Terrain[] components = SceneModeUtility.GetSelectedObjectsOfType<Terrain>(out objArray, new Type[0]);
+            Terrain[] components = SceneModeUtility.GetSelectedObjectsOfType<Terrain>(out objArray, new System.Type[0]);
             if (objArray.Length > 0)
             {
                 flag = false;
@@ -464,7 +464,7 @@
             }
         }
 
-        private static void ObjectSettings(Object[] components, GameObject[] gos)
+        private static void ObjectSettings(UnityEngine.Object[] components, GameObject[] gos)
         {
             EditorGUILayout.MultiSelectionObjectTitleBar(components);
             SerializedObject obj2 = new SerializedObject(gos);
@@ -627,7 +627,7 @@
         private static void RepaintSceneAndGameViews()
         {
             SceneView.RepaintAll();
-            foreach (GameView view in Resources.FindObjectsOfTypeAll(typeof(GameView)))
+            foreach (GameView view in UnityEngine.Resources.FindObjectsOfTypeAll(typeof(GameView)))
             {
                 view.Repaint();
             }
@@ -792,17 +792,17 @@
             }
         }
 
-        [MenuItem("Window/Navigation", false, 0x834)]
+        [UnityEditor.MenuItem("Window/Navigation", false, 0x834)]
         public static void SetupWindow()
         {
-            Type[] desiredDockNextTo = new Type[] { typeof(InspectorWindow) };
+            System.Type[] desiredDockNextTo = new System.Type[] { typeof(InspectorWindow) };
             EditorWindow.GetWindow<NavMeshEditorWindow>(desiredDockNextTo).minSize = new Vector2(300f, 360f);
         }
 
         private void UpdateSelectedAgentAndObstacleState()
         {
-            Object[] filtered = Selection.GetFiltered(typeof(NavMeshAgent), SelectionMode.Editable | SelectionMode.ExcludePrefab);
-            Object[] objArray2 = Selection.GetFiltered(typeof(NavMeshObstacle), SelectionMode.Editable | SelectionMode.ExcludePrefab);
+            UnityEngine.Object[] filtered = Selection.GetFiltered(typeof(NavMeshAgent), UnityEditor.SelectionMode.Editable | UnityEditor.SelectionMode.ExcludePrefab);
+            UnityEngine.Object[] objArray2 = Selection.GetFiltered(typeof(NavMeshObstacle), UnityEditor.SelectionMode.Editable | UnityEditor.SelectionMode.ExcludePrefab);
             this.m_SelectedNavMeshAgentCount = filtered.Length;
             this.m_SelectedNavMeshObstacleCount = objArray2.Length;
         }

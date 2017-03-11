@@ -6,7 +6,7 @@
     using UnityEngine.Events;
     using UnityEngine.Rendering;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(Light))]
+    [CustomEditor(typeof(Light)), CanEditMultipleObjects]
     internal class LightEditor : Editor
     {
         internal static Color kGizmoDisabledLight = new Color(0.5294118f, 0.454902f, 0.1960784f, 0.5019608f);

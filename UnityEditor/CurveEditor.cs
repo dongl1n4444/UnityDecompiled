@@ -201,7 +201,7 @@
         {
             if (this.s_TimeRangeSelectionActive)
             {
-                Debug.LogError("BeginTimeRangeSelection can only be called once");
+                UnityEngine.Debug.LogError("BeginTimeRangeSelection can only be called once");
             }
             else
             {
@@ -222,7 +222,7 @@
         {
             if (!this.s_TimeRangeSelectionActive)
             {
-                Debug.LogError("CancelTimeRangeSelection can only be called after BeginTimeRangeSelection");
+                UnityEngine.Debug.LogError("CancelTimeRangeSelection can only be called after BeginTimeRangeSelection");
             }
             else
             {
@@ -450,7 +450,7 @@
                     }
                     else
                     {
-                        Debug.Log("Error: No intersection found! There should be one...");
+                        UnityEngine.Debug.Log("Error: No intersection found! There should be one...");
                     }
                 }
                 v = vector5;
@@ -1296,7 +1296,7 @@
         {
             if (!this.s_TimeRangeSelectionActive)
             {
-                Debug.LogError("EndTimeRangeSelection can only be called after BeginTimeRangeSelection");
+                UnityEngine.Debug.LogError("EndTimeRangeSelection can only be called after BeginTimeRangeSelection");
             }
             else
             {
@@ -1350,6 +1350,7 @@
         private void FinishEditingPoints()
         {
             this.editingPoints = false;
+            this.EndLiveEdit();
         }
 
         public void FrameClip(bool horizontally, bool vertically)
@@ -1935,7 +1936,7 @@
                             this.ValidateCurveList();
                             break;
                         }
-                        Debug.LogError("Unhandled region");
+                        UnityEngine.Debug.LogError("Unhandled region");
                     }
                     else
                     {
@@ -2124,7 +2125,7 @@
         {
             if (this.m_Selection != null)
             {
-                Object.DestroyImmediate(this.m_Selection);
+                UnityEngine.Object.DestroyImmediate(this.m_Selection);
             }
         }
 
@@ -2734,6 +2735,7 @@
             this.focusedPointField = "pointValueField";
             this.timeWasEdited = this.valueWasEdited = false;
             this.editingPoints = true;
+            this.StartLiveEdit();
         }
 
         private void StartEditingSelectedPointsContext(object fieldPosition)
@@ -2827,7 +2829,7 @@
         {
             if (!this.s_TimeRangeSelectionActive)
             {
-                Debug.LogError("TimeRangeSelectTo can only be called after BeginTimeRangeSelection");
+                UnityEngine.Debug.LogError("TimeRangeSelectTo can only be called after BeginTimeRangeSelection");
             }
             else
             {
@@ -3024,21 +3026,21 @@
                 {
                     if (i == (this.m_AnimationCurves.Length - 1))
                     {
-                        Debug.LogError("Region has only one curve last! Regions should be added as two curves after each other with same regionId");
+                        UnityEngine.Debug.LogError("Region has only one curve last! Regions should be added as two curves after each other with same regionId");
                         return;
                     }
                     CurveWrapper wrapper2 = this.m_AnimationCurves[++i];
                     int num3 = wrapper2.regionId;
                     if (regionId != num3)
                     {
-                        Debug.LogError(string.Concat(new object[] { "Regions should be added as two curves after each other with same regionId: ", regionId, " != ", num3 }));
+                        UnityEngine.Debug.LogError(string.Concat(new object[] { "Regions should be added as two curves after each other with same regionId: ", regionId, " != ", num3 }));
                         return;
                     }
                 }
             }
             if (this.m_DrawOrder.Count != this.m_AnimationCurves.Length)
             {
-                Debug.LogError(string.Concat(new object[] { "DrawOrder and AnimationCurves mismatch: DrawOrder ", this.m_DrawOrder.Count, ", AnimationCurves: ", this.m_AnimationCurves.Length }));
+                UnityEngine.Debug.LogError(string.Concat(new object[] { "DrawOrder and AnimationCurves mismatch: DrawOrder ", this.m_DrawOrder.Count, ", AnimationCurves: ", this.m_AnimationCurves.Length }));
             }
             else
             {
@@ -3051,14 +3053,14 @@
                     {
                         if (j == (count - 1))
                         {
-                            Debug.LogError("Region has only one curve last! Regions should be added as two curves after each other with same regionId");
+                            UnityEngine.Debug.LogError("Region has only one curve last! Regions should be added as two curves after each other with same regionId");
                             break;
                         }
                         int num8 = this.m_DrawOrder[++j];
                         int num9 = this.GetCurveWrapperFromID(num8).regionId;
                         if (num7 != num9)
                         {
-                            Debug.LogError(string.Concat(new object[] { "DrawOrder: Regions not added correctly after each other. RegionIds: ", num7, " , ", num9 }));
+                            UnityEngine.Debug.LogError(string.Concat(new object[] { "DrawOrder: Regions not added correctly after each other. RegionIds: ", num7, " , ", num9 }));
                             break;
                         }
                     }
@@ -3362,8 +3364,8 @@
                     frame.key.time = this.$this.SnapTime(Mathf.Clamp(time, this.$this.hRangeMin, this.$this.hRangeMax));
                     if (this.flipX)
                     {
-                        frame.key.inTangent = -keyframe.key.outTangent;
-                        frame.key.outTangent = -keyframe.key.inTangent;
+                        frame.key.inTangent = (keyframe.key.outTangent == float.PositiveInfinity) ? float.PositiveInfinity : -keyframe.key.outTangent;
+                        frame.key.outTangent = (keyframe.key.inTangent == float.PositiveInfinity) ? float.PositiveInfinity : -keyframe.key.inTangent;
                     }
                     return frame;
                 }
@@ -3416,16 +3418,16 @@
                 frame.key.time = Mathf.Clamp(v.x, this.$this.hRangeMin, this.$this.hRangeMax);
                 if (this.flipX)
                 {
-                    frame.key.inTangent = -keyframe.key.outTangent;
-                    frame.key.outTangent = -keyframe.key.inTangent;
+                    frame.key.inTangent = (keyframe.key.outTangent == float.PositiveInfinity) ? float.PositiveInfinity : -keyframe.key.outTangent;
+                    frame.key.outTangent = (keyframe.key.inTangent == float.PositiveInfinity) ? float.PositiveInfinity : -keyframe.key.inTangent;
                 }
                 if (frame.selected == CurveWrapper.SelectionMode.Selected)
                 {
                     frame.key.value = this.$this.ClampVerticalValue(v.y, curve.curveId);
                     if (this.flipY)
                     {
-                        frame.key.inTangent = -frame.key.inTangent;
-                        frame.key.outTangent = -frame.key.outTangent;
+                        frame.key.inTangent = (frame.key.inTangent == float.PositiveInfinity) ? float.PositiveInfinity : -frame.key.inTangent;
+                        frame.key.outTangent = (frame.key.outTangent == float.PositiveInfinity) ? float.PositiveInfinity : -frame.key.outTangent;
                     }
                 }
                 return frame;

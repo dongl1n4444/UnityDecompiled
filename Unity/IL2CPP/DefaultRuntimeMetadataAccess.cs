@@ -94,8 +94,9 @@
 
         public string SizeOf(TypeReference type)
         {
-            TypeReference variableType = this._typeResolver.Resolve(type);
-            return $"sizeof({Naming.ForVariable(variableType)})";
+            TypeReference reference = this._typeResolver.Resolve(type);
+            this._metadataUsage.AddTypeInfo(reference);
+            return Emit.Call("il2cpp_codegen_sizeof", Naming.ForRuntimeTypeInfo(reference));
         }
 
         public string StaticData(TypeReference type)

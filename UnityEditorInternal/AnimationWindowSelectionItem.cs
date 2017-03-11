@@ -99,7 +99,7 @@
             }
         }
 
-        public Type GetEditorCurveValueType(EditorCurveBinding curveBinding)
+        public System.Type GetEditorCurveValueType(EditorCurveBinding curveBinding)
         {
             if (this.rootGameObject != null)
             {
@@ -194,7 +194,7 @@
                 {
                     return false;
                 }
-                if (!AssetDatabase.IsOpenForEdit(this.animationClip))
+                if (!AssetDatabase.IsOpenForEdit(this.animationClip, StatusQueryOptions.UseCachedIfPossible))
                 {
                     return false;
                 }

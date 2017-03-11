@@ -18,7 +18,7 @@
 
         public override void Run()
         {
-            foreach (Module module in this.get_CompileUnit().get_Modules())
+            foreach (Module module in this.CompileUnit.Modules)
             {
                 foreach (string str in this._pragmas)
                 {

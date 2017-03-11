@@ -57,6 +57,8 @@
         private SerializedProperty m_EnableCrashReportAPI;
         private SerializedProperty m_EnableInternalProfiler;
         private SerializedProperty m_ForceSingleInstance;
+        private static GUIContent[] m_GfxJobModeNames;
+        private static GraphicsJobMode[] m_GfxJobModeValues;
         private Dictionary<BuildTarget, ReorderableList> m_GraphicsDeviceLists = new Dictionary<BuildTarget, ReorderableList>();
         private SerializedProperty m_GraphicsJobs;
         private SerializedProperty m_IOSAllowHTTPDownload;
@@ -140,6 +142,10 @@
             kSinglePassStereoRenderingTargetGroups = new BuildTargetGroup[] { BuildTargetGroup.Standalone, BuildTargetGroup.PS4 };
             kStereoInstancingRenderingTargetGroups = new BuildTargetGroup[] { BuildTargetGroup.WSA };
             defaultIsFullScreen = EditorGUIUtility.TextContent("Default Is Full Screen*");
+            GraphicsJobMode[] modeArray1 = new GraphicsJobMode[2];
+            modeArray1[1] = GraphicsJobMode.Legacy;
+            m_GfxJobModeValues = modeArray1;
+            m_GfxJobModeNames = new GUIContent[] { new GUIContent("Native"), new GUIContent("Legacy") };
         }
 
         private void AddGraphicsDeviceElement(BuildTarget target, Rect rect, ReorderableList list)
@@ -330,7 +336,7 @@
             BuildFileBoxButton(prop, uiString, directory, ext, null);
         }
 
-        internal static void BuildFileBoxButton(SerializedProperty prop, string uiString, string directory, string ext, Action onSelect)
+        internal static void BuildFileBoxButton(SerializedProperty prop, string uiString, string directory, string ext, System.Action onSelect)
         {
             float minHeight = 16f;
             float minWidth = (80f + EditorGUIUtility.fieldWidth) + 5f;
@@ -618,17 +624,30 @@
                         {
                             int num2 = Mathf.Min(0x60, iconWidthsForPlatform[i]);
                             int b = (int) ((iconHeightsForPlatform[i] * num2) / ((float) iconWidthsForPlatform[i]));
-                            Rect rect = GUILayoutUtility.GetRect(64f, (float) (Mathf.Max(0x40, b) + 6));
-                            float num4 = Mathf.Min(rect.width, (((EditorGUIUtility.labelWidth + 4f) + 64f) + 6f) + 96f);
+                            if (targetGroup == BuildTargetGroup.iPhone)
+                            {
+                                if (((i + 1) < iconWidthsForPlatform.Length) && (iconWidthsForPlatform[i + 1] == 80))
+                                {
+                                    Rect rect = GUILayoutUtility.GetRect(EditorGUIUtility.labelWidth, 20f);
+                                    GUI.Label(new Rect(rect.x, rect.y, EditorGUIUtility.labelWidth, 20f), "Spotlight icons", EditorStyles.boldLabel);
+                                }
+                                if (iconWidthsForPlatform[i] == 0x57)
+                                {
+                                    Rect rect2 = GUILayoutUtility.GetRect(EditorGUIUtility.labelWidth, 20f);
+                                    GUI.Label(new Rect(rect2.x, rect2.y, EditorGUIUtility.labelWidth, 20f), "Settings icons", EditorStyles.boldLabel);
+                                }
+                            }
+                            Rect rect3 = GUILayoutUtility.GetRect(64f, (float) (Mathf.Max(0x40, b) + 6));
+                            float num4 = Mathf.Min(rect3.width, (((EditorGUIUtility.labelWidth + 4f) + 64f) + 6f) + 96f);
                             string text = iconWidthsForPlatform[i] + "x" + iconHeightsForPlatform[i];
-                            GUI.Label(new Rect(rect.x, rect.y, ((num4 - 96f) - 64f) - 12f, 20f), text);
+                            GUI.Label(new Rect(rect3.x, rect3.y, ((num4 - 96f) - 64f) - 12f, 20f), text);
                             if (flag4)
                             {
                                 int num5 = 0x40;
                                 int num6 = (int) ((((float) iconHeightsForPlatform[i]) / ((float) iconWidthsForPlatform[i])) * 64f);
-                                texturedArray[i] = (Texture2D) EditorGUI.ObjectField(new Rect((((rect.x + num4) - 96f) - 64f) - 6f, rect.y, (float) num5, (float) num6), texturedArray[i], typeof(Texture2D), false);
+                                texturedArray[i] = (Texture2D) EditorGUI.ObjectField(new Rect((((rect3.x + num4) - 96f) - 64f) - 6f, rect3.y, (float) num5, (float) num6), texturedArray[i], typeof(Texture2D), false);
                             }
-                            Rect position = new Rect((rect.x + num4) - 96f, rect.y, (float) num2, (float) b);
+                            Rect position = new Rect((rect3.x + num4) - 96f, rect3.y, (float) num2, (float) b);
                             Texture2D image = PlayerSettings.GetIconForPlatformAtSize(key, iconWidthsForPlatform[i], iconHeightsForPlatform[i]);
                             if (image != null)
                             {
@@ -1315,6 +1334,18 @@
                 }
             }
             EditorGUILayout.PropertyField(this.m_GraphicsJobs, EditorGUIUtility.TextContent("Graphics Jobs (Experimental)*"), new GUILayoutOption[0]);
+            if (this.PlatformSupportsGfxJobModes(targetGroup))
+            {
+                using (new EditorGUI.DisabledScope(!this.m_GraphicsJobs.boolValue))
+                {
+                    int graphicsJobMode = (int) PlayerSettings.graphicsJobMode;
+                    int num4 = BuildEnumPopup<GraphicsJobMode>(Styles.graphicsJobsMode, graphicsJobMode, m_GfxJobModeValues, m_GfxJobModeNames);
+                    if (num4 != graphicsJobMode)
+                    {
+                        PlayerSettings.graphicsJobMode = (GraphicsJobMode) num4;
+                    }
+                }
+            }
             if (this.m_VRSettings.TargetGroupSupportsVirtualReality(targetGroup))
             {
                 this.m_VRSettings.DevicesGUI(targetGroup);
@@ -1324,9 +1355,9 @@
                     bool flag8 = TargetSupportsStereoInstancingRendering(targetGroup);
                     if (PlayerSettings.virtualRealitySupported)
                     {
-                        int num3 = (1 + (!flag7 ? 0 : 1)) + (!flag8 ? 0 : 1);
-                        GUIContent[] displayedOptions = new GUIContent[num3];
-                        int[] optionValues = new int[num3];
+                        int num5 = (1 + (!flag7 ? 0 : 1)) + (!flag8 ? 0 : 1);
+                        GUIContent[] displayedOptions = new GUIContent[num5];
+                        int[] optionValues = new int[num5];
                         int index = 0;
                         displayedOptions[index] = Styles.kStereoRenderingMethodsAll[0];
                         optionValues[index++] = kStereoRenderingMethodValues[0];
@@ -1370,6 +1401,9 @@
                 return new Version();
             }
         }
+
+        private bool PlatformSupportsGfxJobModes(BuildTargetGroup targetGroup) => 
+            (targetGroup == BuildTargetGroup.PS4);
 
         public void PublishSectionGUI(BuildTargetGroup targetGroup, ISettingEditorExtension settingsExtension)
         {
@@ -1705,6 +1739,7 @@
             public static readonly GUIContent cursorHotspot = EditorGUIUtility.TextContent("Cursor Hotspot");
             public static readonly GUIContent defaultCursor = EditorGUIUtility.TextContent("Default Cursor");
             public static readonly GUIContent defaultIcon = EditorGUIUtility.TextContent("Default Icon");
+            public static readonly GUIContent graphicsJobsMode = EditorGUIUtility.TextContent("Graphics Jobs Mode*");
             public static readonly GUIContent[] kStereoRenderingMethodsAll = new GUIContent[] { new GUIContent("Multi pass (Slow)"), new GUIContent("Single Pass (Fast)"), new GUIContent("Single Pass Instanced (Fastest)") };
             public static readonly GUIContent require31 = EditorGUIUtility.TextContent("Require ES3.1");
             public static readonly GUIContent requireAEP = EditorGUIUtility.TextContent("Require ES3.1+AEP");

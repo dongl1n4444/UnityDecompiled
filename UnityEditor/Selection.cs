@@ -14,7 +14,7 @@
         /// <summary>
         /// <para>Delegate callback triggered when currently active/selected item has changed.</para>
         /// </summary>
-        public static Action selectionChanged;
+        public static System.Action selectionChanged;
 
         internal static void Add(int instanceID)
         {
@@ -26,7 +26,7 @@
             }
         }
 
-        internal static void Add(Object obj)
+        internal static void Add(UnityEngine.Object obj)
         {
             if (obj != null)
             {
@@ -47,7 +47,7 @@
         /// </summary>
         /// <param name="instanceID"></param>
         /// <param name="obj"></param>
-        public static bool Contains(Object obj) => 
+        public static bool Contains(UnityEngine.Object obj) => 
             Contains(obj.GetInstanceID());
 
         /// <summary>
@@ -55,7 +55,7 @@
         /// </summary>
         /// <param name="type">Only objects of this type will be retrieved.</param>
         /// <param name="mode">Further options to refine the selection.</param>
-        public static Object[] GetFiltered(Type type, SelectionMode mode)
+        public static UnityEngine.Object[] GetFiltered(System.Type type, UnityEditor.SelectionMode mode)
         {
             ArrayList list = new ArrayList();
             if ((type == typeof(Component)) || type.IsSubclassOf(typeof(Component)))
@@ -80,8 +80,8 @@
             }
             else
             {
-                Object[] objectsMode = GetObjectsMode(mode);
-                foreach (Object obj2 in objectsMode)
+                UnityEngine.Object[] objectsMode = GetObjectsMode(mode);
+                foreach (UnityEngine.Object obj2 in objectsMode)
                 {
                     if ((obj2 != null) && ((obj2.GetType() == type) || obj2.GetType().IsSubclassOf(type)))
                     {
@@ -89,17 +89,17 @@
                     }
                 }
             }
-            return (Object[]) list.ToArray(typeof(Object));
+            return (UnityEngine.Object[]) list.ToArray(typeof(UnityEngine.Object));
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Object[] GetObjectsMode(SelectionMode mode);
+        internal static extern UnityEngine.Object[] GetObjectsMode(UnityEditor.SelectionMode mode);
         /// <summary>
         /// <para>Allows for fine grained control of the selection type using the SelectionMode bitmask.</para>
         /// </summary>
         /// <param name="mode">Options for refining the selection.</param>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern Transform[] GetTransforms(SelectionMode mode);
+        public static extern Transform[] GetTransforms(UnityEditor.SelectionMode mode);
         private static void Internal_CallSelectionChanged()
         {
             if (selectionChanged != null)
@@ -115,7 +115,7 @@
             instanceIDs = list.ToArray();
         }
 
-        internal static void Remove(Object obj)
+        internal static void Remove(UnityEngine.Object obj)
         {
             if (obj != null)
             {
@@ -136,7 +136,7 @@
         /// <summary>
         /// <para>Returns the actual object selection. Includes prefabs, non-modifyable objects.</para>
         /// </summary>
-        public static Object activeObject { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static UnityEngine.Object activeObject { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
         /// <summary>
         /// <para>Returns the active transform. (The one shown in the inspector).</para>
@@ -163,7 +163,7 @@
         /// <summary>
         /// <para>The actual unfiltered selection from the Scene.</para>
         /// </summary>
-        public static Object[] objects { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static UnityEngine.Object[] objects { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
         /// <summary>
         /// <para>Returns the top level selection, excluding prefabs.</para>

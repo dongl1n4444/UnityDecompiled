@@ -93,14 +93,14 @@
             bool flag = false;
             if ((this.m_TargetTexture != null) && (this.m_CurrentColorSpace != QualitySettings.activeColorSpace))
             {
-                Object.DestroyImmediate(this.m_TargetTexture);
+                UnityEngine.Object.DestroyImmediate(this.m_TargetTexture);
             }
             if (this.m_TargetTexture == null)
             {
                 this.m_CurrentColorSpace = QualitySettings.activeColorSpace;
                 this.m_TargetTexture = new RenderTexture(0, 0, 0x18, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
                 this.m_TargetTexture.name = "GameView RT";
-                this.m_TargetTexture.filterMode = FilterMode.Point;
+                this.m_TargetTexture.filterMode = UnityEngine.FilterMode.Point;
                 this.m_TargetTexture.hideFlags = HideFlags.HideAndDontSave;
             }
             int num = Mathf.Max(1, QualitySettings.antiAliasing);
@@ -184,7 +184,7 @@
             {
                 GUILayout.FlexibleSpace();
                 Color color = GUI.color;
-                GUI.color *= AnimationMode.animatedPropertyColor;
+                GUI.color *= UnityEditor.AnimationMode.animatedPropertyColor;
                 GUILayout.Label(Styles.frameDebuggerOnContent, EditorStyles.miniLabel, new GUILayoutOption[0]);
                 GUI.color = color;
                 if (Event.current.type == EventType.Repaint)
@@ -343,7 +343,7 @@
             s_GameViews.Remove(this);
             if (this.m_TargetTexture != null)
             {
-                Object.DestroyImmediate(this.m_TargetTexture);
+                UnityEngine.Object.DestroyImmediate(this.m_TargetTexture);
             }
         }
 
@@ -479,11 +479,11 @@
             {
                 if (this.m_ZoomArea.scale.y < 1f)
                 {
-                    this.m_TargetTexture.filterMode = FilterMode.Bilinear;
+                    this.m_TargetTexture.filterMode = UnityEngine.FilterMode.Bilinear;
                 }
                 else
                 {
-                    this.m_TargetTexture.filterMode = FilterMode.Point;
+                    this.m_TargetTexture.filterMode = UnityEngine.FilterMode.Point;
                 }
             }
             if (this.m_NoCameraWarning && !EditorGUIUtility.IsDisplayReferencedByCameras(this.m_TargetDisplay))

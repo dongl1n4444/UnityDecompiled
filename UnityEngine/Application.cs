@@ -7,6 +7,7 @@
     using System.Security;
     using System.Text;
     using UnityEngine.Internal;
+    using UnityEngine.Rendering;
     using UnityEngine.SceneManagement;
     using UnityEngine.Scripting;
 
@@ -572,7 +573,9 @@
         /// <summary>
         /// <para>Checks whether splash screen is being shown.</para>
         /// </summary>
-        public static bool isShowingSplashScreen { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        [Obsolete("This property is deprecated, please use SplashScreen.isFinished instead")]
+        public static bool isShowingSplashScreen =>
+            !SplashScreen.isFinished;
 
         internal static bool isTestRun { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
@@ -680,10 +683,10 @@
         /// <summary>
         /// <para>Indicates whether Unity's webplayer security model is enabled.</para>
         /// </summary>
-        [Obsolete("Application.webSecurityEnabled is no longer supported, since the Unity Web Player is no longer supported by Unity."), ThreadAndSerializationSafe]
+        [ThreadAndSerializationSafe, Obsolete("Application.webSecurityEnabled is no longer supported, since the Unity Web Player is no longer supported by Unity.")]
         public static bool webSecurityEnabled { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-        [Obsolete("Application.webSecurityHostUrl is no longer supported, since the Unity Web Player is no longer supported by Unity."), ThreadAndSerializationSafe]
+        [ThreadAndSerializationSafe, Obsolete("Application.webSecurityHostUrl is no longer supported, since the Unity Web Player is no longer supported by Unity.")]
         public static string webSecurityHostUrl { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
         /// <summary>

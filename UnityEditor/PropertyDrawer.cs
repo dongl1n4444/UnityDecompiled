@@ -10,7 +10,7 @@
     public abstract class PropertyDrawer : GUIDrawer
     {
         internal PropertyAttribute m_Attribute;
-        internal FieldInfo m_FieldInfo;
+        internal System.Reflection.FieldInfo m_FieldInfo;
 
         protected PropertyDrawer()
         {
@@ -63,7 +63,7 @@
         /// <summary>
         /// <para>The reflection FieldInfo for the member this property represents. (Read Only)</para>
         /// </summary>
-        public FieldInfo fieldInfo =>
+        public System.Reflection.FieldInfo fieldInfo =>
             this.m_FieldInfo;
     }
 }

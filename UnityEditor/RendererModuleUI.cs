@@ -240,7 +240,7 @@
                     EditorGUI.indentLevel--;
                     if ((intValue != RenderMode.Mesh) && (this.m_Meshes[0].objectReferenceInstanceIDValue == 0))
                     {
-                        this.m_Meshes[0].objectReferenceValue = Resources.GetBuiltinResource(typeof(Mesh), "Cube.fbx");
+                        this.m_Meshes[0].objectReferenceValue = UnityEngine.Resources.GetBuiltinResource(typeof(Mesh), "Cube.fbx");
                     }
                     break;
 

@@ -32,7 +32,7 @@
 
         public bool EditLightmapParameters()
         {
-            Object[] filtered = Selection.GetFiltered(typeof(LightmapParameters), SelectionMode.Unfiltered);
+            UnityEngine.Object[] filtered = Selection.GetFiltered(typeof(LightmapParameters), UnityEditor.SelectionMode.Unfiltered);
             if (filtered.Length == 0)
             {
                 return false;
@@ -46,7 +46,7 @@
         public bool EditLights()
         {
             GameObject[] objArray;
-            Light[] selectedObjectsOfType = SceneModeUtility.GetSelectedObjectsOfType<Light>(out objArray, new Type[0]);
+            Light[] selectedObjectsOfType = SceneModeUtility.GetSelectedObjectsOfType<Light>(out objArray, new System.Type[0]);
             if (objArray.Length == 0)
             {
                 return false;
@@ -60,7 +60,7 @@
         public bool EditRenderers()
         {
             GameObject[] objArray;
-            Type[] types = new Type[] { typeof(MeshRenderer), typeof(SkinnedMeshRenderer) };
+            System.Type[] types = new System.Type[] { typeof(MeshRenderer), typeof(SkinnedMeshRenderer) };
             Renderer[] selectedObjectsOfType = SceneModeUtility.GetSelectedObjectsOfType<Renderer>(out objArray, types);
             if (objArray.Length == 0)
             {
@@ -119,7 +119,7 @@
         public bool EditTerrains()
         {
             GameObject[] objArray;
-            Terrain[] selectedObjectsOfType = SceneModeUtility.GetSelectedObjectsOfType<Terrain>(out objArray, new Type[0]);
+            Terrain[] selectedObjectsOfType = SceneModeUtility.GetSelectedObjectsOfType<Terrain>(out objArray, new System.Type[0]);
             if (objArray.Length == 0)
             {
                 return false;
@@ -165,7 +165,7 @@
             return this.m_LightEditor;
         }
 
-        private Editor GetLightmapParametersEditor(Object[] lights)
+        private Editor GetLightmapParametersEditor(UnityEngine.Object[] lights)
         {
             Editor.CreateCachedEditor(lights, typeof(LightmapParametersEditor), ref this.m_LightmapParametersEditor);
             return this.m_LightmapParametersEditor;
@@ -365,8 +365,8 @@
                                 float num5 = drawableArea.y - 14f;
                                 rect7.y -= num5;
                                 drawableArea.y -= num5;
-                                FilterMode filterMode = texture.filterMode;
-                                texture.filterMode = FilterMode.Point;
+                                UnityEngine.FilterMode filterMode = texture.filterMode;
+                                texture.filterMode = UnityEngine.FilterMode.Point;
                                 GITextureType textureType = this.kObjectPreviewTextureTypes[index];
                                 bool drawSpecularUV = flag && this.m_HasSeparateIndirectUV;
                                 LightmapVisualizationUtility.DrawTextureWithUVOverlay(texture, Selection.activeGameObject, drawableArea, rect7, textureType, drawSpecularUV);
@@ -397,7 +397,7 @@
             {
                 s_Styles = new Styles();
             }
-            Type[] types = new Type[] { typeof(Light), typeof(Renderer), typeof(Terrain) };
+            System.Type[] types = new System.Type[] { typeof(Light), typeof(Renderer), typeof(Terrain) };
             SceneModeUtility.SearchBar(types);
             EditorGUILayout.Space();
             bool flag = false;
@@ -412,8 +412,8 @@
 
         public void OnDisable()
         {
-            Object.DestroyImmediate(this.m_LightEditor);
-            Object.DestroyImmediate(this.m_LightmapParametersEditor);
+            UnityEngine.Object.DestroyImmediate(this.m_LightEditor);
+            UnityEngine.Object.DestroyImmediate(this.m_LightmapParametersEditor);
         }
 
         public void OnEnable(EditorWindow window)

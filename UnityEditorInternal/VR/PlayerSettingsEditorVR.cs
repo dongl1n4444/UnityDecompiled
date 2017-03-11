@@ -134,7 +134,7 @@
                 this.m_MapVRUIStringToDeviceKey[editor.deviceNameUI] = editor.deviceNameKey;
                 if (!this.m_CustomOptions.TryGetValue(editor.deviceNameKey, out options))
                 {
-                    Type type = Type.GetType("UnityEditorInternal.VR.VRCustomOptions" + editor.deviceNameKey, false, true);
+                    System.Type type = System.Type.GetType("UnityEditorInternal.VR.VRCustomOptions" + editor.deviceNameKey, false, true);
                     if (type != null)
                     {
                         options = (VRCustomOptions) Activator.CreateInstance(type);

@@ -153,14 +153,14 @@
         /// <summary>
         /// <para>Value of an object reference property.</para>
         /// </summary>
-        public Object objectReferenceValue { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public UnityEngine.Object objectReferenceValue { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
         public int objectReferenceInstanceIDValue { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
         internal string objectReferenceStringValue { [MethodImpl(MethodImplOptions.InternalCall)] get; }
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern bool ValidateObjectReferenceValue(Object obj);
+        internal extern bool ValidateObjectReferenceValue(UnityEngine.Object obj);
         internal string objectReferenceTypeString { [MethodImpl(MethodImplOptions.InternalCall)] get; }
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern void AppendFoldoutPPtrValue(Object obj);
+        internal extern void AppendFoldoutPPtrValue(UnityEngine.Object obj);
         internal string layerMaskStringValue { [MethodImpl(MethodImplOptions.InternalCall)] get; }
         /// <summary>
         /// <para>Enum index of an enum property.</para>
@@ -445,12 +445,12 @@
         /// <param name="dstIndex"></param>
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern bool MoveArrayElement(int srcIndex, int dstIndex);
-        internal void SetToValueOfTarget(Object target)
+        internal void SetToValueOfTarget(UnityEngine.Object target)
         {
             SerializedProperty property = new SerializedObject(target).FindProperty(this.propertyPath);
             if (property == null)
             {
-                Debug.LogError(target.name + " does not have the property " + this.propertyPath);
+                UnityEngine.Debug.LogError(target.name + " does not have the property " + this.propertyPath);
             }
             else
             {

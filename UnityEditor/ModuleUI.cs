@@ -100,7 +100,7 @@
             Color color = GUI.color;
             if (floatProp.isAnimated)
             {
-                GUI.color = AnimationMode.animatedPropertyColor;
+                GUI.color = UnityEditor.AnimationMode.animatedPropertyColor;
             }
             float floatValue = floatProp.floatValue;
             float num2 = FloatDraggable(rect, floatValue, remap, dragWidth, formatString);
@@ -755,9 +755,9 @@
         {
         }
 
-        internal Object ParticleSystemValidator(Object[] references, Type objType, SerializedProperty property)
+        internal UnityEngine.Object ParticleSystemValidator(UnityEngine.Object[] references, System.Type objType, SerializedProperty property)
         {
-            foreach (Object obj2 in references)
+            foreach (UnityEngine.Object obj2 in references)
             {
                 if (obj2 != null)
                 {
@@ -878,7 +878,7 @@
             Color color = GUI.color;
             if (boolProp.isAnimated)
             {
-                GUI.color = AnimationMode.animatedPropertyColor;
+                GUI.color = UnityEditor.AnimationMode.animatedPropertyColor;
             }
             bool boolValue = boolProp.boolValue;
             bool flag2 = EditorGUI.Toggle(rect, boolValue, ParticleSystemStyles.Get().toggle);

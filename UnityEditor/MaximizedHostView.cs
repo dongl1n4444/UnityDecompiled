@@ -14,9 +14,9 @@
             menu.AddItem(EditorGUIUtility.TextContent("Maximize"), !(base.parent is SplitView), new GenericMenu.MenuFunction2(this.Unmaximize), view);
             menu.AddDisabledItem(EditorGUIUtility.TextContent("Close Tab"));
             menu.AddSeparator("");
-            Type[] paneTypes = base.GetPaneTypes();
+            System.Type[] paneTypes = base.GetPaneTypes();
             GUIContent content = EditorGUIUtility.TextContent("Add Tab");
-            foreach (Type type in paneTypes)
+            foreach (System.Type type in paneTypes)
             {
                 if (type != null)
                 {

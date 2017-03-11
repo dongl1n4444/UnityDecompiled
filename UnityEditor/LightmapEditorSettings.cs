@@ -20,7 +20,7 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool GetInstanceResolution(Renderer renderer, out int width, out int height);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Object GetLightmapSettings();
+        internal static extern UnityEngine.Object GetLightmapSettings();
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool GetSystemResolution(Renderer renderer, out int width, out int height);
         [MethodImpl(MethodImplOptions.InternalCall)]

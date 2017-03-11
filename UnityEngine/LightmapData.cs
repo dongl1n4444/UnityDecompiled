@@ -37,7 +37,7 @@
                 this.m_Dir = value;
             }
         }
-        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property LightmapData.lightmap has been deprecated. Use LightmapData.lightmapLight instead (UnityUpgradable) -> lightmapLight", true)]
+        [Obsolete("Property LightmapData.lightmap has been deprecated. Use LightmapData.lightmapLight instead (UnityUpgradable) -> lightmapLight", true), EditorBrowsable(EditorBrowsableState.Never)]
         public Texture2D lightmap
         {
             get => 
@@ -55,7 +55,7 @@
             {
             }
         }
-        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property LightmapData.lightmapNear has been deprecated. Use LightmapData.lightmapDir instead (UnityUpgradable) -> lightmapDir", true)]
+        [Obsolete("Property LightmapData.lightmapNear has been deprecated. Use LightmapData.lightmapDir instead (UnityUpgradable) -> lightmapDir", true), EditorBrowsable(EditorBrowsableState.Never)]
         public Texture2D lightmapNear
         {
             get => 

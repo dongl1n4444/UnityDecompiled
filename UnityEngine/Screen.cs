@@ -119,7 +119,7 @@
         /// <summary>
         /// <para>Should the cursor be visible?</para>
         /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property showCursor has been deprecated. Use Cursor.visible instead (UnityUpgradable) -> UnityEngine.Cursor.visible", true)]
+        [Obsolete("Property showCursor has been deprecated. Use Cursor.visible instead (UnityUpgradable) -> UnityEngine.Cursor.visible", true), EditorBrowsable(EditorBrowsableState.Never)]
         public static bool showCursor
         {
             [CompilerGenerated]

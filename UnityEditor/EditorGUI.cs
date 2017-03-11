@@ -261,7 +261,7 @@
             showMixedValue = property.hasMultipleDifferentValues;
             if (property.isAnimated)
             {
-                Color animatedPropertyColor = AnimationMode.animatedPropertyColor;
+                Color animatedPropertyColor = UnityEditor.AnimationMode.animatedPropertyColor;
                 animatedPropertyColor.a *= GUI.color.a;
                 GUI.color = animatedPropertyColor;
             }
@@ -461,7 +461,7 @@
         private static long CalculateIntDragSensitivity(long value) => 
             ((long) Math.Max((double) 1.0, (double) (Math.Pow(Math.Abs((double) value), 0.5) * 0.029999999329447746)));
 
-        internal static bool CheckForCrossSceneReferencing(Object obj1, Object obj2)
+        internal static bool CheckForCrossSceneReferencing(UnityEngine.Object obj1, UnityEngine.Object obj2)
         {
             GameObject gameObjectFromObject = GetGameObjectFromObject(obj1);
             if (gameObjectFromObject == null)
@@ -833,13 +833,13 @@
                     case EventType.DragPerform:
                         if (position.Contains(event2.mousePosition) && GUI.enabled)
                         {
-                            Object[] objectReferences = DragAndDrop.objectReferences;
-                            Object[] references = new Object[1];
+                            UnityEngine.Object[] objectReferences = DragAndDrop.objectReferences;
+                            UnityEngine.Object[] references = new UnityEngine.Object[1];
                             bool flag6 = false;
-                            foreach (Object obj2 in objectReferences)
+                            foreach (UnityEngine.Object obj2 in objectReferences)
                             {
                                 references[0] = obj2;
-                                Object obj3 = ValidateObjectFieldAssignment(references, null, property);
+                                UnityEngine.Object obj3 = ValidateObjectFieldAssignment(references, null, property);
                                 if (obj3 != null)
                                 {
                                     DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
@@ -1812,7 +1812,7 @@
                         property.animationCurveValue = CurveEditorWindow.curve;
                         if (property.hasMultipleDifferentValues)
                         {
-                            Debug.LogError("AnimationCurve SerializedProperty hasMultipleDifferentValues is true after writing.");
+                            UnityEngine.Debug.LogError("AnimationCurve SerializedProperty hasMultipleDifferentValues is true after writing.");
                         }
                     }
                     return CurveEditorWindow.curve;
@@ -1831,7 +1831,7 @@
             return value;
         }
 
-        internal static Object DoDropField(Rect position, int id, Type objType, ObjectFieldValidator validator, bool allowSceneObjects, GUIStyle style)
+        internal static UnityEngine.Object DoDropField(Rect position, int id, System.Type objType, ObjectFieldValidator validator, bool allowSceneObjects, GUIStyle style)
         {
             if (validator == null)
             {
@@ -1856,8 +1856,8 @@
                 case EventType.DragPerform:
                     if (position.Contains(Event.current.mousePosition) && GUI.enabled)
                     {
-                        Object[] objectReferences = DragAndDrop.objectReferences;
-                        Object target = validator(objectReferences, objType, null);
+                        UnityEngine.Object[] objectReferences = DragAndDrop.objectReferences;
+                        UnityEngine.Object target = validator(objectReferences, objType, null);
                         if ((target != null) && (!allowSceneObjects && !EditorUtility.IsPersistent(target)))
                         {
                             target = null;
@@ -1900,7 +1900,7 @@
 
         private static Enum DoEnumMaskField(Rect position, GUIContent label, Enum enumValue, GUIStyle style, out int changedFlags, out bool changedToValue)
         {
-            Type type = enumValue.GetType();
+            System.Type type = enumValue.GetType();
             if (!type.IsEnum)
             {
                 throw new Exception("parameter _enum must be of type System.Enum");
@@ -2042,7 +2042,7 @@
             return color;
         }
 
-        internal static void DoInspectorTitlebar(Rect position, int id, bool foldout, Object[] targetObjs, GUIStyle baseStyle)
+        internal static void DoInspectorTitlebar(Rect position, int id, bool foldout, UnityEngine.Object[] targetObjs, GUIStyle baseStyle)
         {
             GUIStyle inspectorTitlebarText = EditorStyles.inspectorTitlebarText;
             GUIStyle iconButton = EditorStyles.iconButton;
@@ -2053,7 +2053,7 @@
                 xMax = rect2.xMin - 2f
             };
             int num = -1;
-            foreach (Object obj2 in targetObjs)
+            foreach (UnityEngine.Object obj2 in targetObjs)
             {
                 int objectEnabled = EditorUtility.GetObjectEnabled(obj2);
                 if (num == -1)
@@ -2067,7 +2067,7 @@
             }
             if (num != -1)
             {
-                bool flag = AnimationMode.IsPropertyAnimated(targetObjs[0], "m_Enabled");
+                bool flag = UnityEditor.AnimationMode.IsPropertyAnimated(targetObjs[0], "m_Enabled");
                 bool flag2 = num != 0;
                 showMixedValue = num == -2;
                 Rect rect4 = rect;
@@ -2076,7 +2076,7 @@
                 Color color = GUI.color;
                 if (flag)
                 {
-                    GUI.color = AnimationMode.animatedPropertyColor;
+                    GUI.color = UnityEditor.AnimationMode.animatedPropertyColor;
                 }
                 int num4 = GUIUtility.GetControlID(s_TitlebarHash, FocusType.Keyboard, position);
                 flag2 = EditorGUIInternal.DoToggleForward(rect4, num4, flag2, GUIContent.none, EditorStyles.toggle);
@@ -2087,7 +2087,7 @@
                 if (EndChangeCheck())
                 {
                     Undo.RecordObjects(targetObjs, (!flag2 ? "Disable" : "Enable") + " Component" + ((targetObjs.Length <= 1) ? "" : "s"));
-                    foreach (Object obj3 in targetObjs)
+                    foreach (UnityEngine.Object obj3 in targetObjs)
                     {
                         EditorUtility.SetObjectEnabled(obj3, flag2);
                     }
@@ -2324,10 +2324,10 @@
             }
         }
 
-        internal static Object DoObjectField(Rect position, Rect dropRect, int id, Object obj, Type objType, SerializedProperty property, ObjectFieldValidator validator, bool allowSceneObjects) => 
+        internal static UnityEngine.Object DoObjectField(Rect position, Rect dropRect, int id, UnityEngine.Object obj, System.Type objType, SerializedProperty property, ObjectFieldValidator validator, bool allowSceneObjects) => 
             DoObjectField(position, dropRect, id, obj, objType, property, validator, allowSceneObjects, EditorStyles.objectField);
 
-        internal static Object DoObjectField(Rect position, Rect dropRect, int id, Object obj, Type objType, SerializedProperty property, ObjectFieldValidator validator, bool allowSceneObjects, GUIStyle style)
+        internal static UnityEngine.Object DoObjectField(Rect position, Rect dropRect, int id, UnityEngine.Object obj, System.Type objType, SerializedProperty property, ObjectFieldValidator validator, bool allowSceneObjects, GUIStyle style)
         {
             Rect rect;
             if (validator == null)
@@ -2403,7 +2403,7 @@
                             obj = property.objectReferenceValue;
                             if (obj != null)
                             {
-                                Object[] references = new Object[] { obj };
+                                UnityEngine.Object[] references = new UnityEngine.Object[] { obj };
                                 if (EditorSceneManager.preventCrossSceneReferences && CheckForCrossSceneReferencing(obj, property.serializedObject.targetObject))
                                 {
                                     if (!EditorApplication.isPlaying)
@@ -2455,8 +2455,8 @@
                 case EventType.DragPerform:
                     if (dropRect.Contains(Event.current.mousePosition) && GUI.enabled)
                     {
-                        Object[] objectReferences = DragAndDrop.objectReferences;
-                        Object target = validator(objectReferences, objType, property);
+                        UnityEngine.Object[] objectReferences = DragAndDrop.objectReferences;
+                        UnityEngine.Object target = validator(objectReferences, objType, property);
                         if ((target != null) && (!allowSceneObjects && !EditorUtility.IsPersistent(target)))
                         {
                             target = null;
@@ -2494,8 +2494,8 @@
                     {
                         break;
                     }
-                    Object[] objArray2 = new Object[] { ObjectSelector.GetCurrentObject() };
-                    Object obj4 = validator(objArray2, objType, property);
+                    UnityEngine.Object[] objArray2 = new UnityEngine.Object[] { ObjectSelector.GetCurrentObject() };
+                    UnityEngine.Object obj4 = validator(objArray2, objType, property);
                     if (property != null)
                     {
                         property.objectReferenceValue = obj4;
@@ -2548,7 +2548,7 @@
             }
             else
             {
-                Object gameObject = (property == null) ? obj : property.objectReferenceValue;
+                UnityEngine.Object gameObject = (property == null) ? obj : property.objectReferenceValue;
                 Component component = gameObject as Component;
                 if (component != null)
                 {
@@ -2590,14 +2590,14 @@
             return obj;
         }
 
-        internal static bool DoObjectFoldout(bool foldout, Rect interactionRect, Rect renderRect, Object[] targetObjs, int id)
+        internal static bool DoObjectFoldout(bool foldout, Rect interactionRect, Rect renderRect, UnityEngine.Object[] targetObjs, int id)
         {
             foldout = DoObjectMouseInteraction(foldout, interactionRect, targetObjs, id);
             DoObjectFoldoutInternal(foldout, interactionRect, renderRect, targetObjs, id);
             return foldout;
         }
 
-        private static void DoObjectFoldoutInternal(bool foldout, Rect interactionRect, Rect renderRect, Object[] targetObjs, int id)
+        private static void DoObjectFoldoutInternal(bool foldout, Rect interactionRect, Rect renderRect, UnityEngine.Object[] targetObjs, int id)
         {
             bool enabled = GUI.enabled;
             GUI.enabled = true;
@@ -2609,7 +2609,7 @@
             GUI.enabled = enabled;
         }
 
-        internal static bool DoObjectMouseInteraction(bool foldout, Rect interactionRect, Object[] targetObjs, int id)
+        internal static bool DoObjectMouseInteraction(bool foldout, Rect interactionRect, UnityEngine.Object[] targetObjs, int id)
         {
             bool enabled = GUI.enabled;
             GUI.enabled = true;
@@ -2861,7 +2861,7 @@
                 }
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = e => Debug.Log(((SerializedProperty) e).propertyPath);
+                    <>f__am$cache0 = e => UnityEngine.Debug.Log(((SerializedProperty) e).propertyPath);
                 }
                 menu.AddItem(EditorGUIUtility.TextContent("Print Property Path"), false, <>f__am$cache0, property2);
             }
@@ -3650,7 +3650,7 @@
             GUI.backgroundColor = backgroundColor;
         }
 
-        private static void DrawObjectFieldLargeThumb(Rect position, int id, Object obj, GUIContent content)
+        private static void DrawObjectFieldLargeThumb(Rect position, int id, UnityEngine.Object obj, GUIContent content)
         {
             GUIStyle objectFieldThumb = EditorStyles.objectFieldThumb;
             objectFieldThumb.Draw(position, GUIContent.none, id, DragAndDrop.activeControlID == id);
@@ -3704,7 +3704,7 @@
             (objectFieldThumb.name + "Overlay2").Draw(position, EditorGUIUtility.TempContent("Select"), id);
         }
 
-        private static void DrawObjectFieldMiniThumb(Rect position, int id, Object obj, GUIContent content)
+        private static void DrawObjectFieldMiniThumb(Rect position, int id, UnityEngine.Object obj, GUIContent content)
         {
             GUIStyle objectFieldMiniThumb = EditorStyles.objectFieldMiniThumb;
             position.width = 32f;
@@ -3925,7 +3925,7 @@
         {
             if ((imageAspect == 0f) && (image == null))
             {
-                Debug.LogError("Please specify an image or a imageAspect");
+                UnityEngine.Debug.LogError("Please specify an image or a imageAspect");
             }
             else
             {
@@ -4080,7 +4080,7 @@
             }
         }
 
-        private static Enum EnumFlagsToInt(Type type, int value) => 
+        private static Enum EnumFlagsToInt(System.Type type, int value) => 
             (Enum.Parse(type, value.ToString()) as Enum);
 
         /// <summary>
@@ -4181,7 +4181,7 @@
 
         internal static Enum EnumMaskFieldInternal(Rect position, Enum enumValue, GUIStyle style)
         {
-            Type type = enumValue.GetType();
+            System.Type type = enumValue.GetType();
             if (!type.IsEnum)
             {
                 throw new Exception("parameter _enum must be of type System.Enum");
@@ -4197,7 +4197,7 @@
 
         internal static Enum EnumMaskFieldInternal(Rect position, GUIContent label, Enum enumValue, GUIStyle style)
         {
-            Type type = enumValue.GetType();
+            System.Type type = enumValue.GetType();
             if (!type.IsEnum)
             {
                 throw new Exception("parameter _enum must be of type System.Enum");
@@ -4377,7 +4377,7 @@
 
         private static Enum EnumPopupInternal(Rect position, GUIContent label, Enum selected, GUIStyle style)
         {
-            Type enumType = selected.GetType();
+            System.Type enumType = selected.GetType();
             if (!enumType.IsEnum)
             {
                 throw new Exception("parameter _enum must be of type System.Enum");
@@ -4759,7 +4759,7 @@
             }
         }
 
-        internal static GameObject GetGameObjectFromObject(Object obj)
+        internal static GameObject GetGameObjectFromObject(UnityEngine.Object obj)
         {
             GameObject gameObject = obj as GameObject;
             if ((gameObject == null) && (obj is Component))
@@ -4987,9 +4987,9 @@
             }
         }
 
-        private static Object HandleTextureToSprite(Texture2D tex)
+        private static UnityEngine.Object HandleTextureToSprite(Texture2D tex)
         {
-            Object[] objArray = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(tex));
+            UnityEngine.Object[] objArray = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(tex));
             for (int i = 0; i < objArray.Length; i++)
             {
                 if (objArray[i].GetType() == typeof(Sprite))
@@ -5030,7 +5030,7 @@
             GUI.Label(position, EditorGUIUtility.TempContent(message, EditorGUIUtility.GetHelpIcon(type)), EditorStyles.helpBox);
         }
 
-        internal static bool HelpIconButton(Rect position, Object obj)
+        internal static bool HelpIconButton(Rect position, UnityEngine.Object obj)
         {
             bool flag = Unsupported.IsDeveloperBuild();
             bool defaultToMonoBehaviour = !flag || obj.GetType().Assembly.ToString().StartsWith("Assembly-");
@@ -5117,7 +5117,7 @@ This warning only shows up in development builds.";
             return new Rect(source.x + indent, source.y, source.width - indent, source.height);
         }
 
-        public static void InspectorTitlebar(Rect position, Object[] targetObjs)
+        public static void InspectorTitlebar(Rect position, UnityEngine.Object[] targetObjs)
         {
             GUIStyle none = GUIStyle.none;
             int id = GUIUtility.GetControlID(s_TitlebarHash, FocusType.Keyboard, position);
@@ -5135,9 +5135,9 @@ This warning only shows up in development builds.";
         /// <returns>
         /// <para>The foldout state selected by the user.</para>
         /// </returns>
-        public static bool InspectorTitlebar(Rect position, bool foldout, Object targetObj, bool expandable)
+        public static bool InspectorTitlebar(Rect position, bool foldout, UnityEngine.Object targetObj, bool expandable)
         {
-            Object[] targetObjs = new Object[] { targetObj };
+            UnityEngine.Object[] targetObjs = new UnityEngine.Object[] { targetObj };
             return InspectorTitlebar(position, foldout, targetObjs, expandable);
         }
 
@@ -5152,7 +5152,7 @@ This warning only shows up in development builds.";
         /// <returns>
         /// <para>The foldout state selected by the user.</para>
         /// </returns>
-        public static bool InspectorTitlebar(Rect position, bool foldout, Object[] targetObjs, bool expandable)
+        public static bool InspectorTitlebar(Rect position, bool foldout, UnityEngine.Object[] targetObjs, bool expandable)
         {
             GUIStyle inspectorTitlebar = EditorStyles.inspectorTitlebar;
             int id = GUIUtility.GetControlID(s_TitlebarHash, FocusType.Keyboard, position);
@@ -6095,7 +6095,7 @@ This warning only shows up in development builds.";
             return MaskFieldGUI.DoMaskField(position, id, mask, displayedOptions, optionValues, style);
         }
 
-        internal static Object MiniThumbnailObjectField(Rect position, GUIContent label, Object obj, Type objType, ObjectFieldValidator validator)
+        internal static UnityEngine.Object MiniThumbnailObjectField(Rect position, GUIContent label, UnityEngine.Object obj, System.Type objType, ObjectFieldValidator validator)
         {
             Rect rect;
             Rect rect2;
@@ -6319,7 +6319,7 @@ This warning only shows up in development builds.";
         /// <param name="property">The object reference property the field shows.</param>
         /// <param name="objType">The type of the objects that can be assigned.</param>
         /// <param name="label">Optional label to display in front of the field. Pass GUIContent.none to hide the label.</param>
-        public static void ObjectField(Rect position, SerializedProperty property, Type objType)
+        public static void ObjectField(Rect position, SerializedProperty property, System.Type objType)
         {
             ObjectField(position, property, objType, null, EditorStyles.objectField);
         }
@@ -6348,7 +6348,7 @@ This warning only shows up in development builds.";
         /// <para>The object that has been set by the user.</para>
         /// </returns>
         [Obsolete("Check the docs for the usage of the new parameter 'allowSceneObjects'.")]
-        public static Object ObjectField(Rect position, Object obj, Type objType)
+        public static UnityEngine.Object ObjectField(Rect position, UnityEngine.Object obj, System.Type objType)
         {
             int id = GUIUtility.GetControlID(s_ObjectFieldHash, FocusType.Keyboard, position);
             return DoObjectField(position, position, id, obj, objType, null, null, true);
@@ -6366,7 +6366,7 @@ This warning only shows up in development builds.";
         /// <para>The object that has been set by the user.</para>
         /// </returns>
         [Obsolete("Check the docs for the usage of the new parameter 'allowSceneObjects'.")]
-        public static Object ObjectField(Rect position, string label, Object obj, Type objType) => 
+        public static UnityEngine.Object ObjectField(Rect position, string label, UnityEngine.Object obj, System.Type objType) => 
             ObjectField(position, EditorGUIUtility.TempContent(label), obj, objType, true);
 
         /// <summary>
@@ -6376,7 +6376,7 @@ This warning only shows up in development builds.";
         /// <param name="property">The object reference property the field shows.</param>
         /// <param name="objType">The type of the objects that can be assigned.</param>
         /// <param name="label">Optional label to display in front of the field. Pass GUIContent.none to hide the label.</param>
-        public static void ObjectField(Rect position, SerializedProperty property, Type objType, GUIContent label)
+        public static void ObjectField(Rect position, SerializedProperty property, System.Type objType, GUIContent label)
         {
             ObjectField(position, property, objType, label, EditorStyles.objectField);
         }
@@ -6393,7 +6393,7 @@ This warning only shows up in development builds.";
         /// <para>The object that has been set by the user.</para>
         /// </returns>
         [Obsolete("Check the docs for the usage of the new parameter 'allowSceneObjects'.")]
-        public static Object ObjectField(Rect position, GUIContent label, Object obj, Type objType) => 
+        public static UnityEngine.Object ObjectField(Rect position, GUIContent label, UnityEngine.Object obj, System.Type objType) => 
             ObjectField(position, label, obj, objType, true);
 
         /// <summary>
@@ -6407,7 +6407,7 @@ This warning only shows up in development builds.";
         /// <returns>
         /// <para>The object that has been set by the user.</para>
         /// </returns>
-        public static Object ObjectField(Rect position, Object obj, Type objType, bool allowSceneObjects)
+        public static UnityEngine.Object ObjectField(Rect position, UnityEngine.Object obj, System.Type objType, bool allowSceneObjects)
         {
             int id = GUIUtility.GetControlID(s_ObjectFieldHash, FocusType.Keyboard, position);
             return DoObjectField(IndentedRect(position), IndentedRect(position), id, obj, objType, null, null, allowSceneObjects);
@@ -6424,10 +6424,10 @@ This warning only shows up in development builds.";
         /// <returns>
         /// <para>The object that has been set by the user.</para>
         /// </returns>
-        public static Object ObjectField(Rect position, string label, Object obj, Type objType, bool allowSceneObjects) => 
+        public static UnityEngine.Object ObjectField(Rect position, string label, UnityEngine.Object obj, System.Type objType, bool allowSceneObjects) => 
             ObjectField(position, EditorGUIUtility.TempContent(label), obj, objType, allowSceneObjects);
 
-        internal static void ObjectField(Rect position, SerializedProperty property, Type objType, GUIContent label, GUIStyle style)
+        internal static void ObjectField(Rect position, SerializedProperty property, System.Type objType, GUIContent label, GUIStyle style)
         {
             label = BeginProperty(position, label, property);
             ObjectFieldInternal(position, property, objType, label, style);
@@ -6445,7 +6445,7 @@ This warning only shows up in development builds.";
         /// <returns>
         /// <para>The object that has been set by the user.</para>
         /// </returns>
-        public static Object ObjectField(Rect position, GUIContent label, Object obj, Type objType, bool allowSceneObjects)
+        public static UnityEngine.Object ObjectField(Rect position, GUIContent label, UnityEngine.Object obj, System.Type objType, bool allowSceneObjects)
         {
             int id = GUIUtility.GetControlID(s_ObjectFieldHash, FocusType.Keyboard, position);
             position = PrefixLabel(position, id, label);
@@ -6458,14 +6458,14 @@ This warning only shows up in development builds.";
             return DoObjectField(position, position, id, obj, objType, null, null, allowSceneObjects);
         }
 
-        private static void ObjectFieldInternal(Rect position, SerializedProperty property, Type objType, GUIContent label, GUIStyle style)
+        private static void ObjectFieldInternal(Rect position, SerializedProperty property, System.Type objType, GUIContent label, GUIStyle style)
         {
             int id = GUIUtility.GetControlID(s_PPtrHash, FocusType.Keyboard, position);
             position = PrefixLabel(position, id, label);
             bool allowSceneObjects = false;
             if (property != null)
             {
-                Object targetObject = property.serializedObject.targetObject;
+                UnityEngine.Object targetObject = property.serializedObject.targetObject;
                 if ((targetObject != null) && !EditorUtility.IsPersistent(targetObject))
                 {
                     allowSceneObjects = true;
@@ -6474,7 +6474,7 @@ This warning only shows up in development builds.";
             DoObjectField(position, position, id, null, null, property, null, allowSceneObjects, style);
         }
 
-        internal static void ObjectIconDropDown(Rect position, Object[] targets, bool showLabelIcons, Texture2D nullIcon, SerializedProperty iconProperty)
+        internal static void ObjectIconDropDown(Rect position, UnityEngine.Object[] targets, bool showLabelIcons, Texture2D nullIcon, SerializedProperty iconProperty)
         {
             if (s_IconTextureInactive == null)
             {
@@ -7230,7 +7230,7 @@ This warning only shows up in development builds.";
             if (Unsupported.IsDeveloperBuild())
             {
                 Color backgroundColor = GUI.backgroundColor;
-                GUI.backgroundColor = new Color(Random.value, Random.value, Random.value, 1f);
+                GUI.backgroundColor = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1f);
                 Texture2D background = EditorStyles.radioButton.normal.background;
                 Vector2 position = new Vector2((float) background.width, (float) background.height);
                 GUI.Label(new Rect(Vector2.zero, EditorGUIUtility.PixelsToPoints(position)), string.Empty, EditorStyles.radioButton);
@@ -7996,7 +7996,7 @@ This warning only shows up in development builds.";
             return text;
         }
 
-        internal static Object ValidateObjectFieldAssignment(Object[] references, Type objType, SerializedProperty property)
+        internal static UnityEngine.Object ValidateObjectFieldAssignment(UnityEngine.Object[] references, System.Type objType, SerializedProperty property)
         {
             if (references.Length > 0)
             {
@@ -8027,7 +8027,7 @@ This warning only shows up in development builds.";
                     {
                         references = ((GameObject) references[0]).GetComponents(typeof(Component));
                     }
-                    foreach (Object obj4 in references)
+                    foreach (UnityEngine.Object obj4 in references)
                     {
                         if ((obj4 != null) && objType.IsAssignableFrom(obj4.GetType()))
                         {
@@ -8039,7 +8039,7 @@ This warning only shows up in development builds.";
             return null;
         }
 
-        private static bool ValidTargetForIconSelection(Object[] targets) => 
+        private static bool ValidTargetForIconSelection(UnityEngine.Object[] targets) => 
             (((targets[0] is MonoScript) || (targets[0] is GameObject)) && (targets.Length == 1));
 
         private static Vector2 Vector2Field(Rect position, Vector2 value)
@@ -8465,7 +8465,7 @@ This warning only shows up in development builds.";
 
         internal sealed class GUIContents
         {
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private static GUIContent <helpIcon>k__BackingField;
             [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private static GUIContent <titleSettingsIcon>k__BackingField;
@@ -8706,7 +8706,7 @@ This warning only shows up in development builds.";
                     knobMaterial.name = "Knob Material";
                     if (knobMaterial.mainTexture == null)
                     {
-                        Debug.Log("Did not find 'KnobCShape'");
+                        UnityEngine.Debug.Log("Did not find 'KnobCShape'");
                     }
                 }
             }
@@ -8811,7 +8811,7 @@ This warning only shows up in development builds.";
             }
         }
 
-        internal delegate Object ObjectFieldValidator(Object[] references, Type objType, SerializedProperty property);
+        internal delegate UnityEngine.Object ObjectFieldValidator(UnityEngine.Object[] references, System.Type objType, SerializedProperty property);
 
         internal enum ObjectFieldVisualType
         {
@@ -8841,7 +8841,7 @@ This warning only shows up in development builds.";
                 {
                     if (instance == null)
                     {
-                        Debug.LogError("Popup menu has no instance");
+                        UnityEngine.Debug.LogError("Popup menu has no instance");
                         return selected;
                     }
                     if (instance.m_ControlID == controlID)
@@ -8884,7 +8884,7 @@ This warning only shows up in development builds.";
                 }
                 else
                 {
-                    Debug.LogError("BUG: We don't have a receiver set up, please report");
+                    UnityEngine.Debug.LogError("BUG: We don't have a receiver set up, please report");
                 }
             }
         }
@@ -8894,7 +8894,7 @@ This warning only shows up in development builds.";
         /// </summary>
         public class PropertyScope : GUI.Scope
         {
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private GUIContent <content>k__BackingField;
 
             /// <summary>

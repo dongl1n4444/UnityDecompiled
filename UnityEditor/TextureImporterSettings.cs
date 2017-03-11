@@ -275,10 +275,10 @@
         /// <summary>
         /// <para>Filtering mode of the texture.</para>
         /// </summary>
-        public FilterMode filterMode
+        public UnityEngine.FilterMode filterMode
         {
             get => 
-                ((FilterMode) this.m_FilterMode);
+                ((UnityEngine.FilterMode) this.m_FilterMode);
             set
             {
                 this.m_FilterMode = (int) value;

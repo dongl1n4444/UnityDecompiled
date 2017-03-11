@@ -217,17 +217,17 @@
                 {
                     ((GUIView) this.m_RootView).RemoveFromAuxWindowList();
                 }
-                Object.DestroyImmediate(this.m_RootView, true);
+                UnityEngine.Object.DestroyImmediate(this.m_RootView, true);
                 this.m_RootView = null;
             }
-            Object.DestroyImmediate(this, true);
+            UnityEngine.Object.DestroyImmediate(this, true);
         }
 
         public void Close()
         {
             this.Save();
             this.InternalClose();
-            Object.DestroyImmediate(this, true);
+            UnityEngine.Object.DestroyImmediate(this, true);
         }
 
         internal bool IsNotDocked() => 

@@ -49,7 +49,7 @@
                 vectorArray3[k].w -= num2;
             }
             mesh.tangents = vectorArray3;
-            Object.DestroyImmediate(obj2);
+            UnityEngine.Object.DestroyImmediate(obj2);
         }
 
         private static int CountIntersections(Vector3 v, Vector3 dist, float length)

@@ -30,7 +30,7 @@
             string responseFile = CommandLineFormatter.GenerateResponseFile(arguments);
             if (this.runUpdater)
             {
-                APIUpdaterHelper.UpdateScripts(responseFile, this._island.GetExtensionOfSourceFiles());
+                UnityEditor.Scripting.Compilers.APIUpdaterHelper.UpdateScripts(responseFile, this._island.GetExtensionOfSourceFiles());
             }
             ManagedProgram program = new ManagedProgram(monodistro, this._island._classlib_profile, compiler, " @" + responseFile, setMonoEnvironmentVariables, null);
             program.Start();

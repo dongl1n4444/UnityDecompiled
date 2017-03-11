@@ -15,6 +15,12 @@
         private static Color s_AnimatedPropertyColorLight = new Color(1f, 0.65f, 0.6f, 1f);
         private static bool s_InAnimationPlaybackMode = false;
 
+        /// <summary>
+        /// <para>Marks a property as currently being animated.</para>
+        /// </summary>
+        /// <param name="binding">Description of the animation clip curve being modified.</param>
+        /// <param name="modification">Object property being modified.</param>
+        /// <param name="keepPrefabOverride">Indicates whether to retain modifications when the targeted object is an instance of prefab.</param>
         public static void AddPropertyModification(EditorCurveBinding binding, PropertyModification modification, bool keepPrefabOverride)
         {
             INTERNAL_CALL_AddPropertyModification(ref binding, modification, keepPrefabOverride);
@@ -57,7 +63,7 @@
         /// <para>Whether the property search is found or not.</para>
         /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern bool IsPropertyAnimated(Object target, string propertyPath);
+        public static extern bool IsPropertyAnimated(UnityEngine.Object target, string propertyPath);
         /// <summary>
         /// <para>Samples an AnimationClip on the object and also records any modified
         /// properties in AnimationMode.</para>

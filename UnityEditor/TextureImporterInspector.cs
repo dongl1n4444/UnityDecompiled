@@ -11,7 +11,7 @@
     using UnityEngine;
     using UnityEngine.Events;
 
-    [CustomEditor(typeof(TextureImporter)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(TextureImporter))]
     internal class TextureImporterInspector : AssetImporterInspector
     {
         internal static readonly TextureImporterFormat[] kFormatsWithCompressionSettings = new TextureImporterFormat[] { TextureImporterFormat.DXT1Crunched };
@@ -26,7 +26,7 @@
         private SerializedProperty m_EnableMipMap;
         private SerializedProperty m_FadeOut;
         private SerializedProperty m_FilterMode;
-        private readonly int[] m_FilterModeOptions = ((int[]) Enum.GetValues(typeof(FilterMode)));
+        private readonly int[] m_FilterModeOptions = ((int[]) Enum.GetValues(typeof(UnityEngine.FilterMode)));
         private SerializedProperty m_GenerateCubemap;
         private Dictionary<TextureInspectorGUIElement, GUIMethod> m_GUIElementMethods = new Dictionary<TextureInspectorGUIElement, GUIMethod>();
         private List<TextureInspectorGUIElement> m_GUIElementsDisplayOrder = new List<TextureInspectorGUIElement>();
@@ -119,7 +119,7 @@
                     }
                     if (this.m_FilterMode.intValue != -1)
                     {
-                        TextureUtil.SetFilterModeNoDirty(tex, (FilterMode) this.m_FilterMode.intValue);
+                        TextureUtil.SetFilterModeNoDirty(tex, (UnityEngine.FilterMode) this.m_FilterMode.intValue);
                     }
                     if (this.m_WrapMode.intValue != -1)
                     {
@@ -240,12 +240,12 @@
             }
         }
 
-        private static bool CountImportersWithAlpha(Object[] importers, out int count)
+        private static bool CountImportersWithAlpha(UnityEngine.Object[] importers, out int count)
         {
             try
             {
                 count = 0;
-                foreach (Object obj2 in importers)
+                foreach (UnityEngine.Object obj2 in importers)
                 {
                     if ((obj2 as TextureImporter).DoesSourceTextureHaveAlpha())
                     {
@@ -261,12 +261,12 @@
             }
         }
 
-        private static bool CountImportersWithHDR(Object[] importers, out int count)
+        private static bool CountImportersWithHDR(UnityEngine.Object[] importers, out int count)
         {
             try
             {
                 count = 0;
-                foreach (Object obj2 in importers)
+                foreach (UnityEngine.Object obj2 in importers)
                 {
                     if ((obj2 as TextureImporter).IsSourceTextureHDR())
                     {
@@ -321,7 +321,7 @@
             }
         }
 
-        private void EnumPopup(SerializedProperty property, Type type, GUIContent label)
+        private void EnumPopup(SerializedProperty property, System.Type type, GUIContent label)
         {
             EditorGUILayout.IntPopup(property, EditorGUIUtility.TempContent(Enum.GetNames(type)), Enum.GetValues(type) as int[], label, new GUILayoutOption[0]);
         }
@@ -428,7 +428,7 @@
             }
             if (!this.m_FilterMode.hasMultipleDifferentValues)
             {
-                settings.filterMode = (FilterMode) this.m_FilterMode.intValue;
+                settings.filterMode = (UnityEngine.FilterMode) this.m_FilterMode.intValue;
             }
             if (!this.m_Aniso.hasMultipleDifferentValues)
             {
@@ -690,7 +690,7 @@
             SelectMainAssets(base.targets);
         }
 
-        public static void SelectMainAssets(Object[] targets)
+        public static void SelectMainAssets(UnityEngine.Object[] targets)
         {
             ArrayList list = new ArrayList();
             foreach (AssetImporter importer in targets)
@@ -703,7 +703,7 @@
             }
             if (list.Count > 0)
             {
-                Selection.objects = list.ToArray(typeof(Object)) as Object[];
+                Selection.objects = list.ToArray(typeof(UnityEngine.Object)) as UnityEngine.Object[];
             }
         }
 
@@ -879,7 +879,7 @@
             if (((this.m_NPOTScale.intValue == 0) && (intValue == TextureWrapMode.Repeat)) && !ShaderUtil.hardwareSupportsFullNPOT)
             {
                 bool flag = false;
-                foreach (Object obj2 in base.targets)
+                foreach (UnityEngine.Object obj2 in base.targets)
                 {
                     int width = -1;
                     int height = -1;
@@ -897,19 +897,19 @@
             }
             EditorGUI.BeginChangeCheck();
             EditorGUI.showMixedValue = this.m_FilterMode.hasMultipleDifferentValues;
-            FilterMode trilinear = (FilterMode) this.m_FilterMode.intValue;
-            if (trilinear == ~FilterMode.Point)
+            UnityEngine.FilterMode trilinear = (UnityEngine.FilterMode) this.m_FilterMode.intValue;
+            if (trilinear == ~UnityEngine.FilterMode.Point)
             {
                 if ((this.m_FadeOut.intValue > 0) || (this.m_ConvertToNormalMap.intValue > 0))
                 {
-                    trilinear = FilterMode.Trilinear;
+                    trilinear = UnityEngine.FilterMode.Trilinear;
                 }
                 else
                 {
-                    trilinear = FilterMode.Bilinear;
+                    trilinear = UnityEngine.FilterMode.Bilinear;
                 }
             }
-            trilinear = (FilterMode) EditorGUILayout.IntPopup(s_Styles.filterMode, (int) trilinear, s_Styles.filterModeOptions, this.m_FilterModeOptions, new GUILayoutOption[0]);
+            trilinear = (UnityEngine.FilterMode) EditorGUILayout.IntPopup(s_Styles.filterMode, (int) trilinear, s_Styles.filterModeOptions, this.m_FilterModeOptions, new GUILayoutOption[0]);
             EditorGUI.showMixedValue = false;
             if (EditorGUI.EndChangeCheck())
             {

@@ -142,17 +142,17 @@
                 EditorGUILayout.PropertyField(this.m_DefaultReflectionMode, Styles.reflectionModeLabel, new GUILayoutOption[0]);
                 EditorGUI.indentLevel++;
                 Cubemap cubemap = this.m_CustomReflection.objectReferenceValue as Cubemap;
-                DefaultReflectionMode intValue = (DefaultReflectionMode) this.m_DefaultReflectionMode.intValue;
-                if (((objectReferenceValue == null) && (intValue == DefaultReflectionMode.FromSkybox)) || ((cubemap == null) && (intValue == DefaultReflectionMode.Custom)))
+                UnityEditor.DefaultReflectionMode intValue = (UnityEditor.DefaultReflectionMode) this.m_DefaultReflectionMode.intValue;
+                if (((objectReferenceValue == null) && (intValue == UnityEditor.DefaultReflectionMode.FromSkybox)) || ((cubemap == null) && (intValue == UnityEditor.DefaultReflectionMode.Custom)))
                 {
                     EditorGUILayout.HelpBox(Styles.defReflectionWarning.text, MessageType.Warning);
                 }
-                if (intValue == DefaultReflectionMode.FromSkybox)
+                if (intValue == UnityEditor.DefaultReflectionMode.FromSkybox)
                 {
                     GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.MinWidth(40f) };
                     EditorGUILayout.IntPopup(this.m_DefaultReflectionResolution, Styles.defaultReflectionSizes, Styles.defaultReflectionSizesValues, Styles.defaultReflectionResolution, options);
                 }
-                else if (intValue == DefaultReflectionMode.Custom)
+                else if (intValue == UnityEditor.DefaultReflectionMode.Custom)
                 {
                     EditorGUILayout.PropertyField(this.m_CustomReflection, Styles.customReflection, new GUILayoutOption[0]);
                 }

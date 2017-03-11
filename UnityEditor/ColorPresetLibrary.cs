@@ -80,7 +80,7 @@
         {
             for (int i = 0; i < 0x7d0; i++)
             {
-                this.m_Presets.Add(new ColorPreset(new Color(Random.Range((float) 0.2f, (float) 1f), Random.Range((float) 0.2f, (float) 1f), Random.Range((float) 0.2f, (float) 1f), 1f), "Preset Color " + i));
+                this.m_Presets.Add(new ColorPreset(new Color(UnityEngine.Random.Range((float) 0.2f, (float) 1f), UnityEngine.Random.Range((float) 0.2f, (float) 1f), UnityEngine.Random.Range((float) 0.2f, (float) 1f), 1f), "Preset Color " + i));
             }
         }
 
@@ -160,19 +160,19 @@
         {
             if (this.m_ColorSwatch != null)
             {
-                Object.DestroyImmediate(this.m_ColorSwatch);
+                UnityEngine.Object.DestroyImmediate(this.m_ColorSwatch);
             }
             if (this.m_ColorSwatchTriangular != null)
             {
-                Object.DestroyImmediate(this.m_ColorSwatchTriangular);
+                UnityEngine.Object.DestroyImmediate(this.m_ColorSwatchTriangular);
             }
             if (this.m_MiniColorSwatchTriangular != null)
             {
-                Object.DestroyImmediate(this.m_MiniColorSwatchTriangular);
+                UnityEngine.Object.DestroyImmediate(this.m_MiniColorSwatchTriangular);
             }
             if (this.m_CheckerBoard != null)
             {
-                Object.DestroyImmediate(this.m_CheckerBoard);
+                UnityEngine.Object.DestroyImmediate(this.m_CheckerBoard);
             }
         }
 

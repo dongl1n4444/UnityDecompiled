@@ -11,7 +11,7 @@
     [CustomEditor(typeof(AnimationClip))]
     internal class AnimationClipEditor : Editor
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private int <takeIndex>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private string[] <takeNames>k__BackingField;
@@ -24,7 +24,7 @@
         private AvatarPreview m_AvatarPreview = null;
         private AnimationClip m_Clip = null;
         private AnimationClipInfoProperties m_ClipInfo = null;
-        private AnimatorController m_Controller = null;
+        private UnityEditor.Animations.AnimatorController m_Controller = null;
         private bool m_DirtyQualityCurves = false;
         private float m_DraggingAdditivePoseFrame = 0f;
         private bool m_DraggingRange = false;
@@ -424,10 +424,10 @@
         {
             if ((this.m_AvatarPreview != null) && (this.m_AvatarPreview.Animator != null))
             {
-                AnimatorController.SetAnimatorController(this.m_AvatarPreview.Animator, null);
+                UnityEditor.Animations.AnimatorController.SetAnimatorController(this.m_AvatarPreview.Animator, null);
             }
-            Object.DestroyImmediate(this.m_Controller);
-            Object.DestroyImmediate(this.m_State);
+            UnityEngine.Object.DestroyImmediate(this.m_Controller);
+            UnityEngine.Object.DestroyImmediate(this.m_State);
             this.m_Controller = null;
             this.m_StateMachine = null;
             this.m_State = null;
@@ -554,7 +554,7 @@
             {
                 if (this.m_Controller == null)
                 {
-                    this.m_Controller = new AnimatorController();
+                    this.m_Controller = new UnityEditor.Animations.AnimatorController();
                     this.m_Controller.pushUndo = false;
                     this.m_Controller.hideFlags = HideFlags.HideAndDontSave;
                     this.m_Controller.AddLayer("preview");
@@ -563,7 +563,7 @@
                     this.m_StateMachine.hideFlags = HideFlags.HideAndDontSave;
                     if (this.mask != null)
                     {
-                        AnimatorControllerLayer[] layers = this.m_Controller.layers;
+                        UnityEditor.Animations.AnimatorControllerLayer[] layers = this.m_Controller.layers;
                         layers[0].avatarMask = this.mask;
                         this.m_Controller.layers = layers;
                     }
@@ -572,16 +572,16 @@
                 {
                     this.m_State = this.m_StateMachine.AddState("preview");
                     this.m_State.pushUndo = false;
-                    AnimatorControllerLayer[] layerArray2 = this.m_Controller.layers;
+                    UnityEditor.Animations.AnimatorControllerLayer[] layerArray2 = this.m_Controller.layers;
                     this.m_State.motion = this.m_Clip;
                     this.m_Controller.layers = layerArray2;
                     this.m_State.iKOnFeet = this.m_AvatarPreview.IKOnFeet;
                     this.m_State.hideFlags = HideFlags.HideAndDontSave;
                 }
-                AnimatorController.SetAnimatorController(this.m_AvatarPreview.Animator, this.m_Controller);
-                if (AnimatorController.GetEffectiveAnimatorController(this.m_AvatarPreview.Animator) != this.m_Controller)
+                UnityEditor.Animations.AnimatorController.SetAnimatorController(this.m_AvatarPreview.Animator, this.m_Controller);
+                if (UnityEditor.Animations.AnimatorController.GetEffectiveAnimatorController(this.m_AvatarPreview.Animator) != this.m_Controller)
                 {
-                    AnimatorController.SetAnimatorController(this.m_AvatarPreview.Animator, this.m_Controller);
+                    UnityEditor.Animations.AnimatorController.SetAnimatorController(this.m_AvatarPreview.Animator, this.m_Controller);
                 }
             }
         }

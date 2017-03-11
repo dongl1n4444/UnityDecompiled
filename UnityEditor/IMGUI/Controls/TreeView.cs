@@ -187,8 +187,8 @@
             this.m_TreeView.selectionChangedCallback = (Action<int[]>) Delegate.Combine(this.m_TreeView.selectionChangedCallback, new Action<int[]>(this.SelectionChanged));
             this.m_TreeView.itemDoubleClickedCallback = (Action<int>) Delegate.Combine(this.m_TreeView.itemDoubleClickedCallback, new Action<int>(this.DoubleClickedItem));
             this.m_TreeView.contextClickItemCallback = (Action<int>) Delegate.Combine(this.m_TreeView.contextClickItemCallback, new Action<int>(this.ContextClickedItem));
-            this.m_TreeView.contextClickOutsideItemsCallback = (Action) Delegate.Combine(this.m_TreeView.contextClickOutsideItemsCallback, new Action(this.ContextClicked));
-            this.m_TreeView.expandedStateChanged = (Action) Delegate.Combine(this.m_TreeView.expandedStateChanged, new Action(this.ExpandedStateChanged));
+            this.m_TreeView.contextClickOutsideItemsCallback = (System.Action) Delegate.Combine(this.m_TreeView.contextClickOutsideItemsCallback, new System.Action(this.ContextClicked));
+            this.m_TreeView.expandedStateChanged = (System.Action) Delegate.Combine(this.m_TreeView.expandedStateChanged, new System.Action(this.ExpandedStateChanged));
             this.m_TreeViewKeyControlID = GUIUtility.GetPermanentControlID();
         }
 
@@ -300,7 +300,7 @@
             }
             if (!this.m_WarnedUser)
             {
-                Debug.LogError("TreeView has not been properly intialized yet (rootItem is null). Ensure to call Reload() before using the tree view");
+                UnityEngine.Debug.LogError("TreeView has not been properly intialized yet (rootItem is null). Ensure to call Reload() before using the tree view");
                 this.m_WarnedUser = true;
             }
             return false;
@@ -504,7 +504,7 @@
 
             public OverriddenMethods(TreeView treeView)
             {
-                Type type = treeView.GetType();
+                System.Type type = treeView.GetType();
                 this.hasItemGUI = IsOverridden(type, "OnItemGUI");
                 this.hasDrawItemBackground = IsOverridden(type, "OnDrawItemBackground");
                 this.hasHandleDragAndDrop = IsOverridden(type, "HandleDragAndDrop");
@@ -512,31 +512,31 @@
                 this.ValidateOverriddenMethods(treeView);
             }
 
-            private static bool IsOverridden(Type type, string methodName)
+            private static bool IsOverridden(System.Type type, string methodName)
             {
                 MethodInfo method = type.GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
                 if (method != null)
                 {
                     return !(method.GetBaseDefinition().DeclaringType == method.DeclaringType);
                 }
-                Debug.LogError("IsOverridden: method name not found: " + methodName + " (check spelling against method declaration)");
+                UnityEngine.Debug.LogError("IsOverridden: method name not found: " + methodName + " (check spelling against method declaration)");
                 return false;
             }
 
             private void ValidateOverriddenMethods(TreeView treeView)
             {
-                Type type = treeView.GetType();
+                System.Type type = treeView.GetType();
                 bool flag = IsOverridden(type, "CanRename");
                 bool flag2 = IsOverridden(type, "RenameEnded");
                 if (flag2 != flag)
                 {
                     if (flag)
                     {
-                        Debug.LogError(type.Name + ": If you are overriding CanRename you should also override RenameEnded (to handle the renaming).");
+                        UnityEngine.Debug.LogError(type.Name + ": If you are overriding CanRename you should also override RenameEnded (to handle the renaming).");
                     }
                     if (flag2)
                     {
-                        Debug.LogError(type.Name + ": If you are overriding RenameEnded you should also override CanRename (to allow renaming).");
+                        UnityEngine.Debug.LogError(type.Name + ": If you are overriding RenameEnded you should also override CanRename (to allow renaming).");
                     }
                 }
                 bool flag3 = IsOverridden(type, "CanStartDrag");
@@ -545,11 +545,11 @@
                 {
                     if (flag3)
                     {
-                        Debug.LogError(type.Name + ": If you are overriding CanStartDrag you should also override SetupDragAndDrop (to setup the drag).");
+                        UnityEngine.Debug.LogError(type.Name + ": If you are overriding CanStartDrag you should also override SetupDragAndDrop (to setup the drag).");
                     }
                     if (flag4)
                     {
-                        Debug.LogError(type.Name + ": If you are overriding SetupDragAndDrop you should also override CanStartDrag (to allow dragging).");
+                        UnityEngine.Debug.LogError(type.Name + ": If you are overriding SetupDragAndDrop you should also override CanStartDrag (to allow dragging).");
                     }
                 }
             }
@@ -668,7 +668,7 @@
 
         private class TreeViewControlGUI : TreeViewGUI
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private int <columnIndexForTreeFoldouts>k__BackingField;
             private readonly TreeView m_Owner;
             private List<Rect> m_RowRects;
@@ -780,7 +780,7 @@
                     int rowCount = base.m_TreeView.data.rowCount;
                     if (rowCount != this.m_RowRects.Count)
                     {
-                        Debug.LogError($"Mismatch in state: rows vs cached rects. Did you remember to update row heigths when BuildRootAndRows was called. Number of rows: {rowCount}, number of custom row heights: {this.m_RowRects.Count}");
+                        UnityEngine.Debug.LogError($"Mismatch in state: rows vs cached rects. Did you remember to update row heigths when BuildRootAndRows was called. Number of rows: {rowCount}, number of custom row heights: {this.m_RowRects.Count}");
                     }
                     float y = base.m_TreeView.state.scrollPos.y;
                     float height = base.m_TreeView.GetTotalRect().height;
@@ -845,7 +845,7 @@
                 }
                 if (this.m_RowRects.Count == 0)
                 {
-                    Debug.LogError("Mismatch in state: rows vs cached rects. No cached row rects but requested row rect " + row);
+                    UnityEngine.Debug.LogError("Mismatch in state: rows vs cached rects. No cached row rects but requested row rect " + row);
                     return new Rect();
                 }
                 Rect rect3 = this.m_RowRects[row];

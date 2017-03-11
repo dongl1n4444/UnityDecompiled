@@ -13,7 +13,7 @@
         private static PrefKey kFPSLeft = new PrefKey("View/FPS Strafe Left", "a");
         private static PrefKey kFPSRight = new PrefKey("View/FPS Strafe Right", "d");
         private static PrefKey kFPSUp = new PrefKey("View/FPS Strafe Up", "e");
-        private ViewTool m_CurrentViewTool = ViewTool.None;
+        private UnityEditor.ViewTool m_CurrentViewTool = UnityEditor.ViewTool.None;
         private float m_FlySpeed = 0f;
         private static TimeHelper m_FPSTiming = new TimeHelper();
         private Vector3 m_Motion = new Vector3();
@@ -47,7 +47,7 @@
             {
                 this.ResetCameraControl();
             }
-            if (this.m_CurrentViewTool == ViewTool.FPS)
+            if (this.m_CurrentViewTool == UnityEditor.ViewTool.FPS)
             {
                 Event current = Event.current;
                 Vector3 motion = this.m_Motion;
@@ -90,7 +90,7 @@
 
         private void HandleCameraKeyUp()
         {
-            if (this.m_CurrentViewTool == ViewTool.FPS)
+            if (this.m_CurrentViewTool == UnityEditor.ViewTool.FPS)
             {
                 Event current = Event.current;
                 if (current.keyCode == kFPSForward.keyCode)
@@ -131,11 +131,11 @@
             Event current = Event.current;
             switch (this.m_CurrentViewTool)
             {
-                case ViewTool.Orbit:
+                case UnityEditor.ViewTool.Orbit:
                     this.OrbitCameraBehavior(cameraState, cam);
                     break;
 
-                case ViewTool.Pan:
+                case UnityEditor.ViewTool.Pan:
                 {
                     cameraState.FixNegativeSize();
                     Vector3 position = cam.WorldToScreenPoint(cameraState.pivot.value) + new Vector3(-Event.current.delta.x, Event.current.delta.y, 0f);
@@ -148,7 +148,7 @@
                     pivot.value += vector7;
                     break;
                 }
-                case ViewTool.Zoom:
+                case UnityEditor.ViewTool.Zoom:
                 {
                     float num = HandleUtility.niceMouseDeltaZoom * (!current.shift ? ((float) 3) : ((float) 9));
                     this.m_TotalMotion += num;
@@ -160,7 +160,7 @@
                     cameraState.viewSize.value = this.m_StartZoom * (1f + (this.m_TotalMotion * 0.001f));
                     break;
                 }
-                case ViewTool.FPS:
+                case UnityEditor.ViewTool.FPS:
                 {
                     Vector3 vector = cameraState.pivot.value - ((Vector3) ((cameraState.rotation.value * Vector3.forward) * cameraState.GetCameraDistance()));
                     Quaternion quaternion = cameraState.rotation.value;
@@ -214,7 +214,7 @@
 
         private void ResetCameraControl()
         {
-            this.m_CurrentViewTool = ViewTool.None;
+            this.m_CurrentViewTool = UnityEditor.ViewTool.None;
             this.m_Motion = Vector3.zero;
         }
 
@@ -223,7 +223,7 @@
             Event current = Event.current;
             if (current.type == EventType.MouseUp)
             {
-                this.m_CurrentViewTool = ViewTool.None;
+                this.m_CurrentViewTool = UnityEditor.ViewTool.None;
             }
             if (current.type == EventType.MouseDown)
             {
@@ -231,22 +231,22 @@
                 bool flag = current.control && (Application.platform == RuntimePlatform.OSXEditor);
                 if (button == 2)
                 {
-                    this.m_CurrentViewTool = ViewTool.Pan;
+                    this.m_CurrentViewTool = UnityEditor.ViewTool.Pan;
                 }
                 else if (((button <= 0) && flag) || ((button == 1) && current.alt))
                 {
-                    this.m_CurrentViewTool = ViewTool.Zoom;
+                    this.m_CurrentViewTool = UnityEditor.ViewTool.Zoom;
                     this.m_StartZoom = cameraState.viewSize.value;
                     this.m_ZoomSpeed = Mathf.Max(Mathf.Abs(this.m_StartZoom), 0.3f);
                     this.m_TotalMotion = 0f;
                 }
                 else if (button <= 0)
                 {
-                    this.m_CurrentViewTool = ViewTool.Orbit;
+                    this.m_CurrentViewTool = UnityEditor.ViewTool.Orbit;
                 }
                 else if ((button == 1) && !current.alt)
                 {
-                    this.m_CurrentViewTool = ViewTool.FPS;
+                    this.m_CurrentViewTool = UnityEditor.ViewTool.FPS;
                 }
             }
             switch (current.type)
@@ -283,7 +283,7 @@
             }
         }
 
-        public ViewTool currentViewTool =>
+        public UnityEditor.ViewTool currentViewTool =>
             this.m_CurrentViewTool;
     }
 }

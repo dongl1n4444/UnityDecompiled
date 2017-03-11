@@ -490,7 +490,7 @@
             {
                 this.m_CurveEditor.OnDestroy();
             }
-            Object.DestroyImmediate(this.m_State);
+            UnityEngine.Object.DestroyImmediate(this.m_State);
         }
 
         public void OnDisable()
@@ -506,9 +506,9 @@
                 this.m_DopeSheet.OnDisable();
             }
             AnimationWindowSelection selection = this.m_State.selection;
-            selection.onSelectionChanged = (Action) Delegate.Remove(selection.onSelectionChanged, new Action(this.OnSelectionChanged));
-            this.m_State.onStartLiveEdit = (Action) Delegate.Remove(this.m_State.onStartLiveEdit, new Action(this.OnStartLiveEdit));
-            this.m_State.onEndLiveEdit = (Action) Delegate.Remove(this.m_State.onEndLiveEdit, new Action(this.OnEndLiveEdit));
+            selection.onSelectionChanged = (System.Action) Delegate.Remove(selection.onSelectionChanged, new System.Action(this.OnSelectionChanged));
+            this.m_State.onStartLiveEdit = (System.Action) Delegate.Remove(this.m_State.onStartLiveEdit, new System.Action(this.OnStartLiveEdit));
+            this.m_State.onEndLiveEdit = (System.Action) Delegate.Remove(this.m_State.onEndLiveEdit, new System.Action(this.OnEndLiveEdit));
             this.m_State.OnDisable();
         }
 
@@ -535,9 +535,9 @@
             this.m_Overlay.state = this.m_State;
             this.m_CurveEditor.curvesUpdated = (CurveEditor.CallbackFunction) Delegate.Combine(this.m_CurveEditor.curvesUpdated, new CurveEditor.CallbackFunction(this.SaveChangedCurvesFromCurveEditor));
             AnimationWindowSelection selection = this.m_State.selection;
-            selection.onSelectionChanged = (Action) Delegate.Combine(selection.onSelectionChanged, new Action(this.OnSelectionChanged));
-            this.m_State.onStartLiveEdit = (Action) Delegate.Combine(this.m_State.onStartLiveEdit, new Action(this.OnStartLiveEdit));
-            this.m_State.onEndLiveEdit = (Action) Delegate.Combine(this.m_State.onEndLiveEdit, new Action(this.OnEndLiveEdit));
+            selection.onSelectionChanged = (System.Action) Delegate.Combine(selection.onSelectionChanged, new System.Action(this.OnSelectionChanged));
+            this.m_State.onStartLiveEdit = (System.Action) Delegate.Combine(this.m_State.onStartLiveEdit, new System.Action(this.OnStartLiveEdit));
+            this.m_State.onEndLiveEdit = (System.Action) Delegate.Combine(this.m_State.onEndLiveEdit, new System.Action(this.OnEndLiveEdit));
         }
 
         public void OnEndLiveEdit()

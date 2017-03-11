@@ -259,14 +259,14 @@
             }
             else
             {
-                Object[] filtered = Selection.GetFiltered(typeof(Object), SelectionMode.Assets);
+                UnityEngine.Object[] filtered = Selection.GetFiltered(typeof(UnityEngine.Object), UnityEditor.SelectionMode.Assets);
                 string[] guids = new string[0];
                 switch (this.m_FileViewWin.SelType)
                 {
                     case ASHistoryFileView.SelectionType.All:
                         if (Selection.objects.Length != 0)
                         {
-                            Selection.objects = new Object[0];
+                            Selection.objects = new UnityEngine.Object[0];
                             this.m_NextSelectionMine = true;
                         }
                         this.m_SelectedPath = "";
@@ -290,7 +290,7 @@
                     case ASHistoryFileView.SelectionType.DeletedItemsRoot:
                         if (Selection.objects.Length != 0)
                         {
-                            Selection.objects = new Object[0];
+                            Selection.objects = new UnityEngine.Object[0];
                             this.m_NextSelectionMine = true;
                         }
                         guids = this.m_FileViewWin.GetAllDeletedItemGUIDs();
@@ -304,7 +304,7 @@
                     case ASHistoryFileView.SelectionType.DeletedItems:
                         if (Selection.objects.Length != 0)
                         {
-                            Selection.objects = new Object[0];
+                            Selection.objects = new UnityEngine.Object[0];
                             this.m_NextSelectionMine = true;
                         }
                         guids = this.m_FileViewWin.GetSelectedDeletedItemGUIDs();

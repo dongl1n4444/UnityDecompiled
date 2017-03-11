@@ -202,7 +202,7 @@
                 if (eaot2.m_Exception != null)
                 {
                     object[] args = new object[] { eaot2.m_input, eaot2.m_Exception };
-                    Debug.LogErrorFormat("Cross compilation job {0} failed.\n{1}", args);
+                    UnityEngine.Debug.LogErrorFormat("Cross compilation job {0} failed.\n{1}", args);
                     flag = false;
                 }
             }

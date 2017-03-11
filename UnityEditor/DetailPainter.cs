@@ -45,7 +45,7 @@
                             float t = this.opacity * this.brush.GetStrengthInt(ix, iy);
                             float targetStrength = this.targetStrength;
                             float num18 = Mathf.Lerp((float) details[j, k], targetStrength, t);
-                            details[j, k] = Mathf.RoundToInt((num18 - 0.5f) + Random.value);
+                            details[j, k] = Mathf.RoundToInt((num18 - 0.5f) + UnityEngine.Random.value);
                         }
                     }
                     this.terrainData.SetDetailLayer(xBase, yBase, numArray[i], details);

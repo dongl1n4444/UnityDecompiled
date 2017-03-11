@@ -21,7 +21,7 @@
         {
             GUIStyle followingStyle = "MiniPopup";
             GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-            EditorGUILayout.PrefixLabel("Tizen SDK Location", followingStyle);
+            EditorGUILayout.PrefixLabel("Tizen Studio Location", followingStyle);
             string text = !string.IsNullOrEmpty(this.m_TizenSdkPath) ? this.m_TizenSdkPath : "Browse...";
             GUIContent content = new GUIContent(text);
             if (EditorGUI.ButtonMouseDown(GUILayoutUtility.GetRect(GUIContent.none, followingStyle), content, FocusType.Passive, followingStyle))

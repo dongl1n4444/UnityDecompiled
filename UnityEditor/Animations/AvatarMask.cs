@@ -7,7 +7,7 @@
     /// <summary>
     /// <para>AvatarMask are used to mask out humanoid body parts and transforms.</para>
     /// </summary>
-    public sealed class AvatarMask : Object
+    public sealed class AvatarMask : UnityEngine.Object
     {
         /// <summary>
         /// <para>Creates a new AvatarMask.</para>

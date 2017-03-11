@@ -6,7 +6,7 @@
     using UnityEditor.VisualStudioIntegration;
     using UnityEngine;
 
-    public sealed class EditorSettings : Object
+    public sealed class EditorSettings : UnityEngine.Object
     {
         [CompilerGenerated]
         private static Func<string, string> <>f__am$cache0;

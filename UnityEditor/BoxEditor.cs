@@ -14,7 +14,7 @@
         private static Func<Vector3, float> <>f__mg$cache1;
         [CompilerGenerated]
         private static Handles.DrawCapFunction <>f__mg$cache2;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private float <backfaceAlphaMultiplier>k__BackingField;
         public Handles.DrawCapFunction drawMethodForHandles;
         public Func<Vector3, float> getHandleSizeMethod;

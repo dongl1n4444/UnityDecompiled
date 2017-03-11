@@ -205,7 +205,7 @@
             GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(80f) };
             GUILayout.BeginVertical(options);
             GUILayout.Label(label, new GUILayoutOption[0]);
-            Type objType = typeof(Texture2D);
+            System.Type objType = typeof(Texture2D);
             GUILayoutOption[] optionArray2 = new GUILayoutOption[] { GUILayout.MaxWidth(64f) };
             Rect position = GUILayoutUtility.GetRect(64f, 64f, 64f, 64f, optionArray2);
             position.x += alignmentOffset;

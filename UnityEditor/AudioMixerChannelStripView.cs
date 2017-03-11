@@ -1222,7 +1222,7 @@
             {
                 if (!current.shift)
                 {
-                    Selection.objects = new Object[0];
+                    Selection.objects = new UnityEngine.Object[0];
                     this.m_Controller.OnUnitySelectionChanged();
                 }
                 GUIUtility.hotControl = this.m_RectSelectionControlID;

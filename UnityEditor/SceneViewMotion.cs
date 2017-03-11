@@ -131,7 +131,7 @@
             Event current = Event.current;
             int controlID = s_ViewToolID;
             EventType typeForControl = current.GetTypeForControl(controlID);
-            if ((view != null) && (Tools.s_LockedViewTool == ViewTool.FPS))
+            if ((view != null) && (Tools.s_LockedViewTool == UnityEditor.ViewTool.FPS))
             {
                 view.FixNegativeSize();
             }
@@ -200,7 +200,7 @@
             {
                 ResetDragState();
             }
-            if (Tools.s_LockedViewTool == ViewTool.FPS)
+            if (Tools.s_LockedViewTool == UnityEditor.ViewTool.FPS)
             {
                 Event current = Event.current;
                 Vector3 vector = s_Motion;
@@ -249,7 +249,7 @@
 
         private static void HandleKeyUp()
         {
-            if (Tools.s_LockedViewTool == ViewTool.FPS)
+            if (Tools.s_LockedViewTool == UnityEditor.ViewTool.FPS)
             {
                 Event current = Event.current;
                 if (current.keyCode == kFPSForward.keyCode)
@@ -290,7 +290,7 @@
             s_Dragged = false;
             if (Tools.viewToolActive)
             {
-                ViewTool viewTool = Tools.viewTool;
+                UnityEditor.ViewTool viewTool = Tools.viewTool;
                 if (Tools.s_LockedViewTool != viewTool)
                 {
                     Event current = Event.current;
@@ -324,7 +324,7 @@
             Event current = Event.current;
             switch (Tools.s_LockedViewTool)
             {
-                case ViewTool.Orbit:
+                case UnityEditor.ViewTool.Orbit:
                     if (!view.in2DMode && !view.isRotationLocked)
                     {
                         OrbitCameraBehavior(view);
@@ -332,7 +332,7 @@
                     }
                     goto Label_031E;
 
-                case ViewTool.Pan:
+                case UnityEditor.ViewTool.Pan:
                 {
                     view.viewIsLockedToObject = false;
                     view.FixNegativeSize();
@@ -346,7 +346,7 @@
                     view.pivot += vector7;
                     goto Label_031E;
                 }
-                case ViewTool.Zoom:
+                case UnityEditor.ViewTool.Zoom:
                 {
                     float num = HandleUtility.niceMouseDeltaZoom * (!current.shift ? ((float) 3) : ((float) 9));
                     if (!view.orthographic)
@@ -367,7 +367,7 @@
                     }
                     goto Label_031E;
                 }
-                case ViewTool.FPS:
+                case UnityEditor.ViewTool.FPS:
                 {
                     if (view.in2DMode || view.isRotationLocked)
                     {
@@ -508,7 +508,7 @@
         private static void ResetDragState()
         {
             GUIUtility.hotControl = 0;
-            Tools.s_LockedViewTool = ViewTool.None;
+            Tools.s_LockedViewTool = UnityEditor.ViewTool.None;
             Tools.s_ButtonDown = -1;
             s_Motion = Vector3.zero;
             if (Toolbar.get != null)

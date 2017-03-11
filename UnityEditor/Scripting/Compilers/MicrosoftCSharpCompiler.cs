@@ -14,8 +14,6 @@
 
     internal class MicrosoftCSharpCompiler : ScriptCompilerBase
     {
-        private static string[] _uwpReferences;
-
         public MicrosoftCSharpCompiler(MonoIsland island, bool runUpdater) : base(island)
         {
         }
@@ -127,11 +125,7 @@
             {
                 return null;
             }
-            if (_uwpReferences == null)
-            {
-                _uwpReferences = UWPReferences.GetReferences();
-            }
-            return _uwpReferences;
+            return UWPReferences.GetReferences(UWPReferences.GetDesiredSDKVersion());
         }
 
         private static ScriptingImplementation GetCurrentScriptingBackend() => 
@@ -208,7 +202,13 @@
             string windowsKitDirectory = GetWindowsKitDirectory(wsaSDK);
             if (wsaSDK == WSASDK.UWP)
             {
-                return Path.Combine(windowsKitDirectory, @"UnionMetadata\Facade\Windows.winmd");
+                string[] components = new string[] { windowsKitDirectory, "UnionMetadata", UWPReferences.SdkVersionToString(UWPReferences.GetDesiredSDKVersion()), "Facade", "Windows.winmd" };
+                string path = Paths.Combine(components);
+                if (!File.Exists(path))
+                {
+                    path = Path.Combine(windowsKitDirectory, @"UnionMetadata\Facade\Windows.winmd");
+                }
+                return path;
             }
             return Path.Combine(windowsKitDirectory, @"References\CommonConfiguration\Neutral\Windows.winmd");
         }
@@ -326,7 +326,7 @@
                 {
                     return environmentVariable;
                 }
-                Debug.Log("Env variables ProgramFiles(x86) & ProgramFiles didn't exist, trying hard coded paths");
+                UnityEngine.Debug.Log("Env variables ProgramFiles(x86) & ProgramFiles didn't exist, trying hard coded paths");
                 string fullPath = Path.GetFullPath(WindowsDirectory + @"\..\..");
                 string path = fullPath + "Program Files (x86)";
                 string str5 = fullPath + "Program Files";

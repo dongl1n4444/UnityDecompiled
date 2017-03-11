@@ -5,7 +5,7 @@
     using UnityEditorInternal;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(ProceduralMaterial))]
+    [CustomEditor(typeof(ProceduralMaterial)), CanEditMultipleObjects]
     internal class ProceduralMaterialInspector : MaterialEditor
     {
         private static string[] kMaxLoadBehaviorStrings = new string[] { "Do nothing", "Do nothing and cache", "Build on level load", "Build on level load and cache", "Bake and keep Substance", "Bake and discard Substance" };
@@ -79,7 +79,7 @@
             this.GeneratedTextures();
         }
 
-        internal static void DoObjectPingField(Rect position, Rect dropRect, int id, Object obj, Type objType)
+        internal static void DoObjectPingField(Rect position, Rect dropRect, int id, UnityEngine.Object obj, System.Type objType)
         {
             Event current = Event.current;
             EventType rawType = current.type;
@@ -93,7 +93,7 @@
                 case EventType.MouseDown:
                     if ((Event.current.button == 0) && position.Contains(Event.current.mousePosition))
                     {
-                        Object gameObject = obj;
+                        UnityEngine.Object gameObject = obj;
                         Component component = gameObject as Component;
                         if (component != null)
                         {
@@ -158,19 +158,19 @@
             }
         }
 
-        [MenuItem("CONTEXT/ProceduralMaterial/Export Bitmaps (remapped alpha channels)", false)]
+        [UnityEditor.MenuItem("CONTEXT/ProceduralMaterial/Export Bitmaps (remapped alpha channels)", false)]
         public static void ExportBitmapsAlphaRemap(MenuCommand command)
         {
             ExportBitmaps(command.context as ProceduralMaterial, true);
         }
 
-        [MenuItem("CONTEXT/ProceduralMaterial/Export Bitmaps (original alpha channels)", false)]
+        [UnityEditor.MenuItem("CONTEXT/ProceduralMaterial/Export Bitmaps (original alpha channels)", false)]
         public static void ExportBitmapsNoAlphaRemap(MenuCommand command)
         {
             ExportBitmaps(command.context as ProceduralMaterial, false);
         }
 
-        [MenuItem("CONTEXT/ProceduralMaterial/Export Preset", false)]
+        [UnityEditor.MenuItem("CONTEXT/ProceduralMaterial/Export Preset", false)]
         public static void ExportPreset(MenuCommand command)
         {
             string exportPath = EditorUtility.SaveFolderPanel("Set preset export path...", "", "");
@@ -647,7 +647,7 @@
 
         public override void OnInspectorGUI()
         {
-            using (new EditorGUI.DisabledScope(AnimationMode.InAnimationMode()))
+            using (new EditorGUI.DisabledScope(UnityEditor.AnimationMode.InAnimationMode()))
             {
                 this.m_MightHaveModified = true;
                 if (this.m_Styles == null)
@@ -769,7 +769,7 @@
             position.width = (position.width - EditorGUIUtility.fieldWidth) - 5f;
             if (GUI.Button(position, this.m_Styles.randomizeButtonContent, EditorStyles.miniButton))
             {
-                val = Random.Range(min, max + 1);
+                val = UnityEngine.Random.Range(min, max + 1);
             }
             position.x += position.width + 5f;
             position.width = EditorGUIUtility.fieldWidth;
@@ -787,7 +787,7 @@
         {
             if (importer != null)
             {
-                Object[] objectsToUndo = new Object[] { material, importer };
+                UnityEngine.Object[] objectsToUndo = new UnityEngine.Object[] { material, importer };
                 Undo.RecordObjects(objectsToUndo, message);
             }
             else
@@ -822,7 +822,7 @@
             }
         }
 
-        [MenuItem("CONTEXT/ProceduralMaterial/Reset", false, -100)]
+        [UnityEditor.MenuItem("CONTEXT/ProceduralMaterial/Reset", false, -100)]
         public static void ResetSubstance(MenuCommand command)
         {
             m_Importer = AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(command.context)) as SubstanceImporter;
@@ -937,7 +937,7 @@
                             if (SubstanceImporter.IsProceduralTextureSlot(material, tex, propertyName))
                             {
                                 string propertyDescription = ShaderUtil.GetPropertyDescription(s, i);
-                                Type textureTypeFromDimension = MaterialEditor.GetTextureTypeFromDimension(ShaderUtil.GetTexDim(s, i));
+                                System.Type textureTypeFromDimension = MaterialEditor.GetTextureTypeFromDimension(ShaderUtil.GetTexDim(s, i));
                                 GUIStyle style = "ObjectPickerResultsGridLabel";
                                 if (flag)
                                 {
@@ -1074,9 +1074,9 @@
             }
         }
 
-        private Object TextureValidator(Object[] references, Type objType, SerializedProperty property)
+        private UnityEngine.Object TextureValidator(UnityEngine.Object[] references, System.Type objType, SerializedProperty property)
         {
-            foreach (Object obj2 in references)
+            foreach (UnityEngine.Object obj2 in references)
             {
                 Texture texture = obj2 as Texture;
                 if (texture != null)
@@ -1109,9 +1109,9 @@
             public int maxTextureWidth;
             public string name;
             public BuildTarget target;
-            private Object[] targets;
+            private UnityEngine.Object[] targets;
 
-            public ProceduralPlatformSetting(Object[] objects, string _name, BuildTarget _target, Texture2D _icon)
+            public ProceduralPlatformSetting(UnityEngine.Object[] objects, string _name, BuildTarget _target, Texture2D _icon)
             {
                 this.targets = objects;
                 this.m_Overridden = false;

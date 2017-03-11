@@ -24,7 +24,7 @@
 
         public override void OnForStatement(ForStatement node)
         {
-            this.OnLoopBody(node.get_Block());
+            this.OnLoopBody(node.Block);
         }
 
         public void OnLoopBody(Block block)
@@ -36,7 +36,7 @@
 
         public override void OnWhileStatement(WhileStatement node)
         {
-            this.OnLoopBody(node.get_Block());
+            this.OnLoopBody(node.Block);
         }
     }
 }

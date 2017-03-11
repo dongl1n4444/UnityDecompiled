@@ -7,7 +7,7 @@
     using UnityEngine;
     using UnityEngine.Events;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(Effector2D), true)]
+    [CustomEditor(typeof(Effector2D), true), CanEditMultipleObjects]
     internal class Effector2DEditor : Editor
     {
         [CompilerGenerated]

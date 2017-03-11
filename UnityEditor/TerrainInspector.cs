@@ -610,7 +610,7 @@
                                     {
                                         if (current.type == EventType.MouseDown)
                                         {
-                                            List<Object> list = new List<Object> {
+                                            List<UnityEngine.Object> list = new List<UnityEngine.Object> {
                                                 this.m_Terrain.terrainData
                                             };
                                             list.AddRange(this.m_Terrain.terrainData.alphamapTextures);
@@ -902,7 +902,7 @@
                     this.m_Terrain.terrainData
                 };
                 list.AddRange(this.m_Terrain.terrainData.alphamapTextures);
-                Undo.RegisterCompleteObjectUndo(list.ToArray(typeof(Object)) as Object[], "Set Resolution");
+                Undo.RegisterCompleteObjectUndo(list.ToArray(typeof(UnityEngine.Object)) as UnityEngine.Object[], "Set Resolution");
                 if (this.m_Terrain.terrainData.heightmapResolution != heightmapResolution)
                 {
                     this.m_Terrain.terrainData.heightmapResolution = heightmapResolution;
@@ -1300,7 +1300,7 @@
         {
             get
             {
-                if (Tools.current == Tool.None)
+                if (Tools.current == UnityEditor.Tool.None)
                 {
                     return (TerrainTool) this.m_SelectedTool.value;
                 }
@@ -1310,7 +1310,7 @@
             {
                 if (value != TerrainTool.None)
                 {
-                    Tools.current = Tool.None;
+                    Tools.current = UnityEditor.Tool.None;
                 }
                 this.m_SelectedTool.value = (int) value;
             }

@@ -526,7 +526,7 @@
                     DragAndDrop.PrepareStartDrag();
                     if (this.singleSelect != null)
                     {
-                        DragAndDrop.objectReferences = new Object[] { this.singleSelect.Asset.Load() };
+                        DragAndDrop.objectReferences = new UnityEngine.Object[] { this.singleSelect.Asset.Load() };
                     }
                     else
                     {
@@ -1011,7 +1011,7 @@
         public void Sync()
         {
             this.SelectedClear();
-            foreach (Object obj2 in Selection.objects)
+            foreach (UnityEngine.Object obj2 in Selection.objects)
             {
                 if (AssetDatabase.IsMainAsset(obj2))
                 {

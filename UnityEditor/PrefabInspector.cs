@@ -5,7 +5,7 @@
 
     internal class PrefabInspector
     {
-        private static void AddComponentGUI(Object prefab)
+        private static void AddComponentGUI(UnityEngine.Object prefab)
         {
             bool flag;
             SerializedObject obj2 = new SerializedObject(prefab);
@@ -22,7 +22,7 @@
         public static void OnOverridenPrefabsInspector(GameObject gameObject)
         {
             GUI.enabled = true;
-            Object prefabObject = PrefabUtility.GetPrefabObject(gameObject);
+            UnityEngine.Object prefabObject = PrefabUtility.GetPrefabObject(gameObject);
             if (prefabObject != null)
             {
                 EditorGUIUtility.labelWidth = 200f;

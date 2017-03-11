@@ -92,7 +92,7 @@
                 }
                 if (image.image != null)
                 {
-                    Object.DestroyImmediate(image.image);
+                    UnityEngine.Object.DestroyImmediate(image.image);
                 }
             }
         }
@@ -104,7 +104,7 @@
                 Texture2D image = cached.image;
                 cached.image = new Texture2D(cached.requestedWidth, cached.requestedWidth, TextureFormat.RGB24, false, true);
                 ScaleImage(cached.requestedWidth, cached.requestedWidth, image, cached.image, iconStyle);
-                Object.DestroyImmediate(image);
+                UnityEngine.Object.DestroyImmediate(image);
                 cached.label = null;
                 AssetStorePreviewManager instance = Instance;
                 instance.m_ConvertedThisTick++;
@@ -117,7 +117,7 @@
             SavedRenderTargetState state = new SavedRenderTargetState();
             if ((s_RenderTexture != null) && ((s_RenderTexture.width != w) || (s_RenderTexture.height != h)))
             {
-                Object.DestroyImmediate(s_RenderTexture);
+                UnityEngine.Object.DestroyImmediate(s_RenderTexture);
                 s_RenderTexture = null;
             }
             if (s_RenderTexture == null)
@@ -324,7 +324,7 @@
                 {
                     if (this.cached.image != null)
                     {
-                        Object.DestroyImmediate(this.cached.image);
+                        UnityEngine.Object.DestroyImmediate(this.cached.image);
                     }
                     this.cached.image = c.texture;
                     AssetStorePreviewManager.s_NeedsRepaint = true;

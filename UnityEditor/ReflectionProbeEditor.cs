@@ -184,16 +184,16 @@
             GUILayout.BeginHorizontal(new GUILayoutOption[0]);
             GUILayout.FlexibleSpace();
             GUI.changed = false;
-            EditMode.SceneViewEditMode editMode = EditMode.editMode;
+            UnityEditorInternal.EditMode.SceneViewEditMode editMode = UnityEditorInternal.EditMode.editMode;
             EditorGUI.BeginChangeCheck();
-            EditMode.DoInspectorToolbar(Styles.sceneViewEditModes, Styles.toolContents, this.GetBounds(), this);
+            UnityEditorInternal.EditMode.DoInspectorToolbar(Styles.sceneViewEditModes, Styles.toolContents, this.GetBounds(), this);
             if (EditorGUI.EndChangeCheck())
             {
                 s_LastInteractedEditor = this;
             }
-            if (editMode != EditMode.editMode)
+            if (editMode != UnityEditorInternal.EditMode.editMode)
             {
-                if (EditMode.editMode == EditMode.SceneViewEditMode.ReflectionProbeOrigin)
+                if (UnityEditorInternal.EditMode.editMode == UnityEditorInternal.EditMode.SceneViewEditMode.ReflectionProbeOrigin)
                 {
                     this.m_OldTransformPosition = ((ReflectionProbe) base.target).transform.position;
                 }
@@ -208,7 +208,7 @@
             string baseSceneEditingToolText = Styles.baseSceneEditingToolText;
             if (this.sceneViewEditing)
             {
-                int index = ArrayUtility.IndexOf<EditMode.SceneViewEditMode>(Styles.sceneViewEditModes, EditMode.editMode);
+                int index = ArrayUtility.IndexOf<UnityEditorInternal.EditMode.SceneViewEditMode>(Styles.sceneViewEditModes, UnityEditorInternal.EditMode.editMode);
                 if (index >= 0)
                 {
                     baseSceneEditingToolText = Styles.toolNames[index].text;
@@ -260,7 +260,7 @@
 
         private bool IsCollidingWithOtherProbes(string targetPath, ReflectionProbe targetProbe, out ReflectionProbe collidingProbe)
         {
-            ReflectionProbe[] probeArray = Object.FindObjectsOfType<ReflectionProbe>().ToArray<ReflectionProbe>();
+            ReflectionProbe[] probeArray = UnityEngine.Object.FindObjectsOfType<ReflectionProbe>().ToArray<ReflectionProbe>();
             collidingProbe = null;
             foreach (ReflectionProbe probe in probeArray)
             {
@@ -273,8 +273,8 @@
             return false;
         }
 
-        private bool IsReflectionProbeEditMode(EditMode.SceneViewEditMode editMode) => 
-            ((editMode == EditMode.SceneViewEditMode.ReflectionProbeBox) || (editMode == EditMode.SceneViewEditMode.ReflectionProbeOrigin));
+        private bool IsReflectionProbeEditMode(UnityEditorInternal.EditMode.SceneViewEditMode editMode) => 
+            ((editMode == UnityEditorInternal.EditMode.SceneViewEditMode.ReflectionProbeBox) || (editMode == UnityEditorInternal.EditMode.SceneViewEditMode.ReflectionProbeOrigin));
 
         private void OnBakeButton(object data)
         {
@@ -298,15 +298,15 @@
         {
             SceneView.onPreSceneGUIDelegate = (SceneView.OnSceneFunc) Delegate.Remove(SceneView.onPreSceneGUIDelegate, new SceneView.OnSceneFunc(this.OnPreSceneGUICallback));
             this.m_BoxEditor.OnDisable();
-            Object.DestroyImmediate(this.m_ReflectiveMaterial);
-            Object.DestroyImmediate(this.m_CubemapEditor);
+            UnityEngine.Object.DestroyImmediate(this.m_ReflectiveMaterial);
+            UnityEngine.Object.DestroyImmediate(this.m_CubemapEditor);
             IEnumerator enumerator = this.m_CachedGizmoMaterials.Values.GetEnumerator();
             try
             {
                 while (enumerator.MoveNext())
                 {
                     Material current = (Material) enumerator.Current;
-                    Object.DestroyImmediate(current);
+                    UnityEngine.Object.DestroyImmediate(current);
                 }
             }
             finally
@@ -373,7 +373,7 @@
                     EditorGUILayout.PropertyField(this.m_RenderDynamicObjects, Styles.renderDynamicObjects, new GUILayoutOption[0]);
                     EditorGUI.BeginChangeCheck();
                     EditorGUI.showMixedValue = this.m_CustomBakedTexture.hasMultipleDifferentValues;
-                    Object obj2 = EditorGUILayout.ObjectField(Styles.customCubemapText, this.m_CustomBakedTexture.objectReferenceValue, typeof(Cubemap), false, new GUILayoutOption[0]);
+                    UnityEngine.Object obj2 = EditorGUILayout.ObjectField(Styles.customCubemapText, this.m_CustomBakedTexture.objectReferenceValue, typeof(Cubemap), false, new GUILayoutOption[0]);
                     EditorGUI.showMixedValue = false;
                     if (EditorGUI.EndChangeCheck())
                     {
@@ -396,7 +396,7 @@
             EditorGUILayout.PropertyField(this.m_Importance, Styles.importanceText, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(this.m_IntensityMultiplier, Styles.intensityText, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(this.m_BoxProjection, Styles.boxProjectionText, new GUILayoutOption[0]);
-            bool flag2 = SceneView.IsUsingDeferredRenderingPath() && (GraphicsSettings.GetShaderMode(BuiltinShaderType.DeferredReflections) != BuiltinShaderMode.Disabled);
+            bool flag2 = SceneView.IsUsingDeferredRenderingPath() && (UnityEngine.Rendering.GraphicsSettings.GetShaderMode(BuiltinShaderType.DeferredReflections) != UnityEngine.Rendering.BuiltinShaderMode.Disabled);
             using (new EditorGUI.DisabledScope(!flag2))
             {
                 EditorGUILayout.PropertyField(this.m_BlendDistance, Styles.blendDistanceText, new GUILayoutOption[0]);
@@ -454,7 +454,7 @@
         {
             if (Event.current.type == EventType.Repaint)
             {
-                foreach (Object obj2 in base.targets)
+                foreach (UnityEngine.Object obj2 in base.targets)
                 {
                     ReflectionProbe key = (ReflectionProbe) obj2;
                     if (this.reflectiveMaterial == null)
@@ -464,7 +464,7 @@
                     Matrix4x4 matrix = new Matrix4x4();
                     if (!this.m_CachedGizmoMaterials.ContainsKey(key))
                     {
-                        this.m_CachedGizmoMaterials.Add(key, Object.Instantiate<Material>(this.reflectiveMaterial));
+                        this.m_CachedGizmoMaterials.Add(key, UnityEngine.Object.Instantiate<Material>(this.reflectiveMaterial));
                     }
                     Material material = this.m_CachedGizmoMaterials[key] as Material;
                     if (material == null)
@@ -538,13 +538,13 @@
         {
             if (this.sceneViewEditing)
             {
-                switch (EditMode.editMode)
+                switch (UnityEditorInternal.EditMode.editMode)
                 {
-                    case EditMode.SceneViewEditMode.ReflectionProbeBox:
+                    case UnityEditorInternal.EditMode.SceneViewEditMode.ReflectionProbeBox:
                         this.DoBoxEditing();
                         break;
 
-                    case EditMode.SceneViewEditMode.ReflectionProbeOrigin:
+                    case UnityEditorInternal.EditMode.SceneViewEditMode.ReflectionProbeOrigin:
                         this.DoOriginEditing();
                         break;
                 }
@@ -554,7 +554,7 @@
         [DrawGizmo(GizmoType.Active)]
         private static void RenderBoxGizmo(ReflectionProbe reflectionProbe, GizmoType gizmoType)
         {
-            if ((s_LastInteractedEditor != null) && (s_LastInteractedEditor.sceneViewEditing && (EditMode.editMode == EditMode.SceneViewEditMode.ReflectionProbeBox)))
+            if ((s_LastInteractedEditor != null) && (s_LastInteractedEditor.sceneViewEditing && (UnityEditorInternal.EditMode.editMode == UnityEditorInternal.EditMode.SceneViewEditMode.ReflectionProbeBox)))
             {
                 Color color = Gizmos.color;
                 Gizmos.color = kGizmoReflectionProbe;
@@ -595,7 +595,7 @@
                 }
                 else
                 {
-                    mesh = s_PlaneMesh = Resources.GetBuiltinResource(typeof(Mesh), "New-Plane.fbx") as Mesh;
+                    mesh = s_PlaneMesh = UnityEngine.Resources.GetBuiltinResource(typeof(Mesh), "New-Plane.fbx") as Mesh;
                 }
                 return mesh;
             }
@@ -613,7 +613,7 @@
             {
                 if (this.m_ReflectiveMaterial == null)
                 {
-                    this.m_ReflectiveMaterial = (Material) Object.Instantiate(EditorGUIUtility.Load("Previews/PreviewCubemapMaterial.mat"));
+                    this.m_ReflectiveMaterial = (Material) UnityEngine.Object.Instantiate(EditorGUIUtility.Load("Previews/PreviewCubemapMaterial.mat"));
                     this.m_ReflectiveMaterial.hideFlags = HideFlags.HideAndDontSave;
                 }
                 return this.m_ReflectiveMaterial;
@@ -621,7 +621,7 @@
         }
 
         private bool sceneViewEditing =>
-            (this.IsReflectionProbeEditMode(EditMode.editMode) && EditMode.IsOwner(this));
+            (this.IsReflectionProbeEditMode(UnityEditorInternal.EditMode.editMode) && UnityEditorInternal.EditMode.IsOwner(this));
 
         private static Mesh sphereMesh
         {
@@ -634,7 +634,7 @@
                 }
                 else
                 {
-                    mesh = s_SphereMesh = Resources.GetBuiltinResource(typeof(Mesh), "New-Sphere.fbx") as Mesh;
+                    mesh = s_SphereMesh = UnityEngine.Resources.GetBuiltinResource(typeof(Mesh), "New-Sphere.fbx") as Mesh;
                 }
                 return mesh;
             }
@@ -670,7 +670,7 @@
             public static GUIContent resolutionText = new GUIContent("Resolution");
             public static GUIStyle richTextMiniLabel = new GUIStyle(EditorStyles.miniLabel);
             public static GUIContent runtimeSettingsHeader = new GUIContent("Runtime settings", "These settings are used by objects when they render with the cubemap of this probe");
-            public static EditMode.SceneViewEditMode[] sceneViewEditModes;
+            public static UnityEditorInternal.EditMode.SceneViewEditMode[] sceneViewEditModes;
             public static GUIContent sizeText = EditorGUIUtility.TextContent("Box Size|The size of the box in which the reflection will be applied to the objects. The value is not affected by the Transform of the Game Object.");
             public static GUIContent skipFramesText = new GUIContent("Skip frames");
             public static GUIContent timeSlicing = new GUIContent("Time Slicing", "If enabled this probe will update over several frames, to help reduce the impact on the frame rate");
@@ -689,7 +689,7 @@
                 clearFlags = new GUIContent[] { new GUIContent("Skybox"), new GUIContent("Solid Color") };
                 clearFlagsValues = new int[] { 1, 2 };
                 toolContents = new GUIContent[] { EditorGUIUtility.IconContent("EditCollider"), EditorGUIUtility.IconContent("MoveTool", "|Move the selected objects.") };
-                sceneViewEditModes = new EditMode.SceneViewEditMode[] { EditMode.SceneViewEditMode.ReflectionProbeBox, EditMode.SceneViewEditMode.ReflectionProbeOrigin };
+                sceneViewEditModes = new UnityEditorInternal.EditMode.SceneViewEditMode[] { UnityEditorInternal.EditMode.SceneViewEditMode.ReflectionProbeBox, UnityEditorInternal.EditMode.SceneViewEditMode.ReflectionProbeOrigin };
                 baseSceneEditingToolText = "<color=grey>Probe Scene Editing Mode:</color> ";
                 toolNames = new GUIContent[] { new GUIContent(baseSceneEditingToolText + "Box Projection Bounds", ""), new GUIContent(baseSceneEditingToolText + "Probe Origin", "") };
                 commandStyle = "Command";

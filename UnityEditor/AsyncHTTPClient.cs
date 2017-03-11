@@ -14,11 +14,11 @@
     {
         [CompilerGenerated]
         private static Func<KeyValuePair<string, string>, string> <>f__am$cache0;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private int <responseCode>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-        private State <state>k__BackingField;
+        private int <responseCode>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private State <state>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private string <tag>k__BackingField;
         public DoneCallback doneCallback;
         public Dictionary<string, string> header;

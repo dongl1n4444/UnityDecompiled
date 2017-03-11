@@ -32,10 +32,11 @@
         public Platform()
         {
             s_Instance = this;
-            GameObject obj3 = new GameObject("UnityAdsCallbackExecutorObject") {
+            GameObject target = new GameObject("UnityAdsCallbackExecutorObject") {
                 hideFlags = HideFlags.HideAndDontSave | HideFlags.HideInInspector
             };
-            s_CallbackExecutor = obj3.AddComponent<CallbackExecutor>();
+            s_CallbackExecutor = target.AddComponent<CallbackExecutor>();
+            UnityEngine.Object.DontDestroyOnLoad(target);
             if (<>f__mg$cache0 == null)
             {
                 <>f__mg$cache0 = new unityAdsReady(Platform.UnityAdsReady);
@@ -123,33 +124,33 @@
             }
         }
 
-        [DllImport("__InternalDynamic")]
+        [DllImport("__Internal")]
         private static extern bool UnityAdsEngineGetDebugMode();
-        [DllImport("__InternalDynamic")]
+        [DllImport("__Internal")]
         private static extern long UnityAdsEngineGetPlacementState(string placementId);
-        [DllImport("__InternalDynamic")]
+        [DllImport("__Internal")]
         private static extern string UnityAdsEngineGetVersion();
-        [DllImport("__InternalDynamic")]
+        [DllImport("__Internal")]
         private static extern void UnityAdsEngineInitialize(string gameId, bool testMode);
-        [DllImport("__InternalDynamic")]
+        [DllImport("__Internal")]
         private static extern bool UnityAdsEngineIsInitialized();
-        [DllImport("__InternalDynamic")]
+        [DllImport("__Internal")]
         private static extern bool UnityAdsEngineIsReady(string placementId);
-        [DllImport("__InternalDynamic")]
+        [DllImport("__Internal")]
         private static extern bool UnityAdsEngineIsSupported();
-        [DllImport("__InternalDynamic")]
+        [DllImport("__Internal")]
         private static extern void UnityAdsEngineSetDebugMode(bool debugMode);
-        [DllImport("__InternalDynamic")]
+        [DllImport("__Internal")]
         private static extern void UnityAdsEngineSetDidErrorCallback(unityAdsDidError callback);
-        [DllImport("__InternalDynamic")]
+        [DllImport("__Internal")]
         private static extern void UnityAdsEngineSetDidFinishCallback(unityAdsDidFinish callback);
-        [DllImport("__InternalDynamic")]
+        [DllImport("__Internal")]
         private static extern void UnityAdsEngineSetDidStartCallback(unityAdsDidStart callback);
-        [DllImport("__InternalDynamic")]
+        [DllImport("__Internal")]
         private static extern void UnityAdsEngineSetMetaData(string category, string data);
-        [DllImport("__InternalDynamic")]
+        [DllImport("__Internal")]
         private static extern void UnityAdsEngineSetReadyCallback(unityAdsReady callback);
-        [DllImport("__InternalDynamic")]
+        [DllImport("__Internal")]
         private static extern void UnityAdsEngineShow(string placementId);
         [MonoPInvokeCallback(typeof(unityAdsReady))]
         private static void UnityAdsReady(string placementId)

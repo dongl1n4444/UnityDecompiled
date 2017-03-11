@@ -124,7 +124,7 @@
 
         public static void Create()
         {
-            Type[] desiredDockNextTo = new Type[] { typeof(ProjectBrowser) };
+            System.Type[] desiredDockNextTo = new System.Type[] { typeof(ProjectBrowser) };
             AudioMixerWindow window = EditorWindow.GetWindow<AudioMixerWindow>(desiredDockNextTo);
             if (window.m_Pos.width < 400f)
             {
@@ -204,7 +204,7 @@
                     Color backgroundColor = GUI.backgroundColor;
                     if (AudioSettings.editingInPlaymode)
                     {
-                        GUI.backgroundColor = AnimationMode.animatedPropertyColor;
+                        GUI.backgroundColor = UnityEditor.AnimationMode.animatedPropertyColor;
                     }
                     EditorGUI.BeginChangeCheck();
                     AudioSettings.editingInPlaymode = GUILayout.Toggle(AudioSettings.editingInPlaymode, s_GuiContents.editSnapShots, EditorStyles.toolbarButton, new GUILayoutOption[0]);

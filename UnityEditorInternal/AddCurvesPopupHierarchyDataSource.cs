@@ -11,7 +11,7 @@
 
     internal class AddCurvesPopupHierarchyDataSource : TreeViewDataSource
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static bool <showEntireHierarchy>k__BackingField;
 
         public AddCurvesPopupHierarchyDataSource(TreeViewController treeView) : base(treeView)
@@ -181,7 +181,7 @@
         {
             if (selectionItem.rootGameObject != null)
             {
-                Object animatedObject = AnimationUtility.GetAnimatedObject(selectionItem.rootGameObject, binding);
+                UnityEngine.Object animatedObject = AnimationUtility.GetAnimatedObject(selectionItem.rootGameObject, binding);
                 if (animatedObject != null)
                 {
                     return ObjectNames.GetInspectorTitle(animatedObject);

@@ -17,7 +17,7 @@
         /// <summary>
         /// <para>The object that owns this state machine behaviour. Could be an Animations.AnimatorState or Animations.AnimatorStateMachine.</para>
         /// </summary>
-        public Object animatorObject;
+        public UnityEngine.Object animatorObject;
         /// <summary>
         /// <para>The animator's layer index that owns this state machine behaviour.</para>
         /// </summary>

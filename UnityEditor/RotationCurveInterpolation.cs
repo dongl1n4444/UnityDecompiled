@@ -33,7 +33,7 @@
         public static char ExtractComponentCharacter(string name) => 
             name[name.Length - 1];
 
-        private static EditorCurveBinding[] GenerateTransformCurveBindingArray(string path, string property, Type type, int count)
+        private static EditorCurveBinding[] GenerateTransformCurveBindingArray(string path, string property, System.Type type, int count)
         {
             EditorCurveBinding[] bindingArray = new EditorCurveBinding[count];
             for (int i = 0; i < count; i++)

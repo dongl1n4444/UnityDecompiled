@@ -17,9 +17,9 @@
     public sealed class AnimatorController : RuntimeAnimatorController
     {
         private const string kControllerExtension = "controller";
-        internal static AnimatorController lastActiveController = null;
+        internal static UnityEditor.Animations.AnimatorController lastActiveController = null;
         internal static int lastActiveLayerIndex = 0;
-        internal Action OnAnimatorControllerDirty;
+        internal System.Action OnAnimatorControllerDirty;
         internal PushUndoIfNeeded undoHandler = new PushUndoIfNeeded(true);
 
         /// <summary>
@@ -40,7 +40,7 @@
         /// <param name="state"></param>
         /// <param name="layerIndex"></param>
         [TypeInferenceRule(TypeInferenceRules.TypeReferencedByFirstArgument)]
-        public StateMachineBehaviour AddEffectiveStateMachineBehaviour(Type stateMachineBehaviourType, AnimatorState state, int layerIndex) => 
+        public StateMachineBehaviour AddEffectiveStateMachineBehaviour(System.Type stateMachineBehaviourType, AnimatorState state, int layerIndex) => 
             ((StateMachineBehaviour) this.Internal_AddStateMachineBehaviourWithType(stateMachineBehaviourType, state, layerIndex));
 
         /// <summary>
@@ -50,7 +50,7 @@
         /// <param name="layer">The layer to add.</param>
         public void AddLayer(string name)
         {
-            AnimatorControllerLayer layer = new AnimatorControllerLayer {
+            UnityEditor.Animations.AnimatorControllerLayer layer = new UnityEditor.Animations.AnimatorControllerLayer {
                 name = this.MakeUniqueLayerName(name),
                 stateMachine = new AnimatorStateMachine()
             };
@@ -68,11 +68,11 @@
         /// </summary>
         /// <param name="name">The name of the Layer.</param>
         /// <param name="layer">The layer to add.</param>
-        public void AddLayer(AnimatorControllerLayer layer)
+        public void AddLayer(UnityEditor.Animations.AnimatorControllerLayer layer)
         {
             this.undoHandler.DoUndo(this, "Layer added");
-            AnimatorControllerLayer[] layers = this.layers;
-            ArrayUtility.Add<AnimatorControllerLayer>(ref layers, layer);
+            UnityEditor.Animations.AnimatorControllerLayer[] layers = this.layers;
+            ArrayUtility.Add<UnityEditor.Animations.AnimatorControllerLayer>(ref layers, layer);
             this.layers = layers;
         }
 
@@ -102,11 +102,11 @@
         /// <param name="name">The name of the parameter.</param>
         /// <param name="type">The type of the parameter.</param>
         /// <param name="paramater">The parameter to add.</param>
-        public void AddParameter(AnimatorControllerParameter paramater)
+        public void AddParameter(UnityEngine.AnimatorControllerParameter paramater)
         {
             this.undoHandler.DoUndo(this, "Parameter added");
-            AnimatorControllerParameter[] parameters = this.parameters;
-            ArrayUtility.Add<AnimatorControllerParameter>(ref parameters, paramater);
+            UnityEngine.AnimatorControllerParameter[] parameters = this.parameters;
+            ArrayUtility.Add<UnityEngine.AnimatorControllerParameter>(ref parameters, paramater);
             this.parameters = parameters;
         }
 
@@ -116,9 +116,9 @@
         /// <param name="name">The name of the parameter.</param>
         /// <param name="type">The type of the parameter.</param>
         /// <param name="paramater">The parameter to add.</param>
-        public void AddParameter(string name, AnimatorControllerParameterType type)
+        public void AddParameter(string name, UnityEngine.AnimatorControllerParameterType type)
         {
-            AnimatorControllerParameter paramater = new AnimatorControllerParameter {
+            UnityEngine.AnimatorControllerParameter paramater = new UnityEngine.AnimatorControllerParameter {
                 name = this.MakeUniqueParameterName(name),
                 type = type
             };
@@ -137,7 +137,7 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool CanAddStateMachineBehaviours();
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern Object[] CollectObjectsUsingParameter(string parameterName);
+        internal extern UnityEngine.Object[] CollectObjectsUsingParameter(string parameterName);
         internal static T[] ConvertStateMachineBehaviour<T>(ScriptableObject[] rawObjects) where T: StateMachineBehaviour
         {
             if (rawObjects == null)
@@ -159,9 +159,9 @@
         /// <returns>
         /// <para>The created AnimationController or null if an error occured.</para>
         /// </returns>
-        public static AnimatorController CreateAnimatorControllerAtPath(string path)
+        public static UnityEditor.Animations.AnimatorController CreateAnimatorControllerAtPath(string path)
         {
-            AnimatorController asset = new AnimatorController {
+            UnityEditor.Animations.AnimatorController asset = new UnityEditor.Animations.AnimatorController {
                 name = Path.GetFileName(path)
             };
             AssetDatabase.CreateAsset(asset, path);
@@ -176,14 +176,14 @@
         /// </summary>
         /// <param name="path">The path where the AnimatorController will be created.</param>
         /// <param name="clip">The default clip that will be played by the AnimatorController.</param>
-        public static AnimatorController CreateAnimatorControllerAtPathWithClip(string path, AnimationClip clip)
+        public static UnityEditor.Animations.AnimatorController CreateAnimatorControllerAtPathWithClip(string path, AnimationClip clip)
         {
-            AnimatorController controller = CreateAnimatorControllerAtPath(path);
+            UnityEditor.Animations.AnimatorController controller = CreateAnimatorControllerAtPath(path);
             controller.AddMotion(clip);
             return controller;
         }
 
-        internal static AnimatorController CreateAnimatorControllerForClip(AnimationClip clip, GameObject animatedObject)
+        internal static UnityEditor.Animations.AnimatorController CreateAnimatorControllerForClip(AnimationClip clip, GameObject animatedObject)
         {
             string assetPath = AssetDatabase.GetAssetPath(clip);
             if (string.IsNullOrEmpty(assetPath))
@@ -198,12 +198,12 @@
             return CreateAnimatorControllerAtPathWithClip(assetPath, clip);
         }
 
-        public AnimatorState CreateBlendTreeInController(string name, out BlendTree tree) => 
+        public AnimatorState CreateBlendTreeInController(string name, out UnityEditor.Animations.BlendTree tree) => 
             this.CreateBlendTreeInController(name, out tree, 0);
 
-        public AnimatorState CreateBlendTreeInController(string name, out BlendTree tree, int layerIndex)
+        public AnimatorState CreateBlendTreeInController(string name, out UnityEditor.Animations.BlendTree tree, int layerIndex)
         {
-            tree = new BlendTree();
+            tree = new UnityEditor.Animations.BlendTree();
             tree.name = name;
             string defaultBlendTreeParameter = this.GetDefaultBlendTreeParameter();
             tree.blendParameterY = defaultBlendTreeParameter;
@@ -226,7 +226,7 @@
         /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern int CreateStateMachineBehaviour(MonoScript script);
-        internal static AnimatorControllerPlayable FindAnimatorControllerPlayable(Animator animator, AnimatorController controller)
+        internal static AnimatorControllerPlayable FindAnimatorControllerPlayable(Animator animator, UnityEditor.Animations.AnimatorController controller)
         {
             AnimatorControllerPlayable ret = new AnimatorControllerPlayable();
             FindAnimatorControllerPlayableInternal(ref ret, animator, controller);
@@ -234,10 +234,10 @@
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void FindAnimatorControllerPlayableInternal(ref AnimatorControllerPlayable ret, Animator animator, AnimatorController controller);
+        internal static extern void FindAnimatorControllerPlayableInternal(ref AnimatorControllerPlayable ret, Animator animator, UnityEditor.Animations.AnimatorController controller);
         internal AnimatorStateMachine FindEffectiveRootStateMachine(int layerIndex)
         {
-            AnimatorControllerLayer layer = this.layers[layerIndex];
+            UnityEditor.Animations.AnimatorControllerLayer layer = this.layers[layerIndex];
             while (layer.syncedLayerIndex != -1)
             {
                 layer = this.layers[layer.syncedLayerIndex];
@@ -261,22 +261,22 @@
             ConvertStateMachineBehaviour<T>(this.GetBehaviours(typeof(T)));
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern ScriptableObject[] GetBehaviours(Type type);
+        internal extern ScriptableObject[] GetBehaviours(System.Type type);
         internal string GetDefaultBlendTreeParameter()
         {
             for (int i = 0; i < this.parameters.Length; i++)
             {
-                if (this.parameters[i].type == AnimatorControllerParameterType.Float)
+                if (this.parameters[i].type == UnityEngine.AnimatorControllerParameterType.Float)
                 {
                     return this.parameters[i].name;
                 }
             }
-            this.AddParameter("Blend", AnimatorControllerParameterType.Float);
+            this.AddParameter("Blend", UnityEngine.AnimatorControllerParameterType.Float);
             return "Blend";
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern AnimatorController GetEffectiveAnimatorController(Animator animator);
+        internal static extern UnityEditor.Animations.AnimatorController GetEffectiveAnimatorController(Animator animator);
         /// <summary>
         /// <para>Gets the effective state machine behaviour list for the AnimatorState. Behaviours are either stored in the AnimatorStateMachine or in the AnimatorLayer's ovverrides. Use this function to get Behaviour list that is effectively used.</para>
         /// </summary>
@@ -310,9 +310,9 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern int IndexOfParameter(string name);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern ScriptableObject Internal_AddStateMachineBehaviourWithType(Type stateMachineBehaviourType, AnimatorState state, int layerIndex);
+        private extern ScriptableObject Internal_AddStateMachineBehaviourWithType(System.Type stateMachineBehaviourType, AnimatorState state, int layerIndex);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_Create(AnimatorController mono);
+        private static extern void Internal_Create(UnityEditor.Animations.AnimatorController mono);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern StateMachineBehaviourContext[] Internal_FindStateMachineBehaviourContext(ScriptableObject scriptableObject);
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -331,7 +331,7 @@
         /// <param name="name">The desired name of the AnimatorParameter.</param>
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern string MakeUniqueParameterName(string name);
-        internal static void OnInvalidateAnimatorController(AnimatorController controller)
+        internal static void OnInvalidateAnimatorController(UnityEditor.Animations.AnimatorController controller)
         {
             if (controller.OnAnimatorControllerDirty != null)
             {
@@ -346,12 +346,12 @@
         public void RemoveLayer(int index)
         {
             this.undoHandler.DoUndo(this, "Layer removed");
-            AnimatorControllerLayer[] layers = this.layers;
+            UnityEditor.Animations.AnimatorControllerLayer[] layers = this.layers;
             this.RemoveLayerInternal(index, ref layers);
             this.layers = layers;
         }
 
-        private void RemoveLayerInternal(int index, ref AnimatorControllerLayer[] layerVector)
+        private void RemoveLayerInternal(int index, ref UnityEditor.Animations.AnimatorControllerLayer[] layerVector)
         {
             if ((layerVector[index].syncedLayerIndex == -1) && (layerVector[index].stateMachine != null))
             {
@@ -362,13 +362,13 @@
                     Undo.DestroyObjectImmediate(layerVector[index].stateMachine);
                 }
             }
-            ArrayUtility.Remove<AnimatorControllerLayer>(ref layerVector, layerVector[index]);
+            ArrayUtility.Remove<UnityEditor.Animations.AnimatorControllerLayer>(ref layerVector, layerVector[index]);
         }
 
         internal void RemoveLayers(List<int> layerIndexes)
         {
             this.undoHandler.DoUndo(this, "Layers removed");
-            AnimatorControllerLayer[] layers = this.layers;
+            UnityEditor.Animations.AnimatorControllerLayer[] layers = this.layers;
             foreach (int num in layerIndexes)
             {
                 this.RemoveLayerInternal(num, ref layers);
@@ -383,16 +383,16 @@
         public void RemoveParameter(int index)
         {
             this.undoHandler.DoUndo(this, "Parameter removed");
-            AnimatorControllerParameter[] parameters = this.parameters;
-            ArrayUtility.Remove<AnimatorControllerParameter>(ref parameters, parameters[index]);
+            UnityEngine.AnimatorControllerParameter[] parameters = this.parameters;
+            ArrayUtility.Remove<UnityEngine.AnimatorControllerParameter>(ref parameters, parameters[index]);
             this.parameters = parameters;
         }
 
-        public void RemoveParameter(AnimatorControllerParameter parameter)
+        public void RemoveParameter(UnityEngine.AnimatorControllerParameter parameter)
         {
             this.undoHandler.DoUndo(this, "Parameter removed");
-            AnimatorControllerParameter[] parameters = this.parameters;
-            ArrayUtility.Remove<AnimatorControllerParameter>(ref parameters, parameter);
+            UnityEngine.AnimatorControllerParameter[] parameters = this.parameters;
+            ArrayUtility.Remove<UnityEngine.AnimatorControllerParameter>(ref parameters, parameter);
             this.parameters = parameters;
         }
 
@@ -401,7 +401,7 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern void RenameParameter(string prevName, string newName);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void SetAnimatorController(Animator behavior, AnimatorController controller);
+        public static extern void SetAnimatorController(Animator behavior, UnityEditor.Animations.AnimatorController controller);
         public void SetStateEffectiveBehaviours(AnimatorState state, int layerIndex, StateMachineBehaviour[] behaviours)
         {
             if (this.layers[layerIndex].syncedLayerIndex == -1)
@@ -443,7 +443,7 @@
             else
             {
                 this.undoHandler.DoUndo(this, "Set Motion");
-                AnimatorControllerLayer[] layers = this.layers;
+                UnityEditor.Animations.AnimatorControllerLayer[] layers = this.layers;
                 layers[layerIndex].SetOverrideMotion(state, motion);
                 this.layers = layers;
             }
@@ -458,7 +458,7 @@
         /// <summary>
         /// <para>The layers in the controller.</para>
         /// </summary>
-        public AnimatorControllerLayer[] layers { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public UnityEditor.Animations.AnimatorControllerLayer[] layers { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
         [Obsolete("parameterCount is obsolete. Use parameters.Length instead.", true)]
         private int parameterCount =>
@@ -467,7 +467,7 @@
         /// <summary>
         /// <para>Parameters are used to communicate between scripting and the controller. They are used to drive transitions and blendtrees for example.</para>
         /// </summary>
-        public AnimatorControllerParameter[] parameters { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public UnityEngine.AnimatorControllerParameter[] parameters { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
         internal bool pushUndo
         {

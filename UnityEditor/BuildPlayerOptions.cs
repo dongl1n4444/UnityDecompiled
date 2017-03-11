@@ -11,15 +11,15 @@
     [StructLayout(LayoutKind.Sequential)]
     public struct BuildPlayerOptions
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-        private string[] <scenes>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string <locationPathName>k__BackingField;
+        private string[] <scenes>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private string <locationPathName>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <assetBundleManifestPath>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private BuildTarget <target>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private BuildOptions <options>k__BackingField;
         /// <summary>
         /// <para>The scenes to be included in the build. If empty, the currently open scene will be built. Paths are relative to the project folder (AssetsMyLevelsMyScene.unity).</para>

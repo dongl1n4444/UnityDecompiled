@@ -60,7 +60,7 @@
                         this.OnProgress(this, "Compiling native assemblies for " + type2.Architecture);
                     }
                     platformProvider = new AndroidIl2CppPlatformProvider(target, type2, isDevelopmentBuild);
-                    IL2CPPUtils.RunCompileAndLink(tempFolder, stagingAreaData, platformProvider, null, runtimeClassRegistry, isDevelopmentBuild);
+                    IL2CPPUtils.RunCompileAndLink(tempFolder, stagingAreaData, platformProvider, null, runtimeClassRegistry, false);
                 }
                 this.FinalizeAndCleanup(str, stagingAreaData, tempFolder);
                 this.CopySymbolMap(str, stagingAreaData, deviceType);

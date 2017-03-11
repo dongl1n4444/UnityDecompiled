@@ -602,7 +602,7 @@
         {
             if (this.m_WireMaterial != null)
             {
-                Object.DestroyImmediate(this.m_WireMaterial, true);
+                UnityEngine.Object.DestroyImmediate(this.m_WireMaterial, true);
             }
             if (this.m_PreviewUtility != null)
             {
@@ -763,7 +763,7 @@
             }
         }
 
-        [MenuItem("Window/Frame Debugger", false, 0x834)]
+        [UnityEditor.MenuItem("Window/Frame Debugger", false, 0x834)]
         public static FrameDebuggerWindow ShowFrameDebuggerWindow()
         {
             FrameDebuggerWindow window = EditorWindow.GetWindow(typeof(FrameDebuggerWindow)) as FrameDebuggerWindow;

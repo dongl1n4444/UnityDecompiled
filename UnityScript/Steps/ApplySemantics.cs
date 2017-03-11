@@ -17,34 +17,34 @@
 
         public void AddScriptBaseType(ClassDefinition klass)
         {
-            klass.get_BaseTypes().Add(this.get_CodeBuilder().CreateTypeReference(this.UnityScriptParameters.ScriptBaseType));
+            klass.BaseTypes.Add(this.CodeBuilder.CreateTypeReference(this.UnityScriptParameters.ScriptBaseType));
         }
 
         public Constructor ConstructorFromMethod(Method method)
         {
             Constructor constructor;
             Constructor constructor1 = constructor = new Constructor();
-            constructor.set_Parameters(method.get_Parameters());
-            constructor.set_Body(method.get_Body());
-            constructor.set_Attributes(method.get_Attributes());
-            constructor.set_Modifiers(method.get_Modifiers());
-            constructor.set_LexicalInfo(method.get_LexicalInfo());
-            constructor.set_EndSourceLocation(method.get_EndSourceLocation());
+            ParameterDeclarationCollection collection1 = constructor.Parameters = method.Parameters;
+            Block block1 = constructor.Body = method.Body;
+            AttributeCollection collection2 = constructor.Attributes = method.Attributes;
+            TypeMemberModifiers modifiers1 = constructor.Modifiers = method.Modifiers;
+            LexicalInfo info1 = constructor.LexicalInfo = method.LexicalInfo;
+            SourceLocation location1 = constructor.EndSourceLocation = method.EndSourceLocation;
             return constructor;
         }
 
         public Method ExistingMainMethodOn(TypeDefinition typeDef) => 
-            typeDef.get_Members().OfType<Method>().FirstOrDefault<Method>(new Func<Method, bool>(this.IsMainMethod));
+            typeDef.Members.OfType<Method>().FirstOrDefault<Method>(new Func<Method, bool>(this.IsMainMethod));
 
         public ClassDefinition FindOrCreateScriptClass(Module module)
         {
             ClassDefinition definition2;
-            foreach (ClassDefinition definition in module.get_Members().OfType<ClassDefinition>())
+            foreach (ClassDefinition definition in module.Members.OfType<ClassDefinition>())
             {
-                if (definition.get_Name() == module.get_Name())
+                if (definition.Name == module.Name)
                 {
-                    module.get_Members().Remove(definition);
-                    if (definition.get_IsPartial())
+                    module.Members.Remove(definition);
+                    if (definition.IsPartial)
                     {
                         this.AddScriptBaseType(definition);
                     }
@@ -52,56 +52,56 @@
                     return definition;
                 }
             }
-            ClassDefinition definition1 = definition2 = new ClassDefinition(module.get_LexicalInfo());
-            definition2.set_Name(module.get_Name());
-            definition2.set_EndSourceLocation(module.get_EndSourceLocation());
-            definition2.set_IsSynthetic(true);
+            ClassDefinition definition1 = definition2 = new ClassDefinition(module.LexicalInfo);
+            string text1 = definition2.Name = module.Name;
+            SourceLocation location1 = definition2.EndSourceLocation = module.EndSourceLocation;
+            int num1 = (int) (definition2.IsSynthetic = true);
             ClassDefinition klass = definition2;
             this.AddScriptBaseType(klass);
             return klass;
         }
 
         public bool IsConstructorMethod(TypeDefinition toType, TypeMember member) => 
-            ((member.get_NodeType() == 0x16) ? (toType.get_Name() == member.get_Name()) : false);
+            ((member.NodeType == NodeType.Method) ? (toType.Name == member.Name) : false);
 
         public bool IsMainMethod(Method m)
         {
             if (m == null)
             {
             }
-            bool flag2 = m.get_Name() == this.ScriptMainMethod;
+            bool flag2 = m.Name == this.ScriptMainMethod;
             if (!flag2)
             {
                 return flag2;
             }
-            return (m.get_Parameters().Count == 0);
+            return (m.Parameters.Count == 0);
         }
 
         public void MakeItPartial(ClassDefinition global)
         {
-            global.set_Modifiers(global.get_Modifiers() | 0x400);
+            global.Modifiers |= TypeMemberModifiers.Partial;
         }
 
         public bool ModuleContainsOnlyTypeDefinitions(Module module)
         {
-            if (module.get_Members().get_IsEmpty())
+            if (module.Members.IsEmpty)
             {
             }
-            if (!module.get_Members().All<TypeMember>(new Func<TypeMember, bool>(this.$ModuleContainsOnlyTypeDefinitions$closure$129)))
+            if (!module.Members.All<TypeMember>(new Func<TypeMember, bool>(this.$ModuleContainsOnlyTypeDefinitions$closure$129)))
             {
             }
-            bool flag3 = module.get_Globals().get_IsEmpty();
-            if (!flag3)
+            bool isEmpty = module.Globals.IsEmpty;
+            if (!isEmpty)
             {
-                return flag3;
+                return isEmpty;
             }
-            return module.get_Attributes().get_IsEmpty();
+            return module.Attributes.IsEmpty;
         }
 
         public void MoveAttributes(TypeDefinition fromType, TypeDefinition toType)
         {
-            toType.get_Attributes().AddRange(fromType.get_Attributes());
-            fromType.get_Attributes().Clear();
+            toType.Attributes.AddRange(fromType.Attributes);
+            fromType.Attributes.Clear();
         }
 
         public TypeMember MovedMember(TypeDefinition toType, TypeMember member) => 
@@ -109,30 +109,30 @@
 
         public void MoveGlobalStatementsToMainMethodOf(TypeDefinition script, Module module)
         {
-            Method method = this.ExistingMainMethodOn(script);
-            if (method == null)
+            Method item = this.ExistingMainMethodOn(script);
+            if (item == null)
             {
-                method = this.NewMainMethodFor(module);
-                script.get_Members().Add(method);
+                item = this.NewMainMethodFor(module);
+                script.Members.Add(item);
             }
             else
             {
-                this.get_Warnings().Add(UnityScriptWarnings.ScriptMainMethodIsImplicitlyDefined(method.get_LexicalInfo(), method.get_Name()));
+                this.Warnings.Add(UnityScriptWarnings.ScriptMainMethodIsImplicitlyDefined(item.LexicalInfo, item.Name));
             }
-            method.get_Body().get_Statements().AddRange(module.get_Globals().get_Statements());
-            module.get_Globals().get_Statements().Clear();
+            item.Body.Statements.AddRange(module.Globals.Statements);
+            module.Globals.Statements.Clear();
         }
 
         public void MoveMembers(TypeDefinition fromType, TypeDefinition toType)
         {
             List list = new List();
-            foreach (TypeMember member in fromType.get_Members())
+            foreach (TypeMember member in fromType.Members)
             {
                 if (!(member is TypeDefinition))
                 {
-                    TypeMember member2 = this.MovedMember(toType, member);
-                    toType.get_Members().Add(member2);
-                    this.Visit(member2);
+                    TypeMember item = this.MovedMember(toType, member);
+                    toType.Members.Add(item);
+                    this.Visit(item);
                     list.Add(member);
                 }
                 else
@@ -145,7 +145,7 @@
                 if (!(obj2 is TypeMember))
                 {
                 }
-                fromType.get_Members().Remove((TypeMember) RuntimeServices.Coerce(obj2, typeof(TypeMember)));
+                fromType.Members.Remove((TypeMember) RuntimeServices.Coerce(obj2, typeof(TypeMember)));
             }
         }
 
@@ -153,10 +153,10 @@
         {
             Method method;
             Method method1 = method = new Method();
-            method.set_LexicalInfo(module.get_Globals().get_IsEmpty() ? module.get_LexicalInfo() : ApplySemanticsModule.Copy(module.get_Globals().get_Statements().get_Item(0).get_LexicalInfo()));
-            method.set_Name(this.ScriptMainMethod);
-            method.set_Modifiers(0x88);
-            method.set_EndSourceLocation(module.get_EndSourceLocation());
+            LexicalInfo info1 = method.LexicalInfo = module.Globals.IsEmpty ? module.LexicalInfo : ApplySemanticsModule.Copy(module.Globals.Statements[0].LexicalInfo);
+            string text1 = method.Name = this.ScriptMainMethod;
+            int num1 = (int) (method.Modifiers = TypeMemberModifiers.Virtual | TypeMemberModifiers.Public);
+            SourceLocation location1 = method.EndSourceLocation = module.EndSourceLocation;
             return method;
         }
 
@@ -170,21 +170,21 @@
                 this.MoveMembers(module, global);
                 this.SetUpMainMethod(module, global);
                 this.MoveAttributes(module, global);
-                module.get_Members().Add(global);
-                UtilitiesModule.SetScriptClass(this.get_Context(), global);
+                module.Members.Add(global);
+                UtilitiesModule.SetScriptClass(this.Context, global);
             }
         }
 
         public override void Run()
         {
-            this.Visit(this.get_CompileUnit());
+            this.Visit(this.CompileUnit);
         }
 
         public void SetUpDefaultImports(Module module)
         {
             foreach (string str in this.UnityScriptParameters.Imports)
             {
-                module.get_Imports().Add(new Import(str));
+                module.Imports.Add(new Import(str));
             }
         }
 
@@ -198,7 +198,7 @@
         {
             if (this.UnityScriptParameters.GlobalVariablesBecomeFields)
             {
-                module.get_Globals().Accept(new DeclareGlobalVariables((ClassDefinition) script));
+                module.Globals.Accept(new DeclareGlobalVariables((ClassDefinition) script));
             }
         }
 
@@ -206,7 +206,7 @@
             this.UnityScriptParameters.ScriptMainMethod;
 
         public UnityScriptCompilerParameters UnityScriptParameters =>
-            ((UnityScriptCompilerParameters) base._context.get_Parameters());
+            ((UnityScriptCompilerParameters) base._context.Parameters);
 
         [Serializable]
         public class DeclareGlobalVariables : DepthFirstTransformer
@@ -219,7 +219,7 @@
             }
 
             public override bool EnterBlock(Block node) => 
-                (node.get_ParentNode() is Method);
+                (node.ParentNode is Method);
 
             public override void OnDeclarationStatement(DeclarationStatement node)
             {
@@ -227,15 +227,15 @@
                 {
                     Field field;
                     Field field1 = field = new Field(LexicalInfo.Empty);
-                    field.set_Modifiers(8);
-                    field.set_Name("$");
-                    field.set_Type(TypeReference.Lift(node.get_Declaration().get_Type()));
-                    field.set_Initializer(Expression.Lift(node.get_Initializer()));
-                    field.set_IsVolatile(false);
-                    field.set_Name(CodeSerializer.LiftName(node.get_Declaration().get_Name()));
-                    Field field2 = field;
-                    field2.set_LexicalInfo(node.get_LexicalInfo());
-                    this._class.get_Members().Add(field2);
+                    int num1 = (int) (field.Modifiers = TypeMemberModifiers.Public);
+                    string text1 = field.Name = "$";
+                    TypeReference reference1 = field.Type = TypeReference.Lift(node.Declaration.Type);
+                    Expression expression1 = field.Initializer = Expression.Lift(node.Initializer);
+                    int num2 = (int) (field.IsVolatile = false);
+                    string text2 = field.Name = CodeSerializer.LiftName(node.Declaration.Name);
+                    Field item = field;
+                    item.LexicalInfo = node.LexicalInfo;
+                    this._class.Members.Add(item);
                     this.RemoveCurrentNode();
                 }
             }

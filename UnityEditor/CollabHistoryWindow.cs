@@ -17,7 +17,7 @@
 
         private static void CloseHistoryWindows()
         {
-            CollabHistoryWindow[] windowArray = Resources.FindObjectsOfTypeAll(typeof(CollabHistoryWindow)) as CollabHistoryWindow[];
+            CollabHistoryWindow[] windowArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(CollabHistoryWindow)) as CollabHistoryWindow[];
             if (windowArray != null)
             {
                 foreach (CollabHistoryWindow window in windowArray)
@@ -37,13 +37,13 @@
 
         public void OnDestroy()
         {
-            Collab.instance.StateChanged -= new StateChangedDelegate(this.OnCollabStateChanged);
+            Collab.instance.StateChanged -= new UnityEditor.Collaboration.StateChangedDelegate(this.OnCollabStateChanged);
             base.OnDestroy();
         }
 
         public override void OnEnable()
         {
-            Collab.instance.StateChanged += new StateChangedDelegate(this.OnCollabStateChanged);
+            Collab.instance.StateChanged += new UnityEditor.Collaboration.StateChangedDelegate(this.OnCollabStateChanged);
             base.initialOpenUrl = "file:///" + EditorApplication.userJavascriptPackagesPath + "unityeditor-collab-history/dist/index.html";
             base.OnEnable();
         }
@@ -58,10 +58,10 @@
             base.titleContent.text = title;
         }
 
-        [MenuItem("Window/Collab History", false, 0x7db)]
+        [UnityEditor.MenuItem("Window/Collab History", false, 0x7db)]
         public static CollabHistoryWindow ShowHistoryWindow()
         {
-            Type[] desiredDockNextTo = new Type[] { typeof(InspectorWindow) };
+            System.Type[] desiredDockNextTo = new System.Type[] { typeof(InspectorWindow) };
             return EditorWindow.GetWindow<CollabHistoryWindow>("Collab History", desiredDockNextTo);
         }
 
@@ -70,7 +70,7 @@
             base.ToggleMaximize();
         }
 
-        [MenuItem("Window/Collab History", true)]
+        [UnityEditor.MenuItem("Window/Collab History", true)]
         public static bool ValidateShowHistoryWindow() => 
             ((UnityConnect.instance.userInfo.whitelisted && Collab.instance.collabInfo.whitelisted) && CollabAccess.Instance.IsServiceEnabled());
     }

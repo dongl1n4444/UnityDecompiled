@@ -54,7 +54,7 @@
             int length = assemblyReferences.Length;
             while (index < length)
             {
-                compiler.Parameters.get_References().Add(assemblyReferences[index]);
+                compiler.Parameters.References.Add(assemblyReferences[index]);
                 index++;
             }
         }
@@ -71,7 +71,7 @@
 
         private void CacheScript(Type type)
         {
-            if (!IsTainted(this._compilationResult.get_CompileUnit()))
+            if (!IsTainted(this._compilationResult.CompileUnit))
             {
                 this.GetEvaluationDomain().CacheScript(this._cacheKey, type);
             }
@@ -87,21 +87,24 @@
 
         private Type DoCompile()
         {
-            UnityScriptCompiler compiler = new UnityScriptCompiler();
-            compiler.Parameters.set_Pipeline(AdjustPipeline(this._context, UnityScriptCompiler.Pipelines.CompileToMemory()));
-            compiler.Parameters.ScriptBaseType = typeof(EvaluationScript);
-            compiler.Parameters.GlobalVariablesBecomeFields = false;
-            compiler.Parameters.ScriptMainMethod = "Run";
-            compiler.Parameters.get_Input().Add(new StringInput("script", this._code + ";"));
-            compiler.Parameters.set_Debug(false);
-            compiler.Parameters.set_GenerateInMemory(true);
+            UnityScriptCompiler compiler = new UnityScriptCompiler {
+                Parameters = { 
+                    Pipeline = AdjustPipeline(this._context, UnityScriptCompiler.Pipelines.CompileToMemory()),
+                    ScriptBaseType = typeof(EvaluationScript),
+                    GlobalVariablesBecomeFields = false,
+                    ScriptMainMethod = "Run"
+                }
+            };
+            compiler.Parameters.Input.Add(new StringInput("script", this._code + ";"));
+            compiler.Parameters.Debug = false;
+            compiler.Parameters.GenerateInMemory = true;
             this.AddEvaluationContextReferencesTo(compiler);
             this._compilationResult = compiler.Run();
-            if (this._compilationResult.get_Errors().Count != 0)
+            if (this._compilationResult.Errors.Count != 0)
             {
-                throw new CompilationErrorsException(this._compilationResult.get_Errors());
+                throw new CompilationErrorsException(this._compilationResult.Errors);
             }
-            return this._compilationResult.get_GeneratedAssembly().GetType("script");
+            return this._compilationResult.GeneratedAssembly.GetType("script");
         }
 
         public static object Eval(EvaluationContext context, string code) => 
@@ -131,7 +134,7 @@
 
         public static void Taint(CompileUnit cu)
         {
-            cu.set_Item(TaintedAnnotation, TaintedAnnotation);
+            cu[TaintedAnnotation] = TaintedAnnotation;
         }
     }
 }

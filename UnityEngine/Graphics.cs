@@ -202,7 +202,7 @@
         /// <param name="receiveShadows">Should the mesh receive shadows?</param>
         /// <param name="useLightProbes">Should the mesh use light probes?</param>
         /// <param name="probeAnchor">If used, the mesh will use this Transform's position to sample light probes and find the matching reflection probe.</param>
-        [Obsolete("Method DrawMesh has been deprecated. Use Graphics.DrawMeshNow instead (UnityUpgradable) -> DrawMeshNow(*)", true), EditorBrowsable(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Method DrawMesh has been deprecated. Use Graphics.DrawMeshNow instead (UnityUpgradable) -> DrawMeshNow(*)", true)]
         public static void DrawMesh(Mesh mesh, Matrix4x4 matrix, int materialIndex)
         {
         }
@@ -224,7 +224,7 @@
         /// <param name="receiveShadows">Should the mesh receive shadows?</param>
         /// <param name="useLightProbes">Should the mesh use light probes?</param>
         /// <param name="probeAnchor">If used, the mesh will use this Transform's position to sample light probes and find the matching reflection probe.</param>
-        [Obsolete("Method DrawMesh has been deprecated. Use Graphics.DrawMeshNow instead (UnityUpgradable) -> DrawMeshNow(*)", true), EditorBrowsable(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Method DrawMesh has been deprecated. Use Graphics.DrawMeshNow instead (UnityUpgradable) -> DrawMeshNow(*)", true)]
         public static void DrawMesh(Mesh mesh, Vector3 position, Quaternion rotation)
         {
         }

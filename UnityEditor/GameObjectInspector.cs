@@ -9,7 +9,7 @@
     using UnityEditorInternal;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(GameObject))]
+    [CustomEditor(typeof(GameObject)), CanEditMultipleObjects]
     internal class GameObjectInspector : Editor
     {
         public static GameObject dragObject;
@@ -67,7 +67,7 @@
             {
                 foreach (GameObject obj2 in this.m_PreviewInstances)
                 {
-                    Object.DestroyImmediate(obj2);
+                    UnityEngine.Object.DestroyImmediate(obj2);
                 }
                 this.m_PreviewInstances.Clear();
             }
@@ -132,37 +132,30 @@
                         }
                         if (((prefabType == PrefabType.DisconnectedModelPrefabInstance) || (prefabType == PrefabType.DisconnectedPrefabInstance)) && GUILayout.Button("Revert", "MiniButtonMid", new GUILayoutOption[0]))
                         {
-                            List<Object> hierarchy = new List<Object>();
+                            List<UnityEngine.Object> hierarchy = new List<UnityEngine.Object>();
                             this.GetObjectListFromHierarchy(hierarchy, go);
                             Undo.RegisterFullObjectHierarchyUndo(go, "Revert to prefab");
                             PrefabUtility.ReconnectToLastPrefab(go);
                             Undo.RegisterCreatedObjectUndo(PrefabUtility.GetPrefabObject(go), "Revert to prefab");
                             PrefabUtility.RevertPrefabInstance(go);
                             this.CalculatePrefabStatus();
-                            List<Object> list2 = new List<Object>();
+                            List<UnityEngine.Object> list2 = new List<UnityEngine.Object>();
                             this.GetObjectListFromHierarchy(list2, go);
                             this.RegisterNewComponents(list2, hierarchy);
                         }
-                        using (new EditorGUI.DisabledScope(AnimationMode.InAnimationMode()))
+                        using (new EditorGUI.DisabledScope(UnityEditor.AnimationMode.InAnimationMode()))
                         {
                             if (((prefabType == PrefabType.ModelPrefabInstance) || (prefabType == PrefabType.PrefabInstance)) && GUILayout.Button("Revert", "MiniButtonMid", new GUILayoutOption[0]))
                             {
-                                List<Object> list3 = new List<Object>();
-                                this.GetObjectListFromHierarchy(list3, go);
-                                Undo.RegisterFullObjectHierarchyUndo(go, "Revert Prefab Instance");
-                                PrefabUtility.RevertPrefabInstance(go);
-                                this.CalculatePrefabStatus();
-                                List<Object> list4 = new List<Object>();
-                                this.GetObjectListFromHierarchy(list4, go);
-                                this.RegisterNewComponents(list4, list3);
+                                this.RevertAndCheckForNewComponents(go);
                             }
                             if ((prefabType == PrefabType.PrefabInstance) || (prefabType == PrefabType.DisconnectedPrefabInstance))
                             {
                                 GameObject source = PrefabUtility.FindValidUploadPrefabInstanceRoot(go);
-                                GUI.enabled = (source != null) && !AnimationMode.InAnimationMode();
+                                GUI.enabled = (source != null) && !UnityEditor.AnimationMode.InAnimationMode();
                                 if (GUILayout.Button("Apply", "MiniButtonRight", new GUILayoutOption[0]))
                                 {
-                                    Object prefabParent = PrefabUtility.GetPrefabParent(source);
+                                    UnityEngine.Object prefabParent = PrefabUtility.GetPrefabParent(source);
                                     string assetPath = AssetDatabase.GetAssetPath(prefabParent);
                                     string[] assets = new string[] { assetPath };
                                     if (Provider.PromptAndCheckoutIfNeeded(assets, "The version control requires you to check out the prefab before applying changes."))
@@ -279,7 +272,7 @@
             {
                 this.m_Tag.stringValue = str2;
                 Undo.RecordObjects(base.targets, "Change Tag of " + this.targetTitle);
-                foreach (Object obj2 in base.targets)
+                foreach (UnityEngine.Object obj2 in base.targets)
                 {
                     (obj2 as GameObject).tag = str2;
                 }
@@ -356,7 +349,7 @@
             return true;
         }
 
-        private void GetObjectListFromHierarchy(List<Object> hierarchy, GameObject gameObject)
+        private void GetObjectListFromHierarchy(List<UnityEngine.Object> hierarchy, GameObject gameObject)
         {
             Transform transform = null;
             List<Component> results = new List<Component>();
@@ -382,7 +375,7 @@
             }
         }
 
-        private Object[] GetObjects(bool includeChildren) => 
+        private UnityEngine.Object[] GetObjects(bool includeChildren) => 
             SceneModeUtility.GetObjects(base.targets, includeChildren);
 
         public static void GetRenderableBoundsRecurse(ref Bounds bounds, GameObject go)
@@ -693,7 +686,7 @@
                         {
                             if (dragObject != null)
                             {
-                                Object.DestroyImmediate(dragObject, false);
+                                UnityEngine.Object.DestroyImmediate(dragObject, false);
                                 HandleUtility.ignoreRaySnapObjects = null;
                                 dragObject = null;
                                 current.Use();
@@ -746,12 +739,12 @@
             }
         }
 
-        private void RegisterNewComponents(List<Object> newHierarchy, List<Object> hierarchy)
+        private void RegisterNewComponents(List<UnityEngine.Object> newHierarchy, List<UnityEngine.Object> hierarchy)
         {
-            for (int i = newHierarchy.Count - 1; i >= 0; i--)
+            for (int i = 0; i < newHierarchy.Count; i++)
             {
                 bool flag = false;
-                Object obj2 = newHierarchy[i];
+                UnityEngine.Object obj2 = newHierarchy[i];
                 for (int j = 0; j < hierarchy.Count; j++)
                 {
                     if (hierarchy[j].GetInstanceID() == obj2.GetInstanceID())
@@ -772,7 +765,7 @@
             this.CreatePreviewInstances();
         }
 
-        public override Texture2D RenderStaticPreview(string assetPath, Object[] subAssets, int width, int height)
+        public override Texture2D RenderStaticPreview(string assetPath, UnityEngine.Object[] subAssets, int width, int height)
         {
             if (!this.HasStaticPreview() || !ShaderUtil.hardwareSupportsRectRenderTexture)
             {
@@ -782,6 +775,18 @@
             this.m_PreviewUtility.BeginStaticPreview(new Rect(0f, 0f, (float) width, (float) height));
             this.DoRenderPreview();
             return this.m_PreviewUtility.EndStaticPreview();
+        }
+
+        public void RevertAndCheckForNewComponents(GameObject gameObject)
+        {
+            List<UnityEngine.Object> hierarchy = new List<UnityEngine.Object>();
+            this.GetObjectListFromHierarchy(hierarchy, gameObject);
+            Undo.RegisterFullObjectHierarchyUndo(gameObject, "Revert Prefab Instance");
+            PrefabUtility.RevertPrefabInstance(gameObject);
+            this.CalculatePrefabStatus();
+            List<UnityEngine.Object> list2 = new List<UnityEngine.Object>();
+            this.GetObjectListFromHierarchy(list2, gameObject);
+            this.RegisterNewComponents(list2, hierarchy);
         }
 
         public static void SetEnabledRecursive(GameObject go, bool enabled)
@@ -794,7 +799,7 @@
 
         private void SetLayer(int layer, bool includeChildren)
         {
-            Object[] objects = this.GetObjects(includeChildren);
+            UnityEngine.Object[] objects = this.GetObjects(includeChildren);
             Undo.RecordObjects(objects, "Change Layer of " + this.targetTitle);
             foreach (GameObject obj2 in objects)
             {

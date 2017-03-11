@@ -77,7 +77,7 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetAnisoLevelNoDirty(Texture tex, int level);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void SetFilterModeNoDirty(Texture tex, FilterMode mode);
+        public static extern void SetFilterModeNoDirty(Texture tex, UnityEngine.FilterMode mode);
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetMipMapBiasNoDirty(Texture tex, float bias);
         [MethodImpl(MethodImplOptions.InternalCall)]

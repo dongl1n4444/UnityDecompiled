@@ -99,7 +99,7 @@
         /// </summary>
         public static void DirtyHierarchyWindowSorting()
         {
-            foreach (SceneHierarchyWindow window in Resources.FindObjectsOfTypeAll(typeof(SceneHierarchyWindow)))
+            foreach (SceneHierarchyWindow window in UnityEngine.Resources.FindObjectsOfTypeAll(typeof(SceneHierarchyWindow)))
             {
                 window.DirtySortingMethods();
             }
@@ -114,7 +114,7 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool ExecuteMenuItemOnGameObjects(string menuItemPath, GameObject[] objects);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool ExecuteMenuItemWithTemporaryContext(string menuItemPath, Object[] objects);
+        internal static extern bool ExecuteMenuItemWithTemporaryContext(string menuItemPath, UnityEngine.Object[] objects);
         /// <summary>
         /// <para>Exit the Unity editor application.</para>
         /// </summary>
@@ -346,7 +346,7 @@
         /// </summary>
         public static void RepaintHierarchyWindow()
         {
-            foreach (SceneHierarchyWindow window in Resources.FindObjectsOfTypeAll(typeof(SceneHierarchyWindow)))
+            foreach (SceneHierarchyWindow window in UnityEngine.Resources.FindObjectsOfTypeAll(typeof(SceneHierarchyWindow)))
             {
                 window.Repaint();
             }
@@ -367,7 +367,7 @@
         internal static extern void ReportUNetWeaver(string filename, string msg, bool isError);
         internal static void RequestRepaintAllViews()
         {
-            foreach (GUIView view in Resources.FindObjectsOfTypeAll(typeof(GUIView)))
+            foreach (GUIView view in UnityEngine.Resources.FindObjectsOfTypeAll(typeof(GUIView)))
             {
                 view.Repaint();
             }
@@ -508,12 +508,12 @@
         /// </summary>
         public static bool isUpdating { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-        internal static Object renderSettings { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal static UnityEngine.Object renderSettings { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
         internal static bool supportsHiDPI =>
             (Application.platform == RuntimePlatform.OSXEditor);
 
-        internal static Object tagManager { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal static UnityEngine.Object tagManager { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
         /// <summary>
         /// <para>The time since the editor was started. (Read Only)</para>

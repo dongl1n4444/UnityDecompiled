@@ -10,7 +10,7 @@
     /// </summary>
     public abstract class PopupWindowContent
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private EditorWindow <editorWindow>k__BackingField;
 
         protected PopupWindowContent()

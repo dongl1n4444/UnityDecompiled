@@ -309,7 +309,7 @@
             ((T) Instantiate(original, position, rotation, parent));
 
         public static T Instantiate<T>(T original, Transform parent) where T: UnityEngine.Object => 
-            Instantiate<T>(original, parent, true);
+            Instantiate<T>(original, parent, false);
 
         public static T Instantiate<T>(T original, Transform parent, bool worldPositionStays) where T: UnityEngine.Object => 
             ((T) Instantiate(original, parent, worldPositionStays));

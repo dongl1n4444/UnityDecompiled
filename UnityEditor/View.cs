@@ -174,7 +174,7 @@
         {
             foreach (View view in this.m_Children)
             {
-                Object.DestroyImmediate(view, true);
+                UnityEngine.Object.DestroyImmediate(view, true);
             }
         }
 

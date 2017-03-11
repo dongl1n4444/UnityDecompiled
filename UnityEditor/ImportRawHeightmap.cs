@@ -48,7 +48,7 @@
 
         private void PickRawDefaults(string path)
         {
-            FileStream stream = File.Open(path, FileMode.Open, FileAccess.Read);
+            FileStream stream = File.Open(path, System.IO.FileMode.Open, FileAccess.Read);
             int length = (int) stream.Length;
             stream.Close();
             this.m_TerrainSize = base.terrainData.size;
@@ -97,7 +97,7 @@
         private void ReadRaw(string path)
         {
             byte[] buffer;
-            using (BinaryReader reader = new BinaryReader(File.Open(path, FileMode.Open, FileAccess.Read)))
+            using (BinaryReader reader = new BinaryReader(File.Open(path, System.IO.FileMode.Open, FileAccess.Read)))
             {
                 buffer = reader.ReadBytes((this.m_Width * this.m_Height) * this.m_Depth);
                 reader.Close();

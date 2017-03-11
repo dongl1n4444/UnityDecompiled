@@ -25,26 +25,26 @@
         public static  event ImportPackageCallback importPackageStarted;
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void AddInstanceIDToAssetWithRandomFileId(int instanceIDToAdd, Object assetObject, bool hide);
+        internal static extern void AddInstanceIDToAssetWithRandomFileId(int instanceIDToAdd, UnityEngine.Object assetObject, bool hide);
         /// <summary>
         /// <para>Adds objectToAdd to an existing asset at path.</para>
         /// </summary>
         /// <param name="objectToAdd">Object to add to the existing asset.</param>
         /// <param name="path">Filesystem path to the asset.</param>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void AddObjectToAsset(Object objectToAdd, string path);
+        public static extern void AddObjectToAsset(UnityEngine.Object objectToAdd, string path);
         /// <summary>
         /// <para>Adds objectToAdd to an existing asset identified by assetObject.</para>
         /// </summary>
         /// <param name="objectToAdd"></param>
         /// <param name="assetObject"></param>
-        public static void AddObjectToAsset(Object objectToAdd, Object assetObject)
+        public static void AddObjectToAsset(UnityEngine.Object objectToAdd, UnityEngine.Object assetObject)
         {
             AddObjectToAsset_OBJ_Internal(objectToAdd, assetObject);
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void AddObjectToAsset_OBJ_Internal(Object newAsset, Object sameAssetFile);
+        private static extern void AddObjectToAsset_OBJ_Internal(UnityEngine.Object newAsset, UnityEngine.Object sameAssetFile);
         /// <summary>
         /// <para>Get the GUID for the asset at path.</para>
         /// </summary>
@@ -59,7 +59,7 @@
         /// </summary>
         /// <param name="obj"></param>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void ClearLabels(Object obj);
+        public static extern void ClearLabels(UnityEngine.Object obj);
         /// <summary>
         /// <para>Is object an asset?</para>
         /// </summary>
@@ -72,7 +72,7 @@
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="instanceID"></param>
-        public static bool Contains(Object obj) => 
+        public static bool Contains(UnityEngine.Object obj) => 
             Contains(obj.GetInstanceID());
 
         /// <summary>
@@ -88,9 +88,9 @@
         /// <param name="asset">Object to use in creating the asset.</param>
         /// <param name="path">Filesystem path for the new asset.</param>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void CreateAsset(Object asset, string path);
+        public static extern void CreateAsset(UnityEngine.Object asset, string path);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void CreateAssetFromObjects(Object[] assets, string path);
+        internal static extern void CreateAssetFromObjects(UnityEngine.Object[] assets, string path);
         /// <summary>
         /// <para>Create a new folder.</para>
         /// </summary>
@@ -259,7 +259,7 @@
         /// </summary>
         /// <param name="assetObject"></param>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern string GetAssetOrScenePath(Object assetObject);
+        public static extern string GetAssetOrScenePath(UnityEngine.Object assetObject);
         /// <summary>
         /// <para>Returns the path name relative to the project folder where the asset is stored.</para>
         /// </summary>
@@ -280,7 +280,7 @@
         /// <para>The asset path name, or null, or an empty string if the asset does not exist.</para>
         /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern string GetAssetPath(Object assetObject);
+        public static extern string GetAssetPath(UnityEngine.Object assetObject);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern string GetAssetPathFromInstanceID(int instanceID);
         /// <summary>
@@ -302,11 +302,11 @@
         /// <param name="assetName"></param>
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern string[] GetAssetPathsFromAssetBundleAndAssetName(string assetBundleName, string assetName);
-        public static T GetBuiltinExtraResource<T>(string path) where T: Object => 
+        public static T GetBuiltinExtraResource<T>(string path) where T: UnityEngine.Object => 
             ((T) GetBuiltinExtraResource(typeof(T), path));
 
         [MethodImpl(MethodImplOptions.InternalCall), TypeInferenceRule(TypeInferenceRules.TypeReferencedByFirstArgument)]
-        public static extern Object GetBuiltinExtraResource(Type type, string path);
+        public static extern UnityEngine.Object GetBuiltinExtraResource(System.Type type, string path);
         /// <summary>
         /// <para>Retrieves an icon for the asset at the given asset path.</para>
         /// </summary>
@@ -363,7 +363,7 @@
         /// </summary>
         /// <param name="obj"></param>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern string[] GetLabels(Object obj);
+        public static extern string[] GetLabels(UnityEngine.Object obj);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int GetMainAssetInstanceID(string assetPath);
         /// <summary>
@@ -371,7 +371,7 @@
         /// </summary>
         /// <param name="assetPath">Filesystem path of the asset to load.</param>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern Type GetMainAssetTypeAtPath(string assetPath);
+        public static extern System.Type GetMainAssetTypeAtPath(string assetPath);
         /// <summary>
         /// <para>Given an absolute path to a directory, this method will return an array of all it's subdirectories.</para>
         /// </summary>
@@ -524,7 +524,7 @@
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="instanceID"></param>
-        public static bool IsForeignAsset(Object obj) => 
+        public static bool IsForeignAsset(UnityEngine.Object obj) => 
             IsForeignAsset(obj.GetInstanceID());
 
         /// <summary>
@@ -539,7 +539,7 @@
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="instanceID"></param>
-        public static bool IsMainAsset(Object obj) => 
+        public static bool IsMainAsset(UnityEngine.Object obj) => 
             IsMainAsset(obj.GetInstanceID());
 
         /// <summary>
@@ -548,14 +548,40 @@
         /// <param name="assetPath">Filesystem path of the asset to load.</param>
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool IsMainAssetAtPathLoaded(string assetPath);
-        public static bool IsMetaFileOpenForEdit(Object assetObject)
+        /// <summary>
+        /// <para>Query whether an asset's metadata (.meta) file is open for edit in version control.</para>
+        /// </summary>
+        /// <param name="assetObject">Object representing the asset whose metadata status you wish to query.</param>
+        /// <param name="message">Returns a reason for the asset metadata not being open for edit.</param>
+        /// <param name="StatusQueryOptions">Options for how the version control system should be queried. These options can effect the speed and accuracy of the query.</param>
+        /// <param name="statusOptions"></param>
+        /// <returns>
+        /// <para>True if the asset's metadata is considered open for edit by the selected version control system.</para>
+        /// </returns>
+        public static bool IsMetaFileOpenForEdit(UnityEngine.Object assetObject) => 
+            IsMetaFileOpenForEdit(assetObject, StatusQueryOptions.UseCachedIfPossible);
+
+        /// <summary>
+        /// <para>Query whether an asset's metadata (.meta) file is open for edit in version control.</para>
+        /// </summary>
+        /// <param name="assetObject">Object representing the asset whose metadata status you wish to query.</param>
+        /// <param name="message">Returns a reason for the asset metadata not being open for edit.</param>
+        /// <param name="StatusQueryOptions">Options for how the version control system should be queried. These options can effect the speed and accuracy of the query.</param>
+        /// <param name="statusOptions"></param>
+        /// <returns>
+        /// <para>True if the asset's metadata is considered open for edit by the selected version control system.</para>
+        /// </returns>
+        public static bool IsMetaFileOpenForEdit(UnityEngine.Object assetObject, StatusQueryOptions statusOptions)
         {
             string str;
-            return IsMetaFileOpenForEdit(assetObject, out str);
+            return IsMetaFileOpenForEdit(assetObject, out str, statusOptions);
         }
 
-        public static bool IsMetaFileOpenForEdit(Object assetObject, out string message) => 
-            IsOpenForEdit(GetTextMetaFilePathFromAssetPath(GetAssetOrScenePath(assetObject)), out message);
+        public static bool IsMetaFileOpenForEdit(UnityEngine.Object assetObject, out string message) => 
+            IsMetaFileOpenForEdit(assetObject, out message, StatusQueryOptions.UseCachedIfPossible);
+
+        public static bool IsMetaFileOpenForEdit(UnityEngine.Object assetObject, out string message, StatusQueryOptions statusOptions) => 
+            IsOpenForEdit(GetTextMetaFilePathFromAssetPath(GetAssetOrScenePath(assetObject)), out message, statusOptions);
 
         /// <summary>
         /// <para>Is asset a native asset?</para>
@@ -569,43 +595,79 @@
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="instanceID"></param>
-        public static bool IsNativeAsset(Object obj) => 
+        public static bool IsNativeAsset(UnityEngine.Object obj) => 
             IsNativeAsset(obj.GetInstanceID());
 
         /// <summary>
-        /// <para>Use IsOpenForEdit to determine if the asset is open for edit by the version control.</para>
+        /// <para>Query whether an asset file is open for edit in version control.</para>
         /// </summary>
-        /// <param name="assetPath">Is the path to the asset on disk relative to project folder.</param>
-        /// <param name="message">Used to give reason for not open.</param>
-        /// <param name="assetObject"></param>
-        /// <param name="assetOrMetaFilePath"></param>
+        /// <param name="assetObject">Object representing the asset whose status you wish to query.</param>
+        /// <param name="assetOrMetaFilePath">Path to the asset file or its .meta file on disk, relative to project folder.</param>
+        /// <param name="message">Returns a reason for the asset not being open for edit.</param>
+        /// <param name="StatusQueryOptions">Options for how the version control system should be queried. These options can effect the speed and accuracy of the query.</param>
+        /// <param name="statusOptions"></param>
         /// <returns>
-        /// <para>True is the asset can be edited.</para>
+        /// <para>True if the asset is considered open for edit by the selected version control system.</para>
         /// </returns>
-        public static bool IsOpenForEdit(string assetOrMetaFilePath)
-        {
-            string str;
-            return IsOpenForEdit(assetOrMetaFilePath, out str);
-        }
+        public static bool IsOpenForEdit(string assetOrMetaFilePath) => 
+            IsOpenForEdit(assetOrMetaFilePath, StatusQueryOptions.UseCachedIfPossible);
 
         /// <summary>
-        /// <para>Use IsOpenForEdit to determine if the asset is open for edit by the version control.</para>
+        /// <para>Query whether an asset file is open for edit in version control.</para>
         /// </summary>
-        /// <param name="assetPath">Is the path to the asset on disk relative to project folder.</param>
-        /// <param name="message">Used to give reason for not open.</param>
-        /// <param name="assetObject"></param>
-        /// <param name="assetOrMetaFilePath"></param>
+        /// <param name="assetObject">Object representing the asset whose status you wish to query.</param>
+        /// <param name="assetOrMetaFilePath">Path to the asset file or its .meta file on disk, relative to project folder.</param>
+        /// <param name="message">Returns a reason for the asset not being open for edit.</param>
+        /// <param name="StatusQueryOptions">Options for how the version control system should be queried. These options can effect the speed and accuracy of the query.</param>
+        /// <param name="statusOptions"></param>
         /// <returns>
-        /// <para>True is the asset can be edited.</para>
+        /// <para>True if the asset is considered open for edit by the selected version control system.</para>
         /// </returns>
-        public static bool IsOpenForEdit(Object assetObject) => 
-            IsOpenForEdit(GetAssetOrScenePath(assetObject));
+        public static bool IsOpenForEdit(UnityEngine.Object assetObject) => 
+            IsOpenForEdit(GetAssetOrScenePath(assetObject), StatusQueryOptions.UseCachedIfPossible);
+
+        /// <summary>
+        /// <para>Query whether an asset file is open for edit in version control.</para>
+        /// </summary>
+        /// <param name="assetObject">Object representing the asset whose status you wish to query.</param>
+        /// <param name="assetOrMetaFilePath">Path to the asset file or its .meta file on disk, relative to project folder.</param>
+        /// <param name="message">Returns a reason for the asset not being open for edit.</param>
+        /// <param name="StatusQueryOptions">Options for how the version control system should be queried. These options can effect the speed and accuracy of the query.</param>
+        /// <param name="statusOptions"></param>
+        /// <returns>
+        /// <para>True if the asset is considered open for edit by the selected version control system.</para>
+        /// </returns>
+        public static bool IsOpenForEdit(string assetOrMetaFilePath, StatusQueryOptions StatusQueryOptions)
+        {
+            string str;
+            return IsOpenForEdit(assetOrMetaFilePath, out str, StatusQueryOptions);
+        }
 
         public static bool IsOpenForEdit(string assetOrMetaFilePath, out string message) => 
-            AssetModificationProcessorInternal.IsOpenForEdit(assetOrMetaFilePath, out message);
+            IsOpenForEdit(assetOrMetaFilePath, out message, StatusQueryOptions.UseCachedIfPossible);
 
-        public static bool IsOpenForEdit(Object assetObject, out string message) => 
-            IsOpenForEdit(GetAssetOrScenePath(assetObject), out message);
+        /// <summary>
+        /// <para>Query whether an asset file is open for edit in version control.</para>
+        /// </summary>
+        /// <param name="assetObject">Object representing the asset whose status you wish to query.</param>
+        /// <param name="assetOrMetaFilePath">Path to the asset file or its .meta file on disk, relative to project folder.</param>
+        /// <param name="message">Returns a reason for the asset not being open for edit.</param>
+        /// <param name="StatusQueryOptions">Options for how the version control system should be queried. These options can effect the speed and accuracy of the query.</param>
+        /// <param name="statusOptions"></param>
+        /// <returns>
+        /// <para>True if the asset is considered open for edit by the selected version control system.</para>
+        /// </returns>
+        public static bool IsOpenForEdit(UnityEngine.Object assetObject, StatusQueryOptions StatusQueryOptions) => 
+            IsOpenForEdit(GetAssetOrScenePath(assetObject), StatusQueryOptions);
+
+        public static bool IsOpenForEdit(UnityEngine.Object assetObject, out string message) => 
+            IsOpenForEdit(assetObject, out message, StatusQueryOptions.UseCachedIfPossible);
+
+        public static bool IsOpenForEdit(string assetOrMetaFilePath, out string message, StatusQueryOptions statusOptions) => 
+            AssetModificationProcessorInternal.IsOpenForEdit(assetOrMetaFilePath, out message, statusOptions);
+
+        public static bool IsOpenForEdit(UnityEngine.Object assetObject, out string message, StatusQueryOptions statusOptions) => 
+            IsOpenForEdit(GetAssetOrScenePath(assetObject), out message, statusOptions);
 
         /// <summary>
         /// <para>Does the asset form part of another asset?</para>
@@ -619,7 +681,7 @@
         /// </summary>
         /// <param name="obj">The asset Object to query.</param>
         /// <param name="instanceID">Instance ID of the asset Object to query.</param>
-        public static bool IsSubAsset(Object obj) => 
+        public static bool IsSubAsset(UnityEngine.Object obj) => 
             IsSubAsset(obj.GetInstanceID());
 
         /// <summary>
@@ -633,14 +695,14 @@
         /// </summary>
         /// <param name="assetPath"></param>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern Object[] LoadAllAssetRepresentationsAtPath(string assetPath);
+        public static extern UnityEngine.Object[] LoadAllAssetRepresentationsAtPath(string assetPath);
         /// <summary>
         /// <para>Returns an array of all asset objects at assetPath.</para>
         /// </summary>
         /// <param name="assetPath">Filesystem path to the asset.</param>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern Object[] LoadAllAssetsAtPath(string assetPath);
-        public static T LoadAssetAtPath<T>(string assetPath) where T: Object => 
+        public static extern UnityEngine.Object[] LoadAllAssetsAtPath(string assetPath);
+        public static T LoadAssetAtPath<T>(string assetPath) where T: UnityEngine.Object => 
             ((T) LoadAssetAtPath(assetPath, typeof(T)));
 
         /// <summary>
@@ -652,15 +714,15 @@
         /// <para>The asset matching the parameters.</para>
         /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), TypeInferenceRule(TypeInferenceRules.TypeReferencedBySecondArgument)]
-        public static extern Object LoadAssetAtPath(string assetPath, Type type);
+        public static extern UnityEngine.Object LoadAssetAtPath(string assetPath, System.Type type);
         /// <summary>
         /// <para>Returns the main asset object at assetPath.</para>
         /// </summary>
         /// <param name="assetPath">Filesystem path of the asset to load.</param>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern Object LoadMainAssetAtPath(string assetPath);
+        public static extern UnityEngine.Object LoadMainAssetAtPath(string assetPath);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern string[] MatchLabelsPartial(Object obj, string partial);
+        internal static extern string[] MatchLabelsPartial(UnityEngine.Object obj, string partial);
         /// <summary>
         /// <para>Move an asset file from one folder to another.</para>
         /// </summary>
@@ -697,7 +759,7 @@
         /// <param name="lineNumber"></param>
         /// <param name="target"></param>
         [ExcludeFromDocs]
-        public static bool OpenAsset(Object target)
+        public static bool OpenAsset(UnityEngine.Object target)
         {
             int lineNumber = -1;
             return OpenAsset(target, lineNumber);
@@ -707,10 +769,10 @@
         /// <para>Opens the asset(s) with associated application(s).</para>
         /// </summary>
         /// <param name="objects"></param>
-        public static bool OpenAsset(Object[] objects)
+        public static bool OpenAsset(UnityEngine.Object[] objects)
         {
             bool flag = true;
-            foreach (Object obj2 in objects)
+            foreach (UnityEngine.Object obj2 in objects)
             {
                 if (!OpenAsset(obj2))
                 {
@@ -734,7 +796,7 @@
         /// <param name="instanceID"></param>
         /// <param name="lineNumber"></param>
         /// <param name="target"></param>
-        public static bool OpenAsset(Object target, [DefaultValue("-1")] int lineNumber) => 
+        public static bool OpenAsset(UnityEngine.Object target, [DefaultValue("-1")] int lineNumber) => 
             ((target != null) && OpenAsset(target.GetInstanceID(), lineNumber));
 
         [ExcludeFromDocs]
@@ -832,7 +894,7 @@
         /// <param name="obj"></param>
         /// <param name="labels"></param>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void SetLabels(Object obj, string[] labels);
+        public static extern void SetLabels(UnityEngine.Object obj, string[] labels);
         /// <summary>
         /// <para>Begin Asset importing. This lets you group several asset imports together into one larger import.</para>
         /// </summary>

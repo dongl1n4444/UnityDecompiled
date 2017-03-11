@@ -24,7 +24,7 @@
             unityEvent.AddIntPersistentListener(call, argument);
         }
 
-        public static void AddObjectPersistentListener<T>(UnityEventBase unityEvent, UnityAction<T> call, T argument) where T: Object
+        public static void AddObjectPersistentListener<T>(UnityEventBase unityEvent, UnityAction<T> call, T argument) where T: UnityEngine.Object
         {
             unityEvent.AddObjectPersistentListener<T>(call, argument);
         }
@@ -99,7 +99,7 @@
             unityEvent.RegisterIntPersistentListener(index, call, argument);
         }
 
-        public static void RegisterObjectPersistentListener<T>(UnityEventBase unityEvent, int index, UnityAction<T> call, T argument) where T: Object
+        public static void RegisterObjectPersistentListener<T>(UnityEventBase unityEvent, int index, UnityAction<T> call, T argument) where T: UnityEngine.Object
         {
             unityEvent.RegisterObjectPersistentListener<T>(index, call, argument);
         }
@@ -170,27 +170,27 @@
         /// <param name="call">Function to remove (if specified).</param>
         public static void RemovePersistentListener(UnityEventBase unityEvent, UnityAction call)
         {
-            unityEvent.RemovePersistentListener(call.Target as Object, call.Method);
+            unityEvent.RemovePersistentListener(call.Target as UnityEngine.Object, call.Method);
         }
 
         public static void RemovePersistentListener<T0>(UnityEventBase unityEvent, UnityAction<T0> call)
         {
-            unityEvent.RemovePersistentListener(call.Target as Object, call.Method);
+            unityEvent.RemovePersistentListener(call.Target as UnityEngine.Object, call.Method);
         }
 
         public static void RemovePersistentListener<T0, T1>(UnityEventBase unityEvent, UnityAction<T0, T1> call)
         {
-            unityEvent.RemovePersistentListener(call.Target as Object, call.Method);
+            unityEvent.RemovePersistentListener(call.Target as UnityEngine.Object, call.Method);
         }
 
         public static void RemovePersistentListener<T0, T1, T2>(UnityEventBase unityEvent, UnityAction<T0, T1, T2> call)
         {
-            unityEvent.RemovePersistentListener(call.Target as Object, call.Method);
+            unityEvent.RemovePersistentListener(call.Target as UnityEngine.Object, call.Method);
         }
 
         public static void RemovePersistentListener<T0, T1, T2, T3>(UnityEventBase unityEvent, UnityAction<T0, T1, T2, T3> call)
         {
-            unityEvent.RemovePersistentListener(call.Target as Object, call.Method);
+            unityEvent.RemovePersistentListener(call.Target as UnityEngine.Object, call.Method);
         }
 
         /// <summary>

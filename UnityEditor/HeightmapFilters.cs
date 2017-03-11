@@ -26,7 +26,7 @@
                 for (int j = 0; j < heights.GetLength(1); j++)
                 {
                     float single1 = heights[i, j];
-                    single1[0] += Random.value * 0.01f;
+                    single1[0] += UnityEngine.Random.value * 0.01f;
                 }
             }
         }
