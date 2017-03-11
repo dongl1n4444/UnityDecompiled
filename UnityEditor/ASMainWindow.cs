@@ -554,7 +554,7 @@
             {
                 HierarchyProperty property = new HierarchyProperty(HierarchyType.Assets);
                 List<string> guids = new List<string>(Selection.objects.Length);
-                foreach (Object obj2 in Selection.objects)
+                foreach (UnityEngine.Object obj2 in Selection.objects)
                 {
                     if (property.Find(obj2.GetInstanceID(), null))
                     {

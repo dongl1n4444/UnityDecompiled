@@ -78,7 +78,7 @@
         public int triangleIndex =>
             this.m_FaceID;
         /// <summary>
-        /// <para>The uv texture coordinate at the impact point.</para>
+        /// <para>The uv texture coordinate at the collision location.</para>
         /// </summary>
         public Vector2 textureCoord
         {

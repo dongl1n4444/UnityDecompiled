@@ -96,6 +96,11 @@
         }
 
         /// <summary>
+        /// <para>Select whether the line will face the camera, or the orientation of the Transform Component.</para>
+        /// </summary>
+        public LineAlignment alignment { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
         /// <para>Set the color gradient describing the color of the line at various points along its length.</para>
         /// </summary>
         public Gradient colorGradient { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
@@ -123,6 +128,11 @@
         public float endWidth { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
+        /// <para>Connect the start and end positions of the line together to form a continuous loop.</para>
+        /// </summary>
+        public bool loop { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
         /// <para>Set this to a value greater than 0, to get rounded corners on each end of the line.</para>
         /// </summary>
         public int numCapVertices { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
@@ -135,7 +145,13 @@
         /// <summary>
         /// <para>Set the number of line segments.</para>
         /// </summary>
+        [Obsolete("Use positionCount property (UnityUpgradable) -> positionCount")]
         public int numPositions { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
+        /// <para>Set the number of line segments.</para>
+        /// </summary>
+        public int positionCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Set the color at the start of the line.</para>

@@ -13,9 +13,9 @@
         internal static void AddSetToValueOfTargetMenuItems(GenericMenu menu, SerializedProperty property, TargetChoiceMenuFunction func)
         {
             SerializedProperty property2 = property.serializedObject.FindProperty(property.propertyPath);
-            Object[] targetObjects = property.serializedObject.targetObjects;
+            UnityEngine.Object[] targetObjects = property.serializedObject.targetObjects;
             List<string> list = new List<string>();
-            foreach (Object obj2 in targetObjects)
+            foreach (UnityEngine.Object obj2 in targetObjects)
             {
                 string item = "Set to Value of " + obj2.name;
                 if (list.Contains(item))
@@ -65,7 +65,7 @@
             EditorUtility.ForceReloadInspectors();
         }
 
-        internal static void SetToValueOfTarget(SerializedProperty property, Object target)
+        internal static void SetToValueOfTarget(SerializedProperty property, UnityEngine.Object target)
         {
             property.SetToValueOfTarget(target);
             property.serializedObject.ApplyModifiedProperties();
@@ -78,7 +78,7 @@
             handler.function(handler.property, handler.target);
         }
 
-        internal delegate void TargetChoiceMenuFunction(SerializedProperty property, Object target);
+        internal delegate void TargetChoiceMenuFunction(SerializedProperty property, UnityEngine.Object target);
     }
 }
 

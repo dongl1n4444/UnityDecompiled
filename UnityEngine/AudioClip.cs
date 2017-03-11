@@ -1,6 +1,7 @@
 ﻿namespace UnityEngine
 {
     using System;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEngine.Scripting;
@@ -10,8 +11,10 @@
     /// </summary>
     public sealed class AudioClip : UnityEngine.Object
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         private event PCMReaderCallback m_PCMReaderCallback;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         private event PCMSetPositionCallback m_PCMSetPositionCallback;
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]

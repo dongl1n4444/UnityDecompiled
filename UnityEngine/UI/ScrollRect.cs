@@ -939,7 +939,7 @@
         }
 
         /// <summary>
-        /// <para>Callback executed when the scroll position of the slider is changed.</para>
+        /// <para>Callback executed when the position of the child changes.</para>
         /// </summary>
         public ScrollRectEvent onValueChanged
         {

@@ -56,7 +56,7 @@
         {
             if ((folder.item != null) && !folder.item.isFolder)
             {
-                Debug.LogError("Should be a folder item!");
+                UnityEngine.Debug.LogError("Should be a folder item!");
             }
             if (!folder.hasChildren)
             {
@@ -343,7 +343,7 @@
 
         private class PackageImportTreeViewGUI : TreeViewGUI
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private int <showPreviewForID>k__BackingField;
             public Action<PackageImportTreeView.PackageImportTreeViewItem> itemWasToggled;
             protected float k_FoldoutWidth;

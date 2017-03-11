@@ -200,6 +200,43 @@
         }
 
         /// <summary>
+        /// <para>This function is called automatically and handles the ExecuteCommand events for “SelectAll” and “FrameSelection”. Override this function to extend or avoid Command events.</para>
+        /// </summary>
+        protected virtual void CommandEventHandling()
+        {
+            Event current = Event.current;
+            if ((current.type == EventType.ExecuteCommand) || (current.type == EventType.ValidateCommand))
+            {
+                bool flag = current.type == EventType.ExecuteCommand;
+                if (this.HasFocus() && (current.commandName == "SelectAll"))
+                {
+                    if (flag)
+                    {
+                        this.SelectAllRows();
+                    }
+                    current.Use();
+                    GUIUtility.ExitGUI();
+                }
+                if (current.commandName == "FrameSelected")
+                {
+                    if (flag)
+                    {
+                        if (this.hasSearch)
+                        {
+                            this.searchString = string.Empty;
+                        }
+                        if (this.HasSelection())
+                        {
+                            this.FrameItem(this.GetSelection()[0]);
+                        }
+                    }
+                    current.Use();
+                    GUIUtility.ExitGUI();
+                }
+            }
+        }
+
+        /// <summary>
         /// <para>Override this method to handle context clicks outside any items (but still in the TreeView rect).</para>
         /// </summary>
         protected virtual void ContextClicked()
@@ -219,6 +256,17 @@
         /// </summary>
         protected static List<TreeViewItem> CreateChildListForCollapsedParent() => 
             LazyTreeViewDataSource.CreateChildListForCollapsedParent();
+
+        /// <summary>
+        /// <para>Override this function to extend or change the search behavior.</para>
+        /// </summary>
+        /// <param name="item">Item used for matching against the search string.</param>
+        /// <param name="search">The search string of the TreeView.</param>
+        /// <returns>
+        /// <para>True if item matches search string, otherwise false.</para>
+        /// </returns>
+        protected virtual bool DoesItemMatchSearch(TreeViewItem item, string search) => 
+            (item.displayName.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0);
 
         /// <summary>
         /// <para>Override this method to handle double click events on an item.</para>
@@ -263,6 +311,25 @@
                 throw new ArgumentException($"Could not find item with id: {id}. FindItem assumes complete tree is built. Most likely the item is not allocated because it is hidden under a collapsed item. Check if GetAncestors are overriden for the tree view.");
             }
             return item;
+        }
+
+        /// <summary>
+        /// <para>Finds a TreeViewItem by an ID.</para>
+        /// </summary>
+        /// <param name="id">Find the TreeViewItem with this ID.</param>
+        /// <param name="searchFromThisItem">Sets the search to start from an item. Use 'rootItem' to search the entire tree.</param>
+        /// <returns>
+        /// <para>This search method returns the TreeViewItem found and returns null if not found.</para>
+        /// </returns>
+        protected TreeViewItem FindItem(int id, TreeViewItem searchFromThisItem) => 
+            TreeViewUtility.FindItem(id, searchFromThisItem);
+
+        protected IList<TreeViewItem> FindRows(IList<int> ids)
+        {
+            <FindRows>c__AnonStorey0 storey = new <FindRows>c__AnonStorey0 {
+                ids = ids
+            };
+            return Enumerable.Where<TreeViewItem>(this.GetRows(), new Func<TreeViewItem, bool>(storey.<>m__0)).ToList<TreeViewItem>();
         }
 
         /// <summary>
@@ -347,7 +414,7 @@
         {
             if (item == null)
             {
-                Debug.LogError("Found a TreeViewItem that is null. Invalid use of AddExpandedRows(): This method is only valid to call if you have built the full tree of TreeViewItems.");
+                UnityEngine.Debug.LogError("Found a TreeViewItem that is null. Invalid use of AddExpandedRows(): This method is only valid to call if you have built the full tree of TreeViewItems.");
             }
             expandedRows.Add(item);
             if (item.hasChildren && this.IsExpanded(item.id))
@@ -411,14 +478,6 @@
             return this.m_TreeView.data.GetRows();
         }
 
-        protected IList<TreeViewItem> GetRowsFromIDs(IList<int> ids)
-        {
-            <GetRowsFromIDs>c__AnonStorey0 storey = new <GetRowsFromIDs>c__AnonStorey0 {
-                ids = ids
-            };
-            return Enumerable.Where<TreeViewItem>(this.GetRows(), new Func<TreeViewItem, bool>(storey.<>m__0)).ToList<TreeViewItem>();
-        }
-
         /// <summary>
         /// <para>Returns the list of TreeViewItem IDs that are currently selected.</para>
         /// </summary>
@@ -429,7 +488,7 @@
             DragAndDropVisualMode.None;
 
         /// <summary>
-        /// <para>Returns true if TreeView itself has keyboard focus (GUIUtility.keyboardControl) and the window the TreeView is in has focus.</para>
+        /// <para>Returns true if the TreeView and its EditorWindow have keyboard focus.</para>
         /// </summary>
         public bool HasFocus() => 
             this.m_TreeView.HasFocus();
@@ -455,9 +514,9 @@
             this.m_TreeView.selectionChangedCallback = (Action<int[]>) Delegate.Combine(this.m_TreeView.selectionChangedCallback, new Action<int[]>(this.SelectionChanged));
             this.m_TreeView.itemDoubleClickedCallback = (Action<int>) Delegate.Combine(this.m_TreeView.itemDoubleClickedCallback, new Action<int>(this.DoubleClickedItem));
             this.m_TreeView.contextClickItemCallback = (Action<int>) Delegate.Combine(this.m_TreeView.contextClickItemCallback, new Action<int>(this.ContextClickedItem));
-            this.m_TreeView.contextClickOutsideItemsCallback = (Action) Delegate.Combine(this.m_TreeView.contextClickOutsideItemsCallback, new Action(this.ContextClicked));
-            this.m_TreeView.expandedStateChanged = (Action) Delegate.Combine(this.m_TreeView.expandedStateChanged, new Action(this.ExpandedStateChanged));
-            this.m_TreeView.keyboardInputCallback = (Action) Delegate.Combine(this.m_TreeView.keyboardInputCallback, new Action(this.KeyEvent));
+            this.m_TreeView.contextClickOutsideItemsCallback = (System.Action) Delegate.Combine(this.m_TreeView.contextClickOutsideItemsCallback, new System.Action(this.ContextClicked));
+            this.m_TreeView.expandedStateChanged = (System.Action) Delegate.Combine(this.m_TreeView.expandedStateChanged, new System.Action(this.ExpandedStateChanged));
+            this.m_TreeView.keyboardInputCallback = (System.Action) Delegate.Combine(this.m_TreeView.keyboardInputCallback, new System.Action(this.KeyEvent));
             this.m_TreeViewKeyControlID = GUIUtility.GetPermanentControlID();
         }
 
@@ -506,6 +565,7 @@
                 {
                     this.m_TreeView.OnGUI(rect, this.m_TreeViewKeyControlID);
                 }
+                this.CommandEventHandling();
             }
         }
 
@@ -613,6 +673,35 @@
             this.m_DataSource.SetExpandedWithChildren(id, expanded);
         }
 
+        /// <summary>
+        /// <para>Calling this function changes the keyboard focus to the TreeView.</para>
+        /// </summary>
+        public void SetFocus()
+        {
+            GUIUtility.keyboardControl = this.m_TreeViewKeyControlID;
+            EditorGUIUtility.editingTextField = false;
+        }
+
+        /// <summary>
+        /// <para>Calling this function changes the keyboard focus to the TreeView and ensures an item is selected. Use this function to enable key navigation of the TreeView.</para>
+        /// </summary>
+        public void SetFocusAndEnsureSelectedItem()
+        {
+            this.SetFocus();
+            if (this.GetRows().Count > 0)
+            {
+                if (this.m_TreeView.IsLastClickedPartOfRows())
+                {
+                    this.FrameItem(this.state.lastClickedID);
+                }
+                else
+                {
+                    int[] selectedIDs = new int[] { this.GetRows()[0].id };
+                    this.SetSelection(selectedIDs, TreeViewSelectionOptions.RevealAndFrame | TreeViewSelectionOptions.FireSelectionChanged);
+                }
+            }
+        }
+
         public void SetSelection(IList<int> selectedIDs)
         {
             this.SetSelection(selectedIDs, TreeViewSelectionOptions.None);
@@ -673,12 +762,15 @@
             }
             if (!this.m_WarnedUser)
             {
-                Debug.LogError("TreeView has not been properly intialized yet. Ensure to call Reload() before using the tree view.");
+                UnityEngine.Debug.LogError("TreeView has not been properly intialized yet. Ensure to call Reload() before using the tree view.");
                 this.m_WarnedUser = true;
             }
             return false;
         }
 
+        /// <summary>
+        /// <para>Indent used for all rows before the tree foldout arrows and content.</para>
+        /// </summary>
         protected float baseIndent
         {
             get => 
@@ -689,6 +781,9 @@
             }
         }
 
+        /// <summary>
+        /// <para>When using a MultiColumnHeader this value adjusts the cell rects provided for all columns except the tree foldout column.</para>
+        /// </summary>
         protected float cellMargin
         {
             get => 
@@ -699,6 +794,9 @@
             }
         }
 
+        /// <summary>
+        /// <para>When using a MultiColumnHeader this value should be set to the column index in which the foldout arrows should appear.</para>
+        /// </summary>
         protected int columnIndexForTreeFoldouts
         {
             get => 
@@ -717,6 +815,9 @@
             }
         }
 
+        /// <summary>
+        /// <para>Custom vertical offset of the foldout arrow.</para>
+        /// </summary>
         protected float customFoldoutYOffset
         {
             get => 
@@ -727,9 +828,15 @@
             }
         }
 
+        /// <summary>
+        /// <para>Value that returns how far the foldouts are indented for each increasing depth value.</para>
+        /// </summary>
         protected float depthIndentWidth =>
             this.m_GUI.k_IndentWidth;
 
+        /// <summary>
+        /// <para>Value to control the spacing before the default icon and label. Can be used e.g for placing a toggle button to the left of the content.</para>
+        /// </summary>
         protected float extraSpaceBeforeIconAndLabel
         {
             get => 
@@ -740,6 +847,9 @@
             }
         }
 
+        /// <summary>
+        /// <para>Width of the built-in foldout arrow.</para>
+        /// </summary>
         protected float foldoutWidth =>
             this.m_GUI.foldoutWidth;
 
@@ -749,9 +859,15 @@
         public bool hasSearch =>
             !string.IsNullOrEmpty(this.searchString);
 
+        /// <summary>
+        /// <para>True if the user is currently dragging one or more items in the TreeView, and false otherwise.</para>
+        /// </summary>
         protected bool isDragging =>
             this.m_TreeView.isDragging;
 
+        /// <summary>
+        /// <para>The TreeView is initialized by calling Reload(). Therefore returns false until Reload() is called the first time.</para>
+        /// </summary>
         protected bool isInitialized =>
             this.m_DataSource.isInitialized;
 
@@ -768,9 +884,15 @@
             }
         }
 
+        /// <summary>
+        /// <para>The hidden root item of the TreeView (it is never rendered).</para>
+        /// </summary>
         protected TreeViewItem rootItem =>
             this.m_TreeView.data.root;
 
+        /// <summary>
+        /// <para>The fixed height used for each row in the TreeView if GetCustomRowHeight have not been overridden.</para>
+        /// </summary>
         protected float rowHeight
         {
             get => 
@@ -794,13 +916,25 @@
             }
         }
 
+        /// <summary>
+        /// <para>Enable this to show alternating row background colors.</para>
+        /// </summary>
         protected bool showAlternatingRowBackgrounds { get; set; }
 
+        /// <summary>
+        /// <para>Enable this to show a border around the TreeView.</para>
+        /// </summary>
         protected bool showBorder { get; set; }
 
+        /// <summary>
+        /// <para>Returns true if the horizontal scroll bar is showing, otherwise false.</para>
+        /// </summary>
         protected bool showingHorizontalScrollBar =>
             this.m_TreeView.showingHorizontalScrollBar;
 
+        /// <summary>
+        /// <para>Returns true if the vertical scroll bar is showing, otherwise false.</para>
+        /// </summary>
         protected bool showingVerticalScrollBar =>
             this.m_TreeView.showingVerticalScrollBar;
 
@@ -829,6 +963,9 @@
             }
         }
 
+        /// <summary>
+        /// <para>The Rect the TreeView is being rendered to.</para>
+        /// </summary>
         protected Rect treeViewRect
         {
             get => 
@@ -840,7 +977,7 @@
         }
 
         [CompilerGenerated]
-        private sealed class <GetRowsFromIDs>c__AnonStorey0
+        private sealed class <FindRows>c__AnonStorey0
         {
             internal IList<int> ids;
 
@@ -848,10 +985,19 @@
                 this.ids.Contains(item.id);
         }
 
+        /// <summary>
+        /// <para>Method arguments for the CanStartDrag virtual method.</para>
+        /// </summary>
         [StructLayout(LayoutKind.Sequential)]
         protected struct CanStartDragArgs
         {
+            /// <summary>
+            /// <para>Item about to be dragged.</para>
+            /// </summary>
             public TreeViewItem draggedItem;
+            /// <summary>
+            /// <para>The multi-selection about to be dragged.</para>
+            /// </summary>
             public IList<int> draggedItemIDs;
         }
 
@@ -989,15 +1135,33 @@
             }
         }
 
+        /// <summary>
+        /// <para>Method arguments for the HandleDragAndDrop virtual method.</para>
+        /// </summary>
         [StructLayout(LayoutKind.Sequential)]
         protected struct DragAndDropArgs
         {
+            /// <summary>
+            /// <para>When dragging items the current drag can have the following 3 positions relative to the items: Upon an item, Between two items or Outside items.</para>
+            /// </summary>
             public TreeView.DragAndDropPosition dragAndDropPosition;
+            /// <summary>
+            /// <para>The parent item is set if the drag is either upon this item or between two of its children.</para>
+            /// </summary>
             public TreeViewItem parentItem;
+            /// <summary>
+            /// <para>This index refers to the index in the children list of the parentItem where the current drag is positioned.</para>
+            /// </summary>
             public int insertAtIndex;
+            /// <summary>
+            /// <para>This value is false as long as the mouse button is down, when the mouse button is released it is true.</para>
+            /// </summary>
             public bool performDrop;
         }
 
+        /// <summary>
+        /// <para>Enum describing the possible positions a drag can have relative to the items: upon a item, between two items or outside items.</para>
+        /// </summary>
         protected enum DragAndDropPosition
         {
             UponItem,
@@ -1015,7 +1179,7 @@
 
             public OverriddenMethods(TreeView treeView)
             {
-                Type type = treeView.GetType();
+                System.Type type = treeView.GetType();
                 this.hasRowGUI = IsOverridden(type, "RowGUI");
                 this.hasHandleDragAndDrop = IsOverridden(type, "HandleDragAndDrop");
                 this.hasGetRenameRect = IsOverridden(type, "GetRenameRect");
@@ -1024,31 +1188,31 @@
                 this.ValidateOverriddenMethods(treeView);
             }
 
-            private static bool IsOverridden(Type type, string methodName)
+            private static bool IsOverridden(System.Type type, string methodName)
             {
                 MethodInfo method = type.GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
                 if (method != null)
                 {
                     return !(method.GetBaseDefinition().DeclaringType == method.DeclaringType);
                 }
-                Debug.LogError("IsOverridden: method name not found: " + methodName + " (check spelling against method declaration)");
+                UnityEngine.Debug.LogError("IsOverridden: method name not found: " + methodName + " (check spelling against method declaration)");
                 return false;
             }
 
             private void ValidateOverriddenMethods(TreeView treeView)
             {
-                Type type = treeView.GetType();
+                System.Type type = treeView.GetType();
                 bool flag = IsOverridden(type, "CanRename");
                 bool flag2 = IsOverridden(type, "RenameEnded");
                 if (flag2 != flag)
                 {
                     if (flag)
                     {
-                        Debug.LogError(type.Name + ": If you are overriding CanRename you should also override RenameEnded (to handle the renaming).");
+                        UnityEngine.Debug.LogError(type.Name + ": If you are overriding CanRename you should also override RenameEnded (to handle the renaming).");
                     }
                     if (flag2)
                     {
-                        Debug.LogError(type.Name + ": If you are overriding RenameEnded you should also override CanRename (to allow renaming).");
+                        UnityEngine.Debug.LogError(type.Name + ": If you are overriding RenameEnded you should also override CanRename (to allow renaming).");
                     }
                 }
                 bool flag3 = IsOverridden(type, "CanStartDrag");
@@ -1057,38 +1221,80 @@
                 {
                     if (flag3)
                     {
-                        Debug.LogError(type.Name + ": If you are overriding CanStartDrag you should also override SetupDragAndDrop (to setup the drag).");
+                        UnityEngine.Debug.LogError(type.Name + ": If you are overriding CanStartDrag you should also override SetupDragAndDrop (to setup the drag).");
                     }
                     if (flag4)
                     {
-                        Debug.LogError(type.Name + ": If you are overriding SetupDragAndDrop you should also override CanStartDrag (to allow dragging).");
+                        UnityEngine.Debug.LogError(type.Name + ": If you are overriding SetupDragAndDrop you should also override CanStartDrag (to allow dragging).");
                     }
                 }
             }
         }
 
+        /// <summary>
+        /// <para>Method arguments for the virtual method RenameEnded.</para>
+        /// </summary>
         [StructLayout(LayoutKind.Sequential)]
         protected struct RenameEndedArgs
         {
+            /// <summary>
+            /// <para>Is true if the rename is accepted.</para>
+            /// </summary>
             public bool acceptedRename;
+            /// <summary>
+            /// <para>Item with ID that are being renamed.</para>
+            /// </summary>
             public int itemID;
+            /// <summary>
+            /// <para>The original name when starting the rename.</para>
+            /// </summary>
             public string originalName;
+            /// <summary>
+            /// <para>Name entered in the rename overlay.</para>
+            /// </summary>
             public string newName;
         }
 
+        /// <summary>
+        /// <para>Method arguments for the virtual method RowGUI.</para>
+        /// </summary>
         [StructLayout(LayoutKind.Sequential)]
         protected struct RowGUIArgs
         {
+            /// <summary>
+            /// <para>Item for the current row being handled in TreeView.RowGUI.</para>
+            /// </summary>
             public TreeViewItem item;
+            /// <summary>
+            /// <para>Label used for text rendering of the item displayName. Note this is an empty string when isRenaming == true.</para>
+            /// </summary>
             public string label;
+            /// <summary>
+            /// <para>Row rect for the current row being handled.</para>
+            /// </summary>
             public Rect rowRect;
+            /// <summary>
+            /// <para>Row index into the list of current rows.</para>
+            /// </summary>
             public int row;
+            /// <summary>
+            /// <para>This value is true when the current row's item is part of the current selection.</para>
+            /// </summary>
             public bool selected;
+            /// <summary>
+            /// <para>This value is true only when the TreeView has keyboard focus and the TreeView's window has focus.</para>
+            /// </summary>
             public bool focused;
+            /// <summary>
+            /// <para>This value is true when the ::item is currently being renamed.</para>
+            /// </summary>
             public bool isRenaming;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private MultiColumnInfo <columnInfo>k__BackingField;
             internal MultiColumnInfo columnInfo { get; set; }
+            /// <summary>
+            /// <para>If using a MultiColumnHeader for the TreeView use this method to get the number of visible columns currently being shown in the MultiColumnHeader.</para>
+            /// </summary>
             public int GetNumVisibleColumns()
             {
                 if (!this.HasMultiColumnInfo())
@@ -1098,6 +1304,13 @@
                 return this.columnInfo.multiColumnHeaderState.visibleColumns.Length;
             }
 
+            /// <summary>
+            /// <para>If using a MultiColumnHeader for the TreeView this method can be used to convert an index from the visible columns list to a index into the actual columns in the MultiColumnHeaderState.</para>
+            /// </summary>
+            /// <param name="visibleColumnIndex">This index is the index into the current visible columns.</param>
+            /// <returns>
+            /// <para>Column index into the columns array in MultiColumnHeaderState.</para>
+            /// </returns>
             public int GetColumn(int visibleColumnIndex)
             {
                 if (!this.HasMultiColumnInfo())
@@ -1107,6 +1320,13 @@
                 return this.columnInfo.multiColumnHeaderState.visibleColumns[visibleColumnIndex];
             }
 
+            /// <summary>
+            /// <para>If using a MultiColumnHeader for the TreeView this method can be used to get the cell rects of a row using the visible columns of the MultiColumnHeader.</para>
+            /// </summary>
+            /// <param name="visibleColumnIndex">Index into the list of visible columns of the multi column header.</param>
+            /// <returns>
+            /// <para>Cell rect defined by the intersection between the row rect and the rect of the visible column.</para>
+            /// </returns>
             public Rect GetCellRect(int visibleColumnIndex)
             {
                 if (!this.HasMultiColumnInfo())
@@ -1131,9 +1351,15 @@
             }
         }
 
+        /// <summary>
+        /// <para>Method arguments to the virtual method SetupDragAndDrop.</para>
+        /// </summary>
         [StructLayout(LayoutKind.Sequential)]
         protected struct SetupDragAndDropArgs
         {
+            /// <summary>
+            /// <para>TreeViewItem IDs being dragged.</para>
+            /// </summary>
             public IList<int> draggedItemIDs;
         }
 
@@ -1154,9 +1380,6 @@
 
             public override bool CanBeParent(TreeViewItem item) => 
                 this.m_Owner.CanBeParent(item);
-
-            private bool DoesItemMatchFilter(TreeViewItem item, string search) => 
-                (item.displayName.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0);
 
             public override void FetchData()
             {
@@ -1216,7 +1439,7 @@
                         {
                             if (item2 != null)
                             {
-                                if (this.DoesItemMatchFilter(item2, search))
+                                if (this.m_Owner.DoesItemMatchSearch(item2, search))
                                 {
                                     result.Add(item2);
                                 }
@@ -1240,7 +1463,7 @@
                 }
                 if (base.m_RootItem.depth != -1)
                 {
-                    Debug.LogError("BuildRoot should ensure the root item has a depth == -1. The visible items start at depth == 0.");
+                    UnityEngine.Debug.LogError("BuildRoot should ensure the root item has a depth == -1. The visible items start at depth == 0.");
                     base.m_RootItem.depth = -1;
                 }
                 if ((base.m_RootItem.children == null) && !this.m_Owner.m_OverriddenMethods.hasBuildRows)
@@ -1307,7 +1530,7 @@
 
         private class TreeViewControlGUI : TreeViewGUI
         {
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private float <cellMargin>k__BackingField;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private int <columnIndexForTreeFoldouts>k__BackingField;
@@ -1382,33 +1605,34 @@
             {
                 if (Event.current.rawType == EventType.Repaint)
                 {
+                    float height = this.m_Owner.treeViewRect.height + this.m_Owner.state.scrollPos.y;
+                    TreeView.DefaultStyles.backgroundOdd.Draw(new Rect(0f, 0f, 100000f, height), false, false, false, false);
+                    int firstRowVisible = 0;
                     int count = this.m_Owner.GetRows().Count;
-                    if (count != 0)
+                    if (count > 0)
                     {
-                        int num3;
                         int num4;
-                        float height = this.m_Owner.treeViewRect.height + this.m_Owner.state.scrollPos.y;
-                        TreeView.DefaultStyles.backgroundEven.Draw(new Rect(0f, 0f, 100000f, height), false, false, false, false);
-                        this.GetFirstAndLastRowVisible(out num3, out num4);
-                        if ((num3 >= 0) && (num3 < count))
+                        this.GetFirstAndLastRowVisible(out firstRowVisible, out num4);
+                        if ((firstRowVisible < 0) || (firstRowVisible >= count))
                         {
-                            Rect position = new Rect(0f, 0f, 0f, this.m_Owner.rowHeight);
-                            for (int i = num3; position.yMax < height; i++)
+                            return;
+                        }
+                    }
+                    Rect position = new Rect(0f, 0f, 0f, this.m_Owner.rowHeight);
+                    for (int i = firstRowVisible; position.yMax < height; i++)
+                    {
+                        if ((i % 2) != 1)
+                        {
+                            if (i < count)
                             {
-                                if ((i % 2) != 0)
-                                {
-                                    if (i < count)
-                                    {
-                                        position = this.m_Owner.GetRowRect(i);
-                                    }
-                                    else
-                                    {
-                                        position.y += position.height * 2f;
-                                    }
-                                    position.width = 100000f;
-                                    TreeView.DefaultStyles.backgroundOdd.Draw(position, false, false, false, false);
-                                }
+                                position = this.m_Owner.GetRowRect(i);
                             }
+                            else if (i > 0)
+                            {
+                                position.y += position.height * 2f;
+                            }
+                            position.width = 100000f;
+                            TreeView.DefaultStyles.backgroundEven.Draw(position, false, false, false, false);
                         }
                     }
                 }

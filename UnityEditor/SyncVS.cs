@@ -16,13 +16,13 @@
     internal class SyncVS : AssetPostprocessor
     {
         [CompilerGenerated]
-        private static Func<KeyValuePair<VisualStudioVersion, string>, VisualStudioVersion> <>f__am$cache0;
+        private static Func<KeyValuePair<VisualStudioVersion, VisualStudioPath[]>, VisualStudioVersion> <>f__am$cache0;
         [CompilerGenerated]
-        private static Func<KeyValuePair<VisualStudioVersion, string>, string> <>f__am$cache1;
+        private static Func<KeyValuePair<VisualStudioVersion, VisualStudioPath[]>, VisualStudioPath[]> <>f__am$cache1;
         [CompilerGenerated]
-        private static Action <>f__mg$cache0;
+        private static System.Action <>f__mg$cache0;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private static Dictionary<VisualStudioVersion, string> <InstalledVisualStudios>k__BackingField;
+        private static Dictionary<VisualStudioVersion, VisualStudioPath[]> <InstalledVisualStudios>k__BackingField;
         private static bool s_AlreadySyncedThisDomainReload;
         private static readonly SolutionSynchronizer Synchronizer = new SolutionSynchronizer(Directory.GetParent(Application.dataPath).FullName, new SolutionSynchronizationSettings());
 
@@ -30,17 +30,17 @@
         {
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Action(SyncVS.SyncVisualStudioProjectIfItAlreadyExists);
+                <>f__mg$cache0 = new System.Action(SyncVS.SyncVisualStudioProjectIfItAlreadyExists);
             }
-            EditorUserBuildSettings.activeBuildTargetChanged = (Action) Delegate.Combine(EditorUserBuildSettings.activeBuildTargetChanged, <>f__mg$cache0);
+            EditorUserBuildSettings.activeBuildTargetChanged = (System.Action) Delegate.Combine(EditorUserBuildSettings.activeBuildTargetChanged, <>f__mg$cache0);
             try
             {
-                InstalledVisualStudios = GetInstalledVisualStudios() as Dictionary<VisualStudioVersion, string>;
+                InstalledVisualStudios = GetInstalledVisualStudios() as Dictionary<VisualStudioVersion, VisualStudioPath[]>;
             }
             catch (Exception exception)
             {
                 Console.WriteLine("Error detecting Visual Studio installations: {0}{1}{2}", exception.Message, Environment.NewLine, exception.StackTrace);
-                InstalledVisualStudios = new Dictionary<VisualStudioVersion, string>();
+                InstalledVisualStudios = new Dictionary<VisualStudioVersion, VisualStudioPath[]>();
             }
             SetVisualStudioAsEditorIfNoEditorWasSet();
             UnityVSSupport.Initialize();
@@ -171,12 +171,13 @@
             {
                 <>f__am$cache1 = kvp2 => kvp2.Value;
             }
-            return Enumerable.Select<KeyValuePair<VisualStudioVersion, string>, string>(Enumerable.OrderByDescending<KeyValuePair<VisualStudioVersion, string>, VisualStudioVersion>(InstalledVisualStudios, <>f__am$cache0), <>f__am$cache1).FirstOrDefault<string>();
+            VisualStudioPath[] source = Enumerable.Select<KeyValuePair<VisualStudioVersion, VisualStudioPath[]>, VisualStudioPath[]>(Enumerable.OrderByDescending<KeyValuePair<VisualStudioVersion, VisualStudioPath[]>, VisualStudioVersion>(InstalledVisualStudios, <>f__am$cache0), <>f__am$cache1).FirstOrDefault<VisualStudioPath[]>();
+            return ((source != null) ? source.Last<VisualStudioPath>().Path : null);
         }
 
-        private static IDictionary<VisualStudioVersion, string> GetInstalledVisualStudios()
+        private static IDictionary<VisualStudioVersion, VisualStudioPath[]> GetInstalledVisualStudios()
         {
-            Dictionary<VisualStudioVersion, string> dictionary = new Dictionary<VisualStudioVersion, string>();
+            Dictionary<VisualStudioVersion, VisualStudioPath[]> dictionary = new Dictionary<VisualStudioVersion, VisualStudioPath[]>();
             if (SolutionSynchronizationSettings.IsWindows)
             {
                 IEnumerator enumerator = Enum.GetValues(typeof(VisualStudioVersion)).GetEnumerator();
@@ -185,46 +186,49 @@
                     while (enumerator.MoveNext())
                     {
                         VisualStudioVersion current = (VisualStudioVersion) enumerator.Current;
-                        try
+                        if (current <= VisualStudioVersion.VisualStudio2015)
                         {
-                            string environmentVariable = Environment.GetEnvironmentVariable($"VS{(int) current}0COMNTOOLS");
-                            if (!string.IsNullOrEmpty(environmentVariable))
+                            try
                             {
-                                string[] components = new string[] { environmentVariable, "..", "IDE", "devenv.exe" };
-                                string path = Paths.Combine(components);
-                                if (File.Exists(path))
+                                string environmentVariable = Environment.GetEnvironmentVariable($"VS{(int) current}0COMNTOOLS");
+                                if (!string.IsNullOrEmpty(environmentVariable))
                                 {
-                                    dictionary[current] = path;
-                                    continue;
+                                    string[] components = new string[] { environmentVariable, "..", "IDE", "devenv.exe" };
+                                    string path = Paths.Combine(components);
+                                    if (File.Exists(path))
+                                    {
+                                        dictionary[current] = new VisualStudioPath[] { new VisualStudioPath(path, "") };
+                                        continue;
+                                    }
+                                }
+                                environmentVariable = GetRegistryValue($"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\{(int) current}.0", "InstallDir");
+                                if (string.IsNullOrEmpty(environmentVariable))
+                                {
+                                    environmentVariable = GetRegistryValue($"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\VisualStudio\{(int) current}.0", "InstallDir");
+                                }
+                                if (!string.IsNullOrEmpty(environmentVariable))
+                                {
+                                    string[] textArray2 = new string[] { environmentVariable, "devenv.exe" };
+                                    string str3 = Paths.Combine(textArray2);
+                                    if (File.Exists(str3))
+                                    {
+                                        dictionary[current] = new VisualStudioPath[] { new VisualStudioPath(str3, "") };
+                                        continue;
+                                    }
+                                }
+                                environmentVariable = GetRegistryValue($"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\{(int) current}.0\Debugger", "FEQARuntimeImplDll");
+                                if (!string.IsNullOrEmpty(environmentVariable))
+                                {
+                                    string str4 = DeriveVisualStudioPath(environmentVariable);
+                                    if (!string.IsNullOrEmpty(str4) && File.Exists(str4))
+                                    {
+                                        dictionary[current] = new VisualStudioPath[] { new VisualStudioPath(DeriveVisualStudioPath(environmentVariable), "") };
+                                    }
                                 }
                             }
-                            environmentVariable = GetRegistryValue($"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\{(int) current}.0", "InstallDir");
-                            if (string.IsNullOrEmpty(environmentVariable))
+                            catch
                             {
-                                environmentVariable = GetRegistryValue($"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\VisualStudio\{(int) current}.0", "InstallDir");
                             }
-                            if (!string.IsNullOrEmpty(environmentVariable))
-                            {
-                                string[] textArray2 = new string[] { environmentVariable, "devenv.exe" };
-                                string str3 = Paths.Combine(textArray2);
-                                if (File.Exists(str3))
-                                {
-                                    dictionary[current] = str3;
-                                    continue;
-                                }
-                            }
-                            environmentVariable = GetRegistryValue($"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\{(int) current}.0\Debugger", "FEQARuntimeImplDll");
-                            if (!string.IsNullOrEmpty(environmentVariable))
-                            {
-                                string str4 = DeriveVisualStudioPath(environmentVariable);
-                                if (!string.IsNullOrEmpty(str4) && File.Exists(str4))
-                                {
-                                    dictionary[current] = DeriveVisualStudioPath(environmentVariable);
-                                }
-                            }
-                        }
-                        catch
-                        {
                         }
                     }
                 }
@@ -236,6 +240,17 @@
                         disposable.Dispose();
                     }
                 }
+                string[] strArray = VisualStudioUtil.FindVisualStudioDevEnvPaths(15, "Microsoft.VisualStudio.Workload.ManagedGame");
+                if ((strArray == null) || (strArray.Length <= 0))
+                {
+                    return dictionary;
+                }
+                VisualStudioPath[] pathArray = new VisualStudioPath[strArray.Length / 2];
+                for (int i = 0; i < (strArray.Length / 2); i++)
+                {
+                    pathArray[i] = new VisualStudioPath(strArray[i * 2], strArray[(i * 2) + 1]);
+                }
+                dictionary[VisualStudioVersion.VisualStudio2017] = pathArray;
             }
             return dictionary;
         }
@@ -300,7 +315,7 @@
             }
         }
 
-        [MenuItem("Assets/Open C# Project")]
+        [UnityEditor.MenuItem("Assets/Open C# Project")]
         private static void SyncAndOpenSolution()
         {
             SyncSolution();
@@ -330,7 +345,7 @@
             }
         }
 
-        internal static Dictionary<VisualStudioVersion, string> InstalledVisualStudios
+        internal static Dictionary<VisualStudioVersion, VisualStudioPath[]> InstalledVisualStudios
         {
             [CompilerGenerated]
             get => 
@@ -376,7 +391,7 @@
                 get
                 {
                     string externalScriptEditor = InternalEditorUtility.GetExternalScriptEditor();
-                    if ((SyncVS.InstalledVisualStudios.ContainsKey(UnityEditor.VisualStudioVersion.VisualStudio2008) && (externalScriptEditor != string.Empty)) && SyncVS.PathsAreEquivalent(SyncVS.InstalledVisualStudios[UnityEditor.VisualStudioVersion.VisualStudio2008], externalScriptEditor))
+                    if ((SyncVS.InstalledVisualStudios.ContainsKey(UnityEditor.VisualStudioVersion.VisualStudio2008) && (externalScriptEditor != string.Empty)) && SyncVS.PathsAreEquivalent(SyncVS.InstalledVisualStudios[UnityEditor.VisualStudioVersion.VisualStudio2008].Last<VisualStudioPath>().Path, externalScriptEditor))
                     {
                         return 9;
                     }

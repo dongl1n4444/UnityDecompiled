@@ -15,12 +15,9 @@
         {
             if (!this.m_AnyTestsExecuted)
             {
-                EditorApplication.Exit(3);
+                Debug.LogWarning("No tests were executed");
             }
-            else
-            {
-                EditorApplication.Exit(!this.m_RunFailed ? 0 : 2);
-            }
+            EditorApplication.Exit(!this.m_RunFailed ? 0 : 2);
         }
 
         public void RunStarted(ITest testsToRun)

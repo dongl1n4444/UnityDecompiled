@@ -1,6 +1,7 @@
 ﻿namespace UnityEditor
 {
     using System;
+    using System.Diagnostics;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Threading;
@@ -13,11 +14,14 @@
         private float m_PrevScollPos;
         private float m_PrevTotalHeight;
 
-        public event Action mouseAndKeyboardInput;
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
+        public event System.Action mouseAndKeyboardInput;
 
-        public event Action scrollHeightChanged;
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
+        public event System.Action scrollHeightChanged;
 
-        public event Action scrollPositionChanged;
+        [field: DebuggerBrowsable(0), CompilerGenerated]
+        public event System.Action scrollPositionChanged;
 
         public GameObjectTreeViewGUI(TreeViewController treeView, bool useHorizontalScroll) : base(treeView, useHorizontalScroll)
         {
@@ -37,7 +41,7 @@
             }
             if ((item2.objectPPTR.hideFlags & HideFlags.NotEditable) != HideFlags.None)
             {
-                Debug.LogWarning("Unable to rename a GameObject with HideFlags.NotEditable.");
+                UnityEngine.Debug.LogWarning("Unable to rename a GameObject with HideFlags.NotEditable.");
                 return false;
             }
             return base.BeginRename(item, delay);
@@ -99,7 +103,7 @@
             position.y = rect.y;
             position.height = rect.height;
             position.width = 24f;
-            if (EditorGUI.ButtonMouseDown(position, GUIContent.none, FocusType.Passive, GUIStyle.none))
+            if (EditorGUI.DropdownButton(position, GUIContent.none, FocusType.Passive, GUIStyle.none))
             {
                 base.m_TreeView.SelectionClick(goItem, true);
                 base.m_TreeView.contextClickItemCallback(goItem.id);

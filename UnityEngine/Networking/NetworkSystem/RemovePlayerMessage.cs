@@ -9,7 +9,7 @@
     public class RemovePlayerMessage : MessageBase
     {
         /// <summary>
-        /// <para>The player ID of the player object which should be removed.</para>
+        /// <para>The player ID of the player GameObject which should be removed.</para>
         /// </summary>
         public short playerControllerId;
 

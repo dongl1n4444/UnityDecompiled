@@ -35,6 +35,10 @@
             return data;
         }
 
+        /// <summary>
+        /// <para>Cancels an asynchronous update of the specified NavMesh data. See Also: UpdateNavMeshDataAsync.</para>
+        /// </summary>
+        /// <param name="data">The data associated with asynchronous updating.</param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void Cancel(NavMeshData data);
         public static void CollectSources(Bounds includedWorldBounds, int includedLayerMask, NavMeshCollectGeometry geometry, int defaultArea, List<NavMeshBuildMarkup> markups, List<NavMeshBuildSource> results)

@@ -16,10 +16,10 @@
         private AnimationClip m_Clip;
         public List<AnimationWindowKeyframe> m_Keyframes;
         private AnimationWindowSelectionItem m_SelectionBinding;
-        private Type m_ValueType;
+        private System.Type m_ValueType;
         public const float timeEpsilon = 1E-05f;
 
-        public AnimationWindowCurve(AnimationClip clip, EditorCurveBinding binding, Type valueType)
+        public AnimationWindowCurve(AnimationClip clip, EditorCurveBinding binding, System.Type valueType)
         {
             binding = RotationCurveInterpolation.RemapAnimationBindingForRotationCurves(binding, clip);
             this.m_Binding = binding;
@@ -262,7 +262,7 @@
                 {
                     ObjectReferenceKeyframe item = new ObjectReferenceKeyframe {
                         time = this.m_Keyframes[i].time,
-                        value = (Object) this.m_Keyframes[i].value
+                        value = (UnityEngine.Object) this.m_Keyframes[i].value
                     };
                     minValue = item.time;
                     list.Add(item);
@@ -323,10 +323,10 @@
         public float timeOffset =>
             ((this.m_SelectionBinding == null) ? 0f : this.m_SelectionBinding.timeOffset);
 
-        public Type type =>
+        public System.Type type =>
             this.m_Binding.type;
 
-        public Type valueType =>
+        public System.Type valueType =>
             this.m_ValueType;
     }
 }

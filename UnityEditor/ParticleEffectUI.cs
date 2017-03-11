@@ -68,11 +68,6 @@
 
         public void Clear()
         {
-            this.Clear(true);
-        }
-
-        public void Clear(bool clearPlanes)
-        {
             ParticleSystem root = ParticleSystemEditorUtils.GetRoot(this.m_SelectedParticleSystems[0]);
             if (this.ShouldManagePlaybackState(root) && (root != null))
             {
@@ -93,10 +88,6 @@
                 SessionState.SetVector3("SimulationState" + instanceID, new Vector3((float) instanceID, (float) playing, ParticleSystemEditorUtils.editorPlaybackTime));
             }
             this.m_ParticleSystemCurveEditor.OnDisable();
-            if (clearPlanes)
-            {
-                ParticleEffectUtils.ClearPlanes();
-            }
             Tools.s_Hidden = false;
             if (root != null)
             {
@@ -109,7 +100,7 @@
 
         public GameObject CreateParticleSystem(ParticleSystem parentOfNewParticleSystem, SubModuleUI.SubEmitterType defaultType)
         {
-            Type[] components = new Type[] { typeof(ParticleSystem) };
+            System.Type[] components = new System.Type[] { typeof(ParticleSystem) };
             GameObject objectToUndo = new GameObject(this.GetNextParticleSystemName(), components);
             if (objectToUndo != null)
             {
@@ -323,7 +314,7 @@
                 }
                 if (this.m_ParticleSystemCurveEditor != null)
                 {
-                    this.Clear(false);
+                    this.Clear();
                 }
                 flag3 = true;
                 if (!flag)
@@ -551,20 +542,16 @@
             }
         }
 
-        public void OnSceneGUI()
-        {
-            foreach (ParticleSystemUI mui in this.m_Emitters)
-            {
-                mui.OnSceneGUI();
-            }
-        }
-
         public void OnSceneViewGUI()
         {
             ParticleSystem root = ParticleSystemEditorUtils.GetRoot(this.m_SelectedParticleSystems[0]);
             if ((root != null) && root.gameObject.activeInHierarchy)
             {
                 SceneViewOverlay.Window(ParticleSystemInspector.playBackTitle, new SceneViewOverlay.WindowFunction(this.SceneViewGUICallback), 400, SceneViewOverlay.WindowDisplayOption.OneWindowPerTitle);
+            }
+            foreach (ParticleSystemUI mui in this.m_Emitters)
+            {
+                mui.OnSceneViewGUI();
             }
         }
 
@@ -775,7 +762,7 @@
             return lastRect;
         }
 
-        private void SceneViewGUICallback(Object target, SceneView sceneView)
+        private void SceneViewGUICallback(UnityEngine.Object target, SceneView sceneView)
         {
             this.PlayStopGUI();
         }
@@ -854,6 +841,10 @@
                     if (eui != null)
                     {
                         eui.CheckVisibilityState();
+                        if (eui.foldout)
+                        {
+                            eui.UndoRedoPerformed();
+                        }
                     }
                 }
             }

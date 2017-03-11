@@ -271,14 +271,14 @@
             this._writer.EndBlock(false);
         }
 
-        private void WriteInvokeChainedDelegates(MethodReference method, List<string> parametersOnlyName)
+        private void WriteInvokeChainedDelegates(MethodReference method, List<string> parametersOnlyName, IRuntimeMetadataAccess metadataAccess)
         {
             string str = CommaSeperate(parametersOnlyName, true);
             string str2 = ExpressionForFieldOfThis(this._prevGetterName) + "()";
             object[] args = new object[] { str2 };
             this.WriteLine("if({0} != NULL)", args);
             this._writer.BeginBlock();
-            object[] objArray2 = new object[] { Naming.ForMethod(method), Naming.ForVariable(method.DeclaringType), str2, str };
+            object[] objArray2 = new object[] { metadataAccess.Method(method), Naming.ForVariable(method.DeclaringType), str2, str };
             this.WriteLine("{0}(({1}){2}{3}, method);", objArray2);
             this._writer.EndBlock(false);
         }
@@ -368,7 +368,7 @@
             }
         }
 
-        private void WriteMethodBodyForInvoke(MethodReference method)
+        private void WriteMethodBodyForInvoke(MethodReference method, IRuntimeMetadataAccess metadataAccess)
         {
             List<string> parametersOnlyName = MethodSignatureWriter.ParametersFor(method, ParameterFormat.WithNameNoThis, false, false, false).ToList<string>();
             if (CodeGenOptions.Dotnetprofile == DotNetProfile.Net45)
@@ -377,7 +377,7 @@
             }
             else
             {
-                this.WriteInvokeChainedDelegates(method, parametersOnlyName);
+                this.WriteInvokeChainedDelegates(method, parametersOnlyName, metadataAccess);
                 this.WriteInvocationsForDelegate(Naming.ThisParameterName, method, parametersOnlyName, null);
             }
         }
@@ -392,7 +392,7 @@
             switch (method.Name)
             {
                 case "Invoke":
-                    this.WriteMethodBodyForInvoke(method);
+                    this.WriteMethodBodyForInvoke(method, metadataAccess);
                     return;
 
                 case "BeginInvoke":

@@ -63,7 +63,7 @@
         {
             if (s_LocalizedChartNames == null)
             {
-                s_LocalizedChartNames = new string[] { LocalizationDatabase.GetLocalizedString("CPU Usage|Graph out the various CPU areas"), LocalizationDatabase.GetLocalizedString("GPU Usage|Graph out the various GPU areas"), LocalizationDatabase.GetLocalizedString("Rendering"), LocalizationDatabase.GetLocalizedString("Memory|Graph out the various memory usage areas"), LocalizationDatabase.GetLocalizedString("Audio"), LocalizationDatabase.GetLocalizedString("Physics"), LocalizationDatabase.GetLocalizedString("Physics (2D)"), LocalizationDatabase.GetLocalizedString("Network Messages"), LocalizationDatabase.GetLocalizedString("Network Operations"), LocalizationDatabase.GetLocalizedString("UI"), LocalizationDatabase.GetLocalizedString("UI Details") };
+                s_LocalizedChartNames = new string[] { LocalizationDatabase.GetLocalizedString("CPU Usage|Graph out the various CPU areas"), LocalizationDatabase.GetLocalizedString("GPU Usage|Graph out the various GPU areas"), LocalizationDatabase.GetLocalizedString("Rendering"), LocalizationDatabase.GetLocalizedString("Memory|Graph out the various memory usage areas"), LocalizationDatabase.GetLocalizedString("Audio"), LocalizationDatabase.GetLocalizedString("Video"), LocalizationDatabase.GetLocalizedString("Physics"), LocalizationDatabase.GetLocalizedString("Physics (2D)"), LocalizationDatabase.GetLocalizedString("Network Messages"), LocalizationDatabase.GetLocalizedString("Network Operations"), LocalizationDatabase.GetLocalizedString("UI"), LocalizationDatabase.GetLocalizedString("UI Details") };
             }
             return s_LocalizedChartNames[(int) this.m_Area];
         }

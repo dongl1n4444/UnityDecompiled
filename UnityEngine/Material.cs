@@ -59,11 +59,13 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void DisableKeyword(string keyword);
         /// <summary>
-        /// <para>Set a shader keyword that is enabled by this material.</para>
+        /// <para>Sets a shader keyword that is enabled by this material.</para>
         /// </summary>
         /// <param name="keyword"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void EnableKeyword(string keyword);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern Array ExtractArrayFromList(object list);
         /// <summary>
         /// <para>Returns the index of the pass passName.</para>
         /// </summary>
@@ -261,6 +263,15 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern string GetPassName(int pass);
         /// <summary>
+        /// <para>Checks whether a given Shader pass is enabled on this Material.</para>
+        /// </summary>
+        /// <param name="passName">Shader pass name (case insensitive).</param>
+        /// <returns>
+        /// <para>True if the Shader pass is enabled.</para>
+        /// </returns>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public extern bool GetShaderPassEnabled(string passName);
+        /// <summary>
         /// <para>Get the value of material's shader tag.</para>
         /// </summary>
         /// <param name="tag"></param>
@@ -443,22 +454,22 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void Lerp(Material start, Material end, float t);
         /// <summary>
-        /// <para>Set a named ComputeBuffer value.</para>
+        /// <para>Sets a named ComputeBuffer value.</para>
         /// </summary>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
         /// <param name="name">Property name.</param>
-        /// <param name="value">ComputeBuffer value to set.</param>
+        /// <param name="value">The ComputeBuffer value to set.</param>
         public void SetBuffer(int nameID, ComputeBuffer value)
         {
             this.SetBufferImpl(nameID, value);
         }
 
         /// <summary>
-        /// <para>Set a named ComputeBuffer value.</para>
+        /// <para>Sets a named ComputeBuffer value.</para>
         /// </summary>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
         /// <param name="name">Property name.</param>
-        /// <param name="value">ComputeBuffer value to set.</param>
+        /// <param name="value">The ComputeBuffer value to set.</param>
         public void SetBuffer(string name, ComputeBuffer value)
         {
             this.SetBuffer(Shader.PropertyToID(name), value);
@@ -467,7 +478,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetBufferImpl(int nameID, ComputeBuffer value);
         /// <summary>
-        /// <para>Set a named color value.</para>
+        /// <para>Sets a named color value.</para>
         /// </summary>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
         /// <param name="name">Property name, e.g. "_Color".</param>
@@ -478,7 +489,7 @@
         }
 
         /// <summary>
-        /// <para>Set a named color value.</para>
+        /// <para>Sets a named color value.</para>
         /// </summary>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
         /// <param name="name">Property name, e.g. "_Color".</param>
@@ -490,19 +501,11 @@
 
         public void SetColorArray(int nameID, List<Color> values)
         {
-            if (values == null)
-            {
-                throw new ArgumentNullException("values");
-            }
-            if (values.Count == 0)
-            {
-                throw new ArgumentException("Zero-sized array is not allowed.");
-            }
-            this.SetColorArrayImplList(nameID, values);
+            this.SetColorArray(nameID, (Color[]) ExtractArrayFromList(values));
         }
 
         /// <summary>
-        /// <para>Set a color array property.</para>
+        /// <para>Sets a color array property.</para>
         /// </summary>
         /// <param name="name">Property name.</param>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
@@ -526,7 +529,7 @@
         }
 
         /// <summary>
-        /// <para>Set a color array property.</para>
+        /// <para>Sets a color array property.</para>
         /// </summary>
         /// <param name="name">Property name.</param>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
@@ -546,7 +549,7 @@
         }
 
         /// <summary>
-        /// <para>Set a named float value.</para>
+        /// <para>Sets a named float value.</para>
         /// </summary>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
         /// <param name="value">Float value to set.</param>
@@ -557,7 +560,7 @@
         }
 
         /// <summary>
-        /// <para>Set a named float value.</para>
+        /// <para>Sets a named float value.</para>
         /// </summary>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
         /// <param name="value">Float value to set.</param>
@@ -569,22 +572,14 @@
 
         public void SetFloatArray(int nameID, List<float> values)
         {
-            if (values == null)
-            {
-                throw new ArgumentNullException("values");
-            }
-            if (values.Count == 0)
-            {
-                throw new ArgumentException("Zero-sized array is not allowed.");
-            }
-            this.SetFloatArrayImplList(nameID, values);
+            this.SetFloatArray(nameID, (float[]) ExtractArrayFromList(values));
         }
 
         /// <summary>
-        /// <para>Set a float array property.</para>
+        /// <para>Sets a float array property.</para>
         /// </summary>
         /// <param name="name">Property name.</param>
-        /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
+        /// <param name="nameID">Property name ID. Use Shader.PropertyToID to get this ID.</param>
         /// <param name="values">Array of values to set.</param>
         public void SetFloatArray(int nameID, float[] values)
         {
@@ -605,10 +600,10 @@
         }
 
         /// <summary>
-        /// <para>Set a float array property.</para>
+        /// <para>Sets a float array property.</para>
         /// </summary>
         /// <param name="name">Property name.</param>
-        /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
+        /// <param name="nameID">Property name ID. Use Shader.PropertyToID to get this ID.</param>
         /// <param name="values">Array of values to set.</param>
         public void SetFloatArray(string name, float[] values)
         {
@@ -618,11 +613,9 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetFloatArrayImpl(int nameID, float[] values);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private extern void SetFloatArrayImplList(int nameID, object values);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetFloatImpl(int nameID, float value);
         /// <summary>
-        /// <para>Set a named integer value.</para>
+        /// <para>Sets a named integer value.</para>
         /// </summary>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
         /// <param name="value">Integer value to set.</param>
@@ -633,7 +626,7 @@
         }
 
         /// <summary>
-        /// <para>Set a named integer value.</para>
+        /// <para>Sets a named integer value.</para>
         /// </summary>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
         /// <param name="value">Integer value to set.</param>
@@ -646,7 +639,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetIntImpl(int nameID, int value);
         /// <summary>
-        /// <para>Set a named matrix for the shader.</para>
+        /// <para>Sets a named matrix for the shader.</para>
         /// </summary>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
         /// <param name="name">Property name, e.g. "_CubemapRotation".</param>
@@ -657,7 +650,7 @@
         }
 
         /// <summary>
-        /// <para>Set a named matrix for the shader.</para>
+        /// <para>Sets a named matrix for the shader.</para>
         /// </summary>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
         /// <param name="name">Property name, e.g. "_CubemapRotation".</param>
@@ -669,19 +662,11 @@
 
         public void SetMatrixArray(int nameID, List<Matrix4x4> values)
         {
-            if (values == null)
-            {
-                throw new ArgumentNullException("values");
-            }
-            if (values.Count == 0)
-            {
-                throw new ArgumentException("Zero-sized array is not allowed.");
-            }
-            this.SetMatrixArrayImplList(nameID, values);
+            this.SetMatrixArray(nameID, (Matrix4x4[]) ExtractArrayFromList(values));
         }
 
         /// <summary>
-        /// <para>Set a matrix array property.</para>
+        /// <para>Sets a matrix array property.</para>
         /// </summary>
         /// <param name="name">Property name.</param>
         /// <param name="values">Array of values to set.</param>
@@ -705,7 +690,7 @@
         }
 
         /// <summary>
-        /// <para>Set a matrix array property.</para>
+        /// <para>Sets a matrix array property.</para>
         /// </summary>
         /// <param name="name">Property name.</param>
         /// <param name="values">Array of values to set.</param>
@@ -717,8 +702,6 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetMatrixArrayImpl(int nameID, Matrix4x4[] values);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private extern void SetMatrixArrayImplList(int nameID, object values);
         private void SetMatrixImpl(int nameID, Matrix4x4 value)
         {
             INTERNAL_CALL_SetMatrixImpl(this, nameID, ref value);
@@ -741,7 +724,14 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool SetPass(int pass);
         /// <summary>
-        /// <para>Set a named texture.</para>
+        /// <para>Enables or disables a Shader pass on a per-Material level.</para>
+        /// </summary>
+        /// <param name="passName">Shader pass name (case insensitive).</param>
+        /// <param name="enabled">Flag indicating whether this Shader pass should be enabled.</param>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public extern void SetShaderPassEnabled(string passName, bool enabled);
+        /// <summary>
+        /// <para>Sets a named texture.</para>
         /// </summary>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
         /// <param name="name">Property name, e.g. "_MainTex".</param>
@@ -752,7 +742,7 @@
         }
 
         /// <summary>
-        /// <para>Set a named texture.</para>
+        /// <para>Sets a named texture.</para>
         /// </summary>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
         /// <param name="name">Property name, e.g. "_MainTex".</param>
@@ -768,7 +758,7 @@
         /// <para>Sets the placement offset of texture propertyName.</para>
         /// </summary>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
-        /// <param name="name">Property name, e.g. "_MainTex".</param>
+        /// <param name="name">Property name, for example: "_MainTex".</param>
         /// <param name="value">Texture placement offset.</param>
         public void SetTextureOffset(int nameID, Vector2 value)
         {
@@ -779,7 +769,7 @@
         /// <para>Sets the placement offset of texture propertyName.</para>
         /// </summary>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
-        /// <param name="name">Property name, e.g. "_MainTex".</param>
+        /// <param name="name">Property name, for example: "_MainTex".</param>
         /// <param name="value">Texture placement offset.</param>
         public void SetTextureOffset(string name, Vector2 value)
         {
@@ -819,7 +809,7 @@
         }
 
         /// <summary>
-        /// <para>Set a named vector value.</para>
+        /// <para>Sets a named vector value.</para>
         /// </summary>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
         /// <param name="name">Property name, e.g. "_WaveAndDistance".</param>
@@ -830,7 +820,7 @@
         }
 
         /// <summary>
-        /// <para>Set a named vector value.</para>
+        /// <para>Sets a named vector value.</para>
         /// </summary>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
         /// <param name="name">Property name, e.g. "_WaveAndDistance".</param>
@@ -842,19 +832,11 @@
 
         public void SetVectorArray(int nameID, List<Vector4> values)
         {
-            if (values == null)
-            {
-                throw new ArgumentNullException("values");
-            }
-            if (values.Count == 0)
-            {
-                throw new ArgumentException("Zero-sized array is not allowed.");
-            }
-            this.SetVectorArrayImplList(nameID, values);
+            this.SetVectorArray(nameID, (Vector4[]) ExtractArrayFromList(values));
         }
 
         /// <summary>
-        /// <para>Set a vector array property.</para>
+        /// <para>Sets a vector array property.</para>
         /// </summary>
         /// <param name="name">Property name.</param>
         /// <param name="values">Array of values to set.</param>
@@ -878,7 +860,7 @@
         }
 
         /// <summary>
-        /// <para>Set a vector array property.</para>
+        /// <para>Sets a vector array property.</para>
         /// </summary>
         /// <param name="name">Property name.</param>
         /// <param name="values">Array of values to set.</param>
@@ -890,8 +872,6 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetVectorArrayImpl(int nameID, Vector4[] values);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private extern void SetVectorArrayImplList(int nameID, object values);
         private void SetVectorImpl(int nameID, Vector4 value)
         {
             INTERNAL_CALL_SetVectorImpl(this, nameID, ref value);
@@ -909,6 +889,11 @@
                 this.SetColor("_Color", value);
             }
         }
+
+        /// <summary>
+        /// <para>Gets and sets whether GPU instancing is enabled for this material.</para>
+        /// </summary>
+        public bool enableInstancing { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Defines how the material should interact with lightmaps and lightprobes.</para>

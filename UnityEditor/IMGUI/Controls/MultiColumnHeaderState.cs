@@ -1,6 +1,7 @@
 ﻿namespace UnityEditor.IMGUI.Controls
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using UnityEngine;
 
@@ -12,10 +13,10 @@
     {
         [SerializeField]
         private Column[] m_Columns;
+        [NonSerialized]
+        private int m_MaxNumberOfSortedColumns = 3;
         [SerializeField]
-        private int m_PreviousSortedColumnIndex;
-        [SerializeField]
-        private int m_SortedColumnIndex;
+        private List<int> m_SortedColumns;
         [SerializeField]
         private int[] m_VisibleColumns;
 
@@ -30,8 +31,7 @@
                 throw new ArgumentException("columns array should at least have one column: it is empty", "columns");
             }
             this.m_Columns = columns;
-            this.m_SortedColumnIndex = -1;
-            this.m_PreviousSortedColumnIndex = -1;
+            this.m_SortedColumns = new List<int>();
             this.m_VisibleColumns = new int[this.m_Columns.Length];
             for (int i = 0; i < this.m_Columns.Length; i++)
             {
@@ -74,13 +74,21 @@
             else
             {
                 destination.m_VisibleColumns = source.m_VisibleColumns.ToArray<int>();
-                destination.m_SortedColumnIndex = source.m_SortedColumnIndex;
-                destination.m_PreviousSortedColumnIndex = source.m_PreviousSortedColumnIndex;
+                destination.m_SortedColumns = new List<int>(source.m_SortedColumns);
                 for (int i = 0; i < destination.m_Columns.Length; i++)
                 {
                     destination.m_Columns[i].width = source.m_Columns[i].width;
                     destination.m_Columns[i].sortedAscending = source.m_Columns[i].sortedAscending;
                 }
+            }
+        }
+
+        private void RemoveInvalidSortingColumnsIndices()
+        {
+            this.m_SortedColumns.RemoveAll(x => x >= this.m_Columns.Length);
+            if (this.m_SortedColumns.Count > this.m_MaxNumberOfSortedColumns)
+            {
+                this.m_SortedColumns.RemoveRange(this.m_MaxNumberOfSortedColumns, this.m_SortedColumns.Count - this.m_MaxNumberOfSortedColumns);
             }
         }
 
@@ -91,30 +99,60 @@
             this.m_Columns;
 
         /// <summary>
-        /// <para>When a new column is set for sorting the previous sorted column is stored.</para>
+        /// <para>This property controls the maximum number of columns returned by the sortedColumns property.</para>
         /// </summary>
-        public int previousSortedColumnIndex =>
-            this.m_PreviousSortedColumnIndex;
-
-        /// <summary>
-        /// <para>The main sorted column. This column will show the sorting arrow in the column header.</para>
-        /// </summary>
-        public int sortedColumnIndex
+        public int maximumNumberOfSortedColumns
         {
             get => 
-                this.m_SortedColumnIndex;
+                this.m_MaxNumberOfSortedColumns;
             set
             {
-                if (value != this.m_SortedColumnIndex)
-                {
-                    this.m_PreviousSortedColumnIndex = this.m_SortedColumnIndex;
-                }
-                this.m_SortedColumnIndex = value;
+                this.m_MaxNumberOfSortedColumns = value;
+                this.RemoveInvalidSortingColumnsIndices();
             }
         }
 
         /// <summary>
-        /// <para>This is the array of currently visible column indicies.</para>
+        /// <para>This property holds the index to the primary sorted column.</para>
+        /// </summary>
+        public int sortedColumnIndex
+        {
+            get => 
+                ((this.m_SortedColumns.Count <= 0) ? -1 : this.m_SortedColumns[0]);
+            set
+            {
+                int num = (this.m_SortedColumns.Count <= 0) ? -1 : this.m_SortedColumns[0];
+                if (value != num)
+                {
+                    if (value >= 0)
+                    {
+                        this.m_SortedColumns.Remove(value);
+                        this.m_SortedColumns.Insert(0, value);
+                    }
+                    else
+                    {
+                        this.m_SortedColumns.Clear();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// <para>The array of column indices for multiple column sorting.</para>
+        /// </summary>
+        public int[] sortedColumns
+        {
+            get => 
+                this.m_SortedColumns.ToArray();
+            set
+            {
+                this.m_SortedColumns = (value != null) ? new List<int>(value) : new List<int>();
+                this.RemoveInvalidSortingColumnsIndices();
+            }
+        }
+
+        /// <summary>
+        /// <para>This is the array of currently visible column indices.</para>
         /// </summary>
         public int[] visibleColumns
         {

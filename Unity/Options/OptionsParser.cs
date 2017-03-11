@@ -171,7 +171,7 @@
                     {
                         foreach (AssemblyName name in assembly2.GetReferencedAssembliesPortable())
                         {
-                            if (((((name.Name != "mscorlib") && !name.Name.StartsWith("System")) && !name.Name.StartsWith("Mono.Cecil")) && (name.Name != "Unity.IL2CPP.RuntimeServices")) && !set.Contains(name))
+                            if (((((name.Name != "mscorlib") && !name.Name.StartsWith("System")) && (!name.Name.StartsWith("Mono.Cecil") && (name.Name != "Unity.IL2CPP.RuntimeServices"))) && !name.Name.StartsWith("Microsoft")) && !set.Contains(name))
                             {
                                 try
                                 {
@@ -223,8 +223,8 @@
             {
                 foreach (FieldInfo info in GetOptionFields(type))
                 {
-                    object[] customAttributes = info.GetCustomAttributes(typeof(HelpDetailsAttribute), false);
-                    if (customAttributes.Length > 1)
+                    object[] objArray = info.GetCustomAttributes(typeof(HelpDetailsAttribute), false).ToArray<object>();
+                    if (objArray.Length > 1)
                     {
                         throw new InvalidOperationException($"Field, {info.Name}, has more than one help attribute");
                     }
@@ -236,7 +236,7 @@
                     if (!info.GetCustomAttributes(typeof(HideFromHelpAttribute), false).Any<object>())
                     {
                         HelpInformation information;
-                        if (customAttributes.Length == 0)
+                        if (objArray.Length == 0)
                         {
                             information = new HelpInformation {
                                 Summary = null,
@@ -246,7 +246,7 @@
                         }
                         else
                         {
-                            HelpDetailsAttribute attribute = (HelpDetailsAttribute) customAttributes[0];
+                            HelpDetailsAttribute attribute = (HelpDetailsAttribute) objArray[0];
                             information = new HelpInformation {
                                 Summary = attribute.Summary,
                                 FieldInfo = info,
@@ -421,7 +421,7 @@
             internal string $current;
             internal bool $disposing;
             internal int $PC;
-            internal string <name>__1;
+            internal string <name>__0;
             internal FieldInfo field;
             internal ProgramOptionsAttribute options;
 
@@ -439,14 +439,14 @@
                 switch (num)
                 {
                     case 0:
-                        this.<name>__1 = OptionsParser.NormalizeName(this.field.Name);
+                        this.<name>__0 = OptionsParser.NormalizeName(this.field.Name);
                         if (this.field.FieldType != typeof(bool))
                         {
-                            this.<name>__1 = this.<name>__1 + "=";
+                            this.<name>__0 = this.<name>__0 + "=";
                         }
                         if (this.options.Group != null)
                         {
-                            this.$current = this.options.Group + "." + this.<name>__1;
+                            this.$current = this.options.Group + "." + this.<name>__0;
                             if (!this.$disposing)
                             {
                                 this.$PC = 3;
@@ -454,7 +454,7 @@
                         }
                         else
                         {
-                            this.$current = this.<name>__1;
+                            this.$current = this.<name>__0;
                             if (!this.$disposing)
                             {
                                 this.$PC = 1;
@@ -463,7 +463,7 @@
                         goto Label_0129;
 
                     case 1:
-                        this.$current = OptionsParser.NormalizeName(this.field.DeclaringType.Name) + "." + this.<name>__1;
+                        this.$current = OptionsParser.NormalizeName(this.field.DeclaringType.Name) + "." + this.<name>__0;
                         if (!this.$disposing)
                         {
                             this.$PC = 2;
@@ -517,7 +517,7 @@
             internal string value;
 
             internal bool <>m__0(object v) => 
-                string.Equals(Enum.GetName(this.type, v), this.value, StringComparison.InvariantCultureIgnoreCase);
+                string.Equals(Enum.GetName(this.type, v), this.value, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

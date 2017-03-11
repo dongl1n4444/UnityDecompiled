@@ -6,7 +6,7 @@
     using UnityEngine.Scripting;
 
     /// <summary>
-    /// <para>The Audio Reverb Filter takes an Audio Clip and distortionates it in a.</para>
+    /// <para>The Audio Reverb Filter takes an Audio Clip and distorts it to create a custom reverb effect.</para>
     /// </summary>
     [RequireComponent(typeof(AudioBehaviour))]
     public sealed class AudioReverbFilter : Behaviour
@@ -96,10 +96,15 @@
         /// </summary>
         public float roomLF { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        /// <summary>
-        /// <para>Rolloff factor for room effect. Ranges from 0.0 to 10.0. Default is 10.0.</para>
-        /// </summary>
-        public float roomRolloff { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+        [Obsolete("roomRolloffFactor is no longer supported.")]
+        public float roomRolloffFactor
+        {
+            get => 
+                10f;
+            set
+            {
+            }
+        }
     }
 }
 

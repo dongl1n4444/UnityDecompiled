@@ -2,11 +2,14 @@
 {
     using System;
     using System.Collections;
+    using System.Diagnostics;
     using System.Globalization;
     using System.Runtime.CompilerServices;
     using System.Security;
     using System.Text;
+    using System.Threading;
     using UnityEngine.Internal;
+    using UnityEngine.Rendering;
     using UnityEngine.SceneManagement;
     using UnityEngine.Scripting;
 
@@ -46,6 +49,9 @@
             }
         }
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
+        public static  event LowMemoryCallback lowMemory;
+
         private static string BuildInvocationForArguments(string functionName, params object[] args)
         {
             StringBuilder builder = new StringBuilder();
@@ -80,6 +86,16 @@
             if (callback2 != null)
             {
                 callback2(logString, stackTrace, type);
+            }
+        }
+
+        [RequiredByNativeCode]
+        private static void CallLowMemory()
+        {
+            LowMemoryCallback lowMemory = Application.lowMemory;
+            if (lowMemory != null)
+            {
+                lowMemory();
             }
         }
 
@@ -122,20 +138,20 @@
         /// <param name="superSize">Factor by which to increase resolution.</param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void CaptureScreenshot(string filename, [DefaultValue("0")] int superSize);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("Use Object.DontDestroyOnLoad instead")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use Object.DontDestroyOnLoad instead"), GeneratedByOldBindingsGenerator]
         public static extern void DontDestroyOnLoad(UnityEngine.Object mono);
         /// <summary>
-        /// <para>Calls a function in the containing web page (Web Player only).</para>
+        /// <para>Calls a function in the web page that contains the WebGL Player.</para>
         /// </summary>
-        /// <param name="functionName"></param>
-        /// <param name="args"></param>
+        /// <param name="functionName">Name of the function to call.</param>
+        /// <param name="args">Array of arguments passed in the call.</param>
         public static void ExternalCall(string functionName, params object[] args)
         {
             Internal_ExternalCall(BuildInvocationForArguments(functionName, args));
         }
 
         /// <summary>
-        /// <para>Evaluates script function in the containing web page.</para>
+        /// <para>Execution of a script function in the contained web page.</para>
         /// </summary>
         /// <param name="script">The Javascript function to call.</param>
         public static void ExternalEval(string script)
@@ -147,7 +163,7 @@
             Internal_ExternalCall(script);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("For internal use only")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("For internal use only"), GeneratedByOldBindingsGenerator]
         public static extern void ForceCrash(int mode);
         /// <summary>
         /// <para>Returns an array of feature tags in use for this build (Read Only).</para>
@@ -439,12 +455,16 @@
         /// <summary>
         /// <para>Priority of background loading thread.</para>
         /// </summary>
-        public static ThreadPriority backgroundLoadingPriority { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+        public static UnityEngine.ThreadPriority backgroundLoadingPriority { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
-        /// <para>Returns application bundle identifier at runtime.</para>
+        /// <para>Returns a GUID for this build (Read Only).</para>
         /// </summary>
-        public static string bundleIdentifier { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+        public static string buildGUID { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        [Obsolete("bundleIdentifier is deprecated. Please use identifier instead (UnityUpgradable) -> identifier", true)]
+        public static string bundleIdentifier =>
+            identifier;
 
         /// <summary>
         /// <para>A unique cloud project identifier. It is unique for every project (Read Only).</para>
@@ -470,6 +490,11 @@
         /// <para>Returns true if application integrity can be confirmed.</para>
         /// </summary>
         public static bool genuineCheckAvailable { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        /// <summary>
+        /// <para>Returns application identifier at runtime. On Apple platforms this is the 'bundleIdentifier' saved in the info.plist file, on Android it's the 'package' from the AndroidManifest.xml. </para>
+        /// </summary>
+        public static string identifier { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Returns the name of the store or package that installed the application (Read Only).</para>
@@ -504,6 +529,11 @@
         /// <para>Are we running inside the Unity editor? (Read Only)</para>
         /// </summary>
         public static bool isEditor { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        /// <summary>
+        /// <para>Whether the player currently has focus. Read-only.</para>
+        /// </summary>
+        public static bool isFocused { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         internal static bool isHumanControllingUs { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
@@ -563,7 +593,9 @@
         /// <summary>
         /// <para>Checks whether splash screen is being shown.</para>
         /// </summary>
-        public static bool isShowingSplashScreen { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+        [Obsolete("This property is deprecated, please use SplashScreen.isFinished instead")]
+        public static bool isShowingSplashScreen =>
+            !SplashScreen.isFinished;
 
         internal static bool isTestRun { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
@@ -692,6 +724,11 @@
         /// <param name="stackTrace"></param>
         /// <param name="type"></param>
         public delegate void LogCallback(string condition, string stackTrace, LogType type);
+
+        /// <summary>
+        /// <para>This is the delegate function when a mobile device notifies of low memory.</para>
+        /// </summary>
+        public delegate void LowMemoryCallback();
     }
 }
 

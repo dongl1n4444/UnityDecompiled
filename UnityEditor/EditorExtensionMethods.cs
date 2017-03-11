@@ -8,7 +8,7 @@
 
     internal static class EditorExtensionMethods
     {
-        internal static List<Enum> EnumGetNonObsoleteValues(this Type type)
+        internal static List<Enum> EnumGetNonObsoleteValues(this System.Type type)
         {
             string[] names = Enum.GetNames(type);
             Enum[] enumArray = Enum.GetValues(type).Cast<Enum>().ToArray<Enum>();
@@ -32,7 +32,7 @@
             return list;
         }
 
-        internal static Type GetArrayOrListElementType(this Type listType)
+        internal static System.Type GetArrayOrListElementType(this System.Type listType)
         {
             if (listType.IsArray)
             {
@@ -45,7 +45,7 @@
             return null;
         }
 
-        internal static bool IsArrayOrList(this Type listType) => 
+        internal static bool IsArrayOrList(this System.Type listType) => 
             (listType.IsArray || (listType.IsGenericType && (listType.GetGenericTypeDefinition() == typeof(List<>))));
 
         internal static bool MainActionKeyForControl(this Event evt, int controlId)

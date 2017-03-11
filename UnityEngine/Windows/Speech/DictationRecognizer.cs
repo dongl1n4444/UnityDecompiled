@@ -1,6 +1,7 @@
 ﻿namespace UnityEngine.Windows.Speech
 {
     using System;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Threading;
@@ -14,12 +15,16 @@
     {
         private IntPtr m_Recognizer;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event DictationCompletedDelegate DictationComplete;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event DictationErrorHandler DictationError;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event DictationHypothesisDelegate DictationHypothesis;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event DictationResultDelegate DictationResult;
 
         /// <summary>

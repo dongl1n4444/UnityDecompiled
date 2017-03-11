@@ -307,7 +307,7 @@
         public extern void SendMessageUpwards(string methodName, [DefaultValue("null")] object value, [DefaultValue("SendMessageOptions.RequireReceiver")] SendMessageOptions options);
 
         /// <summary>
-        /// <para>The Animation attached to this GameObject (null if there is none attached).</para>
+        /// <para>The Animation attached to this GameObject. (Null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property animation has been deprecated. Use GetComponent<Animation>() instead. (UnityUpgradable)", true)]
         public Component animation
@@ -319,7 +319,7 @@
         }
 
         /// <summary>
-        /// <para>The AudioSource attached to this GameObject (null if there is none attached).</para>
+        /// <para>The AudioSource attached to this GameObject. (Null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property audio has been deprecated. Use GetComponent<AudioSource>() instead. (UnityUpgradable)", true)]
         public Component audio
@@ -331,7 +331,7 @@
         }
 
         /// <summary>
-        /// <para>The Camera attached to this GameObject (null if there is none attached).</para>
+        /// <para>The Camera attached to this GameObject. (Null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property camera has been deprecated. Use GetComponent<Camera>() instead. (UnityUpgradable)", true)]
         public Component camera
@@ -343,7 +343,7 @@
         }
 
         /// <summary>
-        /// <para>The Collider attached to this GameObject (null if there is none attached).</para>
+        /// <para>The Collider attached to this GameObject. (Null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property collider has been deprecated. Use GetComponent<Collider>() instead. (UnityUpgradable)", true)]
         public Component collider
@@ -367,7 +367,7 @@
         }
 
         /// <summary>
-        /// <para>The ConstantForce attached to this GameObject (null if there is none attached).</para>
+        /// <para>The ConstantForce attached to this GameObject. (Null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property constantForce has been deprecated. Use GetComponent<ConstantForce>() instead. (UnityUpgradable)", true)]
         public Component constantForce
@@ -393,7 +393,7 @@
         }
 
         /// <summary>
-        /// <para>The GUIText attached to this GameObject (null if there is none attached).</para>
+        /// <para>The GUIText attached to this GameObject. (Null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property guiText has been deprecated. Use GetComponent<GUIText>() instead. (UnityUpgradable)", true)]
         public Component guiText
@@ -417,7 +417,7 @@
         }
 
         /// <summary>
-        /// <para>The HingeJoint attached to this GameObject (null if there is none attached).</para>
+        /// <para>The HingeJoint attached to this GameObject. (Null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property hingeJoint has been deprecated. Use GetComponent<HingeJoint>() instead. (UnityUpgradable)", true)]
         public Component hingeJoint
@@ -429,7 +429,7 @@
         }
 
         /// <summary>
-        /// <para>The Light attached to this GameObject (null if there is none attached).</para>
+        /// <para>The Light attached to this GameObject. (Null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property light has been deprecated. Use GetComponent<Light>() instead. (UnityUpgradable)", true)]
         public Component light
@@ -453,7 +453,7 @@
         }
 
         /// <summary>
-        /// <para>The ParticleEmitter attached to this GameObject (null if there is none attached).</para>
+        /// <para>The ParticleEmitter attached to this GameObject. (Null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property particleEmitter has been deprecated. Use GetComponent<ParticleEmitter>() instead. (UnityUpgradable)", true)]
         public Component particleEmitter
@@ -465,7 +465,7 @@
         }
 
         /// <summary>
-        /// <para>The ParticleSystem attached to this GameObject (null if there is none attached).</para>
+        /// <para>The ParticleSystem attached to this GameObject. (Null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property particleSystem has been deprecated. Use GetComponent<ParticleSystem>() instead. (UnityUpgradable)", true)]
         public Component particleSystem
@@ -477,7 +477,7 @@
         }
 
         /// <summary>
-        /// <para>The Renderer attached to this GameObject (null if there is none attached).</para>
+        /// <para>The Renderer attached to this GameObject. (Null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property renderer has been deprecated. Use GetComponent<Renderer>() instead. (UnityUpgradable)", true)]
         public Component renderer
@@ -489,7 +489,7 @@
         }
 
         /// <summary>
-        /// <para>The Rigidbody attached to this GameObject (null if there is none attached).</para>
+        /// <para>The Rigidbody attached to this GameObject. (Null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property rigidbody has been deprecated. Use GetComponent<Rigidbody>() instead. (UnityUpgradable)", true)]
         public Component rigidbody
@@ -526,7 +526,7 @@
         }
 
         /// <summary>
-        /// <para>The Transform attached to this GameObject (null if there is none attached).</para>
+        /// <para>The Transform attached to this GameObject.</para>
         /// </summary>
         public Transform transform { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }

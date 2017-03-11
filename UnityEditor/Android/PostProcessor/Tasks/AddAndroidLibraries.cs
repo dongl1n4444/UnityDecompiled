@@ -1,13 +1,16 @@
 ﻿namespace UnityEditor.Android.PostProcessor.Tasks
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEditor.Android;
     using UnityEditor.Android.PostProcessor;
 
     internal class AddAndroidLibraries : IPostProcessorTask
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ProgressHandler OnProgress;
 
         public void Execute(PostProcessorContext context)

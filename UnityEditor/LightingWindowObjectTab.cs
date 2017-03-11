@@ -9,8 +9,8 @@
 
     internal class LightingWindowObjectTab
     {
-        private static GUIContent[] kObjectPreviewTextureOptions = new GUIContent[] { EditorGUIUtility.TextContent("Charting"), EditorGUIUtility.TextContent("Albedo"), EditorGUIUtility.TextContent("Emissive"), EditorGUIUtility.TextContent("Realtime Intensity"), EditorGUIUtility.TextContent("Realtime Direction"), EditorGUIUtility.TextContent("Baked Intensity"), EditorGUIUtility.TextContent("Baked Direction"), EditorGUIUtility.TextContent("Baked Shadowmask") };
-        private GITextureType[] kObjectPreviewTextureTypes = new GITextureType[] { GITextureType.Charting };
+        private static GUIContent[] kObjectPreviewTextureOptions = new GUIContent[] { EditorGUIUtility.TextContent("Albedo"), EditorGUIUtility.TextContent("Emissive"), EditorGUIUtility.TextContent("Realtime Intensity"), EditorGUIUtility.TextContent("Realtime Direction"), EditorGUIUtility.TextContent("Realtime Charting"), EditorGUIUtility.TextContent("Baked Intensity"), EditorGUIUtility.TextContent("Baked Direction"), EditorGUIUtility.TextContent("Baked Charting"), EditorGUIUtility.TextContent("Baked Shadowmask") };
+        private GITextureType[] kObjectPreviewTextureTypes = new GITextureType[] { GITextureType.Albedo };
         private Editor m_LightEditor;
         private Editor m_LightmapParametersEditor;
         private int m_PreviousSelection;
@@ -23,59 +23,6 @@
             float num = Mathf.Clamp((float) (((float) ((int) (to.width - rect.width))) / 2f), (float) 0f, (float) 2.147484E+09f);
             float num2 = Mathf.Clamp((float) (((float) ((int) (to.height - rect.height))) / 2f), (float) 0f, (float) 2.147484E+09f);
             return new Rect(rect.x + num, rect.y + num2, rect.width, rect.height);
-        }
-
-        private static bool isBuiltIn(SerializedProperty prop)
-        {
-            if (prop.objectReferenceValue != null)
-            {
-                LightmapParameters objectReferenceValue = prop.objectReferenceValue as LightmapParameters;
-                return (objectReferenceValue.hideFlags == HideFlags.NotEditable);
-            }
-            return true;
-        }
-
-        public static bool LightmapParametersGUI(SerializedProperty prop, GUIContent content, bool advancedParameters)
-        {
-            EditorGUILayout.BeginHorizontal(new GUILayoutOption[0]);
-            if (advancedParameters)
-            {
-                EditorGUIInternal.AssetPopup<LightmapParameters>(prop, content, "giparams", "Scene Default Parameters");
-            }
-            else
-            {
-                EditorGUIInternal.AssetPopup<LightmapParameters>(prop, content, "giparams", "Default-Medium");
-            }
-            string text = "Edit...";
-            if (isBuiltIn(prop))
-            {
-                text = "View";
-            }
-            bool flag = false;
-            if (prop.objectReferenceValue == null)
-            {
-                SerializedProperty property = new SerializedObject(LightmapEditorSettings.GetLightmapSettings()).FindProperty("m_LightmapEditorSettings.m_LightmapParameters");
-                using (new EditorGUI.DisabledScope(property == null))
-                {
-                    GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.ExpandWidth(false) };
-                    if (GUILayout.Button(text, EditorStyles.miniButton, options))
-                    {
-                        Selection.activeObject = property.objectReferenceValue;
-                        flag = true;
-                    }
-                }
-            }
-            else
-            {
-                GUILayoutOption[] optionArray2 = new GUILayoutOption[] { GUILayout.ExpandWidth(false) };
-                if (GUILayout.Button(text, EditorStyles.miniButton, optionArray2))
-                {
-                    Selection.activeObject = prop.objectReferenceValue;
-                    flag = true;
-                }
-            }
-            EditorGUILayout.EndHorizontal();
-            return flag;
         }
 
         public void ObjectPreview(Rect r)
@@ -125,7 +72,7 @@
                         index = 0;
                     }
                     this.m_SelectedObjectPreviewTexture = kObjectPreviewTextureOptions[index];
-                    LightmapType lightmapType = (((this.kObjectPreviewTextureTypes[index] != GITextureType.BakedShadowMask) && (this.kObjectPreviewTextureTypes[index] != GITextureType.Baked)) && (this.kObjectPreviewTextureTypes[index] != GITextureType.BakedDirectional)) ? LightmapType.DynamicLightmap : LightmapType.StaticLightmap;
+                    LightmapType lightmapType = (((this.kObjectPreviewTextureTypes[index] != GITextureType.BakedShadowMask) && (this.kObjectPreviewTextureTypes[index] != GITextureType.Baked)) && ((this.kObjectPreviewTextureTypes[index] != GITextureType.BakedDirectional) && (this.kObjectPreviewTextureTypes[index] != GITextureType.BakedCharting))) ? LightmapType.DynamicLightmap : LightmapType.StaticLightmap;
                     switch (Event.current.type)
                     {
                         case EventType.ValidateCommand:
@@ -168,8 +115,8 @@
                                 float num5 = drawableArea.y - 14f;
                                 rect6.y -= num5;
                                 drawableArea.y -= num5;
-                                FilterMode filterMode = texture.filterMode;
-                                texture.filterMode = FilterMode.Point;
+                                UnityEngine.FilterMode filterMode = texture.filterMode;
+                                texture.filterMode = UnityEngine.FilterMode.Point;
                                 GITextureType textureType = this.kObjectPreviewTextureTypes[index];
                                 LightmapVisualizationUtility.DrawTextureWithUVOverlay(texture, Selection.activeGameObject, drawableArea, rect6, textureType);
                                 texture.filterMode = filterMode;
@@ -195,8 +142,8 @@
 
         public void OnDisable()
         {
-            Object.DestroyImmediate(this.m_LightEditor);
-            Object.DestroyImmediate(this.m_LightmapParametersEditor);
+            UnityEngine.Object.DestroyImmediate(this.m_LightEditor);
+            UnityEngine.Object.DestroyImmediate(this.m_LightmapParametersEditor);
         }
 
         public void OnEnable(EditorWindow window)

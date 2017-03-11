@@ -1,9 +1,11 @@
 ﻿namespace UnityEngine.TestTools.TestRunner
 {
+    using NUnit.Framework;
+    using NUnit.Framework.Interfaces;
     using System;
     using UnityEngine.TestTools.Logging;
 
-    internal class UnexpectedLogMessageException : Exception
+    internal class UnexpectedLogMessageException : ResultStateException
     {
         public LogMatch LogEvent;
 
@@ -13,7 +15,13 @@
         }
 
         private static string BuildMessage(LogMatch log) => 
-            string.Format("Expected log did not appear: [{0}] {1}\nEnv st: ", log.LogType, log.Message, Environment.StackTrace);
+            $"Expected log did not appear: {log}";
+
+        public override NUnit.Framework.Interfaces.ResultState ResultState =>
+            NUnit.Framework.Interfaces.ResultState.Failure;
+
+        public override string StackTrace =>
+            null;
     }
 }
 

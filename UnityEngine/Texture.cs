@@ -12,7 +12,7 @@
     [UsedByNativeCode]
     public class Texture : UnityEngine.Object
     {
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("Use GetNativeTexturePtr instead.")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use GetNativeTexturePtr instead."), GeneratedByOldBindingsGenerator]
         public extern int GetNativeTextureID();
         /// <summary>
         /// <para>Retrieve a native (underlying graphics API) pointer to the texture resource.</para>

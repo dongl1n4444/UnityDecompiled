@@ -12,7 +12,11 @@
         Baked,
         BakedDirectional,
         InputWorkspace,
-        BakedShadowMask
+        BakedShadowMask,
+        BakedAlbedo,
+        BakedEmissive,
+        BakedCharting,
+        BakedTexelValidity
     }
 }
 

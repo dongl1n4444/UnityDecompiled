@@ -34,26 +34,26 @@
 
         public override void OnMethod(Method node)
         {
-            if (!node.get_IsPrivate())
+            if (!node.IsPrivate)
             {
                 this.SetPublicByDefault(node);
-                if (!node.get_IsFinal() && !node.get_IsStatic())
+                if (!node.IsFinal && !node.IsStatic)
                 {
-                    node.set_Modifiers(node.get_Modifiers() | 0x80);
+                    node.Modifiers |= TypeMemberModifiers.Virtual;
                 }
             }
         }
 
         public override void Run()
         {
-            this.Visit(this.get_CompileUnit());
+            this.Visit(this.CompileUnit);
         }
 
         public void SetPublicByDefault(TypeMember node)
         {
-            if (!node.get_IsVisibilitySet())
+            if (!node.IsVisibilitySet)
             {
-                node.set_Modifiers(node.get_Modifiers() | 8);
+                node.Modifiers |= TypeMemberModifiers.Public;
             }
         }
     }

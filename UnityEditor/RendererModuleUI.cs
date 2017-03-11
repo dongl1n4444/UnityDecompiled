@@ -16,7 +16,6 @@
         [CompilerGenerated]
         private static GenericMenu.MenuFunction2 <>f__mg$cache0;
         private const int k_MaxNumMeshes = 4;
-        private static readonly float k_VertexStreamListElementHeight = 16f;
         private SerializedProperty m_CameraVelocityScale;
         private SerializedProperty m_CastShadows;
         private bool m_HasColor;
@@ -151,13 +150,12 @@
         {
             int intValue = this.m_VertexStreams.GetArrayElementAtIndex(index).intValue;
             string str = !base.isWindowView ? "TEXCOORD" : "TEX";
-            Rect position = new Rect(rect.x, rect.y, rect.width, rect.height);
             int num2 = s_Texts.vertexStreamTexCoordChannels[intValue];
             if (num2 != 0)
             {
                 int length = ((this.m_TexCoordChannelIndex + num2) <= 4) ? num2 : (num2 + 1);
                 string str2 = s_Texts.channels.Substring(this.m_TexCoordChannelIndex, length);
-                GUI.Label(position, string.Concat(new object[] { s_Texts.vertexStreamsPacked[intValue], " (", str, this.m_NumTexCoords, ".", str2, ")" }), ParticleSystemStyles.Get().label);
+                GUI.Label(rect, string.Concat(new object[] { s_Texts.vertexStreamsPacked[intValue], " (", str, this.m_NumTexCoords, ".", str2, ")" }), ParticleSystemStyles.Get().label);
                 this.m_TexCoordChannelIndex += num2;
                 if (this.m_TexCoordChannelIndex >= 4)
                 {
@@ -167,7 +165,7 @@
             }
             else
             {
-                GUI.Label(position, s_Texts.vertexStreamsPacked[intValue] + " (" + s_Texts.vertexStreamPackedTypes[intValue] + ")", ParticleSystemStyles.Get().label);
+                GUI.Label(rect, s_Texts.vertexStreamsPacked[intValue] + " (" + s_Texts.vertexStreamPackedTypes[intValue] + ")", ParticleSystemStyles.Get().label);
                 if (s_Texts.vertexStreamsPacked[intValue] == "Tangent")
                 {
                     this.m_HasTangent = true;
@@ -218,7 +216,7 @@
                 this.m_UseCustomVertexStreams = base.GetProperty0("m_UseCustomVertexStreams");
                 this.m_VertexStreams = base.GetProperty0("m_VertexStreams");
                 this.m_VertexStreamsList = new ReorderableList(base.serializedObject, this.m_VertexStreams, true, true, true, true);
-                this.m_VertexStreamsList.elementHeight = k_VertexStreamListElementHeight;
+                this.m_VertexStreamsList.elementHeight = 16f;
                 this.m_VertexStreamsList.headerHeight = 0f;
                 this.m_VertexStreamsList.onAddDropdownCallback = new ReorderableList.AddDropdownCallbackDelegate(this.OnVertexStreamListAddDropdownCallback);
                 this.m_VertexStreamsList.onCanRemoveCallback = new ReorderableList.CanRemoveCallbackDelegate(this.OnVertexStreamListCanRemoveCallback);
@@ -246,7 +244,7 @@
                         EditorGUI.indentLevel--;
                         if ((flag && (this.m_Meshes[0].objectReferenceInstanceIDValue == 0)) && !this.m_Meshes[0].hasMultipleDifferentValues)
                         {
-                            this.m_Meshes[0].objectReferenceValue = Resources.GetBuiltinResource(typeof(Mesh), "Cube.fbx");
+                            this.m_Meshes[0].objectReferenceValue = UnityEngine.Resources.GetBuiltinResource(typeof(Mesh), "Cube.fbx");
                         }
                         break;
 
@@ -335,7 +333,7 @@
             this.m_Probes.OnGUI(source.ToArray(), source.FirstOrDefault<ParticleSystemRenderer>(), true);
         }
 
-        public override void OnSceneGUI()
+        public override void OnSceneViewGUI()
         {
             if (s_VisualizePivot)
             {

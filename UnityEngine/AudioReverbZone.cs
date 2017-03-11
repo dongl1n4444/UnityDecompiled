@@ -93,7 +93,15 @@
         /// <summary>
         /// <para>Like rolloffscale in global settings, but for reverb room size effect.</para>
         /// </summary>
-        public float roomRolloffFactor { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+        [Obsolete("roomRolloffFactor is no longer supported.")]
+        public float roomRolloffFactor
+        {
+            get => 
+                10f;
+            set
+            {
+            }
+        }
     }
 }
 

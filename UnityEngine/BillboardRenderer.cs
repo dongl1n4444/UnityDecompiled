@@ -5,7 +5,7 @@
     using UnityEngine.Scripting;
 
     /// <summary>
-    /// <para>Renders a billboard.</para>
+    /// <para>Renders a billboard from a BillboardAsset.</para>
     /// </summary>
     public sealed class BillboardRenderer : Renderer
     {

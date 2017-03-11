@@ -227,8 +227,8 @@
 
         public void InitializeLightingFields()
         {
-            this.m_Lighting = new LightingSettingsInspector();
-            this.m_Lighting.ShowSettings = EditorPrefs.GetBool("TerrainInspector.Lighting.ShowSettings", false);
+            this.m_Lighting = new LightingSettingsInspector(base.serializedObject);
+            this.m_Lighting.showSettings = EditorPrefs.GetBool("TerrainInspector.Lighting.ShowSettings", false);
         }
 
         private static string IntString(float p)
@@ -487,6 +487,7 @@
 
         public override void OnInspectorGUI()
         {
+            base.serializedObject.Update();
             this.Initialize();
             if (styles == null)
             {
@@ -534,7 +535,7 @@
                 if (num2 != selectedTool)
                 {
                     this.selectedTool = (TerrainTool) num2;
-                    base.Repaint();
+                    InspectorWindow.RepaintAllInspectors();
                     if (Toolbar.get != null)
                     {
                         Toolbar.get.Repaint();
@@ -654,7 +655,7 @@
                                     {
                                         if (current.type == EventType.MouseDown)
                                         {
-                                            List<Object> list = new List<Object> {
+                                            List<UnityEngine.Object> list = new List<UnityEngine.Object> {
                                                 this.m_Terrain.terrainData
                                             };
                                             list.AddRange(this.m_Terrain.terrainData.alphamapTextures);
@@ -796,15 +797,15 @@
 
         public void RenderLightingFields()
         {
-            bool showSettings = this.m_Lighting.ShowSettings;
+            bool showSettings = this.m_Lighting.showSettings;
             if (this.m_Lighting.Begin())
             {
-                this.m_Lighting.RenderTerrainSettings(base.serializedObject);
+                this.m_Lighting.RenderTerrainSettings();
             }
             this.m_Lighting.End();
-            if (this.m_Lighting.ShowSettings != showSettings)
+            if (this.m_Lighting.showSettings != showSettings)
             {
-                EditorPrefs.SetBool("TerrainInspector.Lighting.ShowSettings", this.m_Lighting.ShowSettings);
+                EditorPrefs.SetBool("TerrainInspector.Lighting.ShowSettings", this.m_Lighting.showSettings);
             }
         }
 
@@ -973,7 +974,7 @@
                     this.m_Terrain.terrainData
                 };
                 list.AddRange(this.m_Terrain.terrainData.alphamapTextures);
-                Undo.RegisterCompleteObjectUndo(list.ToArray(typeof(Object)) as Object[], "Set Resolution");
+                Undo.RegisterCompleteObjectUndo(list.ToArray(typeof(UnityEngine.Object)) as UnityEngine.Object[], "Set Resolution");
                 if (this.m_Terrain.terrainData.heightmapResolution != heightmapResolution)
                 {
                     this.m_Terrain.terrainData.heightmapResolution = heightmapResolution;
@@ -1371,7 +1372,7 @@
         {
             get
             {
-                if ((Tools.current == Tool.None) && (base.GetInstanceID() == s_activeTerrainInspector))
+                if ((Tools.current == UnityEditor.Tool.None) && (base.GetInstanceID() == s_activeTerrainInspector))
                 {
                     return (TerrainTool) this.m_SelectedTool.value;
                 }
@@ -1381,7 +1382,7 @@
             {
                 if (value != TerrainTool.None)
                 {
-                    Tools.current = Tool.None;
+                    Tools.current = UnityEditor.Tool.None;
                 }
                 this.m_SelectedTool.value = (int) value;
                 s_activeTerrainInspector = base.GetInstanceID();

@@ -1,31 +1,69 @@
 ﻿namespace UnityEditor
 {
     using System;
+    using UnityEditor.AI;
     using UnityEngine;
     using UnityEngine.AI;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(NavMeshAgent))]
+    [CustomEditor(typeof(NavMeshAgent)), CanEditMultipleObjects]
     internal class NavMeshAgentInspector : Editor
     {
         private SerializedProperty m_Acceleration;
+        private SerializedProperty m_AgentTypeID;
         private SerializedProperty m_AngularSpeed;
         private SerializedProperty m_AutoBraking;
         private SerializedProperty m_AutoRepath;
         private SerializedProperty m_AutoTraverseOffMeshLink;
         private SerializedProperty m_AvoidancePriority;
         private SerializedProperty m_BaseOffset;
-        private SerializedProperty m_Height;
         private SerializedProperty m_ObstacleAvoidanceType;
-        private SerializedProperty m_Radius;
         private SerializedProperty m_Speed;
         private SerializedProperty m_StoppingDistance;
         private SerializedProperty m_WalkableMask;
         private static Styles s_Styles;
 
+        private static void AgentTypePopupInternal(string labelName, SerializedProperty agentTypeID)
+        {
+            int selectedIndex = -1;
+            int settingsCount = NavMesh.GetSettingsCount();
+            string[] displayedOptions = new string[settingsCount + 2];
+            for (int i = 0; i < settingsCount; i++)
+            {
+                int num4 = NavMesh.GetSettingsByIndex(i).agentTypeID;
+                displayedOptions[i] = NavMesh.GetSettingsNameFromID(num4);
+                if (num4 == agentTypeID.intValue)
+                {
+                    selectedIndex = i;
+                }
+            }
+            displayedOptions[settingsCount] = "";
+            displayedOptions[settingsCount + 1] = "Open Agent Settings...";
+            if (selectedIndex == -1)
+            {
+                EditorGUILayout.HelpBox("Agent Type invalid.", MessageType.Warning);
+            }
+            Rect totalPosition = EditorGUILayout.GetControlRect(true, EditorGUIUtility.singleLineHeight, new GUILayoutOption[0]);
+            EditorGUI.BeginProperty(totalPosition, GUIContent.none, agentTypeID);
+            EditorGUI.BeginChangeCheck();
+            selectedIndex = EditorGUI.Popup(totalPosition, labelName, selectedIndex, displayedOptions);
+            if (EditorGUI.EndChangeCheck())
+            {
+                if ((selectedIndex >= 0) && (selectedIndex < settingsCount))
+                {
+                    int num5 = NavMesh.GetSettingsByIndex(selectedIndex).agentTypeID;
+                    agentTypeID.intValue = num5;
+                }
+                else if (selectedIndex == (settingsCount + 1))
+                {
+                    NavMeshEditorHelpers.OpenAgentSettings(-1);
+                }
+            }
+            EditorGUI.EndProperty();
+        }
+
         private void OnEnable()
         {
-            this.m_Radius = base.serializedObject.FindProperty("m_Radius");
-            this.m_Height = base.serializedObject.FindProperty("m_Height");
+            this.m_AgentTypeID = base.serializedObject.FindProperty("m_AgentTypeID");
             this.m_WalkableMask = base.serializedObject.FindProperty("m_WalkableMask");
             this.m_Speed = base.serializedObject.FindProperty("m_Speed");
             this.m_Acceleration = base.serializedObject.FindProperty("m_Acceleration");
@@ -46,9 +84,7 @@
                 s_Styles = new Styles();
             }
             base.serializedObject.Update();
-            EditorGUILayout.LabelField(s_Styles.m_AgentSizeHeader, EditorStyles.boldLabel, new GUILayoutOption[0]);
-            EditorGUILayout.PropertyField(this.m_Radius, new GUILayoutOption[0]);
-            EditorGUILayout.PropertyField(this.m_Height, new GUILayoutOption[0]);
+            AgentTypePopupInternal("Agent Type", this.m_AgentTypeID);
             EditorGUILayout.PropertyField(this.m_BaseOffset, new GUILayoutOption[0]);
             EditorGUILayout.Space();
             EditorGUILayout.LabelField(s_Styles.m_AgentSteeringHeader, EditorStyles.boldLabel, new GUILayoutOption[0]);
@@ -107,7 +143,6 @@
         {
             public readonly GUIContent m_AgentAvoidanceHeader = new GUIContent("Obstacle Avoidance");
             public readonly GUIContent m_AgentPathFindingHeader = new GUIContent("Path Finding");
-            public readonly GUIContent m_AgentSizeHeader = new GUIContent("Agent Size");
             public readonly GUIContent m_AgentSteeringHeader = new GUIContent("Steering");
         }
     }

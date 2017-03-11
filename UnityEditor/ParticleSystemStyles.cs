@@ -10,7 +10,6 @@
         public GUIStyle effectBgStyle = FindStyle("ShurikenEffectBg");
         public GUIStyle emitterHeaderStyle = FindStyle("ShurikenEmitterTitle");
         public GUIStyle label = FindStyle("ShurikenLabel");
-        public GUIStyle line = FindStyle("ShurikenLine");
         public GUIStyle minMaxCurveStateDropDown = FindStyle("ShurikenDropdown");
         public GUIStyle minus = FindStyle("ShurikenMinus");
         public GUIStyle moduleBgStyle = FindStyle("ShurikenModuleBg");

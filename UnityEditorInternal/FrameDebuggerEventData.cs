@@ -36,6 +36,7 @@
         public FrameDebuggerBlendState blendState;
         public FrameDebuggerRasterState rasterState;
         public FrameDebuggerDepthState depthState;
+        public int batchBreakCause;
         public ShaderProperties shaderProperties;
     }
 }

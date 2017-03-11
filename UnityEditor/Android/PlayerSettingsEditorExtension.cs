@@ -23,8 +23,10 @@
         private SerializedProperty m_AndroidSplashScreen;
         private SerializedProperty m_AndroidSplashScreenScale;
         private SerializedProperty m_AndroidTargetDevice;
+        private SerializedProperty m_AndroidTargetSdkVersion;
         private SerializedProperty m_AndroidTVCompatibility;
         private SerializedProperty m_APKExpansionFiles;
+        private SerializedProperty m_ApplicationBundleVersion;
         private SerializedProperty m_CreateWallpaper;
         private SerializedProperty m_ForceInternetPermission;
         private SerializedProperty m_ForceSDCardPermission;
@@ -116,8 +118,11 @@
 
         public override void IdentificationSectionGUI()
         {
+            PlayerSettingsEditor.ShowApplicationIdentifierUI(this.m_SettingsEditor.serializedObject, BuildTargetGroup.Android, k_Texts.packageName.text, k_Texts.packageUndo.text);
+            EditorGUILayout.PropertyField(this.m_ApplicationBundleVersion, k_Texts.version, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(this.m_AndroidBundleVersionCode, k_Texts.bundleVersion, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(this.m_AndroidMinSdkVersion, k_Texts.minimumLevel, new GUILayoutOption[0]);
+            EditorGUILayout.PropertyField(this.m_AndroidTargetSdkVersion, k_Texts.targetLevel, new GUILayoutOption[0]);
         }
 
         public override void OnEnable(PlayerSettingsEditor settingsEditor)
@@ -126,6 +131,7 @@
             this.m_AndroidKeystoreName = settingsEditor.FindPropertyAssert("AndroidKeystoreName");
             this.m_AndroidKeyaliasName = settingsEditor.FindPropertyAssert("AndroidKeyaliasName");
             this.m_AndroidMinSdkVersion = settingsEditor.FindPropertyAssert("AndroidMinSdkVersion");
+            this.m_AndroidTargetSdkVersion = settingsEditor.FindPropertyAssert("AndroidTargetSdkVersion");
             this.m_AndroidPreferredInstallLocation = settingsEditor.FindPropertyAssert("AndroidPreferredInstallLocation");
             this.m_AndroidSplashScreenScale = settingsEditor.FindPropertyAssert("AndroidSplashScreenScale");
             this.m_AndroidTargetDevice = settingsEditor.FindPropertyAssert("AndroidTargetDevice");
@@ -137,6 +143,7 @@
             this.m_ForceInternetPermission = settingsEditor.FindPropertyAssert("ForceInternetPermission");
             this.m_ForceSDCardPermission = settingsEditor.FindPropertyAssert("ForceSDCardPermission");
             this.m_AndroidSplashScreen = settingsEditor.FindPropertyAssert("androidSplashScreen");
+            this.m_ApplicationBundleVersion = settingsEditor.FindPropertyAssert("bundleVersion");
             this.m_SettingsEditor = settingsEditor;
         }
 
@@ -358,15 +365,19 @@
             public GUIContent minimumLevel = EditorGUIUtility.TextContent("Minimum API Level");
             public GUIContent newKey = EditorGUIUtility.TextContent("Create a new key");
             public GUIContent openKeystore = EditorGUIUtility.TextContent("Open existing keystore...");
+            public GUIContent packageName = EditorGUIUtility.TextContent("Package Name");
+            public GUIContent packageUndo = EditorGUIUtility.TextContent("Changed Android package field");
             public GUIContent password = EditorGUIUtility.TextContent("Password");
             public GUIContent passwordLength = EditorGUIUtility.TextContent("Password must be at least 6 characters.");
             public GUIContent passwordMatch = EditorGUIUtility.TextContent("Passwords do not match.");
             public GUIContent scaling = EditorGUIUtility.TextContent("Scaling");
             public GUIContent splitApplicationBinary = EditorGUIUtility.TextContent("Split Application Binary|Split application binary into expansion files\n(use only with Google Play Store if larger than 50 MB)");
             public GUIContent staticSplash = EditorGUIUtility.TextContent("Static Splash Image|This image will be shown while the engine is loading");
+            public GUIContent targetLevel = EditorGUIUtility.TextContent("Target API Level");
             public GUIContent tvCompatibility = EditorGUIUtility.TextContent("Android TV Compatibility|Check the game for Android TV compatibility, update the manifest if needed");
             public GUIContent unsignedDebug = EditorGUIUtility.TextContent("Unsigned (debug)");
             public GUIContent useExistingKeystore = EditorGUIUtility.TextContent("Use Existing Keystore");
+            public GUIContent version = EditorGUIUtility.TextContent("Version*");
             public GUIContent writeExternal = EditorGUIUtility.TextContent("Write Permission|Since KITKAT writing to external cache and persistent data paths doesn't require write external permission.");
         }
     }

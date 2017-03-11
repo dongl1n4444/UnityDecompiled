@@ -113,18 +113,25 @@
                 this.DrawHeader(styles.sEnvLibrary);
                 using (new EditorGUI.DisabledScope(!this.m_LookDevView.envLibrary.dirty))
                 {
-                    if (GUILayout.Button(styles.sSaveCurrentLibrary, styles.sMenuItem, new GUILayoutOption[0]) && this.m_LookDevView.SaveLookDevLibrary())
+                    if (GUILayout.Button(styles.sSaveCurrentLibrary, styles.sMenuItem, new GUILayoutOption[0]))
                     {
-                        this.m_LookDevView.envLibrary.dirty = false;
+                        base.editorWindow.Close();
+                        if (this.m_LookDevView.SaveLookDevLibrary())
+                        {
+                            this.m_LookDevView.envLibrary.dirty = false;
+                        }
+                        GUIUtility.ExitGUI();
                     }
                 }
                 if (GUILayout.Button(styles.sCreateNewLibrary, styles.sMenuItem, new GUILayoutOption[0]))
                 {
+                    base.editorWindow.Close();
                     string str = EditorUtility.SaveFilePanelInProject("Save New Environment Library", "New Env Library", "asset", "");
                     if (!string.IsNullOrEmpty(str))
                     {
                         this.m_LookDevView.CreateNewLibrary(str);
                     }
+                    GUIUtility.ExitGUI();
                 }
                 EditorGUI.BeginChangeCheck();
                 LookDevEnvironmentLibrary library = EditorGUILayout.ObjectField(this.m_LookDevView.userEnvLibrary, typeof(LookDevEnvironmentLibrary), false, new GUILayoutOption[0]) as LookDevEnvironmentLibrary;

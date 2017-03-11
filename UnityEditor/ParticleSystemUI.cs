@@ -318,7 +318,7 @@
                             GUI.Label(rect3, GUIContent.none, ParticleSystemStyles.Get().moduleBgStyle);
                         }
                     }
-                    if (!this.multiEdit && EditorGUI.ButtonMouseDown(rect3, GUIContent.none, FocusType.Passive, GUIStyle.none))
+                    if (!this.multiEdit && EditorGUI.DropdownButton(rect3, GUIContent.none, FocusType.Passive, GUIStyle.none))
                     {
                         if (EditorGUI.actionKey)
                         {
@@ -353,7 +353,7 @@
                 Rect rect5 = new Rect((rect.x + rect.width) - 10f, (rect.y + rect.height) - 10f, 10f, 10f);
                 Rect rect6 = new Rect(rect5.x - 4f, rect5.y - 4f, rect5.width + 4f, rect5.height + 4f);
                 Rect rect7 = new Rect(rect5.x - 23f, rect5.y - 3f, 16f, 16f);
-                if (flag2 && EditorGUI.ButtonMouseDown(rect6, s_Texts.addModules, FocusType.Passive, GUIStyle.none))
+                if (flag2 && EditorGUI.DropdownButton(rect6, s_Texts.addModules, FocusType.Passive, GUIStyle.none))
                 {
                     this.ShowAddModuleMenu();
                 }
@@ -424,7 +424,7 @@
             this.ApplyProperties();
         }
 
-        public void OnSceneGUI()
+        public void OnSceneViewGUI()
         {
             if (this.m_Modules != null)
             {
@@ -449,7 +449,7 @@
                 {
                     if ((((eui != null) && eui.visibleUI) && eui.enabled) && eui.foldout)
                     {
-                        eui.OnSceneGUI();
+                        eui.OnSceneViewGUI();
                     }
                 }
                 this.ApplyProperties();

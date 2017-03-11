@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Threading;
@@ -19,7 +20,7 @@
         [CompilerGenerated]
         private static Func<<>__AnonType0<GUID, AudioMixerGroupController>, GUID> <>f__am$cache2;
         [CompilerGenerated]
-        private static Func<Object, AudioMixerGroupController> <>f__am$cache3;
+        private static Func<UnityEngine.Object, AudioMixerGroupController> <>f__am$cache3;
         public static float kMaxEffect = 0f;
         public static float kMinVolume = -80f;
         public static float kVolumeWarp = 1.7f;
@@ -31,6 +32,7 @@
         public int m_HighlightEffectIndex = -1;
         public static string s_GroupEffectDisplaySeperator = @"\";
 
+        [field: DebuggerBrowsable(0), CompilerGenerated]
         public event ChangedExposedParameterHandler ChangedExposedParameter;
 
         public AudioMixerController()
@@ -63,7 +65,7 @@
             }
             else
             {
-                Debug.LogError("Cannot expose the same parameter more than once!");
+                UnityEngine.Debug.LogError("Cannot expose the same parameter more than once!");
             }
         }
 
@@ -76,7 +78,7 @@
             this.views = views.ToArray<MixerGroupView>();
         }
 
-        private void AddNewSubAsset(Object obj, bool storeUndoState)
+        private void AddNewSubAsset(UnityEngine.Object obj, bool storeUndoState)
         {
             AssetDatabase.AddObjectToAsset(obj, this);
             if (storeUndoState)
@@ -143,10 +145,10 @@
         {
             int numGroups = 0;
             this.DeleteGroups(this.masterGroup.children);
-            this.BuildTestSetup(new Random(), this.masterGroup, minSpan, maxSpan, maxGroups, "G", ref numGroups);
+            this.BuildTestSetup(new System.Random(), this.masterGroup, minSpan, maxSpan, maxGroups, "G", ref numGroups);
         }
 
-        private void BuildTestSetup(Random r, AudioMixerGroupController parent, int minSpan, int maxSpan, int maxGroups, string prefix, ref int numGroups)
+        private void BuildTestSetup(System.Random r, AudioMixerGroupController parent, int minSpan, int maxSpan, int maxGroups, string prefix, ref int numGroups)
         {
             int num = (numGroups != 0) ? r.Next(minSpan, maxSpan + 1) : maxSpan;
             for (int i = 0; i < num; i++)
@@ -223,7 +225,7 @@
         public void CloneNewSnapshotFromTarget(bool storeUndoState)
         {
             List<AudioMixerSnapshotController> list = new List<AudioMixerSnapshotController>(this.snapshots);
-            AudioMixerSnapshotController item = Object.Instantiate<AudioMixerSnapshotController>(this.TargetSnapshot);
+            AudioMixerSnapshotController item = UnityEngine.Object.Instantiate<AudioMixerSnapshotController>(this.TargetSnapshot);
             item.name = this.TargetSnapshot.name + " - Copy";
             list.Add(item);
             this.snapshots = list.ToArray();
@@ -357,7 +359,7 @@
             };
             this.snapshots = new AudioMixerSnapshotController[] { controller2 };
             this.startSnapshot = controller2;
-            Object[] assets = new Object[] { this, this.masterGroup, effect, controller2 };
+            UnityEngine.Object[] assets = new UnityEngine.Object[] { this, this.masterGroup, effect, controller2 };
             AssetDatabase.CreateAssetFromObjects(assets, path);
         }
 
@@ -647,7 +649,7 @@
         {
             if ((targetIndex < 0) || (targetIndex > targetEffects.Count))
             {
-                Debug.LogError(string.Concat(new object[] { "Inserting effect failed! size: ", targetEffects.Count, " at index: ", targetIndex }));
+                UnityEngine.Debug.LogError(string.Concat(new object[] { "Inserting effect failed! size: ", targetEffects.Count, " at index: ", targetIndex }));
                 return false;
             }
             targetEffects.Insert(targetIndex, effect);
@@ -671,15 +673,15 @@
 
         private static void ListTemporaryGraph(Dictionary<object, ConnectionNode> graph)
         {
-            Debug.Log("Listing temporary graph:");
+            UnityEngine.Debug.Log("Listing temporary graph:");
             int num = 0;
             foreach (KeyValuePair<object, ConnectionNode> pair in graph)
             {
-                Debug.Log($"Node {num++}: {pair.Value.GetDisplayString()}");
+                UnityEngine.Debug.Log($"Node {num++}: {pair.Value.GetDisplayString()}");
                 int num2 = 0;
                 foreach (object obj2 in pair.Value.targets)
                 {
-                    Debug.Log($"  Target {num2++}: {graph[obj2].GetDisplayString()}");
+                    UnityEngine.Debug.Log($"  Target {num2++}: {graph[obj2].GetDisplayString()}");
                 }
             }
         }
@@ -727,12 +729,12 @@
         public void OnUnitySelectionChanged()
         {
             List<AudioMixerGroupController> allAudioGroupsSlow = this.GetAllAudioGroupsSlow();
-            Object[] filtered = Selection.GetFiltered(typeof(AudioMixerGroupController), SelectionMode.Deep);
+            UnityEngine.Object[] filtered = Selection.GetFiltered(typeof(AudioMixerGroupController), UnityEditor.SelectionMode.Deep);
             if (<>f__am$cache3 == null)
             {
                 <>f__am$cache3 = g => (AudioMixerGroupController) g;
             }
-            this.m_CachedSelection = allAudioGroupsSlow.Intersect<AudioMixerGroupController>(Enumerable.Select<Object, AudioMixerGroupController>(filtered, <>f__am$cache3)).ToList<AudioMixerGroupController>();
+            this.m_CachedSelection = allAudioGroupsSlow.Intersect<AudioMixerGroupController>(Enumerable.Select<UnityEngine.Object, AudioMixerGroupController>(filtered, <>f__am$cache3)).ToList<AudioMixerGroupController>();
         }
 
         private void RemoveAncestorGroups(List<AudioMixerGroupController> groups)

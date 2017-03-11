@@ -954,15 +954,26 @@
                             {
                                 this.m_Text = this.m_Text.Substring(0, this.characterLimit);
                             }
-                            int length = this.m_Text.Length;
-                            this.caretSelectPositionInternal = length;
-                            this.caretPositionInternal = length;
+                            if (this.m_Keyboard.canGetSelection)
+                            {
+                                this.UpdateCaretFromKeyboard();
+                            }
+                            else
+                            {
+                                int length = this.m_Text.Length;
+                                this.caretSelectPositionInternal = length;
+                                this.caretPositionInternal = length;
+                            }
                             if (this.m_Text != text)
                             {
                                 this.m_Keyboard.text = this.m_Text;
                             }
                             this.SendOnValueChangedAndUpdateLabel();
                         }
+                    }
+                    else if (this.m_Keyboard.canGetSelection)
+                    {
+                        this.UpdateCaretFromKeyboard();
                     }
                     if (this.m_Keyboard.done)
                     {
@@ -1726,6 +1737,29 @@
         Transform ICanvasElement.get_transform() => 
             base.transform;
 
+        private void UpdateCaretFromKeyboard()
+        {
+            RangeInt selection = this.m_Keyboard.selection;
+            int start = selection.start;
+            int end = selection.end;
+            bool flag = false;
+            if (this.caretPositionInternal != start)
+            {
+                flag = true;
+                this.caretPositionInternal = start;
+            }
+            if (this.caretSelectPositionInternal != end)
+            {
+                this.caretSelectPositionInternal = end;
+                flag = true;
+            }
+            if (flag)
+            {
+                this.m_BlinkStartTime = Time.unscaledTime;
+                this.UpdateLabel();
+            }
+        }
+
         private void UpdateCaretMaterial()
         {
             if ((this.m_TextComponent != null) && (this.m_CachedInputRenderer != null))
@@ -1740,14 +1774,15 @@
             {
                 if ((this.m_CachedInputRenderer == null) && (this.m_TextComponent != null))
                 {
-                    GameObject obj2 = new GameObject(base.transform.name + " Input Caret") {
+                    System.Type[] components = new System.Type[] { typeof(RectTransform), typeof(CanvasRenderer) };
+                    GameObject obj2 = new GameObject(base.transform.name + " Input Caret", components) {
                         hideFlags = HideFlags.DontSave
                     };
                     obj2.transform.SetParent(this.m_TextComponent.transform.parent);
                     obj2.transform.SetAsFirstSibling();
                     obj2.layer = base.gameObject.layer;
-                    this.caretRectTrans = obj2.AddComponent<RectTransform>();
-                    this.m_CachedInputRenderer = obj2.AddComponent<CanvasRenderer>();
+                    this.caretRectTrans = obj2.GetComponent<RectTransform>();
+                    this.m_CachedInputRenderer = obj2.GetComponent<CanvasRenderer>();
                     this.m_CachedInputRenderer.SetMaterial(this.m_TextComponent.GetModifiedMaterial(Graphic.defaultGraphicMaterial), Texture2D.whiteTexture);
                     obj2.AddComponent<LayoutElement>().ignoreLayout = true;
                     this.AssignPositioningIfNeeded();
@@ -2370,7 +2405,7 @@
         }
 
         /// <summary>
-        /// <para>The the end point of the selection.</para>
+        /// <para>The end point of the selection.</para>
         /// </summary>
         public int selectionFocusPosition
         {

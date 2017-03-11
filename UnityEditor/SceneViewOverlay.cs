@@ -90,7 +90,7 @@
             Window(title, sceneViewFunc, order, null, option);
         }
 
-        public static void Window(GUIContent title, WindowFunction sceneViewFunc, int order, Object target, WindowDisplayOption option)
+        public static void Window(GUIContent title, WindowFunction sceneViewFunc, int order, UnityEngine.Object target, WindowDisplayOption option)
         {
             if (Event.current.type == EventType.Layout)
             {
@@ -155,7 +155,7 @@
             public int m_PrimaryOrder;
             public SceneViewOverlay.WindowFunction m_SceneViewFunc;
             public int m_SecondaryOrder;
-            public Object m_Target;
+            public UnityEngine.Object m_Target;
             public GUIContent m_Title;
 
             public int CompareTo(SceneViewOverlay.OverlayWindow other)
@@ -176,7 +176,7 @@
             OneWindowPerTitle
         }
 
-        public delegate void WindowFunction(Object target, SceneView sceneView);
+        public delegate void WindowFunction(UnityEngine.Object target, SceneView sceneView);
     }
 }
 

@@ -1,6 +1,7 @@
 ﻿namespace UnityEditor.SceneManagement
 {
     using System;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Threading;
@@ -10,25 +11,32 @@
     using UnityEngine.Scripting;
 
     /// <summary>
-    /// <para>Scene management in the editor.</para>
+    /// <para>Scene management in the Editor.</para>
     /// </summary>
     public sealed class EditorSceneManager : SceneManager
     {
         internal static UnityAction<Scene, NewSceneMode> sceneWasCreated;
         internal static UnityAction<Scene, OpenSceneMode> sceneWasOpened;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event NewSceneCreatedCallback newSceneCreated;
 
+        [field: DebuggerBrowsable(0), CompilerGenerated]
         public static  event SceneClosedCallback sceneClosed;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event SceneClosingCallback sceneClosing;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event SceneOpenedCallback sceneOpened;
 
+        [field: DebuggerBrowsable(0), CompilerGenerated]
         public static  event SceneOpeningCallback sceneOpening;
 
+        [field: DebuggerBrowsable(0), CompilerGenerated]
         public static  event SceneSavedCallback sceneSaved;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event SceneSavingCallback sceneSaving;
 
         /// <summary>
@@ -73,6 +81,9 @@
         /// <summary>
         /// <para>Returns the current setup of the SceneManager.</para>
         /// </summary>
+        /// <returns>
+        /// <para>An array of SceneSetup classes - one item for each Scene.</para>
+        /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern SceneSetup[] GetSceneManagerSetup();
         internal static Scene GetTargetSceneForNewGameObjects()
@@ -191,17 +202,20 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void MarkAllScenesDirty();
         /// <summary>
-        /// <para>Mark the Scene as modified.</para>
+        /// <para>Mark the specified Scene as modified.</para>
         /// </summary>
         /// <param name="scene">The Scene to be marked as modified.</param>
+        /// <returns>
+        /// <para>Whether the Scene was successfully marked as dirty.</para>
+        /// </returns>
         public static bool MarkSceneDirty(Scene scene) => 
             INTERNAL_CALL_MarkSceneDirty(ref scene);
 
         /// <summary>
         /// <para>Allows you to reorder the Scenes currently open in the Hierarchy window. Moves the source Scene so it comes after the destination Scene.</para>
         /// </summary>
-        /// <param name="src"></param>
-        /// <param name="dst"></param>
+        /// <param name="src">The Scene to move.</param>
+        /// <param name="dst">The Scene which should come directly before the source Scene in the hierarchy.</param>
         public static void MoveSceneAfter(Scene src, Scene dst)
         {
             INTERNAL_CALL_MoveSceneAfter(ref src, ref dst);
@@ -210,8 +224,8 @@
         /// <summary>
         /// <para>Allows you to reorder the Scenes currently open in the Hierarchy window. Moves the source Scene so it comes before the destination Scene.</para>
         /// </summary>
-        /// <param name="src"></param>
-        /// <param name="dst"></param>
+        /// <param name="src">The Scene to move.</param>
+        /// <param name="dst">The Scene which should come directly after the source Scene in the hierarchy.</param>
         public static void MoveSceneBefore(Scene src, Scene dst)
         {
             INTERNAL_CALL_MoveSceneBefore(ref src, ref dst);
@@ -229,8 +243,11 @@
         /// <summary>
         /// <para>Create a new Scene.</para>
         /// </summary>
-        /// <param name="setup">Allows you to select whether or not the default set of GameObjects should be added to the new Scene. See SceneManagement.NewSceneSetup for more information about the options.</param>
-        /// <param name="mode">Allows you to select how to open the new Scene, and whether to keep existing Scenes in the Hierarchy. See SceneManagement.NewSceneMode for more information about the options.</param>
+        /// <param name="setup">Whether the new Scene should use the default set of GameObjects.</param>
+        /// <param name="mode">Whether to keep existing Scenes open.</param>
+        /// <returns>
+        /// <para>A reference to the new Scene.</para>
+        /// </returns>
         public static Scene NewScene(NewSceneSetup setup, [DefaultValue("NewSceneMode.Single")] NewSceneMode mode)
         {
             Scene scene;
@@ -250,8 +267,11 @@
         /// <summary>
         /// <para>Open a Scene in the Editor.</para>
         /// </summary>
-        /// <param name="scenePath">Path of the Scene. Should be relative to the project folder. Like: "AssetsMyScenesMyScene.unity".</param>
+        /// <param name="scenePath">The path of the Scene. This should be relative to the Project folder; for example, "AssetsMyScenesMyScene.unity".</param>
         /// <param name="mode">Allows you to select how to open the specified Scene, and whether to keep existing Scenes in the Hierarchy. See SceneManagement.OpenSceneMode for more information about the options.</param>
+        /// <returns>
+        /// <para>A reference to the opened Scene.</para>
+        /// </returns>
         public static Scene OpenScene(string scenePath, [DefaultValue("OpenSceneMode.Single")] OpenSceneMode mode)
         {
             Scene scene;
@@ -269,14 +289,20 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void RestoreSceneManagerSetup(SceneSetup[] value);
         /// <summary>
-        /// <para>Ask the user if they want to save the the modified Scene(s).</para>
+        /// <para>Asks you if you want to save the modified Scene or Scenes.</para>
         /// </summary>
+        /// <returns>
+        /// <para>This returns true if you chose to save the Scene or Scenes, and returns false if you pressed Cancel.</para>
+        /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool SaveCurrentModifiedScenesIfUserWantsTo();
         /// <summary>
-        /// <para>Ask the user if he wants to save any of the modfied input Scenes.</para>
+        /// <para>Asks whether the modfied input Scenes should be saved.</para>
         /// </summary>
         /// <param name="scenes">Scenes that should be saved if they are modified.</param>
+        /// <returns>
+        /// <para>Your choice of whether to save or not save the Scenes.</para>
+        /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool SaveModifiedScenesIfUserWantsTo(Scene[] scenes);
         /// <summary>
@@ -306,8 +332,8 @@
         /// <para>Save a Scene.</para>
         /// </summary>
         /// <param name="scene">The Scene to be saved.</param>
-        /// <param name="dstScenePath">The file path to save at. If not empty, the current open Scene will be overwritten, or if never saved before, a save dialog is shown.</param>
-        /// <param name="saveAsCopy">If set to true, the Scene will be saved without changing the current Scene and without clearing the unsaved changes marker.</param>
+        /// <param name="dstScenePath">The file path to save the Scene to. If the path is empty, the current open Scene is overwritten. If it has not yet been saved at all, a save dialog is shown.</param>
+        /// <param name="saveAsCopy">If set to true, the Scene is saved without changing the current Scene, and without clearing the unsaved changes marker.</param>
         /// <returns>
         /// <para>True if the save succeeded, otherwise false.</para>
         /// </returns>
@@ -321,6 +347,9 @@
         /// <para>Save a list of Scenes.</para>
         /// </summary>
         /// <param name="scenes">List of Scenes that should be saved.</param>
+        /// <returns>
+        /// <para>True if the save succeeded. Otherwise false.</para>
+        /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool SaveScenes(Scene[] scenes);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -332,7 +361,7 @@
         public static int loadedSceneCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
-        /// <para>Preventing cross-scene references from the editor UI.</para>
+        /// <para>Controls whether cross-Scene references are allowed in the Editor.</para>
         /// </summary>
         public static bool preventCrossSceneReferences { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 

@@ -3,6 +3,7 @@
     using Mono.Cecil;
     using Mono.Cecil.Cil;
     using System;
+    using Unity.IL2CPP;
 
     internal class SequencePointsMappingVisitor
     {
@@ -17,9 +18,10 @@
         {
             foreach (Instruction instruction in method.Body.Instructions)
             {
-                if (instruction.SequencePoint != null)
+                SequencePoint sequencePoint = instruction.GetSequencePoint(method);
+                if (sequencePoint != null)
                 {
-                    this._callback(instruction, instruction.SequencePoint);
+                    this._callback(instruction, sequencePoint);
                 }
             }
         }

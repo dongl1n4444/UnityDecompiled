@@ -9,14 +9,14 @@
     [AttributeUsage(AttributeTargets.Class)]
     internal class FilePathAttribute : Attribute
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private string <filepath>k__BackingField;
 
         public FilePathAttribute(string relativePath, Location location)
         {
             if (string.IsNullOrEmpty(relativePath))
             {
-                Debug.LogError("Invalid relative path! (its null or empty)");
+                UnityEngine.Debug.LogError("Invalid relative path! (its null or empty)");
             }
             else
             {

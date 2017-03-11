@@ -16,6 +16,7 @@
         private readonly HashSet<string> _divideByZeroChecksMethods = new HashSet<string>();
         private int _forwardedToBaseClassComCallableWrapperMethods;
         private int _implementedComCallableWrapperMethods;
+        private int _interfacesImplementedOnIl2CppComObject;
         private readonly HashSet<string> _memoryBarrierMethods = new HashSet<string>();
         private readonly Dictionary<string, long> _metadataStreams = new Dictionary<string, long>();
         private long _metadataTotal;
@@ -151,6 +152,11 @@
             }
         }
 
+        public void RecordNativeToManagedInterfaceAdapter()
+        {
+            this._interfacesImplementedOnIl2CppComObject++;
+        }
+
         public void RecordNullCheckEmitted(MethodDefinition methodDefinition)
         {
             this._totalNullChecks++;
@@ -222,6 +228,7 @@
             writer.WriteLine("Interop:");
             writer.WriteLine($"	Windows Runtime boxed types : {this.WindowsRuntimeBoxedTypes}");
             writer.WriteLine($"	Windows Runtime types with names : {this.WindowsRuntimeTypesWithNames}");
+            writer.WriteLine($"	Native to managed interface adapters : {this.NativeToManagedInterfaceAdapters}");
             writer.WriteLine($"	Array COM callable wrappers : {this.ArrayComCallableWrappers}");
             writer.WriteLine($"	COM callable wrappers : {this.ComCallableWrappers}");
             writer.WriteLine($"	COM callable wrapper methods that were implemented : {this.ImplementedComCallableWrapperMethods}");
@@ -250,7 +257,7 @@
         public long ConversionMilliseconds { get; set; }
 
         public int CppCacheHitPercentage =>
-            ((this.CppFileCacheHits / this.CppTotalFiles) * 100);
+            ((int) ((((double) this.CppFileCacheHits) / ((double) this.CppTotalFiles)) * 100.0));
 
         public int CppFileCacheHits { get; private set; }
 
@@ -286,6 +293,9 @@
         public int MethodHashCollisions { get; set; }
 
         public int Methods { get; set; }
+
+        public int NativeToManagedInterfaceAdapters =>
+            this._interfacesImplementedOnIl2CppComObject;
 
         public Dictionary<string, int> NullCheckMethodsCount =>
             this._nullCheckMethodsCount;

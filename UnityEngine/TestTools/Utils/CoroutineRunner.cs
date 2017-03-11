@@ -59,7 +59,7 @@
             internal bool $disposing;
             internal int $PC;
             internal CoroutineRunner $this;
-            internal Coroutine <timer>__1;
+            internal Coroutine <timer>__0;
             internal IEnumerator e;
             internal int timeout;
 
@@ -83,7 +83,7 @@
                 switch (num)
                 {
                     case 0:
-                        this.<timer>__1 = this.$this.m_Controller.StartCoroutine(this.$this.StartTimer(this.e, this.timeout, new Action(this.<>m__0)));
+                        this.<timer>__0 = this.$this.m_Controller.StartCoroutine(this.$this.StartTimer(this.e, this.timeout, new Action(this.<>m__0)));
                         this.$current = this.$this.m_Controller.StartCoroutine(this.e);
                         if (!this.$disposing)
                         {
@@ -92,7 +92,7 @@
                         return true;
 
                     case 1:
-                        this.$this.m_Controller.StopCoroutine(this.<timer>__1);
+                        this.$this.m_Controller.StopCoroutine(this.<timer>__0);
                         this.$this.m_Running = false;
                         this.$PC = -1;
                         break;

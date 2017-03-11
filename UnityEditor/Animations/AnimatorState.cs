@@ -11,7 +11,7 @@
     /// <summary>
     /// <para>States are the basic building blocks of a state machine. Each state contains a Motion ( AnimationClip or BlendTree) which will play while the character is in that state. When an event in the game triggers a state transition, the character will be left in a new state whose animation sequence will then take over.</para>
     /// </summary>
-    public sealed class AnimatorState : Object
+    public sealed class AnimatorState : UnityEngine.Object
     {
         private PushUndoIfNeeded undoHandler = new PushUndoIfNeeded(true);
 
@@ -29,13 +29,8 @@
         /// <returns>
         /// <para>The Animations.AnimatorStateTransition that was added.</para>
         /// </returns>
-        public AnimatorStateTransition AddExitTransition()
-        {
-            AnimatorStateTransition transition = this.CreateTransition(false);
-            transition.isExit = true;
-            this.AddTransition(transition);
-            return transition;
-        }
+        public AnimatorStateTransition AddExitTransition() => 
+            this.AddExitTransition(false);
 
         /// <summary>
         /// <para>Utility function to add an outgoing transition to the exit of the state's parent state machine.</para>
@@ -46,14 +41,10 @@
         /// </returns>
         public AnimatorStateTransition AddExitTransition(bool defaultExitTime)
         {
-            AnimatorStateTransition newTransition = this.CreateTransition(false);
-            newTransition.isExit = true;
-            if (defaultExitTime)
-            {
-                this.SetDefaultTransitionExitTime(ref newTransition);
-            }
-            this.AddTransition(newTransition);
-            return newTransition;
+            AnimatorStateTransition transition = this.CreateTransition(defaultExitTime);
+            transition.isExit = true;
+            this.AddTransition(transition);
+            return transition;
         }
 
         public T AddStateMachineBehaviour<T>() where T: StateMachineBehaviour => 
@@ -64,7 +55,7 @@
         /// </summary>
         /// <param name="stateMachineBehaviourType"></param>
         [TypeInferenceRule(TypeInferenceRules.TypeReferencedByFirstArgument)]
-        public StateMachineBehaviour AddStateMachineBehaviour(Type stateMachineBehaviourType) => 
+        public StateMachineBehaviour AddStateMachineBehaviour(System.Type stateMachineBehaviourType) => 
             ((StateMachineBehaviour) this.Internal_AddStateMachineBehaviourWithType(stateMachineBehaviourType));
 
         /// <summary>
@@ -173,7 +164,7 @@
             null;
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private extern ScriptableObject Internal_AddStateMachineBehaviourWithType(Type stateMachineBehaviourType);
+        private extern ScriptableObject Internal_AddStateMachineBehaviourWithType(System.Type stateMachineBehaviourType);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_Create(AnimatorState mono);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -200,8 +191,13 @@
             if ((this.motion != null) && (this.motion.averageDuration > 0f))
             {
                 float num = 0.25f / this.motion.averageDuration;
-                newTransition.duration = !newTransition.hasFixedDuration ? num : 0.25f;
+                newTransition.duration = 0.25f;
                 newTransition.exitTime = 1f - num;
+            }
+            else
+            {
+                newTransition.duration = 0.25f;
+                newTransition.exitTime = 0.75f;
             }
         }
 

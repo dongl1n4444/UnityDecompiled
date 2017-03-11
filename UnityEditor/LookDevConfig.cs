@@ -79,7 +79,7 @@
             int index = (int) context;
             if (this.m_PreviewObjects[index] != null)
             {
-                Object.DestroyImmediate(this.m_PreviewObjects[index]);
+                UnityEngine.Object.DestroyImmediate(this.m_PreviewObjects[index]);
                 this.m_PreviewObjects[index] = null;
             }
         }
@@ -177,7 +177,7 @@
             {
                 int index = (int) context;
                 this.m_OriginalGameObject[index] = go;
-                this.m_PreviewObjects[index] = Object.Instantiate<GameObject>(this.m_OriginalGameObject[index], Vector3.zero, Quaternion.identity);
+                this.m_PreviewObjects[index] = UnityEngine.Object.Instantiate<GameObject>(this.m_OriginalGameObject[index], Vector3.zero, Quaternion.identity);
                 EditorUtility.InitInstantiatedPreviewRecursive(this.m_PreviewObjects[index]);
                 this.SetEnabledRecursive(this.m_PreviewObjects[index], false);
                 this.DisableLightProbes(this.m_PreviewObjects[index]);

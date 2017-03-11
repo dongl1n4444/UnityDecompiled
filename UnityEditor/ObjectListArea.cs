@@ -20,21 +20,21 @@
         private static Predicate<AssetStoreGroup> <>f__am$cache0;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <allowBuiltinResources>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private bool <allowDeselection>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private bool <allowDeselection>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <allowDragging>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <allowFindNextShortcut>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-        private bool <allowFocusRendering>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private bool <allowFocusRendering>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <allowMultiSelect>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <allowRenaming>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <allowUserRenderingHook>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <foldersFirst>k__BackingField;
         private const float k_ListModeVersionControlOverlayPadding = 14f;
         private const double kDelayQueryAfterScroll = 0.0;
@@ -49,16 +49,16 @@
         private bool m_AllowRenameOnMouseUp = true;
         private bool m_AllowThumbnails = true;
         private string m_AssetStoreError = "";
-        private Action m_AssetStoreSearchEnded;
+        private System.Action m_AssetStoreSearchEnded;
         public float m_BottomMargin = 10f;
         private Func<Rect, float> m_DrawLocalAssetHeader;
         private bool m_FrameLastClickedItem = false;
-        private Action m_GotKeyboardFocus;
+        private System.Action m_GotKeyboardFocus;
         private List<Group> m_Groups;
         private Dictionary<int, string> m_InstanceIDToCroppedNameMap = new Dictionary<int, string>();
         private Action<bool> m_ItemSelectedCallback;
         private int m_KeyboardControlID;
-        private Action m_KeyboardInputCallback;
+        private System.Action m_KeyboardInputCallback;
         private double m_LastAssetStoreQueryChangeTime = 0.0;
         private string[] m_LastAssetStoreQueryClassName = new string[0];
         private string[] m_LastAssetStoreQueryLabels = new string[0];
@@ -75,7 +75,7 @@
         private PingData m_Ping = new PingData();
         private int m_pingIndex;
         private bool m_QueryInProgress = false;
-        private Action m_RepaintWantedCallback;
+        private System.Action m_RepaintWantedCallback;
         public bool m_RequeryAssetStore;
         private int m_ResizePreviewCacheTo = 0;
         public float m_RightMargin = 10f;
@@ -130,7 +130,7 @@
             }
             else
             {
-                Debug.LogError("Failed to insert new asset into list");
+                UnityEngine.Debug.LogError("Failed to insert new asset into list");
             }
             this.Repaint();
         }
@@ -1401,7 +1401,7 @@
 
         public bool allowUserRenderingHook { get; set; }
 
-        public Action assetStoreSearchEnded
+        public System.Action assetStoreSearchEnded
         {
             get => 
                 this.m_AssetStoreSearchEnded;
@@ -1423,7 +1423,7 @@
 
         public bool foldersFirst { get; set; }
 
-        public Action gotKeyboardFocus
+        public System.Action gotKeyboardFocus
         {
             get => 
                 this.m_GotKeyboardFocus;
@@ -1457,7 +1457,7 @@
             }
         }
 
-        public Action keyboardCallback
+        public System.Action keyboardCallback
         {
             get => 
                 this.m_KeyboardInputCallback;
@@ -1476,7 +1476,7 @@
         public int numItemsDisplayed =>
             this.m_LocalAssets.ItemCount;
 
-        public Action repaintCallback
+        public System.Action repaintCallback
         {
             get => 
                 this.m_RepaintWantedCallback;
@@ -1530,7 +1530,7 @@
                 {
                     if (ObjectListArea.s_Debug)
                     {
-                        Debug.LogError("Error performing Asset Store search: " + results.error);
+                        UnityEngine.Debug.LogError("Error performing Asset Store search: " + results.error);
                     }
                     else
                     {
@@ -2047,8 +2047,8 @@
                 if (icon != null)
                 {
                     int width = icon.width;
-                    FilterMode filterMode = icon.filterMode;
-                    icon.filterMode = FilterMode.Point;
+                    UnityEngine.FilterMode filterMode = icon.filterMode;
+                    icon.filterMode = UnityEngine.FilterMode.Point;
                     GUI.DrawTexture(new Rect(position.x + ((((int) position.width) - width) / 2), position.y + ((((int) position.height) - width) / 2), (float) width, (float) width), icon, ScaleMode.ScaleToFit);
                     icon.filterMode = filterMode;
                 }
@@ -2098,7 +2098,7 @@
                 return list.ToArray();
             }
 
-            private Object[] GetSelectedReferences() => 
+            private UnityEngine.Object[] GetSelectedReferences() => 
                 Selection.objects;
 
             protected virtual void HandleUnusedDragEvents(float yOffset)
@@ -3089,11 +3089,11 @@
                 return index;
             }
 
-            private void InitBuiltinAssetType(Type type)
+            private void InitBuiltinAssetType(System.Type type)
             {
                 if (type == null)
                 {
-                    Debug.LogWarning("ObjectSelector::InitBuiltinAssetType: type is null!");
+                    UnityEngine.Debug.LogWarning("ObjectSelector::InitBuiltinAssetType: type is null!");
                 }
                 else
                 {
@@ -3101,7 +3101,7 @@
                     UnityType type2 = UnityType.FindTypeByName(name);
                     if (type2 == null)
                     {
-                        Debug.LogWarning("ObjectSelector::InitBuiltinAssetType: class '" + name + "' not found");
+                        UnityEngine.Debug.LogWarning("ObjectSelector::InitBuiltinAssetType: class '" + name + "' not found");
                     }
                     else
                     {
@@ -3257,7 +3257,7 @@
                     }
                     message = message + "\n";
                 }
-                Debug.Log(message);
+                UnityEngine.Debug.Log(message);
             }
 
             private void RefreshBuiltinResourceList(SearchFilter searchFilter)

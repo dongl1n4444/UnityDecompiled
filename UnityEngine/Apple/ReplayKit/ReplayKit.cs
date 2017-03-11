@@ -6,7 +6,7 @@
     using UnityEngine.Scripting;
 
     /// <summary>
-    /// <para>ReplayKit is only available on iPhoneiPadiPod Touch running iOS 9.0 or later.</para>
+    /// <para>ReplayKit is only available on certain iPhone, iPad and iPod Touch devices running iOS 9.0 or later.</para>
     /// </summary>
     public static class ReplayKit
     {

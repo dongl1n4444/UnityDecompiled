@@ -19,7 +19,7 @@
         [CompilerGenerated]
         private static Func<bool> <>f__am$cache3;
         [CompilerGenerated]
-        private static Action <>f__am$cache4;
+        private static System.Action <>f__am$cache4;
         [CompilerGenerated]
         private static Func<ProfilerChoise, string> <>f__am$cache5;
         [CompilerGenerated]
@@ -45,7 +45,7 @@
                         Name = device.name,
                         Enabled = true,
                         IsSelected = new Func<bool>(storey.<>m__0),
-                        ConnectTo = new Action(storey.<>m__1)
+                        ConnectTo = new System.Action(storey.<>m__1)
                     };
                     profilers.Add(item);
                 }
@@ -66,7 +66,7 @@
                 <>f__am$cache1 = () => false;
             }
             item.IsSelected = <>f__am$cache1;
-            item.ConnectTo = new Action(storey.<>m__0);
+            item.ConnectTo = new System.Action(storey.<>m__0);
             profilers.Add(item);
         }
 
@@ -86,7 +86,7 @@
                     <>f__am$cache0 = () => ProfilerDriver.connectedProfiler == 0xfeed;
                 }
                 item.IsSelected = <>f__am$cache0;
-                item.ConnectTo = new Action(storey.<>m__0);
+                item.ConnectTo = new System.Action(storey.<>m__0);
                 profilers.Add(item);
             }
         }
@@ -117,7 +117,7 @@
                     Name = connectionIdentifier,
                     Enabled = flag2,
                     IsSelected = new Func<bool>(storey.<>m__0),
-                    ConnectTo = new Action(storey.<>m__1)
+                    ConnectTo = new System.Action(storey.<>m__1)
                 };
                 profilers.Add(item);
             }
@@ -147,7 +147,7 @@
 
         public void OnGUI(Rect connectRect, GUIContent profilerLabel)
         {
-            if (EditorGUI.ButtonMouseDown(connectRect, profilerLabel, FocusType.Passive, EditorStyles.toolbarDropDown))
+            if (EditorGUI.DropdownButton(connectRect, profilerLabel, FocusType.Passive, EditorStyles.toolbarDropDown))
             {
                 int[] numArray;
                 List<ProfilerChoise> profilers = new List<ProfilerChoise>();

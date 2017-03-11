@@ -5,6 +5,8 @@
     internal interface ParticleEffectUIOwner
     {
         void Repaint();
+
+        Editor customEditor { get; }
     }
 }
 

@@ -158,7 +158,7 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void InternalCreate(string name);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         internal extern void InternalDestroy();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern bool AddString(string key, string value);

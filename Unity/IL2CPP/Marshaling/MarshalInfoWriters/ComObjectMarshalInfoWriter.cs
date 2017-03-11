@@ -51,7 +51,14 @@
 
         public override void WriteIncludesForMarshaling(CppCodeWriter writer)
         {
-            writer.AddIncludeForTypeDefinition(this._windowsRuntimeType);
+            if (!base._typeRef.IsSystemObject())
+            {
+                if (this._isSealed || this._isClass)
+                {
+                    writer.AddIncludeForTypeDefinition(this._windowsRuntimeType);
+                }
+                writer.AddIncludeForTypeDefinition(this._defaultInterface);
+            }
         }
 
         public sealed override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, string managedVariableName)

@@ -19,11 +19,13 @@
         private SerializedProperty m_AppInBackgroundBehavior;
         private SerializedProperty m_AppleDeveloperTeamID;
         private SerializedProperty m_AppleEnableAutomaticSigning;
+        private SerializedProperty m_ApplicationBundleVersion;
         private GUIContent m_AutomaticSigningGUIContent = EditorGUIUtility.TextContent("Automatically Sign|Check this to allow Xcode to Automatically sign your build.");
         private GUIContent m_iOSManualSigningGUIContent = EditorGUIUtility.TextContent("iOS Provisioning Profile");
         private SerializedProperty m_iOSManualSigningProvisioningProfileID;
         private ReorderableList m_RequirementList;
         private bool m_ResourceVariantsVisible = false;
+        private PlayerSettingsEditor m_SettingsEditor;
         private GUIContent m_TeamIDGUIContent = EditorGUIUtility.TextContent("Automatic Signing Team ID|Developers can retrieve their Team ID by visiting the Apple Developer site under Account > Membership.");
         private SerializedProperty[] splashScreenProperties;
 
@@ -200,6 +202,9 @@
 
         public override void IdentificationSectionGUI()
         {
+            PlayerSettingsEditor.ShowApplicationIdentifierUI(this.m_SettingsEditor.serializedObject, BuildTargetGroup.iPhone, "Bundle Identifier", "Changed iOS bundleIdentifier");
+            EditorGUILayout.PropertyField(this.m_ApplicationBundleVersion, EditorGUIUtility.TextContent("Version*"), new GUILayoutOption[0]);
+            PlayerSettingsEditor.ShowBuildNumberUI(this.m_SettingsEditor.serializedObject, BuildTargetGroup.iPhone, "Build", "Changed iOS build number");
             ProvisioningProfileGUI.ShowUIWithDefaults(iOSEditorPrefKeys.kDefaultiOSProvisioningProfileUUID, this.m_AppleEnableAutomaticSigning, this.m_AutomaticSigningGUIContent, this.m_iOSManualSigningProvisioningProfileID, this.m_iOSManualSigningGUIContent, this.m_AppleDeveloperTeamID, this.m_TeamIDGUIContent);
         }
 
@@ -283,6 +288,11 @@
 
         public override void OnEnable(PlayerSettingsEditor editor)
         {
+            this.m_ApplicationBundleVersion = editor.serializedObject.FindProperty("bundleVersion");
+            if (this.m_ApplicationBundleVersion == null)
+            {
+                this.m_ApplicationBundleVersion = editor.FindPropertyAssert("iPhoneBundleVersion");
+            }
             this.splashScreenProperties = new SerializedProperty[UnityEditor.iOS.SplashScreen.iOSTypes.Length];
             for (int i = 0; i < UnityEditor.iOS.SplashScreen.iOSTypes.Length; i++)
             {
@@ -306,6 +316,7 @@
             this.m_AppleEnableAutomaticSigning = editor.FindPropertyAssert("appleEnableAutomaticSigning");
             this.InitRequirements();
             this.m_AppInBackgroundBehavior = editor.FindPropertyAssert("iosAppInBackgroundBehavior");
+            this.m_SettingsEditor = editor;
         }
 
         private static string PopupWithOptionalStringEntry(string label, string selected, string[] values, string[] displayedValues)

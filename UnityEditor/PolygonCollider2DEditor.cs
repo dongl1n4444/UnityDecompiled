@@ -11,9 +11,9 @@
     internal class PolygonCollider2DEditor : Collider2DEditorBase
     {
         [CompilerGenerated]
-        private static Func<Object, bool> <>f__am$cache0;
+        private static Func<UnityEngine.Object, bool> <>f__am$cache0;
         [CompilerGenerated]
-        private static Func<Object, PolygonCollider2D> <>f__am$cache1;
+        private static Func<UnityEngine.Object, PolygonCollider2D> <>f__am$cache1;
         private SerializedProperty m_Points;
         private readonly PolygonEditorUtility m_PolyUtility = new PolygonEditorUtility();
 
@@ -25,20 +25,20 @@
                 {
                     <>f__am$cache0 = obj => (obj is Sprite) || (obj is Texture2D);
                 }
-                foreach (Object obj2 in Enumerable.Where<Object>(DragAndDrop.objectReferences, <>f__am$cache0))
+                foreach (UnityEngine.Object obj2 in Enumerable.Where<UnityEngine.Object>(DragAndDrop.objectReferences, <>f__am$cache0))
                 {
                     DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
                     if (Event.current.type == EventType.DragPerform)
                     {
-                        Sprite sprite = !(obj2 is Sprite) ? SpriteUtility.TextureToSprite(obj2 as Texture2D) : (obj2 as Sprite);
+                        Sprite sprite = !(obj2 is Sprite) ? UnityEditor.SpriteUtility.TextureToSprite(obj2 as Texture2D) : (obj2 as Sprite);
                         if (<>f__am$cache1 == null)
                         {
                             <>f__am$cache1 = target => target as PolygonCollider2D;
                         }
-                        foreach (PolygonCollider2D colliderd in Enumerable.Select<Object, PolygonCollider2D>(base.targets, <>f__am$cache1))
+                        foreach (PolygonCollider2D colliderd in Enumerable.Select<UnityEngine.Object, PolygonCollider2D>(base.targets, <>f__am$cache1))
                         {
                             Vector2[][] vectorArray;
-                            SpriteUtility.GenerateOutlineFromSprite(sprite, 0.25f, 200, true, out vectorArray);
+                            UnityEditor.Sprites.SpriteUtility.GenerateOutlineFromSprite(sprite, 0.25f, 200, true, out vectorArray);
                             colliderd.pathCount = vectorArray.Length;
                             for (int i = 0; i < vectorArray.Length; i++)
                             {
@@ -83,7 +83,7 @@
                 EditorGUILayout.HelpBox(Collider2DEditorBase.Styles.s_ColliderEditDisableHelp.text, MessageType.Info);
                 if (base.editingCollider)
                 {
-                    EditMode.QuitEditMode();
+                    UnityEditorInternal.EditMode.QuitEditMode();
                 }
             }
             else

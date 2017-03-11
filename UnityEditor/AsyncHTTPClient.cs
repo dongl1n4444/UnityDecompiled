@@ -19,7 +19,7 @@
         private int <responseCode>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private State <state>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <tag>k__BackingField;
         public DoneCallback doneCallback;
         public Dictionary<string, string> header;

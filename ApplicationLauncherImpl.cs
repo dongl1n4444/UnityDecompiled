@@ -61,7 +61,7 @@ internal class ApplicationLauncherImpl
         }
         string args = $""{this.installPath}\{this.packageName}.sln" /nologo /maxcpucount /p:Configuration={this.configuration} /p:Platform={this.platform} /p:SolutionDir="{this.installPath.Replace(@"\", @"\\")}\\" /t:Build /clp:Verbosity=minimal";
         this.KillRunningAppInstances();
-        EditorUtility.DisplayProgressBar("Deploying Player", $"Building solution with Visual Studio version {Utility.GetVSVersion()}, {this.configuration}|{this.platform}", 0.5f);
+        EditorUtility.DisplayProgressBar("Deploying Player", $"Building solution with Visual Studio {GetVSVersionYear(Utility.GetVSVersion())}, {this.configuration}|{this.platform}", 0.5f);
         this.RunMSBuild(args);
     }
 
@@ -221,7 +221,7 @@ internal class ApplicationLauncherImpl
     }
 
     private string GetProjectExt() => 
-        "csproj";
+        ((this.scriptingBackend != ScriptingImplementation.WinRTDotNET) ? "vcxproj" : "csproj");
 
     private string GetProjectName()
     {
@@ -270,6 +270,27 @@ internal class ApplicationLauncherImpl
         }
         string[] components = new string[] { this.installPath, this.packageName, this.packageName };
         return (Paths.Combine(components) + "." + this.GetProjectExt());
+    }
+
+    private static string GetVSVersionYear(string vsVersion)
+    {
+        if (vsVersion == null)
+        {
+            return vsVersion;
+        }
+        if (vsVersion != "12.0")
+        {
+            if (vsVersion == "14.0")
+            {
+                return "2015";
+            }
+            if (vsVersion == "15.0")
+            {
+                return "2017";
+            }
+            return vsVersion;
+        }
+        return "2013";
     }
 
     private void KillRunningAppInstances()
@@ -330,7 +351,6 @@ internal class ApplicationLauncherImpl
                         return;
 
                     case WSABuildAndRunDeployTarget.WindowsPhone:
-                        this.BuildUsingMSBuild(false);
                         commandLine = commandLine + " -noMDIL";
                         this.RunOnPhone(commandLine);
                         return;

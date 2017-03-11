@@ -8,7 +8,7 @@
     /// <summary>
     /// <para>Joint is the base class for all joints.</para>
     /// </summary>
-    [NativeClass("Unity::Joint"), RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(Rigidbody)), NativeClass("Unity::Joint")]
     public class Joint : Component
     {
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]

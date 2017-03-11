@@ -134,32 +134,32 @@
                 {
                     return new ExceptionMarshalInfoWriter(storey.typeDefinition);
                 }
-                if (storey.type.MetadataType == MetadataType.Class)
-                {
-                    if (storey.typeDefinition.IsWindowsRuntime && !(storey.type is TypeSpecification))
-                    {
-                        return new ComObjectMarshalInfoWriter(storey.typeDefinition, storey.marshalType, marshalInfo);
-                    }
-                    TypeDefinition definition2 = WindowsRuntimeProjections.ProjectToWindowsRuntime(storey.typeDefinition);
-                    if ((definition2 != storey.typeDefinition) && WindowsRuntimeProjections.IsSupportedProjectedInterfaceWindowsRuntime(definition2))
-                    {
-                        return new ComObjectMarshalInfoWriter(definition2, storey.marshalType, marshalInfo);
-                    }
-                }
-                else if (storey.type.MetadataType == MetadataType.GenericInstance)
+                GenericInstanceType type5 = storey.type as GenericInstanceType;
+                if (type5 != null)
                 {
                     if ((TypeProvider.IReferenceType != null) && storey.type.IsNullable())
                     {
-                        TypeReference reference3 = ((GenericInstanceType) storey.type).GenericArguments[0];
+                        TypeReference reference3 = type5.GenericArguments[0];
                         if (reference3.CanBoxToWindowsRuntime())
                         {
                             return new WindowsRuntimeNullableMarshalInfoWriter(storey.type);
                         }
                     }
-                    TypeReference reference4 = WindowsRuntimeProjections.ProjectToWindowsRuntime(storey.type);
-                    if (((reference4 != storey.type) && reference4.IsComOrWindowsRuntimeInterface()) && WindowsRuntimeProjections.IsSupportedProjectedInterfaceWindowsRuntime(reference4))
+                }
+                else if (((storey.typeDefinition.MetadataType == MetadataType.Class) && !(storey.type is TypeSpecification)) && storey.typeDefinition.IsWindowsRuntime)
+                {
+                    return new ComObjectMarshalInfoWriter(storey.typeDefinition, storey.marshalType, marshalInfo);
+                }
+                TypeReference reference4 = WindowsRuntimeProjections.ProjectToWindowsRuntime(storey.type);
+                if ((reference4 != storey.type) && reference4.IsComOrWindowsRuntimeInterface())
+                {
+                    if (storey.typeDefinition.IsInterface)
                     {
                         return new ComObjectMarshalInfoWriter(storey.type, storey.marshalType, marshalInfo);
+                    }
+                    if ((storey.typeDefinition.IsValueType && (type5 != null)) && ((storey.typeDefinition.Namespace == "System.Collections.Generic") && (storey.typeDefinition.Name == "KeyValuePair`2")))
+                    {
+                        return new KeyValuePairMarshalInfoWriter(type5);
                     }
                 }
             }

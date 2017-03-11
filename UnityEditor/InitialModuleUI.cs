@@ -118,10 +118,10 @@
             ModuleUI.GUIMinMaxCurve(s_Texts.lifetime, this.m_LifeTime, new GUILayoutOption[0]);
             ModuleUI.GUIMinMaxCurve(s_Texts.speed, this.m_Speed, new GUILayoutOption[0]);
             EditorGUI.BeginChangeCheck();
-            bool flag2 = ModuleUI.GUIToggle(s_Texts.size3D, this.m_Size3D, new GUILayoutOption[0]);
+            bool addToCurveEditor = ModuleUI.GUIToggle(s_Texts.size3D, this.m_Size3D, new GUILayoutOption[0]);
             if (EditorGUI.EndChangeCheck())
             {
-                if (flag2)
+                if (addToCurveEditor)
                 {
                     this.m_SizeX.RemoveCurveFromEditor();
                 }
@@ -132,10 +132,12 @@
                     this.m_SizeZ.RemoveCurveFromEditor();
                 }
             }
-            MinMaxCurveState state = this.m_SizeX.state;
-            this.m_SizeY.state = state;
-            this.m_SizeZ.state = state;
-            if (flag2)
+            if (!this.m_SizeX.stateHasMultipleDifferentValues)
+            {
+                this.m_SizeZ.SetMinMaxState(this.m_SizeX.state, addToCurveEditor);
+                this.m_SizeY.SetMinMaxState(this.m_SizeX.state, addToCurveEditor);
+            }
+            if (addToCurveEditor)
             {
                 this.m_SizeX.m_DisplayName = s_Texts.x;
                 base.GUITripleMinMaxCurve(GUIContent.none, s_Texts.x, this.m_SizeX, s_Texts.y, this.m_SizeY, s_Texts.z, this.m_SizeZ, null, new GUILayoutOption[0]);
@@ -160,9 +162,11 @@
                     this.m_RotationZ.RemoveCurveFromEditor();
                 }
             }
-            state = this.m_RotationZ.state;
-            this.m_RotationY.state = state;
-            this.m_RotationX.state = state;
+            if (!this.m_RotationZ.stateHasMultipleDifferentValues)
+            {
+                this.m_RotationX.SetMinMaxState(this.m_RotationZ.state, flag3);
+                this.m_RotationY.SetMinMaxState(this.m_RotationZ.state, flag3);
+            }
             if (flag3)
             {
                 this.m_RotationZ.m_DisplayName = s_Texts.z;

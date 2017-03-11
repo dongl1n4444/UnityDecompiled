@@ -41,7 +41,7 @@
         /// <para>Returns the closest power of two value.</para>
         /// </summary>
         /// <param name="value"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern int ClosestPowerOfTwo(int value);
         /// <summary>
         /// <para>Converts the given value from gamma (sRGB) to linear color space.</para>
@@ -100,7 +100,10 @@
         /// <summary>
         /// <para>Returns the sine of angle f in radians.</para>
         /// </summary>
-        /// <param name="f"></param>
+        /// <param name="f">The argument as a radian.</param>
+        /// <returns>
+        /// <para>The return value between -1 and +1.</para>
+        /// </returns>
         public static float Sin(float f) => 
             ((float) Math.Sin((double) f));
 
@@ -446,18 +449,24 @@
         /// <summary>
         /// <para>Linearly interpolates between a and b by t.</para>
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <param name="t"></param>
+        /// <param name="a">The start value.</param>
+        /// <param name="b">The end value.</param>
+        /// <param name="t">The interpolation value between the two floats.</param>
+        /// <returns>
+        /// <para>The interpolated float result between the two float values.</para>
+        /// </returns>
         public static float Lerp(float a, float b, float t) => 
             (a + ((b - a) * Clamp01(t)));
 
         /// <summary>
-        /// <para>Linearly interpolates between a and b by t.</para>
+        /// <para>Linearly interpolates between a and b by t with no limit to t.</para>
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <param name="t"></param>
+        /// <param name="a">The start value.</param>
+        /// <param name="b">The end value.</param>
+        /// <param name="t">The interpolation between the two floats.</param>
+        /// <returns>
+        /// <para>The float value as a result from the linear interpolation.</para>
+        /// </returns>
         public static float LerpUnclamped(float a, float b, float t) => 
             (a + ((b - a) * t));
 
@@ -539,7 +548,7 @@
         }
 
         /// <summary>
-        /// <para>Compares two floating point values if they are similar.</para>
+        /// <para>Compares two floating point values and returns true if they are similar.</para>
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>

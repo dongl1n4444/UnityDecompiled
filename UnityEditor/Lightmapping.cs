@@ -85,9 +85,9 @@
         /// <para>Returns true if baking was succesful.</para>
         /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern bool BakeReflectionProbe(ReflectionProbe probe, string path);
+        public static extern bool BakeReflectionProbe(UnityEngine.ReflectionProbe probe, string path);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        internal static extern bool BakeReflectionProbeSnapshot(ReflectionProbe probe);
+        internal static extern bool BakeReflectionProbeSnapshot(UnityEngine.ReflectionProbe probe);
         /// <summary>
         /// <para>Starts a synchronous bake job for the selected objects.</para>
         /// </summary>
@@ -124,8 +124,32 @@
         public static extern void ClearLightingDataAsset();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void ClearPrecompSetIsDone();
+        /// <summary>
+        /// <para>Force the Progressive Path Tracer to stop baking and use the computed results as they are.</para>
+        /// </summary>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern void ForceStop();
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern float GetLightmapBakePerformance(int lightmapIndex);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern float GetLightmapBakePerformanceTotal();
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern float GetLightmapBakeTimeRaw();
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern float GetLightmapBakeTimeTotal();
+        internal static LightmapConvergence GetLightmapConvergence(int lightmapIndex)
+        {
+            LightmapConvergence convergence;
+            INTERNAL_CALL_GetLightmapConvergence(lightmapIndex, out convergence);
+            return convergence;
+        }
+
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void GetTerrainGIChunks(Terrain terrain, ref int numChunksX, ref int numChunksY);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern ulong GetVisibleTexelCount(int lightmapIndex);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_GetLightmapConvergence(int lightmapIndex, out LightmapConvergence value);
         private static void Internal_CallCompletedFunctions()
         {
             if (completed != null)
@@ -166,7 +190,7 @@
 
         internal static bool enlightenForceWhiteAlbedo { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        internal static FilterMode filterMode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+        internal static UnityEngine.FilterMode filterMode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The lightmap baking workflow mode used. Iterative mode is default, but you can switch to on demand mode which bakes only when the user presses the bake button.</para>
@@ -198,7 +222,7 @@
             }
         }
 
-        internal static bool openRLEnabled { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+        internal static ulong occupiedTexelCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Is realtime GI enabled?</para>

@@ -79,7 +79,7 @@
         /// <param name="obj"></param>
         /// <param name="methodID"></param>
         /// <param name="args"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern int CallIntMethod(IntPtr obj, IntPtr methodID, jvalue[] args);
         /// <summary>
         /// <para>Calls an instance (nonstatic) Java method defined by &lt;tt&gt;methodID&lt;tt&gt;, optionally passing an array of arguments (&lt;tt&gt;args&lt;tt&gt;) to the method.</para>
@@ -109,7 +109,7 @@
         /// <param name="obj"></param>
         /// <param name="methodID"></param>
         /// <param name="args"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern short CallShortMethod(IntPtr obj, IntPtr methodID, jvalue[] args);
         /// <summary>
         /// <para>Invokes a static method on a Java object, according to the specified &lt;tt&gt;methodID&lt;tt&gt;, optionally passing an array of arguments (&lt;tt&gt;args&lt;tt&gt;) to the method.</para>
@@ -187,7 +187,7 @@
         /// <param name="clazz"></param>
         /// <param name="methodID"></param>
         /// <param name="args"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern short CallStaticShortMethod(IntPtr clazz, IntPtr methodID, jvalue[] args);
         /// <summary>
         /// <para>Invokes a static method on a Java object, according to the specified &lt;tt&gt;methodID&lt;tt&gt;, optionally passing an array of arguments (&lt;tt&gt;args&lt;tt&gt;) to the method.</para>
@@ -195,7 +195,7 @@
         /// <param name="clazz"></param>
         /// <param name="methodID"></param>
         /// <param name="args"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern string CallStaticStringMethod(IntPtr clazz, IntPtr methodID, jvalue[] args);
         /// <summary>
         /// <para>Invokes a static method on a Java object, according to the specified &lt;tt&gt;methodID&lt;tt&gt;, optionally passing an array of arguments (&lt;tt&gt;args&lt;tt&gt;) to the method.</para>
@@ -203,7 +203,7 @@
         /// <param name="clazz"></param>
         /// <param name="methodID"></param>
         /// <param name="args"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern void CallStaticVoidMethod(IntPtr clazz, IntPtr methodID, jvalue[] args);
         /// <summary>
         /// <para>Calls an instance (nonstatic) Java method defined by &lt;tt&gt;methodID&lt;tt&gt;, optionally passing an array of arguments (&lt;tt&gt;args&lt;tt&gt;) to the method.</para>
@@ -225,24 +225,24 @@
         /// <para>Deletes the global reference pointed to by &lt;tt&gt;obj&lt;/tt&gt;.</para>
         /// </summary>
         /// <param name="obj"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern void DeleteGlobalRef(IntPtr obj);
         /// <summary>
         /// <para>Deletes the local reference pointed to by &lt;tt&gt;obj&lt;/tt&gt;.</para>
         /// </summary>
         /// <param name="obj"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern void DeleteLocalRef(IntPtr obj);
         /// <summary>
         /// <para>Detaches the current thread from a Java (Dalvik) VM.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern int DetachCurrentThread();
         /// <summary>
         /// <para>Ensures that at least a given number of local references can be created in the current thread.</para>
         /// </summary>
         /// <param name="capacity"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern int EnsureLocalCapacity(int capacity);
         /// <summary>
         /// <para>Clears any exception that is currently being thrown.</para>
@@ -252,7 +252,7 @@
         /// <summary>
         /// <para>Prints an exception and a backtrace of the stack to the &lt;tt&gt;logcat&lt;/tt&gt;</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern void ExceptionDescribe();
         /// <summary>
         /// <para>Determines if an exception is being thrown.</para>
@@ -299,7 +299,7 @@
         /// <para>Convert a Java array of &lt;tt&gt;char&lt;/tt&gt; to a managed array of System.Char.</para>
         /// </summary>
         /// <param name="array"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern char[] FromCharArray(IntPtr array);
         /// <summary>
         /// <para>Convert a Java array of &lt;tt&gt;double&lt;/tt&gt; to a managed array of System.Double.</para>
@@ -323,7 +323,7 @@
         /// <para>Convert a Java array of &lt;tt&gt;long&lt;/tt&gt; to a managed array of System.Int64.</para>
         /// </summary>
         /// <param name="array"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern long[] FromLongArray(IntPtr array);
         /// <summary>
         /// <para>Convert a Java array of &lt;tt&gt;java.lang.Object&lt;/tt&gt; to a managed array of System.IntPtr, representing Java objects.</para>
@@ -372,7 +372,7 @@
         /// </summary>
         /// <param name="array"></param>
         /// <param name="index"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern bool GetBooleanArrayElement(IntPtr array, int index);
         /// <summary>
         /// <para>This function returns the value of an instance (nonstatic) field of an object.</para>
@@ -393,14 +393,14 @@
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="fieldID"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern byte GetByteField(IntPtr obj, IntPtr fieldID);
         /// <summary>
         /// <para>Returns the value of one element of a primitive array.</para>
         /// </summary>
         /// <param name="array"></param>
         /// <param name="index"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern char GetCharArrayElement(IntPtr array, int index);
         /// <summary>
         /// <para>This function returns the value of an instance (nonstatic) field of an object.</para>
@@ -414,14 +414,14 @@
         /// </summary>
         /// <param name="array"></param>
         /// <param name="index"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern double GetDoubleArrayElement(IntPtr array, int index);
         /// <summary>
         /// <para>This function returns the value of an instance (nonstatic) field of an object.</para>
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="fieldID"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern double GetDoubleField(IntPtr obj, IntPtr fieldID);
         /// <summary>
         /// <para>Returns the field ID for an instance (nonstatic) field of a class.</para>
@@ -442,28 +442,28 @@
         /// </summary>
         /// <param name="array"></param>
         /// <param name="index"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern float GetFloatArrayElement(IntPtr array, int index);
         /// <summary>
         /// <para>This function returns the value of an instance (nonstatic) field of an object.</para>
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="fieldID"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern float GetFloatField(IntPtr obj, IntPtr fieldID);
         /// <summary>
         /// <para>Returns the value of one element of a primitive array.</para>
         /// </summary>
         /// <param name="array"></param>
         /// <param name="index"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern int GetIntArrayElement(IntPtr array, int index);
         /// <summary>
         /// <para>This function returns the value of an instance (nonstatic) field of an object.</para>
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="fieldID"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern int GetIntField(IntPtr obj, IntPtr fieldID);
         /// <summary>
         /// <para>Returns the value of one element of a primitive array.</para>
@@ -536,7 +536,7 @@
         /// </summary>
         /// <param name="array"></param>
         /// <param name="index"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern short GetShortArrayElement(IntPtr array, int index);
         /// <summary>
         /// <para>This function returns the value of an instance (nonstatic) field of an object.</para>
@@ -557,21 +557,21 @@
         /// </summary>
         /// <param name="clazz"></param>
         /// <param name="fieldID"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern byte GetStaticByteField(IntPtr clazz, IntPtr fieldID);
         /// <summary>
         /// <para>This function returns the value of a static field of an object.</para>
         /// </summary>
         /// <param name="clazz"></param>
         /// <param name="fieldID"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern char GetStaticCharField(IntPtr clazz, IntPtr fieldID);
         /// <summary>
         /// <para>This function returns the value of a static field of an object.</para>
         /// </summary>
         /// <param name="clazz"></param>
         /// <param name="fieldID"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern double GetStaticDoubleField(IntPtr clazz, IntPtr fieldID);
         /// <summary>
         /// <para>Returns the field ID for a static field of a class.</para>
@@ -606,7 +606,7 @@
         /// </summary>
         /// <param name="clazz"></param>
         /// <param name="fieldID"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern long GetStaticLongField(IntPtr clazz, IntPtr fieldID);
         /// <summary>
         /// <para>Returns the method ID for a static method of a class.</para>
@@ -640,7 +640,7 @@
         /// </summary>
         /// <param name="clazz"></param>
         /// <param name="fieldID"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern short GetStaticShortField(IntPtr clazz, IntPtr fieldID);
         /// <summary>
         /// <para>This function returns the value of a static field of an object.</para>
@@ -654,13 +654,13 @@
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="fieldID"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern string GetStringField(IntPtr obj, IntPtr fieldID);
         /// <summary>
         /// <para>Returns a managed string object representing the string in modified UTF-8 encoding.</para>
         /// </summary>
         /// <param name="str"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern string GetStringUTFChars(IntPtr str);
         /// <summary>
         /// <para>Returns the length in bytes of the modified UTF-8 representation of a string.</para>
@@ -786,7 +786,7 @@
         /// </summary>
         /// <param name="obj1"></param>
         /// <param name="obj2"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern bool IsSameObject(IntPtr obj1, IntPtr obj2);
         /// <summary>
         /// <para>Construct a new primitive array object.</para>
@@ -969,10 +969,10 @@
         /// <summary>
         /// <para>Sets the value of one element in a primitive array.</para>
         /// </summary>
-        /// <param name="array"></param>
-        /// <param name="index"></param>
-        /// <param name="val"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        /// <param name="array">The array of native booleans.</param>
+        /// <param name="index">Index of the array element to set.</param>
+        /// <param name="val">The value to set - for 'true' use 1, for 'false' use 0.</param>
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern void SetBooleanArrayElement(IntPtr array, int index, byte val);
         /// <summary>
         /// <para>This function sets the value of an instance (nonstatic) field of an object.</para>
@@ -996,7 +996,7 @@
         /// <param name="obj"></param>
         /// <param name="fieldID"></param>
         /// <param name="val"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern void SetByteField(IntPtr obj, IntPtr fieldID, byte val);
         /// <summary>
         /// <para>Sets the value of one element in a primitive array.</para>
@@ -1004,7 +1004,7 @@
         /// <param name="array"></param>
         /// <param name="index"></param>
         /// <param name="val"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern void SetCharArrayElement(IntPtr array, int index, char val);
         /// <summary>
         /// <para>This function sets the value of an instance (nonstatic) field of an object.</para>
@@ -1028,7 +1028,7 @@
         /// <param name="obj"></param>
         /// <param name="fieldID"></param>
         /// <param name="val"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern void SetDoubleField(IntPtr obj, IntPtr fieldID, double val);
         /// <summary>
         /// <para>Sets the value of one element in a primitive array.</para>
@@ -1044,7 +1044,7 @@
         /// <param name="obj"></param>
         /// <param name="fieldID"></param>
         /// <param name="val"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern void SetFloatField(IntPtr obj, IntPtr fieldID, float val);
         /// <summary>
         /// <para>Sets the value of one element in a primitive array.</para>
@@ -1068,7 +1068,7 @@
         /// <param name="array"></param>
         /// <param name="index"></param>
         /// <param name="val"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern void SetLongArrayElement(IntPtr array, int index, long val);
         /// <summary>
         /// <para>This function sets the value of an instance (nonstatic) field of an object.</para>
@@ -1076,7 +1076,7 @@
         /// <param name="obj"></param>
         /// <param name="fieldID"></param>
         /// <param name="val"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern void SetLongField(IntPtr obj, IntPtr fieldID, long val);
         /// <summary>
         /// <para>Sets an element of an &lt;tt&gt;Object&lt;/tt&gt; array.</para>
@@ -1084,7 +1084,7 @@
         /// <param name="array"></param>
         /// <param name="index"></param>
         /// <param name="obj"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern void SetObjectArrayElement(IntPtr array, int index, IntPtr obj);
         /// <summary>
         /// <para>This function sets the value of an instance (nonstatic) field of an object.</para>
@@ -1124,7 +1124,7 @@
         /// <param name="clazz"></param>
         /// <param name="fieldID"></param>
         /// <param name="val"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern void SetStaticByteField(IntPtr clazz, IntPtr fieldID, byte val);
         /// <summary>
         /// <para>This function ets the value of a static field of an object.</para>
@@ -1140,7 +1140,7 @@
         /// <param name="clazz"></param>
         /// <param name="fieldID"></param>
         /// <param name="val"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern void SetStaticDoubleField(IntPtr clazz, IntPtr fieldID, double val);
         /// <summary>
         /// <para>This function ets the value of a static field of an object.</para>
@@ -1148,7 +1148,7 @@
         /// <param name="clazz"></param>
         /// <param name="fieldID"></param>
         /// <param name="val"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern void SetStaticFloatField(IntPtr clazz, IntPtr fieldID, float val);
         /// <summary>
         /// <para>This function ets the value of a static field of an object.</para>
@@ -1164,7 +1164,7 @@
         /// <param name="clazz"></param>
         /// <param name="fieldID"></param>
         /// <param name="val"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern void SetStaticLongField(IntPtr clazz, IntPtr fieldID, long val);
         /// <summary>
         /// <para>This function ets the value of a static field of an object.</para>
@@ -1172,7 +1172,7 @@
         /// <param name="clazz"></param>
         /// <param name="fieldID"></param>
         /// <param name="val"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern void SetStaticObjectField(IntPtr clazz, IntPtr fieldID, IntPtr val);
         /// <summary>
         /// <para>This function ets the value of a static field of an object.</para>
@@ -1180,7 +1180,7 @@
         /// <param name="clazz"></param>
         /// <param name="fieldID"></param>
         /// <param name="val"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern void SetStaticShortField(IntPtr clazz, IntPtr fieldID, short val);
         /// <summary>
         /// <para>This function ets the value of a static field of an object.</para>
@@ -1196,7 +1196,7 @@
         /// <param name="obj"></param>
         /// <param name="fieldID"></param>
         /// <param name="val"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern void SetStringField(IntPtr obj, IntPtr fieldID, string val);
         /// <summary>
         /// <para>Causes a &lt;tt&gt;java.lang.Throwable&lt;/tt&gt; object to be thrown.</para>
@@ -1209,7 +1209,7 @@
         /// </summary>
         /// <param name="clazz"></param>
         /// <param name="message"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern int ThrowNew(IntPtr clazz, string message);
         /// <summary>
         /// <para>Convert a managed array of System.Boolean to a Java array of &lt;tt&gt;boolean&lt;/tt&gt;.</para>

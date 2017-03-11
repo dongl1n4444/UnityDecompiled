@@ -134,10 +134,10 @@
 
         public static void AutoSetupOnInstance(GameObject modelPrefab, SerializedObject modelImporterSerializedObject)
         {
-            GameObject modelInstance = Object.Instantiate<GameObject>(modelPrefab);
+            GameObject modelInstance = UnityEngine.Object.Instantiate<GameObject>(modelPrefab);
             modelInstance.hideFlags = HideFlags.HideAndDontSave;
             AutoSetup(modelPrefab, modelInstance, modelImporterSerializedObject);
-            Object.DestroyImmediate(modelInstance);
+            UnityEngine.Object.DestroyImmediate(modelInstance);
         }
 
         public static Quaternion AvatarComputeOrientation(BoneWrapper[] bones)
@@ -211,11 +211,11 @@
 
         public static void CopyPose(GameObject go, GameObject source)
         {
-            GameObject obj2 = Object.Instantiate<GameObject>(source);
+            GameObject obj2 = UnityEngine.Object.Instantiate<GameObject>(source);
             obj2.hideFlags = HideFlags.HideAndDontSave;
             AnimatorUtility.DeoptimizeTransformHierarchy(obj2);
             CopyPose(go.transform, obj2.transform);
-            Object.DestroyImmediate(obj2);
+            UnityEngine.Object.DestroyImmediate(obj2);
         }
 
         private static void CopyPose(Transform t, Transform source)
@@ -720,13 +720,13 @@
 
         public static bool IsPoseValidOnInstance(GameObject modelPrefab, SerializedObject modelImporterSerializedObject)
         {
-            GameObject obj2 = Object.Instantiate<GameObject>(modelPrefab);
+            GameObject obj2 = UnityEngine.Object.Instantiate<GameObject>(modelPrefab);
             obj2.hideFlags = HideFlags.HideAndDontSave;
             Dictionary<Transform, bool> actualBones = GetModelBones(obj2.transform, false, null);
             BoneWrapper[] humanBones = GetHumanBones(modelImporterSerializedObject, actualBones);
             TransferDescriptionToPose(modelImporterSerializedObject, obj2.transform);
             bool flag = IsPoseValid(humanBones);
-            Object.DestroyImmediate(obj2);
+            UnityEngine.Object.DestroyImmediate(obj2);
             return flag;
         }
 
@@ -941,7 +941,7 @@
                 {
                     list = new List<string>(File.ReadAllLines(path));
                 }
-                GameObject obj3 = Object.Instantiate<GameObject>(modelAsset);
+                GameObject obj3 = UnityEngine.Object.Instantiate<GameObject>(modelAsset);
                 obj3.hideFlags = HideFlags.HideAndDontSave;
                 Dictionary<Transform, bool> actualBones = GetModelBones(obj3.transform, false, null);
                 BoneWrapper[] humanBones = GetHumanBones(serializedObject, actualBones);
@@ -959,7 +959,7 @@
                         }
                     }
                 }
-                Object.DestroyImmediate(obj3);
+                UnityEngine.Object.DestroyImmediate(obj3);
                 if (flag2)
                 {
                     return false;
@@ -1244,8 +1244,8 @@
                     case EventType.DragPerform:
                         if (dropRect.Contains(Event.current.mousePosition) && GUI.enabled)
                         {
-                            Object[] objectReferences = DragAndDrop.objectReferences;
-                            Object target = (objectReferences.Length != 1) ? null : objectReferences[0];
+                            UnityEngine.Object[] objectReferences = DragAndDrop.objectReferences;
+                            UnityEngine.Object target = (objectReferences.Length != 1) ? null : objectReferences[0];
                             if ((target != null) && ((!(target is Transform) && !(target is GameObject)) || EditorUtility.IsPersistent(target)))
                             {
                                 target = null;

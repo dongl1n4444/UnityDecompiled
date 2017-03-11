@@ -23,13 +23,21 @@
         /// </summary>
         public Color32 color;
         /// <summary>
-        /// <para>UV0.</para>
+        /// <para>The first texture coordinate set of the mesh. Used by UI elements by default.</para>
         /// </summary>
         public Vector2 uv0;
         /// <summary>
-        /// <para>UV1.</para>
+        /// <para>The second texture coordinate set of the mesh, if present.</para>
         /// </summary>
         public Vector2 uv1;
+        /// <summary>
+        /// <para>The Third texture coordinate set of the mesh, if present.</para>
+        /// </summary>
+        public Vector2 uv2;
+        /// <summary>
+        /// <para>The forth texture coordinate set of the mesh, if present.</para>
+        /// </summary>
+        public Vector2 uv3;
         /// <summary>
         /// <para>Tangent.</para>
         /// </summary>
@@ -50,7 +58,9 @@
                 tangent = s_DefaultTangent,
                 color = s_DefaultColor,
                 uv0 = Vector2.zero,
-                uv1 = Vector2.zero
+                uv1 = Vector2.zero,
+                uv2 = Vector2.zero,
+                uv3 = Vector2.zero
             };
             simpleVert = vertex;
         }

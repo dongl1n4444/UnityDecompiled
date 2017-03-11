@@ -142,6 +142,7 @@
         /// <para>Set bounding distances for 'distance bands' the group should compute, as well as options for how spheres falling into each distance band should be treated.</para>
         /// </summary>
         /// <param name="distances">An array of bounding distances. The distances should be sorted in increasing order.</param>
+        /// <param name="distanceBehaviours">An array of CullingDistanceBehaviour settings. The array should be the same length as the array provided to the distances parameter. It can also be omitted or passed as null, in which case all distances will be given CullingDistanceBehaviour.Normal behaviour.</param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetBoundingDistances(float[] distances);
         /// <summary>
@@ -163,7 +164,7 @@
         /// <param name="transform">A transform to measure the distance from. The transform's position will be automatically tracked.</param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetDistanceReferencePoint(Transform transform);
-        [RequiredByNativeCode, SecuritySafeCritical]
+        [SecuritySafeCritical, RequiredByNativeCode]
         private static unsafe void SendEvents(CullingGroup cullingGroup, IntPtr eventsPtr, int count)
         {
             CullingGroupEvent* eventPtr = (CullingGroupEvent*) eventsPtr.ToPointer();
@@ -178,7 +179,7 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Init();
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private extern void FinalizerFailure();
         /// <summary>
         /// <para>This delegate is used for recieving a callback when a sphere's distance or visibility state has changed.</para>

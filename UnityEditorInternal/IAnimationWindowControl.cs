@@ -28,7 +28,7 @@
         public abstract void ResampleAnimation();
         public abstract void ScrubTime(float time);
         public abstract void StartPlayback();
-        public abstract void StartRecording(Object targetObject);
+        public abstract void StartRecording(UnityEngine.Object targetObject);
         public abstract void StartScrubTime();
         public abstract void StopPlayback();
         public abstract void StopRecording();

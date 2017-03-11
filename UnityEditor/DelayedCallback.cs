@@ -4,10 +4,10 @@
 
     internal class DelayedCallback
     {
-        private Action m_Callback;
+        private System.Action m_Callback;
         private double m_CallbackTime;
 
-        public DelayedCallback(Action function, double timeFromNow)
+        public DelayedCallback(System.Action function, double timeFromNow)
         {
             this.m_Callback = function;
             this.m_CallbackTime = EditorApplication.timeSinceStartup + timeFromNow;
@@ -25,7 +25,7 @@
         {
             if (EditorApplication.timeSinceStartup > this.m_CallbackTime)
             {
-                Action callback = this.m_Callback;
+                System.Action callback = this.m_Callback;
                 this.Clear();
                 callback();
             }

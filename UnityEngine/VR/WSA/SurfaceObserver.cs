@@ -23,7 +23,7 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Destroy(IntPtr observer);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern void DestroyThreaded(IntPtr observer);
         /// <summary>
         /// <para>Call Dispose when the SurfaceObserver is no longer needed.  This will ensure that the object is cleaned up appropriately but will not affect any Meshes, components, or objects returned by RequestMeshAsync.</para>

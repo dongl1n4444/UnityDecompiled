@@ -317,7 +317,7 @@
         /// <para>Returns true if the other rectangle overlaps this one. If allowInverse is present and true, the widths and heights of the Rects are allowed to take negative values (ie, the min value is greater than the max), and the test will still work.</para>
         /// </summary>
         /// <param name="other">Other rectangle to test overlapping with.</param>
-        /// <param name="allowInverse">Does the test allow the Rects' widths and heights to be negative?</param>
+        /// <param name="allowInverse">Does the test allow the widths and heights of the Rects to be negative?</param>
         public bool Overlaps(Rect other) => 
             ((((other.xMax > this.xMin) && (other.xMin < this.xMax)) && (other.yMax > this.yMin)) && (other.yMin < this.yMax));
 
@@ -325,7 +325,7 @@
         /// <para>Returns true if the other rectangle overlaps this one. If allowInverse is present and true, the widths and heights of the Rects are allowed to take negative values (ie, the min value is greater than the max), and the test will still work.</para>
         /// </summary>
         /// <param name="other">Other rectangle to test overlapping with.</param>
-        /// <param name="allowInverse">Does the test allow the Rects' widths and heights to be negative?</param>
+        /// <param name="allowInverse">Does the test allow the widths and heights of the Rects to be negative?</param>
         public bool Overlaps(Rect other, bool allowInverse)
         {
             Rect rect = this;

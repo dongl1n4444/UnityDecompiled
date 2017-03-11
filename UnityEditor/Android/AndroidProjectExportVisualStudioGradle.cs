@@ -131,6 +131,7 @@
             AndroidProjectExport.CopyDir(Path.Combine(base.m_StagingArea, "plugins"), target);
             AndroidProjectExport.CopyDir(Path.Combine(base.m_StagingArea, "libs"), str7);
             AndroidProjectExport.CopyDir(Path.Combine(base.m_StagingArea, "assets"), Path.Combine(str5, "assets"));
+            AndroidProjectExport.CopyDir(Path.Combine(base.m_StagingArea, "raw"), Path.Combine(str5, "assets"));
             this.CopySymbols(path, str7);
             this.WriteGradleBuildFiles(storey.projectPath);
             AndroidProjectExport.GenerateAndroidManifest(Path.Combine(str5, "AndroidManifest.xml.template"), base.m_StagingArea, base.m_PackageName, false);

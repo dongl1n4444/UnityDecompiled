@@ -6,7 +6,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
 
-    public abstract class CodeWriter : IDisposable
+    public class CodeWriter : IDisposable
     {
         private int _indent;
         private string _indentString = "";
@@ -15,7 +15,7 @@
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StreamWriter <Writer>k__BackingField;
 
-        protected CodeWriter(StreamWriter writer)
+        public CodeWriter(StreamWriter writer)
         {
             this.Writer = writer;
             this._shouldIndent = true;

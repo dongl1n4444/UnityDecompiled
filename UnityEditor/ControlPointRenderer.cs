@@ -76,7 +76,7 @@
         {
             for (int i = 0; i < this.m_RenderChunks.Count; i++)
             {
-                Object.DestroyImmediate(this.m_RenderChunks[i].mesh);
+                UnityEngine.Object.DestroyImmediate(this.m_RenderChunks[i].mesh);
             }
             this.m_RenderChunks.Clear();
         }

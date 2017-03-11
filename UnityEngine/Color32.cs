@@ -27,7 +27,7 @@
         /// </summary>
         public byte a;
         /// <summary>
-        /// <para>Constructs a new Color with given r, g, b, a components.</para>
+        /// <para>Constructs a new Color32 with given r, g, b, a components.</para>
         /// </summary>
         /// <param name="r"></param>
         /// <param name="g"></param>

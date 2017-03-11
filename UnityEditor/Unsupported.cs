@@ -19,15 +19,15 @@
         public static extern bool CopyComponentToPasteboard(Component component);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void CopyGameObjectsToPasteboard();
-        public static void CopyStateMachineDataToPasteboard(Object stateMachineObject, AnimatorController controller, int layerIndex)
+        public static void CopyStateMachineDataToPasteboard(UnityEngine.Object stateMachineObject, AnimatorController controller, int layerIndex)
         {
-            Object[] stateMachineObjects = new Object[] { stateMachineObject };
+            UnityEngine.Object[] stateMachineObjects = new UnityEngine.Object[] { stateMachineObject };
             Vector3[] monoPositions = new Vector3[] { new Vector3() };
             CopyStateMachineDataToPasteboard(stateMachineObjects, monoPositions, controller, layerIndex);
         }
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern void CopyStateMachineDataToPasteboard(Object[] stateMachineObjects, Vector3[] monoPositions, AnimatorController controller, int layerIndex);
+        public static extern void CopyStateMachineDataToPasteboard(UnityEngine.Object[] stateMachineObjects, Vector3[] monoPositions, AnimatorController controller, int layerIndex);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void DeleteGameObjectSelection();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -39,7 +39,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int GetLocalIdentifierInFile(int instanceID);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern Object GetSerializedAssetInterfaceSingleton(string className);
+        public static extern UnityEngine.Object GetSerializedAssetInterfaceSingleton(string className);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string[] GetSubmenus(string menuPath);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -47,7 +47,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string[] GetSubmenusIncludingSeparators(string menuPath);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern Type GetTypeFromFullName(string fullName);
+        public static extern System.Type GetTypeFromFullName(string fullName);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool HasStateMachineDataInPasteboard();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -92,7 +92,7 @@
         }
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern void PrepareObjectContextMenu(Object c, int contextUserData);
+        public static extern void PrepareObjectContextMenu(UnityEngine.Object c, int contextUserData);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string ResolveSymlinks(string path);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -108,7 +108,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetRenderSettingsUseFogNoDirty(bool fog);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern void SmartReset(Object obj);
+        public static extern void SmartReset(UnityEngine.Object obj);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void StopPlayingImmediately();
 

@@ -6,9 +6,10 @@
     [StructLayout(LayoutKind.Sequential)]
     internal struct LightingStats
     {
-        public uint dynamicLightsCount;
+        public uint realtimeLightsCount;
         public uint dynamicMeshesCount;
-        public uint staticLightsCount;
+        public uint mixedLightsCount;
+        public uint bakedLightsCount;
         public uint staticMeshesCount;
         public uint staticMeshesRealtimeEmissive;
         public uint staticMeshesBakedEmissive;
@@ -16,9 +17,10 @@
         public uint reflectionProbesCount;
         internal void Reset()
         {
-            this.dynamicLightsCount = 0;
+            this.realtimeLightsCount = 0;
             this.dynamicMeshesCount = 0;
-            this.staticLightsCount = 0;
+            this.mixedLightsCount = 0;
+            this.bakedLightsCount = 0;
             this.staticMeshesCount = 0;
             this.staticMeshesRealtimeEmissive = 0;
             this.staticMeshesBakedEmissive = 0;

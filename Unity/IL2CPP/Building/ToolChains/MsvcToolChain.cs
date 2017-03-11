@@ -652,8 +652,8 @@
             internal int $PC;
             internal MsvcToolChain $this;
             private static Func<string, bool> <>f__am$cache0;
-            internal bool <hasClrFlag>__1;
-            internal string <p>__2;
+            internal bool <hasClrFlag>__0;
+            internal string <p>__1;
             internal CppCompilationInstruction cppCompilationInstruction;
 
             private static bool <>m__0(string flag) => 
@@ -694,7 +694,7 @@
                         {
                             <>f__am$cache0 = new Func<string, bool>(MsvcToolChain.<DefaultCompilerFlags>c__Iterator5.<>m__0);
                         }
-                        this.<hasClrFlag>__1 = this.cppCompilationInstruction.CompilerFlags.Any<string>(<>f__am$cache0);
+                        this.<hasClrFlag>__0 = this.cppCompilationInstruction.CompilerFlags.Any<string>(<>f__am$cache0);
                         this.$current = (this.$this.BuildConfiguration != BuildConfiguration.Debug) ? "/MD" : "/MDd";
                         if (!this.$disposing)
                         {
@@ -735,7 +735,7 @@
                         goto Label_0502;
 
                     case 5:
-                        if (this.<hasClrFlag>__1)
+                        if (this.<hasClrFlag>__0)
                         {
                             break;
                         }
@@ -842,7 +842,7 @@
                         goto Label_0502;
 
                     case 0x13:
-                        if (this.<hasClrFlag>__1)
+                        if (this.<hasClrFlag>__0)
                         {
                             goto Label_04F9;
                         }
@@ -919,8 +919,8 @@
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<p>__2 = this.$locvar0.Current;
-                        this.$current = this.<p>__2;
+                        this.<p>__1 = this.$locvar0.Current;
+                        this.$current = this.<p>__1;
                         if (!this.$disposing)
                         {
                             this.$PC = 0x11;
@@ -1456,31 +1456,40 @@
         {
             internal string $current;
             internal bool $disposing;
+            internal IEnumerator<NPath> $locvar0;
             internal int $PC;
             internal MsvcToolChain $this;
-            private static Func<NPath, string> <>f__am$cache0;
-            private static Func<string, string, string> <>f__am$cache1;
-            internal string <aggregatedIncludes>__2;
-            internal NPath[] <toolChainIncludes>__1;
+            internal NPath <include>__1;
             internal NPath idl;
-
-            private static string <>m__0(NPath x) => 
-                x.ToString();
-
-            private static string <>m__1(string x, string y) => 
-                (x + ";" + y);
 
             [DebuggerHidden]
             public void Dispose()
             {
+                uint num = (uint) this.$PC;
                 this.$disposing = true;
                 this.$PC = -1;
+                switch (num)
+                {
+                    case 9:
+                        try
+                        {
+                        }
+                        finally
+                        {
+                            if (this.$locvar0 != null)
+                            {
+                                this.$locvar0.Dispose();
+                            }
+                        }
+                        break;
+                }
             }
 
             public bool MoveNext()
             {
                 uint num = (uint) this.$PC;
                 this.$PC = -1;
+                bool flag = false;
                 switch (num)
                 {
                     case 0:
@@ -1561,7 +1570,7 @@
                         break;
 
                     case 9:
-                        goto Label_025A;
+                        goto Label_01D5;
 
                     case 10:
                         this.$current = $"/metadata_dir "{this.$this.MsvcInstallation.GetUnionMetadataDirectory()}"";
@@ -1597,26 +1606,33 @@
                     default:
                         goto Label_0343;
                 }
-                this.<toolChainIncludes>__1 = this.$this.ToolChainIncludePaths().ToArray<NPath>();
-                if (this.<toolChainIncludes>__1.Length > 0)
+                this.$locvar0 = this.$this.ToolChainIncludePaths().GetEnumerator();
+                num = 0xfffffffd;
+            Label_01D5:
+                try
                 {
-                    if (<>f__am$cache0 == null)
+                    while (this.$locvar0.MoveNext())
                     {
-                        <>f__am$cache0 = new Func<NPath, string>(MsvcToolChain.<IdlCompilerArgumentsFor>c__Iterator6.<>m__0);
+                        this.<include>__1 = this.$locvar0.Current;
+                        this.$current = $"/I {this.<include>__1.InQuotes()}";
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 9;
+                        }
+                        flag = true;
+                        goto Label_0345;
                     }
-                    if (<>f__am$cache1 == null)
-                    {
-                        <>f__am$cache1 = new Func<string, string, string>(MsvcToolChain.<IdlCompilerArgumentsFor>c__Iterator6.<>m__1);
-                    }
-                    this.<aggregatedIncludes>__2 = this.<toolChainIncludes>__1.Select<NPath, string>(<>f__am$cache0).Aggregate<string>(<>f__am$cache1);
-                    this.$current = $"/I "{this.<aggregatedIncludes>__2}"";
-                    if (!this.$disposing)
-                    {
-                        this.$PC = 9;
-                    }
-                    goto Label_0345;
                 }
-            Label_025A:
+                finally
+                {
+                    if (!flag)
+                    {
+                    }
+                    if (this.$locvar0 != null)
+                    {
+                        this.$locvar0.Dispose();
+                    }
+                }
                 if (this.$this.MsvcInstallation.HasMetadataDirectories())
                 {
                     this.$current = "/winrt";

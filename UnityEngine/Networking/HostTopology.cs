@@ -68,7 +68,7 @@
         /// </summary>
         /// <param name="config">Connection config for special connection.</param>
         /// <returns>
-        /// <para>Id of this connection, user should use this id when he calls Networking.NetworkTransport.Connect.</para>
+        /// <para>Id of this connection. You should use this id when you call Networking.NetworkTransport.Connect.</para>
         /// </returns>
         public int AddSpecialConnectionConfig(ConnectionConfig config)
         {

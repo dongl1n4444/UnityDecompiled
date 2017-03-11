@@ -274,52 +274,54 @@
             }
         }
 
-        private void SetMinMaxState(MinMaxCurveState newState)
+        public void SetMinMaxState(MinMaxCurveState newState, bool addToCurveEditor = true)
         {
-            if (this.stateHasMultipleDifferentValues || (newState != this.state))
+            if (!this.stateHasMultipleDifferentValues && (newState == this.state))
             {
-                MinMaxCurveState oldState = this.state;
-                ParticleSystemCurveEditor particleSystemCurveEditor = this.m_Module.GetParticleSystemCurveEditor();
-                if (particleSystemCurveEditor.IsAdded(this.GetMinCurve(), this.maxCurve))
-                {
-                    particleSystemCurveEditor.RemoveCurve(this.GetMinCurve(), this.maxCurve);
-                }
+                return;
+            }
+            MinMaxCurveState oldState = this.state;
+            ParticleSystemCurveEditor particleSystemCurveEditor = this.m_Module.GetParticleSystemCurveEditor();
+            if (particleSystemCurveEditor.IsAdded(this.GetMinCurve(), this.maxCurve))
+            {
+                particleSystemCurveEditor.RemoveCurve(this.GetMinCurve(), this.maxCurve);
+            }
+            switch (newState)
+            {
+                case MinMaxCurveState.k_Scalar:
+                    this.InitSingleScalar(oldState);
+                    break;
+
+                case MinMaxCurveState.k_Curve:
+                    this.InitSingleCurve(oldState);
+                    break;
+
+                case MinMaxCurveState.k_TwoCurves:
+                    this.InitDoubleCurves(oldState);
+                    break;
+
+                case MinMaxCurveState.k_TwoScalars:
+                    this.InitDoubleScalars(oldState);
+                    break;
+            }
+            this.minMaxState.intValue = (int) newState;
+            if (addToCurveEditor)
+            {
                 switch (newState)
                 {
                     case MinMaxCurveState.k_Scalar:
-                        this.InitSingleScalar(oldState);
-                        break;
-
-                    case MinMaxCurveState.k_Curve:
-                        this.InitSingleCurve(oldState);
-                        break;
-
-                    case MinMaxCurveState.k_TwoCurves:
-                        this.InitDoubleCurves(oldState);
-                        break;
-
                     case MinMaxCurveState.k_TwoScalars:
-                        this.InitDoubleScalars(oldState);
-                        break;
-                }
-                this.minMaxState.intValue = (int) newState;
-                switch (newState)
-                {
-                    case MinMaxCurveState.k_Scalar:
-                    case MinMaxCurveState.k_TwoScalars:
-                        break;
+                        goto Label_0102;
 
                     case MinMaxCurveState.k_Curve:
                     case MinMaxCurveState.k_TwoCurves:
                         particleSystemCurveEditor.AddCurve(this.CreateCurveData(particleSystemCurveEditor.GetAvailableColor()));
-                        break;
-
-                    default:
-                        Debug.LogError("Unhandled enum value");
-                        break;
+                        goto Label_0102;
                 }
-                AnimationCurvePreviewCache.ClearCache();
+                Debug.LogError("Unhandled enum value");
             }
+        Label_0102:
+            AnimationCurvePreviewCache.ClearCache();
         }
 
         private void SetNormalizedConstant(SerializedProperty curve, float totalValue)
@@ -420,7 +422,7 @@
                 ((MinMaxCurveState) this.minMaxState.intValue);
             set
             {
-                this.SetMinMaxState(value);
+                this.SetMinMaxState(value, true);
             }
         }
 

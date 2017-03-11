@@ -41,8 +41,8 @@
 
         public WindowsRuntimeDelegateMarshalInfoWriter(TypeReference type) : base(type)
         {
-            TypeDefinition definition = type.Resolve();
-            if (!definition.IsDelegate())
+            TypeDefinition typeReference = type.Resolve();
+            if (!typeReference.IsDelegate())
             {
                 throw new ArgumentException($"WindowsRuntimeDelegateMarshalInfoWriter cannot marshal non-delegate type {type.FullName}.");
             }
@@ -51,10 +51,10 @@
             {
                 <>f__am$cache0 = new Func<MethodDefinition, bool>(WindowsRuntimeDelegateMarshalInfoWriter.<WindowsRuntimeDelegateMarshalInfoWriter>m__0);
             }
-            this._invokeMethod = this._typeResolver.Resolve(definition.Methods.Single<MethodDefinition>(<>f__am$cache0));
+            this._invokeMethod = this._typeResolver.Resolve(typeReference.Methods.Single<MethodDefinition>(<>f__am$cache0));
             this._comCallableWrapperInterfaceName = DefaultMarshalInfoWriter.Naming.ForWindowsRuntimeDelegateComCallableWrapperInterface(type);
             this._nativeInvokerName = DefaultMarshalInfoWriter.Naming.ForWindowsRuntimeDelegateNativeInvokerMethod(this._invokeMethod);
-            this._marshaledTypes = new MarshaledType[] { new MarshaledType(this._comCallableWrapperInterfaceName, this._comCallableWrapperInterfaceName + '*') };
+            this._marshaledTypes = new MarshaledType[] { new MarshaledType(this._comCallableWrapperInterfaceName + '*', this._comCallableWrapperInterfaceName + '*') };
             string returnType = DefaultMarshalInfoWriter.Naming.ForVariable(this._typeResolver.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveReturnTypeIfNeeded(this._invokeMethod)));
             string parameters = $"{DefaultMarshalInfoWriter.Naming.ForVariable(DefaultMarshalInfoWriter.TypeProvider.Il2CppComObjectTypeReference)} {DefaultMarshalInfoWriter.Naming.ThisParameterName}, {MethodSignatureWriter.FormatParameters(this._invokeMethod, ParameterFormat.WithTypeAndNameNoThis, false, true)}";
             this._nativeInvokerSignature = MethodSignatureWriter.GetMethodSignature(this._nativeInvokerName, returnType, parameters, "extern \"C\"", string.Empty);
@@ -78,6 +78,11 @@
                 object[] objArray3 = new object[] { variableName, DefaultMarshalInfoWriter.Naming.Null };
                 writer.WriteLine("{0} = {1};", objArray3);
             }
+        }
+
+        public override void WriteMarshaledTypeForwardDeclaration(CppCodeWriter writer)
+        {
+            writer.AddForwardDeclaration($"struct {this._comCallableWrapperInterfaceName}");
         }
 
         public override string WriteMarshalEmptyVariableToNative(CppCodeWriter writer, ManagedMarshalValue variableName, IList<MarshaledParameter> methodParameters) => 
@@ -107,7 +112,7 @@
                 object[] objArray2 = new object[] { DefaultMarshalInfoWriter.Naming.Null };
                 writer.WriteLine("Il2CppIManagedObjectHolder* imanagedObject = {0};", objArray2);
                 object[] objArray3 = new object[] { DefaultMarshalInfoWriter.Naming.ForInteropHResultVariable(), variableName };
-                writer.WriteLine("il2cpp_hresult_t {0} = {1}->QueryInterface(Il2CppIManagedObjectHolder::IID, reinterpret_cast<void**>(&imanagedObject));", objArray3);
+                writer.WriteLine("il2cpp_hresult_t {0} = ({1})->QueryInterface(Il2CppIManagedObjectHolder::IID, reinterpret_cast<void**>(&imanagedObject));", objArray3);
                 object[] objArray4 = new object[] { DefaultMarshalInfoWriter.Naming.ForInteropHResultVariable() };
                 writer.WriteLine("if (IL2CPP_HR_SUCCEEDED({0}))", objArray4);
                 using (new BlockWriter(writer, false))
@@ -138,6 +143,7 @@
                     FieldDefinition definition3 = DefaultMarshalInfoWriter.TypeProvider.SystemDelegate.Fields.Single<FieldDefinition>(<>f__am$cache5);
                     string str3 = DefaultMarshalInfoWriter.Naming.ForFieldSetter(definition3);
                     writer.WriteLine(destinationVariable.Store(Emit.NewObj(base._typeRef, metadataAccess)));
+                    writer.AddMethodForwardDeclaration($"{this._nativeInvokerSignature};");
                     object[] objArray6 = new object[] { destinationVariable.Load(), str, this._nativeInvokerName };
                     writer.WriteLine("{0}->{1}((Il2CppMethodPointer){2});", objArray6);
                     object[] objArray7 = new object[] { DefaultMarshalInfoWriter.Naming.ForVariable(DefaultMarshalInfoWriter.TypeProvider.SystemIntPtr) };
@@ -155,7 +161,6 @@
                     object[] objArray10 = new object[] { destinationVariable.Load(), str3, DefaultMarshalInfoWriter.Naming.ForTypeNameOnly(DefaultMarshalInfoWriter.TypeProvider.Il2CppComDelegateTypeReference), variableName, metadataAccess.TypeInfoFor(DefaultMarshalInfoWriter.TypeProvider.Il2CppComDelegateTypeReference) };
                     writer.WriteLine("{0}->{1}(il2cpp_codegen_com_get_or_create_rcw_for_sealed_class<{2}>({3}, {4}));", objArray10);
                     writer.AddIncludeForTypeDefinition(DefaultMarshalInfoWriter.TypeProvider.Il2CppComDelegateTypeReference);
-                    writer.AddIncludeForMethodDeclarations(base._typeRef);
                 }
             }
             writer.WriteLine("else");
@@ -213,7 +218,7 @@
         {
             writer.WriteCommentedLine($"Native invoker for {base._typeRef.FullName}");
             MethodWriter.WriteMethodWithMetadataInitialization(writer, this._nativeInvokerSignature, this._invokeMethod.FullName, delegate (CppCodeWriter bodyWriter, MetadataUsage metadataUsage, MethodUsage methodUsage) {
-                IRuntimeMetadataAccess metadataAccess = MethodWriter.GetDefaultRuntimeMetadataAccess(this._invokeMethod, metadataUsage, methodUsage);
+                IRuntimeMetadataAccess metadataAccess = MethodWriter.GetDefaultRuntimeMetadataAccess(this._invokeMethod, metadataUsage, methodUsage, null);
                 new WindowsRuntimeDelegateMethodBodyWriter(this._invokeMethod).WriteMethodBody(bodyWriter, metadataAccess);
             }, this._nativeInvokerName);
         }
@@ -231,7 +236,7 @@
             using (new BlockWriter(writer, true))
             {
                 writer.WriteLine("static const Il2CppGuid IID;");
-                string str = ComInterfaceWriter.BuildMethodParameterList(this._invokeMethod, this._invokeMethod, this._typeResolver, MarshalType.WindowsRuntime, true);
+                string str = MethodSignatureWriter.FormatComMethodParameterList(this._invokeMethod, this._invokeMethod, this._typeResolver, MarshalType.WindowsRuntime, true);
                 object[] objArray2 = new object[] { str };
                 writer.WriteLine("virtual il2cpp_hresult_t STDCALL Invoke({0}) = 0;", objArray2);
             }

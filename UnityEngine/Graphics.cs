@@ -94,7 +94,7 @@
         }
 
         /// <summary>
-        /// <para>Clear random write targets for Shader Model 5.0 level pixel shaders.</para>
+        /// <para>Clear random write targets for level pixel shaders.</para>
         /// </summary>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void ClearRandomWriteTargets();
@@ -203,6 +203,7 @@
         /// <param name="mesh">The Mesh to draw.</param>
         /// <param name="position">Position of the mesh.</param>
         /// <param name="rotation">Rotation of the mesh.</param>
+        /// <param name="materialIndex">Subset of the mesh to draw.</param>
         /// <param name="matrix">Transformation matrix of the mesh (combines position, rotation and other transformations).</param>
         /// <param name="material">Material to use.</param>
         /// <param name="layer"> to use.</param>
@@ -213,7 +214,6 @@
         /// <param name="receiveShadows">Should the mesh receive shadows?</param>
         /// <param name="useLightProbes">Should the mesh use light probes?</param>
         /// <param name="probeAnchor">If used, the mesh will use this Transform's position to sample light probes and find the matching reflection probe.</param>
-        /// <param name="materialIndex"></param>
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Method DrawMesh has been deprecated. Use Graphics.DrawMeshNow instead (UnityUpgradable) -> DrawMeshNow(*)", true)]
         public static void DrawMesh(Mesh mesh, Matrix4x4 matrix)
         {
@@ -225,6 +225,7 @@
         /// <param name="mesh">The Mesh to draw.</param>
         /// <param name="position">Position of the mesh.</param>
         /// <param name="rotation">Rotation of the mesh.</param>
+        /// <param name="materialIndex">Subset of the mesh to draw.</param>
         /// <param name="matrix">Transformation matrix of the mesh (combines position, rotation and other transformations).</param>
         /// <param name="material">Material to use.</param>
         /// <param name="layer"> to use.</param>
@@ -235,7 +236,6 @@
         /// <param name="receiveShadows">Should the mesh receive shadows?</param>
         /// <param name="useLightProbes">Should the mesh use light probes?</param>
         /// <param name="probeAnchor">If used, the mesh will use this Transform's position to sample light probes and find the matching reflection probe.</param>
-        /// <param name="materialIndex"></param>
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Method DrawMesh has been deprecated. Use Graphics.DrawMeshNow instead (UnityUpgradable) -> DrawMeshNow(*)", true)]
         public static void DrawMesh(Mesh mesh, Matrix4x4 matrix, int materialIndex)
         {
@@ -247,6 +247,7 @@
         /// <param name="mesh">The Mesh to draw.</param>
         /// <param name="position">Position of the mesh.</param>
         /// <param name="rotation">Rotation of the mesh.</param>
+        /// <param name="materialIndex">Subset of the mesh to draw.</param>
         /// <param name="matrix">Transformation matrix of the mesh (combines position, rotation and other transformations).</param>
         /// <param name="material">Material to use.</param>
         /// <param name="layer"> to use.</param>
@@ -257,7 +258,6 @@
         /// <param name="receiveShadows">Should the mesh receive shadows?</param>
         /// <param name="useLightProbes">Should the mesh use light probes?</param>
         /// <param name="probeAnchor">If used, the mesh will use this Transform's position to sample light probes and find the matching reflection probe.</param>
-        /// <param name="materialIndex"></param>
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Method DrawMesh has been deprecated. Use Graphics.DrawMeshNow instead (UnityUpgradable) -> DrawMeshNow(*)", true)]
         public static void DrawMesh(Mesh mesh, Vector3 position, Quaternion rotation)
         {
@@ -281,6 +281,7 @@
         /// <param name="mesh">The Mesh to draw.</param>
         /// <param name="position">Position of the mesh.</param>
         /// <param name="rotation">Rotation of the mesh.</param>
+        /// <param name="materialIndex">Subset of the mesh to draw.</param>
         /// <param name="matrix">Transformation matrix of the mesh (combines position, rotation and other transformations).</param>
         /// <param name="material">Material to use.</param>
         /// <param name="layer"> to use.</param>
@@ -291,7 +292,6 @@
         /// <param name="receiveShadows">Should the mesh receive shadows?</param>
         /// <param name="useLightProbes">Should the mesh use light probes?</param>
         /// <param name="probeAnchor">If used, the mesh will use this Transform's position to sample light probes and find the matching reflection probe.</param>
-        /// <param name="materialIndex"></param>
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Method DrawMesh has been deprecated. Use Graphics.DrawMeshNow instead (UnityUpgradable) -> DrawMeshNow(*)", true)]
         public static void DrawMesh(Mesh mesh, Vector3 position, Quaternion rotation, int materialIndex)
         {
@@ -392,6 +392,7 @@
         /// <param name="mesh">The Mesh to draw.</param>
         /// <param name="position">Position of the mesh.</param>
         /// <param name="rotation">Rotation of the mesh.</param>
+        /// <param name="materialIndex">Subset of the mesh to draw.</param>
         /// <param name="matrix">Transformation matrix of the mesh (combines position, rotation and other transformations).</param>
         /// <param name="material">Material to use.</param>
         /// <param name="layer"> to use.</param>
@@ -402,7 +403,6 @@
         /// <param name="receiveShadows">Should the mesh receive shadows?</param>
         /// <param name="useLightProbes">Should the mesh use light probes?</param>
         /// <param name="probeAnchor">If used, the mesh will use this Transform's position to sample light probes and find the matching reflection probe.</param>
-        /// <param name="materialIndex"></param>
         [ExcludeFromDocs]
         public static void DrawMesh(Mesh mesh, Matrix4x4 matrix, Material material, int layer, Camera camera, int submeshIndex, MaterialPropertyBlock properties, bool castShadows, bool receiveShadows)
         {
@@ -416,6 +416,7 @@
         /// <param name="mesh">The Mesh to draw.</param>
         /// <param name="position">Position of the mesh.</param>
         /// <param name="rotation">Rotation of the mesh.</param>
+        /// <param name="materialIndex">Subset of the mesh to draw.</param>
         /// <param name="matrix">Transformation matrix of the mesh (combines position, rotation and other transformations).</param>
         /// <param name="material">Material to use.</param>
         /// <param name="layer"> to use.</param>
@@ -426,7 +427,6 @@
         /// <param name="receiveShadows">Should the mesh receive shadows?</param>
         /// <param name="useLightProbes">Should the mesh use light probes?</param>
         /// <param name="probeAnchor">If used, the mesh will use this Transform's position to sample light probes and find the matching reflection probe.</param>
-        /// <param name="materialIndex"></param>
         [ExcludeFromDocs]
         public static void DrawMesh(Mesh mesh, Matrix4x4 matrix, Material material, int layer, Camera camera, int submeshIndex, MaterialPropertyBlock properties, ShadowCastingMode castShadows, bool receiveShadows)
         {
@@ -458,6 +458,7 @@
         /// <param name="mesh">The Mesh to draw.</param>
         /// <param name="position">Position of the mesh.</param>
         /// <param name="rotation">Rotation of the mesh.</param>
+        /// <param name="materialIndex">Subset of the mesh to draw.</param>
         /// <param name="matrix">Transformation matrix of the mesh (combines position, rotation and other transformations).</param>
         /// <param name="material">Material to use.</param>
         /// <param name="layer"> to use.</param>
@@ -468,7 +469,6 @@
         /// <param name="receiveShadows">Should the mesh receive shadows?</param>
         /// <param name="useLightProbes">Should the mesh use light probes?</param>
         /// <param name="probeAnchor">If used, the mesh will use this Transform's position to sample light probes and find the matching reflection probe.</param>
-        /// <param name="materialIndex"></param>
         public static void DrawMesh(Mesh mesh, Matrix4x4 matrix, Material material, int layer, [UnityEngine.Internal.DefaultValue("null")] Camera camera, [UnityEngine.Internal.DefaultValue("0")] int submeshIndex, [UnityEngine.Internal.DefaultValue("null")] MaterialPropertyBlock properties, [UnityEngine.Internal.DefaultValue("true")] bool castShadows, [UnityEngine.Internal.DefaultValue("true")] bool receiveShadows, [UnityEngine.Internal.DefaultValue("true")] bool useLightProbes)
         {
             DrawMeshImpl(mesh, matrix, material, layer, camera, submeshIndex, properties, !castShadows ? ShadowCastingMode.Off : ShadowCastingMode.On, receiveShadows, null, useLightProbes);
@@ -487,6 +487,7 @@
         /// <param name="mesh">The Mesh to draw.</param>
         /// <param name="position">Position of the mesh.</param>
         /// <param name="rotation">Rotation of the mesh.</param>
+        /// <param name="materialIndex">Subset of the mesh to draw.</param>
         /// <param name="matrix">Transformation matrix of the mesh (combines position, rotation and other transformations).</param>
         /// <param name="material">Material to use.</param>
         /// <param name="layer"> to use.</param>
@@ -497,7 +498,6 @@
         /// <param name="receiveShadows">Should the mesh receive shadows?</param>
         /// <param name="useLightProbes">Should the mesh use light probes?</param>
         /// <param name="probeAnchor">If used, the mesh will use this Transform's position to sample light probes and find the matching reflection probe.</param>
-        /// <param name="materialIndex"></param>
         [ExcludeFromDocs]
         public static void DrawMesh(Mesh mesh, Vector3 position, Quaternion rotation, Material material, int layer, Camera camera, int submeshIndex, MaterialPropertyBlock properties, bool castShadows, bool receiveShadows)
         {
@@ -519,6 +519,7 @@
         /// <param name="mesh">The Mesh to draw.</param>
         /// <param name="position">Position of the mesh.</param>
         /// <param name="rotation">Rotation of the mesh.</param>
+        /// <param name="materialIndex">Subset of the mesh to draw.</param>
         /// <param name="matrix">Transformation matrix of the mesh (combines position, rotation and other transformations).</param>
         /// <param name="material">Material to use.</param>
         /// <param name="layer"> to use.</param>
@@ -529,7 +530,6 @@
         /// <param name="receiveShadows">Should the mesh receive shadows?</param>
         /// <param name="useLightProbes">Should the mesh use light probes?</param>
         /// <param name="probeAnchor">If used, the mesh will use this Transform's position to sample light probes and find the matching reflection probe.</param>
-        /// <param name="materialIndex"></param>
         public static void DrawMesh(Mesh mesh, Matrix4x4 matrix, Material material, int layer, Camera camera, int submeshIndex, MaterialPropertyBlock properties, ShadowCastingMode castShadows, [UnityEngine.Internal.DefaultValue("true")] bool receiveShadows, [UnityEngine.Internal.DefaultValue("null")] Transform probeAnchor, [UnityEngine.Internal.DefaultValue("true")] bool useLightProbes)
         {
             DrawMeshImpl(mesh, matrix, material, layer, camera, submeshIndex, properties, castShadows, receiveShadows, probeAnchor, useLightProbes);
@@ -541,6 +541,7 @@
         /// <param name="mesh">The Mesh to draw.</param>
         /// <param name="position">Position of the mesh.</param>
         /// <param name="rotation">Rotation of the mesh.</param>
+        /// <param name="materialIndex">Subset of the mesh to draw.</param>
         /// <param name="matrix">Transformation matrix of the mesh (combines position, rotation and other transformations).</param>
         /// <param name="material">Material to use.</param>
         /// <param name="layer"> to use.</param>
@@ -551,7 +552,6 @@
         /// <param name="receiveShadows">Should the mesh receive shadows?</param>
         /// <param name="useLightProbes">Should the mesh use light probes?</param>
         /// <param name="probeAnchor">If used, the mesh will use this Transform's position to sample light probes and find the matching reflection probe.</param>
-        /// <param name="materialIndex"></param>
         public static void DrawMesh(Mesh mesh, Vector3 position, Quaternion rotation, Material material, int layer, [UnityEngine.Internal.DefaultValue("null")] Camera camera, [UnityEngine.Internal.DefaultValue("0")] int submeshIndex, [UnityEngine.Internal.DefaultValue("null")] MaterialPropertyBlock properties, [UnityEngine.Internal.DefaultValue("true")] bool castShadows, [UnityEngine.Internal.DefaultValue("true")] bool receiveShadows, [UnityEngine.Internal.DefaultValue("true")] bool useLightProbes)
         {
             DrawMesh(mesh, position, rotation, material, layer, camera, submeshIndex, properties, !castShadows ? ShadowCastingMode.Off : ShadowCastingMode.On, receiveShadows, null, useLightProbes);
@@ -563,6 +563,7 @@
         /// <param name="mesh">The Mesh to draw.</param>
         /// <param name="position">Position of the mesh.</param>
         /// <param name="rotation">Rotation of the mesh.</param>
+        /// <param name="materialIndex">Subset of the mesh to draw.</param>
         /// <param name="matrix">Transformation matrix of the mesh (combines position, rotation and other transformations).</param>
         /// <param name="material">Material to use.</param>
         /// <param name="layer"> to use.</param>
@@ -573,7 +574,6 @@
         /// <param name="receiveShadows">Should the mesh receive shadows?</param>
         /// <param name="useLightProbes">Should the mesh use light probes?</param>
         /// <param name="probeAnchor">If used, the mesh will use this Transform's position to sample light probes and find the matching reflection probe.</param>
-        /// <param name="materialIndex"></param>
         [ExcludeFromDocs]
         public static void DrawMesh(Mesh mesh, Vector3 position, Quaternion rotation, Material material, int layer, Camera camera, int submeshIndex, MaterialPropertyBlock properties, ShadowCastingMode castShadows, bool receiveShadows, Transform probeAnchor)
         {
@@ -587,6 +587,7 @@
         /// <param name="mesh">The Mesh to draw.</param>
         /// <param name="position">Position of the mesh.</param>
         /// <param name="rotation">Rotation of the mesh.</param>
+        /// <param name="materialIndex">Subset of the mesh to draw.</param>
         /// <param name="matrix">Transformation matrix of the mesh (combines position, rotation and other transformations).</param>
         /// <param name="material">Material to use.</param>
         /// <param name="layer"> to use.</param>
@@ -597,7 +598,6 @@
         /// <param name="receiveShadows">Should the mesh receive shadows?</param>
         /// <param name="useLightProbes">Should the mesh use light probes?</param>
         /// <param name="probeAnchor">If used, the mesh will use this Transform's position to sample light probes and find the matching reflection probe.</param>
-        /// <param name="materialIndex"></param>
         public static void DrawMesh(Mesh mesh, Vector3 position, Quaternion rotation, Material material, int layer, Camera camera, int submeshIndex, MaterialPropertyBlock properties, ShadowCastingMode castShadows, [UnityEngine.Internal.DefaultValue("true")] bool receiveShadows, [UnityEngine.Internal.DefaultValue("null")] Transform probeAnchor, [UnityEngine.Internal.DefaultValue("true")] bool useLightProbes)
         {
             DrawMeshImpl(mesh, Matrix4x4.TRS(position, rotation, Vector3.one), material, layer, camera, submeshIndex, properties, castShadows, receiveShadows, probeAnchor, useLightProbes);
@@ -772,6 +772,10 @@
             if (material == null)
             {
                 throw new ArgumentNullException("material");
+            }
+            if (!material.enableInstancing)
+            {
+                throw new InvalidOperationException("Material needs to enable instancing for use with DrawMeshInstanced.");
             }
             if (matrices == null)
             {
@@ -1185,7 +1189,7 @@
         }
 
         /// <summary>
-        /// <para>Set random write target for Shader Model 5.0 level pixel shaders.</para>
+        /// <para>Set random write target for level pixel shaders.</para>
         /// </summary>
         /// <param name="index">Index of the random write target in the shader.</param>
         /// <param name="uav">RenderTexture to set as write target.</param>
@@ -1196,7 +1200,7 @@
         }
 
         /// <summary>
-        /// <para>Set random write target for Shader Model 5.0 level pixel shaders.</para>
+        /// <para>Set random write target for level pixel shaders.</para>
         /// </summary>
         /// <param name="index">Index of the random write target in the shader.</param>
         /// <param name="uav">RenderTexture to set as write target.</param>
@@ -1223,7 +1227,8 @@
         /// <param name="depthSlice">Depth slice to render into (use 0 if not a 3D or 2DArray render target).</param>
         /// <param name="colorBuffer">Color buffer to render into.</param>
         /// <param name="depthBuffer">Depth buffer to render into.</param>
-        /// <param name="colorBuffers">Color buffers to render into (for multiple render target effects).</param>
+        /// <param name="colorBuffers">
+        /// Color buffers to render into (for multiple render target effects).</param>
         /// <param name="setup">Full render target setup information.</param>
         public static void SetRenderTarget(RenderTargetSetup setup)
         {
@@ -1239,7 +1244,8 @@
         /// <param name="depthSlice">Depth slice to render into (use 0 if not a 3D or 2DArray render target).</param>
         /// <param name="colorBuffer">Color buffer to render into.</param>
         /// <param name="depthBuffer">Depth buffer to render into.</param>
-        /// <param name="colorBuffers">Color buffers to render into (for multiple render target effects).</param>
+        /// <param name="colorBuffers">
+        /// Color buffers to render into (for multiple render target effects).</param>
         /// <param name="setup">Full render target setup information.</param>
         public static void SetRenderTarget(RenderTexture rt)
         {
@@ -1255,7 +1261,8 @@
         /// <param name="depthSlice">Depth slice to render into (use 0 if not a 3D or 2DArray render target).</param>
         /// <param name="colorBuffer">Color buffer to render into.</param>
         /// <param name="depthBuffer">Depth buffer to render into.</param>
-        /// <param name="colorBuffers">Color buffers to render into (for multiple render target effects).</param>
+        /// <param name="colorBuffers">
+        /// Color buffers to render into (for multiple render target effects).</param>
         /// <param name="setup">Full render target setup information.</param>
         public static void SetRenderTarget(RenderBuffer colorBuffer, RenderBuffer depthBuffer)
         {
@@ -1271,7 +1278,8 @@
         /// <param name="depthSlice">Depth slice to render into (use 0 if not a 3D or 2DArray render target).</param>
         /// <param name="colorBuffer">Color buffer to render into.</param>
         /// <param name="depthBuffer">Depth buffer to render into.</param>
-        /// <param name="colorBuffers">Color buffers to render into (for multiple render target effects).</param>
+        /// <param name="colorBuffers">
+        /// Color buffers to render into (for multiple render target effects).</param>
         /// <param name="setup">Full render target setup information.</param>
         public static void SetRenderTarget(RenderTexture rt, int mipLevel)
         {
@@ -1287,7 +1295,8 @@
         /// <param name="depthSlice">Depth slice to render into (use 0 if not a 3D or 2DArray render target).</param>
         /// <param name="colorBuffer">Color buffer to render into.</param>
         /// <param name="depthBuffer">Depth buffer to render into.</param>
-        /// <param name="colorBuffers">Color buffers to render into (for multiple render target effects).</param>
+        /// <param name="colorBuffers">
+        /// Color buffers to render into (for multiple render target effects).</param>
         /// <param name="setup">Full render target setup information.</param>
         public static void SetRenderTarget(RenderBuffer[] colorBuffers, RenderBuffer depthBuffer)
         {
@@ -1303,7 +1312,8 @@
         /// <param name="depthSlice">Depth slice to render into (use 0 if not a 3D or 2DArray render target).</param>
         /// <param name="colorBuffer">Color buffer to render into.</param>
         /// <param name="depthBuffer">Depth buffer to render into.</param>
-        /// <param name="colorBuffers">Color buffers to render into (for multiple render target effects).</param>
+        /// <param name="colorBuffers">
+        /// Color buffers to render into (for multiple render target effects).</param>
         /// <param name="setup">Full render target setup information.</param>
         public static void SetRenderTarget(RenderBuffer colorBuffer, RenderBuffer depthBuffer, int mipLevel)
         {
@@ -1319,7 +1329,8 @@
         /// <param name="depthSlice">Depth slice to render into (use 0 if not a 3D or 2DArray render target).</param>
         /// <param name="colorBuffer">Color buffer to render into.</param>
         /// <param name="depthBuffer">Depth buffer to render into.</param>
-        /// <param name="colorBuffers">Color buffers to render into (for multiple render target effects).</param>
+        /// <param name="colorBuffers">
+        /// Color buffers to render into (for multiple render target effects).</param>
         /// <param name="setup">Full render target setup information.</param>
         public static void SetRenderTarget(RenderTexture rt, int mipLevel, CubemapFace face)
         {
@@ -1335,7 +1346,8 @@
         /// <param name="depthSlice">Depth slice to render into (use 0 if not a 3D or 2DArray render target).</param>
         /// <param name="colorBuffer">Color buffer to render into.</param>
         /// <param name="depthBuffer">Depth buffer to render into.</param>
-        /// <param name="colorBuffers">Color buffers to render into (for multiple render target effects).</param>
+        /// <param name="colorBuffers">
+        /// Color buffers to render into (for multiple render target effects).</param>
         /// <param name="setup">Full render target setup information.</param>
         public static void SetRenderTarget(RenderBuffer colorBuffer, RenderBuffer depthBuffer, int mipLevel, CubemapFace face)
         {
@@ -1351,7 +1363,8 @@
         /// <param name="depthSlice">Depth slice to render into (use 0 if not a 3D or 2DArray render target).</param>
         /// <param name="colorBuffer">Color buffer to render into.</param>
         /// <param name="depthBuffer">Depth buffer to render into.</param>
-        /// <param name="colorBuffers">Color buffers to render into (for multiple render target effects).</param>
+        /// <param name="colorBuffers">
+        /// Color buffers to render into (for multiple render target effects).</param>
         /// <param name="setup">Full render target setup information.</param>
         public static void SetRenderTarget(RenderTexture rt, int mipLevel, CubemapFace face, int depthSlice)
         {
@@ -1367,7 +1380,8 @@
         /// <param name="depthSlice">Depth slice to render into (use 0 if not a 3D or 2DArray render target).</param>
         /// <param name="colorBuffer">Color buffer to render into.</param>
         /// <param name="depthBuffer">Depth buffer to render into.</param>
-        /// <param name="colorBuffers">Color buffers to render into (for multiple render target effects).</param>
+        /// <param name="colorBuffers">
+        /// Color buffers to render into (for multiple render target effects).</param>
         /// <param name="setup">Full render target setup information.</param>
         public static void SetRenderTarget(RenderBuffer colorBuffer, RenderBuffer depthBuffer, int mipLevel, CubemapFace face, int depthSlice)
         {
@@ -1465,15 +1479,15 @@
         /// </summary>
         public static GraphicsTier activeTier { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        [Obsolete("Property deviceName has been deprecated. Use SystemInfo.graphicsDeviceName instead (UnityUpgradable) -> UnityEngine.SystemInfo.graphicsDeviceName", true), EditorBrowsable(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property deviceName has been deprecated. Use SystemInfo.graphicsDeviceName instead (UnityUpgradable) -> UnityEngine.SystemInfo.graphicsDeviceName", true)]
         public static string deviceName =>
             SystemInfo.graphicsDeviceName;
 
-        [Obsolete("Property deviceVendor has been deprecated. Use SystemInfo.graphicsDeviceVendor instead (UnityUpgradable) -> UnityEngine.SystemInfo.graphicsDeviceVendor", true), EditorBrowsable(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property deviceVendor has been deprecated. Use SystemInfo.graphicsDeviceVendor instead (UnityUpgradable) -> UnityEngine.SystemInfo.graphicsDeviceVendor", true)]
         public static string deviceVendor =>
             SystemInfo.graphicsDeviceVendor;
 
-        [Obsolete("Property deviceVersion has been deprecated. Use SystemInfo.graphicsDeviceVersion instead (UnityUpgradable) -> UnityEngine.SystemInfo.graphicsDeviceVersion", true), EditorBrowsable(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property deviceVersion has been deprecated. Use SystemInfo.graphicsDeviceVersion instead (UnityUpgradable) -> UnityEngine.SystemInfo.graphicsDeviceVersion", true)]
         public static string deviceVersion =>
             SystemInfo.graphicsDeviceVersion;
     }

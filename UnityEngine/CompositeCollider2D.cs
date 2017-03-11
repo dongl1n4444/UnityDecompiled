@@ -63,6 +63,11 @@
         private extern int Internal_GetPathPointCount(int index);
 
         /// <summary>
+        /// <para>Controls the radius of all edges created by the Collider.</para>
+        /// </summary>
+        public float edgeRadius { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
         /// <para>Specifies when to generate the Composite Collider geometry.</para>
         /// </summary>
         public GenerationType generationType { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
@@ -93,7 +98,6 @@
         public enum GenerationType
         {
             Synchronous,
-            Asynchronous,
             Manual
         }
 

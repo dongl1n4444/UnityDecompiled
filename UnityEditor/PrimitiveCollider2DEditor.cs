@@ -11,14 +11,14 @@
         }
 
         protected abstract void CopyColliderSizeToHandle();
-        protected abstract void CopyHandleSizeToCollider();
+        protected abstract bool CopyHandleSizeToCollider();
         protected virtual Quaternion GetHandleRotation() => 
             Quaternion.identity;
 
         public override void OnEnable()
         {
             base.OnEnable();
-            this.boundHandle.axes = PrimitiveBoundsHandle.Axes.Y | PrimitiveBoundsHandle.Axes.X;
+            this.boundsHandle.axes = PrimitiveBoundsHandle.Axes.Y | PrimitiveBoundsHandle.Axes.X;
         }
 
         protected virtual void OnSceneGUI()
@@ -26,19 +26,24 @@
             if (base.editingCollider)
             {
                 Collider2D target = (Collider2D) base.target;
-                using (new Handles.MatrixScope(Matrix4x4.TRS(target.transform.position, this.GetHandleRotation(), Vector3.one)))
+                if (!Mathf.Approximately(target.transform.lossyScale.sqrMagnitude, 0f))
                 {
-                    Matrix4x4 localToWorldMatrix = target.transform.localToWorldMatrix;
-                    this.boundHandle.center = this.ProjectOntoWorldPlane((Vector3) (Handles.inverseMatrix * (localToWorldMatrix * target.offset)));
-                    this.CopyColliderSizeToHandle();
-                    this.boundHandle.SetColor(!target.enabled ? Handles.s_ColliderHandleColorDisabled : Handles.s_ColliderHandleColor);
-                    EditorGUI.BeginChangeCheck();
-                    this.boundHandle.DrawHandle();
-                    if (EditorGUI.EndChangeCheck())
+                    using (new Handles.DrawingScope(Matrix4x4.TRS(target.transform.position, this.GetHandleRotation(), Vector3.one)))
                     {
-                        Undo.RecordObject(target, $"Modify {ObjectNames.NicifyVariableName(base.target.GetType().Name)}");
-                        target.offset = (Vector2) (localToWorldMatrix.inverse * this.ProjectOntoColliderPlane((Vector3) (Handles.matrix * this.boundHandle.center), localToWorldMatrix));
-                        this.CopyHandleSizeToCollider();
+                        Matrix4x4 localToWorldMatrix = target.transform.localToWorldMatrix;
+                        this.boundsHandle.center = this.ProjectOntoWorldPlane((Vector3) (Handles.inverseMatrix * (localToWorldMatrix * target.offset)));
+                        this.CopyColliderSizeToHandle();
+                        this.boundsHandle.SetColor(!target.enabled ? Handles.s_ColliderHandleColorDisabled : Handles.s_ColliderHandleColor);
+                        EditorGUI.BeginChangeCheck();
+                        this.boundsHandle.DrawHandle();
+                        if (EditorGUI.EndChangeCheck())
+                        {
+                            Undo.RecordObject(target, $"Modify {ObjectNames.NicifyVariableName(base.target.GetType().Name)}");
+                            if (this.CopyHandleSizeToCollider())
+                            {
+                                target.offset = (Vector2) (localToWorldMatrix.inverse * this.ProjectOntoColliderPlane((Vector3) (Handles.matrix * this.boundsHandle.center), localToWorldMatrix));
+                            }
+                        }
                     }
                 }
             }
@@ -63,7 +68,7 @@
             return worldVector;
         }
 
-        protected abstract PrimitiveBoundsHandle boundHandle { get; }
+        protected abstract PrimitiveBoundsHandle boundsHandle { get; }
 
         protected override GUIContent editModeButton =>
             PrimitiveBoundsHandle.editModeButton;

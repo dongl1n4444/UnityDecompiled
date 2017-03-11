@@ -8,15 +8,11 @@
     {
         public ITextureImporter GetAssetImporterFromPath(string path)
         {
-            AssetImporter atPath = AssetImporter.GetAtPath(path);
-            if (!(atPath is TextureImporter))
-            {
-                throw new NotSupportedException("Current implementation only supports TextureImporter.");
-            }
-            return new TextureImporter((TextureImporter) atPath);
+            AssetImporter atPath = AssetImporter.GetAtPath(path) as UnityEditor.TextureImporter;
+            return ((atPath != null) ? new UnityEditor.U2D.Interface.TextureImporter((UnityEditor.TextureImporter) atPath) : null);
         }
 
-        public string GetAssetPath(Object o) => 
+        public string GetAssetPath(UnityEngine.Object o) => 
             AssetDatabase.GetAssetPath(o);
     }
 }

@@ -427,6 +427,13 @@
             else
             {
                 base.OnServerConnect(conn);
+                for (int i = 0; i < this.lobbySlots.Length; i++)
+                {
+                    if (this.lobbySlots[i] != null)
+                    {
+                        this.lobbySlots[i].SetDirtyBit(1);
+                    }
+                }
                 this.OnLobbyServerConnect(conn);
             }
         }

@@ -23,8 +23,26 @@
             return ptr;
         }
 
+        /// <summary>
+        /// <para>Returns the device's current TrackingSpaceType. This value determines how the camera is positioned relative to its starting position. For more, see the section "Understanding the camera" in.</para>
+        /// </summary>
+        /// <returns>
+        /// <para>The device's current TrackingSpaceType.</para>
+        /// </returns>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern TrackingSpaceType GetTrackingSpaceType();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetNativePtr(out IntPtr value);
+        /// <summary>
+        /// <para>Sets the device's current TrackingSpaceType. Returns true on success. Returns false if the given TrackingSpaceType is not supported or the device fails to switch.</para>
+        /// </summary>
+        /// <param name="TrackingSpaceType">The TrackingSpaceType the device should switch to.</param>
+        /// <param name="trackingSpaceType"></param>
+        /// <returns>
+        /// <para>True on success. False if the given TrackingSpaceType is not supported or the device fails to switch.</para>
+        /// </returns>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern bool SetTrackingSpaceType(TrackingSpaceType trackingSpaceType);
 
         /// <summary>
         /// <para>The name of the family of the loaded VR device.</para>

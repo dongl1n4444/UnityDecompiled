@@ -1,16 +1,19 @@
 ﻿namespace Unity.IL2CPP.IoCServices
 {
     using Mono.Cecil;
+    using System;
 
     public interface ITypeProviderService
     {
-        TypeReference BindableIteratorToEnumeratorAdapterTypeReference { get; }
+        TypeDefinition OptionalResolve(string namespaze, string name, AssemblyNameReference assembly);
 
         TypeReference BoolTypeReference { get; }
 
         TypeReference ByteTypeReference { get; }
 
         TypeReference CharTypeReference { get; }
+
+        TypeDefinition ConstantSplittableMapType { get; }
 
         AssemblyDefinition Corlib { get; }
 

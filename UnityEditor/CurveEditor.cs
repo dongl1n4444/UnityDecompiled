@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
@@ -19,10 +18,7 @@
         private static Func<ChangedCurve, int> <>f__am$cache2;
         [CompilerGenerated]
         private static Func<string, string> <>f__am$cache3;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private bool <editingPoints>k__BackingField;
         public CallbackFunction curvesUpdated;
-        private string focusedPointField;
         public float invSnap;
         private const float kCurveTimeEpsilon = 1E-05f;
         private const float kExactPickDistSqr = 16f;
@@ -42,10 +38,15 @@
         private CurveWrapper m_DraggingKey;
         private Bounds m_DrawingBounds;
         private List<int> m_DrawOrder;
+        private bool m_EditingPoints;
         private bool m_EnableCurveGroups;
+        private string m_FocusedPointField;
         private bool m_InRangeSelection;
         private CurveMenuManager m_MenuManager;
         private Vector2 m_MoveCoord;
+        private float m_NewTime;
+        private float m_NewValue;
+        private Vector2 m_PointEditingFieldPosition;
         private CurveControlPointRenderer m_PointRenderer;
         private Vector2 m_PreviousDrawPointCenter;
         private CurveEditorRectangleTool m_RectangleTool;
@@ -56,7 +57,8 @@
         private bool m_SelectionBoundsAreDirty;
         private CurveEditorSettings m_Settings;
         private Color m_TangentColor;
-        private Vector2 pointEditingFieldPosition;
+        private bool m_TimeWasEdited;
+        private bool m_ValueWasEdited;
         private List<CurveSelection> preCurveDragSelection;
         private Vector2 s_EndMouseDragPosition;
         private PickMode s_PickMode;
@@ -69,8 +71,6 @@
         private float s_TimeRangeSelectionEnd;
         private float s_TimeRangeSelectionStart;
         public ICurveEditorState state;
-        private bool timeWasEdited;
-        private bool valueWasEdited;
 
         public CurveEditor(Rect rect, CurveWrapper[] curves, bool minimalGUI) : base(minimalGUI)
         {
@@ -90,7 +90,7 @@
             this.m_DrawingBounds = new Bounds(Vector3.zero, Vector3.zero);
             this.m_DraggingKey = null;
             this.m_AxisLabelFormat = "n1";
-            this.focusedPointField = null;
+            this.m_FocusedPointField = null;
             this.m_DraggingCurveOrRegion = null;
             base.rect = rect;
             this.animationCurves = curves;
@@ -1219,23 +1219,25 @@
         private void EditSelectedPoints()
         {
             Event current = Event.current;
-            if (this.editingPoints && !this.hasSelection)
+            if (this.m_EditingPoints && !this.hasSelection)
             {
-                this.editingPoints = false;
+                this.m_EditingPoints = false;
             }
             bool flag = false;
             if (current.type == EventType.KeyDown)
             {
                 if ((current.keyCode == KeyCode.KeypadEnter) || (current.keyCode == KeyCode.Return))
                 {
-                    if (this.hasSelection && !this.editingPoints)
+                    if (this.hasSelection && !this.m_EditingPoints)
                     {
                         this.StartEditingSelectedPoints();
                         current.Use();
                     }
-                    else if (this.editingPoints)
+                    else if (this.m_EditingPoints)
                     {
+                        this.SetSelectedKeyPositions(this.m_NewTime, this.m_NewValue, this.m_TimeWasEdited, this.m_ValueWasEdited);
                         this.FinishEditingPoints();
+                        GUI.changed = true;
                         current.Use();
                     }
                 }
@@ -1244,45 +1246,46 @@
                     flag = true;
                 }
             }
-            if (this.editingPoints)
+            if (this.m_EditingPoints)
             {
-                Vector2 vector = base.DrawingToViewTransformPoint(this.pointEditingFieldPosition);
+                Vector2 vector = base.DrawingToViewTransformPoint(this.m_PointEditingFieldPosition);
                 Rect rect = Rect.MinMaxRect(base.leftmargin, base.topmargin, base.rect.width - base.rightmargin, base.rect.height - base.bottommargin);
                 vector.x = Mathf.Clamp(vector.x, rect.xMin, rect.xMax - 80f);
                 vector.y = Mathf.Clamp(vector.y, rect.yMin, rect.yMax - 36f);
                 EditorGUI.BeginChangeCheck();
                 GUI.SetNextControlName("pointTimeField");
-                float num = this.PointFieldForSelection(new Rect(vector.x, vector.y, 80f, 18f), 1, x => this.GetKeyframeFromSelection(x).time, (r, id, time) => base.TimeField(r, id, time, this.invSnap, this.timeFormat), "time");
+                this.m_NewTime = this.PointFieldForSelection(new Rect(vector.x, vector.y, 80f, 18f), 1, this.m_NewTime, x => this.GetKeyframeFromSelection(x).time, (r, id, time) => base.TimeField(r, id, time, this.invSnap, this.timeFormat), "time");
                 if (EditorGUI.EndChangeCheck())
                 {
-                    this.timeWasEdited = true;
+                    this.m_TimeWasEdited = true;
                 }
                 EditorGUI.BeginChangeCheck();
                 GUI.SetNextControlName("pointValueField");
-                float y = this.PointFieldForSelection(new Rect(vector.x, vector.y + 18f, 80f, 18f), 2, x => this.GetKeyframeFromSelection(x).value, (r, id, value) => base.ValueField(r, id, value), "value");
+                this.m_NewValue = this.PointFieldForSelection(new Rect(vector.x, vector.y + 18f, 80f, 18f), 2, this.m_NewValue, x => this.GetKeyframeFromSelection(x).value, (r, id, value) => base.ValueField(r, id, value), "value");
                 if (EditorGUI.EndChangeCheck())
                 {
-                    this.valueWasEdited = true;
-                }
-                if (this.timeWasEdited || this.valueWasEdited)
-                {
-                    this.SetSelectedKeyPositions(new Vector2(num, y), this.timeWasEdited, this.valueWasEdited);
+                    this.m_ValueWasEdited = true;
                 }
                 if (flag)
                 {
                     this.FinishEditingPoints();
                 }
-                if (this.focusedPointField != null)
+                if (this.m_FocusedPointField != null)
                 {
-                    EditorGUI.FocusTextInControl(this.focusedPointField);
+                    EditorGUI.FocusTextInControl(this.m_FocusedPointField);
                     if (current.type == EventType.Repaint)
                     {
-                        this.focusedPointField = null;
+                        this.m_FocusedPointField = null;
                     }
                 }
-                if ((current.type == EventType.KeyDown) && (current.character == '\t'))
+                if ((current.type == EventType.KeyDown) && ((current.character == '\t') || (current.character == '\x0019')))
                 {
-                    this.focusedPointField = (GUI.GetNameOfFocusedControl() != "pointValueField") ? "pointValueField" : "pointTimeField";
+                    if (this.m_TimeWasEdited || this.m_ValueWasEdited)
+                    {
+                        this.SetSelectedKeyPositions(this.m_NewTime, this.m_NewValue, this.m_TimeWasEdited, this.m_ValueWasEdited);
+                        this.m_PointEditingFieldPosition = this.GetPointEditionFieldPosition();
+                    }
+                    this.m_FocusedPointField = (GUI.GetNameOfFocusedControl() != "pointValueField") ? "pointValueField" : "pointTimeField";
                     current.Use();
                 }
                 if (current.type == EventType.MouseDown)
@@ -1360,7 +1363,7 @@
 
         private void FinishEditingPoints()
         {
-            this.editingPoints = false;
+            this.m_EditingPoints = false;
         }
 
         public void FrameClip(bool horizontally, bool vertically)
@@ -1542,6 +1545,15 @@
                 return curveFromSelection[curveSelection.key];
             }
             return new Keyframe();
+        }
+
+        private Vector2 GetPointEditionFieldPosition()
+        {
+            float num = Enumerable.Min<CurveSelection>(this.selectedCurves, (Func<CurveSelection, float>) (x => this.GetKeyframeFromSelection(x).time));
+            float num2 = Enumerable.Max<CurveSelection>(this.selectedCurves, (Func<CurveSelection, float>) (x => this.GetKeyframeFromSelection(x).time));
+            float num3 = Enumerable.Min<CurveSelection>(this.selectedCurves, (Func<CurveSelection, float>) (x => this.GetKeyframeFromSelection(x).value));
+            float num4 = Enumerable.Max<CurveSelection>(this.selectedCurves, (Func<CurveSelection, float>) (x => this.GetKeyframeFromSelection(x).value));
+            return (Vector2) (new Vector2(num + num2, num3 + num4) * 0.5f);
         }
 
         private Vector2 GetPosition(CurveSelection selection)
@@ -1976,7 +1988,7 @@
                 case EventType.MouseDown:
                     if (current.button != 0)
                     {
-                        goto Label_051F;
+                        goto Label_0528;
                     }
                     foreach (CurveSelection selection in this.selectedCurves)
                     {
@@ -1988,6 +2000,7 @@
                             {
                                 Keyframe keyframeFromSelection = this.GetKeyframeFromSelection(selection);
                                 this.SetupKeyOrCurveDragging(new Vector2(keyframeFromSelection.time, keyframeFromSelection.value), curveWrapperFromSelection, controlID, current.mousePosition);
+                                this.m_RectangleTool.OnStartMove(this.s_StartMouseDragPosition, this.m_RectangleTool.rippleTimeClutch);
                                 current.Use();
                                 break;
                             }
@@ -1998,24 +2011,21 @@
                 case EventType.MouseUp:
                     if (GUIUtility.hotControl == controlID)
                     {
-                        if (this.InLiveEdit())
-                        {
-                            this.EndLiveEdit();
-                        }
+                        this.m_RectangleTool.OnEndMove();
                         this.ResetDragging();
                         GUI.changed = true;
                         current.Use();
                     }
-                    goto Label_051F;
+                    goto Label_0528;
 
                 case EventType.MouseDrag:
                 {
                     if (GUIUtility.hotControl != controlID)
                     {
-                        goto Label_051F;
+                        goto Label_0528;
                     }
                     Vector2 lhs = current.mousePosition - this.s_StartMouseDragPosition;
-                    Vector3 zero = Vector3.zero;
+                    Vector2 zero = Vector2.zero;
                     if (current.shift && (this.m_AxisLock == AxisLock.None))
                     {
                         float introduced22 = Mathf.Abs(lhs.x);
@@ -2024,7 +2034,7 @@
                     if (this.m_DraggingCurveOrRegion != null)
                     {
                         lhs.x = 0f;
-                        zero = (Vector3) base.ViewToDrawingTransformVector(lhs);
+                        zero = base.ViewToDrawingTransformVector(lhs);
                         float introduced23 = this.SnapValue(zero.y + this.s_StartKeyDragPosition.y);
                         zero.y = introduced23 - this.s_StartKeyDragPosition.y;
                     }
@@ -2034,7 +2044,7 @@
                         {
                             case AxisLock.None:
                             {
-                                zero = (Vector3) base.ViewToDrawingTransformVector(lhs);
+                                zero = base.ViewToDrawingTransformVector(lhs);
                                 float introduced24 = this.SnapTime(zero.x + this.s_StartKeyDragPosition.x);
                                 zero.x = introduced24 - this.s_StartKeyDragPosition.x;
                                 float introduced25 = this.SnapValue(zero.y + this.s_StartKeyDragPosition.y);
@@ -2044,7 +2054,7 @@
                             case AxisLock.X:
                             {
                                 lhs.y = 0f;
-                                zero = (Vector3) base.ViewToDrawingTransformVector(lhs);
+                                zero = base.ViewToDrawingTransformVector(lhs);
                                 float introduced26 = this.SnapTime(zero.x + this.s_StartKeyDragPosition.x);
                                 zero.x = introduced26 - this.s_StartKeyDragPosition.x;
                                 break;
@@ -2052,18 +2062,14 @@
                             case AxisLock.Y:
                             {
                                 lhs.x = 0f;
-                                zero = (Vector3) base.ViewToDrawingTransformVector(lhs);
+                                zero = base.ViewToDrawingTransformVector(lhs);
                                 float introduced27 = this.SnapValue(zero.y + this.s_StartKeyDragPosition.y);
                                 zero.y = introduced27 - this.s_StartKeyDragPosition.y;
                                 break;
                             }
                         }
                     }
-                    if (!this.InLiveEdit())
-                    {
-                        this.StartLiveEdit();
-                    }
-                    this.TranslateSelectedKeys(zero);
+                    this.m_RectangleTool.OnMove(this.s_StartMouseDragPosition + zero);
                     GUI.changed = true;
                     current.Use();
                     return zero;
@@ -2076,7 +2082,7 @@
                         GUI.changed = true;
                         current.Use();
                     }
-                    goto Label_051F;
+                    goto Label_0528;
 
                 case EventType.Repaint:
                 {
@@ -2092,10 +2098,10 @@
                     {
                         EditorGUIUtility.AddCursorRect(position, MouseCursor.ResizeVertical);
                     }
-                    goto Label_051F;
+                    goto Label_0528;
                 }
                 default:
-                    goto Label_051F;
+                    goto Label_0528;
             }
             if (this.settings.allowDraggingCurvesAndRegions && (this.m_DraggingKey == null))
             {
@@ -2116,10 +2122,11 @@
                     this.selectedCurves = list;
                     this.SetupKeyOrCurveDragging(timeValue, curves[0], controlID, current.mousePosition);
                     this.m_DraggingCurveOrRegion = curves;
+                    this.m_RectangleTool.OnStartMove(this.s_StartMouseDragPosition, false);
                     current.Use();
                 }
             }
-        Label_051F:
+        Label_0528:
             return Vector2.zero;
         }
 
@@ -2136,7 +2143,7 @@
         {
             if (this.m_Selection != null)
             {
-                Object.DestroyImmediate(this.m_Selection);
+                UnityEngine.Object.DestroyImmediate(this.m_Selection);
             }
         }
 
@@ -2184,31 +2191,26 @@
             return -1;
         }
 
-        private float PointFieldForSelection(Rect rect, int customID, Func<CurveSelection, float> memberGetter, Func<Rect, int, float, float> memberSetter, string label)
+        private float PointFieldForSelection(Rect rect, int customID, float value, Func<CurveSelection, float> memberGetter, Func<Rect, int, float, float> fieldCreator, string label)
         {
-            <PointFieldForSelection>c__AnonStorey8 storey = new <PointFieldForSelection>c__AnonStorey8 {
-                memberGetter = memberGetter,
-                $this = this
+            <PointFieldForSelection>c__AnonStorey9 storey = new <PointFieldForSelection>c__AnonStorey9 {
+                memberGetter = memberGetter
             };
-            float num = 0f;
-            if (Enumerable.All<CurveSelection>(this.selectedCurves, new Func<CurveSelection, bool>(storey.<>m__0)))
-            {
-                num = storey.memberGetter(this.selectedCurves[0]);
-            }
-            else
+            storey.firstSelectedValue = storey.memberGetter(this.selectedCurves[0]);
+            if (!Enumerable.All<CurveSelection>(this.selectedCurves, new Func<CurveSelection, bool>(storey.<>m__0)))
             {
                 EditorGUI.showMixedValue = true;
             }
             Rect position = rect;
             position.x -= position.width;
-            int num2 = GUIUtility.GetControlID(customID, FocusType.Keyboard, rect);
+            int num = GUIUtility.GetControlID(customID, FocusType.Keyboard, rect);
             Color color = GUI.color;
             GUI.color = Color.white;
             GUI.Label(position, label, Styles.rightAlignedLabel);
-            float num3 = memberSetter(rect, num2, num);
+            value = fieldCreator(rect, num, value);
             GUI.color = color;
             EditorGUI.showMixedValue = false;
-            return num3;
+            return value;
         }
 
         private void RecalcCurveSelection()
@@ -2605,6 +2607,10 @@
                                 }
                             }
                             this.selectedCurves = list2;
+                            if (this.s_SelectionBackup.Count > 0)
+                            {
+                                this.selectedCurves.Sort();
+                            }
                             this.RecalcSecondarySelection();
                             this.RecalcCurveSelection();
                         }
@@ -2682,23 +2688,27 @@
             }
         }
 
-        internal void SetSelectedKeyPositions(Vector2 newPosition, bool updateTime, bool updateValue)
+        internal void SetSelectedKeyPositions(float newTime, float newValue, bool updateTime, bool updateValue)
         {
             <SetSelectedKeyPositions>c__AnonStorey1 storey = new <SetSelectedKeyPositions>c__AnonStorey1 {
                 updateTime = updateTime,
-                newPosition = newPosition,
+                newTime = newTime,
                 updateValue = updateValue,
+                newValue = newValue,
                 $this = this
             };
-            bool flag = this.InLiveEdit();
-            if (!flag)
+            if (storey.updateTime || storey.updateValue)
             {
-                this.StartLiveEdit();
-            }
-            this.UpdateCurvesFromPoints(new SavedCurve.KeyFrameOperation(storey.<>m__0));
-            if (!flag)
-            {
-                this.EndLiveEdit();
+                bool flag = this.InLiveEdit();
+                if (!flag)
+                {
+                    this.StartLiveEdit();
+                }
+                this.UpdateCurvesFromPoints(new SavedCurve.KeyFrameOperation(storey.<>m__0));
+                if (!flag)
+                {
+                    this.EndLiveEdit();
+                }
             }
         }
 
@@ -2753,20 +2763,31 @@
 
         private void StartEditingSelectedPoints()
         {
-            float num = Enumerable.Min<CurveSelection>(this.selectedCurves, (Func<CurveSelection, float>) (x => this.GetKeyframeFromSelection(x).time));
-            float num2 = Enumerable.Max<CurveSelection>(this.selectedCurves, (Func<CurveSelection, float>) (x => this.GetKeyframeFromSelection(x).time));
-            float num3 = Enumerable.Min<CurveSelection>(this.selectedCurves, (Func<CurveSelection, float>) (x => this.GetKeyframeFromSelection(x).value));
-            float num4 = Enumerable.Max<CurveSelection>(this.selectedCurves, (Func<CurveSelection, float>) (x => this.GetKeyframeFromSelection(x).value));
-            Vector2 fieldPosition = (Vector2) (new Vector2(num + num2, num3 + num4) * 0.5f);
-            this.StartEditingSelectedPoints(fieldPosition);
+            Vector2 pointEditionFieldPosition = this.GetPointEditionFieldPosition();
+            this.StartEditingSelectedPoints(pointEditionFieldPosition);
         }
 
         private void StartEditingSelectedPoints(Vector2 fieldPosition)
         {
-            this.pointEditingFieldPosition = fieldPosition;
-            this.focusedPointField = "pointValueField";
-            this.timeWasEdited = this.valueWasEdited = false;
-            this.editingPoints = true;
+            <StartEditingSelectedPoints>c__AnonStorey8 storey = new <StartEditingSelectedPoints>c__AnonStorey8 {
+                $this = this
+            };
+            this.m_PointEditingFieldPosition = fieldPosition;
+            this.m_FocusedPointField = "pointValueField";
+            this.m_TimeWasEdited = false;
+            this.m_ValueWasEdited = false;
+            this.m_NewTime = 0f;
+            this.m_NewValue = 0f;
+            storey.keyframe = this.GetKeyframeFromSelection(this.selectedCurves[0]);
+            if (Enumerable.All<CurveSelection>(this.selectedCurves, new Func<CurveSelection, bool>(storey.<>m__0)))
+            {
+                this.m_NewTime = storey.keyframe.time;
+            }
+            if (Enumerable.All<CurveSelection>(this.selectedCurves, new Func<CurveSelection, bool>(storey.<>m__1)))
+            {
+                this.m_NewValue = storey.keyframe.value;
+            }
+            this.m_EditingPoints = true;
         }
 
         private void StartEditingSelectedPointsContext(object fieldPosition)
@@ -3212,8 +3233,6 @@
             }
         }
 
-        private bool editingPoints { get; set; }
-
         public bool hasSelection =>
             (this.selectedCurves.Count != 0);
 
@@ -3287,13 +3306,13 @@
         }
 
         [CompilerGenerated]
-        private sealed class <PointFieldForSelection>c__AnonStorey8
+        private sealed class <PointFieldForSelection>c__AnonStorey9
         {
-            internal CurveEditor $this;
+            internal float firstSelectedValue;
             internal Func<CurveSelection, float> memberGetter;
 
             internal bool <>m__0(CurveSelection x) => 
-                (this.memberGetter(x) == this.memberGetter(this.$this.selectedCurves[0]));
+                (this.memberGetter(x) == this.firstSelectedValue);
         }
 
         [CompilerGenerated]
@@ -3332,7 +3351,8 @@
         private sealed class <SetSelectedKeyPositions>c__AnonStorey1
         {
             internal CurveEditor $this;
-            internal Vector2 newPosition;
+            internal float newTime;
+            internal float newValue;
             internal bool updateTime;
             internal bool updateValue;
 
@@ -3343,16 +3363,29 @@
                     CurveEditor.SavedCurve.SavedKeyFrame frame = keyframe.Clone();
                     if (this.updateTime)
                     {
-                        frame.key.time = Mathf.Clamp(this.newPosition.x, this.$this.hRangeMin, this.$this.hRangeMax);
+                        frame.key.time = Mathf.Clamp(this.newTime, this.$this.hRangeMin, this.$this.hRangeMax);
                     }
                     if (this.updateValue)
                     {
-                        frame.key.value = this.$this.ClampVerticalValue(this.newPosition.y, curve.curveId);
+                        frame.key.value = this.$this.ClampVerticalValue(this.newValue, curve.curveId);
                     }
                     return frame;
                 }
                 return keyframe;
             }
+        }
+
+        [CompilerGenerated]
+        private sealed class <StartEditingSelectedPoints>c__AnonStorey8
+        {
+            internal CurveEditor $this;
+            internal Keyframe keyframe;
+
+            internal bool <>m__0(CurveSelection x) => 
+                (this.$this.GetKeyframeFromSelection(x).time == this.keyframe.time);
+
+            internal bool <>m__1(CurveSelection x) => 
+                (this.$this.GetKeyframeFromSelection(x).value == this.keyframe.value);
         }
 
         [CompilerGenerated]
@@ -3375,8 +3408,8 @@
                     frame.key.time = this.$this.SnapTime(Mathf.Clamp(time, this.$this.hRangeMin, this.$this.hRangeMax));
                     if (this.flipX)
                     {
-                        frame.key.inTangent = -keyframe.key.outTangent;
-                        frame.key.outTangent = -keyframe.key.inTangent;
+                        frame.key.inTangent = (keyframe.key.outTangent == float.PositiveInfinity) ? float.PositiveInfinity : -keyframe.key.outTangent;
+                        frame.key.outTangent = (keyframe.key.inTangent == float.PositiveInfinity) ? float.PositiveInfinity : -keyframe.key.inTangent;
                     }
                     return frame;
                 }

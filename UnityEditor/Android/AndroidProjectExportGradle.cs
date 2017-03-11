@@ -181,7 +181,7 @@
             templateValues["DEPS"] = str14 + str5;
             if (PlayerSettings.Android.keyaliasName.Length != 0)
             {
-                string str15 = !Path.IsPathRooted(PlayerSettings.Android.keystoreName) ? Path.Combine(Directory.GetCurrentDirectory(), PlayerSettings.Android.keystoreName) : PlayerSettings.Android.keystoreName;
+                string str15 = !Path.IsPathRooted(PlayerSettings.Android.keystoreName) ? Path.Combine(Directory.GetCurrentDirectory(), PlayerSettings.Android.keystoreName).Replace('\\', '/') : PlayerSettings.Android.keystoreName;
                 string str16 = $"		storeFile file('{str15}')
 		storePassword '{PlayerSettings.Android.keystorePass}'
 		keyAlias '{PlayerSettings.Android.keyaliasName}'

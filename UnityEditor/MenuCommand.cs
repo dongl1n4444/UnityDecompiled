@@ -14,7 +14,7 @@
         /// <summary>
         /// <para>Context is the object that is the target of a menu command.</para>
         /// </summary>
-        public Object context;
+        public UnityEngine.Object context;
         /// <summary>
         /// <para>An integer for passing custom information to a menu item.</para>
         /// </summary>
@@ -24,7 +24,7 @@
         /// </summary>
         /// <param name="inContext"></param>
         /// <param name="inUserData"></param>
-        public MenuCommand(Object inContext, int inUserData)
+        public MenuCommand(UnityEngine.Object inContext, int inUserData)
         {
             this.context = inContext;
             this.userData = inUserData;
@@ -34,7 +34,7 @@
         /// <para>Creates a new MenuCommand object.</para>
         /// </summary>
         /// <param name="inContext"></param>
-        public MenuCommand(Object inContext)
+        public MenuCommand(UnityEngine.Object inContext)
         {
             this.context = inContext;
             this.userData = 0;

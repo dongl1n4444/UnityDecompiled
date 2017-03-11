@@ -105,7 +105,7 @@
             EditorGUILayout.LabelField(content, new GUILayoutOption[0]);
             EditorGUILayout.EndHorizontal();
             EditorGUI.BeginDisabledGroup(this.m_InPlayMode);
-            bool flag = EditorGUILayout.ButtonMouseDown(content2, FocusType.Passive, EditorStyles.miniButton, new GUILayoutOption[0]);
+            bool flag = EditorGUILayout.DropdownButton(content2, FocusType.Passive, EditorStyles.miniButton, new GUILayoutOption[0]);
             EditorGUI.EndDisabledGroup();
             if (flag)
             {

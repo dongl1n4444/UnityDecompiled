@@ -209,13 +209,18 @@
 
         public static void WriteCPlusPlusFileForStaticAOTModuleRegistration(BuildTarget buildTarget, string file, CrossCompileOptions crossCompileOptions, bool advancedLic, string targetDevice, bool stripping, RuntimeClassRegistry usedClassRegistry, AssemblyReferenceChecker checker, string stagingAreaDataManaged)
         {
+            WriteCPlusPlusFileForStaticAOTModuleRegistration(buildTarget, file, crossCompileOptions, advancedLic, targetDevice, stripping, usedClassRegistry, checker, stagingAreaDataManaged, null);
+        }
+
+        public static void WriteCPlusPlusFileForStaticAOTModuleRegistration(BuildTarget buildTarget, string file, CrossCompileOptions crossCompileOptions, bool advancedLic, string targetDevice, bool stripping, RuntimeClassRegistry usedClassRegistry, AssemblyReferenceChecker checker, string stagingAreaDataManaged, IIl2CppPlatformProvider platformProvider)
+        {
             HashSet<UnityType> set;
             HashSet<string> set2;
             string str = Path.Combine(stagingAreaDataManaged, "ICallSummary.txt");
             string exe = Path.Combine(MonoInstallationFinder.GetFrameWorksFolder(), "Tools/InternalCallRegistrationWriter/InternalCallRegistrationWriter.exe");
             string args = $"-assembly="{Path.Combine(stagingAreaDataManaged, "UnityEngine.dll")}" -summary="{str}"";
             Runner.RunManagedProgram(exe, args);
-            CodeStrippingUtils.GenerateDependencies(Path.GetFullPath(stagingAreaDataManaged), str, usedClassRegistry, stripping, out set, out set2, null);
+            CodeStrippingUtils.GenerateDependencies(Path.GetDirectoryName(stagingAreaDataManaged), str, usedClassRegistry, stripping, out set, out set2, platformProvider);
             using (TextWriter writer = new StreamWriter(file))
             {
                 string[] assemblyFileNames = checker.GetAssemblyFileNames();

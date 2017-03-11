@@ -22,48 +22,50 @@
         {
             Keyframe[] array = new Keyframe[orgKeys.Length];
             orgKeys.CopyTo(array, 0);
-            if (((rect.width == 0f) || (rect.height == 0f)) || (float.IsInfinity(rect.width) || float.IsInfinity(rect.height)))
+            if (normalization != NormalizationMode.None)
             {
-                Debug.LogError("CopyAndScaleCurve: Invalid scale: " + rect);
-                return array;
-            }
-            float num = rect.height / rect.width;
-            switch (normalization)
-            {
-                case NormalizationMode.None:
+                if (((rect.width == 0f) || (rect.height == 0f)) || (float.IsInfinity(rect.width) || float.IsInfinity(rect.height)))
+                {
+                    Debug.LogError("CopyAndScaleCurve: Invalid scale: " + rect);
                     return array;
-
-                case NormalizationMode.Normalize:
-                    for (int i = 0; i < array.Length; i++)
+                }
+                float num = rect.height / rect.width;
+                if (normalization != NormalizationMode.Normalize)
+                {
+                    if (normalization == NormalizationMode.Denormalize)
                     {
-                        array[i].time = (orgKeys[i].time - rect.xMin) / rect.width;
-                        array[i].value = (orgKeys[i].value - rect.yMin) / rect.height;
-                        if (!float.IsInfinity(orgKeys[i].inTangent))
+                        for (int i = 0; i < array.Length; i++)
                         {
-                            array[i].inTangent = orgKeys[i].inTangent / num;
+                            array[i].time = (orgKeys[i].time * rect.width) + rect.xMin;
+                            array[i].value = (orgKeys[i].value * rect.height) + rect.yMin;
+                            if (!float.IsInfinity(orgKeys[i].inTangent))
+                            {
+                                array[i].inTangent = orgKeys[i].inTangent * num;
+                            }
+                            if (!float.IsInfinity(orgKeys[i].outTangent))
+                            {
+                                array[i].outTangent = orgKeys[i].outTangent * num;
+                            }
                         }
-                        if (!float.IsInfinity(orgKeys[i].outTangent))
-                        {
-                            array[i].outTangent = orgKeys[i].outTangent / num;
-                        }
+                        return array;
                     }
-                    return array;
-
-                case NormalizationMode.Denormalize:
+                }
+                else
+                {
                     for (int j = 0; j < array.Length; j++)
                     {
-                        array[j].time = (orgKeys[j].time * rect.width) + rect.xMin;
-                        array[j].value = (orgKeys[j].value * rect.height) + rect.yMin;
+                        array[j].time = (orgKeys[j].time - rect.xMin) / rect.width;
+                        array[j].value = (orgKeys[j].value - rect.yMin) / rect.height;
                         if (!float.IsInfinity(orgKeys[j].inTangent))
                         {
-                            array[j].inTangent = orgKeys[j].inTangent * num;
+                            array[j].inTangent = orgKeys[j].inTangent / num;
                         }
                         if (!float.IsInfinity(orgKeys[j].outTangent))
                         {
-                            array[j].outTangent = orgKeys[j].outTangent * num;
+                            array[j].outTangent = orgKeys[j].outTangent / num;
                         }
                     }
-                    return array;
+                }
             }
             return array;
         }
@@ -323,7 +325,7 @@
 
         private void PresetDropDown(Rect rect)
         {
-            if (EditorGUI.ButtonMouseDown(rect, EditorGUI.GUIContents.titleSettingsIcon, FocusType.Passive, EditorStyles.inspectorTitlebarText) && (this.m_Curve != null))
+            if (EditorGUI.DropdownButton(rect, EditorGUI.GUIContents.titleSettingsIcon, FocusType.Passive, EditorStyles.inspectorTitlebarText) && (this.m_Curve != null))
             {
                 if (this.m_CurvePresets == null)
                 {

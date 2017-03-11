@@ -35,8 +35,8 @@
             {
                 try
                 {
-                    Type[] types = assembly.GetTypes();
-                    foreach (Type type in Enumerable.Where<Type>(types, new Func<Type, bool>(storey.<>m__0)))
+                    System.Type[] types = assembly.GetTypes();
+                    foreach (System.Type type in Enumerable.Where<System.Type>(types, new Func<System.Type, bool>(storey.<>m__0)))
                     {
                         this.RegisterCustomGUI(Activator.CreateInstance(type) as IAudioEffectPluginGUI);
                     }
@@ -77,7 +77,7 @@
             Color effectColor = AudioMixerDrawUtils.GetEffectColor(effect);
             EditorGUI.DrawRect(rect3, effectColor);
             GUI.Label(position, !flag2 ? effect.effectName : (effect.effectName + string.Format(Texts.cpuFormatString, effect.GetCPUUsage(controller))), EditorStyles.boldLabel);
-            if (EditorGUI.ButtonMouseDown(rect5, EditorGUI.GUIContents.titleSettingsIcon, FocusType.Passive, EditorStyles.iconButton))
+            if (EditorGUI.DropdownButton(rect5, EditorGUI.GUIContents.titleSettingsIcon, FocusType.Passive, EditorStyles.iconButton))
             {
                 ShowEffectContextMenu(group, effect, effectIndex, controller, rect5);
             }
@@ -279,7 +279,7 @@
                     GUILayout.Space(10f);
                     EditorGUILayout.BeginHorizontal(new GUILayoutOption[0]);
                     GUILayout.FlexibleSpace();
-                    if (EditorGUILayout.ButtonMouseDown(Texts.addEffect, FocusType.Passive, GUISkin.current.button, new GUILayoutOption[0]))
+                    if (EditorGUILayout.DropdownButton(Texts.addEffect, FocusType.Passive, GUISkin.current.button, new GUILayoutOption[0]))
                     {
                         GenericMenu pm = new GenericMenu();
                         Rect last = GUILayoutUtility.topLevel.GetLast();
@@ -363,9 +363,9 @@
         [CompilerGenerated]
         private sealed class <AudioMixerEffectView>c__AnonStorey0
         {
-            internal Type pluginType;
+            internal System.Type pluginType;
 
-            internal bool <>m__0(Type t) => 
+            internal bool <>m__0(System.Type t) => 
                 (!t.IsAbstract && this.pluginType.IsAssignableFrom(t));
         }
 

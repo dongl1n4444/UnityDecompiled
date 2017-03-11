@@ -32,8 +32,6 @@
         public static INamingService Naming;
         [Inject]
         public static ITypeProviderService TypeProvider;
-        [Inject]
-        public static IWindowsRuntimeProjections WindowsRuntimeProjections;
 
         internal static int AlignmentPackingSizeFor(TypeDefinition typeDefinition) => 
             typeDefinition.PackingSize;
@@ -233,7 +231,7 @@
             return !field.IsStatic;
         }
 
-        private string GetBaseTypeDeclaration(TypeReference type)
+        private static string GetBaseTypeDeclaration(TypeReference type)
         {
             if (type.IsArray)
             {
@@ -337,7 +335,7 @@
         internal static bool NeedsPadding(TypeDefinition typeDefinition) => 
             (typeDefinition.ClassSize > 0);
 
-        private static void WriteAccessSpecifier(CppCodeWriter writer, string accessSpecifier)
+        private static void WriteAccessSpecifier(CodeWriter writer, string accessSpecifier)
         {
             writer.Dedent(1);
             object[] args = new object[] { accessSpecifier };
@@ -345,7 +343,7 @@
             writer.Indent(1);
         }
 
-        private static void WriteArrayAccessors(CppCodeWriter writer, TypeReference elementType, string elementTypeName, bool emitArrayBoundsCheck)
+        private static void WriteArrayAccessors(CodeWriter writer, TypeReference elementType, string elementTypeName, bool emitArrayBoundsCheck)
         {
             object[] args = new object[] { elementTypeName, Naming.ForArrayItemGetter(emitArrayBoundsCheck), Naming.ForArrayIndexType(), Naming.ForArrayIndexName(), Naming.ForArrayItems() };
             writer.WriteLine("inline {0} {1}({2} {3}) const", args);
@@ -383,7 +381,7 @@
             }
         }
 
-        private static void WriteArrayAccessorsForMultiDimensionalArray(CppCodeWriter writer, int rank, TypeReference elementType, string elementTypeName, bool emitArrayBoundsCheck)
+        private static void WriteArrayAccessorsForMultiDimensionalArray(CodeWriter writer, int rank, TypeReference elementType, string elementTypeName, bool emitArrayBoundsCheck)
         {
             StringBuilder stringBuilder = new StringBuilder();
             string str = BuildArrayIndexParameters(stringBuilder, rank);
@@ -419,7 +417,7 @@
             }
         }
 
-        private static void WriteArrayFieldsWithAccessors(CppCodeWriter writer, ArrayType arrayType)
+        private static void WriteArrayFieldsWithAccessors(CodeWriter writer, ArrayType arrayType)
         {
             TypeReference elementType = arrayType.ElementType;
             string elementTypeName = Naming.ForVariable(elementType);
@@ -437,7 +435,7 @@
             }
         }
 
-        public void WriteArrayTypeDefinition(ArrayType type, CppCodeWriter writer, IInteropDataCollector interopDataCollector)
+        public static void WriteArrayTypeDefinition(ArrayType type, CodeWriter writer)
         {
             ErrorInformation.CurrentlyProcessing.Type = type.Resolve();
             if (CodeGenOptions.EnableErrorMessageTest)
@@ -445,15 +443,11 @@
                 ErrorTypeAndMethod.ThrowIfIsErrorType(type.Resolve());
             }
             writer.WriteCommentedLine(type.FullName);
-            object[] args = new object[] { Naming.ForTypeNameOnly(type), this.GetBaseTypeDeclaration(type) };
+            object[] args = new object[] { Naming.ForTypeNameOnly(type), GetBaseTypeDeclaration(type) };
             writer.WriteLine("struct {0} {1}", args);
             writer.BeginBlock();
             WriteArrayFieldsWithAccessors(writer, type);
             writer.EndBlock(true);
-            if (type.NeedsComCallableWrapper())
-            {
-                interopDataCollector.AddCCWMarshallingFunction(type);
-            }
         }
 
         private static void WriteComFieldGetters(CppCodeWriter writer, TypeReference declaringType, List<ComFieldWriteInstruction> fieldWriteInstructions)
@@ -683,7 +677,7 @@
                 }
                 else
                 {
-                    object[] objArray2 = new object[] { str, Naming.ForTypeNameOnly(type), this.GetBaseTypeDeclaration(type) };
+                    object[] objArray2 = new object[] { str, Naming.ForTypeNameOnly(type), GetBaseTypeDeclaration(type) };
                     writer.WriteLine("struct {0} {1} {2}", objArray2);
                     writer.BeginBlock();
                     WriteGuid(writer, type, interopDataCollector);

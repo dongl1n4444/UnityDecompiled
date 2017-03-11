@@ -108,7 +108,7 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private extern void DestroyWWW(bool cancel);
         /// <summary>
         /// <para>Disposes of an existing WWW object.</para>
@@ -395,7 +395,7 @@
         /// <summary>
         /// <para>Load an Ogg Vorbis file into the audio clip.</para>
         /// </summary>
-        [Obsolete("Obsolete msg (UnityUpgradable) -> * UnityEngine.WWWAudioExtensions.GetAudioClip(UnityEngine.WWW)", true), EditorBrowsable(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Obsolete msg (UnityUpgradable) -> * UnityEngine.WWWAudioExtensions.GetAudioClip(UnityEngine.WWW)", true)]
         public UnityEngine.Object oggVorbis =>
             null;
 

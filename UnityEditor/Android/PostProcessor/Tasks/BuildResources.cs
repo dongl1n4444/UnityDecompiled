@@ -2,7 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEditor;
     using UnityEditor.Android;
@@ -16,6 +18,7 @@
         private string _playerPackage;
         private string _stagingArea;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ProgressHandler OnProgress;
 
         private void CompileResources(PostProcessorContext context)
@@ -38,7 +41,7 @@
             string str7 = TasksCommon.Exec(tools.AAPT, args, this._stagingArea, errorMsg, 3);
             if (!str7.Contains("Done!") || !File.Exists(Path.Combine(this._stagingArea, "bin/resources.ap_")))
             {
-                Debug.LogError("Failed to re-package resources with the following parameters:\n" + args + "\n" + str7);
+                UnityEngine.Debug.LogError("Failed to re-package resources with the following parameters:\n" + args + "\n" + str7);
                 CancelPostProcess.AbortBuildPointToConsole("Resource re-package failed!", errorMsg);
             }
             if (libraries.Count > 0)
@@ -54,7 +57,7 @@
                 string str12 = TasksCommon.Exec(AndroidJavaTools.javacPath, str10, fullName, str11, 0);
                 if (str12.Trim().Length > 0)
                 {
-                    Debug.LogError("Failed to compile resources with the following parameters:\n" + str10 + "\n" + str12);
+                    UnityEngine.Debug.LogError("Failed to compile resources with the following parameters:\n" + str10 + "\n" + str12);
                     CancelPostProcess.AbortBuildPointToConsole("Resource compilation failed!", str11);
                 }
             }

@@ -25,7 +25,7 @@
             {
                 return false;
             }
-            if ((leftType.FullName != rightType.FullName) && (leftType.IsByReference & rightType.IsPointer))
+            if (((leftType.FullName != rightType.FullName) && leftType.IsByReference) && rightType.IsPointer)
             {
                 return true;
             }
@@ -37,7 +37,7 @@
             {
                 return false;
             }
-            return (leftType.IsArray || rightType.IsArray);
+            return ((((leftType.FullName != rightType.FullName) && leftType.IsDelegate()) && rightType.IsDelegate()) || (leftType.IsArray || rightType.IsArray));
         }
     }
 }

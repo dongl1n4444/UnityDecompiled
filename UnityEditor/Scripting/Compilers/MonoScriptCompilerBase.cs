@@ -28,7 +28,7 @@
             string responseFile = CommandLineFormatter.GenerateResponseFile(arguments);
             if (this.runUpdater)
             {
-                APIUpdaterHelper.UpdateScripts(responseFile, this._island.GetExtensionOfSourceFiles());
+                UnityEditor.Scripting.Compilers.APIUpdaterHelper.UpdateScripts(responseFile, this._island.GetExtensionOfSourceFiles());
             }
             ManagedProgram program = new ManagedProgram(monodistro, BuildPipeline.CompatibilityProfileToClassLibFolder(this._island._api_compatibility_level), compiler, " @" + responseFile, setMonoEnvironmentVariables, null);
             program.Start();

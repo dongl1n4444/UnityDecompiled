@@ -101,7 +101,7 @@
 
         internal class AudioProfilerClipViewColumnHeader
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private float[] <columnWidths>k__BackingField;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private float <dragWidth>k__BackingField;

@@ -1,16 +1,11 @@
 ﻿namespace UnityEditor
 {
     using System;
+    using UnityEngine;
 
     internal class LightingExplorerWindowTab
     {
-        private EmissionTable m_EmissionTable;
         private SerializedPropertyTable m_LightTable;
-
-        public LightingExplorerWindowTab(EmissionTable emissionTable)
-        {
-            this.m_EmissionTable = emissionTable;
-        }
 
         public LightingExplorerWindowTab(SerializedPropertyTable lightTable)
         {
@@ -23,10 +18,6 @@
             {
                 this.m_LightTable.OnDisable();
             }
-            else if (this.m_EmissionTable != null)
-            {
-                this.m_EmissionTable.OnDisable();
-            }
         }
 
         public void OnEnable()
@@ -35,27 +26,26 @@
             {
                 this.m_LightTable.OnEnable();
             }
-            else if (this.m_EmissionTable != null)
-            {
-                this.m_EmissionTable.OnEnable();
-            }
         }
 
         public void OnGUI()
         {
             EditorGUI.indentLevel++;
-            if (this.m_LightTable != null)
+            int indentLevel = EditorGUI.indentLevel;
+            float indent = EditorGUI.indent;
+            EditorGUI.indentLevel = 0;
+            EditorGUILayout.BeginHorizontal(new GUILayoutOption[0]);
+            GUILayout.Space(indent);
+            using (new EditorGUILayout.VerticalScope(new GUILayoutOption[0]))
             {
-                using (new TableScoper(0, () => this.m_LightTable.OnGUI()))
+                if (this.m_LightTable != null)
                 {
+                    this.m_LightTable.OnGUI();
                 }
             }
-            else if (this.m_EmissionTable != null)
-            {
-                using (new TableScoper(0, () => this.m_EmissionTable.OnGUI()))
-                {
-                }
-            }
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.Space();
+            EditorGUI.indentLevel = indentLevel;
             EditorGUI.indentLevel--;
         }
 
@@ -65,10 +55,6 @@
             {
                 this.m_LightTable.OnHierarchyChange();
             }
-            else if (this.m_EmissionTable != null)
-            {
-                this.m_EmissionTable.OnHierarchyChange();
-            }
         }
 
         public void OnInspectorUpdate()
@@ -76,10 +62,6 @@
             if (this.m_LightTable != null)
             {
                 this.m_LightTable.OnInspectorUpdate();
-            }
-            else if (this.m_EmissionTable != null)
-            {
-                this.m_EmissionTable.OnInspectorUpdate();
             }
         }
 
@@ -89,16 +71,14 @@
             {
                 this.m_LightTable.OnSelectionChange();
             }
-            else if (this.m_EmissionTable != null)
-            {
-                this.m_EmissionTable.OnSelectionChange();
-            }
         }
 
-        public bool Refresh()
+        public void OnSelectionChange(int[] instanceIDs)
         {
-            bool flag = false;
-            return (flag || ((this.m_LightTable != null) && this.m_LightTable.Refresh()));
+            if (this.m_LightTable != null)
+            {
+                this.m_LightTable.OnSelectionChange(instanceIDs);
+            }
         }
     }
 }

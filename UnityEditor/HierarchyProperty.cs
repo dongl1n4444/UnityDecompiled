@@ -54,7 +54,6 @@
         internal void SetSearchFilter(SearchFilter filter)
         {
             this.SetSearchFilterINTERNAL(SearchFilter.Split(filter.nameFilter), filter.classNames, filter.assetLabels, filter.assetBundleNames, filter.versionControlStates, filter.referencingInstanceIDs, filter.scenePaths, filter.showAllHits);
-            this.SetSearchFilterINTERNAL(SearchFilter.Split(filter.nameFilter), filter.classNames, filter.assetLabels, filter.assetBundleNames, new string[0], filter.referencingInstanceIDs, filter.scenePaths, filter.showAllHits);
         }
 
         public void SetSearchFilter(string searchString, int mode)
@@ -96,7 +95,7 @@
 
         public string name { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public Object pptrValue { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+        public UnityEngine.Object pptrValue { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         public int row { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }

@@ -92,8 +92,8 @@
         /// <param name="direction">Vector representing the direction of the box.</param>
         /// <param name="distance">Maximum distance over which to cast the box.</param>
         /// <param name="layerMask">Filter to detect Colliders only on certain layers.</param>
-        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than this value.</param>
-        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than this value.</param>
+        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than or equal to this value.</param>
+        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
         /// <returns>
         /// <para>The cast results returned.</para>
         /// </returns>
@@ -148,8 +148,8 @@
         /// <param name="direction">Vector representing the direction of the box.</param>
         /// <param name="distance">Maximum distance over which to cast the box.</param>
         /// <param name="layerMask">Filter to detect Colliders only on certain layers.</param>
-        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than this value.</param>
-        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than this value.</param>
+        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than or equal to this value.</param>
+        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
         /// <returns>
         /// <para>The cast results returned.</para>
         /// </returns>
@@ -203,8 +203,8 @@
         /// <param name="results">Array to receive results.</param>
         /// <param name="distance">Maximum distance over which to cast the box.</param>
         /// <param name="layerMask">Filter to detect Colliders only on certain layers.</param>
-        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than this value.</param>
-        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than this value.</param>
+        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than or equal to this value.</param>
+        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
         /// <returns>
         /// <para>Returns the number of results placed in the results array.</para>
         /// </returns>
@@ -470,8 +470,8 @@
         /// <param name="direction">Vector representing the direction of the circle.</param>
         /// <param name="distance">Maximum distance over which to cast the circle.</param>
         /// <param name="layerMask">Filter to detect Colliders only on certain layers.</param>
-        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than this value.</param>
-        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than this value.</param>
+        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than or equal to this value.</param>
+        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
         /// <returns>
         /// <para>The cast results returned.</para>
         /// </returns>
@@ -525,8 +525,8 @@
         /// <param name="direction">Vector representing the direction of the circle.</param>
         /// <param name="distance">Maximum distance over which to cast the circle.</param>
         /// <param name="layerMask">Filter to detect Colliders only on certain layers.</param>
-        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than this value.</param>
-        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than this value.</param>
+        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than or equal to this value.</param>
+        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
         /// <returns>
         /// <para>The cast results returned.</para>
         /// </returns>
@@ -579,8 +579,8 @@
         /// <param name="results">Array to receive results.</param>
         /// <param name="distance">Maximum distance over which to cast the circle.</param>
         /// <param name="layerMask">Filter to detect Colliders only on certain layers.</param>
-        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than this value.</param>
-        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than this value.</param>
+        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than or equal to this value.</param>
+        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
         /// <returns>
         /// <para>Returns the number of results placed in the results array.</para>
         /// </returns>
@@ -590,6 +590,16 @@
             return Internal_CircleCastNonAlloc(origin, radius, direction, distance, contactFilter, results);
         }
 
+        /// <summary>
+        /// <para>Calculates the minimum distance between two colliders.</para>
+        /// </summary>
+        /// <param name="colliderA">A collider used to calculate the minimum distance against colliderB.</param>
+        /// <param name="colliderB">A collider used to calculate the minimum distance against colliderA.</param>
+        /// <returns>
+        /// <para>The minimum distance between colliderA and colliderB.</para>
+        /// </returns>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern ColliderDistance2D Distance(Collider2D colliderA, Collider2D colliderB);
         private static int GetColliderContacts(Collider2D collider, ContactFilter2D contactFilter, ContactPoint2D[] results) => 
             INTERNAL_CALL_GetColliderContacts(collider, ref contactFilter, results);
 
@@ -599,15 +609,12 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern Collider2D GetColliderFromInstanceID(int instanceID);
         /// <summary>
-        /// <para>Retrieves all contacts for the Collider or Rigidbody.</para>
+        /// <para>Retrieves all colliders in contact with the collider.</para>
         /// </summary>
         /// <param name="collider">The collider to retrieve contacts for.</param>
-        /// <param name="rigidbody">The rigidbody to retrieve contacts for.  All colliders attached to this rigidbody will be checked.</param>
-        /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
         /// <param name="colliders">An array of Collider2D used to receive the results.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z or depth buffer, or normal angle.</param>
         /// <returns>
-        /// <para>Returns the number of contacts placed in the contacts array.</para>
+        /// <para>Returns the number of colliders placed in the colliders array.</para>
         /// </returns>
         public static int GetContacts(Collider2D collider, Collider2D[] colliders)
         {
@@ -616,13 +623,10 @@
         }
 
         /// <summary>
-        /// <para>Retrieves all contacts for the Collider or Rigidbody.</para>
+        /// <para>Retrieves all contact points in contact with the collider.</para>
         /// </summary>
         /// <param name="collider">The collider to retrieve contacts for.</param>
-        /// <param name="rigidbody">The rigidbody to retrieve contacts for.  All colliders attached to this rigidbody will be checked.</param>
         /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
-        /// <param name="colliders">An array of Collider2D used to receive the results.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z or depth buffer, or normal angle.</param>
         /// <returns>
         /// <para>Returns the number of contacts placed in the contacts array.</para>
         /// </returns>
@@ -633,15 +637,12 @@
         }
 
         /// <summary>
-        /// <para>Retrieves all contacts for the Collider or Rigidbody.</para>
+        /// <para>Retrieves all colliders in contact with any of the collider(s) attached to this rigidbody.</para>
         /// </summary>
-        /// <param name="collider">The collider to retrieve contacts for.</param>
         /// <param name="rigidbody">The rigidbody to retrieve contacts for.  All colliders attached to this rigidbody will be checked.</param>
-        /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
         /// <param name="colliders">An array of Collider2D used to receive the results.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z or depth buffer, or normal angle.</param>
         /// <returns>
-        /// <para>Returns the number of contacts placed in the contacts array.</para>
+        /// <para>Returns the number of colliders placed in the colliders array.</para>
         /// </returns>
         public static int GetContacts(Rigidbody2D rigidbody, Collider2D[] colliders)
         {
@@ -650,13 +651,10 @@
         }
 
         /// <summary>
-        /// <para>Retrieves all contacts for the Collider or Rigidbody.</para>
+        /// <para>Retrieves all contact points in contact with any of the collider(s) attached to this rigidbody.</para>
         /// </summary>
-        /// <param name="collider">The collider to retrieve contacts for.</param>
         /// <param name="rigidbody">The rigidbody to retrieve contacts for.  All colliders attached to this rigidbody will be checked.</param>
         /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
-        /// <param name="colliders">An array of Collider2D used to receive the results.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z or depth buffer, or normal angle.</param>
         /// <returns>
         /// <para>Returns the number of contacts placed in the contacts array.</para>
         /// </returns>
@@ -667,27 +665,23 @@
         }
 
         /// <summary>
-        /// <para>Retrieves all contacts for the Collider or Rigidbody.</para>
+        /// <para>Retrieves all colliders in contact with the collider, with the results filtered by the ContactFilter2D.</para>
         /// </summary>
         /// <param name="collider">The collider to retrieve contacts for.</param>
-        /// <param name="rigidbody">The rigidbody to retrieve contacts for.  All colliders attached to this rigidbody will be checked.</param>
-        /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
+        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
         /// <param name="colliders">An array of Collider2D used to receive the results.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z or depth buffer, or normal angle.</param>
         /// <returns>
-        /// <para>Returns the number of contacts placed in the contacts array.</para>
+        /// <para>Returns the number of colliders placed in the colliders array.</para>
         /// </returns>
         public static int GetContacts(Collider2D collider, ContactFilter2D contactFilter, Collider2D[] colliders) => 
             GetColliderContactsCollidersOnly(collider, contactFilter, colliders);
 
         /// <summary>
-        /// <para>Retrieves all contacts for the Collider or Rigidbody.</para>
+        /// <para>Retrieves all contact points in contact with the collider, with the results filtered by the ContactFilter2D.</para>
         /// </summary>
         /// <param name="collider">The collider to retrieve contacts for.</param>
-        /// <param name="rigidbody">The rigidbody to retrieve contacts for.  All colliders attached to this rigidbody will be checked.</param>
+        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
         /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
-        /// <param name="colliders">An array of Collider2D used to receive the results.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z or depth buffer, or normal angle.</param>
         /// <returns>
         /// <para>Returns the number of contacts placed in the contacts array.</para>
         /// </returns>
@@ -695,27 +689,23 @@
             GetColliderContacts(collider, contactFilter, contacts);
 
         /// <summary>
-        /// <para>Retrieves all contacts for the Collider or Rigidbody.</para>
+        /// <para>Retrieves all colliders in contact with any of the collider(s) attached to this rigidbody, with the results filtered by the ContactFilter2D.</para>
         /// </summary>
-        /// <param name="collider">The collider to retrieve contacts for.</param>
         /// <param name="rigidbody">The rigidbody to retrieve contacts for.  All colliders attached to this rigidbody will be checked.</param>
-        /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
+        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
         /// <param name="colliders">An array of Collider2D used to receive the results.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z or depth buffer, or normal angle.</param>
         /// <returns>
-        /// <para>Returns the number of contacts placed in the contacts array.</para>
+        /// <para>Returns the number of colliders placed in the colliders array.</para>
         /// </returns>
         public static int GetContacts(Rigidbody2D rigidbody, ContactFilter2D contactFilter, Collider2D[] colliders) => 
             GetRigidbodyContactsCollidersOnly(rigidbody, contactFilter, colliders);
 
         /// <summary>
-        /// <para>Retrieves all contacts for the Collider or Rigidbody.</para>
+        /// <para>Retrieves all contact points in contact with any of the collider(s) attached to this rigidbody, with the results filtered by the ContactFilter2D.</para>
         /// </summary>
-        /// <param name="collider">The collider to retrieve contacts for.</param>
         /// <param name="rigidbody">The rigidbody to retrieve contacts for.  All colliders attached to this rigidbody will be checked.</param>
+        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
         /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
-        /// <param name="colliders">An array of Collider2D used to receive the results.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z or depth buffer, or normal angle.</param>
         /// <returns>
         /// <para>Returns the number of contacts placed in the contacts array.</para>
         /// </returns>
@@ -727,13 +717,19 @@
         /// </summary>
         /// <param name="collider1">The first collider to compare to collider2.</param>
         /// <param name="collider2">The second collider to compare to collider1.</param>
+        /// <returns>
+        /// <para>Whether the collision detection system will ignore all collisionstriggers between collider1 and collider2/ or not.</para>
+        /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool GetIgnoreCollision(Collider2D collider1, Collider2D collider2);
         /// <summary>
-        /// <para>Should collisions between the specified layers be ignored?</para>
+        /// <para>Checks whether collisions between the specified layers be ignored or not.</para>
         /// </summary>
         /// <param name="layer1">ID of first layer.</param>
         /// <param name="layer2">ID of second layer.</param>
+        /// <returns>
+        /// <para>Whether collisions between the specified layers be ignored or not.</para>
+        /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool GetIgnoreLayerCollision(int layer1, int layer2);
         /// <summary>
@@ -959,6 +955,8 @@
         private static extern int INTERNAL_CALL_Internal_RaycastNonAlloc(ref Vector2 origin, ref Vector2 direction, float distance, ref ContactFilter2D contactFilter, RaycastHit2D[] results);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool INTERNAL_CALL_IsTouching(Collider2D collider, ref ContactFilter2D contactFilter);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern int INTERNAL_CALL_OverlapCollider(Collider2D collider, ref ContactFilter2D contactFilter, Collider2D[] results);
         private static void Internal_CapsuleCast(Vector2 origin, Vector2 size, CapsuleDirection2D capsuleDirection, float angle, Vector2 direction, float distance, ContactFilter2D contactFilter, out RaycastHit2D raycastHit)
         {
             INTERNAL_CALL_Internal_CapsuleCast(ref origin, ref size, capsuleDirection, angle, ref direction, distance, ref contactFilter, out raycastHit);
@@ -1077,37 +1075,32 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_set_gravity(ref Vector2 value);
         /// <summary>
-        /// <para>Checks whether the passed colliders are in contact.</para>
+        /// <para>Checks whether the passed colliders are in contact or not.</para>
         /// </summary>
         /// <param name="collider1">The collider to check if it is touching collider2.</param>
         /// <param name="collider2">The collider to check if it is touching collider1.</param>
-        /// <param name="collider">Checks if collider is touching any other collider, filtered by contactFilter.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z or depth buffer, or normal angle.</param>
         /// <returns>
         /// <para>Whether collider1 is touching collider2 or not.</para>
         /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool IsTouching(Collider2D collider1, Collider2D collider2);
         /// <summary>
-        /// <para>Checks whether the passed colliders are in contact.</para>
+        /// <para>Checks whether the passed colliders are in contact or not.</para>
         /// </summary>
-        /// <param name="collider1">The collider to check if it is touching collider2.</param>
-        /// <param name="collider2">The collider to check if it is touching collider1.</param>
-        /// <param name="collider">Checks if collider is touching any other collider, filtered by contactFilter.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z or depth buffer, or normal angle.</param>
+        /// <param name="collider">The collider to check if it is touching any other collider filtered by the contactFilter.</param>
+        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
         /// <returns>
-        /// <para>Whether collider1 is touching collider2 or not.</para>
+        /// <para>Whether the collider is touching any other collider filtered by the contactFilter or not.</para>
         /// </returns>
         public static bool IsTouching(Collider2D collider, ContactFilter2D contactFilter) => 
             INTERNAL_CALL_IsTouching(collider, ref contactFilter);
 
         /// <summary>
-        /// <para>Checks whether the passed colliders are in contact.</para>
+        /// <para>Checks whether the passed colliders are in contact or not.</para>
         /// </summary>
         /// <param name="collider1">The collider to check if it is touching collider2.</param>
         /// <param name="collider2">The collider to check if it is touching collider1.</param>
-        /// <param name="collider">Checks if collider is touching any other collider, filtered by contactFilter.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z or depth buffer, or normal angle.</param>
+        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
         /// <returns>
         /// <para>Whether collider1 is touching collider2 or not.</para>
         /// </returns>
@@ -1174,8 +1167,8 @@
         /// <param name="start">The start point of the line in world space.</param>
         /// <param name="end">The end point of the line in world space.</param>
         /// <param name="layerMask">Filter to detect Colliders only on certain layers.</param>
-        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than this value.</param>
-        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than this value.</param>
+        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than or equal to this value.</param>
+        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
         /// <returns>
         /// <para>The cast results returned.</para>
         /// </returns>
@@ -1217,8 +1210,8 @@
         /// <param name="start">The start point of the line in world space.</param>
         /// <param name="end">The end point of the line in world space.</param>
         /// <param name="layerMask">Filter to detect Colliders only on certain layers.</param>
-        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than this value.</param>
-        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than this value.</param>
+        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than or equal to this value.</param>
+        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
         /// <returns>
         /// <para>The cast results returned.</para>
         /// </returns>
@@ -1255,8 +1248,8 @@
         /// <summary>
         /// <para>Casts a line against colliders in the scene.</para>
         /// </summary>
-        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than this value.</param>
-        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than this value.</param>
+        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than or equal to this value.</param>
+        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
         /// <param name="start">The start point of the line in world space.</param>
         /// <param name="end">The end point of the line in world space.</param>
         /// <param name="results">Returned array of objects that intersect the line.</param>
@@ -1300,7 +1293,7 @@
         /// <param name="pointA">One corner of the rectangle.</param>
         /// <param name="pointB">Diagonally opposite the point A corner of the rectangle.</param>
         /// <param name="results">The array to receive results.  The size of the array determines the maximum number of results that can be returned.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z or depth buffer, or normal angle.</param>
+        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, and Z or depth buffer. Note that normal angle is not used for overlap testing.</param>
         /// <returns>
         /// <para>Returns the number of results placed in the results array.</para>
         /// </returns>
@@ -1313,8 +1306,8 @@
         /// <param name="pointA">One corner of the rectangle.</param>
         /// <param name="pointB">Diagonally opposite the point A corner of the rectangle.</param>
         /// <param name="layerMask">Filter to check objects only on specific layers.</param>
-        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than this value.</param>
-        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than this value.</param>
+        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than or equal to this value.</param>
+        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
         /// <returns>
         /// <para>The collider overlapping the area.</para>
         /// </returns>
@@ -1354,8 +1347,8 @@
         /// <param name="pointA">One corner of the rectangle.</param>
         /// <param name="pointB">Diagonally opposite the point A corner of the rectangle.</param>
         /// <param name="layerMask">Filter to check objects only on specific layers.</param>
-        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than this value.</param>
-        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than this value.</param>
+        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than or equal to this value.</param>
+        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
         /// <returns>
         /// <para>The cast results returned.</para>
         /// </returns>
@@ -1396,8 +1389,8 @@
         /// <param name="pointB">Diagonally opposite the point A corner of the rectangle.</param>
         /// <param name="results">Array to receive results.</param>
         /// <param name="layerMask">Filter to check objects only on specified layers.</param>
-        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than this value.</param>
-        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than this value.</param>
+        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than or equal to this value.</param>
+        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
         /// <returns>
         /// <para>Returns the number of results placed in the results array.</para>
         /// </returns>
@@ -1437,7 +1430,7 @@
         /// <param name="point">Center of the box.</param>
         /// <param name="size">Size of the box.</param>
         /// <param name="angle">Angle of the box.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z or depth buffer, or normal angle.</param>
+        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, and Z or depth buffer. Note that normal angle is not used for overlap testing.</param>
         /// <param name="results">The array to receive results.  The size of the array determines the maximum number of results that can be returned.</param>
         /// <returns>
         /// <para>Returns the number of results placed in the results array.</para>
@@ -1579,7 +1572,7 @@
         /// <param name="size">Size of the capsule.</param>
         /// <param name="direction">The direction of the capsule.</param>
         /// <param name="angle">Angle of the capsule.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z or depth buffer, or normal angle.</param>
+        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, and Z or depth buffer. Note that normal angle is not used for overlap testing.</param>
         /// <param name="results">The array to receive results.  The size of the array determines the maximum number of results that can be returned.</param>
         /// <returns>
         /// <para>Returns the number of results placed in the results array.</para>
@@ -1722,7 +1715,7 @@
         /// </summary>
         /// <param name="point">Centre of the circle.</param>
         /// <param name="radius">Radius of the circle.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z or depth buffer, or normal angle.</param>
+        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, and Z or depth buffer. Note that normal angle is not used for overlap testing.</param>
         /// <param name="results">The array to receive results.  The size of the array determines the maximum number of results that can be returned.</param>
         /// <returns>
         /// <para>Returns the number of results placed in the results array.</para>
@@ -1736,8 +1729,8 @@
         /// <param name="point">Centre of the circle.</param>
         /// <param name="radius">Radius of the circle.</param>
         /// <param name="layerMask">Filter to check objects only on specific layers.</param>
-        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than this value.</param>
-        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than this value.</param>
+        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than or equal to this value.</param>
+        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
         /// <returns>
         /// <para>The collider overlapping the circle.</para>
         /// </returns>
@@ -1777,8 +1770,8 @@
         /// <param name="point">Center of the circle.</param>
         /// <param name="radius">Radius of the circle.</param>
         /// <param name="layerMask">Filter to check objects only on specified layers.</param>
-        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than this value.</param>
-        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than this value.</param>
+        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than or equal to this value.</param>
+        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
         /// <returns>
         /// <para>The cast results.</para>
         /// </returns>
@@ -1819,8 +1812,8 @@
         /// <param name="radius">Radius of the circle.</param>
         /// <param name="results">Array to receive results.</param>
         /// <param name="layerMask">Filter to check objects only on specific layers.</param>
-        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than this value.</param>
-        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than this value.</param>
+        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than or equal to this value.</param>
+        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
         /// <returns>
         /// <para>Returns the number of results placed in the results array.</para>
         /// </returns>
@@ -1829,6 +1822,18 @@
             ContactFilter2D contactFilter = ContactFilter2D.CreateLegacyFilter(layerMask, minDepth, maxDepth);
             return Internal_OverlapCircleNonAlloc(point, radius, contactFilter, results);
         }
+
+        /// <summary>
+        /// <para>Get a list of all colliders that overlap collider.</para>
+        /// </summary>
+        /// <param name="collider">The collider that defines the area used to query for other collider overlaps.</param>
+        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth.  Note that normal angle is not used for overlap testing.</param>
+        /// <param name="results">The array to receive results.  The size of the array determines the maximum number of results that can be returned.</param>
+        /// <returns>
+        /// <para>Returns the number of results placed in the results array.</para>
+        /// </returns>
+        public static int OverlapCollider(Collider2D collider, ContactFilter2D contactFilter, Collider2D[] results) => 
+            INTERNAL_CALL_OverlapCollider(collider, ref contactFilter, results);
 
         [ExcludeFromDocs]
         public static Collider2D OverlapPoint(Vector2 point)
@@ -1858,7 +1863,7 @@
         /// <para>Checks if a collider overlaps a point in world space.</para>
         /// </summary>
         /// <param name="point">A point in world space.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z or depth buffer, or normal angle.</param>
+        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, and Z or depth buffer. Note that normal angle is not used for overlap testing.</param>
         /// <param name="results">The array to receive results.  The size of the array determines the maximum number of results that can be returned.</param>
         /// <returns>
         /// <para>Returns the number of results placed in the results array.</para>
@@ -1871,8 +1876,8 @@
         /// </summary>
         /// <param name="point">A point in world space.</param>
         /// <param name="layerMask">Filter to check objects only on specific layers.</param>
-        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than this value.</param>
-        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than this value.</param>
+        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than or equal to this value.</param>
+        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
         /// <returns>
         /// <para>The collider overlapping the point.</para>
         /// </returns>
@@ -1909,8 +1914,8 @@
         /// <summary>
         /// <para>Get a list of all colliders that overlap a point in space.</para>
         /// </summary>
-        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than this value.</param>
-        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than this value.</param>
+        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than or equal to this value.</param>
+        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
         /// <param name="point">A point in space.</param>
         /// <param name="layerMask">Filter to check objects only on specific layers.</param>
         /// <returns>
@@ -1949,8 +1954,8 @@
         /// <summary>
         /// <para>Get a list of all colliders that overlap a point in space.</para>
         /// </summary>
-        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than this value.</param>
-        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than this value.</param>
+        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than or equal to this value.</param>
+        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
         /// <param name="point">A point in space.</param>
         /// <param name="results">Array to receive results.</param>
         /// <param name="layerMask">Filter to check objects only on specific layers.</param>
@@ -2025,8 +2030,8 @@
         /// <param name="direction">The vector representing the direction of the ray.</param>
         /// <param name="distance">Maximum distance over which to cast the ray.</param>
         /// <param name="layerMask">Filter to detect Colliders only on certain layers.</param>
-        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than this value.</param>
-        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than this value.</param>
+        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than or equal to this value.</param>
+        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
         /// <returns>
         /// <para>The cast results returned.</para>
         /// </returns>
@@ -2079,8 +2084,8 @@
         /// <param name="direction">The vector representing the direction of the ray.</param>
         /// <param name="distance">Maximum distance over which to cast the ray.</param>
         /// <param name="layerMask">Filter to detect Colliders only on certain layers.</param>
-        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than this value.</param>
-        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than this value.</param>
+        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than or equal to this value.</param>
+        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
         /// <returns>
         /// <para>The cast results returned.</para>
         /// </returns>
@@ -2127,8 +2132,8 @@
         /// <summary>
         /// <para>Casts a ray into the scene.</para>
         /// </summary>
-        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than this value.</param>
-        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than this value.</param>
+        /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than or equal to this value.</param>
+        /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
         /// <param name="origin">The point in 2D space where the ray originates.</param>
         /// <param name="direction">The vector representing the direction of the ray.</param>
         /// <param name="results">Array to receive results.</param>
@@ -2274,6 +2279,11 @@
         public static float contactArrowScale { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
+        /// <para>The default contact offset of the newly created colliders.</para>
+        /// </summary>
+        public static float defaultContactOffset { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
         /// <para>Ets the collision callbacks to stop or continue processing if any of the objects involved in the collision are deleted.</para>
         /// </summary>
         [Obsolete("Physics2D.deleteStopsCallbacks is deprecated. Use Physics2D.changeStopsCallbacks instead. (UnityUpgradable) -> changeStopsCallbacks", true)]
@@ -2329,9 +2339,18 @@
         public static float maxTranslationSpeed { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
-        /// <para>The minimum contact penetration radius allowed before any separation impulse force is applied.  Extreme caution should be used when modifying this value as making this smaller means that polygons will have an insufficient buffer for continuous collision and making it larger may create artefacts for vertex collision.</para>
+        /// <para>This property is obsolete.  You should use defaultContactOffset instead.</para>
         /// </summary>
-        public static float minPenetrationForPenalty { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+        [Obsolete("Physics2D.minPenetrationForPenalty is deprecated. Use Physics2D.defaultContactOffset instead. (UnityUpgradable) -> defaultContactOffset", false)]
+        public static float minPenetrationForPenalty
+        {
+            get => 
+                defaultContactOffset;
+            set
+            {
+                defaultContactOffset = value;
+            }
+        }
 
         /// <summary>
         /// <para>The number of iterations of the physics solver when considering objects' positions.</para>

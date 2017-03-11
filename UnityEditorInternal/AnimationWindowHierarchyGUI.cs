@@ -74,7 +74,7 @@
                     rootGameObject = selectionBinding.rootGameObject;
                 }
             }
-            return base.GetRenameOverlay().BeginRename(this.GetGameObjectName(rootGameObject, this.m_RenamedNode.path), item.id, delay);
+            return base.GetRenameOverlay().BeginRename(this.m_RenamedNode.path, item.id, delay);
         }
 
         public override void BeginRowGUI()
@@ -151,7 +151,7 @@
                     GUI.color = k_KeyColorForNonCurves;
                 }
                 bool flag = false;
-                if (AnimationMode.InAnimationMode())
+                if (UnityEditor.AnimationMode.InAnimationMode())
                 {
                     foreach (AnimationWindowCurve curve in node.curves)
                     {
@@ -230,7 +230,7 @@
                 {
                     TreeViewGUI.Styles.selectionStyle.Draw(rect, false, false, true, focused);
                 }
-                if (AnimationMode.InAnimationMode())
+                if (UnityEditor.AnimationMode.InAnimationMode())
                 {
                     rect.width -= 77f;
                 }
@@ -509,7 +509,7 @@
                 menu.AddItem(new GUIContent("Interpolation/Euler Angles (Quaternion)"), rotationInterpolationMode == RotationCurveInterpolation.Mode.Baked, !enabled ? function : new GenericMenu.MenuFunction2(this.ChangeRotationInterpolation), RotationCurveInterpolation.Mode.Baked);
                 menu.AddItem(new GUIContent("Interpolation/Quaternion"), rotationInterpolationMode == RotationCurveInterpolation.Mode.NonBaked, !enabled ? function : new GenericMenu.MenuFunction2(this.ChangeRotationInterpolation), RotationCurveInterpolation.Mode.NonBaked);
             }
-            if (AnimationMode.InAnimationMode())
+            if (UnityEditor.AnimationMode.InAnimationMode())
             {
                 menu.AddSeparator("");
                 bool flag3 = true;
@@ -826,11 +826,10 @@
                 Undo.RecordObject(this.state.activeAnimationClip, "Rename Curve");
                 foreach (AnimationWindowCurve curve in this.m_RenamedNode.curves)
                 {
-                    string newPath = this.RenamePath(curve.path, name);
-                    EditorCurveBinding renamedBinding = AnimationWindowUtility.GetRenamedBinding(curve.binding, newPath);
+                    EditorCurveBinding renamedBinding = AnimationWindowUtility.GetRenamedBinding(curve.binding, name);
                     if (AnimationWindowUtility.CurveExists(renamedBinding, this.state.allCurves.ToArray()))
                     {
-                        Debug.LogWarning("Curve already exists, renaming cancelled.");
+                        UnityEngine.Debug.LogWarning("Curve already exists, renaming cancelled.");
                     }
                     else
                     {
@@ -839,15 +838,6 @@
                 }
             }
             this.m_RenamedNode = null;
-        }
-
-        private string RenamePath(string oldPath, string newGameObjectName)
-        {
-            if (oldPath.Length > 0)
-            {
-                return (this.GetPathWithoutChildmostGameObject(oldPath) + newGameObjectName);
-            }
-            return newGameObjectName;
         }
 
         private void SetStyleTextColor(GUIStyle style, Color color)

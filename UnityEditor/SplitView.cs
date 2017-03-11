@@ -178,7 +178,7 @@
                     child.position = base.position;
                     if (!Unsupported.IsDestroyScriptableObject(this))
                     {
-                        Object.DestroyImmediate(this);
+                        UnityEngine.Object.DestroyImmediate(this);
                     }
                     return;
                 }
@@ -190,7 +190,7 @@
                     child.Reflow();
                     if (!Unsupported.IsDestroyScriptableObject(this))
                     {
-                        Object.DestroyImmediate(this);
+                        UnityEngine.Object.DestroyImmediate(this);
                     }
                     return;
                 }
@@ -223,7 +223,7 @@
                         ((SplitView) base.parent).RemoveChildNice(this);
                         if (!Unsupported.IsDestroyScriptableObject(this))
                         {
-                            Object.DestroyImmediate(this, true);
+                            UnityEngine.Object.DestroyImmediate(this, true);
                         }
                     }
                     cleanuppable.Cleanup();

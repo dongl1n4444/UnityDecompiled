@@ -90,7 +90,7 @@
                     }
                 }
             }
-            FileStream stream = new FileStream(path, FileMode.Create);
+            FileStream stream = new FileStream(path, System.IO.FileMode.Create);
             stream.Write(buffer, 0, buffer.Length);
             stream.Close();
         }

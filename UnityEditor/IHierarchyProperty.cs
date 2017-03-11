@@ -42,7 +42,7 @@
 
         string name { get; }
 
-        Object pptrValue { get; }
+        UnityEngine.Object pptrValue { get; }
 
         int row { get; }
     }

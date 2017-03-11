@@ -14,6 +14,8 @@
     internal class TestRunnerWindow : EditorWindow, IHasCustomMenu
     {
         [CompilerGenerated]
+        private static GenericMenu.MenuFunction <>f__am$cache0;
+        [CompilerGenerated]
         private static EditorApplication.CallbackFunction <>f__mg$cache0;
         [CompilerGenerated]
         private static EditorApplication.CallbackFunction <>f__mg$cache1;
@@ -24,9 +26,8 @@
         public TestFilterSettings filterSettings;
         [SerializeField]
         private EditModeTestListGUI m_EditModeTestListGUI;
-        private readonly GUIContent m_GUIBlockUI = new GUIContent("Block UI when running", "Block UI when running tests");
+        private readonly GUIContent m_GUIDisablePlaymodeTestsRunner = new GUIContent("Disable playmode tests runner");
         private readonly GUIContent m_GUIHorizontalSplit = new GUIContent("Horizontal layout");
-        private readonly GUIContent m_GUIPauseOnFailure = new GUIContent("Pause on test failure");
         private readonly GUIContent m_GUIVerticalSplit = new GUIContent("Vertical layout");
         private bool m_IsBuilding;
         [SerializeField]
@@ -50,16 +51,25 @@
             float[] relativeSizes = new float[] { 75f, 25f };
             int[] minSizes = new int[] { 0x20, 0x20 };
             this.m_Spl = new SplitterState(relativeSizes, minSizes, null);
-            this.m_TestTypeToolbarIndex = 0;
+            this.m_TestTypeToolbarIndex = 1;
         }
 
         public void AddItemsToMenu(GenericMenu menu)
         {
-            menu.AddItem(this.m_GUIBlockUI, this.m_Settings.blockUIWhenRunning, new GenericMenu.MenuFunction(this.m_Settings.ToggleBlockUIWhenRunning));
-            menu.AddItem(this.m_GUIPauseOnFailure, this.m_Settings.pauseOnTestFailure, new GenericMenu.MenuFunction(this.m_Settings.TogglePauseOnTestFailure));
-            menu.AddSeparator(null);
             menu.AddItem(this.m_GUIVerticalSplit, this.m_Settings.verticalSplit, new GenericMenu.MenuFunction(this.m_Settings.ToggleVerticalSplit));
             menu.AddItem(this.m_GUIHorizontalSplit, !this.m_Settings.verticalSplit, new GenericMenu.MenuFunction(this.m_Settings.ToggleVerticalSplit));
+            if (IsPlaymodeTestRunnerEnabled())
+            {
+                menu.AddSeparator(null);
+                if (<>f__am$cache0 == null)
+                {
+                    <>f__am$cache0 = delegate {
+                        EnablePlaymodeTestRunnerEnabled(false);
+                        EditorUtility.DisplayDialog("Disable PlayMode Tests", "You need to restart the editor now", "Ok");
+                    };
+                }
+                menu.AddItem(this.m_GUIDisablePlaymodeTestsRunner, false, <>f__am$cache0);
+            }
         }
 
         [DidReloadScripts]
@@ -70,6 +80,11 @@
                 s_Instance.m_SelectedTestTypes.Repaint();
                 s_Instance.Repaint();
             }
+        }
+
+        internal static void EnablePlaymodeTestRunnerEnabled(bool enable)
+        {
+            EditorPrefs.SetBool("PlayModeTestEnabled", enable);
         }
 
         private static void InitBackgroundRunners()
@@ -90,6 +105,9 @@
             }
             EditorSceneManager.sceneWasOpened = (UnityAction<Scene, OpenSceneMode>) Delegate.Combine(EditorSceneManager.sceneWasOpened, <>f__mg$cache2);
         }
+
+        internal static bool IsPlaymodeTestRunnerEnabled() => 
+            EditorPrefs.GetBool("PlayModeTestEnabled");
 
         public void OnDestroy()
         {

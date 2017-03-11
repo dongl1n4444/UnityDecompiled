@@ -70,7 +70,7 @@
                 {
                     str6 = "Assets/" + searchString.Substring(num3 + 1);
                 }
-                Object obj2 = AssetDatabase.LoadMainAssetAtPath(str6);
+                UnityEngine.Object obj2 = AssetDatabase.LoadMainAssetAtPath(str6);
                 if (obj2 != null)
                 {
                     instanceID = obj2.GetInstanceID();

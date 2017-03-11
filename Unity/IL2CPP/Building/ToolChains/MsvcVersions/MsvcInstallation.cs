@@ -3,28 +3,43 @@
     using Microsoft.Win32;
     using NiceIO;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+    using System.Threading;
     using Unity.IL2CPP.Building;
     using Unity.IL2CPP.Common;
+    using Unity.IL2CPP.Portability;
 
     public abstract class MsvcInstallation
     {
         private static Dictionary<System.Version, MsvcInstallation> _installations = new Dictionary<System.Version, MsvcInstallation>();
         private readonly bool _use64BitTools;
         [CompilerGenerated]
-        private static Func<NPath, string> <>f__am$cache0;
+        private static Func<NPath, NPath> <>f__am$cache0;
         [CompilerGenerated]
-        private static Func<System.Version, int> <>f__am$cache1;
+        private static Func<NPath, NPath> <>f__am$cache1;
         [CompilerGenerated]
-        private static Func<System.Version, int> <>f__am$cache2;
+        private static Func<NPath, NPath> <>f__am$cache2;
         [CompilerGenerated]
-        private static Func<System.Version, int> <>f__am$cache3;
+        private static Func<NPath, NPath> <>f__am$cache3;
         [CompilerGenerated]
-        private static Func<System.Version, int> <>f__am$cache4;
+        private static Func<NPath, NPath> <>f__am$cache4;
+        [CompilerGenerated]
+        private static Func<NPath, NPath> <>f__am$cache5;
+        [CompilerGenerated]
+        private static Func<NPath, string> <>f__am$cache6;
+        [CompilerGenerated]
+        private static Func<System.Version, int> <>f__am$cache7;
+        [CompilerGenerated]
+        private static Func<System.Version, int> <>f__am$cache8;
+        [CompilerGenerated]
+        private static Func<System.Version, int> <>f__am$cache9;
+        [CompilerGenerated]
+        private static Func<System.Version, int> <>f__am$cacheA;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private NPath <SDKDirectory>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -98,25 +113,25 @@
             using (Process process = Process.GetCurrentProcess())
             {
                 bool flag2;
-                return (IsWow64Process(process.Handle, out flag2) && flag2);
+                return (IsWow64Process(process.GetHandlePortable(), out flag2) && flag2);
             }
         }
 
         public abstract IEnumerable<NPath> GetIncludeDirectories(Unity.IL2CPP.Building.Architecture architecture);
         public static MsvcInstallation GetLatestInstallationAtLeast(System.Version version)
         {
-            <GetLatestInstallationAtLeast>c__AnonStorey0 storey = new <GetLatestInstallationAtLeast>c__AnonStorey0 {
+            <GetLatestInstallationAtLeast>c__AnonStorey1 storey = new <GetLatestInstallationAtLeast>c__AnonStorey1 {
                 version = version
             };
-            if (<>f__am$cache3 == null)
+            if (<>f__am$cache9 == null)
             {
-                <>f__am$cache3 = v => v.Major;
+                <>f__am$cache9 = v => v.Major;
             }
-            if (<>f__am$cache4 == null)
+            if (<>f__am$cacheA == null)
             {
-                <>f__am$cache4 = v => v.Minor;
+                <>f__am$cacheA = v => v.Minor;
             }
-            System.Version version2 = _installations.Keys.OrderByDescending<System.Version, int>(<>f__am$cache3).ThenByDescending<System.Version, int>(<>f__am$cache4).Where<System.Version>(new Func<System.Version, bool>(storey.<>m__0)).FirstOrDefault<System.Version>();
+            System.Version version2 = _installations.Keys.OrderByDescending<System.Version, int>(<>f__am$cache9).ThenByDescending<System.Version, int>(<>f__am$cacheA).Where<System.Version>(new Func<System.Version, bool>(storey.<>m__0)).FirstOrDefault<System.Version>();
             if (version2 == null)
             {
                 throw new Exception($"MSVC Installation version {storey.version.Major}.{storey.version.Minor} or later is not installed on current machine!");
@@ -126,15 +141,15 @@
 
         public static MsvcInstallation GetLatestInstalled()
         {
-            if (<>f__am$cache1 == null)
+            if (<>f__am$cache7 == null)
             {
-                <>f__am$cache1 = k => k.Major;
+                <>f__am$cache7 = k => k.Major;
             }
-            if (<>f__am$cache2 == null)
+            if (<>f__am$cache8 == null)
             {
-                <>f__am$cache2 = k => k.Minor;
+                <>f__am$cache8 = k => k.Minor;
             }
-            System.Version version = _installations.Keys.OrderByDescending<System.Version, int>(<>f__am$cache1).ThenByDescending<System.Version, int>(<>f__am$cache2).FirstOrDefault<System.Version>();
+            System.Version version = _installations.Keys.OrderByDescending<System.Version, int>(<>f__am$cache7).ThenByDescending<System.Version, int>(<>f__am$cache8).FirstOrDefault<System.Version>();
             if (version == null)
             {
                 throw new Exception("No MSVC installations were found on the machine!");
@@ -156,50 +171,58 @@
                     source.Add(this.VisualStudioDirectory.Combine(textArray2));
                     if (this.SDKDirectory != null)
                     {
-                        string[] textArray3 = new string[] { "bin" };
-                        string[] textArray4 = new string[] { "x64" };
-                        source.Add(this.SDKDirectory.Combine(textArray3).Combine(textArray4));
+                        if (<>f__am$cache0 == null)
+                        {
+                            <>f__am$cache0 = d => d.Combine(new string[] { "x64" });
+                        }
+                        source.AddRange(this.GetSDKBinDirectories().Select<NPath, NPath>(<>f__am$cache0));
                     }
                 }
                 else
                 {
-                    string[] textArray5 = new string[] { "VC", "bin" };
-                    source.Add(this.VisualStudioDirectory.Combine(textArray5));
+                    string[] textArray3 = new string[] { "VC", "bin" };
+                    source.Add(this.VisualStudioDirectory.Combine(textArray3));
                 }
                 if (this.SDKDirectory != null)
                 {
-                    string[] textArray6 = new string[] { "bin" };
-                    string[] textArray7 = new string[] { "x86" };
-                    source.Add(this.SDKDirectory.Combine(textArray6).Combine(textArray7));
+                    if (<>f__am$cache1 == null)
+                    {
+                        <>f__am$cache1 = d => d.Combine(new string[] { "x86" });
+                    }
+                    source.AddRange(this.GetSDKBinDirectories().Select<NPath, NPath>(<>f__am$cache1));
                 }
             }
             else if (architecture is ARMv7Architecture)
             {
                 if (this._use64BitTools)
                 {
-                    string[] textArray8 = new string[] { "VC", "bin", "amd64_arm" };
-                    source.Add(this.VisualStudioDirectory.Combine(textArray8));
-                    string[] textArray9 = new string[] { "VC", "bin", "amd64" };
-                    source.Add(this.VisualStudioDirectory.Combine(textArray9));
+                    string[] textArray4 = new string[] { "VC", "bin", "amd64_arm" };
+                    source.Add(this.VisualStudioDirectory.Combine(textArray4));
+                    string[] textArray5 = new string[] { "VC", "bin", "amd64" };
+                    source.Add(this.VisualStudioDirectory.Combine(textArray5));
                     if (this.SDKDirectory != null)
                     {
-                        string[] textArray10 = new string[] { "bin" };
-                        string[] textArray11 = new string[] { "x64" };
-                        source.Add(this.SDKDirectory.Combine(textArray10).Combine(textArray11));
+                        if (<>f__am$cache2 == null)
+                        {
+                            <>f__am$cache2 = d => d.Combine(new string[] { "x64" });
+                        }
+                        source.AddRange(this.GetSDKBinDirectories().Select<NPath, NPath>(<>f__am$cache2));
                     }
                 }
                 else
                 {
-                    string[] textArray12 = new string[] { "VC", "bin", "x86_arm" };
-                    source.Add(this.VisualStudioDirectory.Combine(textArray12));
-                    string[] textArray13 = new string[] { "VC", "bin" };
-                    source.Add(this.VisualStudioDirectory.Combine(textArray13));
+                    string[] textArray6 = new string[] { "VC", "bin", "x86_arm" };
+                    source.Add(this.VisualStudioDirectory.Combine(textArray6));
+                    string[] textArray7 = new string[] { "VC", "bin" };
+                    source.Add(this.VisualStudioDirectory.Combine(textArray7));
                 }
                 if (this.SDKDirectory != null)
                 {
-                    string[] textArray14 = new string[] { "bin" };
-                    string[] textArray15 = new string[] { "x86" };
-                    source.Add(this.SDKDirectory.Combine(textArray14).Combine(textArray15));
+                    if (<>f__am$cache3 == null)
+                    {
+                        <>f__am$cache3 = d => d.Combine(new string[] { "x86" });
+                    }
+                    source.AddRange(this.GetSDKBinDirectories().Select<NPath, NPath>(<>f__am$cache3));
                 }
             }
             else
@@ -208,23 +231,27 @@
                 {
                     throw new NotSupportedException($"'{architecture.Name}' architecture is not supported.");
                 }
-                string[] textArray16 = new string[] { "VC", "bin", "amd64" };
-                source.Add(this.VisualStudioDirectory.Combine(textArray16));
+                string[] textArray8 = new string[] { "VC", "bin", "amd64" };
+                source.Add(this.VisualStudioDirectory.Combine(textArray8));
                 if (this.SDKDirectory != null)
                 {
-                    string[] textArray17 = new string[] { "bin" };
-                    string[] textArray18 = new string[] { "x64" };
-                    source.Add(this.SDKDirectory.Combine(textArray17).Combine(textArray18));
-                    string[] textArray19 = new string[] { "bin" };
-                    string[] textArray20 = new string[] { "x86" };
-                    source.Add(this.SDKDirectory.Combine(textArray19).Combine(textArray20));
+                    if (<>f__am$cache4 == null)
+                    {
+                        <>f__am$cache4 = d => d.Combine(new string[] { "x64" });
+                    }
+                    source.AddRange(this.GetSDKBinDirectories().Select<NPath, NPath>(<>f__am$cache4));
+                    if (<>f__am$cache5 == null)
+                    {
+                        <>f__am$cache5 = d => d.Combine(new string[] { "x86" });
+                    }
+                    source.AddRange(this.GetSDKBinDirectories().Select<NPath, NPath>(<>f__am$cache5));
                 }
             }
-            if (<>f__am$cache0 == null)
+            if (<>f__am$cache6 == null)
             {
-                <>f__am$cache0 = p => p.ToString();
+                <>f__am$cache6 = p => p.ToString();
             }
-            return source.Select<NPath, string>(<>f__am$cache0).AggregateWith(";");
+            return source.Select<NPath, string>(<>f__am$cache6).AggregateWith(";");
         }
 
         public virtual IEnumerable<NPath> GetPlatformMetadataReferences()
@@ -232,22 +259,39 @@
             throw new NotSupportedException($"{base.GetType().Name} does not support platform metadata");
         }
 
+        [DebuggerHidden]
+        protected virtual IEnumerable<NPath> GetSDKBinDirectories() => 
+            new <GetSDKBinDirectories>c__Iterator0 { 
+                $this = this,
+                $PC = -2
+            };
+
         public virtual NPath GetSDKToolPath(string toolName)
         {
-            string[] append = new string[] { "bin" };
-            NPath path = this.SDKDirectory.Combine(append);
+            string str;
             Unity.IL2CPP.Building.Architecture bestThisMachineCanRun = Unity.IL2CPP.Building.Architecture.BestThisMachineCanRun;
             if (bestThisMachineCanRun is x86Architecture)
             {
-                string[] textArray2 = new string[] { "x86", toolName };
-                return path.Combine(textArray2);
+                str = "x86";
             }
-            if (!(bestThisMachineCanRun is x64Architecture))
+            else
             {
-                throw new NotSupportedException("Can't find MSVC tool for " + bestThisMachineCanRun);
+                if (!(bestThisMachineCanRun is x64Architecture))
+                {
+                    throw new NotSupportedException($"Invalid host architecture: {bestThisMachineCanRun.GetType().Name}");
+                }
+                str = "x64";
             }
-            string[] textArray3 = new string[] { "x64", toolName };
-            return path.Combine(textArray3);
+            foreach (NPath path in this.GetSDKBinDirectories())
+            {
+                string[] append = new string[] { str, toolName };
+                NPath path2 = path.Combine(append);
+                if (path2.FileExists(""))
+                {
+                    return path2;
+                }
+            }
+            throw new NotSupportedException("Can't find MSVC tool for " + bestThisMachineCanRun);
         }
 
         public virtual NPath GetUnionMetadataDirectory()
@@ -315,12 +359,77 @@
         protected virtual NPath VisualStudioDirectory { get; set; }
 
         [CompilerGenerated]
-        private sealed class <GetLatestInstallationAtLeast>c__AnonStorey0
+        private sealed class <GetLatestInstallationAtLeast>c__AnonStorey1
         {
             internal Version version;
 
             internal bool <>m__0(Version v) => 
                 (v >= this.version);
+        }
+
+        [CompilerGenerated]
+        private sealed class <GetSDKBinDirectories>c__Iterator0 : IEnumerable, IEnumerable<NPath>, IEnumerator, IDisposable, IEnumerator<NPath>
+        {
+            internal NPath $current;
+            internal bool $disposing;
+            internal int $PC;
+            internal MsvcInstallation $this;
+
+            [DebuggerHidden]
+            public void Dispose()
+            {
+                this.$disposing = true;
+                this.$PC = -1;
+            }
+
+            public bool MoveNext()
+            {
+                uint num = (uint) this.$PC;
+                this.$PC = -1;
+                switch (num)
+                {
+                    case 0:
+                    {
+                        string[] append = new string[] { "bin" };
+                        this.$current = this.$this.SDKDirectory.Combine(append);
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 1;
+                        }
+                        return true;
+                    }
+                    case 1:
+                        this.$PC = -1;
+                        break;
+                }
+                return false;
+            }
+
+            [DebuggerHidden]
+            public void Reset()
+            {
+                throw new NotSupportedException();
+            }
+
+            [DebuggerHidden]
+            IEnumerator<NPath> IEnumerable<NPath>.GetEnumerator()
+            {
+                if (Interlocked.CompareExchange(ref this.$PC, 0, -2) == -2)
+                {
+                    return this;
+                }
+                return new MsvcInstallation.<GetSDKBinDirectories>c__Iterator0 { $this = this.$this };
+            }
+
+            [DebuggerHidden]
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
+
+            NPath IEnumerator<NPath>.Current =>
+                this.$current;
+
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

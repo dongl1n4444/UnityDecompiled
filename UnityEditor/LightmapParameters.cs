@@ -8,7 +8,7 @@
     /// <summary>
     /// <para>A collection of parameters that impact lightmap and realtime GI computations.</para>
     /// </summary>
-    public sealed class LightmapParameters : Object
+    public sealed class LightmapParameters : UnityEngine.Object
     {
         public LightmapParameters()
         {

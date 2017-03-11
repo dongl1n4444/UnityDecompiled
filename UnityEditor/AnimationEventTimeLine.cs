@@ -225,8 +225,8 @@
                         this.m_DirtyTooltip = false;
                     }
                     bool[] selections = new bool[animationEvents.Length];
-                    Object[] objects = Selection.objects;
-                    foreach (Object obj3 in objects)
+                    UnityEngine.Object[] objects = Selection.objects;
+                    foreach (UnityEngine.Object obj3 in objects)
                     {
                         AnimationWindowEvent event3 = obj3 as AnimationWindowEvent;
                         if ((event3 != null) && ((event3.eventIndex >= 0) && (event3.eventIndex < selections.Length)))

@@ -325,8 +325,8 @@
             internal HashSet<Instruction>.Enumerator $locvar0;
             internal int $PC;
             internal ExceptionSupport $this;
-            internal Instruction <instruction>__2;
-            internal HashSet<Instruction> <targets>__1;
+            internal Instruction <instruction>__1;
+            internal HashSet<Instruction> <targets>__0;
             internal ExceptionSupport.Node finallyNode;
 
             [DebuggerHidden]
@@ -357,9 +357,9 @@
                 switch (num)
                 {
                     case 0:
-                        if (this.$this._leaveTargets.TryGetValue(this.finallyNode, out this.<targets>__1))
+                        if (this.$this._leaveTargets.TryGetValue(this.finallyNode, out this.<targets>__0))
                         {
-                            this.$locvar0 = this.<targets>__1.GetEnumerator();
+                            this.$locvar0 = this.<targets>__0.GetEnumerator();
                             num = 0xfffffffd;
                             break;
                         }
@@ -375,8 +375,8 @@
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<instruction>__2 = this.$locvar0.Current;
-                        this.$current = this.<instruction>__2;
+                        this.<instruction>__1 = this.$locvar0.Current;
+                        this.$current = this.<instruction>__1;
                         if (!this.$disposing)
                         {
                             this.$PC = 1;
@@ -936,8 +936,8 @@
                 internal int $locvar1;
                 internal int $PC;
                 internal ExceptionSupport.Node $this;
-                internal ExceptionSupport.Node <current>__2;
-                internal Queue<ExceptionSupport.Node> <queue>__1;
+                internal ExceptionSupport.Node <current>__1;
+                internal Queue<ExceptionSupport.Node> <queue>__0;
                 internal Func<ExceptionSupport.Node, bool> filter;
 
                 [DebuggerHidden]
@@ -954,8 +954,8 @@
                     switch (num)
                     {
                         case 0:
-                            this.<queue>__1 = new Queue<ExceptionSupport.Node>();
-                            this.<queue>__1.Enqueue(this.$this);
+                            this.<queue>__0 = new Queue<ExceptionSupport.Node>();
+                            this.<queue>__0.Enqueue(this.$this);
                             goto Label_00E5;
 
                         case 1:
@@ -965,21 +965,21 @@
                             goto Label_00FD;
                     }
                 Label_008B:
-                    this.$locvar0 = this.<current>__2.Children;
+                    this.$locvar0 = this.<current>__1.Children;
                     this.$locvar1 = 0;
                     while (this.$locvar1 < this.$locvar0.Length)
                     {
                         ExceptionSupport.Node item = this.$locvar0[this.$locvar1];
-                        this.<queue>__1.Enqueue(item);
+                        this.<queue>__0.Enqueue(item);
                         this.$locvar1++;
                     }
                 Label_00E5:
-                    if (this.<queue>__1.Count > 0)
+                    if (this.<queue>__0.Count > 0)
                     {
-                        this.<current>__2 = this.<queue>__1.Dequeue();
-                        if (this.filter(this.<current>__2))
+                        this.<current>__1 = this.<queue>__0.Dequeue();
+                        if (this.filter(this.<current>__1))
                         {
-                            this.$current = this.<current>__2;
+                            this.$current = this.<current>__1;
                             if (!this.$disposing)
                             {
                                 this.$PC = 1;

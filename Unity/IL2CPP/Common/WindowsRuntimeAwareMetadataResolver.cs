@@ -53,7 +53,7 @@
                 if (!this._pendingWinmds.Contains(path.FileNameWithoutExtension))
                 {
                     this._pendingWinmds.Add(path.FileNameWithoutExtension);
-                    AssemblyNameReference name = new AssemblyNameReference(path.FileNameWithoutExtension, new Version()) {
+                    AssemblyNameReference name = new AssemblyNameReference(path.FileNameWithoutExtension, new Version(0, 0, 0, 0)) {
                         IsWindowsRuntime = true
                     };
                     this._loadedWinmds.Add(this._assemblyResolver.Resolve(name));

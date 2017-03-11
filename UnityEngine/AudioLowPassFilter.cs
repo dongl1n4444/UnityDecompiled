@@ -6,7 +6,7 @@
     using UnityEngine.Scripting;
 
     /// <summary>
-    /// <para>The Audio Low Pass Filter filter passes low frequencies of an.</para>
+    /// <para>The Audio Low Pass Filter passes low frequencies of an AudioSource or all sounds reaching an AudioListener, while removing frequencies higher than the Cutoff Frequency.</para>
     /// </summary>
     [RequireComponent(typeof(AudioBehaviour))]
     public sealed class AudioLowPassFilter : Behaviour

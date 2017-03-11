@@ -26,7 +26,7 @@
             {
                 <>f__am$cache0 = method => method != null;
             }
-            return Enumerable.Where<MethodInfo>(Enumerable.Select<Type, MethodInfo>(EditorAssemblies.SubclassesOf(typeof(AssetPostprocessor)), new Func<Type, MethodInfo>(storey.<>m__0)), <>f__am$cache0);
+            return Enumerable.Where<MethodInfo>(Enumerable.Select<System.Type, MethodInfo>(EditorAssemblies.SubclassesOf(typeof(AssetPostprocessor)), new Func<System.Type, MethodInfo>(storey.<>m__0)), <>f__am$cache0);
         }
 
         internal static void CallOnGeneratedCSProjectFiles()
@@ -56,12 +56,12 @@
         private static uint[] GetAudioProcessorVersions()
         {
             List<uint> list = new List<uint>();
-            foreach (Type type in EditorAssemblies.SubclassesOf(typeof(AssetPostprocessor)))
+            foreach (System.Type type in EditorAssemblies.SubclassesOf(typeof(AssetPostprocessor)))
             {
                 try
                 {
                     AssetPostprocessor postprocessor = Activator.CreateInstance(type) as AssetPostprocessor;
-                    Type type2 = postprocessor.GetType();
+                    System.Type type2 = postprocessor.GetType();
                     bool flag = type2.GetMethod("OnPreprocessAudio", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance) != null;
                     bool flag2 = type2.GetMethod("OnPostprocessAudio", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance) != null;
                     uint version = postprocessor.GetVersion();
@@ -87,7 +87,7 @@
             if (m_PostprocessorClasses == null)
             {
                 m_PostprocessorClasses = new ArrayList();
-                foreach (Type type in EditorAssemblies.SubclassesOf(typeof(AssetPostprocessor)))
+                foreach (System.Type type in EditorAssemblies.SubclassesOf(typeof(AssetPostprocessor)))
                 {
                     m_PostprocessorClasses.Add(type);
                 }
@@ -99,12 +99,12 @@
         private static uint[] GetMeshProcessorVersions()
         {
             List<uint> list = new List<uint>();
-            foreach (Type type in EditorAssemblies.SubclassesOf(typeof(AssetPostprocessor)))
+            foreach (System.Type type in EditorAssemblies.SubclassesOf(typeof(AssetPostprocessor)))
             {
                 try
                 {
                     AssetPostprocessor postprocessor = Activator.CreateInstance(type) as AssetPostprocessor;
-                    Type type2 = postprocessor.GetType();
+                    System.Type type2 = postprocessor.GetType();
                     bool flag = type2.GetMethod("OnPreprocessModel", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance) != null;
                     bool flag2 = type2.GetMethod("OnProcessMeshAssingModel", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance) != null;
                     bool flag3 = type2.GetMethod("OnPostprocessModel", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance) != null;
@@ -130,12 +130,12 @@
         private static uint[] GetTextureProcessorVersions()
         {
             List<uint> list = new List<uint>();
-            foreach (Type type in EditorAssemblies.SubclassesOf(typeof(AssetPostprocessor)))
+            foreach (System.Type type in EditorAssemblies.SubclassesOf(typeof(AssetPostprocessor)))
             {
                 try
                 {
                     AssetPostprocessor postprocessor = Activator.CreateInstance(type) as AssetPostprocessor;
-                    Type type2 = postprocessor.GetType();
+                    System.Type type2 = postprocessor.GetType();
                     bool flag = type2.GetMethod("OnPreprocessTexture", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance) != null;
                     bool flag2 = type2.GetMethod("OnPostprocessTexture", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance) != null;
                     uint version = postprocessor.GetVersion();
@@ -165,7 +165,7 @@
             {
                 while (enumerator.MoveNext())
                 {
-                    Type current = (Type) enumerator.Current;
+                    System.Type current = (System.Type) enumerator.Current;
                     try
                     {
                         AssetPostprocessor postprocessor = Activator.CreateInstance(current) as AssetPostprocessor;
@@ -201,7 +201,7 @@
             m_PostprocessStack.Add(stack);
         }
 
-        private static void LogPostProcessorMissingDefaultConstructor(Type type)
+        private static void LogPostProcessorMissingDefaultConstructor(System.Type type)
         {
             object[] args = new object[] { type };
             Debug.LogErrorFormat("{0} requires a default constructor to be used as an asset post processor", args);
@@ -226,7 +226,7 @@
         private static void PostprocessAllAssets(string[] importedAssets, string[] addedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromPathAssets)
         {
             object[] parameters = new object[] { importedAssets, deletedAssets, movedAssets, movedFromPathAssets };
-            foreach (Type type in EditorAssemblies.SubclassesOf(typeof(AssetPostprocessor)))
+            foreach (System.Type type in EditorAssemblies.SubclassesOf(typeof(AssetPostprocessor)))
             {
                 MethodInfo method = type.GetMethod("OnPostprocessAllAssets", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
                 if (method != null)
@@ -241,7 +241,7 @@
         private static void PostprocessAssetbundleNameChanged(string assetPAth, string prevoiusAssetBundleName, string newAssetBundleName)
         {
             object[] args = new object[] { assetPAth, prevoiusAssetBundleName, newAssetBundleName };
-            foreach (Type type in EditorAssemblies.SubclassesOf(typeof(AssetPostprocessor)))
+            foreach (System.Type type in EditorAssemblies.SubclassesOf(typeof(AssetPostprocessor)))
             {
                 AssetPostprocessor target = Activator.CreateInstance(type) as AssetPostprocessor;
                 AttributeHelper.InvokeMemberIfAvailable(target, "OnPostprocessAssetbundleNameChanged", args);
@@ -576,7 +576,7 @@
         {
             internal string callbackName;
 
-            internal MethodInfo <>m__0(Type assetPostprocessorClass) => 
+            internal MethodInfo <>m__0(System.Type assetPostprocessorClass) => 
                 assetPostprocessorClass.GetMethod(this.callbackName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
         }
 

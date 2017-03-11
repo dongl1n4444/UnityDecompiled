@@ -8,6 +8,8 @@
 
     internal sealed class FrameDebuggerUtility
     {
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern string[] GetBatchBreakCauseStrings();
         private static FrameDebuggerEventData GetFrameEventData()
         {
             FrameDebuggerEventData data;

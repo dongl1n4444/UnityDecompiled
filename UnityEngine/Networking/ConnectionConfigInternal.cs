@@ -37,12 +37,36 @@
             this.InitMaxCombinedReliableMessageSize(config.MaxCombinedReliableMessageSize);
             this.InitMaxCombinedReliableMessageCount(config.MaxCombinedReliableMessageCount);
             this.InitMaxSentMessageQueueSize(config.MaxSentMessageQueueSize);
-            this.InitIsAcksLong(config.IsAcksLong);
+            this.InitAcksType((int) config.AcksType);
             this.InitUsePlatformSpecificProtocols(config.UsePlatformSpecificProtocols);
             this.InitInitialBandwidth(config.InitialBandwidth);
             this.InitBandwidthPeakFactor(config.BandwidthPeakFactor);
             this.InitWebSocketReceiveBufferMaxSize(config.WebSocketReceiveBufferMaxSize);
             this.InitUdpSocketReceiveBufferMaxSize(config.UdpSocketReceiveBufferMaxSize);
+            if (config.SSLCertFilePath != null)
+            {
+                int num = this.InitSSLCertFilePath(config.SSLCertFilePath);
+                if (num != 0)
+                {
+                    throw new ArgumentOutOfRangeException("SSLCertFilePath cannot be > than " + num.ToString());
+                }
+            }
+            if (config.SSLPrivateKeyFilePath != null)
+            {
+                int num2 = this.InitSSLPrivateKeyFilePath(config.SSLPrivateKeyFilePath);
+                if (num2 != 0)
+                {
+                    throw new ArgumentOutOfRangeException("SSLPrivateKeyFilePath cannot be > than " + num2.ToString());
+                }
+            }
+            if (config.SSLCAFilePath != null)
+            {
+                int num3 = this.InitSSLCAFilePath(config.SSLCAFilePath);
+                if (num3 != 0)
+                {
+                    throw new ArgumentOutOfRangeException("SSLCAFilePath cannot be > than " + num3.ToString());
+                }
+            }
             for (byte i = 0; i < config.ChannelCount; i = (byte) (i + 1))
             {
                 this.AddChannel(config.GetChannel(i));
@@ -63,6 +87,8 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void InitAckDelay(uint value);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public extern void InitAcksType(int value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void InitAllCostTimeout(uint value);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void InitBandwidthPeakFactor(float value);
@@ -74,8 +100,6 @@
         public extern void InitFragmentSize(ushort value);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void InitInitialBandwidth(uint value);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public extern void InitIsAcksLong(bool value);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void InitMaxCombinedReliableMessageCount(ushort value);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -100,6 +124,12 @@
         public extern void InitResendTimeout(uint value);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void InitSendDelay(uint value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public extern int InitSSLCAFilePath(string value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public extern int InitSSLCertFilePath(string value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public extern int InitSSLPrivateKeyFilePath(string value);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void InitUdpSocketReceiveBufferMaxSize(uint value);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]

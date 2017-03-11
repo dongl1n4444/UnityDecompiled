@@ -110,7 +110,7 @@
 
         private static bool IsPrimitiveBlittable(TypeDefinition type, NativeType? nativeType, MarshalType marshalType, bool useUnicodeCharset)
         {
-            if (!nativeType.HasValue)
+            if (!nativeType.HasValue || ((((NativeType) nativeType.GetValueOrDefault()) == NativeType.Max) && nativeType.HasValue))
             {
                 if (marshalType == MarshalType.WindowsRuntime)
                 {

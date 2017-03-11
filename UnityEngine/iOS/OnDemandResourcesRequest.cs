@@ -33,7 +33,7 @@
         /// <summary>
         /// <para>Release all resources kept alive by On Demand Resources (ODR) request.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public extern void Dispose();
         ~OnDemandResourcesRequest()
         {

@@ -36,14 +36,14 @@
 
         private void GestureHandler_NavigationCompletedOrCanceled(InteractionSourceKind source, Vector3 normalizedOffset, Ray headRay)
         {
-            this.m_Module.HoloLensInput_GestureNotifier();
+            this.m_Module.Internal_GestureNotifier();
             this.m_NavigationNormalizedOffset = Vector3.zero;
             this.m_MouseEmulationMode = MouseEmulationMode.Inactive;
         }
 
         private void GestureHandler_NavigationStarted(InteractionSourceKind source, Vector3 normalizedOffset, Ray headRay)
         {
-            this.m_Module.HoloLensInput_GestureNotifier();
+            this.m_Module.Internal_GestureNotifier();
             if (this.TryGetAnchorWorldSpace(out this.m_NavigationAnchorWorldSpace))
             {
                 this.m_MouseEmulationMode = MouseEmulationMode.Navigation;
@@ -53,13 +53,13 @@
 
         private void GestureHandler_NavigationUpdated(InteractionSourceKind source, Vector3 normalizedOffset, Ray headRay)
         {
-            this.m_Module.HoloLensInput_GestureNotifier();
+            this.m_Module.Internal_GestureNotifier();
             this.m_NavigationNormalizedOffset = normalizedOffset;
         }
 
         private void GestureHandler_Tapped(InteractionSourceKind source, int tapCount, Ray headRay)
         {
-            this.m_Module.HoloLensInput_GestureNotifier();
+            this.m_Module.Internal_GestureNotifier();
             if (this.TryGetAnchorWorldSpace(out this.m_TapAnchorWorldSpace))
             {
                 this.m_MouseEmulationMode = MouseEmulationMode.Tap;
@@ -72,7 +72,7 @@
             switch (this.m_MouseEmulationMode)
             {
                 case MouseEmulationMode.Navigation:
-                    return this.EmulateMousePosition(this.m_NavigationAnchorWorldSpace, (Vector2) (this.m_Module.HoloLensInput_GetScreenOffsetScalar() * new Vector2(this.m_NavigationNormalizedOffset.x, this.m_NavigationNormalizedOffset.y)));
+                    return this.EmulateMousePosition(this.m_NavigationAnchorWorldSpace, (Vector2) (this.m_Module.normalizedNavigationToScreenOffsetScalar * new Vector2(this.m_NavigationNormalizedOffset.x, this.m_NavigationNormalizedOffset.y)));
 
                 case MouseEmulationMode.Tap:
                     return this.EmulateMousePosition(this.m_TapAnchorWorldSpace, Vector2.zero);
@@ -108,14 +108,14 @@
 
         private bool TryGetAnchorWorldSpace(out Vector3 anchor)
         {
-            EventSystem system = this.m_Module.HoloLensInput_GetEventSystem();
-            if ((null == system) || (null == system.currentSelectedGameObject))
+            GameObject obj2 = this.m_Module.Internal_GetCurrentFocusedGameObject();
+            if (obj2 == null)
             {
                 anchor = Vector3.zero;
                 return false;
             }
-            RectTransform component = system.currentSelectedGameObject.GetComponent<RectTransform>();
-            if (null == component)
+            RectTransform component = obj2.GetComponent<RectTransform>();
+            if (component == null)
             {
                 anchor = Vector3.zero;
                 return false;
@@ -125,7 +125,7 @@
 
         public void UpdateInput()
         {
-            if ((this.m_MouseEmulationMode == MouseEmulationMode.Tap) && ((this.m_LastTapTime + this.m_Module.HoloLensInput_GetTimeToPressOnTap()) < Time.time))
+            if ((this.m_MouseEmulationMode == MouseEmulationMode.Tap) && ((this.m_LastTapTime + this.m_Module.timeToPressOnTap) < Time.time))
             {
                 this.m_MouseEmulationMode = MouseEmulationMode.Inactive;
             }

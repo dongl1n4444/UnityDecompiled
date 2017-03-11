@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
     using UnityEditor;
     using UnityEditor.Animations;
     using UnityEditor.Graphs;
@@ -313,7 +314,7 @@
             this.HandleGraphInput();
         }
 
-        public override void SyncGraphToUnitySelection()
+        public override void SyncGraphToUnitySelection(bool force = false)
         {
             if (GUIUtility.hotControl == 0)
             {

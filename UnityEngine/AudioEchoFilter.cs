@@ -5,7 +5,7 @@
     using UnityEngine.Scripting;
 
     /// <summary>
-    /// <para>The Audio Echo Filter repeats a sound after a given Delay, attenuating.</para>
+    /// <para>The Audio Echo Filter repeats a sound after a given Delay, attenuating the repetitions based on the Decay Ratio.</para>
     /// </summary>
     [RequireComponent(typeof(AudioBehaviour))]
     public sealed class AudioEchoFilter : Behaviour

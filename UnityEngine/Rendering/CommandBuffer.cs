@@ -157,13 +157,83 @@
         /// </summary>
         /// <param name="src">Source texture or identifier, see RenderTargetIdentifier.</param>
         /// <param name="dst">Destination texture or identifier, see RenderTargetIdentifier.</param>
+        /// <param name="srcElement">Source texture element (cubemap face, texture array layer or 3D texture depth slice).</param>
+        /// <param name="srcMip">Source texture mipmap level.</param>
+        /// <param name="dstElement">Destination texture element (cubemap face, texture array layer or 3D texture depth slice).</param>
+        /// <param name="dstMip">Destination texture mipmap level.</param>
+        /// <param name="srcX">X coordinate of source texture region to copy (left side is zero).</param>
+        /// <param name="srcY">Y coordinate of source texture region to copy (bottom is zero).</param>
+        /// <param name="srcWidth">Width of source texture region to copy.</param>
+        /// <param name="srcHeight">Height of source texture region to copy.</param>
+        /// <param name="dstX">X coordinate of where to copy region in destination texture (left side is zero).</param>
+        /// <param name="dstY">Y coordinate of where to copy region in destination texture (bottom is zero).</param>
         public void CopyTexture(RenderTargetIdentifier src, RenderTargetIdentifier dst)
         {
-            this.CopyTexture_Internal(ref src, ref dst);
+            this.CopyTexture_Internal(ref src, -1, -1, -1, -1, -1, -1, ref dst, -1, -1, -1, -1, 1);
+        }
+
+        /// <summary>
+        /// <para>Adds a command to copy a texture into another texture.</para>
+        /// </summary>
+        /// <param name="src">Source texture or identifier, see RenderTargetIdentifier.</param>
+        /// <param name="dst">Destination texture or identifier, see RenderTargetIdentifier.</param>
+        /// <param name="srcElement">Source texture element (cubemap face, texture array layer or 3D texture depth slice).</param>
+        /// <param name="srcMip">Source texture mipmap level.</param>
+        /// <param name="dstElement">Destination texture element (cubemap face, texture array layer or 3D texture depth slice).</param>
+        /// <param name="dstMip">Destination texture mipmap level.</param>
+        /// <param name="srcX">X coordinate of source texture region to copy (left side is zero).</param>
+        /// <param name="srcY">Y coordinate of source texture region to copy (bottom is zero).</param>
+        /// <param name="srcWidth">Width of source texture region to copy.</param>
+        /// <param name="srcHeight">Height of source texture region to copy.</param>
+        /// <param name="dstX">X coordinate of where to copy region in destination texture (left side is zero).</param>
+        /// <param name="dstY">Y coordinate of where to copy region in destination texture (bottom is zero).</param>
+        public void CopyTexture(RenderTargetIdentifier src, int srcElement, RenderTargetIdentifier dst, int dstElement)
+        {
+            this.CopyTexture_Internal(ref src, srcElement, -1, -1, -1, -1, -1, ref dst, dstElement, -1, -1, -1, 2);
+        }
+
+        /// <summary>
+        /// <para>Adds a command to copy a texture into another texture.</para>
+        /// </summary>
+        /// <param name="src">Source texture or identifier, see RenderTargetIdentifier.</param>
+        /// <param name="dst">Destination texture or identifier, see RenderTargetIdentifier.</param>
+        /// <param name="srcElement">Source texture element (cubemap face, texture array layer or 3D texture depth slice).</param>
+        /// <param name="srcMip">Source texture mipmap level.</param>
+        /// <param name="dstElement">Destination texture element (cubemap face, texture array layer or 3D texture depth slice).</param>
+        /// <param name="dstMip">Destination texture mipmap level.</param>
+        /// <param name="srcX">X coordinate of source texture region to copy (left side is zero).</param>
+        /// <param name="srcY">Y coordinate of source texture region to copy (bottom is zero).</param>
+        /// <param name="srcWidth">Width of source texture region to copy.</param>
+        /// <param name="srcHeight">Height of source texture region to copy.</param>
+        /// <param name="dstX">X coordinate of where to copy region in destination texture (left side is zero).</param>
+        /// <param name="dstY">Y coordinate of where to copy region in destination texture (bottom is zero).</param>
+        public void CopyTexture(RenderTargetIdentifier src, int srcElement, int srcMip, RenderTargetIdentifier dst, int dstElement, int dstMip)
+        {
+            this.CopyTexture_Internal(ref src, srcElement, srcMip, -1, -1, -1, -1, ref dst, dstElement, dstMip, -1, -1, 3);
+        }
+
+        /// <summary>
+        /// <para>Adds a command to copy a texture into another texture.</para>
+        /// </summary>
+        /// <param name="src">Source texture or identifier, see RenderTargetIdentifier.</param>
+        /// <param name="dst">Destination texture or identifier, see RenderTargetIdentifier.</param>
+        /// <param name="srcElement">Source texture element (cubemap face, texture array layer or 3D texture depth slice).</param>
+        /// <param name="srcMip">Source texture mipmap level.</param>
+        /// <param name="dstElement">Destination texture element (cubemap face, texture array layer or 3D texture depth slice).</param>
+        /// <param name="dstMip">Destination texture mipmap level.</param>
+        /// <param name="srcX">X coordinate of source texture region to copy (left side is zero).</param>
+        /// <param name="srcY">Y coordinate of source texture region to copy (bottom is zero).</param>
+        /// <param name="srcWidth">Width of source texture region to copy.</param>
+        /// <param name="srcHeight">Height of source texture region to copy.</param>
+        /// <param name="dstX">X coordinate of where to copy region in destination texture (left side is zero).</param>
+        /// <param name="dstY">Y coordinate of where to copy region in destination texture (bottom is zero).</param>
+        public void CopyTexture(RenderTargetIdentifier src, int srcElement, int srcMip, int srcX, int srcY, int srcWidth, int srcHeight, RenderTargetIdentifier dst, int dstElement, int dstMip, int dstX, int dstY)
+        {
+            this.CopyTexture_Internal(ref src, srcElement, srcMip, srcX, srcY, srcWidth, srcHeight, ref dst, dstElement, dstMip, dstX, dstY, 4);
         }
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private extern void CopyTexture_Internal(ref RenderTargetIdentifier src, ref RenderTargetIdentifier dst);
+        private extern void CopyTexture_Internal(ref RenderTargetIdentifier src, int srcElement, int srcMip, int srcX, int srcY, int srcWidth, int srcHeight, ref RenderTargetIdentifier dst, int dstElement, int dstMip, int dstX, int dstY, int mode);
         /// <summary>
         /// <para>Adds a command to disable global shader keyword.</para>
         /// </summary>
@@ -909,7 +979,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetGlobalMatrixArrayListImpl(int nameID, object values);
         /// <summary>
-        /// <para>Add a "set global shader texture property" command.</para>
+        /// <para>Add a "set global shader texture property" command, referencing a RenderTexture.</para>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="value"></param>
@@ -920,7 +990,7 @@
         }
 
         /// <summary>
-        /// <para>Add a "set global shader texture property" command.</para>
+        /// <para>Add a "set global shader texture property" command, referencing a RenderTexture.</para>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="value"></param>

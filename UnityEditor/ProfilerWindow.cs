@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
+    using System.Runtime.InteropServices;
     using UnityEditorInternal;
     using UnityEngine;
     using UnityEngine.Profiling;
@@ -22,6 +24,7 @@
         private const string kProfilerEnabledSessionKey = "ProfilerEnabled";
         private const string kProfilerGPUColumnSettings = "VisibleProfilerGPUColumns";
         private const string kProfilerGPUDetailColumnSettings = "VisibleProfilerGPUDetailColumns";
+        private const string kProfilerRecentSaveLoadProfilePath = "ProfilerRecentSaveLoadProfilePath";
         private const string kProfilerVisibleGraphsSettings = "VisibleProfilerGraphs";
         private const float kRowHeight = 16f;
         private const string kSearchControlName = "ProfilerSearchField";
@@ -40,8 +43,9 @@
         private float m_ChartMaxClamp;
         private float[] m_ChartOldMax;
         private ProfilerChart[] m_Charts;
-        private ProfilerHierarchyGUI m_CPUDetailHierarchyGUI;
         private ProfilerHierarchyGUI m_CPUHierarchyGUI;
+        private ProfilerProperty m_CPUOrGPUProfilerProperty;
+        private CachedProfilerPropertyConfig m_CPUOrGPUProfilerPropertyConfig;
         private ProfilerTimelineGUI m_CPUTimelineGUI;
         [SerializeField]
         private ProfilerArea m_CurrentArea;
@@ -50,9 +54,10 @@
         private float m_DSPGraphZoomFactor;
         private bool m_FocusSearchField = false;
         private bool m_GatherObjectReferences;
-        private ProfilerHierarchyGUI m_GPUDetailHierarchyGUI;
         private ProfilerHierarchyGUI m_GPUHierarchyGUI;
         private Vector2 m_GraphPos;
+        [SerializeField]
+        private HierarchyViewDetailPaneType m_HierarchyViewDetailPaneType;
         [SerializeField]
         private bool m_HighlightAudibleDSPChains;
         private int m_LastAudioProfilerFrame;
@@ -99,7 +104,7 @@
             this.m_NetworkSplit = new SplitterState(singleArray3, numArray3, null);
             this.m_AttachProfilerUI = new AttachProfilerUI();
             this.m_GraphPos = Vector2.zero;
-            this.m_PaneScroll = new Vector2[9];
+            this.m_PaneScroll = new Vector2[10];
             this.m_PaneScroll_AudioChannels = Vector2.zero;
             this.m_PaneScroll_AudioDSP = Vector2.zero;
             this.m_PaneScroll_AudioClips = Vector2.zero;
@@ -122,6 +127,7 @@
             this.m_AudioProfilerClipView = null;
             this.m_SelectedMemRecordMode = ProfilerMemoryRecordMode.None;
             this.s_CheckMark = '✔';
+            this.m_HierarchyViewDetailPaneType = HierarchyViewDetailPaneType.None;
             this.msgNames = new string[] { "UserMessage", "ObjectDestroy", "ClientRpc", "ObjectSpawn", "Owner", "Command", "LocalPlayerTransform", "SyncEvent", "SyncVars", "SyncList", "ObjectSpawnScene", "NetworkInfo", "SpawnFinished", "ObjectHide", "CRC", "ClientAuthority" };
             this.msgFoldouts = new bool[] { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false };
         }
@@ -155,18 +161,18 @@
         {
             ProfilerColumn[] columnsToShow = new ProfilerColumn[] { ProfilerColumn.FunctionName };
             ProfilerColumn[] columns = new ProfilerColumn[] { ProfilerColumn.ObjectName };
-            this.m_CPUHierarchyGUI = new ProfilerHierarchyGUI(this, "VisibleProfilerColumnsV2", columnsToShow, ProfilerColumnNames(columnsToShow), false, ProfilerColumn.TotalTime);
-            this.m_CPUTimelineGUI = new ProfilerTimelineGUI(this);
             string text = EditorGUIUtility.TextContent("Object").text;
             string[] columnNames = ProfilerColumnNames(columns);
             columnNames[0] = text;
-            this.m_CPUDetailHierarchyGUI = new ProfilerHierarchyGUI(this, "VisibleProfilerDetailColumns", columns, columnNames, true, ProfilerColumn.TotalTime);
+            ProfilerHierarchyGUI detailedObjectsView = new ProfilerHierarchyGUI(this, null, "VisibleProfilerDetailColumns", columns, columnNames, true, ProfilerColumn.TotalTime);
+            this.m_CPUHierarchyGUI = new ProfilerHierarchyGUI(this, detailedObjectsView, "VisibleProfilerColumnsV2", columnsToShow, ProfilerColumnNames(columnsToShow), false, ProfilerColumn.TotalTime);
+            this.m_CPUTimelineGUI = new ProfilerTimelineGUI(this);
             ProfilerColumn[] columnArray3 = new ProfilerColumn[] { ProfilerColumn.FunctionName };
             ProfilerColumn[] columnArray4 = new ProfilerColumn[] { ProfilerColumn.ObjectName };
-            this.m_GPUHierarchyGUI = new ProfilerHierarchyGUI(this, "VisibleProfilerGPUColumns", columnArray3, ProfilerColumnNames(columnArray3), false, ProfilerColumn.TotalGPUTime);
             columnNames = ProfilerColumnNames(columnArray4);
             columnNames[0] = text;
-            this.m_GPUDetailHierarchyGUI = new ProfilerHierarchyGUI(this, "VisibleProfilerGPUDetailColumns", columnArray4, columnNames, true, ProfilerColumn.TotalGPUTime);
+            ProfilerHierarchyGUI ygui2 = new ProfilerHierarchyGUI(this, null, "VisibleProfilerGPUDetailColumns", columnArray4, columnNames, true, ProfilerColumn.TotalGPUTime);
+            this.m_GPUHierarchyGUI = new ProfilerHierarchyGUI(this, ygui2, "VisibleProfilerGPUColumns", columnArray3, ProfilerColumnNames(columnArray3), false, ProfilerColumn.TotalGPUTime);
         }
 
         private void CheckForPlatformModuleChange()
@@ -179,14 +185,21 @@
             }
         }
 
-        private static bool CheckFrameData(ProfilerProperty property)
+        private static bool CheckFrameData(ProfilerProperty property) => 
+            property.frameDataReady;
+
+        private void Clear()
         {
-            if (!property.frameDataReady)
+            if (this.m_CPUOrGPUProfilerProperty != null)
             {
-                GUILayout.Label(ms_Styles.noData, ms_Styles.background, new GUILayoutOption[0]);
-                return false;
+                this.m_CPUOrGPUProfilerProperty.Cleanup();
+                this.m_CPUOrGPUProfilerProperty = null;
             }
-            return true;
+            this.m_CPUOrGPUProfilerPropertyConfig.frameIndex = -1;
+            this.m_CPUHierarchyGUI.ClearCaches();
+            this.m_GPUHierarchyGUI.ClearCaches();
+            ProfilerDriver.ClearAllFrames();
+            NetworkDetailStats.m_NetworkOperations.Clear();
         }
 
         public void ClearSelectedPropertyPath()
@@ -199,11 +212,16 @@
             }
         }
 
-        public ProfilerProperty CreateProperty(bool details)
+        public ProfilerProperty CreateProperty()
+        {
+            ProfilerColumn sortType = (this.m_CurrentArea != ProfilerArea.CPU) ? this.m_GPUHierarchyGUI.sortType : this.m_CPUHierarchyGUI.sortType;
+            return this.CreateProperty(sortType);
+        }
+
+        public ProfilerProperty CreateProperty(ProfilerColumn sortType)
         {
             ProfilerProperty property = new ProfilerProperty();
-            ProfilerColumn profilerSortColumn = (this.m_CurrentArea != ProfilerArea.CPU) ? (!details ? this.m_GPUHierarchyGUI.sortType : this.m_GPUDetailHierarchyGUI.sortType) : (!details ? this.m_CPUHierarchyGUI.sortType : this.m_CPUDetailHierarchyGUI.sortType);
-            property.SetRoot(this.GetActiveVisibleFrameIndex(), profilerSortColumn, this.m_ViewType);
+            property.SetRoot(this.GetActiveVisibleFrameIndex(), sortType, this.m_ViewType);
             property.onlyShowGPUSamples = this.m_CurrentArea == ProfilerArea.GPU;
             return property;
         }
@@ -267,7 +285,7 @@
                 {
                     this.m_AudioProfilerDSPView = new AudioProfilerDSPView();
                 }
-                ProfilerProperty property = this.CreateProperty(false);
+                ProfilerProperty property = this.CreateProperty();
                 if (CheckFrameData(property))
                 {
                     this.m_AudioProfilerDSPView.OnGUI(clippingRect, property, this.m_ShowInactiveDSPChains, this.m_HighlightAudibleDSPChains, ref this.m_DSPGraphZoomFactor, ref this.m_PaneScroll_AudioDSP);
@@ -299,7 +317,7 @@
                 {
                     this.m_AudioProfilerClipViewBackend = new AudioProfilerClipViewBackend(this.m_AudioProfilerClipTreeViewState);
                 }
-                ProfilerProperty property2 = this.CreateProperty(false);
+                ProfilerProperty property2 = this.CreateProperty();
                 if (CheckFrameData(property2))
                 {
                     if ((this.m_CurrentFrame == -1) || (this.m_LastAudioProfilerFrame != this.m_CurrentFrame))
@@ -367,7 +385,7 @@
                 {
                     this.m_AudioProfilerGroupViewBackend = new AudioProfilerGroupViewBackend(this.m_AudioProfilerGroupTreeViewState);
                 }
-                ProfilerProperty property3 = this.CreateProperty(false);
+                ProfilerProperty property3 = this.CreateProperty();
                 if (CheckFrameData(property3))
                 {
                     if ((this.m_CurrentFrame == -1) || (this.m_LastAudioProfilerFrame != this.m_CurrentFrame))
@@ -412,50 +430,8 @@
             }
         }
 
-        private void DrawCPUOrRenderingPane(ProfilerHierarchyGUI mainPane, ProfilerHierarchyGUI detailPane, ProfilerTimelineGUI timelinePane)
+        private void DrawCPUorGPUCommonToolbar(ProfilerProperty property)
         {
-            ProfilerProperty property = this.CreateProperty(false);
-            this.DrawCPUOrRenderingToolbar(property);
-            if (!CheckFrameData(property))
-            {
-                property.Cleanup();
-            }
-            else if ((timelinePane != null) && (this.m_ViewType == ProfilerViewType.Timeline))
-            {
-                float height = this.m_VertSplit.realSizes[1];
-                height -= EditorStyles.toolbar.CalcHeight(GUIContent.none, 10f) + 2f;
-                timelinePane.DoGUI(this.GetActiveVisibleFrameIndex(), base.position.width, base.position.height - height, height, this.m_TimelineViewDetail);
-                property.Cleanup();
-            }
-            else
-            {
-                SplitterGUILayout.BeginHorizontalSplit(this.m_ViewSplit, new GUILayoutOption[0]);
-                GUILayout.BeginVertical(new GUILayoutOption[0]);
-                bool expandAll = false;
-                mainPane.DoGUI(property, this.m_SearchString, expandAll);
-                property.Cleanup();
-                GUILayout.EndVertical();
-                GUILayout.BeginVertical(new GUILayoutOption[0]);
-                ProfilerProperty property2 = this.CreateProperty(true);
-                ProfilerProperty detailedProperty = mainPane.GetDetailedProperty(property2);
-                property2.Cleanup();
-                if (detailedProperty != null)
-                {
-                    detailPane.DoGUI(detailedProperty, string.Empty, expandAll);
-                    detailedProperty.Cleanup();
-                }
-                else
-                {
-                    DrawEmptyCPUOrRenderingDetailPane();
-                }
-                GUILayout.EndVertical();
-                SplitterGUILayout.EndHorizontalSplit();
-            }
-        }
-
-        private void DrawCPUOrRenderingToolbar(ProfilerProperty property)
-        {
-            EditorGUILayout.BeginHorizontal(EditorStyles.toolbar, new GUILayoutOption[0]);
             string[] displayedOptions = new string[] { "Hierarchy", "Timeline", "Raw Hierarchy" };
             int[] numArray1 = new int[3];
             numArray1[1] = 1;
@@ -465,44 +441,103 @@
             this.m_ViewType = (ProfilerViewType) EditorGUILayout.IntPopup((int) this.m_ViewType, displayedOptions, optionValues, EditorStyles.toolbarDropDown, options);
             GUILayout.FlexibleSpace();
             GUILayout.Label($"CPU:{property.frameTime}ms   GPU:{property.frameGpuTime}ms", EditorStyles.miniLabel, new GUILayoutOption[0]);
-            GUI.enabled = ProfilerDriver.GetNextFrameIndex(this.m_CurrentFrame) == -1;
-            if (GUILayout.Button(!GUI.enabled ? ms_Styles.noFrameDebugger : ms_Styles.frameDebugger, EditorStyles.toolbarButton, new GUILayoutOption[0]))
-            {
-                FrameDebuggerWindow.ShowFrameDebuggerWindow().EnableIfNeeded();
-            }
             GUI.enabled = true;
             if (ProfilerInstrumentationPopup.InstrumentationEnabled && GUILayout.Button(ms_Styles.profilerInstrumentation, EditorStyles.toolbarDropDown, new GUILayoutOption[0]))
             {
                 ProfilerInstrumentationPopup.Show(GUILayoutUtility.topLevel.GetLast());
             }
+        }
+
+        private HierarchyViewDetailPaneType DrawCPUOrGPUDetailedViewPopup()
+        {
+            string[] displayedOptions = new string[] { "No details", "Show related objects" };
+            int[] numArray1 = new int[2];
+            numArray1[1] = 1;
+            int[] optionValues = numArray1;
+            GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(120f) };
+            return (HierarchyViewDetailPaneType) EditorGUILayout.IntPopup((int) this.m_HierarchyViewDetailPaneType, displayedOptions, optionValues, EditorStyles.toolbarDropDown, options);
+        }
+
+        private void DrawCPUOrGPUHierarchyViewToolbar(ProfilerProperty property, bool showDetailedView)
+        {
+            EditorGUILayout.BeginHorizontal(EditorStyles.toolbar, new GUILayoutOption[0]);
+            this.DrawCPUorGPUCommonToolbar(property);
             GUILayout.FlexibleSpace();
-            if (this.m_ViewType == ProfilerViewType.Timeline)
+            this.SearchFieldGUI();
+            if (!showDetailedView)
             {
-                this.m_TimelineViewDetail = GUILayout.Toggle(this.m_TimelineViewDetail, ms_Styles.timelineHighDetail, EditorStyles.toolbarButton, new GUILayoutOption[0]);
-                ms_Styles.memRecord.text = "Mem Record";
-                if (this.m_SelectedMemRecordMode != ProfilerMemoryRecordMode.None)
-                {
-                    string text = ms_Styles.memRecord.text;
-                    object[] objArray1 = new object[] { text, " [", this.s_CheckMark, "]" };
-                    ms_Styles.memRecord.text = string.Concat(objArray1);
-                }
-                GUILayoutOption[] optionArray2 = new GUILayoutOption[] { GUILayout.Width(100f) };
-                Rect position = GUILayoutUtility.GetRect(ms_Styles.memRecord, EditorStyles.toolbarDropDown, optionArray2);
-                if (EditorGUI.ButtonMouseDown(position, ms_Styles.memRecord, FocusType.Passive, EditorStyles.toolbarDropDown))
-                {
-                    string[] strArray2 = new string[] { "None", "Sample only", "Callstack (fast)", "Callstack (full)" };
-                    bool[] enabled = new bool[strArray2.Length];
-                    for (int i = 0; i < strArray2.Length; i++)
-                    {
-                        enabled[i] = true;
-                    }
-                    int[] selected = new int[] { this.m_SelectedMemRecordMode };
-                    EditorUtility.DisplayCustomMenu(position, strArray2, enabled, selected, new EditorUtility.SelectMenuItemFunction(this.MemRecordModeClick), null);
-                }
+                this.m_HierarchyViewDetailPaneType = this.DrawCPUOrGPUDetailedViewPopup();
+            }
+            EditorGUILayout.EndHorizontal();
+            this.HandleCommandEvents();
+        }
+
+        private void DrawCPUOrGPUPane(ProfilerHierarchyGUI mainPane, ProfilerTimelineGUI timelinePane)
+        {
+            bool showDetailedView = this.m_HierarchyViewDetailPaneType != HierarchyViewDetailPaneType.None;
+            ProfilerProperty rootProfilerProperty = this.GetRootProfilerProperty();
+            if (!CheckFrameData(rootProfilerProperty))
+            {
+                this.DrawCPUOrGPUHierarchyViewToolbar(rootProfilerProperty, showDetailedView);
+                GUILayout.Label(ms_Styles.noData, ms_Styles.background, new GUILayoutOption[0]);
+            }
+            else if ((timelinePane != null) && (this.m_ViewType == ProfilerViewType.Timeline))
+            {
+                this.DrawCPUOrGPUTimelineViewToolbar(rootProfilerProperty);
+                float height = this.m_VertSplit.realSizes[1];
+                height -= EditorStyles.toolbar.CalcHeight(GUIContent.none, 10f) + 2f;
+                timelinePane.DoGUI(this.GetActiveVisibleFrameIndex(), base.position.width, base.position.height - height, height, this.m_TimelineViewDetail);
             }
             else
             {
-                this.SearchFieldGUI();
+                if (showDetailedView)
+                {
+                    SplitterGUILayout.BeginHorizontalSplit(this.m_ViewSplit, new GUILayoutOption[0]);
+                }
+                GUILayout.BeginVertical(new GUILayoutOption[0]);
+                this.DrawCPUOrGPUHierarchyViewToolbar(rootProfilerProperty, showDetailedView);
+                bool expandAll = false;
+                mainPane.DoGUI(rootProfilerProperty, this.m_SearchString, expandAll);
+                GUILayout.EndVertical();
+                if (showDetailedView)
+                {
+                    GUILayout.BeginVertical(new GUILayoutOption[0]);
+                    EditorGUILayout.BeginHorizontal(EditorStyles.toolbar, new GUILayoutOption[0]);
+                    this.m_HierarchyViewDetailPaneType = this.DrawCPUOrGPUDetailedViewPopup();
+                    GUILayout.FlexibleSpace();
+                    EditorGUILayout.EndHorizontal();
+                    mainPane.detailedObjectsView.DoGUI(ms_Styles.header, this.GetActiveVisibleFrameIndex(), this.m_ViewType);
+                    GUILayout.EndVertical();
+                    SplitterGUILayout.EndHorizontalSplit();
+                }
+            }
+        }
+
+        private void DrawCPUOrGPUTimelineViewToolbar(ProfilerProperty property)
+        {
+            EditorGUILayout.BeginHorizontal(EditorStyles.toolbar, new GUILayoutOption[0]);
+            this.DrawCPUorGPUCommonToolbar(property);
+            GUILayout.FlexibleSpace();
+            this.m_TimelineViewDetail = GUILayout.Toggle(this.m_TimelineViewDetail, ms_Styles.timelineHighDetail, EditorStyles.toolbarButton, new GUILayoutOption[0]);
+            ms_Styles.memRecord.text = "Mem Record";
+            if (this.m_SelectedMemRecordMode != ProfilerMemoryRecordMode.None)
+            {
+                string text = ms_Styles.memRecord.text;
+                object[] objArray1 = new object[] { text, " [", this.s_CheckMark, "]" };
+                ms_Styles.memRecord.text = string.Concat(objArray1);
+            }
+            GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(100f) };
+            Rect position = GUILayoutUtility.GetRect(ms_Styles.memRecord, EditorStyles.toolbarDropDown, options);
+            if (EditorGUI.DropdownButton(position, ms_Styles.memRecord, FocusType.Passive, EditorStyles.toolbarDropDown))
+            {
+                string[] strArray = new string[] { "None", "Sample only", "Callstack (fast)", "Callstack (full)" };
+                bool[] enabled = new bool[strArray.Length];
+                for (int i = 0; i < strArray.Length; i++)
+                {
+                    enabled[i] = true;
+                }
+                int[] selected = new int[] { this.m_SelectedMemRecordMode };
+                EditorUtility.DisplayCustomMenu(position, strArray, enabled, selected, new EditorUtility.SelectMenuItemFunction(this.MemRecordModeClick), null);
             }
             EditorGUILayout.EndHorizontal();
             this.HandleCommandEvents();
@@ -516,26 +551,12 @@
             SplitterGUILayout.EndHorizontalSplit();
         }
 
-        private static void DrawEmptyCPUOrRenderingDetailPane()
-        {
-            GUILayout.Box(string.Empty, ms_Styles.header, new GUILayoutOption[0]);
-            GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-            GUILayout.FlexibleSpace();
-            GUILayout.BeginVertical(new GUILayoutOption[0]);
-            GUILayout.FlexibleSpace();
-            GUILayout.Label("Select Line for per-object breakdown", EditorStyles.wordWrappedLabel, new GUILayoutOption[0]);
-            GUILayout.FlexibleSpace();
-            GUILayout.EndVertical();
-            GUILayout.FlexibleSpace();
-            GUILayout.EndHorizontal();
-        }
-
         private void DrawMainToolbar()
         {
             GUILayout.BeginHorizontal(EditorStyles.toolbar, new GUILayoutOption[0]);
             GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(120f) };
             Rect position = GUILayoutUtility.GetRect(ms_Styles.addArea, EditorStyles.toolbarDropDown, options);
-            if (EditorGUI.ButtonMouseDown(position, ms_Styles.addArea, FocusType.Passive, EditorStyles.toolbarDropDown))
+            if (EditorGUI.DropdownButton(position, ms_Styles.addArea, FocusType.Passive, EditorStyles.toolbarDropDown))
             {
                 int length = this.m_Charts.Length;
                 string[] strArray = new string[length];
@@ -558,10 +579,21 @@
             SetProfileDeepScripts(GUILayout.Toggle(ProfilerDriver.deepProfiling, ms_Styles.deepProfile, EditorStyles.toolbarButton, new GUILayoutOption[0]));
             ProfilerDriver.profileEditor = GUILayout.Toggle(ProfilerDriver.profileEditor, ms_Styles.profileEditor, EditorStyles.toolbarButton, new GUILayoutOption[0]);
             this.m_AttachProfilerUI.OnGUILayout(this);
+            GUILayout.Space(5f);
             if (GUILayout.Button(ms_Styles.clearData, EditorStyles.toolbarButton, new GUILayoutOption[0]))
             {
-                ProfilerDriver.ClearAllFrames();
-                NetworkDetailStats.m_NetworkOperations.Clear();
+                this.Clear();
+            }
+            if (GUILayout.Button(ms_Styles.loadProfilingData, EditorStyles.toolbarButton, new GUILayoutOption[0]))
+            {
+                this.LoadProfilingData(Event.current.shift);
+            }
+            using (new EditorGUI.DisabledScope(ProfilerDriver.lastFrameIndex == -1))
+            {
+                if (GUILayout.Button(ms_Styles.saveProfilingData, EditorStyles.toolbarButton, new GUILayoutOption[0]))
+                {
+                    this.SaveProfilingData();
+                }
             }
             GUILayout.Space(5f);
             GUILayout.FlexibleSpace();
@@ -659,9 +691,13 @@
             SplitterGUILayout.EndHorizontalSplit();
         }
 
-        private static void DrawOtherToolbar()
+        private static void DrawOtherToolbar(ProfilerArea area)
         {
             EditorGUILayout.BeginHorizontal(EditorStyles.toolbar, new GUILayoutOption[0]);
+            if ((area == ProfilerArea.Rendering) && GUILayout.Button(!GUI.enabled ? ms_Styles.noFrameDebugger : ms_Styles.frameDebugger, EditorStyles.toolbarButton, new GUILayoutOption[0]))
+            {
+                FrameDebuggerWindow.ShowFrameDebuggerWindow().EnableIfNeeded();
+            }
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();
         }
@@ -675,7 +711,7 @@
 
         private void DrawPane(ProfilerArea area)
         {
-            DrawOtherToolbar();
+            DrawOtherToolbar(area);
             this.DrawOverviewText(area);
         }
 
@@ -719,6 +755,31 @@
         public int GetActiveVisibleFrameIndex() => 
             ((this.m_CurrentFrame != -1) ? this.m_CurrentFrame : this.m_LastFrameFromTick);
 
+        public ProfilerProperty GetRootProfilerProperty()
+        {
+            ProfilerColumn sortType = (this.m_CurrentArea != ProfilerArea.CPU) ? this.m_GPUHierarchyGUI.sortType : this.m_CPUHierarchyGUI.sortType;
+            return this.GetRootProfilerProperty(sortType);
+        }
+
+        public ProfilerProperty GetRootProfilerProperty(ProfilerColumn sortType)
+        {
+            if ((((this.m_CPUOrGPUProfilerProperty != null) && (this.m_CPUOrGPUProfilerPropertyConfig.frameIndex == this.GetActiveVisibleFrameIndex())) && ((this.m_CPUOrGPUProfilerPropertyConfig.area == this.m_CurrentArea) && (this.m_CPUOrGPUProfilerPropertyConfig.viewType == this.m_ViewType))) && (this.m_CPUOrGPUProfilerPropertyConfig.sortType == sortType))
+            {
+                this.m_CPUOrGPUProfilerProperty.ResetToRoot();
+                return this.m_CPUOrGPUProfilerProperty;
+            }
+            if (this.m_CPUOrGPUProfilerProperty != null)
+            {
+                this.m_CPUOrGPUProfilerProperty.Cleanup();
+            }
+            this.m_CPUOrGPUProfilerProperty = this.CreateProperty(sortType);
+            this.m_CPUOrGPUProfilerPropertyConfig.frameIndex = this.GetActiveVisibleFrameIndex();
+            this.m_CPUOrGPUProfilerPropertyConfig.area = this.m_CurrentArea;
+            this.m_CPUOrGPUProfilerPropertyConfig.viewType = this.m_ViewType;
+            this.m_CPUOrGPUProfilerPropertyConfig.sortType = sortType;
+            return this.m_CPUOrGPUProfilerProperty;
+        }
+
         public string GetSearch() => 
             this.m_SearchString;
 
@@ -748,7 +809,7 @@
         private void Initialize()
         {
             int len = ProfilerDriver.maxHistoryLength - 1;
-            this.m_Charts = new ProfilerChart[9];
+            this.m_Charts = new ProfilerChart[10];
             Color[] colors = ProfilerColors.colors;
             for (ProfilerArea area = ProfilerArea.CPU; area < ProfilerArea.AreaCount; area += 1)
             {
@@ -789,6 +850,23 @@
 
         public bool IsSearching() => 
             (!string.IsNullOrEmpty(this.m_SearchString) && (this.m_SearchString.Length > 0));
+
+        private void LoadProfilingData(bool keepExistingData)
+        {
+            string text = EditorGUIUtility.TempContent("Load profile").text;
+            string directory = EditorPrefs.GetString("ProfilerRecentSaveLoadProfilePath");
+            string str3 = EditorUtility.OpenFilePanel(text, directory, "data");
+            if (str3.Length != 0)
+            {
+                EditorPrefs.SetString("ProfilerRecentSaveLoadProfilePath", str3);
+                if (ProfilerDriver.LoadProfile(str3, keepExistingData))
+                {
+                    Profiler.enabled = this.m_Recording = false;
+                    SessionState.SetBool("ProfilerEnabled", this.m_Recording);
+                    NetworkDetailStats.m_NetworkOperations.Clear();
+                }
+            }
+        }
 
         private void MemRecordModeClick(object userData, string[] options, int selected)
         {
@@ -898,11 +976,11 @@
             switch (this.m_CurrentArea)
             {
                 case ProfilerArea.CPU:
-                    this.DrawCPUOrRenderingPane(this.m_CPUHierarchyGUI, this.m_CPUDetailHierarchyGUI, this.m_CPUTimelineGUI);
+                    this.DrawCPUOrGPUPane(this.m_CPUHierarchyGUI, this.m_CPUTimelineGUI);
                     break;
 
                 case ProfilerArea.GPU:
-                    this.DrawCPUOrRenderingPane(this.m_GPUHierarchyGUI, this.m_GPUDetailHierarchyGUI, null);
+                    this.DrawCPUOrGPUPane(this.m_GPUHierarchyGUI, null);
                     break;
 
                 case ProfilerArea.Memory:
@@ -1047,6 +1125,20 @@
                     window.m_LastFrameFromTick = ProfilerDriver.lastFrameIndex;
                     window.RepaintImmediately();
                 }
+            }
+        }
+
+        private void SaveProfilingData()
+        {
+            string text = EditorGUIUtility.TempContent("Save profile").text;
+            string str2 = EditorPrefs.GetString("ProfilerRecentSaveLoadProfilePath");
+            string directory = !string.IsNullOrEmpty(str2) ? Path.GetDirectoryName(str2) : "";
+            string defaultName = !string.IsNullOrEmpty(str2) ? Path.GetFileName(str2) : "";
+            string str5 = EditorUtility.SaveFilePanel(text, directory, defaultName, "data");
+            if (str5.Length != 0)
+            {
+                EditorPrefs.SetString("ProfilerRecentSaveLoadProfilePath", str5);
+                ProfilerDriver.SaveProfile(str5);
             }
         }
 
@@ -1306,6 +1398,21 @@
         private bool wantsMemoryRefresh =>
             this.m_MemoryListView.RequiresRefresh;
 
+        [StructLayout(LayoutKind.Sequential)]
+        private struct CachedProfilerPropertyConfig
+        {
+            public int frameIndex;
+            public ProfilerArea area;
+            public ProfilerViewType viewType;
+            public ProfilerColumn sortType;
+        }
+
+        private enum HierarchyViewDetailPaneType
+        {
+            None,
+            Objects
+        }
+
         internal class Styles
         {
             public GUIContent addArea = EditorGUIUtility.TextContent("Add Profiler|Add a profiler area");
@@ -1316,10 +1423,11 @@
             public GUIStyle entryEven = "OL EntryBackEven";
             public GUIStyle entryOdd = "OL EntryBackOdd";
             public GUIContent frame = EditorGUIUtility.TextContent("Frame: ");
-            public GUIContent frameDebugger = EditorGUIUtility.TextContent("Frame Debugger|Open Frame Debugger");
+            public GUIContent frameDebugger = EditorGUIUtility.TextContent("Open Frame Debugger|Frame Debugger for current game view");
             public GUIContent gatherObjectReferences = EditorGUIUtility.TextContent("Gather object references|Collect reference information to see where objects are referenced from. Disable this to save memory");
             public GUIStyle header = "OL title";
             public GUIStyle label = "OL label";
+            public GUIContent loadProfilingData = EditorGUIUtility.TextContent("Load|Load binary profiling information from a file. Shift click to append to the existing data");
             public GUIContent memRecord = EditorGUIUtility.TextContent("Mem Record|Record activity in the native memory system");
             public GUIContent nextFrame = EditorGUIUtility.IconContent("Profiler.NextFrame", "|Go one frame forwards");
             public GUIContent noData = EditorGUIUtility.TextContent("No frame data available");
@@ -1330,6 +1438,7 @@
             public GUIContent profilerInstrumentation = EditorGUIUtility.TextContent("Instrumentation|Add Profiler Instrumentation to selected functions");
             public GUIContent profilerRecord = EditorGUIUtility.TextContentWithIcon("Record|Record profiling information", "Profiler.Record");
             public GUIContent[] reasons = GetLocalizedReasons();
+            public GUIContent saveProfilingData = EditorGUIUtility.TextContent("Save|Save current profiling information to a binary file");
             public GUIContent timelineHighDetail = EditorGUIUtility.TextContent("High Detail|Guaranteed to show all samples and memory callstacks");
 
             public Styles()

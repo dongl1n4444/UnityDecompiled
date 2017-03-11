@@ -18,11 +18,11 @@
         private static Func<JSONValue, string> <>f__am$cache1;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private static string <Name>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private static List<string> <OpenDocuments>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-        private static int <ProcessId>k__BackingField;
+        private static List<string> <OpenDocuments>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private static int <ProcessId>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private static string <ServerURL>k__BackingField;
 
         static ScriptEditorSettings()
@@ -64,7 +64,7 @@
             }
             catch (Exception exception)
             {
-                Logger.Log(exception);
+                UnityEditor.RestService.Logger.Log(exception);
                 Clear();
                 Save();
             }

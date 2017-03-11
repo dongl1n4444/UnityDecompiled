@@ -1,6 +1,7 @@
 ﻿namespace UnityEngine
 {
     using System;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Security;
@@ -19,7 +20,7 @@
         /// <param name="count">Number of elements in the buffer.</param>
         /// <param name="stride">Size of one element in the buffer. Has to match size of buffer type in the shader. See for cross-platform compatibility information.</param>
         /// <param name="type">Type of the buffer, default is ComputeBufferType.Default (structured buffer).</param>
-        public ComputeBuffer(int count, int stride) : this(count, stride, ComputeBufferType.Default)
+        public ComputeBuffer(int count, int stride) : this(count, stride, ComputeBufferType.Default, 3)
         {
         }
 
@@ -29,7 +30,11 @@
         /// <param name="count">Number of elements in the buffer.</param>
         /// <param name="stride">Size of one element in the buffer. Has to match size of buffer type in the shader. See for cross-platform compatibility information.</param>
         /// <param name="type">Type of the buffer, default is ComputeBufferType.Default (structured buffer).</param>
-        public ComputeBuffer(int count, int stride, ComputeBufferType type)
+        public ComputeBuffer(int count, int stride, ComputeBufferType type) : this(count, stride, type, 3)
+        {
+        }
+
+        internal ComputeBuffer(int count, int stride, ComputeBufferType type, int stackDepth)
         {
             if (count <= 0)
             {
@@ -41,6 +46,7 @@
             }
             this.m_Ptr = IntPtr.Zero;
             InitBuffer(this, count, stride, type);
+            this.SaveCallstack(stackDepth);
         }
 
         /// <summary>
@@ -67,7 +73,7 @@
             }
             else if (this.m_Ptr != IntPtr.Zero)
             {
-                Debug.LogWarning("GarbageCollector disposing of ComputeBuffer. Please use ComputeBuffer.Release() or .Dispose() to manually release the buffer.");
+                UnityEngine.Debug.LogWarning($"GarbageCollector disposing of ComputeBuffer allocated in {this.GetFileName()} at line {this.GetLineNumber()}. Please use ComputeBuffer.Release() or .Dispose() to manually release the buffer.");
             }
             this.m_Ptr = IntPtr.Zero;
         }
@@ -87,6 +93,10 @@
             this.InternalGetData(data, Marshal.SizeOf(data.GetType().GetElementType()));
         }
 
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
+        internal extern string GetFileName();
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
+        internal extern int GetLineNumber();
         /// <summary>
         /// <para>Retrieve a native (underlying graphics API) pointer to the buffer.</para>
         /// </summary>
@@ -116,6 +126,14 @@
             this.Dispose();
         }
 
+        internal void SaveCallstack(int stackDepth)
+        {
+            StackFrame frame = new StackFrame(stackDepth, true);
+            this.SaveCallstack_Internal(frame.GetFileName(), frame.GetFileLineNumber());
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern void SaveCallstack_Internal(string fileName, int lineNumber);
         /// <summary>
         /// <para>Sets counter value of append/consume buffer.</para>
         /// </summary>

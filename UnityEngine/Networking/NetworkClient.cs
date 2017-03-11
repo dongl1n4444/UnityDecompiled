@@ -437,7 +437,7 @@
             {
                 return 0;
             }
-            return NetworkTransport.GetCurrentRtt(this.m_ClientId, this.m_ClientConnectionId, out num2);
+            return NetworkTransport.GetCurrentRTT(this.m_ClientId, this.m_ClientConnectionId, out num2);
         }
 
         public void GetStatsIn(out int numMsgs, out int numBytes)

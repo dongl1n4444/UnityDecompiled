@@ -93,7 +93,7 @@
         {
             if (obj != null)
             {
-                Type baseType = obj.GetType();
+                System.Type baseType = obj.GetType();
                 MethodInfo method = null;
                 while (baseType != null)
                 {
@@ -108,8 +108,8 @@
             return null;
         }
 
-        protected Type[] GetPaneTypes() => 
-            new Type[] { typeof(SceneView), typeof(GameView), typeof(InspectorWindow), typeof(SceneHierarchyWindow), typeof(ProjectBrowser), typeof(ProfilerWindow), typeof(AnimationWindow) };
+        protected System.Type[] GetPaneTypes() => 
+            new System.Type[] { typeof(SceneView), typeof(GameView), typeof(InspectorWindow), typeof(SceneHierarchyWindow), typeof(ProjectBrowser), typeof(ProfilerWindow), typeof(AnimationWindow) };
 
         protected void Invoke(string methodName)
         {
@@ -171,7 +171,7 @@
         {
             if (this.m_ActualView != null)
             {
-                Object.DestroyImmediate(this.m_ActualView, true);
+                UnityEngine.Object.DestroyImmediate(this.m_ActualView, true);
             }
             base.OnDestroy();
         }
@@ -312,9 +312,8 @@
             this.Invoke("Update");
         }
 
-        protected override void SetPosition(Rect newPos)
+        protected virtual void SetActualViewPosition(Rect newPos)
         {
-            base.SetPosition(newPos);
             if (this.m_ActualView != null)
             {
                 this.m_ActualView.m_Pos = newPos;
@@ -322,11 +321,17 @@
             }
         }
 
+        protected override void SetPosition(Rect newPos)
+        {
+            base.SetPosition(newPos);
+            this.SetActualViewPosition(newPos);
+        }
+
         protected void ShowGenericMenu()
         {
             GUIStyle style = "PaneOptions";
             Rect position = new Rect((base.position.width - style.fixedWidth) - 4f, Mathf.Floor((this.background.margin.top + 20) - style.fixedHeight), style.fixedWidth, style.fixedHeight);
-            if (EditorGUI.ButtonMouseDown(position, GUIContent.none, FocusType.Passive, "PaneOptions"))
+            if (EditorGUI.DropdownButton(position, GUIContent.none, FocusType.Passive, "PaneOptions"))
             {
                 this.PopupGenericMenu(this.m_ActualView, position);
             }

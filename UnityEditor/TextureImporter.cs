@@ -27,7 +27,7 @@
         /// <summary>
         /// <para>Does textures source image have RGB channels.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("DoesSourceTextureHaveColor always returns true in Unity.")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("DoesSourceTextureHaveColor always returns true in Unity."), GeneratedByOldBindingsGenerator]
         public extern bool DoesSourceTextureHaveColor();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern TextureImporterFormat FormatFromTextureParameters(TextureImporterSettings settings, TextureImporterPlatformSettings platformSettings, bool doesTextureContainAlpha, bool sourceWasHDR, BuildTarget destinationPlatform);
@@ -37,7 +37,7 @@
         /// <returns>
         /// <para>True if the importer allows alpha split on the imported texture, False otherwise.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use UnityEditor.TextureImporter.GetPlatformTextureSettings() instead."), GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("Use UnityEditor.TextureImporter.GetPlatformTextureSettings() instead.")]
         public extern bool GetAllowsAlphaSplitting();
         /// <summary>
         /// <para>Returns the TextureImporterFormat that would be automatically chosen for this platform.</para>
@@ -132,7 +132,7 @@
         /// <para>Setter for the flag that allows Alpha splitting on the imported texture when needed (for example ETC1 compression for textures with transparency).</para>
         /// </summary>
         /// <param name="flag"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use UnityEditor.TextureImporter.SetPlatformTextureSettings() instead."), GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("Use UnityEditor.TextureImporter.SetPlatformTextureSettings() instead.")]
         public extern void SetAllowsAlphaSplitting(bool flag);
         /// <summary>
         /// <para>Set specific target platform settings.</para>
@@ -248,7 +248,7 @@
         /// <summary>
         /// <para>Filtering mode of the texture.</para>
         /// </summary>
-        public FilterMode filterMode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+        public UnityEngine.FilterMode filterMode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Cubemap generation mode.</para>
@@ -288,7 +288,7 @@
         public float heightmapScale { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
-        /// <para>Is texture data readable from scripts.</para>
+        /// <para>Set this to true if you want texture data to be readable from scripts. Set it to false to prevent scripts from reading texture data.</para>
         /// </summary>
         public bool isReadable { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
@@ -338,7 +338,7 @@
         public float mipMapBias { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
-        /// <para>Generate mip maps for the texture?</para>
+        /// <para>Generate Mip Maps.</para>
         /// </summary>
         public bool mipmapEnabled { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 

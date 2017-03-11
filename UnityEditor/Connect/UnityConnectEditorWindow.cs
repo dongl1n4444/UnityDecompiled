@@ -14,7 +14,7 @@
     {
         [CompilerGenerated]
         private static Func<UnityConnectEditorWindow, bool> <>f__am$cache0;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <ErrorUrl>k__BackingField;
         private bool m_ClearInitialOpenURL = true;
         private List<string> m_ServiceUrls = new List<string>();
@@ -25,7 +25,7 @@
 
         public static UnityConnectEditorWindow Create(string title, List<string> serviceUrls)
         {
-            UnityConnectEditorWindow[] windowArray = Resources.FindObjectsOfTypeAll(typeof(UnityConnectEditorWindow)) as UnityConnectEditorWindow[];
+            UnityConnectEditorWindow[] windowArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(UnityConnectEditorWindow)) as UnityConnectEditorWindow[];
             if (windowArray != null)
             {
                 if (<>f__am$cache0 == null)
@@ -38,7 +38,7 @@
                     return window;
                 }
             }
-            Type[] desiredDockNextTo = new Type[] { typeof(InspectorWindow) };
+            System.Type[] desiredDockNextTo = new System.Type[] { typeof(InspectorWindow) };
             UnityConnectEditorWindow window3 = EditorWindow.GetWindow<UnityConnectEditorWindow>(title, desiredDockNextTo);
             window3.m_ClearInitialOpenURL = false;
             window3.initialOpenUrl = serviceUrls[0];

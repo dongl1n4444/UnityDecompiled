@@ -1111,7 +1111,7 @@
         }
 
         /// <summary>
-        /// <para>The id of the player associated with this object.</para>
+        /// <para>The id of the player associated with this GameObject.</para>
         /// </summary>
         public short playerControllerId =>
             this.m_PlayerId;

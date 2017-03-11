@@ -4,6 +4,7 @@
     using UnityEditor.AnimatedValues;
     using UnityEngine;
     using UnityEngine.Events;
+    using UnityEngine.Experimental.Rendering;
     using UnityEngine.Rendering;
 
     [CustomEditor(typeof(GraphicsSettings))]
@@ -11,6 +12,7 @@
     {
         private Editor m_AlwaysIncludedShadersEditor;
         private Editor m_BuiltinShadersEditor;
+        private SerializedProperty m_ScriptableRenderLoop;
         private Editor m_ShaderPreloadEditor;
         private Editor m_ShaderStrippingEditor;
         private Editor m_TierSettingsEditor;
@@ -42,11 +44,18 @@
         {
             this.m_TransparencySortMode = base.serializedObject.FindProperty("m_TransparencySortMode");
             this.m_TransparencySortAxis = base.serializedObject.FindProperty("m_TransparencySortAxis");
+            this.m_ScriptableRenderLoop = base.serializedObject.FindProperty("m_CustomRenderPipeline");
         }
 
         public override void OnInspectorGUI()
         {
             base.serializedObject.Update();
+            GUILayout.Label(Styles.renderLoopSettings, EditorStyles.boldLabel, new GUILayoutOption[0]);
+            Rect totalPosition = EditorGUILayout.GetControlRect(true, EditorGUI.GetPropertyHeight(this.m_ScriptableRenderLoop), new GUILayoutOption[0]);
+            EditorGUI.BeginProperty(totalPosition, Styles.renderLoopLabel, this.m_ScriptableRenderLoop);
+            this.m_ScriptableRenderLoop.objectReferenceValue = EditorGUI.ObjectField(totalPosition, this.m_ScriptableRenderLoop.objectReferenceValue, typeof(RenderPipelineAsset), false);
+            EditorGUI.EndProperty();
+            EditorGUILayout.Space();
             GUILayout.Label(Styles.cameraSettings, EditorStyles.boldLabel, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(this.m_TransparencySortMode, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(this.m_TransparencySortAxis, new GUILayoutOption[0]);
@@ -108,7 +117,7 @@
             }
         }
 
-        private Object graphicsSettings =>
+        private UnityEngine.Object graphicsSettings =>
             GraphicsSettings.GetGraphicsSettings();
 
         private Editor shaderPreloadEditor
@@ -144,6 +153,8 @@
             public static readonly GUIContent builtinSettings = EditorGUIUtility.TextContent("Built-in shader settings");
             public static readonly GUIContent cameraSettings = EditorGUIUtility.TextContent("Camera settings");
             public static readonly GUIContent closeEditorWindow = new GUIContent("Close Editor");
+            public static readonly GUIContent renderLoopLabel = EditorGUIUtility.TextContent("Scriptable Render Loop");
+            public static readonly GUIContent renderLoopSettings = EditorGUIUtility.TextContent("Scriptable RenderLoop settings");
             public static readonly GUIContent shaderPreloadSettings = EditorGUIUtility.TextContent("Shader preloading");
             public static readonly GUIContent shaderStrippingSettings = EditorGUIUtility.TextContent("Shader stripping");
             public static readonly GUIContent showEditorWindow = new GUIContent("Open Editor...");

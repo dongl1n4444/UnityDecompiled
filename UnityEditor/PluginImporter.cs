@@ -331,9 +331,9 @@
             internal IEnumerator<IEnumerable<PluginDesc>> $locvar0;
             internal IEnumerator<PluginDesc> $locvar1;
             internal int $PC;
-            internal IEnumerable<PluginDesc> <extensionPlugins>__2;
-            internal PluginDesc <pluginDesc>__3;
-            internal IEnumerable<IEnumerable<PluginDesc>> <pluginDescriptions>__1;
+            internal IEnumerable<PluginDesc> <extensionPlugins>__1;
+            internal PluginDesc <pluginDesc>__2;
+            internal IEnumerable<IEnumerable<PluginDesc>> <pluginDescriptions>__0;
             internal BuildTarget target;
 
             [DebuggerHidden]
@@ -379,8 +379,8 @@
                     case 0:
                     {
                         object[] arguments = new object[] { this.target };
-                        this.<pluginDescriptions>__1 = AttributeHelper.CallMethodsWithAttribute<IEnumerable<PluginDesc>>(typeof(RegisterPluginsAttribute), arguments);
-                        this.$locvar0 = this.<pluginDescriptions>__1.GetEnumerator();
+                        this.<pluginDescriptions>__0 = AttributeHelper.CallMethodsWithAttribute<IEnumerable<PluginDesc>>(typeof(RegisterPluginsAttribute), arguments);
+                        this.$locvar0 = this.<pluginDescriptions>__0.GetEnumerator();
                         num = 0xfffffffd;
                         break;
                     }
@@ -399,16 +399,16 @@
                     }
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<extensionPlugins>__2 = this.$locvar0.Current;
-                        this.$locvar1 = this.<extensionPlugins>__2.GetEnumerator();
+                        this.<extensionPlugins>__1 = this.$locvar0.Current;
+                        this.$locvar1 = this.<extensionPlugins>__1.GetEnumerator();
                         num = 0xfffffffd;
                     Label_009A:
                         try
                         {
                             while (this.$locvar1.MoveNext())
                             {
-                                this.<pluginDesc>__3 = this.$locvar1.Current;
-                                this.$current = this.<pluginDesc>__3;
+                                this.<pluginDesc>__2 = this.$locvar1.Current;
+                                this.$current = this.<pluginDesc>__2;
                                 if (!this.$disposing)
                                 {
                                     this.$PC = 1;

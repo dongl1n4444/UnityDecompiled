@@ -172,10 +172,10 @@
         /// <param name="assets">List of assets to checkout.</param>
         /// <param name="mode">Tell the Provider to checkout the asset, the .meta file or both.</param>
         /// <param name="asset">Asset to checkout.</param>
-        public static Task Checkout(Object[] assets, CheckoutMode mode)
+        public static Task Checkout(UnityEngine.Object[] assets, CheckoutMode mode)
         {
             AssetList list = new AssetList();
-            foreach (Object obj2 in assets)
+            foreach (UnityEngine.Object obj2 in assets)
             {
                 Asset assetByPath = GetAssetByPath(AssetDatabase.GetAssetPath(obj2));
                 list.Add(assetByPath);
@@ -189,7 +189,7 @@
         /// <param name="assets">List of assets to checkout.</param>
         /// <param name="mode">Tell the Provider to checkout the asset, the .meta file or both.</param>
         /// <param name="asset">Asset to checkout.</param>
-        public static Task Checkout(Object asset, CheckoutMode mode)
+        public static Task Checkout(UnityEngine.Object asset, CheckoutMode mode)
         {
             Asset assetByPath = GetAssetByPath(AssetDatabase.GetAssetPath(asset));
             Asset[] assets = new Asset[] { assetByPath };
@@ -453,9 +453,9 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool Internal_RevertIsValid(Asset[] assets, RevertMode mode);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private static extern Task Internal_SetFileMode(Asset[] assets, FileMode mode);
+        private static extern Task Internal_SetFileMode(Asset[] assets, UnityEditor.VersionControl.FileMode mode);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private static extern Task Internal_SetFileModeStrings(string[] assets, FileMode mode);
+        private static extern Task Internal_SetFileModeStrings(string[] assets, UnityEditor.VersionControl.FileMode mode);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Task Internal_Status(Asset[] assets, bool recursively);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -597,10 +597,10 @@
         public static bool RevertIsValid(AssetList assets, RevertMode mode) => 
             Internal_RevertIsValid(assets.ToArray(), mode);
 
-        internal static Task SetFileMode(AssetList assets, FileMode mode) => 
+        internal static Task SetFileMode(AssetList assets, UnityEditor.VersionControl.FileMode mode) => 
             Internal_SetFileMode(assets.ToArray(), mode);
 
-        internal static Task SetFileMode(string[] assets, FileMode mode) => 
+        internal static Task SetFileMode(string[] assets, UnityEditor.VersionControl.FileMode mode) => 
             Internal_SetFileModeStrings(assets, mode);
 
         /// <summary>

@@ -213,7 +213,7 @@
                     Help.ShowHelpForObject(this.m_SerializedTransition.targetObject);
                 }
                 Rect position = new Rect(r.width - 18f, r.y + 5f, 14f, 14f);
-                if (EditorGUI.ButtonMouseDown(position, EditorGUI.GUIContents.titleSettingsIcon, FocusType.Passive, EditorStyles.inspectorTitlebarText))
+                if (EditorGUI.DropdownButton(position, EditorGUI.GUIContents.titleSettingsIcon, FocusType.Passive, EditorStyles.inspectorTitlebarText))
                 {
                     EditorUtility.DisplayObjectContextMenu(position, this.m_SerializedTransition.targetObject, 0);
                 }

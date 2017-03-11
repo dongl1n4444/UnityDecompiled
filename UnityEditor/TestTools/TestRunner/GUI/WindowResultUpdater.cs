@@ -5,6 +5,7 @@
     using UnityEditor.TestTools.TestRunner;
     using UnityEngine;
     using UnityEngine.TestTools.TestRunner;
+    using UnityEngine.TestTools.TestRunner.GUI;
 
     internal class WindowResultUpdater : ScriptableObject, TestRunnerListener
     {
@@ -20,7 +21,8 @@
         {
             if (TestRunnerWindow.s_Instance != null)
             {
-                TestRunnerWindow.s_Instance.m_SelectedTestTypes.UpdateResult(test);
+                TestRunnerResult result = new TestRunnerResult(test);
+                TestRunnerWindow.s_Instance.m_SelectedTestTypes.UpdateResult(result);
                 TestRunnerWindow.s_Instance.m_SelectedTestTypes.Repaint();
                 TestRunnerWindow.s_Instance.Repaint();
             }

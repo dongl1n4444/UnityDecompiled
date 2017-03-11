@@ -166,7 +166,7 @@
             for (int i = 0; i < graphicsForCanvas.Count; i++)
             {
                 Graphic item = graphicsForCanvas[i];
-                if (((item.depth != -1) && item.raycastTarget) && (RectTransformUtility.RectangleContainsScreenPoint(item.rectTransform, pointerPosition, eventCamera) && item.Raycast(pointerPosition, eventCamera)))
+                if ((!item.canvasRenderer.cull && (item.depth != -1)) && ((item.raycastTarget && RectTransformUtility.RectangleContainsScreenPoint(item.rectTransform, pointerPosition, eventCamera)) && item.Raycast(pointerPosition, eventCamera)))
                 {
                     s_SortedGraphics.Add(item);
                 }

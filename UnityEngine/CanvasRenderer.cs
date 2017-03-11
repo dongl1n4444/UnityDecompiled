@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Threading;
@@ -12,6 +13,7 @@
     /// </summary>
     public sealed class CanvasRenderer : Component
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event OnRequestRebuild onRequestRebuild;
 
         public static void AddUIVertexStream(List<UIVertex> verts, List<Vector3> positions, List<Color32> colors, List<Vector2> uv0S, List<Vector2> uv1S, List<Vector3> normals, List<Vector4> tangents)

@@ -57,7 +57,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void CalculateAmbientProbeFromSkybox();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern string CalculateHashForObjectsAndDependencies(Object[] objects);
+        public static extern string CalculateHashForObjectsAndDependencies(UnityEngine.Object[] objects);
         public static Bounds CalculateSelectionBounds(bool usePivotOnlyForParticles, bool onlyUseActiveSelection)
         {
             Bounds bounds;
@@ -117,6 +117,19 @@
             return mask;
         }
 
+        public static string CountToString(ulong count)
+        {
+            string[] strArray = new string[] { "g", "m", "k", "" };
+            float[] numArray = new float[] { 1E+09f, 1000000f, 1000f, 1f };
+            int index = 0;
+            while ((index < 3) && (count < (numArray[index] / 2f)))
+            {
+                index++;
+            }
+            float num2 = ((float) count) / numArray[index];
+            return (num2.ToString("0.0") + strArray[index]);
+        }
+
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int CreateScriptableObjectUnchecked(MonoScript script);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -125,7 +138,7 @@
         public static extern int DetermineDepthOrder(Transform lhs, Transform rhs);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void DrawSkyboxMaterial(Material mat, Camera cam);
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("use EditorSceneManager.EnsureUntitledSceneHasBeenSaved"), GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("use EditorSceneManager.EnsureUntitledSceneHasBeenSaved")]
         public static extern bool EnsureSceneHasBeenSaved(string operation);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void ExecuteCommandOnKeyWindow(string commandName);
@@ -878,7 +891,7 @@
         }
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern bool GetIsInspectorExpanded(Object obj);
+        public static extern bool GetIsInspectorExpanded(UnityEngine.Object obj);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetLayerName(int layer);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -886,7 +899,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetLicenseInfo();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern Object GetLoadedObjectFromInstanceID(int instanceID);
+        public static extern UnityEngine.Object GetLoadedObjectFromInstanceID(int instanceID);
         private static Bounds GetLocalBounds(GameObject gameObject)
         {
             RectTransform component = gameObject.GetComponent<RectTransform>();
@@ -912,6 +925,8 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern MonoIsland[] GetMonoIslands();
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern MonoIsland[] GetMonoIslandsForPlayer();
         public static List<int> GetNewSelection(int clickedInstanceID, List<int> allInstanceIDs, List<int> selectedInstanceIDs, int lastClickedInstanceID, bool keepMultiSelection, bool useShiftAsActionKey, bool allowMultiSelection)
         {
             List<int> list = new List<int>();
@@ -1009,7 +1024,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetNoDiffToolsDetectedMessage();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern Object GetObjectFromInstanceID(int instanceID);
+        public static extern UnityEngine.Object GetObjectFromInstanceID(int instanceID);
         public static Camera[] GetSceneViewCameras() => 
             SceneView.GetAllSceneCameras();
 
@@ -1093,7 +1108,7 @@
         public static extern string GetUnityVersionFull();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool HasAdvancedLicenseOnBuildTarget(BuildTarget target);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         public static extern bool HasEduLicense();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         public static extern bool HasFreeLicense();
@@ -1106,7 +1121,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern DragAndDropVisualMode HierarchyWindowDrag(HierarchyProperty property, bool perform, HierarchyDropMode dropMode);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        internal static extern DragAndDropVisualMode InspectorWindowDrag(Object[] targets, bool perform);
+        internal static extern DragAndDropVisualMode InspectorWindowDrag(UnityEngine.Object[] targets, bool perform);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern Material[] InstantiateMaterialsInEditMode(Renderer renderer);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -1128,7 +1143,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool INTERNAL_CALL_SaveCursorToFile(string path, Texture2D image, ref Vector2 hotSpot);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private static extern DragAndDropVisualMode INTERNAL_CALL_SceneViewDrag(Object dropUpon, ref Vector3 worldPosition, ref Vector2 viewportPosition, bool perform);
+        private static extern DragAndDropVisualMode INTERNAL_CALL_SceneViewDrag(UnityEngine.Object dropUpon, ref Vector3 worldPosition, ref Vector2 viewportPosition, bool perform);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SetCustomLighting(Light[] lights, ref Color ambient);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -1202,7 +1217,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void LoadDefaultLayout();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern Object[] LoadSerializedFileAndForget(string path);
+        public static extern UnityEngine.Object[] LoadSerializedFileAndForget(string path);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void OnGameViewFocus(bool focus);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -1347,8 +1362,8 @@
         }
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern void SaveToSerializedFileAndForget(Object[] obj, string path, bool allowTextSerialization);
-        public static DragAndDropVisualMode SceneViewDrag(Object dropUpon, Vector3 worldPosition, Vector2 viewportPosition, bool perform) => 
+        public static extern void SaveToSerializedFileAndForget(UnityEngine.Object[] obj, string path, bool allowTextSerialization);
+        public static DragAndDropVisualMode SceneViewDrag(UnityEngine.Object dropUpon, Vector3 worldPosition, Vector2 viewportPosition, bool perform) => 
             INTERNAL_CALL_SceneViewDrag(dropUpon, ref worldPosition, ref viewportPosition, perform);
 
         public static void SetCustomLighting(Light[] lights, Color ambient)
@@ -1367,7 +1382,7 @@
         }
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern void SetIsInspectorExpanded(Object obj, bool isExpanded);
+        public static extern void SetIsInspectorExpanded(UnityEngine.Object obj, bool isExpanded);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void SetPlatformPath(string path);
         public static void SetRectTransformTemporaryRect(RectTransform rectTransform, Rect rect)

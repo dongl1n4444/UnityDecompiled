@@ -8,7 +8,7 @@
     /// <summary>
     /// <para>Base class from which asset importers for specific asset types derive.</para>
     /// </summary>
-    public class AssetImporter : Object
+    public class AssetImporter : UnityEngine.Object
     {
         /// <summary>
         /// <para>Retrieves the asset importer for the asset at path.</para>

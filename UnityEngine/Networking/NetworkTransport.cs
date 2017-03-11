@@ -267,6 +267,8 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool FinishSendMulticast(int hostId, out byte error);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern int GetAckBufferCount(int hostId, int connectionId, out byte error);
         /// <summary>
         /// <para>The Unity Multiplayer spawning system uses assetIds to identify what remote objects to spawn. This function allows you to get the assetId for the prefab associated with an object.</para>
         /// </summary>
@@ -299,15 +301,41 @@
         /// <summary>
         /// <para>Returns the number of unread messages in the read-queue.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("GetCurrentIncomingMessageAmount has been deprecated."), GeneratedByOldBindingsGenerator]
         public static extern int GetCurrentIncomingMessageAmount();
         /// <summary>
         /// <para>Returns the total number of messages still in the write-queue.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("GetCurrentOutgoingMessageAmount has been deprecated."), GeneratedByOldBindingsGenerator]
         public static extern int GetCurrentOutgoingMessageAmount();
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("GetCurrentRtt() has been deprecated."), GeneratedByOldBindingsGenerator]
         public static extern int GetCurrentRtt(int hostId, int connectionId, out byte error);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern int GetCurrentRTT(int hostId, int connectionId, out byte error);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern int GetIncomingMessageQueueSize(int hostId, out byte error);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern int GetIncomingPacketCount(int hostId, int connectionId, out byte error);
+        /// <summary>
+        /// <para>Returns how many packets have been received from start. (from Init() call).</para>
+        /// </summary>
+        /// <returns>
+        /// <para>Packets count received from start for all hosts.</para>
+        /// </returns>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern int GetIncomingPacketCountForAllHosts();
+        /// <summary>
+        /// <para>How many packets have been dropped due lack space in incoming queue (absolute value, countinf from start).</para>
+        /// </summary>
+        /// <returns>
+        /// <para>Dropping packet count.</para>
+        /// </returns>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern int GetIncomingPacketDropCountForAllHosts();
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern int GetIncomingPacketLossCount(int hostId, int connectionId, out byte error);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern int GetMaxAllowedBandwidth(int hostId, int connectionId, out byte error);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int GetMaxPacketSize();
         /// <summary>
@@ -316,9 +344,9 @@
         /// <returns>
         /// <para>Time in micro seconds.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("GetNetIOTimeuS has been made obsolete. Please do not use this function.")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("GetNetIOTimeuS has been deprecated."), GeneratedByOldBindingsGenerator]
         public static extern int GetNetIOTimeuS();
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("GetNetworkLostPacketNum() has been deprecated."), GeneratedByOldBindingsGenerator]
         public static extern int GetNetworkLostPacketNum(int hostId, int connectionId, out byte error);
         /// <summary>
         /// <para>Get a network timestamp. Can be used in your messages to investigate network delays together with Networking.GetRemoteDelayTimeMS.</para>
@@ -330,13 +358,19 @@
         public static extern int GetNetworkTimestamp();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int GetNextSceneId();
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("GetPacketReceivedRate has been made obsolete. Please do not use this function."), GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern int GetOutgoingMessageQueueSize(int hostId, out byte error);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern int GetOutgoingPacketNetworkLossPercent(int hostId, int connectionId, out byte error);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern int GetOutgoingPacketOverflowLossPercent(int hostId, int connectionId, out byte error);
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("GetPacketReceivedRate has been deprecated."), GeneratedByOldBindingsGenerator]
         public static extern int GetPacketReceivedRate(int hostId, int connectionId, out byte error);
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("GetPacketSentRate has been made obsolete. Please do not use this function."), GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("GetPacketSentRate has been deprecated."), GeneratedByOldBindingsGenerator]
         public static extern int GetPacketSentRate(int hostId, int connectionId, out byte error);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int GetRemoteDelayTimeMS(int hostId, int connectionId, int remoteTime, out byte error);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("GetRemotePacketReceivedRate has been made obsolete. Please do not use this function.")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("GetRemotePacketReceivedRate has been deprecated."), GeneratedByOldBindingsGenerator]
         public static extern int GetRemotePacketReceivedRate(int hostId, int connectionId, out byte error);
         /// <summary>
         /// <para>Initializes the NetworkTransport. Should be called before any other operations on the NetworkTransport are done.</para>
@@ -366,7 +400,18 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool IsBroadcastDiscoveryRunning();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern bool NotifyConnectionSendable(int hostId, int connectionId, out byte error);
+        private static extern bool NotifyConnectionSendable(int hostId, int connectionId, out byte error);
+        public static bool QueueMessageForSending(int hostId, int connectionId, int channelId, byte[] buffer, int size, out byte error)
+        {
+            if (buffer == null)
+            {
+                throw new NullReferenceException("send buffer is not initialized");
+            }
+            return QueueMessageForSendingWrapper(hostId, connectionId, channelId, buffer, size, out error);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern bool QueueMessageForSendingWrapper(int hostId, int connectionId, int channelId, byte[] buffer, int size, out byte error);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern NetworkEventType Receive(out int hostId, out int connectionId, out int channelId, byte[] buffer, int bufferSize, out int receivedSize, out byte error);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -390,6 +435,8 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool SendMulticast(int hostId, int connectionId, out byte error);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern bool SendQueuedMessages(int hostId, int connectionId, out byte error);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool SendWrapper(int hostId, int connectionId, int channelId, byte[] buffer, int size, out byte error);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]

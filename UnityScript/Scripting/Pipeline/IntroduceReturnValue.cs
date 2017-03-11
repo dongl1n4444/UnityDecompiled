@@ -11,24 +11,24 @@
     public class IntroduceReturnValue : AbstractCompilerStep
     {
         public bool IsVoid(Expression e) => 
-            RuntimeServices.EqualityOperator(TypeSystemServices.GetExpressionType(e), this.get_TypeSystemServices().VoidType);
+            RuntimeServices.EqualityOperator(TypeSystemServices.GetExpressionType(e), this.TypeSystemServices.VoidType);
 
         public ExpressionStatement LastExpressionStatement(Method method)
         {
-            StatementCollection statements = method.get_Body().get_Statements();
-            return ((statements.Count != 0) ? (statements.get_Item(-1) as ExpressionStatement) : null);
+            StatementCollection statements = method.Body.Statements;
+            return ((statements.Count != 0) ? (statements[-1] as ExpressionStatement) : null);
         }
 
         public override void Run()
         {
-            ClassDefinition scriptClass = UtilitiesModule.GetScriptClass(this.get_Context());
+            ClassDefinition scriptClass = UtilitiesModule.GetScriptClass(this.Context);
             if (scriptClass != null)
             {
-                Method method = scriptClass.get_Members().get_Item("Run");
-                ExpressionStatement statement = this.LastExpressionStatement(method);
-                if ((statement != null) && !this.IsVoid(statement.get_Expression()))
+                Method method = (Method) scriptClass.Members["Run"];
+                ExpressionStatement existing = this.LastExpressionStatement(method);
+                if ((existing != null) && !this.IsVoid(existing.Expression))
                 {
-                    statement.get_ParentNode().Replace(statement, new ReturnStatement(statement.get_Expression()));
+                    existing.ParentNode.Replace(existing, new ReturnStatement(existing.Expression));
                 }
             }
         }

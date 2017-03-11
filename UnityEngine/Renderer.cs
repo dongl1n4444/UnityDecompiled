@@ -135,7 +135,7 @@
         }
 
         /// <summary>
-        /// <para>If set, the Renderer will use the Light Probe Proxy Volume component attached to the source game object.</para>
+        /// <para>If set, the Renderer will use the Light Probe Proxy Volume component attached to the source GameObject.</para>
         /// </summary>
         public GameObject lightProbeProxyVolumeOverride { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 

@@ -15,7 +15,7 @@
         /// <summary>
         /// <para>Triggered in response to SwitchActiveBuildTarget.</para>
         /// </summary>
-        public static Action activeBuildTargetChanged;
+        public static System.Action activeBuildTargetChanged;
 
         /// <summary>
         /// <para>Get the current location for the build.</para>
@@ -309,6 +309,11 @@
         public static WSASubtarget wsaSubtarget { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         public static WSAUWPBuildType wsaUWPBuildType { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
+        /// <para>Sets and gets target UWP SDK to build Windows Store application against.</para>
+        /// </summary>
+        public static string wsaUWPSDK { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Xbox Build subtarget.</para>

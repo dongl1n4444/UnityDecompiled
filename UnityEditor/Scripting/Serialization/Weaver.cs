@@ -140,7 +140,7 @@
                 {
                     <>f__mg$cache1 = new Action<string>(Debug.LogError);
                 }
-                if (!Program.Process(unityEngine, unityUNet, Path.GetDirectoryName(destPath), assemblies, list.ToArray(), assemblyResolver, <>f__mg$cache0, <>f__mg$cache1))
+                if (!Unity.UNetWeaver.Program.Process(unityEngine, unityUNet, Path.GetDirectoryName(destPath), assemblies, list.ToArray(), assemblyResolver, <>f__mg$cache0, <>f__mg$cache1))
                 {
                     Debug.LogError("Failure generating network code.");
                     return false;

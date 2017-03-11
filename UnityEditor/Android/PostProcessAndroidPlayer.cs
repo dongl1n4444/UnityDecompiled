@@ -5,6 +5,7 @@
     using UnityEditor.Android.PostProcessor;
     using UnityEditor.Android.PostProcessor.Tasks;
     using UnityEditor.Utils;
+    using UnityEngine;
 
     internal class PostProcessAndroidPlayer
     {
@@ -15,7 +16,7 @@
             switch (EditorUserBuildSettings.androidBuildSystem)
             {
                 case AndroidBuildSystem.Internal:
-                    return 0;
+                    return (!_context.Get<bool>("ExportAndroidProject") ? 0 : 2);
 
                 case AndroidBuildSystem.Gradle:
                     return 1;
@@ -26,7 +27,7 @@
                 case AndroidBuildSystem.VisualStudio:
                     return 3;
             }
-            return (!_context.Get<bool>("ExportAndroidProject") ? 0 : 2);
+            throw new UnityException($"Invalid Android build system {EditorUserBuildSettings.androidBuildSystem}. Update build settings.");
         }
 
         internal static void Launch(BuildTarget target, string installPath)

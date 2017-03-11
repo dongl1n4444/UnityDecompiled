@@ -25,7 +25,7 @@
             objArray1[3] = ScriptEditorSettings.ServerURL;
             objArray1[4] = " Process id: ";
             objArray1[5] = ScriptEditorSettings.ProcessId;
-            Logger.Log(string.Concat(objArray1));
+            UnityEditor.RestService.Logger.Log(string.Concat(objArray1));
             return new JSONValue { 
                 ["unityprocessid"] = Process.GetCurrentProcess().Id,
                 ["unityproject"] = Application.dataPath
@@ -44,7 +44,7 @@
             }
             catch (Exception exception)
             {
-                Logger.Log(exception);
+                UnityEditor.RestService.Logger.Log(exception);
                 return false;
             }
         }

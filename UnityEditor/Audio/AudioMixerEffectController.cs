@@ -8,7 +8,7 @@
     using UnityEngine;
     using UnityEngine.Scripting;
 
-    internal sealed class AudioMixerEffectController : Object
+    internal sealed class AudioMixerEffectController : UnityEngine.Object
     {
         private string m_DisplayName;
         private int m_LastCachedGroupDisplayNameID;

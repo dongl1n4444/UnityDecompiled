@@ -9,7 +9,7 @@
     /// <summary>
     /// <para>The Cloth class provides an interface to cloth simulation physics.</para>
     /// </summary>
-    [NativeClass("Unity::Cloth"), RequireComponent(typeof(Transform), typeof(SkinnedMeshRenderer))]
+    [RequireComponent(typeof(Transform), typeof(SkinnedMeshRenderer)), NativeClass("Unity::Cloth")]
     public sealed class Cloth : Component
     {
         /// <summary>

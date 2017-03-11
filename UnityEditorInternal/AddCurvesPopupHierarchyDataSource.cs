@@ -181,7 +181,7 @@
         {
             if (selectionItem.rootGameObject != null)
             {
-                Object animatedObject = AnimationUtility.GetAnimatedObject(selectionItem.rootGameObject, binding);
+                UnityEngine.Object animatedObject = AnimationUtility.GetAnimatedObject(selectionItem.rootGameObject, binding);
                 if (animatedObject != null)
                 {
                     return ObjectNames.GetInspectorTitle(animatedObject);

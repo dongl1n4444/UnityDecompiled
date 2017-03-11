@@ -12,10 +12,10 @@
 
         public void CheckTypeReference(Node node)
         {
-            ExternalType type = node.get_Entity() as ExternalType;
-            if (type != null)
+            ExternalType entity = node.Entity as ExternalType;
+            if (entity != null)
             {
-                this._assemblies.Add(type.get_ActualType().Assembly);
+                this._assemblies.Add(entity.ActualType.Assembly);
             }
         }
 

@@ -70,7 +70,7 @@
         }
 
         public override bool CanBeActivated() => 
-            (base.spriteImportMode != SpriteImportMode.Polygon);
+            (SpriteUtility.GetSpriteImportMode(base.assetDatabase, base.spriteEditor.selectedTexture) != SpriteImportMode.Polygon);
 
         public void CreateSprite(Rect rect)
         {
@@ -97,7 +97,7 @@
             {
                 base.m_RectsCache.ClearAll();
             }
-            List<Rect> rects = new List<Rect>(InternalSpriteUtility.GenerateAutomaticSpriteRectangles((Texture2D) base.spriteEditor.GetReadableTexture2D(), minimumSpriteSize, 0));
+            List<Rect> rects = new List<Rect>(InternalSpriteUtility.GenerateAutomaticSpriteRectangles((UnityEngine.Texture2D) base.spriteEditor.GetReadableTexture2D(), minimumSpriteSize, 0));
             rects = this.SortRects(rects);
             int index = 0;
             foreach (Rect rect in rects)
@@ -111,7 +111,7 @@
 
         public void DoGridSlicing(Vector2 size, Vector2 offset, Vector2 padding, int alignment, Vector2 pivot)
         {
-            Rect[] rectArray = InternalSpriteUtility.GenerateGridSpriteRectangles((Texture2D) base.spriteEditor.GetReadableTexture2D(), offset, size, padding);
+            Rect[] rectArray = InternalSpriteUtility.GenerateGridSpriteRectangles((UnityEngine.Texture2D) base.spriteEditor.GetReadableTexture2D(), offset, size, padding);
             int num = 0;
             base.undoSystem.RegisterCompleteObjectUndo(base.m_RectsCache, "Grid Slicing");
             base.m_RectsCache.ClearAll();
@@ -335,6 +335,7 @@
 
         public override void OnModuleActivate()
         {
+            base.OnModuleActivate();
             base.m_RectsCache = base.spriteEditor.spriteRects;
             base.spriteEditor.enableMouseMoveEvent = true;
         }

@@ -28,7 +28,7 @@
         /// <para>Returns the System.Type object of the class implemented by this script.</para>
         /// </summary>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public extern Type GetClass();
+        public extern System.Type GetClass();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern string GetNamespace();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]

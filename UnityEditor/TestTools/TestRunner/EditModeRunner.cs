@@ -1,5 +1,6 @@
 ﻿namespace UnityEditor.TestTools.TestRunner
 {
+    using NUnit.Framework.Interfaces;
     using NUnit.Framework.Internal;
     using System;
     using System.Collections;
@@ -9,28 +10,25 @@
     using UnityEditor;
     using UnityEngine;
     using UnityEngine.Events;
-    using UnityEngine.TestTools;
     using UnityEngine.TestTools.Logging;
     using UnityEngine.TestTools.NUnitExtensions;
     using UnityEngine.TestTools.TestRunner;
-    using UnityEngine.TestTools.TestRunner.GUI;
-    using UnityEngine.TestTools.Utils;
 
     internal class EditModeRunner : IDisposable
     {
         private List<ScriptableObject> m_CallbackObjects = new List<ScriptableObject>();
         private IEnumerator m_CurrentTest;
-        private TestRunnerFilter m_Filter;
         private LogScope m_LogCollector;
         private RunFinishedEvent m_RunFinishedEvent = new RunFinishedEvent();
+        private UnityTestAssemblyRunner m_Runner;
         private RunStartedEvent m_RunStartedEvent = new RunStartedEvent();
         private TestFinishedEvent m_TestFinishedEvent = new TestFinishedEvent();
         private TestStartedEvent m_TestStartedEvent = new TestStartedEvent();
-        private UnityTestAssemblyRunner runner;
+        public static bool RunningTests;
 
-        public EditModeRunner(TestRunnerFilter filter)
+        public EditModeRunner(UnityTestAssemblyRunner runner)
         {
-            this.m_Filter = filter;
+            this.m_Runner = runner;
         }
 
         public T AddEventHandler<T>() where T: ScriptableObject, TestRunnerListener
@@ -51,6 +49,8 @@
 
         public void Dispose()
         {
+            Reflect.MethodCallWrapper = null;
+            EditorApplication.update = (EditorApplication.CallbackFunction) Delegate.Remove(EditorApplication.update, new EditorApplication.CallbackFunction(this.TestConsumer));
             if (this.m_CallbackObjects != null)
             {
                 foreach (ScriptableObject obj2 in this.m_CallbackObjects)
@@ -59,6 +59,7 @@
                 }
                 this.m_CallbackObjects.Clear();
             }
+            RunningTests = false;
         }
 
         private void InvokeDelegator()
@@ -66,15 +67,22 @@
             TestDelegator instance = TestDelegator.instance;
             if (instance.HasTest())
             {
-                if (this.m_CurrentTest == null)
-                {
-                    this.m_LogCollector = new LogScope();
-                    this.m_CurrentTest = instance.GetTestEnumerator();
-                }
                 bool flag = false;
                 try
                 {
-                    flag = !this.m_CurrentTest.MoveNext();
+                    if (this.m_CurrentTest == null)
+                    {
+                        this.m_LogCollector = new LogScope();
+                        this.m_CurrentTest = instance.GetTestEnumerator();
+                        if (this.m_CurrentTest == null)
+                        {
+                            flag = true;
+                        }
+                    }
+                    if (this.m_CurrentTest != null)
+                    {
+                        flag = !this.m_CurrentTest.MoveNext();
+                    }
                     if (this.m_LogCollector.AnyFailingLogs())
                     {
                         throw new UnhandledLogMessageException(this.m_LogCollector.FailingLogs.First<LogEvent>());
@@ -100,7 +108,7 @@
                 }
                 else if (this.m_CurrentTest.Current != null)
                 {
-                    Debug.LogWarning("EditMode test can only yield null");
+                    Debug.LogError("EditMode test can only yield null");
                 }
             }
         }
@@ -120,23 +128,25 @@
             this.m_LogCollector = null;
         }
 
-        public void Run()
+        public void Run(ITestFilter filter)
         {
-            TestListUtil util = new TestListUtil();
-            this.runner = new UnityTestAssemblyRunner(util.GetNUnitTestBuilder(TestPlatform.EditMode));
+            this.m_RunStartedEvent.Invoke(this.m_Runner.LoadedTest);
             Reflect.MethodCallWrapper = new Func<Func<object>, object>(ActionDelegator.instance.Delegate);
-            this.runner.Load(util.GetUserAssemblies(true).ToArray<Assembly>(), util.GetNUnitTestBuilderSettings(TestPlatform.EditMode));
-            this.m_RunStartedEvent.Invoke(this.runner.LoadedTest);
-            this.runner.RunAsync(new TestListenerWrapper(this.m_TestStartedEvent, this.m_TestFinishedEvent), this.m_Filter.BuildNUnitFilter());
             EditorApplication.update = (EditorApplication.CallbackFunction) Delegate.Combine(EditorApplication.update, new EditorApplication.CallbackFunction(this.TestConsumer));
+            if (RunningTests)
+            {
+                throw new Exception("Tests are currently running");
+            }
+            RunningTests = true;
+            this.m_Runner.RunAsync(new TestListenerWrapper(this.m_TestStartedEvent, this.m_TestFinishedEvent, true), filter);
         }
 
         private void TestConsumer()
         {
-            if (this.runner.IsTestComplete)
+            if (this.m_Runner.IsTestComplete)
             {
                 EditorApplication.update = (EditorApplication.CallbackFunction) Delegate.Remove(EditorApplication.update, new EditorApplication.CallbackFunction(this.TestConsumer));
-                this.m_RunFinishedEvent.Invoke(this.runner.Result);
+                this.m_RunFinishedEvent.Invoke(this.m_Runner.Result);
                 this.Dispose();
             }
             if (ActionDelegator.instance.HasAction())

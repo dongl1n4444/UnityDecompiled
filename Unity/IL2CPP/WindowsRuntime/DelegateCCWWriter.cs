@@ -32,7 +32,7 @@
                 <>f__am$cache0 = m => m.Name == "Invoke";
             }
             storey.invokeMethod = typeResolver.Resolve(base._type.Resolve().Methods.Single<MethodDefinition>(<>f__am$cache0));
-            string str = ComInterfaceWriter.BuildMethodParameterList(storey.invokeMethod, storey.invokeMethod, typeResolver, MarshalType.WindowsRuntime, true);
+            string str = MethodSignatureWriter.FormatComMethodParameterList(storey.invokeMethod, storey.invokeMethod, typeResolver, MarshalType.WindowsRuntime, true);
             string str2 = CCWWriterBase.Naming.ForWindowsRuntimeDelegateComCallableWrapperInterface(base._type);
             string str3 = CCWWriterBase.Naming.ForComCallableWrapperClass(base._type);
             writer.AddInclude("vm/CachedCCWBase.h");
@@ -71,7 +71,7 @@
 
             internal void <>m__0(CppCodeWriter bodyWriter, MetadataUsage metadataUsage, MethodUsage methodUsage)
             {
-                IRuntimeMetadataAccess metadataAccess = MethodWriter.GetDefaultRuntimeMetadataAccess(this.invokeMethod, metadataUsage, methodUsage);
+                IRuntimeMetadataAccess metadataAccess = MethodWriter.GetDefaultRuntimeMetadataAccess(this.invokeMethod, metadataUsage, methodUsage, null);
                 new ComCallableWrapperMethodBodyWriter(this.invokeMethod, this.invokeMethod, MarshalType.WindowsRuntime).WriteMethodBody(bodyWriter, metadataAccess);
             }
         }

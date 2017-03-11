@@ -1,7 +1,6 @@
 ﻿namespace Unity.IL2CPP
 {
     using Mono.Cecil;
-    using Mono.Collections.Generic;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -11,32 +10,19 @@
     using Unity.IL2CPP.ILPreProcessor;
     using Unity.IL2CPP.IoC;
     using Unity.IL2CPP.IoCServices;
+    using Unity.IL2CPP.Marshaling.BodyWriters.ManagedToNative.WindowsRuntimeProjection;
+    using Unity.IL2CPP.WindowsRuntime;
 
     internal class WindowsRuntimeProjectionsComponent : IWindowsRuntimeProjections, IWindowsRuntimeProjectionsInitializer
     {
-        private readonly Dictionary<TypeDefinition, CCWWriterPair> _ccwWriterTypeMap = new Dictionary<TypeDefinition, CCWWriterPair>();
         private readonly Dictionary<TypeDefinition, TypeDefinition> _clrTypeToWindowsRuntimeTypeMap = new Dictionary<TypeDefinition, TypeDefinition>();
-        private bool _hasIEnumerableCCW;
-        private readonly Dictionary<MethodDefinition, WindowsRuntimeProjectedMethodBodyWriter> _methodBodyWriterTypeMap = new Dictionary<MethodDefinition, WindowsRuntimeProjectedMethodBodyWriter>();
         private ModuleDefinition _mscorlib;
+        private Dictionary<TypeDefinition, TypeDefinition> _nativeToManagedInterfaceAdapterClasses = new Dictionary<TypeDefinition, TypeDefinition>();
+        private readonly Dictionary<TypeDefinition, IProjectedComCallableWrapperMethodWriter> _projectedComCallableWrapperWriterMap = new Dictionary<TypeDefinition, IProjectedComCallableWrapperMethodWriter>();
         private readonly AssemblyNameReference _windowsAssemblyReference;
         private readonly Dictionary<TypeDefinition, TypeDefinition> _windowsRuntimeTypeToCLRTypeMap = new Dictionary<TypeDefinition, TypeDefinition>();
         [CompilerGenerated]
-        private static Func<MethodDefinition, TypeDefinition> <>f__am$cache0;
-        [CompilerGenerated]
-        private static Func<KeyValuePair<TypeDefinition, CCWWriterPair>, bool> <>f__am$cache1;
-        [CompilerGenerated]
-        private static Func<KeyValuePair<TypeDefinition, CCWWriterPair>, KeyValuePair<TypeDefinition, WindowsRuntimeProjectedCCWWriter>> <>f__am$cache2;
-        [CompilerGenerated]
-        private static WindowsRuntimeProjectedMethodBodyWriter <>f__mg$cache0;
-        [CompilerGenerated]
-        private static WindowsRuntimeProjectedCCWWriter <>f__mg$cache1;
-        [CompilerGenerated]
-        private static WindowsRuntimeProjectedCCWWriter <>f__mg$cache2;
-        [CompilerGenerated]
-        private static WindowsRuntimeProjectedCCWWriter <>f__mg$cache3;
-        [CompilerGenerated]
-        private static WindowsRuntimeProjectedCCWWriter <>f__mg$cache4;
+        private static Func<InterfaceImplementation, bool> <>f__am$cache0;
         [Inject]
         public static ITypeProviderService TypeProvider;
 
@@ -46,56 +32,6 @@
                 IsWindowsRuntime = true
             };
             this._windowsAssemblyReference = reference;
-        }
-
-        private void AddCCWWriter(TypeDefinition windowsRuntimeType, WindowsRuntimeProjectedCCWWriter typeDefinitionWriter, WindowsRuntimeProjectedCCWWriter methodDefinitionsWriter)
-        {
-            this._ccwWriterTypeMap.Add(windowsRuntimeType, new CCWWriterPair(typeDefinitionWriter, methodDefinitionsWriter));
-        }
-
-        private static void AddInterfaceToIl2CppComObject(TypeDefinition interfaceType)
-        {
-            TypeDefinition definition = TypeProvider.Il2CppComObjectTypeReference.Resolve();
-            ModuleDefinition module = definition.Module;
-            definition.Interfaces.Add(new InterfaceImplementation(module.ImportReference(interfaceType)));
-            foreach (MethodDefinition definition3 in interfaceType.Methods)
-            {
-                MethodDefinition item = new MethodDefinition(definition3.Name, MethodAttributes.CompilerControlled | MethodAttributes.FamANDAssem | MethodAttributes.Family | MethodAttributes.Final | MethodAttributes.HideBySig | MethodAttributes.NewSlot | MethodAttributes.Virtual, module.ImportReference(definition3.ReturnType));
-                definition.Methods.Add(item);
-                item.Overrides.Add(definition3);
-                foreach (ParameterDefinition definition5 in definition3.Parameters)
-                {
-                    item.Parameters.Add(new ParameterDefinition(definition5.Name, definition5.Attributes, module.ImportReference(definition5.ParameterType)));
-                }
-            }
-            using (Collection<PropertyDefinition>.Enumerator enumerator3 = interfaceType.Properties.GetEnumerator())
-            {
-                while (enumerator3.MoveNext())
-                {
-                    <AddInterfaceToIl2CppComObject>c__AnonStorey1 storey = new <AddInterfaceToIl2CppComObject>c__AnonStorey1 {
-                        interfaceProperty = enumerator3.Current
-                    };
-                    PropertyDefinition definition6 = new PropertyDefinition(storey.interfaceProperty.Name, storey.interfaceProperty.Attributes, module.ImportReference(storey.interfaceProperty.PropertyType));
-                    definition.Properties.Add(definition6);
-                    if (storey.interfaceProperty.GetMethod != null)
-                    {
-                        definition6.GetMethod = interfaceType.Methods.First<MethodDefinition>(new Func<MethodDefinition, bool>(storey.<>m__0));
-                    }
-                    if (storey.interfaceProperty.SetMethod != null)
-                    {
-                        definition6.SetMethod = interfaceType.Methods.First<MethodDefinition>(new Func<MethodDefinition, bool>(storey.<>m__1));
-                    }
-                }
-            }
-        }
-
-        private void AddMethodBodyWriter(TypeDefinition clrType, string clrMethodName, WindowsRuntimeProjectedMethodBodyWriter methodBodyWriter)
-        {
-            <AddMethodBodyWriter>c__AnonStorey0 storey = new <AddMethodBodyWriter>c__AnonStorey0 {
-                clrMethodName = clrMethodName
-            };
-            MethodDefinition key = clrType.Methods.First<MethodDefinition>(new Func<MethodDefinition, bool>(storey.<>m__0)).Resolve();
-            this._methodBodyWriterTypeMap.Add(key, methodBodyWriter);
         }
 
         private bool AddProjection(string clrAssembly, string clrNamespace, string clrName, string windowsRuntimeNamespace, string windowsRuntimeName, out TypeDefinition clrType, out TypeDefinition windowsRuntimeType)
@@ -121,47 +57,26 @@
             return false;
         }
 
-        public IEnumerable<KeyValuePair<TypeDefinition, WindowsRuntimeProjectedCCWWriter>> GetAllNonGenericCCWMethodDefinitionsWriters()
+        public TypeDefinition GetNativeToManagedAdapterClassFor(TypeDefinition interfaceType)
         {
-            if (<>f__am$cache1 == null)
-            {
-                <>f__am$cache1 = p => !p.Key.HasGenericParameters;
-            }
-            if (<>f__am$cache2 == null)
-            {
-                <>f__am$cache2 = p => new KeyValuePair<TypeDefinition, WindowsRuntimeProjectedCCWWriter>(p.Key, p.Value.MethodDefinitionsWriter);
-            }
-            return this._ccwWriterTypeMap.Where<KeyValuePair<TypeDefinition, CCWWriterPair>>(<>f__am$cache1).Select<KeyValuePair<TypeDefinition, CCWWriterPair>, KeyValuePair<TypeDefinition, WindowsRuntimeProjectedCCWWriter>>(<>f__am$cache2);
+            TypeDefinition definition = null;
+            this._nativeToManagedInterfaceAdapterClasses.TryGetValue(interfaceType, out definition);
+            return definition;
         }
 
-        public WindowsRuntimeProjectedCCWWriter GetCCWWriter(TypeDefinition type, bool typeDefinition)
+        public IProjectedComCallableWrapperMethodWriter GetProjectedComCallableWrapperMethodWriterFor(TypeDefinition type)
         {
-            CCWWriterPair pair;
-            if (!this._ccwWriterTypeMap.TryGetValue(type, out pair))
-            {
-                return null;
-            }
-            return (!typeDefinition ? pair.MethodDefinitionsWriter : pair.TypeDefinitionWriter);
+            IProjectedComCallableWrapperMethodWriter writer;
+            this._projectedComCallableWrapperWriterMap.TryGetValue(type, out writer);
+            return writer;
         }
 
-        public WindowsRuntimeProjectedMethodBodyWriter GetMethodBodyWriter(MethodDefinition method)
+        private MethodDefinition GetSingleMethod(TypeDefinition type, string name)
         {
-            WindowsRuntimeProjectedMethodBodyWriter writer2;
-            if (!method.HasOverrides)
-            {
-                return null;
-            }
-            MethodDefinition key = method.Overrides.Single<MethodReference>().Resolve();
-            return (!this._methodBodyWriterTypeMap.TryGetValue(key, out writer2) ? null : writer2);
-        }
-
-        public IEnumerable<TypeDefinition> GetSupportedProjectedInterfacesCLR()
-        {
-            if (<>f__am$cache0 == null)
-            {
-                <>f__am$cache0 = m => m.DeclaringType;
-            }
-            return this._methodBodyWriterTypeMap.Keys.Select<MethodDefinition, TypeDefinition>(<>f__am$cache0).Distinct<TypeDefinition>();
+            <GetSingleMethod>c__AnonStorey0 storey = new <GetSingleMethod>c__AnonStorey0 {
+                name = name
+            };
+            return type.Methods.Single<MethodDefinition>(new Func<MethodDefinition, bool>(storey.<>m__0));
         }
 
         public void Initialize(ModuleDefinition mscorlib, DotNetProfile dotNetProfile)
@@ -171,6 +86,7 @@
             {
                 TypeDefinition definition;
                 TypeDefinition definition2;
+                Dictionary<MethodDefinition, InterfaceAdapterMethodBodyWriter> adapterMethodBodyWriters = new Dictionary<MethodDefinition, InterfaceAdapterMethodBodyWriter>();
                 this.AddProjection("System.ObjectModel", "System.Collections.Specialized", "INotifyCollectionChanged", "Windows.UI.Xaml.Interop", "INotifyCollectionChanged", out definition, out definition2);
                 this.AddProjection("System.ObjectModel", "System.Collections.Specialized", "NotifyCollectionChangedAction", "Windows.UI.Xaml.Interop", "NotifyCollectionChangedAction", out definition, out definition2);
                 this.AddProjection("System.ObjectModel", "System.Collections.Specialized", "NotifyCollectionChangedEventArgs", "Windows.UI.Xaml.Interop", "NotifyCollectionChangedEventArgs", out definition, out definition2);
@@ -184,46 +100,59 @@
                 this.AddProjection("System.Runtime", "System", "DateTimeOffset", "Windows.Foundation", "DateTime", out definition, out definition2);
                 this.AddProjection("System.Runtime", "System", "EventHandler`1", "Windows.Foundation", "EventHandler`1", out definition, out definition2);
                 this.AddProjection("System.Runtime", "System", "Exception", "Windows.Foundation", "HResult", out definition, out definition2);
-                this.AddProjection("System.Runtime", "System", "IDisposable", "Windows.Foundation", "IClosable", out definition, out definition2);
+                if (this.AddProjection("System.Runtime", "System", "IDisposable", "Windows.Foundation", "IClosable", out definition, out definition2))
+                {
+                    adapterMethodBodyWriters.Add(this.GetSingleMethod(definition, "Dispose"), new InterfaceAdapterMethodBodyWriter(new IDisposableDisposeMethodBodyWriter(this.GetSingleMethod(definition2, "Close")).WriteDispose));
+                    this._projectedComCallableWrapperWriterMap.Add(definition2, new DisposableCCWWriter());
+                }
                 this.AddProjection("System.Runtime", "System", "Nullable`1", "Windows.Foundation", "IReference`1", out definition, out definition2);
                 this.AddProjection("System.Runtime", "System", "TimeSpan", "Windows.Foundation", "TimeSpan", out definition, out definition2);
                 this.AddProjection("System.Runtime", "System", "Type", "Windows.UI.Xaml.Interop", "TypeName", out definition, out definition2);
                 this.AddProjection("System.Runtime", "System", "Uri", "Windows.Foundation", "Uri", out definition, out definition2);
-                if (this.AddProjection("System.Runtime", "System.Collections", "IEnumerable", "Windows.UI.Xaml.Interop", "IBindableIterable", out definition, out definition2))
+                TypeDefinition ienumeratorType = TypeProvider.OptionalResolve("System.Collections", "IEnumerator", TypeProvider.Corlib.Name);
+                TypeDefinition iteratorType = TypeProvider.OptionalResolve("Windows.UI.Xaml.Interop", "IBindableIterator", this._windowsAssemblyReference);
+                if (((ienumeratorType != null) && (iteratorType != null)) && this.AddProjection("System.Runtime", "System.Collections", "IEnumerable", "Windows.UI.Xaml.Interop", "IBindableIterable", out definition, out definition2))
                 {
-                    if (<>f__mg$cache0 == null)
-                    {
-                        <>f__mg$cache0 = new WindowsRuntimeProjectedMethodBodyWriter(IEnumerableMethodBodyWriter.WriteGetEnumerator);
-                    }
-                    this.AddMethodBodyWriter(definition, "GetEnumerator", <>f__mg$cache0);
-                    if (<>f__mg$cache1 == null)
-                    {
-                        <>f__mg$cache1 = new WindowsRuntimeProjectedCCWWriter(EnumerableCCWWriter.WriteTypeDefinition);
-                    }
-                    if (<>f__mg$cache2 == null)
-                    {
-                        <>f__mg$cache2 = new WindowsRuntimeProjectedCCWWriter(EnumerableCCWWriter.WriteMethodDefinitions);
-                    }
-                    this.AddCCWWriter(definition2, <>f__mg$cache1, <>f__mg$cache2);
+                    TypeDefinition iteratorToEnumeratorAdapter = new IteratorToEnumeratorAdapterTypeGenerator(TypeProvider.Corlib.MainModule, iteratorType, ienumeratorType).Generate();
+                    adapterMethodBodyWriters.Add(this.GetSingleMethod(definition, "GetEnumerator"), new InterfaceAdapterMethodBodyWriter(new IEnumerableMethodBodyWriter(iteratorToEnumeratorAdapter).WriteGetEnumerator));
+                    this._projectedComCallableWrapperWriterMap.Add(definition2, new EnumerableCCWWriter());
                 }
                 this.AddProjection("System.Runtime", "System.Collections", "IList", "Windows.UI.Xaml.Interop", "IBindableVector", out definition, out definition2);
                 this.AddProjection("System.Runtime", "System.Collections.Generic", "IDictionary`2", "Windows.Foundation.Collections", "IMap`2", out definition, out definition2);
-                if (this.AddProjection("System.Runtime", "System.Collections.Generic", "IEnumerable`1", "Windows.Foundation.Collections", "IIterable`1", out definition, out definition2))
+                TypeDefinition definition6 = TypeProvider.OptionalResolve("System.Collections.Generic", "IEnumerator`1", TypeProvider.Corlib.Name);
+                TypeDefinition definition7 = TypeProvider.OptionalResolve("Windows.Foundation.Collections", "IIterator`1", this._windowsAssemblyReference);
+                if (((definition6 != null) && (definition7 != null)) && this.AddProjection("System.Runtime", "System.Collections.Generic", "IEnumerable`1", "Windows.Foundation.Collections", "IIterable`1", out definition, out definition2))
                 {
-                    if (<>f__mg$cache3 == null)
-                    {
-                        <>f__mg$cache3 = new WindowsRuntimeProjectedCCWWriter(GenericEnumerableCCWWriter.WriteTypeDefinition);
-                    }
-                    if (<>f__mg$cache4 == null)
-                    {
-                        <>f__mg$cache4 = new WindowsRuntimeProjectedCCWWriter(GenericEnumerableCCWWriter.WriteMethodDefinitions);
-                    }
-                    this.AddCCWWriter(definition2, <>f__mg$cache3, <>f__mg$cache4);
+                    TypeDefinition definition8 = new IteratorToEnumeratorAdapterTypeGenerator(TypeProvider.Corlib.MainModule, definition7, definition6).Generate();
+                    adapterMethodBodyWriters.Add(this.GetSingleMethod(definition, "GetEnumerator"), new InterfaceAdapterMethodBodyWriter(new IEnumerableMethodBodyWriter(definition8).WriteGetEnumerator));
+                    this._projectedComCallableWrapperWriterMap.Add(definition2, new EnumerableCCWWriter());
                 }
                 this.AddProjection("System.Runtime", "System.Collections.Generic", "IList`1", "Windows.Foundation.Collections", "IVector`1", out definition, out definition2);
-                this.AddProjection("System.Runtime", "System.Collections.Generic", "IReadOnlyDictionary`2", "Windows.Foundation.Collections", "IMapView`2", out definition, out definition2);
-                this.AddProjection("System.Runtime", "System.Collections.Generic", "IReadOnlyList`1", "Windows.Foundation.Collections", "IVectorView`1", out definition, out definition2);
-                this.AddProjection("System.Runtime", "System.Collections.Generic", "KeyValuePair`2", "Windows.Foundation.Collections", "IKeyValuePair`2", out definition, out definition2);
+                if (this.AddProjection("System.Runtime", "System.Collections.Generic", "IReadOnlyDictionary`2", "Windows.Foundation.Collections", "IMapView`2", out definition, out definition2))
+                {
+                    IReadOnlyDictionaryProjectedMethodBodyWriter writer = new IReadOnlyDictionaryProjectedMethodBodyWriter(definition, definition2);
+                    adapterMethodBodyWriters.Add(this.GetSingleMethod(definition, "get_Item"), new InterfaceAdapterMethodBodyWriter(writer.WriteGetItem));
+                    adapterMethodBodyWriters.Add(this.GetSingleMethod(definition, "get_Keys"), new InterfaceAdapterMethodBodyWriter(writer.WriteGetKeys));
+                    adapterMethodBodyWriters.Add(this.GetSingleMethod(definition, "get_Values"), new InterfaceAdapterMethodBodyWriter(writer.WriteGetValues));
+                    adapterMethodBodyWriters.Add(this.GetSingleMethod(definition, "ContainsKey"), new InterfaceAdapterMethodBodyWriter(writer.WriteContainsKey));
+                    adapterMethodBodyWriters.Add(this.GetSingleMethod(definition, "TryGetValue"), new InterfaceAdapterMethodBodyWriter(writer.WriteTryGetValue));
+                    this._projectedComCallableWrapperWriterMap.Add(definition2, new ReadOnlyDictionaryCCWWriter(definition));
+                }
+                if (this.AddProjection("System.Runtime", "System.Collections.Generic", "IReadOnlyList`1", "Windows.Foundation.Collections", "IVectorView`1", out definition, out definition2))
+                {
+                    if (<>f__am$cache0 == null)
+                    {
+                        <>f__am$cache0 = i => i.InterfaceType.Name == "IReadOnlyCollection`1";
+                    }
+                    TypeDefinition type = definition.Interfaces.Single<InterfaceImplementation>(<>f__am$cache0).InterfaceType.Resolve();
+                    adapterMethodBodyWriters.Add(this.GetSingleMethod(definition, "get_Item"), new InterfaceAdapterMethodBodyWriter(new IReadOnlyListGetItemMethodBodyWriter(this.GetSingleMethod(definition2, "GetAt")).WriteGetItem));
+                    adapterMethodBodyWriters.Add(this.GetSingleMethod(type, "get_Count"), new InterfaceAdapterMethodBodyWriter(new IReadOnlyCollectionGetCountMethodBodyWriter(this.GetSingleMethod(definition2, "get_Size")).WriteGetCount));
+                    this._projectedComCallableWrapperWriterMap.Add(definition2, new ReadOnlyListCCWWriter(definition));
+                }
+                if (this.AddProjection("System.Runtime", "System.Collections.Generic", "KeyValuePair`2", "Windows.Foundation.Collections", "IKeyValuePair`2", out definition, out definition2))
+                {
+                    this._projectedComCallableWrapperWriterMap.Add(definition2, new KeyValuePairCCWWriter(definition));
+                }
                 this.AddProjection("System.Runtime.InteropServices.WindowsRuntime", "System.Runtime.InteropServices.WindowsRuntime", "EventRegistrationToken", "Windows.Foundation", "EventRegistrationToken", out definition, out definition2);
                 this.AddProjection("System.Runtime.WindowsRuntime", "Windows.Foundation", "Point", "Windows.Foundation", "Point", out definition, out definition2);
                 this.AddProjection("System.Runtime.WindowsRuntime", "Windows.Foundation", "Rect", "Windows.Foundation", "Rect", out definition, out definition2);
@@ -248,20 +177,9 @@
                 this.AddProjection("System.Numerics.Vectors", "System.Numerics", "Vector2", "Windows.Foundation.Numerics", "Vector2", out definition, out definition2);
                 this.AddProjection("System.Numerics.Vectors", "System.Numerics", "Vector3", "Windows.Foundation.Numerics", "Vector3", out definition, out definition2);
                 this.AddProjection("System.Numerics.Vectors", "System.Numerics", "Vector4", "Windows.Foundation.Numerics", "Vector4", out definition, out definition2);
-                this.InitializeIl2CppComObject();
+                this._nativeToManagedInterfaceAdapterClasses = InterfaceNativeToManagedAdapterGenerator.Generate(this._clrTypeToWindowsRuntimeTypeMap, adapterMethodBodyWriters);
             }
         }
-
-        private void InitializeIl2CppComObject()
-        {
-            foreach (TypeDefinition definition in this.GetSupportedProjectedInterfacesCLR())
-            {
-                AddInterfaceToIl2CppComObject(definition);
-            }
-        }
-
-        public bool IsSupportedProjectedInterfaceWindowsRuntime(TypeReference type) => 
-            this._ccwWriterTypeMap.ContainsKey(type.Resolve());
 
         public TypeDefinition ProjectToCLR(TypeDefinition windowsRuntimeType)
         {
@@ -275,10 +193,17 @@
 
         public TypeReference ProjectToCLR(TypeReference windowsRuntimeType)
         {
-            TypeDefinition definition;
-            if (this._windowsRuntimeTypeToCLRTypeMap.TryGetValue(windowsRuntimeType.Resolve(), out definition))
+            if (!(windowsRuntimeType is TypeSpecification) || windowsRuntimeType.IsGenericInstance)
             {
-                return Unity.IL2CPP.ILPreProcessor.TypeResolver.For(windowsRuntimeType).Resolve(definition);
+                TypeDefinition definition;
+                if (windowsRuntimeType.IsGenericParameter)
+                {
+                    return windowsRuntimeType;
+                }
+                if (this._windowsRuntimeTypeToCLRTypeMap.TryGetValue(windowsRuntimeType.Resolve(), out definition))
+                {
+                    return Unity.IL2CPP.ILPreProcessor.TypeResolver.For(windowsRuntimeType).Resolve(definition);
+                }
             }
             return windowsRuntimeType;
         }
@@ -295,55 +220,28 @@
 
         public TypeReference ProjectToWindowsRuntime(TypeReference clrType)
         {
-            TypeDefinition definition;
-            if (this._clrTypeToWindowsRuntimeTypeMap.TryGetValue(clrType.Resolve(), out definition))
+            if (!(clrType is TypeSpecification) || clrType.IsGenericInstance)
             {
-                return Unity.IL2CPP.ILPreProcessor.TypeResolver.For(clrType).Resolve(definition);
+                TypeDefinition definition;
+                if (clrType.IsGenericParameter)
+                {
+                    return clrType;
+                }
+                if (this._clrTypeToWindowsRuntimeTypeMap.TryGetValue(clrType.Resolve(), out definition))
+                {
+                    return Unity.IL2CPP.ILPreProcessor.TypeResolver.For(clrType).Resolve(definition);
+                }
             }
             return clrType;
         }
 
-        public bool HasIEnumerableCCW
-        {
-            get => 
-                this._hasIEnumerableCCW;
-            set
-            {
-                this._hasIEnumerableCCW = value;
-            }
-        }
-
         [CompilerGenerated]
-        private sealed class <AddInterfaceToIl2CppComObject>c__AnonStorey1
+        private sealed class <GetSingleMethod>c__AnonStorey0
         {
-            internal PropertyDefinition interfaceProperty;
+            internal string name;
 
             internal bool <>m__0(MethodDefinition m) => 
-                (m.Name == this.interfaceProperty.GetMethod.Name);
-
-            internal bool <>m__1(MethodDefinition m) => 
-                (m.Name == this.interfaceProperty.SetMethod.Name);
-        }
-
-        [CompilerGenerated]
-        private sealed class <AddMethodBodyWriter>c__AnonStorey0
-        {
-            internal string clrMethodName;
-
-            internal bool <>m__0(MethodDefinition m) => 
-                (m.Name == this.clrMethodName);
-        }
-
-        private class CCWWriterPair
-        {
-            public readonly WindowsRuntimeProjectedCCWWriter MethodDefinitionsWriter;
-            public readonly WindowsRuntimeProjectedCCWWriter TypeDefinitionWriter;
-
-            public CCWWriterPair(WindowsRuntimeProjectedCCWWriter typeDefinitionWriter, WindowsRuntimeProjectedCCWWriter methodDefinitionsWriter)
-            {
-                this.TypeDefinitionWriter = typeDefinitionWriter;
-                this.MethodDefinitionsWriter = methodDefinitionsWriter;
-            }
+                (m.Name == this.name);
         }
     }
 }

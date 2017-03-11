@@ -35,7 +35,7 @@
             {
                 this.m_Window.Close();
             }
-            Object.DestroyImmediate(this, true);
+            UnityEngine.Object.DestroyImmediate(this, true);
             s_Get = null;
         }
 
@@ -131,7 +131,7 @@
             {
                 if (s_Get == null)
                 {
-                    Object[] objArray = Resources.FindObjectsOfTypeAll(typeof(PaneDragTab));
+                    UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(PaneDragTab));
                     if (objArray.Length != 0)
                     {
                         s_Get = (PaneDragTab) objArray[0];

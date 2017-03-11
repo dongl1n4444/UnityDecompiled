@@ -13,6 +13,7 @@
         [SerializeField]
         private string m_CancelButton = "Cancel";
         private int m_ConsecutiveMoveCount = 0;
+        private GameObject m_CurrentFocusedGameObject;
         [SerializeField, FormerlySerializedAs("m_AllowActivationOnMobileDevice")]
         private bool m_ForceModuleActive;
         [SerializeField]
@@ -59,8 +60,12 @@
             base.ClearSelection();
         }
 
+        [Obsolete("This method is no longer checked, overriding it with return true does nothing!")]
         protected virtual bool ForceAutoSelect() => 
             false;
+
+        protected GameObject GetCurrentFocusedGameObject() => 
+            this.m_CurrentFocusedGameObject;
 
         private Vector2 GetRawMoveVector()
         {
@@ -141,10 +146,7 @@
         {
             PointerInputModule.MouseState mousePointerEventData = this.GetMousePointerEventData(id);
             PointerInputModule.MouseButtonEventData eventData = mousePointerEventData.GetButtonState(PointerEventData.InputButton.Left).eventData;
-            if (this.ForceAutoSelect())
-            {
-                base.eventSystem.SetSelectedGameObject(eventData.buttonData.pointerCurrentRaycast.gameObject, eventData.buttonData);
-            }
+            this.m_CurrentFocusedGameObject = eventData.buttonData.pointerCurrentRaycast.gameObject;
             this.ProcessMousePress(eventData);
             this.ProcessMove(eventData.buttonData);
             this.ProcessDrag(eventData.buttonData);

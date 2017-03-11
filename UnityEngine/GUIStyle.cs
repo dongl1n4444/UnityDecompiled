@@ -586,7 +586,7 @@
             Internal_GetNumCharactersThatFitWithinWidth(this.m_Ptr, text, width);
 
         /// <summary>
-        /// <para>Calculate the size of a some content if it is rendered with this style.</para>
+        /// <para>Calculate the size of some content if it is rendered with this style.</para>
         /// </summary>
         /// <param name="content"></param>
         public Vector2 CalcSize(GUIContent content)
@@ -631,7 +631,7 @@
             return UnityString.Format("GUIStyle '{0}'", args);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private extern void Init();
         [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private extern void InitCopy(GUIStyle other);
@@ -737,7 +737,7 @@
         private static extern float Internal_GetLineHeight(IntPtr target);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetFontInternal(Font value);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private extern Font GetFontInternalDuringLoadingThread();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern Font GetFontInternal();

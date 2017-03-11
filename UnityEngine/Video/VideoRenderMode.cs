@@ -7,8 +7,8 @@
     /// </summary>
     public enum VideoRenderMode
     {
-        CameraBackPlane,
-        CameraFrontPlane,
+        CameraFarPlane,
+        CameraNearPlane,
         RenderTexture,
         MaterialOverride,
         APIOnly

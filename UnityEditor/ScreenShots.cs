@@ -53,7 +53,7 @@
             textured.SetPixels(pixels, 0);
             textured.Apply(true);
             byte[] bytes = textured.EncodeToPNG();
-            Object.DestroyImmediate(textured, true);
+            UnityEngine.Object.DestroyImmediate(textured, true);
             string uniquePathForName = GetUniquePathForName(name);
             File.WriteAllBytes(uniquePathForName, bytes);
             Debug.Log($"Saved screenshot at {uniquePathForName}");
@@ -86,7 +86,7 @@
             return SaveScreenShot((int) (r.width + 2f), (int) (r.height + 2f), pixels, name);
         }
 
-        [MenuItem("Window/Screenshot/Snap Game View Content", false, 0x3e8, true)]
+        [UnityEditor.MenuItem("Window/Screenshot/Snap Game View Content", false, 0x3e8, true)]
         public static void ScreenGameViewContent()
         {
             string uniquePathForName = GetUniquePathForName("ContentExample");
@@ -94,7 +94,7 @@
             Debug.Log($"Saved screenshot at {uniquePathForName}");
         }
 
-        [MenuItem("Window/Screenshot/Snap View %&j", false, 0x3e8, true)]
+        [UnityEditor.MenuItem("Window/Screenshot/Snap View %&j", false, 0x3e8, true)]
         public static void Screenshot()
         {
             GUIView mouseOverView = GetMouseOverView();
@@ -108,13 +108,13 @@
             }
         }
 
-        [MenuItem("Window/Screenshot/Snap Component", false, 0x3e8, true)]
+        [UnityEditor.MenuItem("Window/Screenshot/Snap Component", false, 0x3e8, true)]
         public static void ScreenShotComponent()
         {
             s_TakeComponentScreenshot = true;
         }
 
-        public static void ScreenShotComponent(Rect contentRect, Object target)
+        public static void ScreenShotComponent(Rect contentRect, UnityEngine.Object target)
         {
             s_TakeComponentScreenshot = false;
             contentRect.yMax += 2f;
@@ -122,14 +122,14 @@
             SaveScreenShotWithBorder(contentRect, kWindowBorderColor, target.GetType().Name + "Inspector");
         }
 
-        [MenuItem("Window/Screenshot/Snap View Extended Right %&k", false, 0x3e8, true)]
+        [UnityEditor.MenuItem("Window/Screenshot/Snap View Extended Right %&k", false, 0x3e8, true)]
         public static void ScreenshotExtendedRight()
         {
             GUIView mouseOverView = GetMouseOverView();
             if (mouseOverView != null)
             {
                 string name = GetGUIViewName(mouseOverView) + "Extended";
-                MainView view2 = Resources.FindObjectsOfTypeAll<MainView>()[0];
+                MainView view2 = UnityEngine.Resources.FindObjectsOfTypeAll<MainView>()[0];
                 Rect screenPosition = mouseOverView.screenPosition;
                 screenPosition.xMax = view2.window.position.xMax;
                 screenPosition.y--;
@@ -138,7 +138,7 @@
             }
         }
 
-        [MenuItem("Window/Screenshot/Snap View Toolbar", false, 0x3e8, true)]
+        [UnityEditor.MenuItem("Window/Screenshot/Snap View Toolbar", false, 0x3e8, true)]
         public static void ScreenshotToolbar()
         {
             GUIView mouseOverView = GetMouseOverView();
@@ -153,21 +153,21 @@
             }
         }
 
-        [MenuItem("Window/Screenshot/Set Window Size %&l", false, 0x3e8, true)]
+        [UnityEditor.MenuItem("Window/Screenshot/Set Window Size %&l", false, 0x3e8, true)]
         public static void SetMainWindowSize()
         {
-            MainView view = Resources.FindObjectsOfTypeAll<MainView>()[0];
+            MainView view = UnityEngine.Resources.FindObjectsOfTypeAll<MainView>()[0];
             view.window.position = new Rect(0f, 0f, 1024f, 768f);
         }
 
-        [MenuItem("Window/Screenshot/Set Window Size Small", false, 0x3e8, true)]
+        [UnityEditor.MenuItem("Window/Screenshot/Set Window Size Small", false, 0x3e8, true)]
         public static void SetMainWindowSizeSmall()
         {
-            MainView view = Resources.FindObjectsOfTypeAll<MainView>()[0];
+            MainView view = UnityEngine.Resources.FindObjectsOfTypeAll<MainView>()[0];
             view.window.position = new Rect(0f, 0f, 762f, 600f);
         }
 
-        [MenuItem("Window/Screenshot/Toggle DeveloperBuild", false, 0x3e8, true)]
+        [UnityEditor.MenuItem("Window/Screenshot/Toggle DeveloperBuild", false, 0x3e8, true)]
         public static void ToggleFakeNonDeveloperBuild()
         {
             Unsupported.fakeNonDeveloperBuild = !Unsupported.fakeNonDeveloperBuild;

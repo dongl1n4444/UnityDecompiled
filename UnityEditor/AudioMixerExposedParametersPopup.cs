@@ -43,7 +43,7 @@
         {
             GUIContent buttonContent = GetButtonContent(controller);
             Rect position = GUILayoutUtility.GetRect(buttonContent, style, options);
-            if (EditorGUI.ButtonMouseDown(position, buttonContent, FocusType.Passive, style))
+            if (EditorGUI.DropdownButton(position, buttonContent, FocusType.Passive, style))
             {
                 PopupWindow.Show(position, new AudioMixerExposedParametersPopup(controller), null, ShowMode.PopupMenuWithKeyboardFocus);
             }

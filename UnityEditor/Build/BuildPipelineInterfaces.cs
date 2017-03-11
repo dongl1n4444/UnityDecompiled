@@ -50,92 +50,81 @@
         internal static void InitializeBuildCallbacks(bool findBuildProcessors, bool findSceneProcessors)
         {
             CleanupBuildCallbacks();
-            List<Type> results = new List<Type>();
-            if (findBuildProcessors && findSceneProcessors)
+            HashSet<string> set = new HashSet<string> { 
+                "UnityEditor",
+                "UnityEngine.UI",
+                "Unity.PackageManager",
+                "UnityEngine.Networking",
+                "nunit.framework",
+                "UnityEditor.TreeEditor",
+                "UnityEditor.Graphs",
+                "UnityEditor.UI",
+                "UnityEditor.TestRunner",
+                "UnityEngine.TestRunner",
+                "UnityEngine.HoloLens",
+                "SyntaxTree.VisualStudio.Unity.Bridge",
+                "UnityEditor.Android.Extensions"
+            };
+            BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+            System.Type[] expectedArguments = new System.Type[] { typeof(BuildTarget), typeof(string) };
+            for (int i = 0; i < EditorAssemblies.loadedAssemblies.Length; i++)
             {
-                Type[] interfaces = new Type[] { typeof(IPreprocessBuild), typeof(IPostprocessBuild), typeof(IProcessScene) };
-                EditorAssemblies.FindClassesThatImplementAnyInterface(results, interfaces);
-            }
-            else if (findBuildProcessors)
-            {
-                Type[] typeArray2 = new Type[] { typeof(IPreprocessBuild), typeof(IPostprocessBuild) };
-                EditorAssemblies.FindClassesThatImplementAnyInterface(results, typeArray2);
-            }
-            else if (findSceneProcessors)
-            {
-                Type[] typeArray3 = new Type[] { typeof(IProcessScene) };
-                EditorAssemblies.FindClassesThatImplementAnyInterface(results, typeArray3);
-            }
-            foreach (Type type in results)
-            {
+                Assembly assembly = EditorAssemblies.loadedAssemblies[i];
+                bool flag = !set.Contains(assembly.FullName.Substring(0, assembly.FullName.IndexOf(',')));
+                System.Type[] types = null;
                 try
                 {
-                    if (type != typeof(AttributeCallbackWrapper))
+                    types = assembly.GetTypes();
+                }
+                catch (ReflectionTypeLoadException exception)
+                {
+                    types = exception.Types;
+                }
+                for (int j = 0; j < types.Length; j++)
+                {
+                    System.Type c = types[j];
+                    if (c != null)
                     {
-                        object o = Activator.CreateInstance(type);
+                        object o = null;
+                        bool flag2 = false;
                         if (findBuildProcessors)
                         {
-                            AddToList<IPreprocessBuild>(o, ref buildPreprocessors);
-                            AddToList<IPostprocessBuild>(o, ref buildPostprocessors);
+                            flag2 = typeof(IOrderedCallback).IsAssignableFrom(c);
+                            if (flag2)
+                            {
+                                if ((!c.IsInterface && typeof(IPreprocessBuild).IsAssignableFrom(c)) && (c != typeof(AttributeCallbackWrapper)))
+                                {
+                                    o = Activator.CreateInstance(c);
+                                    AddToList<IPreprocessBuild>(o, ref buildPreprocessors);
+                                }
+                                if ((!c.IsInterface && typeof(IPostprocessBuild).IsAssignableFrom(c)) && (c != typeof(AttributeCallbackWrapper)))
+                                {
+                                    o = (o != null) ? o : Activator.CreateInstance(c);
+                                    AddToList<IPostprocessBuild>(o, ref buildPostprocessors);
+                                }
+                            }
                         }
-                        if (findSceneProcessors)
+                        if ((findSceneProcessors && (!findBuildProcessors || flag2)) && ((!c.IsInterface && typeof(IProcessScene).IsAssignableFrom(c)) && (c != typeof(AttributeCallbackWrapper))))
                         {
+                            o = (o != null) ? o : Activator.CreateInstance(c);
                             AddToList<IProcessScene>(o, ref sceneProcessors);
                         }
-                    }
-                }
-                catch (Exception exception)
-                {
-                    Debug.LogException(exception);
-                }
-            }
-            foreach (Type type2 in EditorAssemblies.loadedTypes)
-            {
-                foreach (MethodInfo info in type2.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly))
-                {
-                    if (findBuildProcessors && info.IsDefined(typeof(PostProcessBuildAttribute), false))
-                    {
-                        if (!info.IsStatic)
+                        if (flag)
                         {
-                            object[] args = new object[] { info.Name };
-                            Debug.LogErrorFormat("Method {0} with PostProcessBuild attribute must be static.", args);
-                            continue;
-                        }
-                        if (info.IsGenericMethod || info.IsGenericMethodDefinition)
-                        {
-                            object[] objArray2 = new object[] { info.Name };
-                            Debug.LogErrorFormat("Method {0} with PostProcessBuild attribute cannot be generic.", objArray2);
-                            continue;
-                        }
-                        ParameterInfo[] parameters = info.GetParameters();
-                        if (((parameters.Length != 2) || (parameters[0].ParameterType != typeof(BuildTarget))) || (parameters[1].ParameterType != typeof(string)))
-                        {
-                            object[] objArray3 = new object[] { info.Name };
-                            Debug.LogErrorFormat("Method {0} with PostProcessBuild attribute does not have the correct signature, expected: static void {0}(BuildTarget target, string path).", objArray3);
-                            continue;
-                        }
-                        AddToList<IPostprocessBuild>(new AttributeCallbackWrapper(info), ref buildPostprocessors);
-                    }
-                    if (findSceneProcessors && info.IsDefined(typeof(PostProcessSceneAttribute), false))
-                    {
-                        if (!info.IsStatic)
-                        {
-                            object[] objArray4 = new object[] { info.Name };
-                            Debug.LogErrorFormat("Method {0} with PostProcessBuild attribute must be static.", objArray4);
-                        }
-                        else if (info.IsGenericMethod || info.IsGenericMethodDefinition)
-                        {
-                            object[] objArray5 = new object[] { info.Name };
-                            Debug.LogErrorFormat("Method {0} with PostProcessScene attribute cannot be generic.", objArray5);
-                        }
-                        else if (info.GetParameters().Length != 0)
-                        {
-                            object[] objArray6 = new object[] { info.Name };
-                            Debug.LogErrorFormat("Method {0} with PostProcessScene attribute does not have the correct signature, expected: static void {0}().", objArray6);
-                        }
-                        else
-                        {
-                            AddToList<IProcessScene>(new AttributeCallbackWrapper(info), ref sceneProcessors);
+                            foreach (MethodInfo info in c.GetMethods(bindingAttr))
+                            {
+                                if (!info.IsSpecialName)
+                                {
+                                    if (findBuildProcessors && ValidateMethod(info, typeof(PostProcessBuildAttribute), expectedArguments))
+                                    {
+                                        AddToList<IPostprocessBuild>(new AttributeCallbackWrapper(info), ref buildPostprocessors);
+                                    }
+                                    if (findSceneProcessors && ValidateMethod(info, typeof(PostProcessSceneAttribute), System.Type.EmptyTypes))
+                                    {
+                                        AddToList<IProcessScene>(new AttributeCallbackWrapper(info), ref sceneProcessors);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -233,6 +222,59 @@
                     }
                 }
             }
+        }
+
+        private static bool ValidateMethod(MethodInfo method, System.Type attribute, System.Type[] expectedArguments)
+        {
+            if (!method.IsDefined(attribute, false))
+            {
+                return false;
+            }
+            if (!method.IsStatic)
+            {
+                string str = attribute.Name.Replace("Attribute", "");
+                object[] args = new object[] { method.Name, str };
+                Debug.LogErrorFormat("Method {0} with {1} attribute must be static.", args);
+                return false;
+            }
+            if (method.IsGenericMethod || method.IsGenericMethodDefinition)
+            {
+                string str2 = attribute.Name.Replace("Attribute", "");
+                object[] objArray2 = new object[] { method.Name, str2 };
+                Debug.LogErrorFormat("Method {0} with {1} attribute cannot be generic.", objArray2);
+                return false;
+            }
+            System.Reflection.ParameterInfo[] parameters = method.GetParameters();
+            bool flag2 = parameters.Length == expectedArguments.Length;
+            if (flag2)
+            {
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    if (parameters[i].ParameterType != expectedArguments[i])
+                    {
+                        flag2 = false;
+                        break;
+                    }
+                }
+            }
+            if (!flag2)
+            {
+                string str3 = attribute.Name.Replace("Attribute", "");
+                string str4 = "static void " + method.Name + "(";
+                for (int j = 0; j < expectedArguments.Length; j++)
+                {
+                    str4 = str4 + expectedArguments[j].Name;
+                    if (j != (expectedArguments.Length - 1))
+                    {
+                        str4 = str4 + ", ";
+                    }
+                }
+                str4 = str4 + ")";
+                object[] objArray3 = new object[] { method.Name, str3, str4 };
+                Debug.LogErrorFormat("Method {0} with {1} attribute does not have the correct signature, expected: {2}.", objArray3);
+                return false;
+            }
+            return true;
         }
 
         private class AttributeCallbackWrapper : IPostprocessBuild, IProcessScene, IOrderedCallback

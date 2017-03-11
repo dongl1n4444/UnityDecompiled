@@ -23,7 +23,7 @@
         /// <para>Returns a preview texture for an asset.</para>
         /// </summary>
         /// <param name="asset"></param>
-        public static Texture2D GetAssetPreview(Object asset)
+        public static Texture2D GetAssetPreview(UnityEngine.Object asset)
         {
             if (asset != null)
             {
@@ -39,12 +39,12 @@
         /// </summary>
         /// <param name="obj"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern Texture2D GetMiniThumbnail(Object obj);
+        public static extern Texture2D GetMiniThumbnail(UnityEngine.Object obj);
         /// <summary>
         /// <para>Returns the thumbnail for the type.</para>
         /// </summary>
         /// <param name="type"></param>
-        public static Texture2D GetMiniTypeThumbnail(Type type)
+        public static Texture2D GetMiniTypeThumbnail(System.Type type)
         {
             if (typeof(MonoBehaviour).IsAssignableFrom(type))
             {
@@ -53,7 +53,7 @@
             return INTERNAL_GetMiniTypeThumbnailFromType(type);
         }
 
-        internal static Texture2D GetMiniTypeThumbnail(Object obj) => 
+        internal static Texture2D GetMiniTypeThumbnail(UnityEngine.Object obj) => 
             INTERNAL_GetMiniTypeThumbnailFromObject(obj);
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -64,9 +64,9 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool HasAnyNewPreviewTexturesAvailable(int clientID);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        internal static extern Texture2D INTERNAL_GetMiniTypeThumbnailFromObject(Object monoObj);
+        internal static extern Texture2D INTERNAL_GetMiniTypeThumbnailFromObject(UnityEngine.Object monoObj);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        internal static extern Texture2D INTERNAL_GetMiniTypeThumbnailFromType(Type managedType);
+        internal static extern Texture2D INTERNAL_GetMiniTypeThumbnailFromType(System.Type managedType);
         /// <summary>
         /// <para>Loading previews is asynchronous so it is useful to know if a specific asset preview is in the process of being loaded so client code e.g can repaint while waiting for the loading to finish.</para>
         /// </summary>

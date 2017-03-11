@@ -440,7 +440,7 @@
                 this.$PC = -1;
                 switch (num)
                 {
-                    case 20:
+                    case 0x15:
                         try
                         {
                         }
@@ -453,7 +453,7 @@
                         }
                         break;
 
-                    case 0x15:
+                    case 0x16:
                         try
                         {
                         }
@@ -481,7 +481,7 @@
                         {
                             this.$PC = 1;
                         }
-                        goto Label_04A7;
+                        goto Label_04EC;
 
                     case 1:
                         this.$current = "-g";
@@ -489,7 +489,7 @@
                         {
                             this.$PC = 2;
                         }
-                        goto Label_04A7;
+                        goto Label_04EC;
 
                     case 2:
                         this.$current = "-DNDEBUG";
@@ -497,7 +497,7 @@
                         {
                             this.$PC = 3;
                         }
-                        goto Label_04A7;
+                        goto Label_04EC;
 
                     case 3:
                         this.$current = "-funwind-tables";
@@ -505,7 +505,7 @@
                         {
                             this.$PC = 4;
                         }
-                        goto Label_04A7;
+                        goto Label_04EC;
 
                     case 4:
                         this.$current = "-fno-limit-debug-info";
@@ -513,7 +513,7 @@
                         {
                             this.$PC = 5;
                         }
-                        goto Label_04A7;
+                        goto Label_04EC;
 
                     case 5:
                         this.$current = "-fPIC";
@@ -521,7 +521,7 @@
                         {
                             this.$PC = 6;
                         }
-                        goto Label_04A7;
+                        goto Label_04EC;
 
                     case 6:
                         this.$current = "-fdata-sections";
@@ -529,7 +529,7 @@
                         {
                             this.$PC = 7;
                         }
-                        goto Label_04A7;
+                        goto Label_04EC;
 
                     case 7:
                         this.$current = "-ffunction-sections";
@@ -537,7 +537,7 @@
                         {
                             this.$PC = 8;
                         }
-                        goto Label_04A7;
+                        goto Label_04EC;
 
                     case 8:
                         this.$current = "-Wa,--noexecstack";
@@ -545,7 +545,7 @@
                         {
                             this.$PC = 9;
                         }
-                        goto Label_04A7;
+                        goto Label_04EC;
 
                     case 9:
                         this.$current = "-fno-rtti";
@@ -553,7 +553,7 @@
                         {
                             this.$PC = 10;
                         }
-                        goto Label_04A7;
+                        goto Label_04EC;
 
                     case 10:
                     {
@@ -567,7 +567,7 @@
                         {
                             this.$PC = 11;
                         }
-                        goto Label_04A7;
+                        goto Label_04EC;
                     }
                     case 11:
                         break;
@@ -578,7 +578,7 @@
                         {
                             this.$PC = 13;
                         }
-                        goto Label_04A7;
+                        goto Label_04EC;
 
                     case 13:
                         this.$current = "-fvisibility-inlines-hidden";
@@ -586,7 +586,7 @@
                         {
                             this.$PC = 14;
                         }
-                        goto Label_04A7;
+                        goto Label_04EC;
 
                     case 14:
                         this.$current = "-fno-strict-overflow";
@@ -594,7 +594,7 @@
                         {
                             this.$PC = 15;
                         }
-                        goto Label_04A7;
+                        goto Label_04EC;
 
                     case 15:
                         this.$current = (this.$this.BuildConfiguration != BuildConfiguration.Debug) ? "-Os" : "-O0";
@@ -602,7 +602,7 @@
                         {
                             this.$PC = 0x10;
                         }
-                        goto Label_04A7;
+                        goto Label_04EC;
 
                     case 0x10:
                         this.$current = "--sysroot " + this.$this._androidNDK.SysRoot.InQuotes();
@@ -610,7 +610,7 @@
                         {
                             this.$PC = 0x11;
                         }
-                        goto Label_04A7;
+                        goto Label_04EC;
 
                     case 0x11:
                         this.$current = "-gcc-toolchain " + this.$this._androidNDK.GccToolchain.InQuotes();
@@ -618,7 +618,7 @@
                         {
                             this.$PC = 0x12;
                         }
-                        goto Label_04A7;
+                        goto Label_04EC;
 
                     case 0x12:
                         this.$current = "-target " + this.$this._androidNDK.Platform;
@@ -626,29 +626,42 @@
                         {
                             this.$PC = 0x13;
                         }
-                        goto Label_04A7;
+                        goto Label_04EC;
 
                     case 0x13:
-                        this.$locvar0 = this.$this._androidNDK.ArchitectureCompilerFlags.GetEnumerator();
-                        num = 0xfffffffd;
-                        goto Label_0371;
+                        if (this.cppCompilationInstruction.SourceFile.ToString().Contains("krait_signal_handler"))
+                        {
+                            this.$current = "-mthumb";
+                            if (!this.$disposing)
+                            {
+                                this.$PC = 20;
+                            }
+                            goto Label_04EC;
+                        }
+                        goto Label_0397;
 
                     case 20:
-                        goto Label_0371;
+                        goto Label_0397;
 
                     case 0x15:
-                        goto Label_0427;
+                        goto Label_03B6;
+
+                    case 0x16:
+                        goto Label_046C;
 
                     default:
-                        goto Label_04A5;
+                        goto Label_04EA;
                 }
                 this.$current = "-fno-strict-aliasing";
                 if (!this.$disposing)
                 {
                     this.$PC = 12;
                 }
-                goto Label_04A7;
-            Label_0371:
+                goto Label_04EC;
+            Label_0397:
+                this.$locvar0 = this.$this._androidNDK.ArchitectureCompilerFlags.GetEnumerator();
+                num = 0xfffffffd;
+            Label_03B6:
                 try
                 {
                     while (this.$locvar0.MoveNext())
@@ -657,10 +670,10 @@
                         this.$current = this.<flag>__1;
                         if (!this.$disposing)
                         {
-                            this.$PC = 20;
+                            this.$PC = 0x15;
                         }
                         flag = true;
-                        goto Label_04A7;
+                        goto Label_04EC;
                     }
                 }
                 finally
@@ -675,11 +688,11 @@
                 }
                 if (this.$this.AdditionalCompilerOptionsForSourceFile == null)
                 {
-                    goto Label_049E;
+                    goto Label_04E3;
                 }
                 this.$locvar1 = this.$this.AdditionalCompilerOptionsForSourceFile(this.cppCompilationInstruction.SourceFile.ToString()).GetEnumerator();
                 num = 0xfffffffd;
-            Label_0427:
+            Label_046C:
                 try
                 {
                     while (this.$locvar1.MoveNext())
@@ -688,10 +701,10 @@
                         this.$current = this.<flag>__2;
                         if (!this.$disposing)
                         {
-                            this.$PC = 0x15;
+                            this.$PC = 0x16;
                         }
                         flag = true;
-                        goto Label_04A7;
+                        goto Label_04EC;
                     }
                 }
                 finally
@@ -704,11 +717,11 @@
                         this.$locvar1.Dispose();
                     }
                 }
-            Label_049E:
+            Label_04E3:
                 this.$PC = -1;
-            Label_04A5:
+            Label_04EA:
                 return false;
-            Label_04A7:
+            Label_04EC:
                 return true;
             }
 
@@ -761,7 +774,7 @@
                 this.$PC = -1;
                 switch (num)
                 {
-                    case 13:
+                    case 14:
                         try
                         {
                         }
@@ -789,7 +802,7 @@
                         {
                             this.$PC = 1;
                         }
-                        goto Label_02F7;
+                        goto Label_031B;
 
                     case 1:
                         this.$current = "-shared";
@@ -797,7 +810,7 @@
                         {
                             this.$PC = 2;
                         }
-                        goto Label_02F7;
+                        goto Label_031B;
 
                     case 2:
                         this.$current = "-Wl,--no-undefined";
@@ -805,7 +818,7 @@
                         {
                             this.$PC = 3;
                         }
-                        goto Label_02F7;
+                        goto Label_031B;
 
                     case 3:
                         this.$current = "-Wl,-z,noexecstack";
@@ -813,7 +826,7 @@
                         {
                             this.$PC = 4;
                         }
-                        goto Label_02F7;
+                        goto Label_031B;
 
                     case 4:
                         this.$current = "-Wl,--gc-sections";
@@ -821,7 +834,7 @@
                         {
                             this.$PC = 5;
                         }
-                        goto Label_02F7;
+                        goto Label_031B;
 
                     case 5:
                         this.$current = "-Wl,--build-id";
@@ -829,7 +842,7 @@
                         {
                             this.$PC = 6;
                         }
-                        goto Label_02F7;
+                        goto Label_031B;
 
                     case 6:
                         this.$current = "--sysroot " + this.$this._androidNDK.SysRoot.InQuotes();
@@ -837,7 +850,7 @@
                         {
                             this.$PC = 7;
                         }
-                        goto Label_02F7;
+                        goto Label_031B;
 
                     case 7:
                         this.$current = "-gcc-toolchain " + this.$this._androidNDK.GccToolchain.InQuotes();
@@ -845,7 +858,7 @@
                         {
                             this.$PC = 8;
                         }
-                        goto Label_02F7;
+                        goto Label_031B;
 
                     case 8:
                         this.$current = "-target " + this.$this._androidNDK.Platform;
@@ -853,42 +866,50 @@
                         {
                             this.$PC = 9;
                         }
-                        goto Label_02F7;
+                        goto Label_031B;
 
                     case 9:
-                        this.$current = "-L " + this.$this._androidNDK.GnuStlLibrary.InQuotes();
+                        this.$current = "-Wl,--wrap,sigaction";
                         if (!this.$disposing)
                         {
                             this.$PC = 10;
                         }
-                        goto Label_02F7;
+                        goto Label_031B;
 
                     case 10:
-                        this.$current = "-lgnustl_static";
+                        this.$current = "-L " + this.$this._androidNDK.GnuStlLibrary.InQuotes();
                         if (!this.$disposing)
                         {
                             this.$PC = 11;
                         }
-                        goto Label_02F7;
+                        goto Label_031B;
 
                     case 11:
-                        this.$current = "-Xlinker -Map=" + this.outputFile.ChangeExtension("map").InQuotes();
+                        this.$current = "-lgnustl_static";
                         if (!this.$disposing)
                         {
                             this.$PC = 12;
                         }
-                        goto Label_02F7;
+                        goto Label_031B;
 
                     case 12:
+                        this.$current = "-Xlinker -Map=" + this.outputFile.ChangeExtension("map").InQuotes();
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 13;
+                        }
+                        goto Label_031B;
+
+                    case 13:
                         this.$locvar0 = this.$this._androidNDK.ArchitectureLinkerFlags.GetEnumerator();
                         num = 0xfffffffd;
                         break;
 
-                    case 13:
+                    case 14:
                         break;
 
                     default:
-                        goto Label_02F5;
+                        goto Label_0319;
                 }
                 try
                 {
@@ -898,10 +919,10 @@
                         this.$current = this.<flag>__1;
                         if (!this.$disposing)
                         {
-                            this.$PC = 13;
+                            this.$PC = 14;
                         }
                         flag = true;
-                        goto Label_02F7;
+                        goto Label_031B;
                     }
                 }
                 finally
@@ -915,9 +936,9 @@
                     }
                 }
                 this.$PC = -1;
-            Label_02F5:
+            Label_0319:
                 return false;
-            Label_02F7:
+            Label_031B:
                 return true;
             }
 
@@ -1058,15 +1079,39 @@
             [DebuggerHidden]
             public void Dispose()
             {
+                this.$disposing = true;
+                this.$PC = -1;
             }
 
             public bool MoveNext()
             {
+                uint num = (uint) this.$PC;
                 this.$PC = -1;
-                if (this.$PC == 0)
+                switch (num)
                 {
+                    case 0:
+                        this.$current = "LINUX";
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 1;
+                        }
+                        goto Label_006D;
+
+                    case 1:
+                        this.$current = "ANDROID";
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 2;
+                        }
+                        goto Label_006D;
+
+                    case 2:
+                        this.$PC = -1;
+                        break;
                 }
                 return false;
+            Label_006D:
+                return true;
             }
 
             [DebuggerHidden]

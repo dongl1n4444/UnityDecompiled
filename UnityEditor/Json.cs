@@ -463,8 +463,8 @@
                 else
                 {
                     Dictionary<string, object> dictionary = new Dictionary<string, object>();
-                    List<FieldInfo> list = value.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance).ToList<FieldInfo>();
-                    foreach (FieldInfo info in list)
+                    List<System.Reflection.FieldInfo> list = value.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance).ToList<System.Reflection.FieldInfo>();
+                    foreach (System.Reflection.FieldInfo info in list)
                     {
                         dictionary.Add(info.Name, info.GetValue(value));
                     }

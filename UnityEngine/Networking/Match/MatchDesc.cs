@@ -9,23 +9,23 @@
 
     internal class MatchDesc : ResponseBase
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private int <averageEloScore>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private int <currentSize>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private List<MatchDirectConnectInfo> <directConnectInfos>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private NodeID <hostNodeId>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <isPrivate>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Dictionary<string, long> <matchAttributes>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private int <maxSize>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <name>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private NetworkID <networkId>k__BackingField;
 
         public override void Parse(object obj)

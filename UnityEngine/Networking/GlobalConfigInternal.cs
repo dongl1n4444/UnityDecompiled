@@ -29,7 +29,7 @@
             this.InitMaxNetSimulatorTimeout(config.MaxNetSimulatorTimeout);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public extern void Dispose();
         ~GlobalConfigInternal()
         {

@@ -7,7 +7,7 @@
 
     internal class FlexibleMenu : PopupWindowContent
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private int <selectedIndex>k__BackingField;
         private const float leftMargin = 25f;
         private const float lineHeight = 18f;

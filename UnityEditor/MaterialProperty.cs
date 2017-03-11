@@ -12,7 +12,7 @@
     [StructLayout(LayoutKind.Sequential)]
     public sealed class MaterialProperty
     {
-        private Object[] m_Targets;
+        private UnityEngine.Object[] m_Targets;
         private ApplyPropertyCallback m_ApplyPropertyCallback;
         private string m_Name;
         private string m_DisplayName;
@@ -26,7 +26,7 @@
         /// <summary>
         /// <para>Material objects being edited by this property (Read Only).</para>
         /// </summary>
-        public Object[] targets =>
+        public UnityEngine.Object[] targets =>
             this.m_Targets;
         /// <summary>
         /// <para>Type of the property (Read Only).</para>
@@ -218,7 +218,7 @@
             {
                 throw new ArgumentException("No material targets provided");
             }
-            Object[] targets = this.targets;
+            UnityEngine.Object[] targets = this.targets;
             if (targets.Length == 1)
             {
                 name = targets[0].name;

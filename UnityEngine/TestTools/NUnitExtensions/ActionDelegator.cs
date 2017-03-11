@@ -1,5 +1,6 @@
 ﻿namespace UnityEngine.TestTools.NUnitExtensions
 {
+    using NUnit.Framework.Internal;
     using System;
     using System.Linq;
     using System.Runtime.CompilerServices;
@@ -11,6 +12,7 @@
     {
         public static ActionDelegator instance = new ActionDelegator();
         private Func<object> m_Action;
+        private TestExecutionContext m_Context;
         private Exception m_Exception;
         private object m_Result;
         private ManualResetEvent m_Signal = new ManualResetEvent(false);
@@ -29,9 +31,11 @@
             {
                 throw new Exception("Action not executed yet");
             }
+            this.m_Context = TestExecutionContext.CurrentContext;
             this.m_Signal.Reset();
             this.m_Action = action;
             this.m_Signal.WaitOne();
+            this.SetCurrentTestContext();
             if (this.m_Exception != null)
             {
                 Exception exception = this.m_Exception;
@@ -47,6 +51,7 @@
         {
             try
             {
+                this.SetCurrentTestContext();
                 this.m_Result = this.m_Action();
                 if (logScope.AnyFailingLogs())
                 {
@@ -70,6 +75,11 @@
 
         public bool HasAction() => 
             (this.m_Action != null);
+
+        private void SetCurrentTestContext()
+        {
+            typeof(TestExecutionContext).GetProperty("CurrentContext").SetValue(null, this.m_Context, null);
+        }
 
         [CompilerGenerated]
         private sealed class <Delegate>c__AnonStorey0

@@ -8,13 +8,13 @@
     [AttributeUsage(AttributeTargets.Class, Inherited=false, AllowMultiple=false)]
     public sealed class CustomPreviewAttribute : Attribute
     {
-        internal Type m_Type;
+        internal System.Type m_Type;
 
         /// <summary>
         /// <para>Tells a DefaultPreview which class it's a preview for.</para>
         /// </summary>
         /// <param name="type">The type you want to create a custom preview for.</param>
-        public CustomPreviewAttribute(Type type)
+        public CustomPreviewAttribute(System.Type type)
         {
             this.m_Type = type;
         }

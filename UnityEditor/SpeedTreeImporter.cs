@@ -13,9 +13,9 @@
     /// </summary>
     public sealed class SpeedTreeImporter : AssetImporter
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private float <shininess>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private Color <specColor>k__BackingField;
         /// <summary>
         /// <para>Gets an array of name strings for wind quality value.</para>

@@ -114,7 +114,7 @@
 
         private UndoPropertyModification[] PostprocessAnimationRecordingModifications(UndoPropertyModification[] modifications)
         {
-            if (!AnimationMode.InAnimationMode())
+            if (!UnityEditor.AnimationMode.InAnimationMode())
             {
                 Undo.postprocessModifications = (Undo.PostprocessModifications) Delegate.Remove(Undo.postprocessModifications, new Undo.PostprocessModifications(this.PostprocessAnimationRecordingModifications));
                 return modifications;
@@ -132,9 +132,9 @@
                     if (item.animationClip != null)
                     {
                         Undo.FlushUndoRecordObjects();
-                        AnimationMode.BeginSampling();
-                        AnimationMode.SampleAnimationClip(item.rootGameObject, item.animationClip, this.time.time - item.timeOffset);
-                        AnimationMode.EndSampling();
+                        UnityEditor.AnimationMode.BeginSampling();
+                        UnityEditor.AnimationMode.SampleAnimationClip(item.rootGameObject, item.animationClip, this.time.time - item.timeOffset);
+                        UnityEditor.AnimationMode.EndSampling();
                         flag = true;
                     }
                 }
@@ -184,9 +184,9 @@
 
         public override void StartPlayback()
         {
-            if (this.canPlay && !AnimationMode.InAnimationPlaybackMode())
+            if (this.canPlay && !UnityEditor.AnimationMode.InAnimationPlaybackMode())
             {
-                AnimationMode.StartAnimationPlaybackMode();
+                UnityEditor.AnimationMode.StartAnimationPlaybackMode();
                 this.m_PreviousUpdateTime = Time.realtimeSinceStartup;
                 this.StartRecording();
             }
@@ -201,7 +201,7 @@
             }
         }
 
-        public override void StartRecording(Object targetObject)
+        public override void StartRecording(UnityEngine.Object targetObject)
         {
             this.StartRecording();
         }
@@ -212,9 +212,9 @@
 
         public override void StopPlayback()
         {
-            if (AnimationMode.InAnimationPlaybackMode())
+            if (UnityEditor.AnimationMode.InAnimationPlaybackMode())
             {
-                AnimationMode.StopAnimationPlaybackMode();
+                UnityEditor.AnimationMode.StopAnimationPlaybackMode();
                 this.SnapTimeToFrame();
             }
         }
@@ -245,7 +245,7 @@
         }
 
         public override bool playing =>
-            (AnimationMode.InAnimationPlaybackMode() && this.recording);
+            (UnityEditor.AnimationMode.InAnimationPlaybackMode() && this.recording);
 
         public override bool recording =>
             ((this.m_Recording != null) && this.m_Recording.enable);

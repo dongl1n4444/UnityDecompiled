@@ -58,6 +58,7 @@
                 }
                 this.ShowProperty(ref labelRect, ref valueRect, "Duration", str);
                 this.ShowProperty(ref labelRect, ref valueRect, "Frames", frameCount.ToString());
+                this.ShowProperty(ref labelRect, ref valueRect, "FPS", frameRate.ToString("F2"));
                 this.ShowProperty(ref labelRect, ref valueRect, "Pixels", target.GetResizeWidth(VideoResizeMode.OriginalSize) + "x" + target.GetResizeHeight(VideoResizeMode.OriginalSize));
                 this.ShowProperty(ref labelRect, ref valueRect, "Alpha", !target.sourceHasAlpha ? "No" : "Yes");
                 ushort sourceAudioTrackCount = target.sourceAudioTrackCount;

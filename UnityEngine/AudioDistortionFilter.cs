@@ -5,7 +5,7 @@
     using UnityEngine.Scripting;
 
     /// <summary>
-    /// <para>The Audio Distortion Filter distorts the sound from an AudioSource or.</para>
+    /// <para>The Audio Distortion Filter distorts the sound from an AudioSource or sounds reaching the AudioListener.</para>
     /// </summary>
     [RequireComponent(typeof(AudioBehaviour))]
     public sealed class AudioDistortionFilter : Behaviour

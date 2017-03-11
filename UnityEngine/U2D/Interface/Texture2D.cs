@@ -5,9 +5,9 @@
 
     internal class Texture2D : ITexture2D
     {
-        private Texture2D m_Texture;
+        private UnityEngine.Texture2D m_Texture;
 
-        public Texture2D(Texture2D texture)
+        public Texture2D(UnityEngine.Texture2D texture)
         {
             this.m_Texture = texture;
         }
@@ -19,7 +19,7 @@
 
         public override bool Equals(object other)
         {
-            Texture2D objA = other as Texture2D;
+            UnityEngine.U2D.Interface.Texture2D objA = other as UnityEngine.U2D.Interface.Texture2D;
             if (object.ReferenceEquals(objA, null))
             {
                 return (this.m_Texture == null);
@@ -38,10 +38,10 @@
             this.m_Texture.SetPixels(c);
         }
 
-        protected override Object ToUnityObject() => 
+        protected override UnityEngine.Object ToUnityObject() => 
             this.m_Texture;
 
-        protected override Texture2D ToUnityTexture() => 
+        protected override UnityEngine.Texture2D ToUnityTexture() => 
             this.m_Texture;
 
         public override FilterMode filterMode

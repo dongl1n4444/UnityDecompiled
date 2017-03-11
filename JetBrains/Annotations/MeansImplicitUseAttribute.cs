@@ -9,7 +9,7 @@
     {
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ImplicitUseTargetFlags <TargetFlags>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ImplicitUseKindFlags <UseKindFlags>k__BackingField;
 
         public MeansImplicitUseAttribute() : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default)

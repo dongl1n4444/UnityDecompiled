@@ -44,7 +44,7 @@
         /// <para>Synchronously create an AssetBundle from a memory region.</para>
         /// </summary>
         /// <param name="binary">Array of bytes with the AssetBundle data.</param>
-        [Obsolete("Method CreateFromMemoryImmediate has been renamed to LoadFromMemory (UnityUpgradable) -> LoadFromMemory(*)", true), EditorBrowsable(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Method CreateFromMemoryImmediate has been renamed to LoadFromMemory (UnityUpgradable) -> LoadFromMemory(*)", true)]
         public static AssetBundle CreateFromMemoryImmediate(byte[] binary) => 
             null;
 
@@ -66,7 +66,7 @@
         public T Load<T>(string name) where T: UnityEngine.Object => 
             null;
 
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("Method Load has been deprecated. Script updater cannot update it as the loading behaviour has changed. Please use LoadAsset instead and check the documentation for details.", true), TypeInferenceRule(TypeInferenceRules.TypeReferencedBySecondArgument)]
+        [MethodImpl(MethodImplOptions.InternalCall), TypeInferenceRule(TypeInferenceRules.TypeReferencedBySecondArgument), Obsolete("Method Load has been deprecated. Script updater cannot update it as the loading behaviour has changed. Please use LoadAsset instead and check the documentation for details.", true), GeneratedByOldBindingsGenerator]
         public extern UnityEngine.Object Load(string name, System.Type type);
         [Obsolete("Method LoadAll has been deprecated. Script updater cannot update it as the loading behaviour has changed. Please use LoadAllAssets instead and check the documentation for details.", true)]
         public UnityEngine.Object[] LoadAll() => 
@@ -155,7 +155,7 @@
             return this.LoadAsset_Internal(name, type);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, TypeInferenceRule(TypeInferenceRules.TypeReferencedBySecondArgument)]
+        [MethodImpl(MethodImplOptions.InternalCall), TypeInferenceRule(TypeInferenceRules.TypeReferencedBySecondArgument), GeneratedByOldBindingsGenerator]
         private extern UnityEngine.Object LoadAsset_Internal(string name, System.Type type);
         /// <summary>
         /// <para>Asynchronously loads asset with name from the bundle.</para>
@@ -259,13 +259,20 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern AssetBundleRequest LoadAssetWithSubAssetsAsync_Internal(string name, System.Type type);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("Method LoadAsync has been deprecated. Script updater cannot update it as the loading behaviour has changed. Please use LoadAssetAsync instead and check the documentation for details.", true)]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Method LoadAsync has been deprecated. Script updater cannot update it as the loading behaviour has changed. Please use LoadAssetAsync instead and check the documentation for details.", true), GeneratedByOldBindingsGenerator]
         public extern AssetBundleRequest LoadAsync(string name, System.Type type);
         [ExcludeFromDocs]
         public static AssetBundle LoadFromFile(string path)
         {
             ulong offset = 0L;
             uint crc = 0;
+            return LoadFromFile(path, crc, offset);
+        }
+
+        [ExcludeFromDocs]
+        public static AssetBundle LoadFromFile(string path, uint crc)
+        {
+            ulong offset = 0L;
             return LoadFromFile(path, crc, offset);
         }
 
@@ -278,13 +285,6 @@
         /// <returns>
         /// <para>Loaded AssetBundle object or null if failed.</para>
         /// </returns>
-        [ExcludeFromDocs]
-        public static AssetBundle LoadFromFile(string path, uint crc)
-        {
-            ulong offset = 0L;
-            return LoadFromFile(path, crc, offset);
-        }
-
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern AssetBundle LoadFromFile(string path, [UnityEngine.Internal.DefaultValue("0")] uint crc, [UnityEngine.Internal.DefaultValue("0")] ulong offset);
         [ExcludeFromDocs]
@@ -292,6 +292,13 @@
         {
             ulong offset = 0L;
             uint crc = 0;
+            return LoadFromFileAsync(path, crc, offset);
+        }
+
+        [ExcludeFromDocs]
+        public static AssetBundleCreateRequest LoadFromFileAsync(string path, uint crc)
+        {
+            ulong offset = 0L;
             return LoadFromFileAsync(path, crc, offset);
         }
 
@@ -304,13 +311,6 @@
         /// <returns>
         /// <para>Asynchronous create request for an AssetBundle. Use AssetBundleCreateRequest.assetBundle property to get an AssetBundle once it is loaded.</para>
         /// </returns>
-        [ExcludeFromDocs]
-        public static AssetBundleCreateRequest LoadFromFileAsync(string path, uint crc)
-        {
-            ulong offset = 0L;
-            return LoadFromFileAsync(path, crc, offset);
-        }
-
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern AssetBundleCreateRequest LoadFromFileAsync(string path, [UnityEngine.Internal.DefaultValue("0")] uint crc, [UnityEngine.Internal.DefaultValue("0")] ulong offset);
         [ExcludeFromDocs]

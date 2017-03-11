@@ -63,9 +63,9 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern AudioCompressionFormat GetTargetPlatformSoundCompressionFormat(AudioClip clip);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern bool HasPreview(AudioClip clip);
+        public static extern bool HasAudioCallback(MonoBehaviour behaviour);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern bool HaveAudioCallback(MonoBehaviour behaviour);
+        public static extern bool HasPreview(AudioClip clip);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetListenerPos(out Vector3 value);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]

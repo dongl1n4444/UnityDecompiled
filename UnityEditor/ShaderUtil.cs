@@ -57,14 +57,14 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern int GetLOD(Shader s);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        internal static extern MaterialProperty[] GetMaterialProperties(Object[] mats);
-        internal static MaterialProperty GetMaterialProperty(Object[] mats, int propertyIndex) => 
+        internal static extern MaterialProperty[] GetMaterialProperties(UnityEngine.Object[] mats);
+        internal static MaterialProperty GetMaterialProperty(UnityEngine.Object[] mats, int propertyIndex) => 
             GetMaterialProperty_Index(mats, propertyIndex);
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        internal static extern MaterialProperty GetMaterialProperty(Object[] mats, string name);
+        internal static extern MaterialProperty GetMaterialProperty(UnityEngine.Object[] mats, string name);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        internal static extern MaterialProperty GetMaterialProperty_Index(Object[] mats, int propertyIndex);
+        internal static extern MaterialProperty GetMaterialProperty_Index(UnityEngine.Object[] mats, int propertyIndex);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern int GetMaterialRawRenderQueue(Material mat);
         /// <summary>
@@ -158,7 +158,7 @@
                 for (int i = 0; i < materialsArray.arraySize; i++)
                 {
                     Material objectReferenceValue = materialsArray.GetArrayElementAtIndex(i).objectReferenceValue as Material;
-                    if (((objectReferenceValue != null) && (objectReferenceValue.shader != null)) && HasInstancing(objectReferenceValue.shader))
+                    if (((objectReferenceValue != null) && objectReferenceValue.enableInstancing) && ((objectReferenceValue.shader != null) && HasInstancing(objectReferenceValue.shader)))
                     {
                         return true;
                     }

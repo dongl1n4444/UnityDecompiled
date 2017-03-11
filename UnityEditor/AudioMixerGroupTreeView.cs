@@ -30,7 +30,7 @@
             this.m_AudioGroupTree.deselectOnUnhandledMouseDown = false;
             this.m_AudioGroupTree.selectionChangedCallback = (Action<int[]>) Delegate.Combine(this.m_AudioGroupTree.selectionChangedCallback, new Action<int[]>(this.OnTreeSelectionChanged));
             this.m_AudioGroupTree.contextClickItemCallback = (Action<int>) Delegate.Combine(this.m_AudioGroupTree.contextClickItemCallback, new Action<int>(this.OnTreeViewContextClick));
-            this.m_AudioGroupTree.expandedStateChanged = (Action) Delegate.Combine(this.m_AudioGroupTree.expandedStateChanged, new Action(this.SaveExpandedState));
+            this.m_AudioGroupTree.expandedStateChanged = (System.Action) Delegate.Combine(this.m_AudioGroupTree.expandedStateChanged, new System.Action(this.SaveExpandedState));
             this.m_TreeViewGUI = new AudioGroupTreeViewGUI(this.m_AudioGroupTree);
             this.m_TreeViewGUI.NodeWasToggled = (Action<AudioMixerTreeViewNode, bool>) Delegate.Combine(this.m_TreeViewGUI.NodeWasToggled, new Action<AudioMixerTreeViewNode, bool>(this.OnNodeToggled));
             this.m_AudioGroupTreeDataSource = new AudioGroupDataSource(this.m_AudioGroupTree, this.m_Controller);
@@ -42,7 +42,7 @@
         {
             if ((parent != null) && (this.m_Controller != null))
             {
-                Object[] objectsToUndo = new Object[] { this.m_Controller, parent };
+                UnityEngine.Object[] objectsToUndo = new UnityEngine.Object[] { this.m_Controller, parent };
                 Undo.RecordObjects(objectsToUndo, "Add Child Group");
                 AudioMixerGroupController child = this.m_Controller.CreateNewGroup("New Group", true);
                 this.m_Controller.AddChildToParent(child, parent);

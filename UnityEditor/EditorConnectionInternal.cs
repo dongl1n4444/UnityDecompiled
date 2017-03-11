@@ -9,6 +9,11 @@
     {
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void Initialize();
+        public bool IsConnected()
+        {
+            throw new NotSupportedException("Check the connected players list instead");
+        }
+
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void RegisterInternal(string messageId);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]

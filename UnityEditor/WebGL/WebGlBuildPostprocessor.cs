@@ -192,24 +192,19 @@
             list2.AddRange(Enumerable.Where<string>(Directory.GetFiles(this.m_StagingAreaData), <>f__am$cache1));
             foreach (string str in list2)
             {
-                list.Add(new DataFile(str, DataFile.Filesystem.Build, str.Substring(this.m_StagingAreaData.Length + 1)));
+                list.Add(new DataFile(str, str.Substring(this.m_StagingAreaData.Length + 1)));
             }
-            list3 = new List<string>();
             string[] textArray3 = new string[] { this.m_StagingAreaDataResources, "unity_builtin_extra" };
-            list3.Add(Paths.Combine(textArray3));
-            List<string> list4 = list3;
-            foreach (string str2 in list4)
+            string path = Paths.Combine(textArray3);
+            if (File.Exists(path))
             {
-                if (File.Exists(str2))
-                {
-                    list.Add(new DataFile(str2, DataFile.Filesystem.Build, str2.Substring(this.m_StagingAreaData.Length + 1)));
-                }
+                list.Add(new DataFile(path, path.Substring(this.m_StagingAreaData.Length + 1)));
             }
             byte[] bytes = Encoding.UTF8.GetBytes("UnityWebData1.0\0");
             long num = bytes.Length + 4;
             foreach (DataFile file in list)
             {
-                num += 0x10 + file.internalPath.Length;
+                num += 12 + file.internalPath.Length;
             }
             using (BinaryWriter writer = new BinaryWriter(File.Open(outputPath, System.IO.FileMode.Create)))
             {
@@ -219,7 +214,6 @@
                 {
                     writer.Write((uint) num);
                     writer.Write((uint) file2.length);
-                    writer.Write((uint) file2.filesystem);
                     writer.Write((uint) file2.internalPath.Length);
                     writer.Write(file2.internalPath);
                     num += file2.length;
@@ -315,76 +309,75 @@
             if (this.m_UseWasm)
             {
                 string[] textArray4 = new string[] { this.m_StagingAreaDataOutputBuild, this.m_BuildName + ".wasm.code.unityweb" };
-                string destFileName = Paths.Combine(textArray4);
+                string str5 = Paths.Combine(textArray4);
                 string[] textArray5 = new string[] { this.m_StagingAreaData, "linkresult_wasm", "build.wasm" };
-                File.Copy(Paths.Combine(textArray5), destFileName);
-                string str6 = this.PostProcessBuildFile(destFileName, "WebAssembly Code");
+                File.Copy(Paths.Combine(textArray5), str5);
+                string str6 = this.PostProcessBuildFile(str5, "WebAssembly Code");
                 contents = contents + ",\n\"wasmCodeUrl\": \"" + str6 + "\"";
                 string[] textArray6 = new string[] { this.m_StagingAreaDataOutputBuild, this.m_BuildName + ".wasm.framework.unityweb" };
                 string str7 = Paths.Combine(textArray6);
                 this.AssembleFramework(args, true, str7);
                 string str8 = this.PostProcessBuildFile(str7, "WebAssembly Framework");
                 contents = contents + ",\n\"wasmFrameworkUrl\": \"" + str8 + "\"";
+                if (!this.m_DevelopmentPlayer && PlayerSettings.WebGL.debugSymbols)
+                {
+                    string[] textArray7 = new string[] { this.m_StagingAreaDataOutputBuild, this.m_BuildName + ".wasm.symbols.unityweb" };
+                    string str9 = Paths.Combine(textArray7);
+                    this.AssembleDebugSymbols(args, true, str9);
+                    string str10 = this.PostProcessBuildFile(str9, "WebAssembly Debug Symbols");
+                    contents = contents + ",\n\"wasmSymbolsUrl\": \"" + str10 + "\"";
+                }
             }
             if (this.m_UseAsm)
             {
-                string[] textArray7 = new string[] { this.m_StagingAreaDataOutputBuild, this.m_BuildName + ".asm.code.unityweb" };
-                string str9 = Paths.Combine(textArray7);
-                this.AssembleAsmCode(args, str9);
-                string str10 = this.PostProcessBuildFile(str9, "asm.js Code");
-                contents = contents + ",\n\"asmCodeUrl\": \"" + str10 + "\"";
-                string[] textArray8 = new string[] { this.m_StagingAreaDataOutputBuild, this.m_BuildName + ".asm.memory.unityweb" };
+                string[] textArray8 = new string[] { this.m_StagingAreaDataOutputBuild, this.m_BuildName + ".asm.code.unityweb" };
                 string str11 = Paths.Combine(textArray8);
-                File.Copy((!this.m_WebGLUsePreBuiltUnityEngine ? Paths.Combine(new string[] { this.m_StagingAreaData, "linkresult_asm", "build" }) : this.m_PreBuiltUnityEngine) + ".js.mem", str11);
-                string str13 = this.PostProcessBuildFile(str11, "asm.js Memory Initializer");
-                contents = contents + ",\n\"asmMemoryUrl\": \"" + str13 + "\"";
-                string[] textArray10 = new string[] { this.m_StagingAreaDataOutputBuild, this.m_BuildName + ".asm.framework.unityweb" };
-                string str14 = Paths.Combine(textArray10);
-                this.AssembleFramework(args, false, str14);
-                string str15 = this.PostProcessBuildFile(str14, "asm.js Framework");
-                contents = contents + ",\n\"asmFrameworkUrl\": \"" + str15 + "\"";
+                this.AssembleAsmCode(args, str11);
+                string str12 = this.PostProcessBuildFile(str11, "asm.js Code");
+                contents = contents + ",\n\"asmCodeUrl\": \"" + str12 + "\"";
+                string[] textArray9 = new string[] { this.m_StagingAreaDataOutputBuild, this.m_BuildName + ".asm.memory.unityweb" };
+                string str13 = Paths.Combine(textArray9);
+                File.Copy((!this.m_WebGLUsePreBuiltUnityEngine ? Paths.Combine(new string[] { this.m_StagingAreaData, "linkresult_asm", "build" }) : this.m_PreBuiltUnityEngine) + ".js.mem", str13);
+                string str15 = this.PostProcessBuildFile(str13, "asm.js Memory Initializer");
+                contents = contents + ",\n\"asmMemoryUrl\": \"" + str15 + "\"";
+                string[] textArray11 = new string[] { this.m_StagingAreaDataOutputBuild, this.m_BuildName + ".asm.framework.unityweb" };
+                string str16 = Paths.Combine(textArray11);
+                this.AssembleFramework(args, false, str16);
+                string str17 = this.PostProcessBuildFile(str16, "asm.js Framework");
+                contents = contents + ",\n\"asmFrameworkUrl\": \"" + str17 + "\"";
                 if (!this.m_DevelopmentPlayer && PlayerSettings.WebGL.debugSymbols)
                 {
-                    string[] textArray11 = new string[] { this.m_StagingAreaDataOutputBuild, this.m_BuildName + ".asm.symbols.unityweb" };
-                    string str16 = Paths.Combine(textArray11);
-                    this.AssembleDebugSymbols(args, false, str16);
-                    string str17 = this.PostProcessBuildFile(str16, "asm.js Debug Symbols");
-                    contents = contents + ",\n\"asmSymbolsUrl\": \"" + str17 + "\"";
+                    string[] textArray12 = new string[] { this.m_StagingAreaDataOutputBuild, this.m_BuildName + ".asm.symbols.unityweb" };
+                    string str18 = Paths.Combine(textArray12);
+                    this.AssembleDebugSymbols(args, false, str18);
+                    string str19 = this.PostProcessBuildFile(str18, "asm.js Debug Symbols");
+                    contents = contents + ",\n\"asmSymbolsUrl\": \"" + str19 + "\"";
                 }
                 if (this.m_WebGLUsePreBuiltUnityEngine)
                 {
-                    string[] textArray12 = new string[] { this.m_StagingAreaDataOutputBuild, this.m_BuildName + ".asm.library.unityweb" };
-                    string str18 = Paths.Combine(textArray12);
-                    string[] textArray13 = new string[] { this.m_StagingAreaData, "linkresult_asm", "build.js" };
-                    File.Copy(Paths.Combine(textArray13), str18);
-                    string str19 = this.PostProcessBuildFile(str18, "asm.js Dynamic Library");
-                    contents = contents + ",\n\"asmLibraryUrl\": \"" + str19 + "\"";
+                    string[] textArray13 = new string[] { this.m_StagingAreaDataOutputBuild, this.m_BuildName + ".asm.library.unityweb" };
+                    string str20 = Paths.Combine(textArray13);
+                    string[] textArray14 = new string[] { this.m_StagingAreaData, "linkresult_asm", "build.js" };
+                    File.Copy(Paths.Combine(textArray14), str20);
+                    string str21 = this.PostProcessBuildFile(str20, "asm.js Dynamic Library");
+                    contents = contents + ",\n\"asmLibraryUrl\": \"" + str21 + "\"";
                 }
             }
-            string[] textArray14 = new string[] { this.m_StagingAreaDataOutputBuild, this.m_BuildName + ".jpg" };
-            string str20 = Paths.Combine(textArray14);
-            if (this.AssembleBackground(args, str20))
+            string[] textArray15 = new string[] { this.m_StagingAreaDataOutputBuild, this.m_BuildName + ".jpg" };
+            string str22 = Paths.Combine(textArray15);
+            if (this.AssembleBackground(args, str22))
             {
-                string str21 = this.PostProcessBuildFile(str20, "Build Background");
-                contents = contents + ",\n\"backgroundUrl\": \"" + str21 + "\"";
+                string str23 = this.PostProcessBuildFile(str22, "Build Background");
+                contents = contents + ",\n\"backgroundUrl\": \"" + str23 + "\"";
             }
-            contents = ((contents + ",\n\"splashScreenStyle\": \"" + ((PlayerSettings.SplashScreen.unityLogoStyle != PlayerSettings.SplashScreen.UnityLogoStyle.DarkOnLight) ? "Light" : "Dark") + "\"") + ",\n\"backgroundColor\": \"#" + ColorUtility.ToHtmlStringRGB(PlayerSettingsSplashScreenEditor.GetSplashScreenActualBackgroundColor()) + "\"") + "\n}";
+            contents = ((contents + ",\n\"splashScreenStyle\": \"" + ((PlayerSettings.SplashScreen.unityLogoStyle != PlayerSettings.SplashScreen.UnityLogoStyle.DarkOnLight) ? "Dark" : "Light") + "\"") + ",\n\"backgroundColor\": \"#" + ColorUtility.ToHtmlStringRGB(PlayerSettingsSplashScreenEditor.GetSplashScreenActualBackgroundColor()) + "\"") + "\n}";
             File.WriteAllText(path, contents);
-            string str22 = "Build/" + this.PostProcessBuildFile(path, "Build Index");
-            string[] textArray15 = new string[] { this.m_StagingAreaDataOutputBuild, "UnityLoader.js" };
-            string str23 = Paths.Combine(textArray15);
-            File.WriteAllText(str23, "var UnityLoader = {\n");
-            string[] textArray16 = new string[] { EmscriptenPaths.buildToolsDir, "UnityLoader" };
-            foreach (string str24 in Directory.GetFiles(Paths.Combine(textArray16)))
-            {
-                File.AppendAllText(str23, File.ReadAllText(str24));
-            }
-            File.AppendAllText(str23, "};\nUnityLoader.init();");
-            if (!this.m_DevelopmentPlayer)
-            {
-                MinifyJS(str23);
-            }
-            string str25 = "Build/" + this.PostProcessBuildFile(str23, "Build Loader");
+            string str24 = "Build/" + this.PostProcessBuildFile(path, "Build Index");
+            string[] textArray16 = new string[] { this.m_StagingAreaDataOutputBuild, "UnityLoader.js" };
+            string destFileName = Paths.Combine(textArray16);
+            string[] textArray17 = new string[] { EmscriptenPaths.buildToolsDir, !this.m_DevelopmentPlayer ? "UnityLoader.min.js" : "UnityLoader.js" };
+            File.Copy(Paths.Combine(textArray17), destFileName);
+            string str26 = "Build/" + this.PostProcessBuildFile(destFileName, "Build Loader");
             Dictionary<string, string> dictionary = new Dictionary<string, string> {
                 { 
                     "%UNITY_WIDTH%",
@@ -400,24 +393,24 @@
                 },
                 { 
                     "%UNITY_WEBGL_LOADER_URL%",
-                    str25
+                    str26
                 },
                 { 
                     "%UNITY_WEBGL_BUILD_URL%",
-                    str22
+                    str24
                 }
             };
-            foreach (string str26 in this.m_ValidTemplateIndexFiles)
+            foreach (string str27 in this.m_ValidTemplateIndexFiles)
             {
-                string[] textArray17 = new string[] { this.m_StagingAreaDataOutput, str26 };
-                string str27 = Paths.Combine(textArray17);
-                if (File.Exists(str27))
+                string[] textArray18 = new string[] { this.m_StagingAreaDataOutput, str27 };
+                string str28 = Paths.Combine(textArray18);
+                if (File.Exists(str28))
                 {
                     if (<>f__am$cache4 == null)
                     {
                         <>f__am$cache4 = (current, replace) => current.Replace(replace.Key, replace.Value);
                     }
-                    File.WriteAllText(str27, Enumerable.Aggregate<KeyValuePair<string, string>, string>(dictionary, File.ReadAllText(str27), <>f__am$cache4));
+                    File.WriteAllText(str28, Enumerable.Aggregate<KeyValuePair<string, string>, string>(dictionary, File.ReadAllText(str28), <>f__am$cache4));
                 }
             }
         }
@@ -936,19 +929,12 @@
         {
             public string path;
             public long length;
-            public Filesystem filesystem;
             public byte[] internalPath;
-            public DataFile(string path, Filesystem filesystem, string internalPath)
+            public DataFile(string path, string internalPath)
             {
                 this.path = path;
                 this.length = new FileInfo(path).Length;
-                this.filesystem = filesystem;
                 this.internalPath = Encoding.UTF8.GetBytes(internalPath.Replace('\\', '/'));
-            }
-            public enum Filesystem
-            {
-                Build,
-                Loader
             }
         }
     }

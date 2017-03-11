@@ -33,7 +33,7 @@
             }
         }
 
-        public override void WriteMarshalOutParameterFromNative(CppCodeWriter writer, string variableName, ManagedMarshalValue destinationVariable, IList<MarshaledParameter> methodParameters, bool returnValue, bool forNativeWrapperOfManagedMethod, IRuntimeMetadataAccess metadataAccess)
+        public override void WriteMarshalOutParameterFromNative(CppCodeWriter writer, string variableName, ManagedMarshalValue destinationVariable, IList<MarshaledParameter> methodParameters, bool returnValue, bool forNativeWrapperOfManagedMethod, bool isIn, IRuntimeMetadataAccess metadataAccess)
         {
             <WriteMarshalOutParameterFromNative>c__AnonStorey2 storey = new <WriteMarshalOutParameterFromNative>c__AnonStorey2 {
                 destinationVariable = destinationVariable,

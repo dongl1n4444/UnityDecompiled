@@ -30,15 +30,18 @@
         internal extern void AddUser(GameObject user);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern int GetAdjustedSize(int size);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, RequiredByNativeCode]
+        [MethodImpl(MethodImplOptions.InternalCall), RequiredByNativeCode, GeneratedByOldBindingsGenerator]
         internal extern float GetAlphamapResolutionInternal();
         /// <summary>
         /// <para>Returns the alpha map at a position x, y given a width and height.</para>
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
+        /// <param name="x">The x offset to read from.</param>
+        /// <param name="y">The y offset to read from.</param>
+        /// <param name="width">The width of the alpha map area to read.</param>
+        /// <param name="height">The height of the alpha map area to read.</param>
+        /// <returns>
+        /// <para>A 3D array of floats, where the 3rd dimension represents the mixing weight of each splatmap at each x,y coordinate.</para>
+        /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern float[,,] GetAlphamaps(int x, int y, int width, int height);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -135,21 +138,21 @@
         private extern void INTERNAL_get_size(out Vector3 value);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_wavingGrassTint(out Color value);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern int Internal_GetMaximumAlphamapResolution();
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern int Internal_GetMaximumBaseMapResolution();
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern int Internal_GetMaximumDetailPatchCount();
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern int Internal_GetMaximumDetailResolutionPerPatch();
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern int Internal_GetMaximumResolution();
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern int Internal_GetMinimumAlphamapResolution();
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern int Internal_GetMinimumBaseMapResolution();
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern int Internal_GetMinimumDetailResolutionPerPatch();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_size(ref Vector3 value);

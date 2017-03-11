@@ -1,10 +1,14 @@
 ﻿namespace UnityEditor
 {
     using System;
+    using System.Diagnostics;
+    using System.Runtime.CompilerServices;
     using UnityEngine;
 
     internal class ParticleSystemWindow : EditorWindow, ParticleEffectUIOwner
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private Editor <customEditor>k__BackingField;
         private bool m_IsVisible;
         private ParticleEffectUI m_ParticleEffectUI;
         private ParticleSystem m_Target;
@@ -244,7 +248,6 @@
         {
             if (this.m_IsVisible && (this.m_ParticleEffectUI != null))
             {
-                this.m_ParticleEffectUI.OnSceneGUI();
                 this.m_ParticleEffectUI.OnSceneViewGUI();
             }
         }
@@ -263,6 +266,8 @@
             }
             base.Repaint();
         }
+
+        public Editor customEditor { get; set; }
 
         private class Texts
         {

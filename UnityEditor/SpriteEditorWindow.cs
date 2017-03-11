@@ -27,8 +27,8 @@
         private IGUIUtility m_GUIUtility;
         public bool m_IgnoreNextPostprocessEvent;
         public ITexture2D m_OriginalTexture;
-        private Texture2D m_OutlineTexture;
-        private Texture2D m_ReadableTexture;
+        private UnityEngine.Texture2D m_OutlineTexture;
+        private UnityEngine.Texture2D m_ReadableTexture;
         private SpriteRectCache m_RectsCache;
         private GUIContent[] m_RegisteredModuleNames;
         private List<ISpriteEditorModule> m_RegisteredModules;
@@ -38,7 +38,7 @@
         private SpriteRect m_Selected;
         public string m_SelectedAssetPath;
         private SpriteEditorWindowStyles m_SpriteEditorWindowStyles;
-        private TextureImporter m_TextureImporter;
+        private UnityEditor.TextureImporter m_TextureImporter;
         private SerializedObject m_TextureImporterSO;
         private SerializedProperty m_TextureImporterSprites;
         private IUndoSystem m_UndoSystem;
@@ -251,35 +251,35 @@
                 int width = 0;
                 int height = 0;
                 assetImporterFromPath.GetWidthAndHeight(ref width, ref height);
-                this.m_ReadableTexture = SpriteUtility.CreateTemporaryDuplicate((Texture2D) this.m_OriginalTexture, width, height);
+                this.m_ReadableTexture = UnityEditor.SpriteUtility.CreateTemporaryDuplicate((UnityEngine.Texture2D) this.m_OriginalTexture, width, height);
                 if (this.m_ReadableTexture != null)
                 {
-                    this.m_ReadableTexture.filterMode = FilterMode.Point;
+                    this.m_ReadableTexture.filterMode = UnityEngine.FilterMode.Point;
                 }
             }
-            return new Texture2D(this.m_ReadableTexture);
+            return new UnityEngine.U2D.Interface.Texture2D(this.m_ReadableTexture);
         }
 
         private ITexture2D GetSelectedTexture2D()
         {
-            Texture2D o = null;
-            if (Selection.activeObject is Texture2D)
+            UnityEngine.Texture2D o = null;
+            if (Selection.activeObject is UnityEngine.Texture2D)
             {
-                o = Selection.activeObject as Texture2D;
+                o = Selection.activeObject as UnityEngine.Texture2D;
             }
             else if (Selection.activeObject is Sprite)
             {
-                o = SpriteUtility.GetSpriteTexture(Selection.activeObject as Sprite, false);
+                o = UnityEditor.Sprites.SpriteUtility.GetSpriteTexture(Selection.activeObject as Sprite, false);
             }
             else if (((Selection.activeGameObject != null) && (Selection.activeGameObject.GetComponent<SpriteRenderer>() != null)) && (Selection.activeGameObject.GetComponent<SpriteRenderer>().sprite != null))
             {
-                o = SpriteUtility.GetSpriteTexture(Selection.activeGameObject.GetComponent<SpriteRenderer>().sprite, false);
+                o = UnityEditor.Sprites.SpriteUtility.GetSpriteTexture(Selection.activeGameObject.GetComponent<SpriteRenderer>().sprite, false);
             }
             if (o != null)
             {
                 this.m_SelectedAssetPath = this.m_AssetDatabase.GetAssetPath(o);
             }
-            return new Texture2D(o);
+            return new UnityEngine.U2D.Interface.Texture2D(o);
         }
 
         public static void GetWindow()
@@ -359,13 +359,13 @@
             this.m_AllRegisteredModules = new List<ISpriteEditorModule>();
             if (this.m_OutlineTexture == null)
             {
-                this.m_OutlineTexture = new Texture2D(1, 0x10, TextureFormat.RGBA32, false);
+                this.m_OutlineTexture = new UnityEngine.Texture2D(1, 0x10, TextureFormat.RGBA32, false);
                 Color[] colors = new Color[] { new Color(0.5f, 0.5f, 0.5f, 0.5f), new Color(0.5f, 0.5f, 0.5f, 0.5f), new Color(0.8f, 0.8f, 0.8f, 0.8f), new Color(0.8f, 0.8f, 0.8f, 0.8f), Color.white, Color.white, Color.white, Color.white, new Color(0.8f, 0.8f, 0.8f, 1f), new Color(0.5f, 0.5f, 0.5f, 0.8f), new Color(0.3f, 0.3f, 0.3f, 0.5f), new Color(0.3f, 0.3f, 0.3f, 0.5f), new Color(0.3f, 0.3f, 0.3f, 0.3f), new Color(0.3f, 0.3f, 0.3f, 0.3f), new Color(0.1f, 0.1f, 0.1f, 0.1f), new Color(0.1f, 0.1f, 0.1f, 0.1f) };
                 this.m_OutlineTexture.SetPixels(colors);
                 this.m_OutlineTexture.Apply();
                 this.m_OutlineTexture.hideFlags = HideFlags.HideAndDontSave;
             }
-            Texture2D outlineTexture = new Texture2D(this.m_OutlineTexture);
+            UnityEngine.U2D.Interface.Texture2D outlineTexture = new UnityEngine.U2D.Interface.Texture2D(this.m_OutlineTexture);
             this.m_AllRegisteredModules.Add(new SpriteFrameModule(this, this.m_EventSystem, this.m_UndoSystem, this.m_AssetDatabase));
             this.m_AllRegisteredModules.Add(new SpritePolygonModeModule(this, this.m_EventSystem, this.m_UndoSystem, this.m_AssetDatabase));
             this.m_AllRegisteredModules.Add(new SpriteOutlineModule(this, this.m_EventSystem, this.m_UndoSystem, this.m_AssetDatabase, this.m_GUIUtility, new ShapeEditorFactory(), outlineTexture));
@@ -377,11 +377,11 @@
             if (this.m_RectsCache != null)
             {
                 this.m_RectsCache.ClearAll();
-                Object.DestroyImmediate(this.m_RectsCache);
+                UnityEngine.Object.DestroyImmediate(this.m_RectsCache);
             }
             if (this.m_ReadableTexture != null)
             {
-                Object.DestroyImmediate(this.m_ReadableTexture);
+                UnityEngine.Object.DestroyImmediate(this.m_ReadableTexture);
                 this.m_ReadableTexture = null;
             }
             this.m_OriginalTexture = null;
@@ -414,12 +414,12 @@
             s_Instance = null;
             if (this.m_OutlineTexture != null)
             {
-                Object.DestroyImmediate(this.m_OutlineTexture);
+                UnityEngine.Object.DestroyImmediate(this.m_OutlineTexture);
                 this.m_OutlineTexture = null;
             }
             if (this.m_ReadableTexture != null)
             {
-                Object.DestroyImmediate(this.m_ReadableTexture);
+                UnityEngine.Object.DestroyImmediate(this.m_ReadableTexture);
                 this.m_ReadableTexture = null;
             }
         }
@@ -492,7 +492,18 @@
                 this.RefreshPropertiesCache();
                 this.RefreshRects();
             }
-            this.UpdateSelectedSprite();
+            if (this.m_RectsCache != null)
+            {
+                if (Selection.activeObject is Sprite)
+                {
+                    this.UpdateSelectedSpriteRect(Selection.activeObject as Sprite);
+                }
+                else if ((Selection.activeGameObject != null) && (Selection.activeGameObject.GetComponent<SpriteRenderer>() != null))
+                {
+                    Sprite sprite = Selection.activeGameObject.GetComponent<SpriteRenderer>().sprite;
+                    this.UpdateSelectedSpriteRect(sprite);
+                }
+            }
             this.UpdateAvailableModules();
             base.Repaint();
         }
@@ -502,16 +513,12 @@
             this.m_OriginalTexture = this.GetSelectedTexture2D();
             if (this.m_OriginalTexture != null)
             {
-                this.m_TextureImporter = AssetImporter.GetAtPath(this.m_SelectedAssetPath) as TextureImporter;
+                this.m_TextureImporter = AssetImporter.GetAtPath(this.m_SelectedAssetPath) as UnityEditor.TextureImporter;
                 if (this.m_TextureImporter != null)
                 {
                     this.m_TextureImporterSO = new SerializedObject(this.m_TextureImporter);
                     this.m_TextureImporterSprites = this.m_TextureImporterSO.FindProperty("m_SpriteSheet.m_Sprites");
-                    if (this.m_RectsCache != null)
-                    {
-                        this.selectedSpriteRect = (this.m_TextureImporterSprites.arraySize <= 0) ? null : this.m_RectsCache.RectAt(0);
-                    }
-                    base.m_Texture = (this.m_OriginalTexture != null) ? new PreviewTexture2D((Texture2D) this.m_OriginalTexture) : null;
+                    base.m_Texture = (this.m_OriginalTexture != null) ? new PreviewTexture2D((UnityEngine.Texture2D) this.m_OriginalTexture) : null;
                 }
             }
         }
@@ -524,7 +531,7 @@
                 {
                     this.m_RectsCache.ClearAll();
                     Undo.ClearUndo(this.m_RectsCache);
-                    Object.DestroyImmediate(this.m_RectsCache);
+                    UnityEngine.Object.DestroyImmediate(this.m_RectsCache);
                 }
                 this.m_RectsCache = ScriptableObject.CreateInstance<SpriteRectCache>();
                 if (this.multipleSprites)
@@ -577,22 +584,6 @@
             this.selectedSpriteRect = null;
             this.textureIsDirty = false;
             base.m_Zoom = -1f;
-        }
-
-        private void SelectSpriteIndex(Sprite sprite)
-        {
-            if (sprite != null)
-            {
-                this.selectedSpriteRect = null;
-                for (int i = 0; i < this.m_RectsCache.Count; i++)
-                {
-                    if (sprite.rect == this.m_RectsCache.RectAt(i).rect)
-                    {
-                        this.selectedSpriteRect = this.m_RectsCache.RectAt(i);
-                        break;
-                    }
-                }
-            }
         }
 
         public void SetDataModified()
@@ -694,17 +685,17 @@
             }
         }
 
-        private void UpdateSelectedSprite()
+        private void UpdateSelectedSpriteRect(Sprite sprite)
         {
-            if (Selection.activeObject is Sprite)
+            for (int i = 0; i < this.m_RectsCache.Count; i++)
             {
-                this.SelectSpriteIndex(Selection.activeObject as Sprite);
+                if (sprite.rect == this.m_RectsCache.RectAt(i).rect)
+                {
+                    this.selectedSpriteRect = this.m_RectsCache.RectAt(i);
+                    return;
+                }
             }
-            else if ((Selection.activeGameObject != null) && (Selection.activeGameObject.GetComponent<SpriteRenderer>() != null))
-            {
-                Sprite sprite = Selection.activeGameObject.GetComponent<SpriteRenderer>().sprite;
-                this.SelectSpriteIndex(sprite);
-            }
+            this.selectedSpriteRect = null;
         }
 
         private bool activeTextureSelected =>
@@ -769,18 +760,18 @@
         public Rect windowDimension =>
             base.position;
 
-        internal class PreviewTexture2D : Texture2D
+        internal class PreviewTexture2D : UnityEngine.U2D.Interface.Texture2D
         {
             private int m_ActualHeight;
             private int m_ActualWidth;
 
-            public PreviewTexture2D(Texture2D t) : base(t)
+            public PreviewTexture2D(UnityEngine.Texture2D t) : base(t)
             {
                 this.m_ActualWidth = 0;
                 this.m_ActualHeight = 0;
                 if (t != null)
                 {
-                    (AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(t)) as TextureImporter).GetWidthAndHeight(ref this.m_ActualWidth, ref this.m_ActualHeight);
+                    (AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(t)) as UnityEditor.TextureImporter).GetWidthAndHeight(ref this.m_ActualWidth, ref this.m_ActualHeight);
                 }
             }
 

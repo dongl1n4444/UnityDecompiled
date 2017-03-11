@@ -6,7 +6,7 @@
 
     internal sealed class DebugLogHandler : ILogHandler
     {
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         internal static extern void Internal_Log(LogType level, string msg, [Writable] UnityEngine.Object obj);
         [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         internal static extern void Internal_LogException(Exception exception, [Writable] UnityEngine.Object obj);

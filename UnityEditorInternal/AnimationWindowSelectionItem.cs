@@ -99,7 +99,7 @@
             }
         }
 
-        public Type GetEditorCurveValueType(EditorCurveBinding curveBinding)
+        public System.Type GetEditorCurveValueType(EditorCurveBinding curveBinding)
         {
             if (this.rootGameObject != null)
             {
@@ -194,7 +194,7 @@
                 {
                     return false;
                 }
-                if (!AssetDatabase.IsOpenForEdit(this.animationClip))
+                if (!AssetDatabase.IsOpenForEdit(this.animationClip, StatusQueryOptions.UseCachedIfPossible))
                 {
                     return false;
                 }
@@ -311,8 +311,8 @@
             }
         }
 
-        public virtual Object sourceObject =>
-            ((this.gameObject == null) ? ((Object) this.scriptableObject) : ((Object) this.gameObject));
+        public virtual UnityEngine.Object sourceObject =>
+            ((this.gameObject == null) ? ((UnityEngine.Object) this.scriptableObject) : ((UnityEngine.Object) this.gameObject));
 
         public virtual float timeOffset
         {

@@ -102,11 +102,12 @@
         public void CenterGraph()
         {
             this.m_CenterGraph = true;
+            this.m_CenterGraphPosition = this.GetCenterPosition();
         }
 
         public void CenterGraph(Vector2 center)
         {
-            this.CenterGraph();
+            this.m_CenterGraph = true;
             this.m_CenterGraphPosition = center;
             this.m_CenterGraphOnPosition = true;
         }
@@ -246,6 +247,7 @@
                         if (GUIUtility.hotControl == controlID)
                         {
                             this.m_ScrollPosition -= current.delta;
+                            this.OnScroll();
                             current.Use();
                             break;
                         }
@@ -502,6 +504,15 @@
             return rect;
         }
 
+        protected virtual Vector2 GetCenterPosition()
+        {
+            if (this.m_CenterGraphOnPosition)
+            {
+                return this.m_CenterGraphPosition;
+            }
+            return new Vector2((this.graph.graphExtents.width / 2f) - (this.m_Host.position.width / 2f), (this.graph.graphExtents.height / 2f) - (this.m_Host.position.height / 2f));
+        }
+
         private static Vector2 GetMidPoint(List<Node> nodes)
         {
             float maxValue = float.MaxValue;
@@ -728,6 +739,10 @@
         {
         }
 
+        protected virtual void OnScroll()
+        {
+        }
+
         public virtual void OnToolbarGUI()
         {
             GUI.enabled = this.selection.Count > 0;
@@ -854,7 +869,7 @@
             return position;
         }
 
-        public virtual void SyncGraphToUnitySelection()
+        public virtual void SyncGraphToUnitySelection(bool force = false)
         {
         }
 
@@ -869,22 +884,18 @@
 
         private void UpdateScrollPosition()
         {
-            this.m_ScrollPosition.x += this.m_LastGraphExtents.x - this.graph.graphExtents.x;
-            this.m_ScrollPosition.y += this.m_LastGraphExtents.y - this.graph.graphExtents.y;
+            Vector2 scrollPosition = this.m_ScrollPosition;
+            scrollPosition.x += this.m_LastGraphExtents.x - this.graph.graphExtents.x;
+            scrollPosition.y += this.m_LastGraphExtents.y - this.graph.graphExtents.y;
             this.m_LastGraphExtents = this.graph.graphExtents;
             if (this.m_CenterGraph && (Event.current.type == EventType.Layout))
             {
-                if (this.m_CenterGraphOnPosition)
-                {
-                    this.m_ScrollPosition = this.m_CenterGraphPosition;
-                    this.m_CenterGraphOnPosition = false;
-                }
-                else
-                {
-                    this.m_ScrollPosition = new Vector2((this.graph.graphExtents.width / 2f) - (this.m_Host.position.width / 2f), (this.graph.graphExtents.height / 2f) - (this.m_Host.position.height / 2f));
-                }
+                scrollPosition = this.GetCenterPosition();
+                this.m_CenterGraphOnPosition = false;
                 this.m_CenterGraph = false;
             }
+            this.m_ScrollPosition = scrollPosition;
+            this.OnScroll();
         }
 
         protected virtual void UpdateUnitySelection()

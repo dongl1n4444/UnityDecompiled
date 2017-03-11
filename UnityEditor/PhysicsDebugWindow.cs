@@ -51,7 +51,7 @@
             this.m_PickAdded = true;
         }
 
-        private void DisplayControls(Object o, SceneView view)
+        private void DisplayControls(UnityEngine.Object o, SceneView view)
         {
             int dirtyCount = PhysicsVisualizationSettings.dirtyCount;
             PhysicsVisualizationSettings.showCollisionGeometry = EditorGUILayout.Toggle(Contents.showCollisionGeometry, PhysicsVisualizationSettings.showCollisionGeometry, new GUILayoutOption[0]);
@@ -223,7 +223,7 @@
             SceneView.RepaintAll();
         }
 
-        [MenuItem("Window/Physics Debugger", false, 0x835)]
+        [UnityEditor.MenuItem("Window/Physics Debugger", false, 0x835)]
         public static PhysicsDebugWindow ShowWindow()
         {
             PhysicsDebugWindow window = EditorWindow.GetWindow(typeof(PhysicsDebugWindow)) as PhysicsDebugWindow;

@@ -22,7 +22,7 @@
             TreeViewController treeView = new TreeViewController(data.editorWindow, data.state);
             GroupTreeViewGUI gui = new GroupTreeViewGUI(treeView);
             TreeViewDataSourceForMixers mixers = new TreeViewDataSourceForMixers(treeView, objectFromInstanceID);
-            mixers.onVisibleRowsChanged = (Action) Delegate.Combine(mixers.onVisibleRowsChanged, new Action(gui.CalculateRowRects));
+            mixers.onVisibleRowsChanged = (System.Action) Delegate.Combine(mixers.onVisibleRowsChanged, new System.Action(gui.CalculateRowRects));
             treeView.deselectOnUnhandledMouseDown = false;
             treeView.Init(data.treeViewRect, mixers, gui, null);
             data.objectTreeForSelector.SetTreeView(treeView);
@@ -73,7 +73,7 @@
                     int rowCount = base.m_TreeView.data.rowCount;
                     if (rowCount != this.m_RowRects.Count)
                     {
-                        Debug.LogError("Mismatch in state: rows vs cached rects");
+                        UnityEngine.Debug.LogError("Mismatch in state: rows vs cached rects");
                     }
                     int num2 = -1;
                     int num3 = -1;
@@ -215,7 +215,7 @@
 
         private class TreeViewDataSourceForMixers : TreeViewDataSource
         {
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private AudioMixerController <ignoreThisController>k__BackingField;
 
             public TreeViewDataSourceForMixers(TreeViewController treeView, AudioMixerController ignoreController) : base(treeView)

@@ -66,7 +66,7 @@
             internal bool $disposing;
             internal int $PC;
             internal Msvc12Installation $this;
-            internal NPath <includeDirectory>__1;
+            internal NPath <includeDirectory>__0;
 
             [DebuggerHidden]
             public void Dispose()
@@ -94,9 +94,9 @@
                     case 1:
                     {
                         string[] textArray2 = new string[] { "Include" };
-                        this.<includeDirectory>__1 = this.$this.SDKDirectory.Combine(textArray2);
+                        this.<includeDirectory>__0 = this.$this.SDKDirectory.Combine(textArray2);
                         string[] textArray3 = new string[] { "shared" };
-                        this.$current = this.<includeDirectory>__1.Combine(textArray3);
+                        this.$current = this.<includeDirectory>__0.Combine(textArray3);
                         if (!this.$disposing)
                         {
                             this.$PC = 2;
@@ -106,7 +106,7 @@
                     case 2:
                     {
                         string[] textArray4 = new string[] { "um" };
-                        this.$current = this.<includeDirectory>__1.Combine(textArray4);
+                        this.$current = this.<includeDirectory>__0.Combine(textArray4);
                         if (!this.$disposing)
                         {
                             this.$PC = 3;
@@ -116,7 +116,7 @@
                     case 3:
                     {
                         string[] textArray5 = new string[] { "winrt" };
-                        this.$current = this.<includeDirectory>__1.Combine(textArray5);
+                        this.$current = this.<includeDirectory>__0.Combine(textArray5);
                         if (!this.$disposing)
                         {
                             this.$PC = 4;
@@ -166,8 +166,8 @@
             internal bool $disposing;
             internal int $PC;
             internal Msvc12Installation $this;
-            internal NPath <sdkLibDirectory>__1;
-            internal NPath <vcLibPath>__1;
+            internal NPath <sdkLibDirectory>__0;
+            internal NPath <vcLibPath>__0;
             internal Architecture architecture;
             internal string sdkSubset;
 
@@ -187,17 +187,17 @@
                     case 0:
                     {
                         string[] append = new string[] { "VC", "lib" };
-                        this.<vcLibPath>__1 = this.$this.VisualStudioDirectory.Combine(append);
+                        this.<vcLibPath>__0 = this.$this.VisualStudioDirectory.Combine(append);
                         string[] textArray2 = new string[] { "lib", "winv6.3", "um" };
-                        this.<sdkLibDirectory>__1 = this.$this.SDKDirectory.Combine(textArray2);
+                        this.<sdkLibDirectory>__0 = this.$this.SDKDirectory.Combine(textArray2);
                         if (this.sdkSubset != null)
                         {
                             string[] textArray3 = new string[] { this.sdkSubset };
-                            this.<vcLibPath>__1 = this.<vcLibPath>__1.Combine(textArray3);
+                            this.<vcLibPath>__0 = this.<vcLibPath>__0.Combine(textArray3);
                         }
                         if (this.architecture is x86Architecture)
                         {
-                            this.$current = this.<vcLibPath>__1;
+                            this.$current = this.<vcLibPath>__0;
                             if (!this.$disposing)
                             {
                                 this.$PC = 1;
@@ -206,7 +206,7 @@
                         else if (this.architecture is x64Architecture)
                         {
                             string[] textArray5 = new string[] { "amd64" };
-                            this.$current = this.<vcLibPath>__1.Combine(textArray5);
+                            this.$current = this.<vcLibPath>__0.Combine(textArray5);
                             if (!this.$disposing)
                             {
                                 this.$PC = 3;
@@ -219,7 +219,7 @@
                                 throw new NotSupportedException($"Architecture {this.architecture} is not supported by MSVC 12 compiler!");
                             }
                             string[] textArray7 = new string[] { "arm" };
-                            this.$current = this.<vcLibPath>__1.Combine(textArray7);
+                            this.$current = this.<vcLibPath>__0.Combine(textArray7);
                             if (!this.$disposing)
                             {
                                 this.$PC = 5;
@@ -230,7 +230,7 @@
                     case 1:
                     {
                         string[] textArray4 = new string[] { "x86" };
-                        this.$current = this.<sdkLibDirectory>__1.Combine(textArray4);
+                        this.$current = this.<sdkLibDirectory>__0.Combine(textArray4);
                         if (!this.$disposing)
                         {
                             this.$PC = 2;
@@ -246,7 +246,7 @@
                     case 3:
                     {
                         string[] textArray6 = new string[] { "x64" };
-                        this.$current = this.<sdkLibDirectory>__1.Combine(textArray6);
+                        this.$current = this.<sdkLibDirectory>__0.Combine(textArray6);
                         if (!this.$disposing)
                         {
                             this.$PC = 4;
@@ -256,7 +256,7 @@
                     case 5:
                     {
                         string[] textArray8 = new string[] { "arm" };
-                        this.$current = this.<sdkLibDirectory>__1.Combine(textArray8);
+                        this.$current = this.<sdkLibDirectory>__0.Combine(textArray8);
                         if (!this.$disposing)
                         {
                             this.$PC = 6;

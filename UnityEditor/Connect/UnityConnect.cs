@@ -1,6 +1,7 @@
 ﻿namespace UnityEditor.Connect
 {
     using System;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEditor;
@@ -12,10 +13,13 @@
     {
         private static readonly UnityConnect s_Instance = new UnityConnect();
 
+        [field: DebuggerBrowsable(0), CompilerGenerated]
         public event ProjectStateChangedDelegate ProjectStateChanged;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event StateChangedDelegate StateChanged;
 
+        [field: DebuggerBrowsable(0), CompilerGenerated]
         public event UserStateChangedDelegate UserStateChanged;
 
         static UnityConnect()
@@ -33,6 +37,8 @@
         public extern void ClearAccessToken();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void ClearCache();
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public extern void ClearError(int errorCode);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void ClearErrors();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -149,20 +155,22 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool SetCOPPACompliance(COPPACompliance compliance);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public extern void SetError(int errorCode);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void ShowLogin();
-        [MenuItem("Window/Unity Connect/Reset AccessToken", false, 0x3e8, true)]
+        [UnityEditor.MenuItem("Window/Unity Connect/Reset AccessToken", false, 0x3e8, true)]
         public static void TestClearAccessToken()
         {
             instance.ClearAccessToken();
         }
 
-        [MenuItem("Window/Unity Connect/Computer DidWakeUp", false, 0x3e8, true)]
+        [UnityEditor.MenuItem("Window/Unity Connect/Computer DidWakeUp", false, 0x3e8, true)]
         public static void TestComputerDidWakeUp()
         {
             instance.ComputerDidWakeUp();
         }
 
-        [MenuItem("Window/Unity Connect/Computer GoesToSleep", false, 0x3e8, true)]
+        [UnityEditor.MenuItem("Window/Unity Connect/Computer GoesToSleep", false, 0x3e8, true)]
         public static void TestComputerGoesToSleep()
         {
             instance.ComputerGoesToSleep();
@@ -211,6 +219,35 @@
         public UserInfo userInfo { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         public bool workingOffline { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        [Flags]
+        internal enum UnityErrorBehaviour
+        {
+            Alert,
+            Automatic,
+            Hidden,
+            ConsoleOnly,
+            Reconnect
+        }
+
+        [Flags]
+        internal enum UnityErrorFilter
+        {
+            All = 7,
+            ByChild = 4,
+            ByContext = 1,
+            ByParent = 2
+        }
+
+        [Flags]
+        internal enum UnityErrorPriority
+        {
+            Critical,
+            Error,
+            Warning,
+            Info,
+            None
+        }
     }
 }
 

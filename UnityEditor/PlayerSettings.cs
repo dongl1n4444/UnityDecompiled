@@ -15,7 +15,7 @@
     /// <summary>
     /// <para>Player Settings is where you define various parameters for the final game that you will build in Unity. Some of these values are used in the Resolution Dialog that launches when you open a standalone game.</para>
     /// </summary>
-    public sealed class PlayerSettings : Object
+    public sealed class PlayerSettings : UnityEngine.Object
     {
         private static SerializedObject _serializedObject;
         internal static readonly char[] defineSplits = new char[] { ';', ',', ' ', '\0' };
@@ -38,10 +38,18 @@
         /// <param name="buildTargetGroup"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern ApiCompatibilityLevel GetApiCompatibilityLevel(BuildTargetGroup buildTargetGroup);
+        /// <summary>
+        /// <para>Get the application identifier for the specified platform.</para>
+        /// </summary>
+        /// <param name="targetGroup"></param>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern string GetApplicationIdentifier(BuildTargetGroup targetGroup);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int GetArchitecture(BuildTargetGroup targetGroup);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void GetBatchingForPlatform(BuildTarget platform, out int staticBatching, out int dynamicBatching);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern string GetBuildNumber(BuildTargetGroup targetGroup);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool GetCloudServiceEnabled(string serviceKey);
         /// <summary>
@@ -109,8 +117,8 @@
         /// <para>The current value of the property.</para>
         /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use explicit API instead."), GeneratedByOldBindingsGenerator]
-        public static extern bool GetPropertyBool(string name, [DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
-        [ExcludeFromDocs, Obsolete("Use explicit API instead.")]
+        public static extern bool GetPropertyBool(string name, [UnityEngine.Internal.DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
+        [Obsolete("Use explicit API instead."), ExcludeFromDocs]
         public static int GetPropertyInt(string name)
         {
             BuildTargetGroup unknown = BuildTargetGroup.Unknown;
@@ -125,8 +133,8 @@
         /// <returns>
         /// <para>The current value of the property.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use explicit API instead."), GeneratedByOldBindingsGenerator]
-        public static extern int GetPropertyInt(string name, [DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("Use explicit API instead.")]
+        public static extern int GetPropertyInt(string name, [UnityEngine.Internal.DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
         [ExcludeFromDocs, Obsolete("Use explicit API instead.")]
         public static bool GetPropertyOptionalBool(string name, ref bool value)
         {
@@ -135,13 +143,13 @@
         }
 
         [Obsolete("Use explicit API instead.")]
-        public static bool GetPropertyOptionalBool(string name, ref bool value, [DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target)
+        public static bool GetPropertyOptionalBool(string name, ref bool value, [UnityEngine.Internal.DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target)
         {
             value = GetPropertyBool(name, target);
             return true;
         }
 
-        [Obsolete("Use explicit API instead."), ExcludeFromDocs]
+        [ExcludeFromDocs, Obsolete("Use explicit API instead.")]
         public static bool GetPropertyOptionalInt(string name, ref int value)
         {
             BuildTargetGroup unknown = BuildTargetGroup.Unknown;
@@ -149,7 +157,7 @@
         }
 
         [Obsolete("Use explicit API instead.")]
-        public static bool GetPropertyOptionalInt(string name, ref int value, [DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target)
+        public static bool GetPropertyOptionalInt(string name, ref int value, [UnityEngine.Internal.DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target)
         {
             value = GetPropertyInt(name, target);
             return true;
@@ -163,7 +171,7 @@
         }
 
         [Obsolete("Use explicit API instead.")]
-        public static bool GetPropertyOptionalString(string name, ref string value, [DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target)
+        public static bool GetPropertyOptionalString(string name, ref string value, [UnityEngine.Internal.DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target)
         {
             value = GetPropertyString(name, target);
             return true;
@@ -185,7 +193,7 @@
         /// <para>The current value of the property.</para>
         /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("Use explicit API instead.")]
-        public static extern string GetPropertyString(string name, [DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
+        public static extern string GetPropertyString(string name, [UnityEngine.Internal.DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern ScriptingImplementation GetScriptingBackend(BuildTargetGroup targetGroup);
         /// <summary>
@@ -233,7 +241,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_set_cursorHotspot(ref Vector2 value);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private static extern Object InternalGetPlayerSettingsObject();
+        private static extern UnityEngine.Object InternalGetPlayerSettingsObject();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetAdditionalIl2CppArgs(string additionalArgs);
         /// <summary>
@@ -243,6 +251,13 @@
         /// <param name="value"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetApiCompatibilityLevel(BuildTargetGroup buildTargetGroup, ApiCompatibilityLevel value);
+        /// <summary>
+        /// <para>Set the application identifier for the specified platform.</para>
+        /// </summary>
+        /// <param name="targetGroup"></param>
+        /// <param name="identifier"></param>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern void SetApplicationIdentifier(BuildTargetGroup targetGroup, string identifier);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetArchitecture(BuildTargetGroup targetGroup, int architecture);
         /// <summary>
@@ -254,6 +269,8 @@
         public static extern void SetAspectRatio(AspectRatio aspectRatio, bool enable);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void SetBatchingForPlatform(BuildTarget platform, int staticBatching, int dynamicBatching);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern void SetBuildNumber(BuildTargetGroup targetGroup, string buildNumber);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void SetCloudServiceEnabled(string serviceKey, bool enabled);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -285,7 +302,7 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetIncrementalIl2CppBuild(BuildTargetGroup targetGroup, bool enabled);
-        [Obsolete("Use explicit API instead."), ExcludeFromDocs]
+        [ExcludeFromDocs, Obsolete("Use explicit API instead.")]
         public static void SetPropertyBool(string name, bool value)
         {
             BuildTargetGroup unknown = BuildTargetGroup.Unknown;
@@ -305,8 +322,8 @@
         /// <param name="value">Value of the property (bool).</param>
         /// <param name="target">BuildTarget for which the property should apply (use default value BuildTargetGroup.Unknown to apply to all targets).</param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("Use explicit API instead.")]
-        public static extern void SetPropertyBool(string name, bool value, [DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
-        [Obsolete("Use explicit API instead."), ExcludeFromDocs]
+        public static extern void SetPropertyBool(string name, bool value, [UnityEngine.Internal.DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
+        [ExcludeFromDocs, Obsolete("Use explicit API instead.")]
         public static void SetPropertyInt(string name, int value)
         {
             BuildTargetGroup unknown = BuildTargetGroup.Unknown;
@@ -325,9 +342,9 @@
         /// <param name="name">Name of the property.</param>
         /// <param name="value">Value of the property (int).</param>
         /// <param name="target">BuildTarget for which the property should apply (use default value BuildTargetGroup.Unknown to apply to all targets).</param>
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use explicit API instead."), GeneratedByOldBindingsGenerator]
-        public static extern void SetPropertyInt(string name, int value, [DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
-        [Obsolete("Use explicit API instead."), ExcludeFromDocs]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("Use explicit API instead.")]
+        public static extern void SetPropertyInt(string name, int value, [UnityEngine.Internal.DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
+        [ExcludeFromDocs, Obsolete("Use explicit API instead.")]
         public static void SetPropertyString(string name, string value)
         {
             BuildTargetGroup unknown = BuildTargetGroup.Unknown;
@@ -346,8 +363,8 @@
         /// <param name="name">Name of the property.</param>
         /// <param name="value">Value of the property (string).</param>
         /// <param name="target">BuildTarget for which the property should apply (use default value BuildTargetGroup.Unknown to apply to all targets).</param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("Use explicit API instead.")]
-        public static extern void SetPropertyString(string name, string value, [DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use explicit API instead."), GeneratedByOldBindingsGenerator]
+        public static extern void SetPropertyString(string name, string value, [UnityEngine.Internal.DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetScriptingBackend(BuildTargetGroup targetGroup, ScriptingImplementation backend);
         /// <summary>
@@ -446,14 +463,33 @@
         public static ApiCompatibilityLevel apiCompatibilityLevel { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
+        /// <para>Set the application identifier for the currently selected build target.</para>
+        /// </summary>
+        public static string applicationIdentifier
+        {
+            get => 
+                GetApplicationIdentifier(EditorUserBuildSettings.selectedBuildTargetGroup);
+            set
+            {
+                SetApplicationIdentifier(EditorUserBuildSettings.selectedBuildTargetGroup, value);
+            }
+        }
+
+        /// <summary>
         /// <para>Pre bake collision meshes on player build.</para>
         /// </summary>
         public static bool bakeCollisionMeshes { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        /// <summary>
-        /// <para>Application bundle identifier shared between iOS &amp; Android platforms.</para>
-        /// </summary>
-        public static string bundleIdentifier { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+        [Obsolete("Use PlayerSettings.applicationIdentifier instead (UnityUpgradable) -> UnityEditor.PlayerSettings.applicationIdentifier", true)]
+        public static string bundleIdentifier
+        {
+            get => 
+                applicationIdentifier;
+            set
+            {
+                applicationIdentifier = value;
+            }
+        }
 
         /// <summary>
         /// <para>Application bundle version shared between iOS &amp; Android platforms.</para>
@@ -593,6 +629,11 @@
         public static bool gpuSkinning { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
+        /// <para>Selects the graphics job mode to use on platforms that support both Native and Legacy graphics jobs.</para>
+        /// </summary>
+        public static GraphicsJobMode graphicsJobMode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
         /// <para>Enable graphics jobs (multi threaded rendering).</para>
         /// </summary>
         public static bool graphicsJobs { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
@@ -600,7 +641,16 @@
         /// <summary>
         /// <para>The bundle identifier of the iPhone application.</para>
         /// </summary>
-        public static string iPhoneBundleIdentifier { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+        [Obsolete("iPhoneBundleIdentifier is deprecated. Use PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.iOS) instead.")]
+        public static string iPhoneBundleIdentifier
+        {
+            get => 
+                GetApplicationIdentifier(BuildTargetGroup.iPhone);
+            set
+            {
+                SetApplicationIdentifier(BuildTargetGroup.iPhone, value);
+            }
+        }
 
         /// <summary>
         /// <para>Password for the key used for signing an Android application.</para>
@@ -632,7 +682,7 @@
         public static bool logObjCUncaughtExceptions { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
-        /// <para>Define how to handle fullscreen mode in Mac OS X standalones.</para>
+        /// <para>Define how to handle fullscreen mode in macOS standalones.</para>
         /// </summary>
         public static MacFullscreenMode macFullscreenMode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
@@ -654,7 +704,7 @@
         public static bool MTRendering { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
-        /// <para>Mutes or allows audio from other applications to play in the background while the Unity application is running.</para>
+        /// <para>Stops or allows audio from other applications to play in the background while your Unity application is running.</para>
         /// </summary>
         public static bool muteOtherAudioSources { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
@@ -828,21 +878,16 @@
 
         internal static string webPlayerTemplate { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
+        [Obsolete("Xbox 360 has been removed in >=5.5")]
         public static int xboxAdditionalTitleMemorySize { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        /// <summary>
-        /// <para>Xbox 360 Kinect Head Orientation file deployment.</para>
-        /// </summary>
+        [Obsolete("Xbox 360 has been removed in >=5.5")]
         public static bool xboxDeployKinectHeadOrientation { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        /// <summary>
-        /// <para>Xbox 360 Kinect Head Position file deployment.</para>
-        /// </summary>
+        [Obsolete("Xbox 360 has been removed in >=5.5")]
         public static bool xboxDeployKinectHeadPosition { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        /// <summary>
-        /// <para>Xbox 360 Kinect resource file deployment.</para>
-        /// </summary>
+        [Obsolete("Xbox 360 has been removed in >=5.5")]
         public static bool xboxDeployKinectResources { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
@@ -850,55 +895,38 @@
         /// </summary>
         public static bool xboxEnableAvatar { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
+        [Obsolete("Xbox 360 has been removed in >=5.5")]
         public static bool xboxEnableGuest { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        /// <summary>
-        /// <para>Xbox 360 Kinect title flag - if false, the Kinect APIs are inactive.</para>
-        /// </summary>
+        [Obsolete("Xbox 360 has been removed in >=5.5")]
         public static bool xboxEnableKinect { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        /// <summary>
-        /// <para>Xbox 360 Kinect automatic skeleton tracking.</para>
-        /// </summary>
+        [Obsolete("Xbox 360 has been removed in >=5.5")]
         public static bool xboxEnableKinectAutoTracking { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        /// <summary>
-        /// <para>Xbox 360 Kinect Enable Speech Engine.</para>
-        /// </summary>
+        [Obsolete("Xbox 360 has been removed in >=5.5")]
         public static bool xboxEnableSpeech { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        /// <summary>
-        /// <para>Xbox 360 auto-generation of _SPAConfig.cs.</para>
-        /// </summary>
+        [Obsolete("Xbox 360 has been removed in >=5.5")]
         public static bool xboxGenerateSpa { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        /// <summary>
-        /// <para>Xbox 360 ImageXex override configuration file path.</para>
-        /// </summary>
+        [Obsolete("Xbox 360 has been removed in >=5.5")]
         public static string xboxImageXexFilePath { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         public static int xboxOneResolution { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         public static bool xboxPIXTextureCapture { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        /// <summary>
-        /// <para>Xbox 360 SPA file path.</para>
-        /// </summary>
+        [Obsolete("Xbox 360 has been removed in >=5.5")]
         public static string xboxSpaFilePath { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        /// <summary>
-        /// <para>Xbox 360 Kinect Speech DB.</para>
-        /// </summary>
+        [Obsolete("Xbox 360 has been removed in >=5.5")]
         public static uint xboxSpeechDB { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        /// <summary>
-        /// <para>Xbox 360 splash screen.</para>
-        /// </summary>
+        [Obsolete("Xbox 360 has been removed in >=5.5")]
         public static Texture2D xboxSplashScreen { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        /// <summary>
-        /// <para>Xbox 360 title id.</para>
-        /// </summary>
+        [Obsolete("Xbox 360 has been removed in >=5.5")]
         public static string xboxTitleId { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         [CompilerGenerated]
@@ -984,7 +1012,7 @@
             public static bool licenseVerification { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
             /// <summary>
-            /// <para>Minimal Android SDK version.</para>
+            /// <para>The minimum API level required for your application to run.</para>
             /// </summary>
             public static AndroidSdkVersions minSdkVersion { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
@@ -1007,6 +1035,11 @@
             /// <para>Android target device.</para>
             /// </summary>
             public static AndroidTargetDevice targetDevice { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+            /// <summary>
+            /// <para>The target API level of your application.</para>
+            /// </summary>
+            public static AndroidSdkVersions targetSdkVersion { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
             /// <summary>
             /// <para>24-bit Depth Buffer is used.</para>
@@ -1101,9 +1134,17 @@
             public static iOSBackgroundMode backgroundModes { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
             /// <summary>
-            /// <para>The build number of the bundle.</para>
+            /// <para>The build number of the bundle</para>
             /// </summary>
-            public static string buildNumber { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+            public static string buildNumber
+            {
+                get => 
+                    PlayerSettings.GetBuildNumber(BuildTargetGroup.iPhone);
+                set
+                {
+                    PlayerSettings.SetBuildNumber(BuildTargetGroup.iPhone, value);
+                }
+            }
 
             /// <summary>
             /// <para>Describes the reason for access to the user's camera.</para>
@@ -1228,6 +1269,19 @@
             /// <para>Indicates whether application will use On Demand Resources (ODR) API.</para>
             /// </summary>
             public static bool useOnDemandResources { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+        }
+
+        public sealed class macOS
+        {
+            public static string buildNumber
+            {
+                get => 
+                    PlayerSettings.GetBuildNumber(BuildTargetGroup.Standalone);
+                set
+                {
+                    PlayerSettings.SetBuildNumber(BuildTargetGroup.Standalone, value);
+                }
+            }
         }
 
         /// <summary>
@@ -2032,7 +2086,7 @@
             private float m_Duration;
             static SplashScreenLogo()
             {
-                s_UnityLogo = Resources.GetBuiltinResource<Sprite>("UnitySplash-cube.png");
+                s_UnityLogo = UnityEngine.Resources.GetBuiltinResource<Sprite>("UnitySplash-cube.png");
             }
 
             [ExcludeFromDocs]
@@ -2058,7 +2112,7 @@
             /// <returns>
             /// <para>The new logo.</para>
             /// </returns>
-            public static PlayerSettings.SplashScreenLogo Create([DefaultValue("k_MinLogoTime")] float duration, [DefaultValue("null")] Sprite logo) => 
+            public static PlayerSettings.SplashScreenLogo Create([UnityEngine.Internal.DefaultValue("k_MinLogoTime")] float duration, [UnityEngine.Internal.DefaultValue("null")] Sprite logo) => 
                 new PlayerSettings.SplashScreenLogo { 
                     m_Duration = duration,
                     m_Logo = logo
@@ -2078,7 +2132,7 @@
             /// <returns>
             /// <para>The new logo.</para>
             /// </returns>
-            public static PlayerSettings.SplashScreenLogo CreateWithUnityLogo([DefaultValue("k_MinLogoTime")] float duration) => 
+            public static PlayerSettings.SplashScreenLogo CreateWithUnityLogo([UnityEngine.Internal.DefaultValue("k_MinLogoTime")] float duration) => 
                 new PlayerSettings.SplashScreenLogo { 
                     m_Duration = duration,
                     m_Logo = s_UnityLogo
@@ -2460,6 +2514,19 @@
             internal static extern void SetTopShelfImageWideLayers(Texture2D[] layers);
 
             /// <summary>
+            /// <para>The build number of the bundle</para>
+            /// </summary>
+            public static string buildNumber
+            {
+                get => 
+                    PlayerSettings.GetBuildNumber(BuildTargetGroup.tvOS);
+                set
+                {
+                    PlayerSettings.SetBuildNumber(BuildTargetGroup.tvOS, value);
+                }
+            }
+
+            /// <summary>
             /// <para>Application requires extended game controller.</para>
             /// </summary>
             public static bool requireExtendedGameController { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
@@ -2481,18 +2548,18 @@
         }
 
         /// <summary>
-        /// <para>Google's Cardboard specific Player Settings.</para>
+        /// <para>Google Cardboard-specific Player Settings.</para>
         /// </summary>
         public static class VRCardboard
         {
             /// <summary>
-            /// <para>Set the requested depth format for the Depth and Stencil Buffers and. Options are 16bit Depth, 24bit Depth and 24bit Depth + 8bit Stencil.</para>
+            /// <para>Set the requested depth format for the Depth and Stencil Buffers. Options are 16bit Depth, 24bit Depth and 24bit Depth + 8bit Stencil.</para>
             /// </summary>
             public static int depthFormat { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
         }
 
         /// <summary>
-        /// <para>Google VR's specific Player Settings.</para>
+        /// <para>Google VR-specific Player Settings.</para>
         /// </summary>
         public static class VRDaydream
         {
@@ -2507,7 +2574,7 @@
             public static Texture2D daydreamIconBackground { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
             /// <summary>
-            /// <para>Set the requested depth format for the Depth and Stencil Buffers and. Options are 16bit Depth, 24bit Depth and 24bit Depth + 8bit Stencil.</para>
+            /// <para>Set the requested depth format for the Depth and Stencil Buffers. Options are 16bit Depth, 24bit Depth and 24bit Depth + 8bit Stencil.</para>
             /// </summary>
             public static int depthFormat { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
         }
@@ -3265,7 +3332,7 @@
 
             public static string ProductId { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-            [Obsolete("SandboxId is obsolete please remove", true)]
+            [Obsolete("SandboxId is obsolete please remove")]
             public static string SandboxId { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
             public static string SCID { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }

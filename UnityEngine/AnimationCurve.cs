@@ -7,16 +7,16 @@
     using UnityEngine.Scripting;
 
     /// <summary>
-    /// <para>A collection of curves form an AnimationClip.</para>
+    /// <para>Store a collection of Keyframes that can be evaluated over time.</para>
     /// </summary>
     [StructLayout(LayoutKind.Sequential), RequiredByNativeCode]
     public sealed class AnimationCurve
     {
         internal IntPtr m_Ptr;
         /// <summary>
-        /// <para>Creates an animation curve from arbitrary number of keyframes.</para>
+        /// <para>Creates an animation curve from an arbitrary number of keyframes.</para>
         /// </summary>
-        /// <param name="keys"></param>
+        /// <param name="keys">An array of Keyframes used to define the curve.</param>
         public AnimationCurve(params Keyframe[] keys)
         {
             this.Init(keys);

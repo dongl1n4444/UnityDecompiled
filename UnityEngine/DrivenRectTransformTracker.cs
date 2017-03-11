@@ -7,7 +7,7 @@
     using UnityEngine.Scripting;
 
     /// <summary>
-    /// <para>A component can be designed drive a RectTransform. The DrivenRectTransformTracker struct is used to specify which RectTransforms it is driving.</para>
+    /// <para>A component can be designed to drive a RectTransform. The DrivenRectTransformTracker struct is used to specify which RectTransforms it is driving.</para>
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct DrivenRectTransformTracker

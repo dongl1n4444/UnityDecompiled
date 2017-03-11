@@ -12,11 +12,11 @@
     internal class SerializedPropertyTreeView : TreeView
     {
         [CompilerGenerated]
-        private static Comparison<TreeViewItem> <>f__am$cache0;
+        private static Func<TreeViewItem, UnityEngine.Object> <>f__am$cache0;
         [CompilerGenerated]
         private static Comparison<TreeViewItem> <>f__am$cache1;
-        private bool m_bFilterDisable;
-        private bool m_bFilterInvert;
+        [CompilerGenerated]
+        private static Comparison<TreeViewItem> <>f__am$cache2;
         private bool m_bFilterSelection;
         private int m_ChangedId;
         private ColumnInternal[] m_ColumnsInternal;
@@ -54,13 +54,13 @@
             {
                 for (int i = num; i <= num2; i++)
                 {
-                    ((SerializedPropertyItem) rows[i]).GetData().Load();
+                    ((SerializedPropertyItem) rows[i]).GetData().Update();
                 }
             }
-            IList<TreeViewItem> rowsFromIDs = base.GetRowsFromIDs(base.GetSelection());
-            foreach (SerializedPropertyItem item in rowsFromIDs)
+            IList<TreeViewItem> list2 = base.FindRows(base.GetSelection());
+            foreach (SerializedPropertyItem item in list2)
             {
-                item.GetData().Refresh();
+                item.GetData().Update();
             }
             base.BeforeRowsGUI();
         }
@@ -76,7 +76,7 @@
                 this.m_Items = new List<TreeViewItem>(elements.Length);
                 for (int i = 0; i < elements.Length; i++)
                 {
-                    SerializedPropertyItem item = new SerializedPropertyItem(elements[i].ObjectId(), 0, elements[i]);
+                    SerializedPropertyItem item = new SerializedPropertyItem(elements[i].objectId, 0, elements[i]);
                     this.m_Items.Add(item);
                 }
             }
@@ -95,11 +95,7 @@
             {
                 this.m_SelectionFilter = null;
             }
-            if (!this.m_bFilterDisable)
-            {
-                items = this.Filter(items);
-            }
-            List<TreeViewItem> rows = items.ToList<TreeViewItem>();
+            List<TreeViewItem> rows = this.Filter(items).ToList<TreeViewItem>();
             if (base.multiColumnHeader.sortedColumnIndex >= 0)
             {
                 this.Sort(rows, base.multiColumnHeader.sortedColumnIndex);
@@ -108,9 +104,6 @@
             TreeViewUtility.SetParentAndChildrenForItems(rows, root);
             return rows;
         }
-
-        protected override bool CanMultiSelect(TreeViewItem item) => 
-            true;
 
         private void CellGUI(Rect cellRect, SerializedPropertyItem item, int columnIndex, ref TreeView.RowGUIArgs args)
         {
@@ -126,53 +119,65 @@
             }
             else if (column.drawDelegate != null)
             {
-                SerializedProperty[] propertyArray = data.Props();
+                SerializedProperty[] properties = data.properties;
                 int num = (column.dependencyIndices == null) ? 0 : column.dependencyIndices.Length;
                 for (int i = 0; i < num; i++)
                 {
-                    this.m_ColumnsInternal[columnIndex].dependencyProps[i] = propertyArray[column.dependencyIndices[i]];
+                    this.m_ColumnsInternal[columnIndex].dependencyProps[i] = properties[column.dependencyIndices[i]];
                 }
-                EditorGUI.BeginChangeCheck();
-                SerializedProperty prop = data.Props()[columnIndex];
-                Profiler.BeginSample("SerializedPropertyTreeView.OnItemGUI.drawDelegate");
                 if (((args.item.id == base.state.lastClickedID) && base.HasFocus()) && (columnIndex == base.multiColumnHeader.state.visibleColumns[(base.multiColumnHeader.state.visibleColumns[0] != 0) ? 0 : 1]))
                 {
                     GUI.SetNextControlName(Styles.focusHelper);
                 }
+                SerializedProperty prop = data.properties[columnIndex];
+                EditorGUI.BeginChangeCheck();
+                Profiler.BeginSample("SerializedPropertyTreeView.OnItemGUI.drawDelegate");
                 column.drawDelegate(cellRect, prop, this.m_ColumnsInternal[columnIndex].dependencyProps);
                 Profiler.EndSample();
                 if (EditorGUI.EndChangeCheck())
                 {
-                    this.m_ChangedId = !column.filter.Active() ? this.m_ChangedId : GUIUtility.keyboardControl;
+                    this.m_ChangedId = ((column.filter == null) || !column.filter.Active()) ? this.m_ChangedId : GUIUtility.keyboardControl;
                     data.Store();
                     IList<int> selection = base.GetSelection();
-                    if (selection.Contains(data.ObjectId()))
+                    if (selection.Contains(data.objectId))
                     {
-                        IList<TreeViewItem> rowsFromIDs = base.GetRowsFromIDs(selection);
-                        foreach (TreeViewItem item2 in rowsFromIDs)
+                        IList<TreeViewItem> list2 = base.FindRows(selection);
+                        if (<>f__am$cache0 == null)
+                        {
+                            <>f__am$cache0 = r => ((SerializedPropertyItem) r).GetData().serializedObject.targetObject;
+                        }
+                        Undo.RecordObjects(Enumerable.Select<TreeViewItem, UnityEngine.Object>(list2, <>f__am$cache0).ToArray<UnityEngine.Object>(), "Modify Multiple Properties");
+                        foreach (TreeViewItem item2 in list2)
                         {
                             if (item2.id != args.item.id)
                             {
-                                ((SerializedPropertyItem) item2).GetData().Store(prop);
+                                SerializedPropertyDataStore.Data data2 = ((SerializedPropertyItem) item2).GetData();
+                                if (IsEditable(data2.serializedObject.targetObject))
+                                {
+                                    if (column.copyDelegate != null)
+                                    {
+                                        column.copyDelegate(data2.properties[columnIndex], prop);
+                                    }
+                                    else
+                                    {
+                                        DefaultDelegates.s_CopyDefault(data2.properties[columnIndex], prop);
+                                    }
+                                    data2.Store();
+                                }
                             }
                         }
                     }
                 }
+                Profiler.EndSample();
             }
-            Profiler.EndSample();
         }
 
         private Column Col(int idx) => 
             ((Column) base.multiColumnHeader.state.columns[idx]);
 
-        private int ColCnt() => 
-            base.multiColumnHeader.state.columns.Length;
-
         public void DeserializeState(string uid)
         {
             this.m_bFilterSelection = SessionState.GetBool(uid + Styles.serializeFilterSelection, false);
-            this.m_bFilterDisable = SessionState.GetBool(uid + Styles.serializeFilterDisable, false);
-            this.m_bFilterInvert = SessionState.GetBool(uid + Styles.serializeFilterInvert, false);
             for (int i = 0; i < base.multiColumnHeader.state.columns.Length; i++)
             {
                 SerializedPropertyFilters.IFilter filter = this.Col(i).filter;
@@ -199,7 +204,7 @@
 
         private IEnumerable<TreeViewItem> Filter(IEnumerable<TreeViewItem> rows)
         {
-            IEnumerable<TreeViewItem> second = rows;
+            IEnumerable<TreeViewItem> enumerable = rows;
             int length = this.m_ColumnsInternal.Length;
             for (int i = 0; i < length; i++)
             {
@@ -215,16 +220,16 @@
                             <Filter>c__AnonStorey1 storey2 = new <Filter>c__AnonStorey1 {
                                 f = (SerializedPropertyFilters.Name) storey.c.filter
                             };
-                            second = Enumerable.Where<TreeViewItem>(second, new Func<TreeViewItem, bool>(storey2.<>m__0));
+                            enumerable = Enumerable.Where<TreeViewItem>(enumerable, new Func<TreeViewItem, bool>(storey2.<>m__0));
                         }
                         else
                         {
-                            second = Enumerable.Where<TreeViewItem>(second, new Func<TreeViewItem, bool>(storey.<>m__0));
+                            enumerable = Enumerable.Where<TreeViewItem>(enumerable, new Func<TreeViewItem, bool>(storey.<>m__0));
                         }
                     }
                 }
             }
-            return (!this.m_bFilterInvert ? second : rows.Except<TreeViewItem>(second));
+            return enumerable;
         }
 
         public void FullReload()
@@ -244,6 +249,9 @@
             }
             return false;
         }
+
+        private static bool IsEditable(UnityEngine.Object target) => 
+            ((target.hideFlags & HideFlags.NotEditable) == HideFlags.None);
 
         public bool IsFilteredDirty() => 
             ((this.m_ChangedId != 0) && ((this.m_ChangedId != GUIUtility.keyboardControl) || !EditorGUIUtility.editingTextField));
@@ -267,13 +275,13 @@
             r.width = GUI.skin.label.CalcSize(Styles.filterSelection).x;
             EditorGUI.LabelField(r, Styles.filterSelection);
             r.width = 300f;
-            r.x = width - r.width;
-            for (int i = 0; i < this.ColCnt(); i++)
+            r.x = (width - r.width) + 10f;
+            for (int i = 0; i < base.multiColumnHeader.state.columns.Length; i++)
             {
                 if (this.IsColumnVisible(i))
                 {
                     Column column = this.Col(i);
-                    if (column.filter.GetType().Equals(typeof(SerializedPropertyFilters.Name)))
+                    if ((column.filter != null) && column.filter.GetType().Equals(typeof(SerializedPropertyFilters.Name)))
                     {
                         column.filter.OnGUI(r);
                     }
@@ -296,23 +304,6 @@
             base.Reload();
         }
 
-        public bool Refresh()
-        {
-            int num;
-            int num2;
-            IList<TreeViewItem> rows = this.GetRows();
-            base.GetFirstAndLastVisibleRows(out num, out num2);
-            bool flag = false;
-            if (num2 != -1)
-            {
-                for (int i = num; i <= num2; i++)
-                {
-                    flag = flag || ((SerializedPropertyItem) rows[i]).GetData().Refresh();
-                }
-            }
-            return flag;
-        }
-
         protected override void RowGUI(TreeView.RowGUIArgs args)
         {
             SerializedPropertyItem item = (SerializedPropertyItem) args.item;
@@ -330,8 +321,6 @@
         public void SerializeState(string uid)
         {
             SessionState.SetBool(uid + Styles.serializeFilterSelection, this.m_bFilterSelection);
-            SessionState.SetBool(uid + Styles.serializeFilterDisable, this.m_bFilterDisable);
-            SessionState.SetBool(uid + Styles.serializeFilterInvert, this.m_bFilterInvert);
             for (int i = 0; i < base.multiColumnHeader.state.columns.Length; i++)
             {
                 SerializedPropertyFilters.IFilter filter = this.Col(i).filter;
@@ -362,16 +351,16 @@
                 Comparison<TreeViewItem> comparison2;
                 if (storey.comp == DefaultDelegates.s_CompareName)
                 {
-                    if (<>f__am$cache0 == null)
-                    {
-                        <>f__am$cache0 = (lhs, rhs) => EditorUtility.NaturalCompare(((SerializedPropertyItem) lhs).GetData().name, ((SerializedPropertyItem) rhs).GetData().name);
-                    }
-                    comparison = <>f__am$cache0;
                     if (<>f__am$cache1 == null)
                     {
-                        <>f__am$cache1 = (lhs, rhs) => -EditorUtility.NaturalCompare(((SerializedPropertyItem) lhs).GetData().name, ((SerializedPropertyItem) rhs).GetData().name);
+                        <>f__am$cache1 = (lhs, rhs) => EditorUtility.NaturalCompare(((SerializedPropertyItem) lhs).GetData().name, ((SerializedPropertyItem) rhs).GetData().name);
                     }
-                    comparison2 = <>f__am$cache1;
+                    comparison = <>f__am$cache1;
+                    if (<>f__am$cache2 == null)
+                    {
+                        <>f__am$cache2 = (lhs, rhs) => -EditorUtility.NaturalCompare(((SerializedPropertyItem) lhs).GetData().name, ((SerializedPropertyItem) rhs).GetData().name);
+                    }
+                    comparison2 = <>f__am$cache2;
                 }
                 else
                 {
@@ -380,6 +369,23 @@
                 }
                 list.Sort(!flag ? comparison2 : comparison);
             }
+        }
+
+        public bool Update()
+        {
+            int num;
+            int num2;
+            IList<TreeViewItem> rows = this.GetRows();
+            base.GetFirstAndLastVisibleRows(out num, out num2);
+            bool flag = false;
+            if (num2 != -1)
+            {
+                for (int i = num; i <= num2; i++)
+                {
+                    flag = flag || ((SerializedPropertyItem) rows[i]).GetData().Update();
+                }
+            }
+            return flag;
         }
 
         [CompilerGenerated]
@@ -398,7 +404,7 @@
             internal int idx;
 
             internal bool <>m__0(TreeViewItem item) => 
-                this.c.filter.Filter(((SerializedPropertyTreeView.SerializedPropertyItem) item).GetData().Props()[this.idx]);
+                this.c.filter.Filter(((SerializedPropertyTreeView.SerializedPropertyItem) item).GetData().properties[this.idx]);
         }
 
         [CompilerGenerated]
@@ -408,21 +414,24 @@
             internal int sortIdx;
 
             internal int <>m__0(TreeViewItem lhs, TreeViewItem rhs) => 
-                this.comp(((SerializedPropertyTreeView.SerializedPropertyItem) lhs).GetData().Props()[this.sortIdx], ((SerializedPropertyTreeView.SerializedPropertyItem) rhs).GetData().Props()[this.sortIdx]);
+                this.comp(((SerializedPropertyTreeView.SerializedPropertyItem) lhs).GetData().properties[this.sortIdx], ((SerializedPropertyTreeView.SerializedPropertyItem) rhs).GetData().properties[this.sortIdx]);
 
             internal int <>m__1(TreeViewItem lhs, TreeViewItem rhs) => 
-                -this.comp(((SerializedPropertyTreeView.SerializedPropertyItem) lhs).GetData().Props()[this.sortIdx], ((SerializedPropertyTreeView.SerializedPropertyItem) rhs).GetData().Props()[this.sortIdx]);
+                -this.comp(((SerializedPropertyTreeView.SerializedPropertyItem) lhs).GetData().properties[this.sortIdx], ((SerializedPropertyTreeView.SerializedPropertyItem) rhs).GetData().properties[this.sortIdx]);
         }
 
         internal class Column : MultiColumnHeaderState.Column
         {
             public CompareEntry compareDelegate;
+            public CopyDelegate copyDelegate;
             public int[] dependencyIndices;
             public DrawEntry drawDelegate;
             public SerializedPropertyFilters.IFilter filter;
             public string propertyName;
 
             public delegate int CompareEntry(SerializedProperty lhs, SerializedProperty rhs);
+
+            public delegate void CopyDelegate(SerializedProperty target, SerializedProperty source);
 
             public delegate void DrawEntry(Rect r, SerializedProperty prop, SerializedProperty[] dependencies);
         }
@@ -441,6 +450,7 @@
             public static readonly SerializedPropertyTreeView.Column.CompareEntry s_CompareFloat = new SerializedPropertyTreeView.Column.CompareEntry(SerializedPropertyTreeView.DefaultDelegates.<s_CompareFloat>m__3);
             public static readonly SerializedPropertyTreeView.Column.CompareEntry s_CompareInt = new SerializedPropertyTreeView.Column.CompareEntry(SerializedPropertyTreeView.DefaultDelegates.<s_CompareInt>m__6);
             public static readonly SerializedPropertyTreeView.Column.CompareEntry s_CompareName = new SerializedPropertyTreeView.Column.CompareEntry(SerializedPropertyTreeView.DefaultDelegates.<s_CompareName>m__8);
+            public static readonly SerializedPropertyTreeView.Column.CopyDelegate s_CopyDefault = new SerializedPropertyTreeView.Column.CopyDelegate(SerializedPropertyTreeView.DefaultDelegates.<s_CopyDefault>m__9);
             public static readonly SerializedPropertyTreeView.Column.DrawEntry s_DrawCheckbox = new SerializedPropertyTreeView.Column.DrawEntry(SerializedPropertyTreeView.DefaultDelegates.<s_DrawCheckbox>m__1);
             public static readonly SerializedPropertyTreeView.Column.DrawEntry s_DrawDefault = new SerializedPropertyTreeView.Column.DrawEntry(SerializedPropertyTreeView.DefaultDelegates.<s_DrawDefault>m__0);
             public static readonly SerializedPropertyTreeView.Column.DrawEntry s_DrawName = new SerializedPropertyTreeView.Column.DrawEntry(SerializedPropertyTreeView.DefaultDelegates.<s_DrawName>m__2);
@@ -478,6 +488,12 @@
             [CompilerGenerated]
             private static int <s_CompareName>m__8(SerializedProperty lhs, SerializedProperty rhs) => 
                 0;
+
+            [CompilerGenerated]
+            private static void <s_CopyDefault>m__9(SerializedProperty target, SerializedProperty source)
+            {
+                target.serializedObject.CopyFromSerializedProperty(source);
+            }
 
             [CompilerGenerated]
             private static void <s_DrawCheckbox>m__1(Rect r, SerializedProperty prop, SerializedProperty[] dependencies)

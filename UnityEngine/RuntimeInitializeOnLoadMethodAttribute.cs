@@ -6,7 +6,8 @@
     using UnityEngine.Scripting;
 
     /// <summary>
-    /// <para>Allow an runtime class method to be initialized when Unity game loads runtime without action from the user.</para>
+    /// <para>Allow a runtime class method to be initialized when a game is loaded at runtime
+    /// without action from the user.</para>
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple=false)]
     public class RuntimeInitializeOnLoadMethodAttribute : PreserveAttribute
@@ -15,18 +16,20 @@
         private RuntimeInitializeLoadType <loadType>k__BackingField;
 
         /// <summary>
-        /// <para>Allow an runtime class method to be initialized when Unity game loads runtime without action from the user.</para>
+        /// <para>Creation of the runtime class used when scenes are loaded.</para>
         /// </summary>
-        /// <param name="loadType">RuntimeInitializeLoadType: Before or After scene is loaded.</param>
+        /// <param name="loadType">Determine whether methods are called before or after the
+        /// scene is loaded.</param>
         public RuntimeInitializeOnLoadMethodAttribute()
         {
             this.loadType = RuntimeInitializeLoadType.AfterSceneLoad;
         }
 
         /// <summary>
-        /// <para>Allow an runtime class method to be initialized when Unity game loads runtime without action from the user.</para>
+        /// <para>Creation of the runtime class used when scenes are loaded.</para>
         /// </summary>
-        /// <param name="loadType">RuntimeInitializeLoadType: Before or After scene is loaded.</param>
+        /// <param name="loadType">Determine whether methods are called before or after the
+        /// scene is loaded.</param>
         public RuntimeInitializeOnLoadMethodAttribute(RuntimeInitializeLoadType loadType)
         {
             this.loadType = loadType;

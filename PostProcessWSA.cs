@@ -269,7 +269,7 @@ internal abstract class PostProcessWSA : PostProcessWinRT
             }
         }
         creator.CreateSolutionFileFrom();
-        MetroVisualStudioSolutionHelper.WriteUnityCommonProps(Path.Combine(base.InstallPath, "UnityCommon.props"), base.PlayerPackage, base.InstallPath, base.SourceBuild);
+        MetroVisualStudioSolutionHelper.WriteUnityCommonProps(Path.Combine(base.InstallPath, "UnityCommon.props"), base.PlayerPackage, base.InstallPath, base.SourceBuild, EditorUserBuildSettings.wsaGenerateReferenceProjects);
         if (!base.SourceBuild)
         {
             this.CopyUnityTools();
@@ -379,10 +379,6 @@ internal abstract class PostProcessWSA : PostProcessWinRT
         base.StagingArea;
 
     protected abstract Version GetToolsVersion();
-    public override void RunAssemblyConverter()
-    {
-    }
-
     protected virtual Dictionary<WSASDK, LibraryCollection> TEMP_GetLibraryCollections() => 
         new Dictionary<WSASDK, LibraryCollection>(1) { { 
             base._sdk,

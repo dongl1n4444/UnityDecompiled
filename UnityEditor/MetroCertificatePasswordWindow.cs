@@ -82,7 +82,7 @@
 
         public static void Show(string path)
         {
-            MetroCertificatePasswordWindow[] windowArray = (MetroCertificatePasswordWindow[]) Resources.FindObjectsOfTypeAll(typeof(MetroCertificatePasswordWindow));
+            MetroCertificatePasswordWindow[] windowArray = (MetroCertificatePasswordWindow[]) UnityEngine.Resources.FindObjectsOfTypeAll(typeof(MetroCertificatePasswordWindow));
             MetroCertificatePasswordWindow window = (windowArray.Length <= 0) ? ScriptableObject.CreateInstance<MetroCertificatePasswordWindow>() : windowArray[0];
             window.path = path;
             window.password = string.Empty;

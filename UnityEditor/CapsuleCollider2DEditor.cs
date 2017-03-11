@@ -23,7 +23,7 @@
             this.m_BoundsHandle.radius = vector2.magnitude * 0.5f;
         }
 
-        protected override void CopyHandleSizeToCollider()
+        protected override bool CopyHandleSizeToCollider()
         {
             Vector3 up;
             Vector3 right;
@@ -45,7 +45,9 @@
             Vector3 vector7 = (Vector3) (base.ProjectOntoWorldPlane((Vector3) (localToWorldMatrix * right)).normalized * vector3.magnitude);
             worldVector = base.ProjectOntoColliderPlane(worldVector, localToWorldMatrix);
             vector7 = base.ProjectOntoColliderPlane(vector7, localToWorldMatrix);
+            Vector2 size = target.size;
             target.size = (Vector2) (localToWorldMatrix.inverse * (worldVector + vector7));
+            return (target.size != size);
         }
 
         protected override Quaternion GetHandleRotation()
@@ -91,7 +93,7 @@
             base.FinalizeInspectorGUI();
         }
 
-        protected override PrimitiveBoundsHandle boundHandle =>
+        protected override PrimitiveBoundsHandle boundsHandle =>
             this.m_BoundsHandle;
     }
 }

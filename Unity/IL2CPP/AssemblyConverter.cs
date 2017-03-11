@@ -51,10 +51,10 @@
         private static Func<AssemblyDefinition, bool> <>f__am$cache4;
         [CompilerGenerated]
         private static Func<AssemblyDefinition, IEnumerable<TypeDefinition>> <>f__am$cache5;
-        [CompilerGenerated]
-        private static Func<GenericInstanceType, TypeDefinition> <>f__am$cache6;
         [Inject]
         public static IAssemblyDependencies AssemblyDependencies;
+        [Inject]
+        public static IStatsService StatsService;
         [Inject]
         public static ITypeProviderService TypeProvider;
         [Inject]
@@ -78,9 +78,31 @@
             this._assemblyLoader = new AssemblyLoader(searchDirectories, applyWindowsRuntimeProjections);
         }
 
+        private void AddWindowsRuntimeTypeNames(ReadOnlyInflatedCollectionCollector readOnlyGenericsCollectionCollector, IInteropDataCollector interopDataCollector)
+        {
+            TypeDefinition definition = TypeProvider.OptionalResolve("System.Collections.Generic", "KeyValuePair`2", TypeProvider.Corlib.Name);
+            foreach (GenericInstanceType type in readOnlyGenericsCollectionCollector.TypeDeclarations)
+            {
+                TypeDefinition definition2 = type.Resolve();
+                if (definition2 == TypeProvider.IReferenceType)
+                {
+                    interopDataCollector.AddWindowsRuntimeTypeWithName(type, type.GetWindowsRuntimeTypeName());
+                    StatsService.RecordWindowsRuntimeBoxedType();
+                }
+                else if (definition2 == definition)
+                {
+                    TypeReference reference = WindowsRuntimeProjections.ProjectToWindowsRuntime(type);
+                    if (reference.IsComOrWindowsRuntimeInterface())
+                    {
+                        interopDataCollector.AddWindowsRuntimeTypeWithName(type, reference.GetWindowsRuntimeTypeName());
+                    }
+                }
+            }
+        }
+
         private void Apply()
         {
-            InflatedCollectionCollector collector2;
+            ReadOnlyInflatedCollectionCollector collector2;
             TypeDefinition[] definitionArray;
             InteropDataCollector interopDataCollector = new InteropDataCollector();
             using (TinyProfiler.Section("PreProcessStage", ""))
@@ -89,15 +111,11 @@
             }
             MethodCollector methodCollector = new MethodCollector();
             AttributeCollection attributeCollection = new AttributeCollection();
-            MetadataCollector metadataCollection = new MetadataCollector(interopDataCollector);
+            MetadataCollector methodVerifier = new MetadataCollector(interopDataCollector);
             SymbolsCollector symbolsCollector = new SymbolsCollector();
             using (TinyProfiler.Section("MetadataCollector", ""))
             {
-                metadataCollection.AddAssemblies(this._assembliesOrderedByDependency);
-            }
-            using (TinyProfiler.Section("WriteWindowsRuntimeProjectionCCWs", ""))
-            {
-                this.WriteWindowsRuntimeProjectionCCWs(collector2, interopDataCollector);
+                methodVerifier.AddAssemblies(this._assembliesOrderedByDependency);
             }
             using (TinyProfiler.Section("AllAssemblyConversion", ""))
             {
@@ -105,16 +123,16 @@
                 {
                     using (TinyProfiler.Section("Convert", definition.Name.Name))
                     {
-                        this.Convert(definition, collector2.AsReadOnly(), attributeCollection, methodCollector, interopDataCollector, metadataCollection, symbolsCollector);
+                        this.Convert(definition, collector2, attributeCollection, methodCollector, methodVerifier, interopDataCollector, methodVerifier, symbolsCollector);
                     }
                 }
             }
             methodCollector.Complete();
             using (TinyProfiler.Section("WriteGenerics", ""))
             {
-                this.WriteGenerics(collector2.AsReadOnly(), definitionArray, new NullMethodCollector(), interopDataCollector, metadataCollection, symbolsCollector);
+                this.WriteGenerics(collector2, definitionArray, methodVerifier, new NullMethodCollector(), interopDataCollector, methodVerifier, symbolsCollector);
             }
-            interopDataCollector.Complete(metadataCollection);
+            interopDataCollector.Complete(methodVerifier);
             using (TinyProfiler.Section("VariousInvokers", ""))
             {
                 this._virtualInvokerCollector.Write(this.GetPathFor("GeneratedVirtualInvokers", "h"));
@@ -128,7 +146,7 @@
             }
             using (TinyProfiler.Section("Metadata", "Global"))
             {
-                SourceWriter.WriteCollectedMetadata(collector2, this._assembliesOrderedByDependency, this._outputDir, this._dataFolder, metadataCollection, attributeCollection, this._vTableBuilder, methodCollector, interopDataCollector);
+                SourceWriter.WriteCollectedMetadata(this._assembliesOrderedByDependency, this._outputDir, this._dataFolder, methodVerifier, attributeCollection, this._vTableBuilder, methodCollector, interopDataCollector);
             }
             using (TinyProfiler.Section("Copy Etc", ""))
             {
@@ -189,10 +207,10 @@
             new GenericVirtualMethodCollector().Collect(allGenerics, allTypeDefinitions, this._vTableBuilder);
         }
 
-        private void Convert(AssemblyDefinition assemblyDefinition, ReadOnlyInflatedCollectionCollector allGenerics, AttributeCollection attributeCollection, MethodCollector methodCollector, IInteropDataCollector interopDataCollector, IMetadataCollection metadataCollection, SymbolsCollector symbolsCollector)
+        private void Convert(AssemblyDefinition assemblyDefinition, ReadOnlyInflatedCollectionCollector allGenerics, AttributeCollection attributeCollection, MethodCollector methodCollector, IMethodVerifier methodVerifier, IInteropDataCollector interopDataCollector, IMetadataCollection metadataCollection, SymbolsCollector symbolsCollector)
         {
             TypeDefinition[] typeList = GetAllTypes(assemblyDefinition.MainModule.Types).ToArray<TypeDefinition>();
-            new SourceWriter(this._vTableBuilder, this._debuggerSupport, this._outputDir).Write(assemblyDefinition, allGenerics, this._outputDir, typeList, attributeCollection, methodCollector, interopDataCollector, metadataCollection, symbolsCollector);
+            new SourceWriter(this._vTableBuilder, this._debuggerSupport, this._outputDir).Write(assemblyDefinition, allGenerics, this._outputDir, typeList, attributeCollection, methodCollector, methodVerifier, interopDataCollector, metadataCollection, symbolsCollector);
         }
 
         public static void ConvertAssemblies(NPath[] assemblies, NPath outputDir, NPath dataFolder, NPath symbolsFolder)
@@ -280,8 +298,9 @@
             }
         }
 
-        private void PreProcessStage(IInteropDataCollector interopDataCollector, out InflatedCollectionCollector genericsCollectionCollector, out TypeDefinition[] allTypeDefinitions)
+        private void PreProcessStage(IInteropDataCollector interopDataCollector, out ReadOnlyInflatedCollectionCollector readOnlyGenericsCollectionCollector, out TypeDefinition[] allTypeDefinitions)
         {
+            InflatedCollectionCollector collector;
             using (TinyProfiler.Section("Collect assemblies to convert", ""))
             {
                 this.CollectAssembliesToConvert();
@@ -370,7 +389,7 @@
             }
             using (TinyProfiler.Section("GenericsCollector.Collect", ""))
             {
-                genericsCollectionCollector = GenericsCollector.Collect(interopDataCollector, this._assembliesOrderedByDependency);
+                collector = GenericsCollector.Collect(interopDataCollector, this._assembliesOrderedByDependency);
             }
             if (<>f__am$cache5 == null)
             {
@@ -379,7 +398,12 @@
             allTypeDefinitions = GetAllTypes(this._assembliesOrderedByDependency.SelectMany<AssemblyDefinition, TypeDefinition>(<>f__am$cache5)).ToArray<TypeDefinition>();
             using (TinyProfiler.Section("CollectGenericVirtualMethods.Collect", ""))
             {
-                this.CollectGenericVirtualMethods(genericsCollectionCollector, allTypeDefinitions);
+                this.CollectGenericVirtualMethods(collector, allTypeDefinitions);
+            }
+            readOnlyGenericsCollectionCollector = collector.AsReadOnly();
+            using (TinyProfiler.Section("Add Windows Runtime type names", ""))
+            {
+                this.AddWindowsRuntimeTypeNames(readOnlyGenericsCollectionCollector, interopDataCollector);
             }
         }
 
@@ -401,41 +425,9 @@
             }
         }
 
-        private void WriteGenerics(ReadOnlyInflatedCollectionCollector allGenerics, IEnumerable<TypeDefinition> allTypeDefinitions, IMethodCollector methodCollector, IInteropDataCollector interopDataCollector, IMetadataCollection metadataCollection, SymbolsCollector lineNumberCollector)
+        private void WriteGenerics(ReadOnlyInflatedCollectionCollector allGenerics, IEnumerable<TypeDefinition> allTypeDefinitions, IMethodVerifier methodVerifier, IMethodCollector methodCollector, IInteropDataCollector interopDataCollector, IMetadataCollection metadataCollection, SymbolsCollector lineNumberCollector)
         {
-            new SourceWriter(this._vTableBuilder, this._debuggerSupport, this._outputDir).WriteGenerics(allGenerics, allTypeDefinitions, methodCollector, interopDataCollector, metadataCollection, lineNumberCollector);
-        }
-
-        private void WriteWindowsRuntimeProjectionCCWs(InflatedCollectionCollector genericsCollectionCollector, IInteropDataCollector interopDataCollector)
-        {
-            foreach (TypeDefinition definition in WindowsRuntimeProjections.GetSupportedProjectedInterfacesCLR())
-            {
-                interopDataCollector.AddGuid(definition);
-            }
-            string[] append = new string[] { "Il2CppWindowsRuntimeCCW.cpp" };
-            using (SourceCodeWriter writer = new SourceCodeWriter(this._outputDir.Combine(append)))
-            {
-                writer.AddCodeGenIncludes();
-                foreach (KeyValuePair<TypeDefinition, WindowsRuntimeProjectedCCWWriter> pair in WindowsRuntimeProjections.GetAllNonGenericCCWMethodDefinitionsWriters())
-                {
-                    pair.Value(pair.Key, writer);
-                }
-                if (<>f__am$cache6 == null)
-                {
-                    <>f__am$cache6 = i => i.Resolve();
-                }
-                foreach (IGrouping<TypeDefinition, GenericInstanceType> grouping in genericsCollectionCollector.WindowsRuntimeCCWs.Items.GroupBy<GenericInstanceType, TypeDefinition>(<>f__am$cache6))
-                {
-                    WindowsRuntimeProjectedCCWWriter cCWWriter = WindowsRuntimeProjections.GetCCWWriter(grouping.Key, false);
-                    if (cCWWriter != null)
-                    {
-                        foreach (GenericInstanceType type in grouping)
-                        {
-                            cCWWriter(type, writer);
-                        }
-                    }
-                }
-            }
+            new SourceWriter(this._vTableBuilder, this._debuggerSupport, this._outputDir).WriteGenerics(allGenerics, allTypeDefinitions, methodVerifier, methodCollector, interopDataCollector, metadataCollection, lineNumberCollector);
         }
 
         [CompilerGenerated]

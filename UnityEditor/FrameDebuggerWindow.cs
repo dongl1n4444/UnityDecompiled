@@ -174,41 +174,49 @@
 
         private void DrawEventComputeDispatchInfo(FrameDebuggerEventData curEventData)
         {
-            GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.ExpandWidth(false) };
-            if (GUILayout.Button("Compute Shader: " + curEventData.csName + " kernel " + curEventData.csName, GUI.skin.label, options))
+            string str;
+            EditorGUILayout.LabelField("Compute Shader", curEventData.csName, new GUILayoutOption[0]);
+            if (GUI.Button(GUILayoutUtility.GetLastRect(), GUIContent.none, GUI.skin.label))
             {
                 EditorGUIUtility.PingObject(curEventData.csInstanceID);
                 Event.current.Use();
             }
+            EditorGUILayout.LabelField("Kernel", curEventData.csKernel, new GUILayoutOption[0]);
             if (((curEventData.csThreadGroupsX != 0) || (curEventData.csThreadGroupsY != 0)) || (curEventData.csThreadGroupsZ != 0))
             {
-                GUILayout.Label($"Thread groups: {curEventData.csThreadGroupsX}x{curEventData.csThreadGroupsY}x{curEventData.csThreadGroupsZ}", new GUILayoutOption[0]);
+                str = $"{curEventData.csThreadGroupsX}x{curEventData.csThreadGroupsY}x{curEventData.csThreadGroupsZ}";
             }
             else
             {
-                GUILayout.Label("Thread groups: indirect dispatch", new GUILayoutOption[0]);
+                str = "indirect dispatch";
             }
+            EditorGUILayout.LabelField("Thread Groups", str, new GUILayoutOption[0]);
         }
 
         private void DrawEventDrawCallInfo(FrameDebuggerEventData curEventData)
         {
-            int shaderPassIndex = curEventData.shaderPassIndex;
-            GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-            object[] objArray1 = new object[] { "Shader: ", curEventData.shaderName, " pass #", shaderPassIndex };
-            string text = string.Concat(objArray1);
-            GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.ExpandWidth(false) };
-            if (GUILayout.Button(new GUIContent(text, "Click to select shader"), GUI.skin.label, options))
+            string str = curEventData.shaderName + ", pass #" + curEventData.shaderPassIndex;
+            EditorGUILayout.LabelField("Shader", str, new GUILayoutOption[0]);
+            if (GUI.Button(GUILayoutUtility.GetLastRect(), Styles.selectShaderTooltip, GUI.skin.label))
             {
                 EditorGUIUtility.PingObject(curEventData.shaderInstanceID);
                 Event.current.Use();
             }
-            GUILayoutOption[] optionArray2 = new GUILayoutOption[] { GUILayout.ExpandWidth(false) };
-            if (GUILayout.Button(new GUIContent(curEventData.shaderKeywords, "Click to copy to clipboard."), GUI.skin.label, optionArray2))
+            if (!string.IsNullOrEmpty(curEventData.shaderKeywords))
             {
-                EditorGUIUtility.systemCopyBuffer = text + Environment.NewLine + curEventData.shaderKeywords;
+                EditorGUILayout.LabelField("Keywords", curEventData.shaderKeywords, new GUILayoutOption[0]);
+                if (GUI.Button(GUILayoutUtility.GetLastRect(), Styles.copyToClipboardTooltip, GUI.skin.label))
+                {
+                    EditorGUIUtility.systemCopyBuffer = str + Environment.NewLine + curEventData.shaderKeywords;
+                }
             }
-            GUILayout.EndHorizontal();
             this.DrawStates(curEventData);
+            if (curEventData.batchBreakCause > 1)
+            {
+                GUILayout.Space(10f);
+                GUILayout.Label(Styles.causeOfNewDrawCallLabel, EditorStyles.boldLabel, new GUILayoutOption[0]);
+                GUILayout.Label(styles.batchBreakCauses[curEventData.batchBreakCause], new GUILayoutOption[0]);
+            }
             GUILayout.Space(15f);
             this.m_AdditionalInfo = (ShowAdditionalInfo) GUILayout.Toolbar((int) this.m_AdditionalInfo, this.m_AdditionalInfoGuiContents, new GUILayoutOption[0]);
             switch (this.m_AdditionalInfo)
@@ -216,8 +224,8 @@
                 case ShowAdditionalInfo.Preview:
                     if (!this.DrawEventMesh(curEventData))
                     {
-                        GUILayout.Label("Vertices: " + curEventData.vertexCount, new GUILayoutOption[0]);
-                        GUILayout.Label("Indices: " + curEventData.indexCount, new GUILayoutOption[0]);
+                        EditorGUILayout.LabelField("Vertices", curEventData.vertexCount.ToString(), new GUILayoutOption[0]);
+                        EditorGUILayout.LabelField("Indices", curEventData.indexCount.ToString(), new GUILayoutOption[0]);
                     }
                     break;
 
@@ -322,7 +330,7 @@
                 {
                     rtCount = (short) (rtCount + 1);
                 }
-                GUILayout.Label("RenderTarget: " + cur.rtName, EditorStyles.boldLabel, new GUILayoutOption[0]);
+                EditorGUILayout.LabelField("RenderTarget", cur.rtName, new GUILayoutOption[0]);
                 GUILayout.BeginHorizontal(EditorStyles.toolbar, new GUILayoutOption[0]);
                 EditorGUI.BeginChangeCheck();
                 using (new EditorGUI.DisabledScope(rtCount <= 1))
@@ -497,56 +505,61 @@
             FrameDebuggerBlendState blendState = curEventData.blendState;
             FrameDebuggerRasterState rasterState = curEventData.rasterState;
             FrameDebuggerDepthState depthState = curEventData.depthState;
-            string text = $"Blend {blendState.srcBlend} {blendState.dstBlend}";
+            string str = $"{blendState.srcBlend} {blendState.dstBlend}";
             if ((blendState.srcBlendAlpha != blendState.srcBlend) || (blendState.dstBlendAlpha != blendState.dstBlend))
             {
-                text = text + $", {blendState.srcBlendAlpha} {blendState.dstBlendAlpha}";
+                str = str + $", {blendState.srcBlendAlpha} {blendState.dstBlendAlpha}";
             }
+            EditorGUILayout.LabelField("Blend", str, new GUILayoutOption[0]);
             if ((blendState.blendOp != BlendOp.Add) || (blendState.blendOpAlpha != BlendOp.Add))
             {
+                string str2;
                 if (blendState.blendOp == blendState.blendOpAlpha)
                 {
-                    text = text + $" BlendOp {blendState.blendOp}";
+                    str2 = blendState.blendOp.ToString();
                 }
                 else
                 {
-                    text = text + $" BlendOp {blendState.blendOp}, {blendState.blendOpAlpha}";
+                    str2 = $"{blendState.blendOp}, {blendState.blendOpAlpha}";
                 }
+                EditorGUILayout.LabelField("BlendOp", str2, new GUILayoutOption[0]);
             }
             if (blendState.writeMask != 15)
             {
-                text = text + " ColorMask ";
+                string str3 = "";
                 if (blendState.writeMask == 0)
                 {
-                    text = text + '0';
+                    str3 = str3 + '0';
                 }
                 else
                 {
                     if ((blendState.writeMask & 2) != 0)
                     {
-                        text = text + 'R';
+                        str3 = str3 + 'R';
                     }
                     if ((blendState.writeMask & 4) != 0)
                     {
-                        text = text + 'G';
+                        str3 = str3 + 'G';
                     }
                     if ((blendState.writeMask & 8) != 0)
                     {
-                        text = text + 'B';
+                        str3 = str3 + 'B';
                     }
                     if ((blendState.writeMask & 1) != 0)
                     {
-                        text = text + 'A';
+                        str3 = str3 + 'A';
                     }
                 }
+                EditorGUILayout.LabelField("ColorMask", str3, new GUILayoutOption[0]);
             }
-            GUILayout.Label(text, EditorStyles.miniLabel, new GUILayoutOption[0]);
-            string str2 = $"ZTest {depthState.depthFunc} ZWrite {(depthState.depthWrite != 0) ? "On" : "Off"} Cull {rasterState.cullMode}";
+            EditorGUILayout.LabelField("ZTest", depthState.depthFunc.ToString(), new GUILayoutOption[0]);
+            EditorGUILayout.LabelField("ZWrite", (depthState.depthWrite != 0) ? "On" : "Off", new GUILayoutOption[0]);
+            EditorGUILayout.LabelField("Cull", rasterState.cullMode.ToString(), new GUILayoutOption[0]);
             if ((rasterState.slopeScaledDepthBias != 0f) || (rasterState.depthBias != 0))
             {
-                str2 = str2 + $" Offset {rasterState.slopeScaledDepthBias}, {rasterState.depthBias}";
+                string str4 = $"{rasterState.slopeScaledDepthBias}, {rasterState.depthBias}";
+                EditorGUILayout.LabelField("Offset", str4, new GUILayoutOption[0]);
             }
-            GUILayout.Label(str2, EditorStyles.miniLabel, new GUILayoutOption[0]);
         }
 
         private bool DrawToolbar(FrameDebuggerEvent[] descs)
@@ -645,7 +658,7 @@
         {
             if (this.m_WireMaterial != null)
             {
-                Object.DestroyImmediate(this.m_WireMaterial, true);
+                UnityEngine.Object.DestroyImmediate(this.m_WireMaterial, true);
             }
             if (this.m_PreviewUtility != null)
             {
@@ -822,7 +835,7 @@
             }
         }
 
-        [MenuItem("Window/Frame Debugger", false, 0x834)]
+        [UnityEditor.MenuItem("Window/Frame Debugger", false, 0x834)]
         public static FrameDebuggerWindow ShowFrameDebuggerWindow()
         {
             FrameDebuggerWindow window = EditorWindow.GetWindow(typeof(FrameDebuggerWindow)) as FrameDebuggerWindow;
@@ -880,8 +893,11 @@
 
         internal class Styles
         {
+            public readonly string[] batchBreakCauses;
+            public static readonly GUIContent causeOfNewDrawCallLabel = EditorGUIUtility.TextContent("Why this draw call can't be batched with the previous one");
             public static readonly GUIContent channelHeader = EditorGUIUtility.TextContent("Channels|Which render target color channels to show");
             public static readonly GUIContent[] channelLabels = new GUIContent[] { EditorGUIUtility.TextContent("All|Show all (RGB) color channels"), EditorGUIUtility.TextContent("R|Show red channel only"), EditorGUIUtility.TextContent("G|Show green channel only"), EditorGUIUtility.TextContent("B|Show blue channel only"), EditorGUIUtility.TextContent("A|Show alpha channel only") };
+            public static readonly GUIContent copyToClipboardTooltip = EditorGUIUtility.TextContent("|Click to copy shader and keywords text to clipboard.");
             public static readonly GUIContent depthLabel = EditorGUIUtility.TextContent("Depth|Show depth buffer");
             public GUIStyle entryEven = "OL EntryBackEven";
             public GUIStyle entryOdd = "OL EntryBackOdd";
@@ -895,6 +911,7 @@
             public GUIStyle rowText = "OL Label";
             public GUIStyle rowTextRight = new GUIStyle("OL Label");
             public static readonly string[] s_ColumnNames = new string[] { "#", "Type", "Vertices", "Indices" };
+            public static readonly GUIContent selectShaderTooltip = EditorGUIUtility.TextContent("|Click to select shader");
 
             public Styles()
             {
@@ -908,6 +925,7 @@
                 {
                     this.headerContent[i] = EditorGUIUtility.TextContent(s_ColumnNames[i]);
                 }
+                this.batchBreakCauses = FrameDebuggerUtility.GetBatchBreakCauseStrings();
             }
         }
     }

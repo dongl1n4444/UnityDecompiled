@@ -25,7 +25,7 @@
         [CompilerGenerated]
         private static Func<Assembly, bool> <>f__am$cache2;
         [CompilerGenerated]
-        private static Func<Assembly, Type> <>f__am$cache3;
+        private static Func<Assembly, System.Type> <>f__am$cache3;
         [CompilerGenerated]
         private static Func<KeyValuePair<string, PackageFileData>, bool> <>f__am$cache4;
         [CompilerGenerated]
@@ -33,7 +33,7 @@
         [CompilerGenerated]
         private static Func<KeyValuePair<string, PackageFileData>, bool> <>f__am$cache6;
         [CompilerGenerated]
-        private static Action <>f__mg$cache0;
+        private static System.Action <>f__mg$cache0;
         [CompilerGenerated]
         private static Func<Assembly, IEnumerable<IPlatformSupportModule>> <>f__mg$cache1;
         [NonSerialized]
@@ -51,9 +51,9 @@
         {
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Action(ModuleManager.OnActiveBuildTargetChanged);
+                <>f__mg$cache0 = new System.Action(ModuleManager.OnActiveBuildTargetChanged);
             }
-            EditorUserBuildSettings.activeBuildTargetChanged = (Action) Delegate.Combine(EditorUserBuildSettings.activeBuildTargetChanged, <>f__mg$cache0);
+            EditorUserBuildSettings.activeBuildTargetChanged = (System.Action) Delegate.Combine(EditorUserBuildSettings.activeBuildTargetChanged, <>f__mg$cache0);
         }
 
         private static void ChangeActivePlatformModuleTo(string target)
@@ -484,12 +484,12 @@
                 }
                 else
                 {
-                    Debug.LogError("Failed to load package manager");
+                    UnityEngine.Debug.LogError("Failed to load package manager");
                 }
             }
         }
 
-        private static bool InitializePackageManager(PackageInfo package)
+        private static bool InitializePackageManager(Unity.DataContract.PackageInfo package)
         {
             if (<>f__am$cache4 == null)
             {
@@ -508,7 +508,7 @@
             return InitializePackageManager(InternalEditorUtility.LoadAssemblyWrapper(Path.GetFileName(str), Path.Combine(package.basePath, str)), package);
         }
 
-        private static bool InitializePackageManager(Assembly assembly, PackageInfo package)
+        private static bool InitializePackageManager(Assembly assembly, Unity.DataContract.PackageInfo package)
         {
             s_PackageManager = AssemblyHelper.FindImplementors<IPackageManagerModule>(assembly).FirstOrDefault<IPackageManagerModule>();
             if (s_PackageManager == null)
@@ -522,7 +522,7 @@
             }
             else
             {
-                PackageInfo info = new PackageInfo {
+                Unity.DataContract.PackageInfo info = new Unity.DataContract.PackageInfo {
                     basePath = Path.GetDirectoryName(location)
                 };
                 package = info;
@@ -531,7 +531,7 @@
             s_PackageManager.editorInstallPath = EditorApplication.applicationContentsPath;
             s_PackageManager.unityVersion = (string) new PackageVersion(Application.unityVersion);
             s_PackageManager.Initialize();
-            foreach (PackageInfo info2 in s_PackageManager.playbackEngines)
+            foreach (Unity.DataContract.PackageInfo info2 in s_PackageManager.playbackEngines)
             {
                 BuildTargetGroup group;
                 BuildTarget target;
@@ -548,7 +548,7 @@
                         if (!File.Exists(Path.Combine(info2.basePath, pair.Key).NormalizePath()))
                         {
                             object[] args = new object[] { info2.basePath, info2.name };
-                            Debug.LogWarningFormat("Missing assembly \t{0} for {1}. Player support may be incomplete.", args);
+                            UnityEngine.Debug.LogWarningFormat("Missing assembly \t{0} for {1}. Player support may be incomplete.", args);
                         }
                         else
                         {
@@ -611,7 +611,7 @@
 
         private static void LoadUnityExtensions()
         {
-            foreach (PackageInfo info in s_PackageManager.unityExtensions)
+            foreach (Unity.DataContract.PackageInfo info in s_PackageManager.unityExtensions)
             {
                 object[] arg = new object[] { info.name, info.version, info.unityVersion, info.basePath };
                 Console.WriteLine("Setting {0} v{1} for Unity v{2} to {3}", arg);
@@ -625,7 +625,7 @@
                     if (!File.Exists(path))
                     {
                         object[] args = new object[] { pair.Key, info.name };
-                        Debug.LogWarningFormat("Missing assembly \t{0} for {1}. Extension support may be incomplete.", args);
+                        UnityEngine.Debug.LogWarningFormat("Missing assembly \t{0} for {1}. Extension support may be incomplete.", args);
                     }
                     else
                     {
@@ -675,7 +675,7 @@
 
         private static void RegisterPackageManager()
         {
-            PackageInfo info;
+            Unity.DataContract.PackageInfo info;
             s_EditorModules = new List<IEditorModule>();
             try
             {
@@ -701,7 +701,7 @@
             {
                 <>f__am$cache3 = a => a.GetType("Unity.PackageManager.Locator");
             }
-            Type type = Enumerable.Select<Assembly, Type>(Enumerable.Where<Assembly>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache2), <>f__am$cache3).FirstOrDefault<Type>();
+            System.Type type = Enumerable.Select<Assembly, System.Type>(Enumerable.Where<Assembly>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache2), <>f__am$cache3).FirstOrDefault<System.Type>();
             try
             {
                 object[] args = new object[2];
@@ -718,7 +718,7 @@
             try
             {
                 string[] textArray2 = new string[] { Application.unityVersion };
-                info = type.InvokeMember("GetPackageManager", BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Static, null, null, textArray2) as PackageInfo;
+                info = type.InvokeMember("GetPackageManager", BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Static, null, null, textArray2) as Unity.DataContract.PackageInfo;
                 if (info == null)
                 {
                     Console.WriteLine("No package manager found!");
@@ -781,9 +781,12 @@
         internal static void ShutdownPlatformSupportModules()
         {
             DeactivateActivePlatformModule();
-            foreach (IPlatformSupportModule module in platformSupportModules)
+            if (s_PlatformModules != null)
             {
-                module.OnUnload();
+                foreach (IPlatformSupportModule module in s_PlatformModules)
+                {
+                    module.OnUnload();
+                }
             }
         }
 
@@ -808,7 +811,7 @@
             }
             catch
             {
-                Debug.LogWarning($"Couldn't find build target for {targetString}");
+                UnityEngine.Debug.LogWarning($"Couldn't find build target for {targetString}");
             }
             return false;
         }
@@ -835,6 +838,19 @@
         }
 
         internal static IEnumerable<IPlatformSupportModule> platformSupportModules
+        {
+            get
+            {
+                Initialize();
+                if (s_PlatformModules == null)
+                {
+                    RegisterPlatformSupportModules();
+                }
+                return s_PlatformModules;
+            }
+        }
+
+        internal static IEnumerable<IPlatformSupportModule> platformSupportModulesDontRegister
         {
             get
             {

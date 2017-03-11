@@ -214,7 +214,7 @@
         {
             if (!this.m_GlobalScale.hasMultipleDifferentValues && (base.targets.Length == 1))
             {
-                Object[] targets = base.targets;
+                UnityEngine.Object[] targets = base.targets;
                 for (int i = 0; i < targets.Length; i++)
                 {
                     object obj2 = targets[i];

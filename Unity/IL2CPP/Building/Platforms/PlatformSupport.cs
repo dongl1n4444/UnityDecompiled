@@ -16,6 +16,8 @@
     {
         [CompilerGenerated]
         private static Func<Type, bool> <>f__am$cache0;
+        [CompilerGenerated]
+        private static Func<Type, bool> <>f__am$cache1;
 
         protected PlatformSupport()
         {
@@ -23,18 +25,26 @@
 
         private static IEnumerable<Type> AllTypes()
         {
-            IEnumerable<Type> first = new Type[0];
+            List<Type> list = new List<Type>();
             foreach (Assembly assembly in AppDomainPortable.GetAllAssembliesInCurrentAppDomainPortable())
             {
                 try
                 {
-                    first = first.Concat<Type>(assembly.GetTypesPortable());
+                    list.AddRange(assembly.GetTypesPortable());
                 }
-                catch (ReflectionTypeLoadException)
+                catch (ReflectionTypeLoadException exception)
                 {
+                    if (exception.Types != null)
+                    {
+                        if (<>f__am$cache1 == null)
+                        {
+                            <>f__am$cache1 = t => t != null;
+                        }
+                        list.AddRange(exception.Types.Where<Type>(<>f__am$cache1));
+                    }
                 }
             }
-            return first;
+            return list;
         }
 
         public static bool Available(RuntimePlatform runtimePlatform)
@@ -75,7 +85,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = t => (typeof(PlatformSupport).IsAssignableFrom(t) && !t.IsAbstractPortable()) && !t.IsGenericTypePortable();
+                <>f__am$cache0 = t => (typeof(PlatformSupport).IsAssignableFromPortable(t) && !t.IsAbstractPortable()) && !t.IsGenericTypePortable();
             }
             IEnumerable<Type> enumerable = AllTypes().Where<Type>(<>f__am$cache0);
             foreach (Type type in enumerable)

@@ -14,7 +14,7 @@
     using UnityEngine.TestTools.NUnitExtensions;
     using UnityEngine.TestTools.Utils;
 
-    [Serializable]
+    [Serializable, AddComponentMenu("")]
     internal class PlaymodeTestsController : MonoBehaviour
     {
         internal const string kPlaymodeTestControllerName = "Code-based tests runner";
@@ -50,17 +50,18 @@
             internal bool $disposing;
             internal int $PC;
             internal PlaymodeTestsController $this;
-            internal CoroutineRunner <cr>__3;
-            internal LogScope <logCollector>__2;
-            internal UnityTestAssemblyRunner <runner>__1;
-            internal IEnumerator <testEnum>__3;
-            internal TestListUtil <testListUtil>__1;
+            internal CoroutineRunner <cr>__2;
+            internal bool <enableUnityTest>__0;
+            internal LogScope <logCollector>__1;
+            internal UnityTestAssemblyRunner <runner>__0;
+            internal IEnumerator <testEnum>__2;
+            internal TestAssemblyProvider <testListUtil>__0;
 
             private void <>__Finally0()
             {
-                if (this.<logCollector>__2 != null)
+                if (this.<logCollector>__1 != null)
                 {
-                    this.<logCollector>__2.Dispose();
+                    this.<logCollector>__1.Dispose();
                 }
             }
 
@@ -103,29 +104,33 @@
                         {
                             this.$PC = 1;
                         }
-                        goto Label_02F1;
+                        goto Label_0337;
 
                     case 1:
                         break;
 
                     case 2:
-                        goto Label_02BD;
+                        goto Label_02F8;
 
                     case 3:
                     case 4:
-                        goto Label_019A;
+                        goto Label_01AA;
 
                     default:
-                        goto Label_02EF;
+                        goto Label_0335;
                 }
-                this.<testListUtil>__1 = new TestListUtil();
-                this.<runner>__1 = new UnityTestAssemblyRunner(this.<testListUtil>__1.GetNUnitTestBuilder(TestPlatform.PlayMode));
-                Reflect.MethodCallWrapper = new Func<Func<object>, object>(ActionDelegator.instance.Delegate);
-                this.<runner>__1.Load(this.<testListUtil>__1.GetUserAssemblies(false).ToArray<Assembly>(), this.<testListUtil>__1.GetNUnitTestBuilderSettings(TestPlatform.PlayMode));
-                this.$this.runStartedEvent.Invoke(this.<runner>__1.LoadedTest);
-                this.<runner>__1.RunAsync(new TestListenerWrapper(this.$this.testStartedEvent, this.$this.testFinishedEvent), this.$this.settings.filter.BuildNUnitFilter());
-            Label_02BD:
-                while (!this.<runner>__1.IsTestComplete)
+                this.<testListUtil>__0 = new TestAssemblyProvider();
+                this.<runner>__0 = new UnityTestAssemblyRunner(UnityTestAssemblyBuilder.GetNUnitTestBuilder(TestPlatform.PlayMode));
+                this.<enableUnityTest>__0 = UnityTestAttribute.IsSupportedOnPlatform();
+                if (this.<enableUnityTest>__0)
+                {
+                    Reflect.MethodCallWrapper = new Func<Func<object>, object>(ActionDelegator.instance.Delegate);
+                }
+                this.<runner>__0.Load(this.<testListUtil>__0.GetUserAssemblies(false).ToArray<Assembly>(), UnityTestAssemblyBuilder.GetNUnitTestBuilderSettings(TestPlatform.PlayMode));
+                this.$this.runStartedEvent.Invoke(this.<runner>__0.LoadedTest);
+                this.<runner>__0.RunAsync(new TestListenerWrapper(this.$this.testStartedEvent, this.$this.testFinishedEvent, this.<enableUnityTest>__0), this.$this.settings.filter.BuildNUnitFilter());
+            Label_02F8:
+                while (this.<enableUnityTest>__0 && !this.<runner>__0.IsTestComplete)
                 {
                     if (ActionDelegator.instance.HasAction())
                     {
@@ -138,44 +143,54 @@
                         {
                             this.$PC = 2;
                         }
-                        goto Label_02F1;
+                        goto Label_0337;
                     }
                     if (!TestDelegator.instance.HasTest())
                     {
-                        goto Label_02BC;
+                        goto Label_02F7;
                     }
-                    this.<logCollector>__2 = new LogScope();
+                    this.<logCollector>__1 = new LogScope();
                     num = 0xfffffffd;
-                Label_019A:
+                Label_01AA:
                     try
                     {
                         switch (num)
                         {
                             case 3:
-                            {
-                                if (!this.<logCollector>__2.AnyFailingLogs())
-                                {
-                                    break;
-                                }
-                                LogEvent log = this.<logCollector>__2.FailingLogs.First<LogEvent>();
-                                TestDelegator.instance.RegisterResultException(new UnhandledLogMessageException(log));
-                                goto Label_028D;
-                            }
+                                break;
+
                             case 4:
-                                goto Label_02BC;
+                                goto Label_02F7;
 
                             default:
-                                this.<testEnum>__3 = TestDelegator.instance.GetTestEnumerator();
-                                this.<cr>__3 = new CoroutineRunner(this.$this, this.<logCollector>__2);
-                                this.$current = this.<cr>__3.HandleEnumerableTest(this.<testEnum>__3, TestDelegator.instance.GetCurrentTestContext().TestCaseTimeout);
-                                if (!this.$disposing)
+                                this.<testEnum>__2 = null;
+                                try
                                 {
-                                    this.$PC = 3;
+                                    this.<testEnum>__2 = TestDelegator.instance.GetTestEnumerator();
                                 }
-                                flag = true;
-                                goto Label_02F1;
+                                catch (Exception exception)
+                                {
+                                    UnityEngine.Debug.LogException(exception);
+                                }
+                                this.<cr>__2 = new CoroutineRunner(this.$this, this.<logCollector>__1);
+                                if (this.<testEnum>__2 != null)
+                                {
+                                    this.$current = this.<cr>__2.HandleEnumerableTest(this.<testEnum>__2, TestDelegator.instance.GetCurrentTestContext().TestCaseTimeout);
+                                    if (!this.$disposing)
+                                    {
+                                        this.$PC = 3;
+                                    }
+                                    flag = true;
+                                    goto Label_0337;
+                                }
+                                break;
                         }
-                        if (this.<logCollector>__2.ExpectedLogs.Any<LogMatch>())
+                        if (this.<logCollector>__1.AnyFailingLogs())
+                        {
+                            LogEvent log = this.<logCollector>__1.FailingLogs.First<LogEvent>();
+                            TestDelegator.instance.RegisterResultException(new UnhandledLogMessageException(log));
+                        }
+                        else if (this.<logCollector>__1.ExpectedLogs.Any<LogMatch>())
                         {
                             TestDelegator.instance.RegisterResultException(new UnexpectedLogMessageException(LogScope.Current.ExpectedLogs.Peek()));
                         }
@@ -183,14 +198,13 @@
                         {
                             TestDelegator.instance.RegisterResult(null);
                         }
-                    Label_028D:
                         this.$current = null;
                         if (!this.$disposing)
                         {
                             this.$PC = 4;
                         }
                         flag = true;
-                        goto Label_02F1;
+                        goto Label_0337;
                     }
                     finally
                     {
@@ -199,13 +213,13 @@
                         }
                         this.<>__Finally0();
                     }
-                Label_02BC:;
+                Label_02F7:;
                 }
-                this.$this.runFinishedEvent.Invoke(this.<runner>__1.Result);
+                this.$this.runFinishedEvent.Invoke(this.<runner>__0.Result);
                 this.$PC = -1;
-            Label_02EF:
+            Label_0335:
                 return false;
-            Label_02F1:
+            Label_0337:
                 return true;
             }
 

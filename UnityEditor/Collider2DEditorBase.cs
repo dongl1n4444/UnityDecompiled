@@ -12,9 +12,9 @@
     internal abstract class Collider2DEditorBase : ColliderEditorBase
     {
         [CompilerGenerated]
-        private static Func<Object, bool> <>f__am$cache0;
+        private static Func<UnityEngine.Object, bool> <>f__am$cache0;
         [CompilerGenerated]
-        private static Func<Object, Rigidbody2D> <>f__am$cache1;
+        private static Func<UnityEngine.Object, Rigidbody2D> <>f__am$cache1;
         protected SerializedProperty m_AutoTiling;
         private static ContactPoint2D[] m_Contacts = new ContactPoint2D[100];
         private Vector2 m_ContactScrollPosition;
@@ -43,7 +43,7 @@
         }
 
         protected bool CanEditCollider() => 
-            (Enumerable.FirstOrDefault<Object>(base.targets, delegate (Object x) {
+            (Enumerable.FirstOrDefault<UnityEngine.Object>(base.targets, delegate (UnityEngine.Object x) {
                 SpriteRenderer component = (x as Component).GetComponent<SpriteRenderer>();
                 return ((component != null) && (component.drawMode != SpriteDrawMode.Simple)) && this.m_AutoTiling.boolValue;
             }) == 0);
@@ -123,7 +123,7 @@
             base.OnForceReloadInspector();
             if (base.editingCollider)
             {
-                EditMode.QuitEditMode();
+                UnityEditorInternal.EditMode.QuitEditMode();
             }
         }
 
@@ -147,7 +147,7 @@
             {
                 <>f__am$cache0 = x => !(x as Collider2D).compositeCapable;
             }
-            if (Enumerable.Where<Object>(base.targets, <>f__am$cache0).Count<Object>() == 0)
+            if (Enumerable.Where<UnityEngine.Object>(base.targets, <>f__am$cache0).Count<UnityEngine.Object>() == 0)
             {
                 EditorGUILayout.PropertyField(this.m_UsedByComposite, new GUILayoutOption[0]);
             }
@@ -164,7 +164,7 @@
             {
                 <>f__am$cache1 = x => (x as Collider2D).attachedRigidbody;
             }
-            if (Enumerable.Select<Object, Rigidbody2D>(base.targets, <>f__am$cache1).Distinct<Rigidbody2D>().Count<Rigidbody2D>() > 1)
+            if (Enumerable.Select<UnityEngine.Object, Rigidbody2D>(base.targets, <>f__am$cache1).Distinct<Rigidbody2D>().Count<Rigidbody2D>() > 1)
             {
                 return false;
             }

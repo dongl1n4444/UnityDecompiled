@@ -13,9 +13,9 @@
     internal class AnimationWindowState : ScriptableObject, ICurveEditorState, IAnimationRecordingState
     {
         [CompilerGenerated]
-        private static Action <>f__am$cache0;
+        private static System.Action <>f__am$cache0;
         [CompilerGenerated]
-        private static Action <>f__am$cache1;
+        private static System.Action <>f__am$cache1;
         [CompilerGenerated]
         private static Action<float> <>f__am$cache2;
         [SerializeField]
@@ -56,11 +56,11 @@
         [SerializeField]
         private TimeArea.TimeFormat m_TimeFormat = TimeArea.TimeFormat.TimeFrame;
         [NonSerialized]
-        public Action onEndLiveEdit;
+        public System.Action onEndLiveEdit;
         [NonSerialized]
         public Action<float> onFrameRateChange;
         [NonSerialized]
-        public Action onStartLiveEdit;
+        public System.Action onStartLiveEdit;
         private static List<AnimationWindowKeyframe> s_KeyframeClipboard;
         [SerializeField]
         public bool showCurveEditor;
@@ -367,9 +367,9 @@
             {
                 this.m_Selection.Clear();
             }
-            Object.DestroyImmediate(this.m_KeySelection);
-            Object.DestroyImmediate(this.m_ControlInterface);
-            Object.DestroyImmediate(this.m_OverrideControlInterface);
+            UnityEngine.Object.DestroyImmediate(this.m_KeySelection);
+            UnityEngine.Object.DestroyImmediate(this.m_ControlInterface);
+            UnityEngine.Object.DestroyImmediate(this.m_OverrideControlInterface);
         }
 
         public void OnDisable()
@@ -389,13 +389,13 @@
                 <>f__am$cache0 = delegate {
                 };
             }
-            this.onStartLiveEdit = (Action) Delegate.Combine(this.onStartLiveEdit, <>f__am$cache0);
+            this.onStartLiveEdit = (System.Action) Delegate.Combine(this.onStartLiveEdit, <>f__am$cache0);
             if (<>f__am$cache1 == null)
             {
                 <>f__am$cache1 = delegate {
                 };
             }
-            this.onEndLiveEdit = (Action) Delegate.Combine(this.onEndLiveEdit, <>f__am$cache1);
+            this.onEndLiveEdit = (System.Action) Delegate.Combine(this.onEndLiveEdit, <>f__am$cache1);
             if (<>f__am$cache2 == null)
             {
                 <>f__am$cache2 = delegate (float frameRate) {
@@ -942,8 +942,8 @@
                         keyframe.key.time = Mathf.Max(!snapToFrame ? v.x : this.SnapToFrame(v.x, curve.curve.clip.frameRate), 0f);
                         if (flipX)
                         {
-                            keyframe.key.inTangent = -keyframe.keySnapshot.outTangent;
-                            keyframe.key.outTangent = -keyframe.keySnapshot.inTangent;
+                            keyframe.key.inTangent = (keyframe.keySnapshot.outTangent == float.PositiveInfinity) ? float.PositiveInfinity : -keyframe.keySnapshot.outTangent;
+                            keyframe.key.outTangent = (keyframe.keySnapshot.inTangent == float.PositiveInfinity) ? float.PositiveInfinity : -keyframe.keySnapshot.inTangent;
                         }
                     }
                     this.SelectKey(keyframe.key);
@@ -1355,7 +1355,7 @@
             {
                 if (this.m_OverrideControlInterface != null)
                 {
-                    Object.DestroyImmediate(this.m_OverrideControlInterface);
+                    UnityEngine.Object.DestroyImmediate(this.m_OverrideControlInterface);
                 }
                 this.m_OverrideControlInterface = value;
             }

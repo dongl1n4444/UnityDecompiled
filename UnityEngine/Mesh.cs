@@ -14,7 +14,7 @@
     public sealed class Mesh : UnityEngine.Object
     {
         /// <summary>
-        /// <para>Creates an empty mesh.</para>
+        /// <para>Creates an empty Mesh.</para>
         /// </summary>
         public Mesh()
         {
@@ -80,26 +80,36 @@
         [ExcludeFromDocs]
         public void CombineMeshes(CombineInstance[] combine)
         {
+            bool hasLightmapData = false;
             bool useMatrices = true;
             bool mergeSubMeshes = true;
-            this.CombineMeshes(combine, mergeSubMeshes, useMatrices);
+            this.CombineMeshes(combine, mergeSubMeshes, useMatrices, hasLightmapData);
         }
 
         [ExcludeFromDocs]
         public void CombineMeshes(CombineInstance[] combine, bool mergeSubMeshes)
         {
+            bool hasLightmapData = false;
             bool useMatrices = true;
-            this.CombineMeshes(combine, mergeSubMeshes, useMatrices);
+            this.CombineMeshes(combine, mergeSubMeshes, useMatrices, hasLightmapData);
+        }
+
+        [ExcludeFromDocs]
+        public void CombineMeshes(CombineInstance[] combine, bool mergeSubMeshes, bool useMatrices)
+        {
+            bool hasLightmapData = false;
+            this.CombineMeshes(combine, mergeSubMeshes, useMatrices, hasLightmapData);
         }
 
         /// <summary>
-        /// <para>Combines several meshes into this mesh.</para>
+        /// <para>Combines several Meshes into this Mesh.</para>
         /// </summary>
-        /// <param name="combine">Descriptions of the meshes to combine.</param>
-        /// <param name="mergeSubMeshes">Should all meshes be combined into a single submesh?</param>
-        /// <param name="useMatrices">Should the transforms supplied in the CombineInstance array be used or ignored?</param>
+        /// <param name="combine">Descriptions of the Meshes to combine.</param>
+        /// <param name="mergeSubMeshes">Defines whether Meshes should be combined into a single sub-Mesh.</param>
+        /// <param name="useMatrices">Defines whether the transforms supplied in the CombineInstance array should be used or ignored.</param>
+        /// <param name="hasLightmapData"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public extern void CombineMeshes(CombineInstance[] combine, [UnityEngine.Internal.DefaultValue("true")] bool mergeSubMeshes, [UnityEngine.Internal.DefaultValue("true")] bool useMatrices);
+        public extern void CombineMeshes(CombineInstance[] combine, [UnityEngine.Internal.DefaultValue("true")] bool mergeSubMeshes, [UnityEngine.Internal.DefaultValue("true")] bool useMatrices, [UnityEngine.Internal.DefaultValue("false")] bool hasLightmapData);
         internal static int DefaultDimensionForChannel(InternalShaderChannel channel)
         {
             if ((channel == InternalShaderChannel.Vertex) || (channel == InternalShaderChannel.Normal))
@@ -142,6 +152,20 @@
         private extern Array GetAllocArrayFromChannelImpl(InternalShaderChannel channel, InternalVertexChannelType format, int dim);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void GetArrayFromChannelImpl(InternalShaderChannel channel, InternalVertexChannelType format, int dim, Array values);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern int GetBindposeCount();
+        public void GetBindposes(List<Matrix4x4> bindposes)
+        {
+            if (bindposes == null)
+            {
+                throw new ArgumentNullException("The result bindposes list cannot be null.", "bindposes");
+            }
+            this.PrepareUserBuffer<Matrix4x4>(bindposes, this.GetBindposeCount());
+            this.GetBindposesNonAllocImpl(bindposes);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern void GetBindposesNonAllocImpl(object values);
         /// <summary>
         /// <para>Returns the frame count for a blend shape.</para>
         /// </summary>
@@ -177,6 +201,36 @@
         /// <param name="shapeIndex"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern string GetBlendShapeName(int shapeIndex);
+        public void GetBoneWeights(List<BoneWeight> boneWeights)
+        {
+            if (boneWeights == null)
+            {
+                throw new ArgumentNullException("The result boneWeights list cannot be null.", "boneWeights");
+            }
+            this.PrepareUserBuffer<BoneWeight>(boneWeights, this.vertexCount);
+            this.GetBoneWeightsNonAllocImpl(boneWeights);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern void GetBoneWeightsNonAllocImpl(object values);
+        public void GetColors(List<Color> colors)
+        {
+            if (colors == null)
+            {
+                throw new ArgumentNullException("The result colors list cannot be null.", "colors");
+            }
+            this.GetListForChannel<Color>(colors, this.vertexCount, InternalShaderChannel.Color, DefaultDimensionForChannel(InternalShaderChannel.Color));
+        }
+
+        public void GetColors(List<Color32> colors)
+        {
+            if (colors == null)
+            {
+                throw new ArgumentNullException("The result colors list cannot be null.", "colors");
+            }
+            this.GetListForChannel<Color32>(colors, this.vertexCount, InternalShaderChannel.Color, 1, InternalVertexChannelType.Color);
+        }
+
         /// <summary>
         /// <para>Gets the index count of the given submesh.</para>
         /// </summary>
@@ -190,16 +244,53 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern uint GetIndexStart(int submesh);
         /// <summary>
-        /// <para>Returns the index buffer for the submesh.</para>
+        /// <para>Gets the index buffer for the specified sub mesh on this instance.</para>
         /// </summary>
-        /// <param name="submesh"></param>
+        /// <param name="indices">A list of indices to populate.</param>
+        /// <param name="submesh">The sub mesh on this instance. See subMeshCount.</param>
         public int[] GetIndices(int submesh) => 
             (!this.CheckCanAccessSubmeshIndices(submesh) ? new int[0] : this.GetIndicesImpl(submesh));
 
+        public void GetIndices(List<int> indices, int submesh)
+        {
+            if (indices == null)
+            {
+                throw new ArgumentNullException("The result indices list cannot be null.", "indices");
+            }
+            if ((submesh < 0) || (submesh >= this.subMeshCount))
+            {
+                throw new IndexOutOfRangeException("Specified sub mesh is out of range. Must be greater or equal to 0 and less than subMeshCount.");
+            }
+            this.PrepareUserBuffer<int>(indices, (int) this.GetIndexCount(submesh));
+            indices.Clear();
+            this.GetIndicesNonAllocImpl(indices, submesh);
+        }
+
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern int[] GetIndicesImpl(int submesh);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern void GetIndicesNonAllocImpl(object values, int submesh);
+        private void GetListForChannel<T>(List<T> buffer, int capacity, InternalShaderChannel channel, int dim)
+        {
+            this.GetListForChannel<T>(buffer, capacity, channel, dim, InternalVertexChannelType.Float);
+        }
+
+        private void GetListForChannel<T>(List<T> buffer, int capacity, InternalShaderChannel channel, int dim, InternalVertexChannelType channelType)
+        {
+            buffer.Clear();
+            if (!this.canAccess)
+            {
+                this.PrintErrorCantAccessMesh(channel);
+            }
+            else if (this.HasChannel(channel))
+            {
+                this.PrepareUserBuffer<T>(buffer, capacity);
+                this.GetArrayFromChannelImpl(channel, channelType, dim, ExtractArrayFromList(buffer));
+            }
+        }
+
         /// <summary>
-        /// <para>Retrieve a native (underlying graphics API) pointer to the index buffer.</para>
+        /// <para>Retrieves a native (underlying graphics API) pointer to the index buffer.</para>
         /// </summary>
         /// <returns>
         /// <para>Pointer to the underlying graphics API index buffer.</para>
@@ -212,9 +303,9 @@
         }
 
         /// <summary>
-        /// <para>Retrieve a native (underlying graphics API) pointer to the vertex buffer.</para>
+        /// <para>Retrieves a native (underlying graphics API) pointer to the vertex buffer.</para>
         /// </summary>
-        /// <param name="bufferIndex">Which vertex buffer to get (some meshes might have more than one). See vertexBufferCount.</param>
+        /// <param name="bufferIndex">Which vertex buffer to get (some Meshes might have more than one). See vertexBufferCount.</param>
         /// <returns>
         /// <para>Pointer to the underlying graphics API vertex buffer.</para>
         /// </returns>
@@ -225,21 +316,56 @@
             return ptr;
         }
 
+        public void GetNormals(List<Vector3> normals)
+        {
+            if (normals == null)
+            {
+                throw new ArgumentNullException("The result normals list cannot be null.", "normals");
+            }
+            this.GetListForChannel<Vector3>(normals, this.vertexCount, InternalShaderChannel.Normal, DefaultDimensionForChannel(InternalShaderChannel.Normal));
+        }
+
+        public void GetTangents(List<Vector4> tangents)
+        {
+            if (tangents == null)
+            {
+                throw new ArgumentNullException("The result tangents list cannot be null.", "tangents");
+            }
+            this.GetListForChannel<Vector4>(tangents, this.vertexCount, InternalShaderChannel.Tangent, DefaultDimensionForChannel(InternalShaderChannel.Tangent));
+        }
+
         /// <summary>
-        /// <para>Gets the topology of a submesh.</para>
+        /// <para>Gets the topology of a sub-Mesh.</para>
         /// </summary>
         /// <param name="submesh"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern MeshTopology GetTopology(int submesh);
         /// <summary>
-        /// <para>Returns the triangle list for the submesh.</para>
+        /// <para>Gets the triangle list for the specified sub mesh on this instance.</para>
         /// </summary>
-        /// <param name="submesh"></param>
+        /// <param name="triangles">A list of vertex indices to populate.</param>
+        /// <param name="submesh">The sub mesh on this instance. See subMeshCount.</param>
         public int[] GetTriangles(int submesh) => 
             (!this.CheckCanAccessSubmeshTriangles(submesh) ? new int[0] : this.GetTrianglesImpl(submesh));
 
+        public void GetTriangles(List<int> triangles, int submesh)
+        {
+            if (triangles == null)
+            {
+                throw new ArgumentNullException("The result triangles list cannot be null.", "triangles");
+            }
+            if ((submesh < 0) || (submesh >= this.subMeshCount))
+            {
+                throw new IndexOutOfRangeException("Specified sub mesh is out of range. Must be greater or equal to 0 and less than subMeshCount.");
+            }
+            this.PrepareUserBuffer<int>(triangles, (int) this.GetIndexCount(submesh));
+            this.GetTrianglesNonAllocImpl(triangles, submesh);
+        }
+
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern int[] GetTrianglesImpl(int submesh);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern void GetTrianglesNonAllocImpl(object values, int submesh);
         internal InternalShaderChannel GetUVChannel(int uvIndex)
         {
             if ((uvIndex < 0) || (uvIndex > 3))
@@ -268,33 +394,22 @@
         {
             if (uvs == null)
             {
-                throw new ArgumentException("The result uvs list cannot be null", "uvs");
+                throw new ArgumentNullException("The result uvs list cannot be null.", "uvs");
             }
             if ((uvIndex < 0) || (uvIndex > 3))
             {
-                throw new ArgumentException("The uv index is invalid (must be in [0..3]", "uvIndex");
+                throw new IndexOutOfRangeException("Specified uv index is out of range. Must be in the range [0, 3].");
             }
-            uvs.Clear();
-            InternalShaderChannel uVChannel = this.GetUVChannel(uvIndex);
-            if (!this.canAccess)
-            {
-                this.PrintErrorCantAccessMesh(uVChannel);
-            }
-            else if (this.HasChannel(uVChannel))
-            {
-                if (this.vertexCount > uvs.Capacity)
-                {
-                    uvs.Capacity = this.vertexCount;
-                }
-                this.GetUVsInternal<T>(uvs, uvIndex, dim);
-            }
+            this.GetListForChannel<T>(uvs, this.vertexCount, this.GetUVChannel(uvIndex), dim);
         }
 
-        private void GetUVsInternal<T>(List<T> uvs, int uvIndex, int dim)
+        public void GetVertices(List<Vector3> vertices)
         {
-            InternalShaderChannel uVChannel = this.GetUVChannel(uvIndex);
-            ResizeList(uvs, this.vertexCount);
-            this.GetArrayFromChannelImpl(uVChannel, InternalVertexChannelType.Float, dim, ExtractArrayFromList(uvs));
+            if (vertices == null)
+            {
+                throw new ArgumentNullException("The result vertices list cannot be null.", "vertices");
+            }
+            this.GetListForChannel<Vector3>(vertices, this.vertexCount, InternalShaderChannel.Vertex, DefaultDimensionForChannel(InternalShaderChannel.Vertex));
         }
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -310,15 +425,25 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_bounds(ref Bounds value);
         /// <summary>
-        /// <para>Optimize the mesh for frequent updates.</para>
+        /// <para>Optimize mesh for frequent updates.</para>
         /// </summary>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void MarkDynamic();
         /// <summary>
-        /// <para>Optimizes the mesh for display.</para>
+        /// <para>Optimizes the Mesh for display.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("This method is no longer supported (UnityUpgradable)", true), EditorBrowsable(EditorBrowsableState.Never)]
+        [MethodImpl(MethodImplOptions.InternalCall), EditorBrowsable(EditorBrowsableState.Never), Obsolete("This method is no longer supported (UnityUpgradable)", true), GeneratedByOldBindingsGenerator]
         public extern void Optimize();
+        private void PrepareUserBuffer<T>(List<T> buffer, int capacity)
+        {
+            buffer.Clear();
+            if (buffer.Capacity < capacity)
+            {
+                buffer.Capacity = capacity;
+            }
+            ResizeList(buffer, capacity);
+        }
+
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void PrintErrorBadSubmeshIndexIndices();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -328,15 +453,20 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void PrintErrorCantAccessMeshForIndices();
         /// <summary>
-        /// <para>Recalculate the bounding volume of the mesh from the vertices.</para>
+        /// <para>Recalculate the bounding volume of the Mesh from the vertices.</para>
         /// </summary>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void RecalculateBounds();
         /// <summary>
-        /// <para>Recalculates the normals of the mesh from the triangles and vertices.</para>
+        /// <para>Recalculates the normals of the Mesh from the triangles and vertices.</para>
         /// </summary>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void RecalculateNormals();
+        /// <summary>
+        /// <para>Recalculates the tangents of the Mesh from the normals and texture coordinates.</para>
+        /// </summary>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public extern void RecalculateTangents();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void ResizeList(object list, int size);
         private int SafeLength(Array values) => 
@@ -368,7 +498,7 @@
         }
 
         /// <summary>
-        /// <para>Sets the index buffer for the submesh.</para>
+        /// <para>Sets the index buffer for the sub-Mesh.</para>
         /// </summary>
         /// <param name="indices">The array of indices that define the Mesh.</param>
         /// <param name="topology">The topology of the Mesh, e.g: Triangles, Lines, Quads, Points, etc. See MeshTopology.</param>
@@ -382,6 +512,14 @@
             this.SetIndices(indices, topology, submesh, calculateBounds);
         }
 
+        /// <summary>
+        /// <para>Sets the index buffer for the sub-Mesh.</para>
+        /// </summary>
+        /// <param name="indices">The array of indices that define the Mesh.</param>
+        /// <param name="topology">The topology of the Mesh, e.g: Triangles, Lines, Quads, Points, etc. See MeshTopology.</param>
+        /// <param name="submesh">The submesh to modify.</param>
+        /// <param name="calculateBounds">Calculate the bounding box of the Mesh after setting the indices. This is done by default.
+        /// Use false when you want to use the existing bounding box and reduce the CPU cost of setting the indices.</param>
         public void SetIndices(int[] indices, MeshTopology topology, int submesh, [UnityEngine.Internal.DefaultValue("true")] bool calculateBounds)
         {
             if (this.CheckCanAccessSubmeshIndices(submesh))
@@ -439,7 +577,7 @@
         }
 
         /// <summary>
-        /// <para>Sets the triangle list for the submesh.</para>
+        /// <para>Sets the triangle list for the sub-Mesh.</para>
         /// </summary>
         /// <param name="triangles">The list of indices that define the triangles.</param>
         /// <param name="submesh">The submesh to modify.</param>
@@ -510,9 +648,10 @@
         }
 
         /// <summary>
-        /// <para>Upload previously done mesh modifications to the graphics API.</para>
+        /// <para>Upload previously done Mesh modifications to the graphics API.</para>
         /// </summary>
-        /// <param name="markNoLogerReadable">Frees up system memory copy of mesh data when set to true.</param>
+        /// <param name="markNoLongerReadable">Frees up system memory copy of mesh data when set to true.</param>
+        /// <param name="markNoLogerReadable"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void UploadMeshData(bool markNoLogerReadable);
 
@@ -551,7 +690,7 @@
         internal bool canAccess { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
-        /// <para>Vertex colors of the mesh.</para>
+        /// <para>Vertex colors of the Mesh.</para>
         /// </summary>
         public Color[] colors
         {
@@ -564,7 +703,7 @@
         }
 
         /// <summary>
-        /// <para>Vertex colors of the mesh.</para>
+        /// <para>Vertex colors of the Mesh.</para>
         /// </summary>
         public Color32[] colors32
         {
@@ -582,7 +721,7 @@
         public bool isReadable { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
-        /// <para>The normals of the mesh.</para>
+        /// <para>The normals of the Mesh.</para>
         /// </summary>
         public Vector3[] normals
         {
@@ -595,12 +734,12 @@
         }
 
         /// <summary>
-        /// <para>The number of submeshes. Every material has a separate triangle list.</para>
+        /// <para>The number of sub-Meshes. Every Material has a separate triangle list.</para>
         /// </summary>
         public int subMeshCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
-        /// <para>The tangents of the mesh.</para>
+        /// <para>The tangents of the Mesh.</para>
         /// </summary>
         public Vector4[] tangents
         {
@@ -613,7 +752,7 @@
         }
 
         /// <summary>
-        /// <para>An array containing all triangles in the mesh.</para>
+        /// <para>An array containing all triangles in the Mesh.</para>
         /// </summary>
         public int[] triangles
         {
@@ -640,7 +779,7 @@
         }
 
         /// <summary>
-        /// <para>The base texture coordinates of the mesh.</para>
+        /// <para>The base texture coordinates of the Mesh.</para>
         /// </summary>
         public Vector2[] uv
         {
@@ -702,12 +841,12 @@
         }
 
         /// <summary>
-        /// <para>Get the number of vertex buffers present in the mesh. (Read Only)</para>
+        /// <para>Get the number of vertex buffers present in the Mesh. (Read Only)</para>
         /// </summary>
         public int vertexBufferCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
-        /// <para>Returns the number of vertices in the mesh (Read Only).</para>
+        /// <para>Returns the number of vertices in the Mesh (Read Only).</para>
         /// </summary>
         public int vertexCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 

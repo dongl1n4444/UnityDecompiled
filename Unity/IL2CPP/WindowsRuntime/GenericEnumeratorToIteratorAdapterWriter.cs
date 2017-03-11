@@ -168,7 +168,7 @@
         {
             string methodSignature = $"il2cpp_hresult_t {this._typeName}::{"GetCurrent"}({this._iIteratorGetCurrentMethodInfo.MarshaledReturnType.DecoratedName}* {this._returnValue})";
             MethodWriter.WriteMethodWithMetadataInitialization(writer, methodSignature, "GetCurrent", delegate (CppCodeWriter bodyWriter, MetadataUsage metadataUsage, MethodUsage methodUsage) {
-                IRuntimeMetadataAccess metadataAccess = MethodWriter.GetDefaultRuntimeMetadataAccess(this._iEnumeratorGetCurrentMethod, metadataUsage, methodUsage);
+                IRuntimeMetadataAccess metadataAccess = MethodWriter.GetDefaultRuntimeMetadataAccess(this._iEnumeratorGetCurrentMethod, metadataUsage, methodUsage, null);
                 new GetCurrentMethodBodyWriter(this._iEnumeratorGetCurrentMethod, this._iIteratorGetCurrentMethod).WriteMethodBody(bodyWriter, metadataAccess);
             }, this._typeName + '_' + "GetCurrent");
         }
@@ -240,7 +240,7 @@
                     <>f__am$cache7 = m => m.Name == "MoveNext";
                 }
                 MethodReference interfaceMethod = this._iIteratorType.GetMethods().First<MethodReference>(<>f__am$cache7);
-                IRuntimeMetadataAccess metadataAccess = MethodWriter.GetDefaultRuntimeMetadataAccess(this._iEnumeratorMoveNextMethod, metadataUsage, methodUsage);
+                IRuntimeMetadataAccess metadataAccess = MethodWriter.GetDefaultRuntimeMetadataAccess(this._iEnumeratorMoveNextMethod, metadataUsage, methodUsage, null);
                 new MoveNextMethodBodyWriter(this._iEnumeratorMoveNextMethod, interfaceMethod).WriteMethodBody(bodyWriter, metadataAccess);
             }, this._typeName + '_' + "MoveNext");
         }
@@ -294,7 +294,7 @@
 
             internal void <>m__0(CppCodeWriter bodyWriter, MetadataUsage metadataUsage, MethodUsage methodUsage)
             {
-                DefaultRuntimeMetadataAccess metadataAccess = new DefaultRuntimeMetadataAccess(this.method, metadataUsage, methodUsage);
+                DefaultRuntimeMetadataAccess metadataAccess = new DefaultRuntimeMetadataAccess(this.method, metadataUsage, methodUsage, null);
                 switch (this.method.Name)
                 {
                     case "get_Current":

@@ -35,20 +35,29 @@
             this._contextStack.Push(item);
             foreach (InstructionBlock block in this._blocks)
             {
+                Instruction last;
                 <BuildTreeWithExceptionHandlers>c__AnonStorey0 storey = new <BuildTreeWithExceptionHandlers>c__AnonStorey0();
                 if (block.Last.Next == null)
                 {
-                    item = new Context {
-                        Type = ContextType.Block,
-                        Block = block
-                    };
-                    this._contextStack.Peek().Children.Add(item);
-                    break;
+                    if (this._contextStack.Count == 1)
+                    {
+                        item = new Context {
+                            Type = ContextType.Block,
+                            Block = block
+                        };
+                        this._contextStack.Peek().Children.Add(item);
+                        break;
+                    }
+                    storey.firstInstr = block.First;
+                    last = block.Last;
                 }
-                storey.firstInstr = block.First;
-                Instruction next = block.Last.Next;
+                else
+                {
+                    storey.firstInstr = block.First;
+                    last = block.Last.Next;
+                }
                 TryCatchInfo info = this._tryCatchInfos[storey.firstInstr];
-                TryCatchInfo info2 = this._tryCatchInfos[next];
+                TryCatchInfo info2 = this._tryCatchInfos[last];
                 if ((info.CatchStart != 0) && (info.FinallyStart != 0))
                 {
                     throw new NotSupportedException("An instruction cannot start both a catch and a finally block!");

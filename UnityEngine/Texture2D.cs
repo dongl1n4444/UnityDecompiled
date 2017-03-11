@@ -183,9 +183,12 @@
         }
 
         /// <summary>
-        /// <para>Get a block of pixel colors.</para>
+        /// <para>Get the pixel colors from the texture.</para>
         /// </summary>
-        /// <param name="miplevel"></param>
+        /// <param name="miplevel">The mipmap level to fetch the pixels from. Defaults to zero.</param>
+        /// <returns>
+        /// <para>The array of all pixels in the mipmap level of the texture.</para>
+        /// </returns>
         public Color[] GetPixels([DefaultValue("0")] int miplevel)
         {
             int blockWidth = this.width >> miplevel;
@@ -211,11 +214,15 @@
         /// <summary>
         /// <para>Get a block of pixel colors.</para>
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="blockWidth"></param>
-        /// <param name="blockHeight"></param>
-        /// <param name="miplevel"></param>
+        /// <param name="x">The x position of the pixel array to fetch.</param>
+        /// <param name="y">The y position of the pixel array to fetch.</param>
+        /// <param name="blockWidth">The width length of the pixel array to fetch.</param>
+        /// <param name="blockHeight">The height length of the pixel array to fetch.</param>
+        /// <param name="miplevel">The mipmap level to fetch the pixels. Defaults to zero, and is
+        /// optional.</param>
+        /// <returns>
+        /// <para>The array of pixels in the texture that have been selected.</para>
+        /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern Color[] GetPixels(int x, int y, int blockWidth, int blockHeight, [DefaultValue("0")] int miplevel);
         [ExcludeFromDocs]
@@ -382,8 +389,8 @@
         /// <summary>
         /// <para>Set a block of pixel colors.</para>
         /// </summary>
-        /// <param name="colors"></param>
-        /// <param name="miplevel"></param>
+        /// <param name="colors">The array of pixel colours to assign (a 2D image flattened to a 1D array).</param>
+        /// <param name="miplevel">The mip level of the texture to write to.</param>
         public void SetPixels(Color[] colors, [DefaultValue("0")] int miplevel)
         {
             int blockWidth = this.width >> miplevel;

@@ -57,6 +57,11 @@
             AnimatorControllerTool.tool.RebuildGraph();
         }
 
+        public void CenterOnFocus()
+        {
+            base.CenterGraph(this.GetFocusPosition());
+        }
+
         public override void ClearSelection()
         {
             base.selection.Clear();
@@ -120,6 +125,14 @@
                 }
             }
             return list;
+        }
+
+        protected Vector2 ConvertGraphPositionToScrollPosition(Vector2 graphPosition)
+        {
+            Rect graphExtents = base.graph.graphExtents;
+            graphExtents.position = Vector2.zero;
+            Vector2 normalizedRectCoordinates = Rect.PointToNormalized(base.graph.graphExtents, graphPosition);
+            return Rect.NormalizedToPoint(graphExtents, normalizedRectCoordinates);
         }
 
         public bool CopySelectionToPasteboard()
@@ -221,6 +234,42 @@
         public override void DoBackgroundClickAction()
         {
             Selection.objects = new List<UnityEngine.Object> { this.activeStateMachine }.ToArray();
+        }
+
+        protected override Vector2 GetCenterPosition() => 
+            base.GetCenterPosition();
+
+        protected Vector2 GetFocusPosition()
+        {
+            if (((this.tool == null) || !this.tool.autoLiveLink) || !this.tool.liveLinkFollowTransitions)
+            {
+                return base.m_ScrollPosition;
+            }
+            Rect position = this.m_LiveLinkInfo.srcNode.position;
+            if (this.m_LiveLinkInfo.dstNode != null)
+            {
+                Rect rect2 = this.m_LiveLinkInfo.dstNode.position;
+                position.position = Vector2.Lerp(position.position, rect2.position, this.m_LiveLinkInfo.transitionInfo.normalizedTime);
+            }
+            position.position = this.ConvertGraphPositionToScrollPosition(position.position);
+            Rect rect3 = new Rect(this.m_ScrollPosition.x, this.m_ScrollPosition.y, this.m_GraphClientArea.width, this.m_GraphClientArea.height);
+            if (rect3.xMin > position.xMin)
+            {
+                rect3.x -= rect3.xMin - position.xMin;
+            }
+            else if (rect3.xMax < position.xMax)
+            {
+                rect3.x += position.xMax - rect3.xMax;
+            }
+            if (rect3.yMin > position.yMin)
+            {
+                rect3.y -= rect3.yMin - position.yMin;
+            }
+            else if (rect3.yMax < position.yMax)
+            {
+                rect3.y += position.yMax - rect3.yMax;
+            }
+            return rect3.position;
         }
 
         private void HandleContextMenu()
@@ -414,11 +463,18 @@
                             {
                                 currentStateMachine = this.m_LiveLinkInfo.nextStateMachine;
                             }
-                            if (((shortNameHash != 0) && (currentStateMachine != this.activeStateMachine)) && (Event.current.type == EventType.Repaint))
+                            if ((Event.current.type == EventType.Repaint) && (shortNameHash != 0))
                             {
-                                List<AnimatorStateMachine> hierarchy = new List<AnimatorStateMachine>();
-                                MecanimUtilities.StateMachineRelativePath(this.rootStateMachine, currentStateMachine, ref hierarchy);
-                                this.tool.BuildBreadCrumbsFromSMHierarchy(hierarchy);
+                                if (currentStateMachine != this.activeStateMachine)
+                                {
+                                    List<AnimatorStateMachine> hierarchy = new List<AnimatorStateMachine>();
+                                    MecanimUtilities.StateMachineRelativePath(this.rootStateMachine, currentStateMachine, ref hierarchy);
+                                    this.tool.BuildBreadCrumbsFromSMHierarchy(hierarchy);
+                                }
+                                else if (this.tool.liveLinkFollowTransitions)
+                                {
+                                    this.tool.CenterViewOnFocus();
+                                }
                             }
                         }
                     }
@@ -473,7 +529,7 @@
             {
                 this.stateMachineGraph.RebuildGraph();
             }
-            this.SyncGraphToUnitySelection();
+            this.SyncGraphToUnitySelection(false);
             this.LiveLink();
             this.SetHoveredStateMachine();
             base.m_Host.BeginWindows();
@@ -501,6 +557,11 @@
             this.HandleContextMenu();
             this.HandleObjectDragging();
             base.DragSelection(new Rect(-5000f, -5000f, 10000f, 10000f));
+        }
+
+        protected override void OnScroll()
+        {
+            this.tool.OnGraphScroll();
         }
 
         private void PasteCallback(object data)
@@ -544,9 +605,9 @@
             }
         }
 
-        public override void SyncGraphToUnitySelection()
+        public override void SyncGraphToUnitySelection(bool force = false)
         {
-            if (GUIUtility.hotControl == 0)
+            if ((GUIUtility.hotControl == 0) || force)
             {
                 base.selection.Clear();
                 this.edgeGUI.edgeSelection.Clear();

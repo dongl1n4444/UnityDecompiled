@@ -5,7 +5,7 @@
     using UnityEngine;
     using UnityEngine.Scripting;
 
-    public sealed class EditorUserSettings : Object
+    public sealed class EditorUserSettings : UnityEngine.Object
     {
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetConfigValue(string name);

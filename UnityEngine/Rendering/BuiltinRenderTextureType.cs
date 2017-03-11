@@ -45,15 +45,15 @@
         /// </summary>
         GBuffer4 = 0x10,
         /// <summary>
-        /// <para>G-buffer #5 Unused.</para>
+        /// <para>G-buffer #5 Available.</para>
         /// </summary>
         GBuffer5 = 0x11,
         /// <summary>
-        /// <para>G-buffer #6 Unused.</para>
+        /// <para>G-buffer #6 Available.</para>
         /// </summary>
         GBuffer6 = 0x12,
         /// <summary>
-        /// <para>G-buffer #7 Unused.</para>
+        /// <para>G-buffer #7 Available.</para>
         /// </summary>
         GBuffer7 = 0x13,
         /// <summary>

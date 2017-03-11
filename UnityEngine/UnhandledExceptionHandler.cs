@@ -23,7 +23,7 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern void NativeUnhandledExceptionHandler(string managedExceptionType, string managedExceptionMessage, string managedExceptionStack);
         private static void PrintException(string title, Exception e)
         {

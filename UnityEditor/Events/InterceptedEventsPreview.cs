@@ -212,12 +212,12 @@
             internal System.Type $current;
             internal bool $disposing;
             internal int $PC;
-            internal Assembly[] <assemblies>__1;
-            internal Assembly <assembly>__3;
-            internal int <i>__2;
-            internal int <j>__5;
-            internal System.Type <type>__6;
-            internal System.Type[] <types>__4;
+            internal Assembly[] <assemblies>__0;
+            internal Assembly <assembly>__2;
+            internal int <i>__1;
+            internal int <j>__4;
+            internal System.Type <type>__5;
+            internal System.Type[] <types>__3;
 
             [DebuggerHidden]
             public void Dispose()
@@ -233,28 +233,28 @@
                 switch (num)
                 {
                     case 0:
-                        this.<assemblies>__1 = AppDomain.CurrentDomain.GetAssemblies();
-                        this.<i>__2 = 0;
-                        while (this.<i>__2 < this.<assemblies>__1.Length)
+                        this.<assemblies>__0 = AppDomain.CurrentDomain.GetAssemblies();
+                        this.<i>__1 = 0;
+                        while (this.<i>__1 < this.<assemblies>__0.Length)
                         {
-                            this.<assembly>__3 = this.<assemblies>__1[this.<i>__2];
-                            if (this.<assembly>__3 != null)
+                            this.<assembly>__2 = this.<assemblies>__0[this.<i>__1];
+                            if (this.<assembly>__2 != null)
                             {
                                 try
                                 {
-                                    this.<types>__4 = this.<assembly>__3.GetTypes();
+                                    this.<types>__3 = this.<assembly>__2.GetTypes();
                                 }
                                 catch (ReflectionTypeLoadException exception)
                                 {
-                                    this.<types>__4 = exception.Types;
+                                    this.<types>__3 = exception.Types;
                                 }
-                                this.<j>__5 = 0;
-                                while (this.<j>__5 < this.<types>__4.Length)
+                                this.<j>__4 = 0;
+                                while (this.<j>__4 < this.<types>__3.Length)
                                 {
-                                    this.<type>__6 = this.<types>__4[this.<j>__5];
-                                    if (this.<type>__6 != null)
+                                    this.<type>__5 = this.<types>__3[this.<j>__4];
+                                    if (this.<type>__5 != null)
                                     {
-                                        this.$current = this.<type>__6;
+                                        this.$current = this.<type>__5;
                                         if (!this.$disposing)
                                         {
                                             this.$PC = 1;
@@ -262,10 +262,10 @@
                                         return true;
                                     }
                                 Label_00DF:
-                                    this.<j>__5++;
+                                    this.<j>__4++;
                                 }
                             }
-                            this.<i>__2++;
+                            this.<i>__1++;
                         }
                         this.$PC = -1;
                         break;

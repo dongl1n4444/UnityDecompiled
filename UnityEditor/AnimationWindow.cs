@@ -26,7 +26,7 @@
             return this.EditAnimationClipInternal(animationClip, null, null);
         }
 
-        private bool EditAnimationClipInternal(AnimationClip animationClip, Object sourceObject, IAnimationWindowControl controlInterface)
+        private bool EditAnimationClipInternal(AnimationClip animationClip, UnityEngine.Object sourceObject, IAnimationWindowControl controlInterface)
         {
             AnimationClipSelectionItem selectedItem = AnimationClipSelectionItem.Create(animationClip, sourceObject);
             if (this.ShouldUpdateSelection(selectedItem))
@@ -36,7 +36,7 @@
             }
             else
             {
-                Object.DestroyImmediate(selectedItem);
+                UnityEngine.Object.DestroyImmediate(selectedItem);
                 return false;
             }
             return true;
@@ -66,12 +66,12 @@
                     this.m_AnimEditor.overrideControlInterface = controlInterface;
                     return true;
                 }
-                Object.DestroyImmediate(selectedItem);
+                UnityEngine.Object.DestroyImmediate(selectedItem);
             }
             return false;
         }
 
-        public bool EditSequencerClip(AnimationClip animationClip, Object sourceObject, IAnimationWindowControl controlInterface)
+        public bool EditSequencerClip(AnimationClip animationClip, UnityEngine.Object sourceObject, IAnimationWindowControl controlInterface)
         {
             if (this.EditAnimationClipInternal(animationClip, sourceObject, controlInterface))
             {
@@ -99,13 +99,14 @@
 
         public void OnDestroy()
         {
-            Object.DestroyImmediate(this.m_AnimEditor);
+            UnityEngine.Object.DestroyImmediate(this.m_AnimEditor);
         }
 
         public void OnDisable()
         {
             s_AnimationWindows.Remove(this);
             this.m_AnimEditor.OnDisable();
+            Undo.undoRedoPerformed = (Undo.UndoRedoCallback) Delegate.Remove(Undo.undoRedoPerformed, new Undo.UndoRedoCallback(this.UndoRedoPerformed));
         }
 
         public void OnEnable()
@@ -118,6 +119,7 @@
             s_AnimationWindows.Add(this);
             base.titleContent = base.GetLocalizedTitleContent();
             this.OnSelectionChange();
+            Undo.undoRedoPerformed = (Undo.UndoRedoCallback) Delegate.Combine(Undo.undoRedoPerformed, new Undo.UndoRedoCallback(this.UndoRedoPerformed));
         }
 
         public void OnFocus()
@@ -211,6 +213,11 @@
             {
                 this.OnSelectionChange();
             }
+        }
+
+        private void UndoRedoPerformed()
+        {
+            base.Repaint();
         }
 
         public void UnlinkSequencer()

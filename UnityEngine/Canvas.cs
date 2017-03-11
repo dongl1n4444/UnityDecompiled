@@ -1,6 +1,7 @@
 ﻿namespace UnityEngine
 {
     using System;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Threading;
@@ -9,9 +10,10 @@
     /// <summary>
     /// <para>Element that can be used for screen rendering.</para>
     /// </summary>
-    [NativeClass("UI::Canvas"), RequireComponent(typeof(RectTransform))]
+    [RequireComponent(typeof(RectTransform)), NativeClass("UI::Canvas")]
     public sealed class Canvas : Behaviour
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event WillRenderCanvases willRenderCanvases;
 
         /// <summary>
@@ -50,6 +52,11 @@
                 willRenderCanvases();
             }
         }
+
+        /// <summary>
+        /// <para>Get or set the mask of additional shader channels to be used when creating the Canvas mesh.</para>
+        /// </summary>
+        public AdditionalCanvasShaderChannels additionalShaderChannels { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Cached calculated value based upon SortingLayerID.</para>

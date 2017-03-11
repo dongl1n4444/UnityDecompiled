@@ -8,7 +8,7 @@
 
     public class AchievementDescription : IAchievementDescription
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <id>k__BackingField;
         private string m_AchievedDescription;
         private bool m_Hidden;

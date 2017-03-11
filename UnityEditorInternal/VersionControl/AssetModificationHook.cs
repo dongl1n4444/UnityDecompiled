@@ -19,7 +19,14 @@
             return Provider.CacheStatus(from);
         }
 
-        public static bool IsOpenForEdit(string assetPath, out string message)
+        private static Asset GetStatusForceUpdate(string from)
+        {
+            Task task = Provider.Status(from);
+            task.Wait();
+            return ((task.assetList.Count <= 0) ? null : task.assetList[0]);
+        }
+
+        public static bool IsOpenForEdit(string assetPath, out string message, StatusQueryOptions statusOptions)
         {
             message = "";
             if (!Provider.enabled)
@@ -30,18 +37,12 @@
             {
                 return true;
             }
-            Asset assetByPath = Provider.GetAssetByPath(assetPath);
-            if (assetByPath == null)
-            {
-                Task task = Provider.Status(assetPath, false);
-                task.Wait();
-                assetByPath = (task.assetList.Count <= 0) ? null : task.assetList[0];
-            }
-            if (assetByPath == null)
+            Asset asset = (statusOptions != StatusQueryOptions.UseCachedIfPossible) ? GetStatusForceUpdate(assetPath) : GetStatusCachedIfPossible(assetPath);
+            if (asset == null)
             {
                 return false;
             }
-            return Provider.IsOpenForEdit(assetByPath);
+            return Provider.IsOpenForEdit(asset);
         }
 
         public static AssetDeleteResult OnWillDeleteAsset(string assetPath, RemoveAssetOptions option)

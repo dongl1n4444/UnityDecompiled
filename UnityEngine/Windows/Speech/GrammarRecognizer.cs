@@ -10,7 +10,7 @@
     /// </summary>
     public sealed class GrammarRecognizer : PhraseRecognizer
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <GrammarFilePath>k__BackingField;
 
         /// <summary>

@@ -26,7 +26,7 @@
             Application.runInBackground = true;
             string sceneName = base.CreateSceneName();
             this.m_Scene = base.CreateBootstrapScene(sceneName, delegate (PlaymodeTestsController runner) {
-                runner.AddEventHandlerMonoBehaviour<ResultsRenderer>();
+                runner.AddEventHandlerMonoBehaviour<PlayModeRunnerCallback>();
                 runner.AddEventHandlerScriptableObject<WindowResultUpdater>();
                 runner.AddEventHandlerScriptableObject<TestRunnerCallback>();
                 if (this.m_Settings.isBatchModeRun)
@@ -38,7 +38,11 @@
             });
             if (this.m_Settings.sceneBased)
             {
-                EditorBuildSettings.scenes = new List<EditorBuildSettingsScene> { new EditorBuildSettingsScene(sceneName, true) }.ToArray();
+                List<EditorBuildSettingsScene> list = new List<EditorBuildSettingsScene> {
+                    new EditorBuildSettingsScene(sceneName, true)
+                };
+                list.AddRange(EditorBuildSettings.scenes);
+                EditorBuildSettings.scenes = list.ToArray();
             }
             EditorApplication.update = (EditorApplication.CallbackFunction) Delegate.Combine(EditorApplication.update, new EditorApplication.CallbackFunction(this.UpdateCallback));
             this.m_InitPlaying = 3;
@@ -50,7 +54,7 @@
             {
                 if (this.m_InitPlaying == 1)
                 {
-                    base.ExecuteSceneSetupMethods(this.m_Settings.filter);
+                    base.LoadTestsAndExecutePreBuildSetupMethods(this.m_Settings.filter.BuildNUnitFilter());
                 }
                 if (this.m_InitPlaying == 0)
                 {

@@ -8,7 +8,7 @@
     using UnityEngine.Scripting;
 
     /// <summary>
-    /// <para>Webplayer security related class. Note supported from 5.4.0.</para>
+    /// <para>Webplayer security related class. Not supported from 5.4.0 onwards.</para>
     /// </summary>
     public sealed class Security
     {
@@ -44,7 +44,7 @@
         /// <param name="ip">IP address of server.</param>
         /// <param name="atPort">Port from where socket policy is read.</param>
         /// <param name="timeout">Time to wait for response.</param>
-        [ExcludeFromDocs, Obsolete("Security.PrefetchSocketPolicy is no longer supported, since the Unity Web Player is no longer supported by Unity.")]
+        [Obsolete("Security.PrefetchSocketPolicy is no longer supported, since the Unity Web Player is no longer supported by Unity."), ExcludeFromDocs]
         public static bool PrefetchSocketPolicy(string ip, int atPort)
         {
             int timeout = 0xbb8;

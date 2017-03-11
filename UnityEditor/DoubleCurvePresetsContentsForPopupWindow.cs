@@ -88,7 +88,7 @@
                 ScriptableObjectSaveLoadHelper<DoubleCurvePresetLibrary> helper = new ScriptableObjectSaveLoadHelper<DoubleCurvePresetLibrary>(PresetLibraryLocations.GetParticleCurveLibraryExtension(this.m_DoubleCurve.IsSingleCurve(), this.m_DoubleCurve.signedRange), SaveType.Text);
                 this.m_CurveLibraryEditor = new PresetLibraryEditor<DoubleCurvePresetLibrary>(helper, this.m_CurveLibraryEditorState, new Action<int, object>(this.ItemClickedCallback));
                 this.m_CurveLibraryEditor.addDefaultPresets = (Action<PresetLibrary>) Delegate.Combine(this.m_CurveLibraryEditor.addDefaultPresets, new Action<PresetLibrary>(this.AddDefaultPresetsToLibrary));
-                this.m_CurveLibraryEditor.presetsWasReordered = new Action(this.PresetsWasReordered);
+                this.m_CurveLibraryEditor.presetsWasReordered = new System.Action(this.PresetsWasReordered);
                 this.m_CurveLibraryEditor.previewAspect = 4f;
                 this.m_CurveLibraryEditor.minMaxPreviewHeight = new Vector2(24f, 24f);
                 this.m_CurveLibraryEditor.showHeader = true;

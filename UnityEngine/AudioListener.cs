@@ -38,9 +38,9 @@
         /// <summary>
         /// <para>Deprecated Version. Returns a block of the listener (master)'s spectrum data.</para>
         /// </summary>
-        /// <param name="numSamples"></param>
-        /// <param name="channel"></param>
-        /// <param name="window"></param>
+        /// <param name="numSamples">Number of values (the length of the samples array). Must be a power of 2. Min = 64. Max = 8192.</param>
+        /// <param name="channel">The channel to sample from.</param>
+        /// <param name="window">The FFTWindow type to use when sampling.</param>
         [Obsolete("GetSpectrumData returning a float[] is deprecated, use GetOutputData and pass a pre allocated array instead.")]
         public static float[] GetSpectrumData(int numSamples, int channel, FFTWindow window)
         {

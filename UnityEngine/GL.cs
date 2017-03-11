@@ -247,7 +247,7 @@
         /// </summary>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void RenderTargetBarrier();
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("Use invertCulling property")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use invertCulling property"), GeneratedByOldBindingsGenerator]
         public static extern void SetRevertBackfacing(bool revertBackFaces);
         /// <summary>
         /// <para>Sets current texture coordinate (v.x,v.y,v.z) for all texture units.</para>

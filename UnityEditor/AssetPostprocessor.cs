@@ -31,7 +31,7 @@
         [ExcludeFromDocs]
         public void LogError(string warning)
         {
-            Object context = null;
+            UnityEngine.Object context = null;
             this.LogError(warning, context);
         }
 
@@ -40,7 +40,7 @@
         /// </summary>
         /// <param name="warning"></param>
         /// <param name="context"></param>
-        public void LogError(string warning, [DefaultValue("null")] Object context)
+        public void LogError(string warning, [DefaultValue("null")] UnityEngine.Object context)
         {
             Debug.LogError(warning, context);
         }
@@ -53,7 +53,7 @@
         [ExcludeFromDocs]
         public void LogWarning(string warning)
         {
-            Object context = null;
+            UnityEngine.Object context = null;
             this.LogWarning(warning, context);
         }
 
@@ -62,7 +62,7 @@
         /// </summary>
         /// <param name="warning"></param>
         /// <param name="context"></param>
-        public void LogWarning(string warning, [DefaultValue("null")] Object context)
+        public void LogWarning(string warning, [DefaultValue("null")] UnityEngine.Object context)
         {
             Debug.LogWarning(warning, context);
         }

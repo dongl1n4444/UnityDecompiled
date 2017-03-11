@@ -31,11 +31,11 @@
 
         public static bool AddClipToAnimatorComponent(Animator animator, AnimationClip newClip)
         {
-            AnimatorController effectiveAnimatorController = AnimatorController.GetEffectiveAnimatorController(animator);
+            UnityEditor.Animations.AnimatorController effectiveAnimatorController = UnityEditor.Animations.AnimatorController.GetEffectiveAnimatorController(animator);
             if (effectiveAnimatorController == null)
             {
-                effectiveAnimatorController = AnimatorController.CreateAnimatorControllerForClip(newClip, animator.gameObject);
-                AnimatorController.SetAnimatorController(animator, effectiveAnimatorController);
+                effectiveAnimatorController = UnityEditor.Animations.AnimatorController.CreateAnimatorControllerForClip(newClip, animator.gameObject);
+                UnityEditor.Animations.AnimatorController.SetAnimatorController(animator, effectiveAnimatorController);
                 if (effectiveAnimatorController != null)
                 {
                     return true;
@@ -73,13 +73,16 @@
                     AnimationKeyTime time2 = AnimationKeyTime.Time(time.time - curve.timeOffset, time.frameRate);
                     object currentValue = CurveBindingUtility.GetCurrentValue(state, curve);
                     AnimationWindowKeyframe keyframe = AddKeyframeToCurve(curve, currentValue, curve.valueType, time2);
-                    state.SaveCurve(curve, undoLabel);
-                    state.SelectKey(keyframe);
+                    if (keyframe != null)
+                    {
+                        state.SaveCurve(curve, undoLabel);
+                        state.SelectKey(keyframe);
+                    }
                 }
             }
         }
 
-        public static AnimationWindowKeyframe AddKeyframeToCurve(AnimationWindowCurve curve, object value, Type type, AnimationKeyTime time)
+        public static AnimationWindowKeyframe AddKeyframeToCurve(AnimationWindowCurve curve, object value, System.Type type, AnimationKeyTime time)
         {
             AnimationWindowKeyframe keyframe = curve.FindKeyAtTime(time);
             if (keyframe != null)
@@ -87,18 +90,20 @@
                 keyframe.value = value;
                 return keyframe;
             }
-            AnimationWindowKeyframe key = new AnimationWindowKeyframe {
-                time = time.time
-            };
+            AnimationWindowKeyframe key = null;
             if (curve.isPPtrCurve)
             {
-                key.value = value;
-                key.curve = curve;
+                key = new AnimationWindowKeyframe {
+                    time = time.time,
+                    value = value,
+                    curve = curve
+                };
                 curve.AddKeyframe(key, time);
                 return key;
             }
             if ((type == typeof(bool)) || (type == typeof(float)))
             {
+                key = new AnimationWindowKeyframe();
                 AnimationCurve curve2 = curve.ToAnimationCurve();
                 Keyframe keyframe4 = new Keyframe(time.time, (float) value);
                 if (type == typeof(bool))
@@ -120,6 +125,7 @@
                         key.m_TangentMode = keyframe5.tangentMode;
                     }
                 }
+                key.time = time.time;
                 key.value = value;
                 key.curve = curve;
                 curve.AddKeyframe(key, time);
@@ -208,7 +214,7 @@
         public static AnimationWindowCurve CreateDefaultCurve(AnimationWindowSelectionItem selectionItem, EditorCurveBinding binding)
         {
             AnimationClip animationClip = selectionItem.animationClip;
-            Type editorCurveValueType = selectionItem.GetEditorCurveValueType(binding);
+            System.Type editorCurveValueType = selectionItem.GetEditorCurveValueType(binding);
             AnimationWindowCurve curve = new AnimationWindowCurve(animationClip, binding, editorCurveValueType);
             object currentValue = CurveBindingUtility.GetCurrentValue(selectionItem.rootGameObject, binding);
             if (animationClip.length == 0f)
@@ -262,7 +268,7 @@
             {
                 EditorUtility.CopySerialized(clip, dest);
                 AssetDatabase.SaveAssets();
-                Object.DestroyImmediate(clip);
+                UnityEngine.Object.DestroyImmediate(clip);
                 return dest;
             }
             AssetDatabase.CreateAsset(clip, clipPath);
@@ -371,7 +377,7 @@
             {
                 return false;
             }
-            AnimationMode.StopAnimationMode();
+            UnityEditor.AnimationMode.StopAnimationMode();
             return AddClipToAnimationPlayerComponent(animationPlayer, newClip);
         }
 
@@ -391,7 +397,7 @@
             return list;
         }
 
-        public static List<AnimationWindowCurve> FilterCurves(AnimationWindowCurve[] curves, string path, Type animatableObjectType)
+        public static List<AnimationWindowCurve> FilterCurves(AnimationWindowCurve[] curves, string path, System.Type animatableObjectType)
         {
             List<AnimationWindowCurve> list = new List<AnimationWindowCurve>();
             if (curves != null)
@@ -407,7 +413,7 @@
             return list;
         }
 
-        public static List<AnimationWindowCurve> FilterCurves(AnimationWindowCurve[] curves, string path, Type animatableObjectType, string propertyName)
+        public static List<AnimationWindowCurve> FilterCurves(AnimationWindowCurve[] curves, string path, System.Type animatableObjectType, string propertyName)
         {
             List<AnimationWindowCurve> list = new List<AnimationWindowCurve>();
             if (curves != null)
@@ -470,14 +476,14 @@
             {
                 return false;
             }
-            if ((animationClip != null) && (((animationClip.hideFlags & HideFlags.NotEditable) != HideFlags.None) || !AssetDatabase.IsOpenForEdit(animationClip)))
+            if ((animationClip != null) && (((animationClip.hideFlags & HideFlags.NotEditable) != HideFlags.None) || !AssetDatabase.IsOpenForEdit(animationClip, StatusQueryOptions.UseCachedIfPossible)))
             {
                 return false;
             }
             return true;
         }
 
-        public static List<EditorCurveBinding> GetAnimatableProperties(ScriptableObject scriptableObject, Type valueType)
+        public static List<EditorCurveBinding> GetAnimatableProperties(ScriptableObject scriptableObject, System.Type valueType)
         {
             EditorCurveBinding[] scriptableObjectAnimatableBindings = AnimationUtility.GetScriptableObjectAnimatableBindings(scriptableObject);
             List<EditorCurveBinding> list = new List<EditorCurveBinding>();
@@ -491,7 +497,7 @@
             return list;
         }
 
-        public static List<EditorCurveBinding> GetAnimatableProperties(GameObject gameObject, GameObject root, Type valueType)
+        public static List<EditorCurveBinding> GetAnimatableProperties(GameObject gameObject, GameObject root, System.Type valueType)
         {
             EditorCurveBinding[] animatableBindings = AnimationUtility.GetAnimatableBindings(gameObject, root);
             List<EditorCurveBinding> list = new List<EditorCurveBinding>();
@@ -505,7 +511,7 @@
             return list;
         }
 
-        public static List<EditorCurveBinding> GetAnimatableProperties(GameObject gameObject, GameObject root, Type objectType, Type valueType)
+        public static List<EditorCurveBinding> GetAnimatableProperties(GameObject gameObject, GameObject root, System.Type objectType, System.Type valueType)
         {
             EditorCurveBinding[] animatableBindings = AnimationUtility.GetAnimatableBindings(gameObject, root);
             List<EditorCurveBinding> list = new List<EditorCurveBinding>();
@@ -607,7 +613,7 @@
             float num;
             if (curveBinding.isPPtrCurve)
             {
-                Object obj2;
+                UnityEngine.Object obj2;
                 AnimationUtility.GetObjectReferenceValue(rootGameObject, curveBinding, out obj2);
                 return obj2;
             }
@@ -650,7 +656,7 @@
             return (!flag ? currentTime : maxValue);
         }
 
-        public static string GetNicePropertyDisplayName(Type animatableObjectType, string propertyName)
+        public static string GetNicePropertyDisplayName(System.Type animatableObjectType, string propertyName)
         {
             if (ShouldPrefixWithTypeName(animatableObjectType, propertyName))
             {
@@ -659,7 +665,7 @@
             return GetPropertyDisplayName(propertyName);
         }
 
-        public static string GetNicePropertyGroupDisplayName(Type animatableObjectType, string propertyGroupName)
+        public static string GetNicePropertyGroupDisplayName(System.Type animatableObjectType, string propertyGroupName)
         {
             if (ShouldPrefixWithTypeName(animatableObjectType, propertyGroupName))
             {
@@ -711,7 +717,7 @@
             return propertyName;
         }
 
-        public static int GetPropertyNodeID(int setId, string path, Type type, string propertyName) => 
+        public static int GetPropertyNodeID(int setId, string path, System.Type type, string propertyName) => 
             (setId.ToString() + path + type.Name + propertyName).GetHashCode();
 
         public static EditorCurveBinding GetRenamedBinding(EditorCurveBinding binding, string newPath) => 
@@ -758,7 +764,7 @@
                 bool flag2 = AddClipToAnimationPlayerComponent(closestAnimationPlayerComponentInParents, newClip);
                 if (!flag2)
                 {
-                    Object.DestroyImmediate(closestAnimationPlayerComponentInParents);
+                    UnityEngine.Object.DestroyImmediate(closestAnimationPlayerComponentInParents);
                 }
                 return flag2;
             }
@@ -838,10 +844,10 @@
             return ((propertyGroupName == "m_LocalRotation") || (propertyGroupName == "localEulerAnglesRaw"));
         }
 
-        public static bool IsTransformType(Type type) => 
+        public static bool IsTransformType(System.Type type) => 
             ((type == typeof(Transform)) || (type == typeof(RectTransform)));
 
-        public static string NicifyPropertyGroupName(Type animatableObjectType, string propertyGroupName)
+        public static string NicifyPropertyGroupName(System.Type animatableObjectType, string propertyGroupName)
         {
             string str = GetPropertyGroupName(GetPropertyDisplayName(propertyGroupName));
             if ((animatableObjectType == typeof(RectTransform)) & str.Equals("Position"))
@@ -887,7 +893,7 @@
             obj2.ApplyModifiedProperties();
         }
 
-        public static bool ShouldPrefixWithTypeName(Type animatableObjectType, string propertyName)
+        public static bool ShouldPrefixWithTypeName(System.Type animatableObjectType, string propertyName)
         {
             if ((animatableObjectType == typeof(Transform)) || (animatableObjectType == typeof(RectTransform)))
             {

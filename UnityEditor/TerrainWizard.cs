@@ -10,7 +10,7 @@
 
         internal static T DisplayTerrainWizard<T>(string title, string button) where T: TerrainWizard
         {
-            T[] localArray = Resources.FindObjectsOfTypeAll<T>();
+            T[] localArray = UnityEngine.Resources.FindObjectsOfTypeAll<T>();
             if (localArray.Length > 0)
             {
                 T local = localArray[0];

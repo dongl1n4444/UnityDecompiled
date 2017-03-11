@@ -45,7 +45,7 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern void SendInput(ref NativeInputEvent inputEvent);
         public static void SetPollingFrequency(float hertz)
         {

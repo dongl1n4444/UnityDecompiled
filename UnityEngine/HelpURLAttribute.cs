@@ -6,7 +6,7 @@
     /// <summary>
     /// <para>Provide a custom documentation URL for a class.</para>
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple=false), UsedByNativeCode]
+    [UsedByNativeCode, AttributeUsage(AttributeTargets.Class, AllowMultiple=false)]
     public sealed class HelpURLAttribute : Attribute
     {
         internal readonly string m_Url;

@@ -9,12 +9,12 @@
 
     public static class SceneModeUtility
     {
-        private static Type s_FocusType = null;
+        private static System.Type s_FocusType = null;
         private static SceneHierarchyWindow s_HierarchyWindow = null;
         private static GUIContent s_NoneButtonContent = null;
         private static Styles s_Styles;
 
-        public static GameObject[] GetObjects(Object[] gameObjects, bool includeChildren)
+        public static GameObject[] GetObjects(UnityEngine.Object[] gameObjects, bool includeChildren)
         {
             List<GameObject> arr = new List<GameObject>();
             if (!includeChildren)
@@ -56,20 +56,20 @@
             }
         }
 
-        public static T[] GetSelectedObjectsOfType<T>(out GameObject[] gameObjects, params Type[] types) where T: Object
+        public static T[] GetSelectedObjectsOfType<T>(out GameObject[] gameObjects, params System.Type[] types) where T: UnityEngine.Object
         {
             if (types.Length == 0)
             {
-                types = new Type[] { typeof(T) };
+                types = new System.Type[] { typeof(T) };
             }
             List<GameObject> list = new List<GameObject>();
             List<T> list2 = new List<T>();
-            Transform[] transforms = Selection.GetTransforms(SelectionMode.Editable | SelectionMode.ExcludePrefab);
+            Transform[] transforms = Selection.GetTransforms(UnityEditor.SelectionMode.Editable | UnityEditor.SelectionMode.ExcludePrefab);
             foreach (Transform transform in transforms)
             {
-                foreach (Type type in types)
+                foreach (System.Type type in types)
                 {
-                    Object component = transform.gameObject.GetComponent(type);
+                    UnityEngine.Object component = transform.gameObject.GetComponent(type);
                     if (component != null)
                     {
                         list.Add(transform.gameObject);
@@ -82,7 +82,7 @@
             return list2.ToArray();
         }
 
-        public static Type SearchBar(params Type[] types)
+        public static System.Type SearchBar(params System.Type[] types)
         {
             if (s_NoneButtonContent == null)
             {
@@ -101,7 +101,7 @@
             }
             for (int i = 0; i < types.Length; i++)
             {
-                Type type = types[i];
+                System.Type type = types[i];
                 Texture2D image = null;
                 if (type == typeof(Renderer))
                 {
@@ -125,9 +125,9 @@
             return s_FocusType;
         }
 
-        public static void SearchForType(Type type)
+        public static void SearchForType(System.Type type)
         {
-            Object[] objArray = Resources.FindObjectsOfTypeAll(typeof(SceneHierarchyWindow));
+            UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(SceneHierarchyWindow));
             SceneHierarchyWindow window = (objArray.Length <= 0) ? null : (objArray[0] as SceneHierarchyWindow);
             if (window != null)
             {
@@ -154,7 +154,7 @@
             }
         }
 
-        public static bool SetStaticFlags(Object[] targetObjects, int changedFlags, bool flagValue)
+        public static bool SetStaticFlags(UnityEngine.Object[] targetObjects, int changedFlags, bool flagValue)
         {
             bool flag = changedFlags == -1;
             StaticEditorFlags flags = !flag ? ((StaticEditorFlags) Enum.Parse(typeof(StaticEditorFlags), changedFlags.ToString())) : ((StaticEditorFlags) 0);

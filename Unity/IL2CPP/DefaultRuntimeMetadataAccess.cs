@@ -2,6 +2,7 @@
 {
     using Mono.Cecil;
     using System;
+    using System.Runtime.InteropServices;
     using Unity.IL2CPP.ILPreProcessor;
     using Unity.IL2CPP.IoC;
     using Unity.IL2CPP.IoCServices;
@@ -11,16 +12,18 @@
     {
         private readonly MetadataUsage _metadataUsage;
         private readonly MethodUsage _methodUsage;
+        private readonly IMethodVerifier _methodVerifier;
         private readonly Unity.IL2CPP.ILPreProcessor.TypeResolver _typeResolver;
         [Inject]
         public static IIl2CppGenericMethodCollectorWriterService Il2CppGenericMethodCollector;
         [Inject]
         public static INamingService Naming;
 
-        public DefaultRuntimeMetadataAccess(MethodReference methodReference, MetadataUsage metadataUsage, MethodUsage methodUsage)
+        public DefaultRuntimeMetadataAccess(MethodReference methodReference, MetadataUsage metadataUsage, MethodUsage methodUsage, IMethodVerifier methodVerifier = null)
         {
             this._metadataUsage = metadataUsage;
             this._methodUsage = methodUsage;
+            this._methodVerifier = methodVerifier;
             if (methodReference != null)
             {
                 this._typeResolver = new Unity.IL2CPP.ILPreProcessor.TypeResolver(methodReference.DeclaringType as GenericInstanceType, methodReference as GenericInstanceMethod);
@@ -65,11 +68,20 @@
             return Naming.ForRuntimeIl2CppType(reference);
         }
 
-        public string Method(MethodReference genericMethod)
+        public string Method(MethodReference method)
         {
-            MethodReference method = this._typeResolver.Resolve(genericMethod);
-            this._methodUsage.AddMethod(method);
-            return Naming.ForMethod(method);
+            if ((!method.IsGenericInstance && !method.DeclaringType.IsGenericInstance) && ((this._methodVerifier != null) && !this._methodVerifier.MethodExists(method)))
+            {
+                MethodReference reference = method;
+                method = method.Resolve();
+                if (!this._methodVerifier.MethodExists(method))
+                {
+                    throw new InvalidOperationException($"attempting to call method '{reference.FullName}' that does not exist");
+                }
+            }
+            MethodReference reference2 = this._typeResolver.Resolve(method);
+            this._methodUsage.AddMethod(reference2);
+            return Naming.ForMethod(reference2);
         }
 
         public string MethodInfo(MethodReference method)
@@ -95,8 +107,9 @@
 
         public string SizeOf(TypeReference type)
         {
-            TypeReference variableType = this._typeResolver.Resolve(type);
-            return $"sizeof({Naming.ForVariable(variableType)})";
+            TypeReference reference = this._typeResolver.Resolve(type);
+            this._metadataUsage.AddTypeInfo(reference);
+            return Emit.Call("il2cpp_codegen_sizeof", Naming.ForRuntimeTypeInfo(reference));
         }
 
         public string StaticData(TypeReference type)

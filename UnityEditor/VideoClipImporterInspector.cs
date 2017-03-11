@@ -9,7 +9,7 @@
     using UnityEngine;
     using UnityEngine.Events;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(VideoClipImporter))]
+    [CustomEditor(typeof(VideoClipImporter)), CanEditMultipleObjects]
     internal class VideoClipImporterInspector : AssetImporterInspector
     {
         private const int kNarrowLabelWidth = 0x2a;
@@ -23,6 +23,7 @@
         private bool m_IsPlaying = false;
         private bool m_ModifiedTargetSettings;
         private Vector2 m_Position = Vector2.zero;
+        private GUIContent m_PreviewTitle;
         private SerializedProperty m_Quality;
         private AnimBool m_ShowResizeModeOptions = new AnimBool();
         private InspectorTargetSettings[,] m_TargetSettings;
@@ -242,6 +243,24 @@
                 EditorGUI.indentLevel--;
             }
             EditorGUILayout.EndFadeGroup();
+        }
+
+        public override GUIContent GetPreviewTitle()
+        {
+            if (this.m_PreviewTitle == null)
+            {
+                this.m_PreviewTitle = new GUIContent();
+                if (base.targets.Length == 1)
+                {
+                    AssetImporter target = (AssetImporter) base.target;
+                    this.m_PreviewTitle.text = Path.GetFileName(target.assetPath);
+                }
+                else
+                {
+                    this.m_PreviewTitle.text = base.targets.Length + " Video Clips";
+                }
+            }
+            return this.m_PreviewTitle;
         }
 
         private List<GUIContent> GetResizeModeList()
@@ -580,7 +599,7 @@
             false;
 
         protected override bool useAssetDrawPreview =>
-            true;
+            false;
 
         internal class InspectorTargetSettings
         {

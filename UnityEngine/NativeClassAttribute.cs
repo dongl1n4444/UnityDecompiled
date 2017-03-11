@@ -7,7 +7,7 @@
     [AttributeUsage(AttributeTargets.Struct | AttributeTargets.Class, Inherited=false)]
     public sealed class NativeClassAttribute : Attribute
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <QualifiedNativeName>k__BackingField;
 
         public NativeClassAttribute(string qualifiedCppName)

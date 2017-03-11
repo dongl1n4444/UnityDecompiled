@@ -65,7 +65,7 @@
             {
                 foreach (AnimationWindowSelectionItem item in this.m_Selection)
                 {
-                    Object.DestroyImmediate(item);
+                    UnityEngine.Object.DestroyImmediate(item);
                 }
                 this.m_Selection.Clear();
                 this.Notify();

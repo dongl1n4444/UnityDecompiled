@@ -87,6 +87,7 @@
                     AnimationKeyTime time = AnimationKeyTime.Time(this.m_State.currentTime, this.m_State.frameRate);
                     AnimationWindowUtility.AddSelectedKeyframes(this.m_State, time);
                     this.UpdateSelectedKeysToCurveEditor();
+                    GUIUtility.ExitGUI();
                 }
             }
         }
@@ -170,13 +171,18 @@
 
         private void FrameRateInputFieldOnGUI()
         {
-            GUILayout.Label(AnimationWindowStyles.samples, AnimationWindowStyles.toolbarLabel, new GUILayoutOption[0]);
-            EditorGUI.BeginChangeCheck();
-            GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(35f) };
-            int num = EditorGUILayout.IntField((int) this.m_State.clipFrameRate, EditorStyles.toolbarTextField, options);
-            if (EditorGUI.EndChangeCheck())
+            AnimationWindowSelectionItem selectedItem = this.m_State.selectedItem;
+            using (new EditorGUI.DisabledScope((selectedItem == null) || !selectedItem.animationIsEditable))
             {
-                this.m_State.clipFrameRate = num;
+                GUILayout.Label(AnimationWindowStyles.samples, AnimationWindowStyles.toolbarLabel, new GUILayoutOption[0]);
+                EditorGUI.BeginChangeCheck();
+                GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(35f) };
+                int num = EditorGUILayout.DelayedIntField((int) this.m_State.clipFrameRate, EditorStyles.toolbarTextField, options);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    this.m_State.clipFrameRate = num;
+                    this.UpdateSelectedKeysToCurveEditor();
+                }
             }
         }
 
@@ -192,6 +198,10 @@
                     case "Copy":
                         if (Event.current.type == EventType.ExecuteCommand)
                         {
+                            if (this.m_State.showCurveEditor)
+                            {
+                                this.UpdateSelectedKeysFromCurveEditor();
+                            }
                             this.m_State.CopyKeys();
                         }
                         Event.current.Use();
@@ -203,6 +213,7 @@
                             this.SaveCurveEditorKeySelection();
                             this.m_State.PasteKeys();
                             this.UpdateSelectedKeysToCurveEditor();
+                            GUIUtility.ExitGUI();
                         }
                         Event.current.Use();
                         break;
@@ -366,10 +377,10 @@
                 this.m_CurveEditor.invSnap = newFrameRate;
                 this.m_CurveEditor.hTicks.SetTickModulosForFrameRate(newFrameRate);
             });
-            this.m_State.onStartLiveEdit = (Action) Delegate.Combine(this.m_State.onStartLiveEdit, new Action(this.OnStartLiveEdit));
-            this.m_State.onEndLiveEdit = (Action) Delegate.Combine(this.m_State.onEndLiveEdit, new Action(this.OnEndLiveEdit));
+            this.m_State.onStartLiveEdit = (System.Action) Delegate.Combine(this.m_State.onStartLiveEdit, new System.Action(this.OnStartLiveEdit));
+            this.m_State.onEndLiveEdit = (System.Action) Delegate.Combine(this.m_State.onEndLiveEdit, new System.Action(this.OnEndLiveEdit));
             AnimationWindowSelection selection = this.m_State.selection;
-            selection.onSelectionChanged = (Action) Delegate.Combine(selection.onSelectionChanged, new Action(this.OnSelectionChanged));
+            selection.onSelectionChanged = (System.Action) Delegate.Combine(selection.onSelectionChanged, new System.Action(this.OnSelectionChanged));
         }
 
         private void InitializeOverlay()
@@ -482,7 +493,7 @@
             {
                 this.m_CurveEditor.OnDestroy();
             }
-            Object.DestroyImmediate(this.m_State);
+            UnityEngine.Object.DestroyImmediate(this.m_State);
         }
 
         public void OnDisable()
@@ -641,7 +652,7 @@
             GUILayout.FlexibleSpace();
             EditorGUI.BeginChangeCheck();
             GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(35f) };
-            int frame = EditorGUILayout.IntField(this.m_State.currentFrame, EditorStyles.toolbarTextField, options);
+            int frame = EditorGUILayout.DelayedIntField(this.m_State.currentFrame, EditorStyles.toolbarTextField, options);
             if (EditorGUI.EndChangeCheck())
             {
                 this.controlInterface.GoToFrame(frame);

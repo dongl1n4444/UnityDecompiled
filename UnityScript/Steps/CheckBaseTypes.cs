@@ -23,25 +23,25 @@
 
         public void CheckIsClass(TypeReference baseType)
         {
-            IType type = this.TypeEntityFor(baseType);
-            if (!type.get_IsClass())
+            IType entity = this.TypeEntityFor(baseType);
+            if (!entity.IsClass)
             {
-                this.get_Errors().Add(UnityScriptCompilerErrors.ClassExpected(baseType.get_LexicalInfo(), EntityExtensions.DisplayName(type)));
+                this.Errors.Add(UnityScriptCompilerErrors.ClassExpected(baseType.LexicalInfo, entity.DisplayName()));
             }
         }
 
         public void CheckIsInterface(TypeReference baseType)
         {
-            IType type = this.TypeEntityFor(baseType);
-            if (!type.get_IsInterface())
+            IType entity = this.TypeEntityFor(baseType);
+            if (!entity.IsInterface)
             {
-                this.get_Errors().Add(UnityScriptCompilerErrors.InterfaceExpected(baseType.get_LexicalInfo(), EntityExtensions.DisplayName(type)));
+                this.Errors.Add(UnityScriptCompilerErrors.InterfaceExpected(baseType.LexicalInfo, entity.DisplayName()));
             }
         }
 
         public override void LeaveClassDefinition(ClassDefinition node)
         {
-            foreach (TypeReference reference in node.get_BaseTypes())
+            foreach (TypeReference reference in node.BaseTypes)
             {
                 this.CheckBaseTypeAnnotation(reference);
             }
@@ -53,7 +53,7 @@
 
         public override void Run()
         {
-            this.Visit(this.get_CompileUnit());
+            this.Visit(this.CompileUnit);
         }
 
         public IType TypeEntityFor(TypeReference baseType) => 

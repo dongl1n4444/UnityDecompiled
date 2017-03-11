@@ -27,7 +27,7 @@
 
         public static void CloseToolbarWindowsImmediately()
         {
-            foreach (CollabToolbarWindow window in Resources.FindObjectsOfTypeAll<CollabToolbarWindow>())
+            foreach (CollabToolbarWindow window in UnityEngine.Resources.FindObjectsOfTypeAll<CollabToolbarWindow>())
             {
                 window.Close();
             }
@@ -35,12 +35,18 @@
 
         public void OnDestroy()
         {
+            this.OnLostFocus();
             base.OnDestroy();
         }
 
         internal void OnDisable()
         {
             s_LastClosedTime = DateTime.Now.Ticks / 0x2710L;
+            if (s_CollabToolbarWindow != null)
+            {
+                s_ToolbarIsVisible = false;
+                base.NotifyVisibility(s_ToolbarIsVisible);
+            }
             s_CollabToolbarWindow = null;
         }
 
@@ -50,13 +56,17 @@
             base.maxSize = new Vector2(320f, 350f);
             base.initialOpenUrl = "file:///" + EditorApplication.userJavascriptPackagesPath + "unityeditor-collab-toolbar/dist/index.html";
             base.OnEnable();
+            if (s_CollabToolbarWindow != null)
+            {
+                s_ToolbarIsVisible = true;
+                base.NotifyVisibility(s_ToolbarIsVisible);
+            }
         }
 
         public void OnFocus()
         {
             base.OnFocus();
             EditorApplication.LockReloadAssemblies();
-            s_ToolbarIsVisible = true;
         }
 
         public void OnInitScripting()
@@ -68,7 +78,6 @@
         {
             base.OnLostFocus();
             EditorApplication.UnlockReloadAssemblies();
-            s_ToolbarIsVisible = false;
         }
 
         public void OnReceiveTitle(string title)
@@ -101,11 +110,11 @@
             return false;
         }
 
-        [MenuItem("Window/Collab Toolbar", false, 0x7db, true)]
+        [UnityEditor.MenuItem("Window/Collab Toolbar", false, 0x7db, true)]
         public static CollabToolbarWindow ShowToolbarWindow() => 
             EditorWindow.GetWindow<CollabToolbarWindow>(false, "Unity Collab Toolbar");
 
-        [MenuItem("Window/Collab Toolbar", true)]
+        [UnityEditor.MenuItem("Window/Collab Toolbar", true)]
         public static bool ValidateShowToolbarWindow() => 
             true;
 

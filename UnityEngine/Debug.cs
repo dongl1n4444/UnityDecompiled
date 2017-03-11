@@ -15,7 +15,7 @@
         internal static ILogger s_Logger = new Logger(new DebugLogHandler());
 
         /// <summary>
-        /// <para>Assert a condition and logs a formatted error message to the Unity console on failure.</para>
+        /// <para>Assert a condition and logs an error message to the Unity console on failure.</para>
         /// </summary>
         /// <param name="condition">Condition you expect to be true.</param>
         /// <param name="context">Object to which the message applies.</param>
@@ -30,7 +30,7 @@
         }
 
         /// <summary>
-        /// <para>Assert a condition and logs a formatted error message to the Unity console on failure.</para>
+        /// <para>Assert a condition and logs an error message to the Unity console on failure.</para>
         /// </summary>
         /// <param name="condition">Condition you expect to be true.</param>
         /// <param name="context">Object to which the message applies.</param>
@@ -54,7 +54,7 @@
         }
 
         /// <summary>
-        /// <para>Assert a condition and logs a formatted error message to the Unity console on failure.</para>
+        /// <para>Assert a condition and logs an error message to the Unity console on failure.</para>
         /// </summary>
         /// <param name="condition">Condition you expect to be true.</param>
         /// <param name="context">Object to which the message applies.</param>
@@ -69,7 +69,7 @@
         }
 
         /// <summary>
-        /// <para>Assert a condition and logs a formatted error message to the Unity console on failure.</para>
+        /// <para>Assert a condition and logs an error message to the Unity console on failure.</para>
         /// </summary>
         /// <param name="condition">Condition you expect to be true.</param>
         /// <param name="context">Object to which the message applies.</param>
@@ -92,7 +92,7 @@
             }
         }
 
-        [Conditional("UNITY_ASSERTIONS"), Obsolete("Assert(bool, string, params object[]) is obsolete. Use AssertFormat(bool, string, params object[]) (UnityUpgradable) -> AssertFormat(*)", true)]
+        [Obsolete("Assert(bool, string, params object[]) is obsolete. Use AssertFormat(bool, string, params object[]) (UnityUpgradable) -> AssertFormat(*)", true), Conditional("UNITY_ASSERTIONS")]
         public static void Assert(bool condition, string format, params object[] args)
         {
             if (!condition)
@@ -471,7 +471,7 @@
         internal static extern void SetDiagnosticSwitch(string name, object value, bool setPersistent);
 
         /// <summary>
-        /// <para>Opens or closes developer console.</para>
+        /// <para>Reports whether the development console is visible. The development console cannot be made to appear using:</para>
         /// </summary>
         public static bool developerConsoleVisible { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 

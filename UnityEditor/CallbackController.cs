@@ -7,13 +7,13 @@
 
     internal class CallbackController
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <active>k__BackingField;
-        private readonly Action m_Callback;
+        private readonly System.Action m_Callback;
         private readonly float m_CallbacksPerSecond;
         private double m_NextCallback;
 
-        public CallbackController(Action callback, float callbacksPerSecond)
+        public CallbackController(System.Action callback, float callbacksPerSecond)
         {
             this.m_Callback = callback;
             this.m_CallbacksPerSecond = Mathf.Max(callbacksPerSecond, 1f);

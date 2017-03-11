@@ -14,7 +14,6 @@
     public class GenericContextFreeVisitor : Unity.Cecil.Visitor.Visitor
     {
         private readonly InflatedCollectionCollector _generics;
-        private readonly IInteropDataCollector _interopDataCollector;
         [CompilerGenerated]
         private static Func<TypeReference, bool> <>f__am$cache0;
         [Inject]
@@ -22,16 +21,13 @@
         [Inject]
         public static IIl2CppGenericMethodCollectorWriterService Il2CppGenericMethodCollector;
         [Inject]
-        public static IStatsService Stats;
-        [Inject]
         public static ITypeProviderService TypeProvider;
         [Inject]
         public static IWindowsRuntimeProjections WindowsRuntimeProjections;
 
-        public GenericContextFreeVisitor(InflatedCollectionCollector generics, IInteropDataCollector interopDataCollector)
+        public GenericContextFreeVisitor(InflatedCollectionCollector generics)
         {
             this._generics = generics;
-            this._interopDataCollector = interopDataCollector;
         }
 
         private static bool IsFullyInflated(GenericInstanceMethod genericInstanceMethod)
@@ -104,22 +100,10 @@
         {
             if (typeDefinition.CanBoxToWindowsRuntime())
             {
-                string fullName;
                 GenericInstanceType inflatedType = new GenericInstanceType(TypeProvider.IReferenceType) {
                     GenericArguments = { typeDefinition }
                 };
                 this.ProcessGenericType(inflatedType);
-                string windowsRuntimePrimitiveName = typeDefinition.GetWindowsRuntimePrimitiveName();
-                if (windowsRuntimePrimitiveName != null)
-                {
-                    fullName = windowsRuntimePrimitiveName;
-                }
-                else
-                {
-                    fullName = WindowsRuntimeProjections.ProjectToWindowsRuntime(typeDefinition).FullName;
-                }
-                this._interopDataCollector.AddWindowsRuntimeTypeWithName(inflatedType, $"Windows.Foundation.IReference`1<{fullName}>");
-                Stats.RecordWindowsRuntimeBoxedType();
             }
         }
 

@@ -108,26 +108,14 @@
         private static bool IsFieldTypeSerializable(TypeReference typeReference) => 
             (IsTypeSerializable(typeReference) || IsSupportedCollection(typeReference));
 
+        private static bool IsGenericDictionary(TypeReference typeReference)
+        {
+            TypeReference type = typeReference;
+            return ((type != null) && CecilUtils.IsGenericDictionary(type));
+        }
+
         public static bool IsNonSerialized(TypeReference typeDeclaration) => 
             ((typeDeclaration == null) || (typeDeclaration.IsEnum() || (typeDeclaration.HasGenericParameters || ((typeDeclaration.MetadataType == MetadataType.Object) || (typeDeclaration.FullName.StartsWith("System.") || (typeDeclaration.IsArray || ((typeDeclaration.FullName == "UnityEngine.MonoBehaviour") || (typeDeclaration.FullName == "UnityEngine.ScriptableObject"))))))));
-
-        private static bool IsOrExtendsGenericDictionary(TypeReference typeReference)
-        {
-            TypeDefinition definition;
-            for (TypeReference reference = typeReference; reference != null; reference = definition.BaseType)
-            {
-                if (CecilUtils.IsGenericDictionary(reference))
-                {
-                    return true;
-                }
-                definition = reference.CheckedResolve();
-                if (definition == null)
-                {
-                    break;
-                }
-            }
-            return false;
-        }
 
         private static bool IsSerializablePrimitive(TypeReference typeReference)
         {
@@ -170,7 +158,7 @@
             {
                 return false;
             }
-            if (IsOrExtendsGenericDictionary(typeReference))
+            if (IsGenericDictionary(typeReference))
             {
                 return false;
             }
@@ -290,10 +278,10 @@
             internal IEnumerator<KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver>> $locvar0;
             internal Collection<FieldDefinition>.Enumerator $locvar1;
             internal int $PC;
-            internal TypeReference <baseType>__1;
-            internal FieldDefinition <fieldDefinition>__4;
-            internal GenericInstanceType <genericBaseInstanceType>__2;
-            internal KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver> <kv>__3;
+            internal TypeReference <baseType>__0;
+            internal FieldDefinition <fieldDefinition>__3;
+            internal GenericInstanceType <genericBaseInstanceType>__1;
+            internal KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver> <kv>__2;
             internal TypeDefinition definition;
             internal Unity.SerializationLogic.TypeResolver typeResolver;
 
@@ -338,17 +326,17 @@
                 switch (num)
                 {
                     case 0:
-                        this.<baseType>__1 = this.definition.BaseType;
-                        if (this.<baseType>__1 == null)
+                        this.<baseType>__0 = this.definition.BaseType;
+                        if (this.<baseType>__0 == null)
                         {
                             goto Label_0128;
                         }
-                        this.<genericBaseInstanceType>__2 = this.<baseType>__1 as GenericInstanceType;
-                        if (this.<genericBaseInstanceType>__2 != null)
+                        this.<genericBaseInstanceType>__1 = this.<baseType>__0 as GenericInstanceType;
+                        if (this.<genericBaseInstanceType>__1 != null)
                         {
-                            this.typeResolver.Add(this.<genericBaseInstanceType>__2);
+                            this.typeResolver.Add(this.<genericBaseInstanceType>__1);
                         }
-                        this.$locvar0 = UnitySerializationLogic.AllFieldsFor(this.<baseType>__1.Resolve(), this.typeResolver).GetEnumerator();
+                        this.$locvar0 = UnitySerializationLogic.AllFieldsFor(this.<baseType>__0.Resolve(), this.typeResolver).GetEnumerator();
                         num = 0xfffffffd;
                         break;
 
@@ -365,8 +353,8 @@
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<kv>__3 = this.$locvar0.Current;
-                        this.$current = this.<kv>__3;
+                        this.<kv>__2 = this.$locvar0.Current;
+                        this.$current = this.<kv>__2;
                         if (!this.$disposing)
                         {
                             this.$PC = 1;
@@ -385,9 +373,9 @@
                         this.$locvar0.Dispose();
                     }
                 }
-                if (this.<genericBaseInstanceType>__2 != null)
+                if (this.<genericBaseInstanceType>__1 != null)
                 {
-                    this.typeResolver.Remove(this.<genericBaseInstanceType>__2);
+                    this.typeResolver.Remove(this.<genericBaseInstanceType>__1);
                 }
             Label_0128:
                 this.$locvar1 = this.definition.Fields.GetEnumerator();
@@ -397,8 +385,8 @@
                 {
                     while (this.$locvar1.MoveNext())
                     {
-                        this.<fieldDefinition>__4 = this.$locvar1.Current;
-                        this.$current = new KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver>(this.<fieldDefinition>__4, this.typeResolver);
+                        this.<fieldDefinition>__3 = this.$locvar1.Current;
+                        this.$current = new KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver>(this.<fieldDefinition>__3, this.typeResolver);
                         if (!this.$disposing)
                         {
                             this.$PC = 2;

@@ -24,7 +24,7 @@
         /// <param name="targetPlatform">The platform to build the bundle for.</param>
         /// <param name="crc">The optional crc output parameter can be used to get a CRC checksum for the generated AssetBundle, which can be used to verify content when downloading AssetBundles using WWW.LoadFromCacheOrDownload.</param>
         [Obsolete("BuildAssetBundle has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details.", true)]
-        public static bool BuildAssetBundle(Object mainAsset, Object[] assets, string pathName) => 
+        public static bool BuildAssetBundle(UnityEngine.Object mainAsset, UnityEngine.Object[] assets, string pathName) => 
             WebPlayerAssetBundlesAreNoLongerSupported();
 
         /// <summary>
@@ -37,18 +37,18 @@
         /// <param name="targetPlatform">The platform to build the bundle for.</param>
         /// <param name="crc">The optional crc output parameter can be used to get a CRC checksum for the generated AssetBundle, which can be used to verify content when downloading AssetBundles using WWW.LoadFromCacheOrDownload.</param>
         [Obsolete("BuildAssetBundle has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details.", true)]
-        public static bool BuildAssetBundle(Object mainAsset, Object[] assets, string pathName, BuildAssetBundleOptions assetBundleOptions) => 
+        public static bool BuildAssetBundle(UnityEngine.Object mainAsset, UnityEngine.Object[] assets, string pathName, BuildAssetBundleOptions assetBundleOptions) => 
             WebPlayerAssetBundlesAreNoLongerSupported();
 
         [Obsolete("BuildAssetBundle has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details.", true)]
-        public static bool BuildAssetBundle(Object mainAsset, Object[] assets, string pathName, out uint crc)
+        public static bool BuildAssetBundle(UnityEngine.Object mainAsset, UnityEngine.Object[] assets, string pathName, out uint crc)
         {
             crc = 0;
             return WebPlayerAssetBundlesAreNoLongerSupported();
         }
 
         [Obsolete("BuildAssetBundle has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details.", true)]
-        public static bool BuildAssetBundle(Object mainAsset, Object[] assets, string pathName, out uint crc, BuildAssetBundleOptions assetBundleOptions)
+        public static bool BuildAssetBundle(UnityEngine.Object mainAsset, UnityEngine.Object[] assets, string pathName, out uint crc, BuildAssetBundleOptions assetBundleOptions)
         {
             crc = 0;
             return WebPlayerAssetBundlesAreNoLongerSupported();
@@ -64,20 +64,20 @@
         /// <param name="targetPlatform">The platform to build the bundle for.</param>
         /// <param name="crc">The optional crc output parameter can be used to get a CRC checksum for the generated AssetBundle, which can be used to verify content when downloading AssetBundles using WWW.LoadFromCacheOrDownload.</param>
         [Obsolete("BuildAssetBundle has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details.")]
-        public static bool BuildAssetBundle(Object mainAsset, Object[] assets, string pathName, BuildAssetBundleOptions assetBundleOptions, BuildTarget targetPlatform)
+        public static bool BuildAssetBundle(UnityEngine.Object mainAsset, UnityEngine.Object[] assets, string pathName, BuildAssetBundleOptions assetBundleOptions, BuildTarget targetPlatform)
         {
             uint num;
             return BuildAssetBundle(mainAsset, assets, pathName, out num, assetBundleOptions, targetPlatform);
         }
 
         [Obsolete("BuildAssetBundle has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details.")]
-        public static bool BuildAssetBundle(Object mainAsset, Object[] assets, string pathName, out uint crc, BuildAssetBundleOptions assetBundleOptions, BuildTarget targetPlatform)
+        public static bool BuildAssetBundle(UnityEngine.Object mainAsset, UnityEngine.Object[] assets, string pathName, out uint crc, BuildAssetBundleOptions assetBundleOptions, BuildTarget targetPlatform)
         {
             BuildTargetGroup activeBuildTargetGroup = EditorUserBuildSettings.activeBuildTargetGroup;
             return BuildAssetBundle(mainAsset, assets, pathName, out crc, assetBundleOptions, activeBuildTargetGroup, targetPlatform);
         }
 
-        internal static bool BuildAssetBundle(Object mainAsset, Object[] assets, string pathName, out uint crc, BuildAssetBundleOptions assetBundleOptions, BuildTargetGroup targetPlatformGroup, BuildTarget targetPlatform)
+        internal static bool BuildAssetBundle(UnityEngine.Object mainAsset, UnityEngine.Object[] assets, string pathName, out uint crc, BuildAssetBundleOptions assetBundleOptions, BuildTargetGroup targetPlatformGroup, BuildTarget targetPlatform)
         {
             crc = 0;
             try
@@ -102,7 +102,7 @@
         /// <param name="targetPlatform">The platform where the asset bundle will be used.</param>
         /// <param name="crc">An optional output parameter used to get a CRC checksum for the generated AssetBundle. (Used to verify content when downloading AssetBundles using WWW.LoadFromCacheOrDownload.)</param>
         [Obsolete("BuildAssetBundleExplicitAssetNames has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details.", true)]
-        public static bool BuildAssetBundleExplicitAssetNames(Object[] assets, string[] assetNames, string pathName) => 
+        public static bool BuildAssetBundleExplicitAssetNames(UnityEngine.Object[] assets, string[] assetNames, string pathName) => 
             WebPlayerAssetBundlesAreNoLongerSupported();
 
         /// <summary>
@@ -116,18 +116,18 @@
         /// <param name="targetPlatform">The platform where the asset bundle will be used.</param>
         /// <param name="crc">An optional output parameter used to get a CRC checksum for the generated AssetBundle. (Used to verify content when downloading AssetBundles using WWW.LoadFromCacheOrDownload.)</param>
         [Obsolete("BuildAssetBundleExplicitAssetNames has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details.", true)]
-        public static bool BuildAssetBundleExplicitAssetNames(Object[] assets, string[] assetNames, string pathName, BuildAssetBundleOptions assetBundleOptions) => 
+        public static bool BuildAssetBundleExplicitAssetNames(UnityEngine.Object[] assets, string[] assetNames, string pathName, BuildAssetBundleOptions assetBundleOptions) => 
             WebPlayerAssetBundlesAreNoLongerSupported();
 
         [Obsolete("BuildAssetBundleExplicitAssetNames has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details.", true)]
-        public static bool BuildAssetBundleExplicitAssetNames(Object[] assets, string[] assetNames, string pathName, out uint crc)
+        public static bool BuildAssetBundleExplicitAssetNames(UnityEngine.Object[] assets, string[] assetNames, string pathName, out uint crc)
         {
             crc = 0;
             return WebPlayerAssetBundlesAreNoLongerSupported();
         }
 
         [Obsolete("BuildAssetBundleExplicitAssetNames has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details.", true)]
-        public static bool BuildAssetBundleExplicitAssetNames(Object[] assets, string[] assetNames, string pathName, out uint crc, BuildAssetBundleOptions assetBundleOptions)
+        public static bool BuildAssetBundleExplicitAssetNames(UnityEngine.Object[] assets, string[] assetNames, string pathName, out uint crc, BuildAssetBundleOptions assetBundleOptions)
         {
             crc = 0;
             return WebPlayerAssetBundlesAreNoLongerSupported();
@@ -144,20 +144,20 @@
         /// <param name="targetPlatform">The platform where the asset bundle will be used.</param>
         /// <param name="crc">An optional output parameter used to get a CRC checksum for the generated AssetBundle. (Used to verify content when downloading AssetBundles using WWW.LoadFromCacheOrDownload.)</param>
         [Obsolete("BuildAssetBundleExplicitAssetNames has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details.")]
-        public static bool BuildAssetBundleExplicitAssetNames(Object[] assets, string[] assetNames, string pathName, BuildAssetBundleOptions assetBundleOptions, BuildTarget targetPlatform)
+        public static bool BuildAssetBundleExplicitAssetNames(UnityEngine.Object[] assets, string[] assetNames, string pathName, BuildAssetBundleOptions assetBundleOptions, BuildTarget targetPlatform)
         {
             uint num;
             return BuildAssetBundleExplicitAssetNames(assets, assetNames, pathName, out num, assetBundleOptions, targetPlatform);
         }
 
         [Obsolete("BuildAssetBundleExplicitAssetNames has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details.")]
-        public static bool BuildAssetBundleExplicitAssetNames(Object[] assets, string[] assetNames, string pathName, out uint crc, BuildAssetBundleOptions assetBundleOptions, BuildTarget targetPlatform)
+        public static bool BuildAssetBundleExplicitAssetNames(UnityEngine.Object[] assets, string[] assetNames, string pathName, out uint crc, BuildAssetBundleOptions assetBundleOptions, BuildTarget targetPlatform)
         {
             BuildTargetGroup activeBuildTargetGroup = EditorUserBuildSettings.activeBuildTargetGroup;
             return BuildAssetBundleExplicitAssetNames(assets, assetNames, pathName, out crc, assetBundleOptions, activeBuildTargetGroup, targetPlatform);
         }
 
-        internal static bool BuildAssetBundleExplicitAssetNames(Object[] assets, string[] assetNames, string pathName, out uint crc, BuildAssetBundleOptions assetBundleOptions, BuildTargetGroup targetPlatformGroup, BuildTarget targetPlatform)
+        internal static bool BuildAssetBundleExplicitAssetNames(UnityEngine.Object[] assets, string[] assetNames, string pathName, out uint crc, BuildAssetBundleOptions assetBundleOptions, BuildTargetGroup targetPlatformGroup, BuildTarget targetPlatform)
         {
             crc = 0;
             try
@@ -172,8 +172,8 @@
         }
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private static extern bool BuildAssetBundleInternal(Object mainAsset, Object[] assets, string[] assetNames, string pathName, BuildAssetBundleOptions assetBundleOptions, BuildTargetGroup targetPlatformGroup, BuildTarget targetPlatform, out uint crc);
-        [Obsolete("BuildAssetBundles signature has changed. Please specify the targetPlatform parameter", true), ExcludeFromDocs]
+        private static extern bool BuildAssetBundleInternal(UnityEngine.Object mainAsset, UnityEngine.Object[] assets, string[] assetNames, string pathName, BuildAssetBundleOptions assetBundleOptions, BuildTargetGroup targetPlatformGroup, BuildTarget targetPlatform, out uint crc);
+        [ExcludeFromDocs, Obsolete("BuildAssetBundles signature has changed. Please specify the targetPlatform parameter", true)]
         public static AssetBundleManifest BuildAssetBundles(string outputPath)
         {
             BuildAssetBundleOptions none = BuildAssetBundleOptions.None;
@@ -187,7 +187,7 @@
             return null;
         }
 
-        [ExcludeFromDocs, Obsolete("BuildAssetBundles signature has changed. Please specify the targetPlatform parameter", true)]
+        [Obsolete("BuildAssetBundles signature has changed. Please specify the targetPlatform parameter", true), ExcludeFromDocs]
         public static AssetBundleManifest BuildAssetBundles(string outputPath, AssetBundleBuild[] builds)
         {
             BuildAssetBundleOptions none = BuildAssetBundleOptions.None;
@@ -206,7 +206,10 @@
         /// </summary>
         /// <param name="outputPath">Output path for the AssetBundles.</param>
         /// <param name="assetBundleOptions">AssetBundle building options.</param>
-        /// <param name="targetPlatform">Target build platform.</param>
+        /// <param name="targetPlatform">Chosen target build platform.</param>
+        /// <returns>
+        /// <para>The manifest listing all AssetBundles included in this build.</para>
+        /// </returns>
         public static AssetBundleManifest BuildAssetBundles(string outputPath, BuildAssetBundleOptions assetBundleOptions, BuildTarget targetPlatform)
         {
             BuildTargetGroup activeBuildTargetGroup = EditorUserBuildSettings.activeBuildTargetGroup;
@@ -217,9 +220,12 @@
         /// <para>Build AssetBundles from a building map.</para>
         /// </summary>
         /// <param name="outputPath">Output path for the AssetBundles.</param>
+        /// <param name="builds">AssetBundle building map.</param>
         /// <param name="assetBundleOptions">AssetBundle building options.</param>
         /// <param name="targetPlatform">Target build platform.</param>
-        /// <param name="builds">AssetBundle building map.</param>
+        /// <returns>
+        /// <para>The manifest listing all AssetBundles included in this build.</para>
+        /// </returns>
         public static AssetBundleManifest BuildAssetBundles(string outputPath, AssetBundleBuild[] builds, BuildAssetBundleOptions assetBundleOptions, BuildTarget targetPlatform)
         {
             BuildTargetGroup activeBuildTargetGroup = EditorUserBuildSettings.activeBuildTargetGroup;
@@ -404,7 +410,7 @@ Provided path: '{locationPathName}', expected a path with the extension '.{str2}
                 BuildReport report = BuildPlayerInternal(levels, locationPath, null, buildTargetGroup, target, (options | BuildOptions.BuildAdditionalStreamedScenes) | BuildOptions.ComputeCRC);
                 crc = report.crc;
                 string str = report.SummarizeErrors();
-                Object.DestroyImmediate(report, true);
+                UnityEngine.Object.DestroyImmediate(report, true);
                 return str;
             }
             catch (Exception exception)
@@ -420,7 +426,7 @@ Provided path: '{locationPathName}', expected a path with the extension '.{str2}
         internal static extern string GetBuildTargetAdvancedLicenseName(BuildTarget target);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern BuildTarget GetBuildTargetByName(string platform);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern BuildTargetGroup GetBuildTargetGroup(BuildTarget platform);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern BuildTargetGroup GetBuildTargetGroupByName(string platform);
@@ -431,13 +437,13 @@ Provided path: '{locationPathName}', expected a path with the extension '.{str2}
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern string GetBuildTargetGroupName(BuildTargetGroup buildTargetGroup);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         internal static extern string GetBuildTargetName(BuildTarget targetPlatform);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern string GetBuildToolsDirectory(BuildTarget target);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool GetCRCForAssetBundle(string targetPath, out uint crc);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         internal static extern string GetEditorTargetName();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool GetHashForAssetBundle(string targetPath, out Hash128 hash);
@@ -450,7 +456,7 @@ Provided path: '{locationPathName}', expected a path with the extension '.{str2}
 
         [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         internal static extern string GetPlaybackEngineDirectory(BuildTargetGroup buildTargetGroup, BuildTarget target, BuildOptions options);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         internal static extern string GetPlaybackEngineExtensionDirectory(BuildTargetGroup buildTargetGroup, BuildTarget target, BuildOptions options);
         private static string[] InvokeCalculateBuildTags(BuildTarget target, BuildTargetGroup group) => 
             new string[0];

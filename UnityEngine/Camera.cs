@@ -11,7 +11,7 @@
     /// <summary>
     /// <para>A Camera is a device through which the player views the world.</para>
     /// </summary>
-    [RequireComponent(typeof(Transform)), UsedByNativeCode]
+    [UsedByNativeCode, RequireComponent(typeof(Transform))]
     public sealed class Camera : Behaviour
     {
         /// <summary>
@@ -121,15 +121,15 @@
         /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern CommandBuffer[] GetCommandBuffers(CameraEvent evt);
-        [Obsolete("Property GetScreenHeight() has been deprecated. Use Screen.height instead (UnityUpgradable) -> Screen.height", true), EditorBrowsable(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property GetScreenHeight() has been deprecated. Use Screen.height instead (UnityUpgradable) -> Screen.height", true)]
         public float GetScreenHeight() => 
             0f;
 
-        [Obsolete("Property GetScreenWidth() has been deprecated. Use Screen.width instead (UnityUpgradable) -> Screen.width", true), EditorBrowsable(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property GetScreenWidth() has been deprecated. Use Screen.width instead (UnityUpgradable) -> Screen.width", true)]
         public float GetScreenWidth() => 
             0f;
 
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("GetStereoProjectionMatrices is deprecated. Use GetStereoProjectionMatrix(StereoscopicEye eye) instead.")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("GetStereoProjectionMatrices is deprecated. Use GetStereoProjectionMatrix(StereoscopicEye eye) instead."), GeneratedByOldBindingsGenerator]
         public extern Matrix4x4[] GetStereoProjectionMatrices();
         public Matrix4x4 GetStereoProjectionMatrix(StereoscopicEye eye)
         {
@@ -138,7 +138,7 @@
             return matrixx;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("GetStereoViewMatrices is deprecated. Use GetStereoViewMatrix(StereoscopicEye eye) instead.")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("GetStereoViewMatrices is deprecated. Use GetStereoViewMatrix(StereoscopicEye eye) instead."), GeneratedByOldBindingsGenerator]
         public extern Matrix4x4[] GetStereoViewMatrices();
         public Matrix4x4 GetStereoViewMatrix(StereoscopicEye eye)
         {
@@ -338,6 +338,7 @@
         /// <summary>
         /// <para>Reset to the default field of view.</para>
         /// </summary>
+        [Obsolete("Camera.ResetFieldOfView has been deprecated in Unity 5.6 and will be removed in the future. Please replace it by explicitly setting the camera's FOV to 60 degrees.")]
         public void ResetFieldOfView()
         {
             INTERNAL_CALL_ResetFieldOfView(this);
@@ -423,10 +424,10 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetReplacementShader(Shader shader, string replacementTag);
         /// <summary>
-        /// <para>Set custom projection matrices for both eyes.</para>
+        /// <para>Sets custom projection matrices for both the left and right stereoscopic eyes.</para>
         /// </summary>
-        /// <param name="leftMatrix">Projection matrix for the stereo left eye.</param>
-        /// <param name="rightMatrix">Projection matrix for the stereo right eye.</param>
+        /// <param name="leftMatrix">Projection matrix for the stereoscopic left eye.</param>
+        /// <param name="rightMatrix">Projection matrix for the stereoscopic right eye.</param>
         [Obsolete("SetStereoProjectionMatrices is deprecated. Use SetStereoProjectionMatrix(StereoscopicEye eye) instead.")]
         public void SetStereoProjectionMatrices(Matrix4x4 leftMatrix, Matrix4x4 rightMatrix)
         {
@@ -505,7 +506,10 @@
         /// <summary>
         /// <para>Transforms position from viewport space into world space.</para>
         /// </summary>
-        /// <param name="position"></param>
+        /// <param name="position">The 3d vector in Viewport space.</param>
+        /// <returns>
+        /// <para>The 3d vector in World space.</para>
+        /// </returns>
         public Vector3 ViewportToWorldPoint(Vector3 position)
         {
             Vector3 vector;
@@ -541,9 +545,7 @@
         public RenderTexture activeTexture { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
-        /// <para>The rendering path that is currently being used (Read Only).
-        /// 
-        /// The actual rendering path might be different from the user-specified renderingPath if the underlying gpu/platform does not support the requested one, or some other situation caused a fallback (for example, deferred rendering is not supported with orthographic projection cameras).</para>
+        /// <para>The rendering path that is currently being used (Read Only).</para>
         /// </summary>
         public RenderingPath actualRenderingPath { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
@@ -707,7 +709,7 @@
         [Obsolete("use Camera.allowHDR instead.")]
         public bool hdr { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        [Obsolete("Property isOrthoGraphic has been deprecated. Use orthographic (UnityUpgradable) -> orthographic", true), EditorBrowsable(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property isOrthoGraphic has been deprecated. Use orthographic (UnityUpgradable) -> orthographic", true)]
         public bool isOrthoGraphic
         {
             get => 
@@ -848,11 +850,7 @@
         }
 
         /// <summary>
-        /// <para>The rendering path that should be used, if possible.
-        /// 
-        /// In some situations, it may not be possible to use the rendering path specified, in which case the renderer will automatically use a different path. For example, if the underlying gpu/platform does not support the requested one, or some other situation caused a fallback (for example, deferred rendering is not supported with orthographic projection cameras).
-        /// 
-        /// For this reason, we also provide the read-only property actualRenderingPath which allows you to discover which path is actually being used.</para>
+        /// <para>The rendering path that should be used, if possible.</para>
         /// </summary>
         public RenderingPath renderingPath { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
@@ -887,9 +885,7 @@
         public float stereoSeparation { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
-        /// <para>When Virtual Reality is enabled, the stereoTargetEye value determines which eyes of the Head Mounted Display (HMD) this camera renders to. The default is to render both eyes.
-        /// 
-        /// The values passed to stereoTargetEye are found in the StereoTargetEyeMask enum. Every camera will render to the Main Game Window by default. If you do not want to see the content from this camera in the Main Game Window, use a camera with a higher depth value than this camera, or set the Camera's showDeviceView value to false.</para>
+        /// <para>Defines which eye of a VR display the Camera renders into.</para>
         /// </summary>
         public StereoTargetEyeMask stereoTargetEye { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 

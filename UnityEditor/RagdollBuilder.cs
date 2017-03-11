@@ -66,7 +66,7 @@
             float num3;
             if (this.head.GetComponent<Collider>() != null)
             {
-                Object.Destroy(this.head.GetComponent<Collider>());
+                UnityEngine.Object.Destroy(this.head.GetComponent<Collider>());
             }
             float num = Vector3.Distance(this.leftArm.transform.position, this.rightArm.transform.position) / 4f;
             SphereCollider collider = this.head.gameObject.AddComponent<SphereCollider>();
@@ -84,7 +84,7 @@
             collider.center = zero;
         }
 
-        private void AddJoint(string name, Transform anchor, string parent, Vector3 worldTwistAxis, Vector3 worldSwingAxis, float minLimit, float maxLimit, float swingLimit, Type colliderType, float radiusScale, float density)
+        private void AddJoint(string name, Transform anchor, string parent, Vector3 worldTwistAxis, Vector3 worldSwingAxis, float minLimit, float maxLimit, float swingLimit, System.Type colliderType, float radiusScale, float density)
         {
             BoneInfo info = new BoneInfo {
                 name = name,
@@ -114,7 +114,7 @@
             this.bones.Add(info);
         }
 
-        private void AddMirroredJoint(string name, Transform leftAnchor, Transform rightAnchor, string parent, Vector3 worldTwistAxis, Vector3 worldSwingAxis, float minLimit, float maxLimit, float swingLimit, Type colliderType, float radiusScale, float density)
+        private void AddMirroredJoint(string name, Transform leftAnchor, Transform rightAnchor, string parent, Vector3 worldTwistAxis, Vector3 worldSwingAxis, float minLimit, float maxLimit, float swingLimit, System.Type colliderType, float radiusScale, float density)
         {
             this.AddJoint("Left " + name, leftAnchor, parent, worldTwistAxis, worldSwingAxis, minLimit, maxLimit, swingLimit, colliderType, radiusScale, density);
             this.AddJoint("Right " + name, rightAnchor, parent, worldTwistAxis, worldSwingAxis, minLimit, maxLimit, swingLimit, colliderType, radiusScale, density);
@@ -406,17 +406,17 @@
                         Component[] componentsInChildren = current.anchor.GetComponentsInChildren(typeof(Joint));
                         foreach (Joint joint in componentsInChildren)
                         {
-                            Object.DestroyImmediate(joint);
+                            UnityEngine.Object.DestroyImmediate(joint);
                         }
                         Component[] componentArray3 = current.anchor.GetComponentsInChildren(typeof(Rigidbody));
                         foreach (Rigidbody rigidbody in componentArray3)
                         {
-                            Object.DestroyImmediate(rigidbody);
+                            UnityEngine.Object.DestroyImmediate(rigidbody);
                         }
                         Component[] componentArray5 = current.anchor.GetComponentsInChildren(typeof(Collider));
                         foreach (Collider collider in componentArray5)
                         {
-                            Object.DestroyImmediate(collider);
+                            UnityEngine.Object.DestroyImmediate(collider);
                         }
                     }
                 }
@@ -447,7 +447,7 @@
             return bounds;
         }
 
-        [MenuItem("GameObject/3D Object/Ragdoll...", false, 0x7d0)]
+        [UnityEditor.MenuItem("GameObject/3D Object/Ragdoll...", false, 0x7d0)]
         private static void CreateWizard()
         {
             ScriptableWizard.DisplayWizard<RagdollBuilder>("Create Ragdoll");
@@ -614,7 +614,7 @@
             public Transform anchor;
             public Vector3 axis;
             public ArrayList children = new ArrayList();
-            public Type colliderType;
+            public System.Type colliderType;
             public float density;
             public CharacterJoint joint;
             public float maxLimit;

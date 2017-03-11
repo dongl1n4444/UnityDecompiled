@@ -126,7 +126,7 @@
             AnimatorOverrideController target = base.target as AnimatorOverrideController;
             RuntimeAnimatorController controller2 = !this.m_Controller.hasMultipleDifferentValues ? target.runtimeAnimatorController : null;
             EditorGUI.BeginChangeCheck();
-            controller2 = EditorGUILayout.ObjectField("Controller", controller2, typeof(AnimatorController), false, new GUILayoutOption[0]) as RuntimeAnimatorController;
+            controller2 = EditorGUILayout.ObjectField("Controller", controller2, typeof(UnityEditor.Animations.AnimatorController), false, new GUILayoutOption[0]) as RuntimeAnimatorController;
             if (EditorGUI.EndChangeCheck())
             {
                 for (int i = 0; i < base.targets.Length; i++)

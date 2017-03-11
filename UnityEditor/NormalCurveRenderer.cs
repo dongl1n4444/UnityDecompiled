@@ -76,19 +76,23 @@
         {
             if (this.m_CurveMesh == null)
             {
+                Vector3[] points = this.GetPoints();
                 this.m_CurveMesh = new Mesh();
                 this.m_CurveMesh.name = "NormalCurveRendererMesh";
                 this.m_CurveMesh.hideFlags |= HideFlags.DontSave;
-                this.m_CurveMesh.vertices = this.GetPoints();
-                int num = this.m_CurveMesh.vertices.Length - 1;
-                int item = 0;
-                List<int> list = new List<int>(num * 2);
-                while (item < num)
+                this.m_CurveMesh.vertices = points;
+                if (points.Length > 0)
                 {
-                    list.Add(item);
-                    list.Add(++item);
+                    int num = points.Length - 1;
+                    int item = 0;
+                    List<int> list = new List<int>(num * 2);
+                    while (item < num)
+                    {
+                        list.Add(item);
+                        list.Add(++item);
+                    }
+                    this.m_CurveMesh.SetIndices(list.ToArray(), MeshTopology.Lines, 0);
                 }
-                this.m_CurveMesh.SetIndices(list.ToArray(), MeshTopology.Lines, 0);
             }
         }
 
@@ -413,7 +417,7 @@
 
         public void FlushCache()
         {
-            Object.DestroyImmediate(this.m_CurveMesh);
+            UnityEngine.Object.DestroyImmediate(this.m_CurveMesh);
         }
 
         public Bounds GetBounds()

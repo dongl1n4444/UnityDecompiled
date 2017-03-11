@@ -248,7 +248,7 @@
                     Texture2D outimage = new Texture2D(texture.width, texture.height, TextureFormat.RGB24, false, true);
                     AssetStorePreviewManager.ScaleImage(outimage.width, outimage.height, texture, outimage, null);
                     this.searchResult.previewImage = outimage;
-                    Object.DestroyImmediate(texture);
+                    UnityEngine.Object.DestroyImmediate(texture);
                     AssetStoreAssetInspector.Instance.Repaint();
                 }
             }

@@ -29,19 +29,19 @@
         {
             this.m_Duration += TimeSpan.FromSeconds((double) result.duration);
             this.m_ResultCount++;
-            if (result.resultType == TestRunnerResult.ResultType.NotRun)
+            if (result.resultStatus != TestRunnerResult.ResultStatus.NotRun)
             {
                 this.m_SkipCount++;
             }
             else
             {
-                TestRunnerResult.ResultType resultType = result.resultType;
-                if (resultType == TestRunnerResult.ResultType.Success)
+                TestRunnerResult.ResultStatus resultStatus = result.resultStatus;
+                if (resultStatus == TestRunnerResult.ResultStatus.Passed)
                 {
                     this.m_SuccessCount++;
                     this.m_TestsRun++;
                 }
-                else if (resultType == TestRunnerResult.ResultType.Failed)
+                else if (resultStatus == TestRunnerResult.ResultStatus.Failed)
                 {
                     this.m_FailureCount++;
                     this.m_TestsRun++;

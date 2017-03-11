@@ -318,7 +318,7 @@
             internal object $current;
             internal bool $disposing;
             internal int $PC;
-            internal JSONRESPONSE <jsonInterface>__1;
+            internal JSONRESPONSE <jsonInterface>__0;
             internal WWW client;
             internal NetworkMatch.InternalResponseDelegate<JSONRESPONSE, USERRESPONSEDELEGATETYPE> internalCallback;
             internal USERRESPONSEDELEGATETYPE userCallback;
@@ -346,23 +346,23 @@
 
                     case 1:
                         object obj2;
-                        this.<jsonInterface>__1 = Activator.CreateInstance<JSONRESPONSE>();
+                        this.<jsonInterface>__0 = Activator.CreateInstance<JSONRESPONSE>();
                         if (!string.IsNullOrEmpty(this.client.error))
                         {
                             object[] args = new object[] { this.client.error, this.client.text };
-                            this.<jsonInterface>__1.SetFailure(UnityString.Format("Request error:[{0}] Raw response:[{1}]", args));
+                            this.<jsonInterface>__0.SetFailure(UnityString.Format("Request error:[{0}] Raw response:[{1}]", args));
                             break;
                         }
                         if (SimpleJson.SimpleJson.TryDeserializeObject(this.client.text, out obj2) && (obj2 is IDictionary<string, object>))
                         {
                             try
                             {
-                                this.<jsonInterface>__1.Parse(obj2);
+                                this.<jsonInterface>__0.Parse(obj2);
                             }
                             catch (FormatException exception)
                             {
                                 object[] objArray1 = new object[] { exception.ToString() };
-                                this.<jsonInterface>__1.SetFailure(UnityString.Format("FormatException:[{0}] ", objArray1));
+                                this.<jsonInterface>__0.SetFailure(UnityString.Format("FormatException:[{0}] ", objArray1));
                             }
                         }
                         break;
@@ -371,7 +371,7 @@
                         goto Label_0144;
                 }
                 this.client.Dispose();
-                this.internalCallback(this.<jsonInterface>__1, this.userCallback);
+                this.internalCallback(this.<jsonInterface>__0, this.userCallback);
                 this.$PC = -1;
             Label_0144:
                 return false;

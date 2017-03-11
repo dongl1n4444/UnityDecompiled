@@ -1,6 +1,7 @@
 ﻿namespace UnityEditor.Hardware
 {
     using System;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Threading;
@@ -8,6 +9,7 @@
 
     public sealed class DevDeviceList
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event OnChangedHandler Changed;
 
         public static bool FindDevice(string deviceId, out DevDevice device)

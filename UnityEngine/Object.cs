@@ -82,7 +82,7 @@
         /// <returns>
         /// <para>The array of objects found matching the type specified.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, TypeInferenceRule(TypeInferenceRules.ArrayOfTypeReferencedByFirstArgument)]
+        [MethodImpl(MethodImplOptions.InternalCall), TypeInferenceRule(TypeInferenceRules.ArrayOfTypeReferencedByFirstArgument), GeneratedByOldBindingsGenerator]
         public static extern UnityEngine.Object[] FindObjectsOfType(System.Type type);
         /// <summary>
         /// <para>The name of the object.</para>
@@ -309,7 +309,7 @@
             ((T) Instantiate(original, position, rotation, parent));
 
         public static T Instantiate<T>(T original, Transform parent) where T: UnityEngine.Object => 
-            Instantiate<T>(original, parent, true);
+            Instantiate<T>(original, parent, false);
 
         public static T Instantiate<T>(T original, Transform parent, bool worldPositionStays) where T: UnityEngine.Object => 
             ((T) Instantiate(original, parent, worldPositionStays));

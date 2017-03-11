@@ -14,12 +14,14 @@
     {
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IAssetDatabase <assetDatabase>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IEventSystem <eventSystem>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private string <moduleName>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ISpriteEditor <spriteEditor>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private SpriteImportMode <spriteImportMode>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IUndoSystem <undoSystem>k__BackingField;
         private const float kInspectorHeight = 160f;
@@ -441,7 +443,11 @@
             return this.inspectorRect.Contains(point);
         }
 
-        public abstract void OnModuleActivate();
+        public virtual void OnModuleActivate()
+        {
+            this.spriteImportMode = SpriteUtility.GetSpriteImportMode(this.assetDatabase, this.spriteEditor.selectedTexture);
+        }
+
         public abstract void OnModuleDeactivate();
         public virtual void OnPostGUI()
         {
@@ -580,24 +586,14 @@
         }
 
         protected string spriteAssetPath =>
-            this.assetDatabase.GetAssetPath((Object) this.spriteEditor.selectedTexture);
+            this.assetDatabase.GetAssetPath((UnityEngine.Object) this.spriteEditor.selectedTexture);
 
         public int spriteCount =>
             this.m_RectsCache.Count;
 
         protected ISpriteEditor spriteEditor { get; private set; }
 
-        protected SpriteImportMode spriteImportMode
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(this.spriteAssetPath))
-                {
-                    return SpriteImportMode.None;
-                }
-                return this.assetDatabase.GetAssetImporterFromPath(this.spriteAssetPath).spriteImportMode;
-            }
-        }
+        protected SpriteImportMode spriteImportMode { get; private set; }
 
         protected static Styles styles
         {

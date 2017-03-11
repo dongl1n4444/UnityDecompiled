@@ -1,7 +1,6 @@
 ﻿namespace Unity.IL2CPP.Common
 {
     using Mono.Cecil;
-    using Mono.Cecil.Cil;
     using NiceIO;
     using System;
     using System.Collections.Generic;
@@ -18,7 +17,7 @@
             this._assemblies = assemblyCache;
         }
 
-        public AssemblyResolver(AssemblyLoader assemblyLoader) : this(new Dictionary<string, AssemblyDefinition>(StringComparer.InvariantCultureIgnoreCase))
+        public AssemblyResolver(AssemblyLoader assemblyLoader) : this(new Dictionary<string, AssemblyDefinition>(StringComparer.OrdinalIgnoreCase))
         {
             this._assemblyLoader = assemblyLoader;
         }
@@ -37,12 +36,12 @@
         {
             if (this._assemblies.ContainsKey(name))
             {
-                throw new Exception(string.Format("Duplicate assembly found. These modules contain assemblies with same names:{0}\t{1}{0}\t{2}", Environment.NewLine, this._assemblies[name].MainModule.FullyQualifiedName, assembly.MainModule.FullyQualifiedName));
+                throw new Exception(string.Format("Duplicate assembly found. These modules contain assemblies with same names:{0}\t{1}{0}\t{2}", Environment.NewLine, this._assemblies[name].MainModule.FileName, assembly.MainModule.FileName));
             }
             this._assemblies.Add(name, assembly);
-            if (assembly.MainModule.FullyQualifiedName != null)
+            if (assembly.MainModule.FileName != null)
             {
-                this._searchDirectories.Add(assembly.MainModule.FullyQualifiedName.ToNPath().Parent);
+                this._searchDirectories.Add(assembly.MainModule.FileName.ToNPath().Parent);
             }
         }
 
@@ -50,11 +49,7 @@
         {
             foreach (AssemblyDefinition definition in this._assemblies.Values)
             {
-                ISymbolReader symbolReader = definition.MainModule.SymbolReader;
-                if (symbolReader != null)
-                {
-                    symbolReader.Dispose();
-                }
+                definition.Dispose();
             }
         }
 

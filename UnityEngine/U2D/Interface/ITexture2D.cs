@@ -30,10 +30,10 @@
             return t1.Equals(t2);
         }
 
-        public static implicit operator Object(ITexture2D t) => 
+        public static implicit operator UnityEngine.Object(ITexture2D t) => 
             (!object.ReferenceEquals(t, null) ? t.ToUnityObject() : null);
 
-        public static implicit operator Texture2D(ITexture2D t) => 
+        public static implicit operator UnityEngine.Texture2D(ITexture2D t) => 
             (!object.ReferenceEquals(t, null) ? t.ToUnityTexture() : null);
 
         public static bool operator !=(ITexture2D t1, ITexture2D t2)
@@ -46,8 +46,8 @@
         }
 
         public abstract void SetPixels(Color[] c);
-        protected abstract Object ToUnityObject();
-        protected abstract Texture2D ToUnityTexture();
+        protected abstract UnityEngine.Object ToUnityObject();
+        protected abstract UnityEngine.Texture2D ToUnityTexture();
 
         public abstract FilterMode filterMode { get; set; }
 

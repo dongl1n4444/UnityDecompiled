@@ -39,7 +39,7 @@
         /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern Transform GetChild(int index);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("use Transform.childCount instead.")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("use Transform.childCount instead."), GeneratedByOldBindingsGenerator]
         public extern int GetChildCount();
         public IEnumerator GetEnumerator() => 
             new Enumerator(this);
@@ -225,11 +225,6 @@
             INTERNAL_CALL_LookAt(this, ref worldPosition, ref worldUp);
         }
 
-        /// <summary>
-        /// <para>Applies a rotation of eulerAngles.z degrees around the z axis, eulerAngles.x degrees around the x axis, and eulerAngles.y degrees around the y axis (in that order).</para>
-        /// </summary>
-        /// <param name="eulerAngles"></param>
-        /// <param name="relativeTo"></param>
         [ExcludeFromDocs]
         public void Rotate(Vector3 eulerAngles)
         {
@@ -237,12 +232,6 @@
             this.Rotate(eulerAngles, self);
         }
 
-        /// <summary>
-        /// <para>Rotates the transform around axis by angle degrees.</para>
-        /// </summary>
-        /// <param name="axis"></param>
-        /// <param name="angle"></param>
-        /// <param name="relativeTo"></param>
         [ExcludeFromDocs]
         public void Rotate(Vector3 axis, float angle)
         {
@@ -253,8 +242,8 @@
         /// <summary>
         /// <para>Applies a rotation of eulerAngles.z degrees around the z axis, eulerAngles.x degrees around the x axis, and eulerAngles.y degrees around the y axis (in that order).</para>
         /// </summary>
-        /// <param name="eulerAngles"></param>
-        /// <param name="relativeTo"></param>
+        /// <param name="eulerAngles">Rotation to apply.</param>
+        /// <param name="relativeTo">Rotation is local to object or World.</param>
         public void Rotate(Vector3 eulerAngles, [DefaultValue("Space.Self")] Space relativeTo)
         {
             Quaternion quaternion = Quaternion.Euler(eulerAngles.x, eulerAngles.y, eulerAngles.z);
@@ -268,13 +257,6 @@
             }
         }
 
-        /// <summary>
-        /// <para>Applies a rotation of zAngle degrees around the z axis, xAngle degrees around the x axis, and yAngle degrees around the y axis (in that order).</para>
-        /// </summary>
-        /// <param name="xAngle"></param>
-        /// <param name="yAngle"></param>
-        /// <param name="zAngle"></param>
-        /// <param name="relativeTo"></param>
         [ExcludeFromDocs]
         public void Rotate(float xAngle, float yAngle, float zAngle)
         {
@@ -283,11 +265,11 @@
         }
 
         /// <summary>
-        /// <para>Rotates the transform around axis by angle degrees.</para>
+        /// <para>Rotates the object around axis by angle degrees.</para>
         /// </summary>
-        /// <param name="axis"></param>
-        /// <param name="angle"></param>
-        /// <param name="relativeTo"></param>
+        /// <param name="axis">Axis to apply rotation to.</param>
+        /// <param name="angle">Degrees to rotation to apply.</param>
+        /// <param name="relativeTo">Rotation is local to object or World.</param>
         public void Rotate(Vector3 axis, float angle, [DefaultValue("Space.Self")] Space relativeTo)
         {
             if (relativeTo == Space.Self)
@@ -303,10 +285,10 @@
         /// <summary>
         /// <para>Applies a rotation of zAngle degrees around the z axis, xAngle degrees around the x axis, and yAngle degrees around the y axis (in that order).</para>
         /// </summary>
-        /// <param name="xAngle"></param>
-        /// <param name="yAngle"></param>
-        /// <param name="zAngle"></param>
-        /// <param name="relativeTo"></param>
+        /// <param name="xAngle">Degrees to rotate around the X axis.</param>
+        /// <param name="yAngle">Degrees to rotate around the Y axis.</param>
+        /// <param name="zAngle">Degrees to rotate around the Z axis.</param>
+        /// <param name="relativeTo">Rotation is local to object or World.</param>
         public void Rotate(float xAngle, float yAngle, float zAngle, [DefaultValue("Space.Self")] Space relativeTo)
         {
             this.Rotate(new Vector3(xAngle, yAngle, zAngle), relativeTo);
@@ -373,6 +355,13 @@
             INTERNAL_CALL_SetLocalEulerHint(this, ref euler);
         }
 
+        /// <summary>
+        /// <para>Set the parent of the transform.</para>
+        /// </summary>
+        /// <param name="parent">The parent Transform to use.</param>
+        /// <param name="worldPositionStays">If true, the parent-relative position, scale and
+        /// rotation are modified such that the object keeps the same world space position,
+        /// rotation and scale as before.</param>
         public void SetParent(Transform parent)
         {
             this.SetParent(parent, true);
@@ -382,7 +371,9 @@
         /// <para>Set the parent of the transform.</para>
         /// </summary>
         /// <param name="parent">The parent Transform to use.</param>
-        /// <param name="worldPositionStays">If true, the parent-relative position, scale and rotation is modified such that the object keeps the same world space position, rotation and scale as before.</param>
+        /// <param name="worldPositionStays">If true, the parent-relative position, scale and
+        /// rotation are modified such that the object keeps the same world space position,
+        /// rotation and scale as before.</param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetParent(Transform parent, bool worldPositionStays);
         /// <summary>

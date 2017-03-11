@@ -8,6 +8,8 @@
     {
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool CanVS2017BuildCppCode();
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern string[] FindVisualStudioDevEnvPaths(int visualStudioVersion, string requiredWorkload);
     }
 }
 

@@ -7,9 +7,9 @@
 
     internal class EditorCache : IDisposable
     {
-        private Dictionary<Object, EditorWrapper> m_EditorCache;
+        private Dictionary<UnityEngine.Object, EditorWrapper> m_EditorCache;
         private EditorFeatures m_Requirements;
-        private Dictionary<Object, bool> m_UsedEditors;
+        private Dictionary<UnityEngine.Object, bool> m_UsedEditors;
 
         public EditorCache() : this(EditorFeatures.None)
         {
@@ -18,8 +18,8 @@
         public EditorCache(EditorFeatures requirements)
         {
             this.m_Requirements = requirements;
-            this.m_EditorCache = new Dictionary<Object, EditorWrapper>();
-            this.m_UsedEditors = new Dictionary<Object, bool>();
+            this.m_EditorCache = new Dictionary<UnityEngine.Object, EditorWrapper>();
+            this.m_UsedEditors = new Dictionary<UnityEngine.Object, bool>();
         }
 
         public void CleanupAllEditors()
@@ -30,8 +30,8 @@
 
         public void CleanupUntouchedEditors()
         {
-            List<Object> list = new List<Object>();
-            foreach (Object obj2 in this.m_EditorCache.Keys)
+            List<UnityEngine.Object> list = new List<UnityEngine.Object>();
+            foreach (UnityEngine.Object obj2 in this.m_EditorCache.Keys)
             {
                 if (!this.m_UsedEditors.ContainsKey(obj2))
                 {
@@ -40,7 +40,7 @@
             }
             if (this.m_EditorCache != null)
             {
-                foreach (Object obj3 in list)
+                foreach (UnityEngine.Object obj3 in list)
                 {
                     EditorWrapper wrapper = this.m_EditorCache[obj3];
                     this.m_EditorCache.Remove(obj3);
@@ -64,7 +64,7 @@
             Debug.LogError("Failed to dispose EditorCache.");
         }
 
-        public EditorWrapper this[Object o]
+        public EditorWrapper this[UnityEngine.Object o]
         {
             get
             {

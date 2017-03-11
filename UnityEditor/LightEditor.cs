@@ -17,10 +17,7 @@
         private AnimBool m_AnimBakedShadowAngleOptions = new AnimBool();
         private AnimBool m_AnimBakedShadowRadiusOptions = new AnimBool();
         private AnimBool m_AnimShowAreaOptions = new AnimBool();
-        private AnimBool m_AnimShowBakingWarning = new AnimBool();
-        private AnimBool m_AnimShowCookieWarning = new AnimBool();
         private AnimBool m_AnimShowDirOptions = new AnimBool();
-        private AnimBool m_AnimShowIndirectWarning = new AnimBool();
         private AnimBool m_AnimShowLightBounceIntensity = new AnimBool();
         private AnimBool m_AnimShowPointOptions = new AnimBool();
         private AnimBool m_AnimShowRuntimeOptions = new AnimBool();
@@ -32,6 +29,7 @@
         private SerializedProperty m_BakedShadowRadius;
         private SerializedProperty m_BounceIntensity;
         private SerializedProperty m_Color;
+        private SerializedProperty m_ColorTemperature;
         private bool m_CommandBuffersShown = true;
         private SerializedProperty m_Cookie;
         private SerializedProperty m_CookieSize;
@@ -51,6 +49,7 @@
         private SerializedProperty m_ShadowsType;
         private SerializedProperty m_SpotAngle;
         private SerializedProperty m_Type;
+        private SerializedProperty m_UseColorTemperature;
         private static Styles s_Styles;
 
         private void CommandBufferGUI()
@@ -142,11 +141,10 @@
             if (EditorGUILayout.BeginFadeGroup(1f - this.m_AnimShowAreaOptions.faded))
             {
                 LightModeUtil.Get().DrawElement(this.m_Lightmapping, s_Styles.LightmappingMode);
-                if (EditorGUILayout.BeginFadeGroup(this.m_AnimShowBakingWarning.faded))
+                if (this.bakingWarningValue)
                 {
                     EditorGUILayout.HelpBox(s_Styles.BakingWarning.text, MessageType.Info);
                 }
-                EditorGUILayout.EndFadeGroup();
             }
             EditorGUILayout.EndFadeGroup();
         }
@@ -155,7 +153,7 @@
         {
             if (this.m_KelvinGradientTexture != null)
             {
-                Object.DestroyImmediate(this.m_KelvinGradientTexture);
+                UnityEngine.Object.DestroyImmediate(this.m_KelvinGradientTexture);
             }
         }
 
@@ -168,6 +166,8 @@
             this.m_Color = base.serializedObject.FindProperty("m_Color");
             this.m_Intensity = base.serializedObject.FindProperty("m_Intensity");
             this.m_BounceIntensity = base.serializedObject.FindProperty("m_BounceIntensity");
+            this.m_ColorTemperature = base.serializedObject.FindProperty("m_ColorTemperature");
+            this.m_UseColorTemperature = base.serializedObject.FindProperty("m_UseColorTemperature");
             this.m_Cookie = base.serializedObject.FindProperty("m_Cookie");
             this.m_ShadowsType = base.serializedObject.FindProperty("m_Shadows.m_Type");
             this.m_ShadowsStrength = base.serializedObject.FindProperty("m_Shadows.m_Strength");
@@ -229,27 +229,43 @@
                 EditorGUILayout.PropertyField(this.m_AreaSizeY, s_Styles.AreaHeight, new GUILayoutOption[0]);
             }
             EditorGUILayout.EndFadeGroup();
-            EditorGUILayout.PropertyField(this.m_Color, s_Styles.Color, new GUILayoutOption[0]);
+            if (GraphicsSettings.lightsUseLinearIntensity && GraphicsSettings.lightsUseColorTemperature)
+            {
+                EditorGUILayout.PropertyField(this.m_UseColorTemperature, s_Styles.UseColorTemperature, new GUILayoutOption[0]);
+                if (this.m_UseColorTemperature.boolValue)
+                {
+                    EditorGUILayout.LabelField(s_Styles.Color, new GUILayoutOption[0]);
+                    EditorGUI.indentLevel++;
+                    EditorGUILayout.PropertyField(this.m_Color, s_Styles.ColorFilter, new GUILayoutOption[0]);
+                    EditorGUILayout.SliderWithTexture(s_Styles.ColorTemperature, this.m_ColorTemperature, 1000f, 20000f, 2f, Styles.sliderBox, Styles.sliderThumb, this.m_KelvinGradientTexture, new GUILayoutOption[0]);
+                    EditorGUI.indentLevel--;
+                }
+                else
+                {
+                    EditorGUILayout.PropertyField(this.m_Color, s_Styles.Color, new GUILayoutOption[0]);
+                }
+            }
+            else
+            {
+                EditorGUILayout.PropertyField(this.m_Color, s_Styles.Color, new GUILayoutOption[0]);
+            }
             EditorGUILayout.Space();
             this.LightUsageGUI();
-            EditorGUILayout.LabelField("Intensity", new GUILayoutOption[0]);
-            EditorGUI.indentLevel++;
             EditorGUILayout.PropertyField(this.m_Intensity, s_Styles.Intensity, new GUILayoutOption[0]);
             if (EditorGUILayout.BeginFadeGroup(this.m_AnimShowLightBounceIntensity.faded))
             {
                 EditorGUILayout.PropertyField(this.m_BounceIntensity, s_Styles.LightBounceIntensity, new GUILayoutOption[0]);
             }
-            EditorGUI.indentLevel--;
-            if (EditorGUILayout.BeginFadeGroup(this.m_AnimShowIndirectWarning.faded))
+            EditorGUILayout.EndFadeGroup();
+            if (this.bounceWarningValue)
             {
                 EditorGUILayout.HelpBox(s_Styles.IndirectBounceShadowWarning.text, MessageType.Info);
             }
-            EditorGUILayout.EndFadeGroup();
             this.ShadowsGUI();
             if (EditorGUILayout.BeginFadeGroup(this.m_AnimShowRuntimeOptions.faded))
             {
                 EditorGUILayout.PropertyField(this.m_Cookie, s_Styles.Cookie, new GUILayoutOption[0]);
-                if (EditorGUILayout.BeginFadeGroup(this.m_AnimShowCookieWarning.faded))
+                if (this.cookieWarningValue)
                 {
                     EditorGUILayout.HelpBox(s_Styles.CookieWarning.text, MessageType.Warning);
                 }
@@ -265,7 +281,7 @@
             EditorGUILayout.PropertyField(this.m_RenderMode, s_Styles.RenderMode, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(this.m_CullingMask, s_Styles.CullingMask, new GUILayoutOption[0]);
             EditorGUILayout.Space();
-            if ((SceneView.currentDrawingSceneView != null) && !SceneView.currentDrawingSceneView.m_SceneLighting)
+            if ((SceneView.lastActiveSceneView != null) && !SceneView.lastActiveSceneView.m_SceneLighting)
             {
                 EditorGUILayout.HelpBox(s_Styles.DisabledLightWarning.text, MessageType.Warning);
             }
@@ -391,9 +407,6 @@
             this.SetOptions(this.m_AnimShowDirOptions, initialize, this.dirOptionsValue);
             this.SetOptions(this.m_AnimShowAreaOptions, initialize, this.areaOptionsValue);
             this.SetOptions(this.m_AnimShowShadowOptions, initialize, this.shadowOptionsValue);
-            this.SetOptions(this.m_AnimShowIndirectWarning, initialize, this.bounceWarningValue);
-            this.SetOptions(this.m_AnimShowBakingWarning, initialize, this.bakingWarningValue);
-            this.SetOptions(this.m_AnimShowCookieWarning, initialize, this.cookieWarningValue);
             this.SetOptions(this.m_AnimShowRuntimeOptions, initialize, this.runtimeOptionsValue);
             this.SetOptions(this.m_AnimBakedShadowAngleOptions, initialize, this.bakedShadowAngle);
             this.SetOptions(this.m_AnimBakedShadowRadiusOptions, initialize, this.bakedShadowRadius);
@@ -475,15 +488,15 @@
             public readonly GUIContent AreaWidth = EditorGUIUtility.TextContent("Width|Controls the width in units of the area light.");
             public readonly GUIContent BakedShadowAngle = EditorGUIUtility.TextContent("Baked Shadow Angle|Controls the amount of artificial softening applied to the edges of shadows cast by directional lights.");
             public readonly GUIContent BakedShadowRadius = EditorGUIUtility.TextContent("Baked Shadow Radius|Controls the amount of artificial softening applied to the edges of shadows cast by the Point or Spot light.");
-            public readonly GUIContent BakingWarning = EditorGUIUtility.TextContent("Light mode is currently overridden to Dynamic mode. Enable Baked Global Illumination under Stationary Lighting to use Stationary or Static light modes.");
+            public readonly GUIContent BakingWarning = EditorGUIUtility.TextContent("Light mode is currently overridden to Realtime mode. Enable Baked Global Illumination to use Mixed or Baked light modes.");
             public readonly GUIContent Color = EditorGUIUtility.TextContent("Color|Controls the color being emitted by the light.");
             public readonly GUIContent ColorFilter = EditorGUIUtility.TextContent("Filter|A colored gel can be put in front of the light source to tint the light.");
+            public readonly GUIContent ColorTemperature = EditorGUIUtility.TextContent("Temperature|Also known as CCT (Correlated color temperature). The color temperature of the electromagnetic radiation emitted from an ideal black body is defined as its surface temperature in Kelvin. White is 6500K");
             public readonly GUIContent Cookie = EditorGUIUtility.TextContent("Cookie|Specifies the Texture mask to cast shadows, create silhouettes, or patterned illumination for the light.");
             public readonly GUIContent CookieSize = EditorGUIUtility.TextContent("Cookie Size|Controls the size of the cookie mask currently assigned to the light.");
             public readonly GUIContent CookieWarning = EditorGUIUtility.TextContent("Cookie textures for spot lights should be set to clamp, not repeat, to avoid artifacts.");
-            public readonly GUIContent CorrelatedColorTemperature = EditorGUIUtility.TextContent("Temperature|Also known as CCT (Correlated color temperature). The color temperature of the electromagnetic radiation emitted from an ideal black body is defined as its surface temperature in Kelvin. White is 6500K");
             public readonly GUIContent CullingMask = EditorGUIUtility.TextContent("Culling Mask|Specifies which layers will be affected or excluded from the light�s effect on objects in the scene.");
-            public readonly GUIContent DisabledLightWarning = EditorGUIUtility.TextContent("Lighting has been disabled in at least one Scene view.  Any changes applied to lights in the Scene will not be updated in these views until Lighting has been enabled again.");
+            public readonly GUIContent DisabledLightWarning = EditorGUIUtility.TextContent("Lighting has been disabled in at least one Scene view. Any changes applied to lights in the Scene will not be updated in these views until Lighting has been enabled again.");
             public readonly GUIContent DrawHalo = EditorGUIUtility.TextContent("Draw Halo|When enabled, draws a spherical halo of light with a radius equal to the lights range value.");
             public readonly GUIContent Flare = EditorGUIUtility.TextContent("Flare|Specifies the flare object to be used by the light to render lens flares in the scene.");
             public readonly GUIContent iconRemove = EditorGUIUtility.IconContent("Toolbar Minus", "Remove command buffer");
@@ -491,7 +504,7 @@
             public readonly GUIContent Intensity = EditorGUIUtility.TextContent("Intensity|Controls the brightness of the light. Light color is multiplied by this value.");
             public readonly GUIStyle invisibleButton = "InvisibleButton";
             public readonly GUIContent LightBounceIntensity = EditorGUIUtility.TextContent("Indirect Multiplier|Controls the intensity of indirect light being contributed to the scene. A value of 0 will cause Dynamic lights to be removed from realtime global illumination and Static and Stationary lights to no longer emit indirect lighting. Has no effect when both Realtime and Baked Global Illumination are disabled.");
-            public readonly GUIContent LightmappingMode = EditorGUIUtility.TextContent("Mode|Specifies the light mode used to determine if and how a light will be baked. Possible modes are Static, Stationary, and Dynamic.");
+            public readonly GUIContent LightmappingMode = EditorGUIUtility.TextContent("Mode|Specifies the light mode used to determine if and how a light will be baked. Possible modes are Baked, Mixed, and Realtime.");
             public readonly GUIContent Range = EditorGUIUtility.TextContent("Range|Controls how far the light is emitted from the center of the object.");
             public readonly GUIContent RenderMode = EditorGUIUtility.TextContent("Render Mode|Specifies the importance of the light which impacts lighting fidelity and performance. Options are Auto, Important, and Not Important. This only affects Forward Rendering");
             public readonly GUIContent ShadowBias = EditorGUIUtility.TextContent("Bias|Controls the distance at which the shadows will be pushed away from the light. Useful for avoiding false self-shadowing artifacts.");
@@ -501,8 +514,17 @@
             public readonly GUIContent ShadowResolution = EditorGUIUtility.TextContent("Resolution|Controls the rendered resolution of the shadow maps. A higher resolution will increase the fidelity of shadows at the cost of GPU performance and memory usage.");
             public readonly GUIContent ShadowStrength = EditorGUIUtility.TextContent("Strength|Controls how dark the shadows cast by the light will be.");
             public readonly GUIContent ShadowType = EditorGUIUtility.TextContent("Shadow Type|Specifies whether Hard Shadows, Soft Shadows, or No Shadows will be cast by the light.");
+            public static GUIStyle sliderBox = new GUIStyle("ColorPickerBox");
+            public static GUIStyle sliderThumb = new GUIStyle("ColorPickerHorizThumb");
             public readonly GUIContent SpotAngle = EditorGUIUtility.TextContent("Spot Angle|Controls the angle in degrees at the base of a Spot light�s cone.");
             public readonly GUIContent Type = EditorGUIUtility.TextContent("Type|Specifies the current type of light. Possible types are Directional, Spot, Point, and Area lights.");
+            public readonly GUIContent UseColorTemperature = EditorGUIUtility.TextContent("Use color temperature mode|Cho0se between RGB and temperature mode for light's color.");
+
+            static Styles()
+            {
+                sliderBox.overflow = new RectOffset(0, 0, -4, -4);
+                sliderBox.padding = new RectOffset(0, 0, 1, 1);
+            }
         }
     }
 }

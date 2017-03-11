@@ -1,6 +1,7 @@
 ﻿namespace UnityEditor.Android.PostProcessor.Tasks
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Runtime.CompilerServices;
@@ -11,6 +12,7 @@
 
     internal class CheckLibrariesConflict : IPostProcessorTask
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ProgressHandler OnProgress;
 
         public void Execute(PostProcessorContext context)
@@ -34,13 +36,13 @@
                     string[] strArray3 = Enumerable.Where<string>(Directory.GetDirectories(path), new Func<string, bool>(storey.<>m__0)).Cast<string>().ToArray<string>();
                     if (strArray3.Length < 1)
                     {
-                        Debug.LogError($"Something went wrong when parsing the generated resources - couldn't find a directory matching {Path.Combine(path, storey.segment)}");
+                        UnityEngine.Debug.LogError($"Something went wrong when parsing the generated resources - couldn't find a directory matching {Path.Combine(path, storey.segment)}");
                         CancelPostProcess.AbortBuildPointToConsole("Error parsing resource!", "Package " + str2 + " has a resource error.");
                     }
                     DirectoryInfo info = new DirectoryInfo(strArray3[0]);
                     if (string.Compare(info.Name, storey.segment) != 0)
                     {
-                        Debug.LogError($"Plugin Bundle ID conflict detected: package {str2} has conflicts with other plugins ({info.Name} vs {storey.segment}). Make sure you use the same case for your package names.");
+                        UnityEngine.Debug.LogError($"Plugin Bundle ID conflict detected: package {str2} has conflicts with other plugins ({info.Name} vs {storey.segment}). Make sure you use the same case for your package names.");
                         CancelPostProcess.AbortBuildPointToConsole("Plugin Bundle ID conflict detected!", "Package " + str2 + " has conflicts with other plugins.");
                     }
                     path = Path.Combine(path, storey.segment);

@@ -1,6 +1,7 @@
 ﻿namespace UnityEngine.Windows.Speech
 {
     using System;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Threading;
@@ -14,6 +15,7 @@
     {
         protected IntPtr m_Recognizer;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event PhraseRecognizedDelegate OnPhraseRecognized;
 
         internal PhraseRecognizer()
@@ -36,7 +38,7 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Destroy(IntPtr recognizer);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern void DestroyThreaded(IntPtr recognizer);
         /// <summary>
         /// <para>Disposes the resources used by phrase recognizer.</para>

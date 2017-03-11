@@ -481,7 +481,7 @@
                 Texture2D textured = new Texture2D(4, 4);
                 Color[] colors = new Color[] { Color.white, Color.white, Color.white, Color.white, Color.white, Color.clear, Color.clear, Color.white, Color.white, Color.clear, Color.clear, Color.white, Color.white, Color.white, Color.white, Color.white };
                 textured.SetPixels(colors);
-                textured.filterMode = FilterMode.Point;
+                textured.filterMode = UnityEngine.FilterMode.Point;
                 textured.Apply();
                 textured.hideFlags = HideFlags.HideAndDontSave;
                 this.frame.normal.background = textured;

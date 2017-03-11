@@ -16,7 +16,7 @@
         {
             for (int i = 0; i < 3; i++)
             {
-                scaleVector[i] = 1f / scaleVector[i];
+                scaleVector[i] = (scaleVector[i] != 0f) ? (1f / scaleVector[i]) : 0f;
             }
             return scaleVector;
         }
@@ -26,16 +26,19 @@
             if (base.editingCollider)
             {
                 Collider target = (Collider) base.target;
-                using (new Handles.MatrixScope(Matrix4x4.TRS(target.transform.position, target.transform.rotation, Vector3.one)))
+                if (!Mathf.Approximately(target.transform.lossyScale.sqrMagnitude, 0f))
                 {
-                    this.CopyColliderPropertiesToHandle();
-                    this.boundsHandle.SetColor(!target.enabled ? Handles.s_ColliderHandleColorDisabled : Handles.s_ColliderHandleColor);
-                    EditorGUI.BeginChangeCheck();
-                    this.boundsHandle.DrawHandle();
-                    if (EditorGUI.EndChangeCheck())
+                    using (new Handles.DrawingScope(Matrix4x4.TRS(target.transform.position, target.transform.rotation, Vector3.one)))
                     {
-                        Undo.RecordObject(target, $"Modify {ObjectNames.NicifyVariableName(base.target.GetType().Name)}");
-                        this.CopyHandlePropertiesToCollider();
+                        this.CopyColliderPropertiesToHandle();
+                        this.boundsHandle.SetColor(!target.enabled ? Handles.s_ColliderHandleColorDisabled : Handles.s_ColliderHandleColor);
+                        EditorGUI.BeginChangeCheck();
+                        this.boundsHandle.DrawHandle();
+                        if (EditorGUI.EndChangeCheck())
+                        {
+                            Undo.RecordObject(target, $"Modify {ObjectNames.NicifyVariableName(base.target.GetType().Name)}");
+                            this.CopyHandlePropertiesToCollider();
+                        }
                     }
                 }
             }

@@ -99,7 +99,7 @@
                 List<AudioMixerItem> audioMixerItemsFromIDs = this.GetAudioMixerItemsFromIDs(draggedNodes);
                 DragAndDrop.PrepareStartDrag();
                 DragAndDrop.SetGenericData("AudioMixerDragging", new DragData(audioMixerItemsFromIDs));
-                DragAndDrop.objectReferences = new Object[0];
+                DragAndDrop.objectReferences = new UnityEngine.Object[0];
                 DragAndDrop.StartDrag(draggedNodes.Count + " AudioMixer" + ((draggedNodes.Count <= 1) ? "" : "s"));
             }
         }

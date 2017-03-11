@@ -1,7 +1,9 @@
 ﻿namespace UnityEditor.Android.PostProcessor.Tasks
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEditor;
     using UnityEditor.Android;
@@ -11,6 +13,7 @@
 
     internal class BuildGradleProject : IPostProcessorTask
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ProgressHandler OnProgress;
 
         public void Execute(PostProcessorContext context)
@@ -31,7 +34,7 @@
             bool flag2 = context.Get<bool>("DevelopmentPlayer");
             string[] components = new string[] { "Temp", "gradleOut" };
             string workingdir = Paths.Combine(components);
-            if (flag2 || Unsupported.IsDeveloperBuild())
+            if (flag2)
             {
                 str2 = "assembleDebug";
                 string[] textArray2 = new string[] { workingdir, "build", "outputs", "apk", "gradleOut-debug.apk" };

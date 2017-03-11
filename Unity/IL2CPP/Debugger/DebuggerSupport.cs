@@ -193,26 +193,19 @@
         private static void WriteDebugLocalInfos(CppCodeWriter writer, MethodReference methodReference, MethodDefinition methodDefinition)
         {
             <WriteDebugLocalInfos>c__AnonStorey1 storey = new <WriteDebugLocalInfos>c__AnonStorey1 {
-                methodReference = methodReference
+                methodDefinition = methodDefinition
             };
-            foreach (VariableDefinition definition in methodDefinition.Body.Variables)
+            foreach (VariableDefinition definition in storey.methodDefinition.Body.Variables)
             {
-                for (TypeSpecification specification = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(storey.methodReference.DeclaringType).ResolveVariableType(storey.methodReference, definition) as TypeSpecification; specification != null; specification = specification.ElementType as TypeSpecification)
+                for (TypeSpecification specification = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(methodReference.DeclaringType).ResolveVariableType(methodReference, definition) as TypeSpecification; specification != null; specification = specification.ElementType as TypeSpecification)
                 {
                 }
-                object[] args = new object[] { Naming.ForDebugMethodLocalInfo(definition, storey.methodReference) };
+                object[] args = new object[] { Naming.ForDebugMethodLocalInfo(definition, storey.methodDefinition) };
                 writer.WriteLine("Il2CppDebugLocalsInfo {0} = ", args);
-                object[] values = new object[4];
-                values[0] = Naming.Null;
-                if (definition.Name == null)
-                {
-                }
-                values[1] = Quote(definition.Index.ToString());
-                values[2] = 0;
-                values[3] = 0;
+                object[] values = new object[] { Naming.Null, Quote(definition.GetName(storey.methodDefinition)), 0, 0 };
                 writer.WriteArrayInitializer(values);
             }
-            writer.WriteArrayInitializer("const Il2CppDebugLocalsInfo*", Naming.ForDebugLocalInfo(storey.methodReference), methodDefinition.Body.Variables.Select<VariableDefinition, string>(new Func<VariableDefinition, string>(storey.<>m__0)), true);
+            writer.WriteArrayInitializer("const Il2CppDebugLocalsInfo*", Naming.ForDebugLocalInfo(methodReference), storey.methodDefinition.Body.Variables.Select<VariableDefinition, string>(new Func<VariableDefinition, string>(storey.<>m__0)), true);
         }
 
         public void WriteDebugMetadataIncludes(CppCodeWriter writer)
@@ -354,10 +347,10 @@
         [CompilerGenerated]
         private sealed class <WriteDebugLocalInfos>c__AnonStorey1
         {
-            internal MethodReference methodReference;
+            internal MethodDefinition methodDefinition;
 
             internal string <>m__0(VariableDefinition v) => 
-                DebuggerSupport.Naming.AddressOf(DebuggerSupport.Naming.ForDebugMethodLocalInfo(v, this.methodReference));
+                DebuggerSupport.Naming.AddressOf(DebuggerSupport.Naming.ForDebugMethodLocalInfo(v, this.methodDefinition));
         }
 
         [CompilerGenerated]

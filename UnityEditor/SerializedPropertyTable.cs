@@ -145,18 +145,24 @@
             {
                 this.m_TreeView.FullReload();
             }
+            else if ((this.m_TreeView != null) && this.m_TreeView.Update())
+            {
+                this.m_TreeView.Repaint();
+            }
         }
 
         public void OnSelectionChange()
         {
-            if (this.m_TreeView != null)
-            {
-                this.m_TreeView.SetSelection(Selection.instanceIDs);
-            }
+            this.OnSelectionChange(Selection.instanceIDs);
         }
 
-        public bool Refresh() => 
-            this.m_TreeView.Refresh();
+        public void OnSelectionChange(int[] instanceIDs)
+        {
+            if (this.m_TreeView != null)
+            {
+                this.m_TreeView.SetSelection(instanceIDs);
+            }
+        }
 
         public bool dragHandleEnabled
         {

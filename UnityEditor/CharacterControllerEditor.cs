@@ -4,7 +4,7 @@
     using System.Runtime.CompilerServices;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(CharacterController))]
+    [CustomEditor(typeof(CharacterController)), CanEditMultipleObjects]
     internal class CharacterControllerEditor : Editor
     {
         [CompilerGenerated]

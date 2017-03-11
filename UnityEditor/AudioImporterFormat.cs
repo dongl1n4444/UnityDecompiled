@@ -3,7 +3,7 @@
     using System;
     using System.ComponentModel;
 
-    [Obsolete("UnityEditor.AudioImporterFormat has been deprecated. Use UnityEngine.AudioCompressionFormat instead."), EditorBrowsable(EditorBrowsableState.Never)]
+    [EditorBrowsable(EditorBrowsableState.Never), Obsolete("UnityEditor.AudioImporterFormat has been deprecated. Use UnityEngine.AudioCompressionFormat instead.")]
     public enum AudioImporterFormat
     {
         Compressed = 0,

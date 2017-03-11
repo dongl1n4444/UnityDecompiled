@@ -1,7 +1,9 @@
 ﻿namespace UnityEditor.Android.PostProcessor.Tasks
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Text.RegularExpressions;
     using System.Threading;
     using UnityEditor;
@@ -10,6 +12,7 @@
 
     internal class NonstreamingObbAssets : IPostProcessorTask
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ProgressHandler OnProgress;
 
         public void Execute(PostProcessorContext context)
@@ -34,14 +37,14 @@
             string str3 = Paths.Combine(textArray2);
             foreach (string str4 in Directory.GetFiles(str3, "*", SearchOption.AllDirectories))
             {
-                if (Regex.IsMatch(str4.Substring(str3.Length + 1).Replace(@"\", "/"), @"^(?:Data/mainData|Data/sharedassets0\.assets(?:\.res[GS]?)?(?:\.split\w+)?|Data/sharedassets0\.resource(?:\.res[GS]?)?(?:\.split\w+)?|Data/level0(?:\.res[GS]?)?(?:\.split\w+)?|Data/globalgamemanagers(?:\.assets)?(?:\.split\w+)?|Data/unity default resources|Data/Resources/unity_builtin_extra|Data/PlayerConnectionConfigFile|Data/Managed/.+\.dll(?:\.mdb)?|Data/.+\.resS)$"))
+                if (Regex.IsMatch(str4.Substring(str3.Length + 1).Replace(@"\", "/"), @"^(?:Data/mainData|Data/sharedassets0\.assets(?:\.res[GS]?)?(?:\.split\w+)?|Data/sharedassets0\.resource(?:\.res[GS]?)?(?:\.split\w+)?|Data/level0(?:\.res[GS]?)?(?:\.split\w+)?|Data/globalgamemanagers(?:\.assets)?(?:\.split\w+)?|Data/unity default resources|Data/Resources/unity_builtin_extra|Data/PlayerConnectionConfigFile|Data/Managed/.+\.dll(?:\.mdb)?(?:\.pdb)?|Data/.+\.resS|Data/data\.unity3d(?:\.obb)?)$"))
                 {
                     FileUtil.DeleteFileOrDirectory(str4);
                 }
             }
             foreach (string str5 in Directory.GetFiles(path, "*", SearchOption.AllDirectories))
             {
-                if (!Regex.IsMatch(str5.Substring(path.Length + 1).Replace(@"\", "/"), @"^(?:Data/mainData|Data/sharedassets0\.assets(?:\.res[GS]?)?(?:\.split\w+)?|Data/sharedassets0\.resource(?:\.res[GS]?)?(?:\.split\w+)?|Data/level0(?:\.res[GS]?)?(?:\.split\w+)?|Data/globalgamemanagers(?:\.assets)?(?:\.split\w+)?|Data/unity default resources|Data/Resources/unity_builtin_extra|Data/PlayerConnectionConfigFile|Data/Managed/.+\.dll(?:\.mdb)?|Data/.+\.resS)$"))
+                if (!Regex.IsMatch(str5.Substring(path.Length + 1).Replace(@"\", "/"), @"^(?:Data/mainData|Data/sharedassets0\.assets(?:\.res[GS]?)?(?:\.split\w+)?|Data/sharedassets0\.resource(?:\.res[GS]?)?(?:\.split\w+)?|Data/level0(?:\.res[GS]?)?(?:\.split\w+)?|Data/globalgamemanagers(?:\.assets)?(?:\.split\w+)?|Data/unity default resources|Data/Resources/unity_builtin_extra|Data/PlayerConnectionConfigFile|Data/Managed/.+\.dll(?:\.mdb)?(?:\.pdb)?|Data/.+\.resS|Data/data\.unity3d(?:\.obb)?)$"))
                 {
                     FileUtil.DeleteFileOrDirectory(str5);
                 }

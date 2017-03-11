@@ -3,12 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.Text;
+    using UnityEditorInternal;
     using UnityEngine;
 
     [EditorWindowTitle(title="Lighting", icon="Lighting")]
     internal class LightingWindow : EditorWindow
     {
-        public const float kButtonWidth = 120f;
+        public const float kButtonWidth = 150f;
         private const string kGlobalIlluminationUnityManualPage = "file:///unity/Manual/GlobalIllumination.html";
         public LightingWindowLightingTab m_LightingTab;
         private LightingWindowLightmapPreviewTab m_LightmapPreviewTab;
@@ -67,8 +68,16 @@
                 }
                 else
                 {
-                    GUILayoutOption[] optionArray2 = new GUILayoutOption[] { GUILayout.Width(120f) };
-                    if (GUILayout.Button("Cancel", optionArray2))
+                    if ((LightmapEditorSettings.giBakeBackend == LightmapEditorSettings.GIBakeBackend.PathTracer) && LightModeUtil.Get().AreBakedLightmapsEnabled())
+                    {
+                        GUILayoutOption[] optionArray2 = new GUILayoutOption[] { GUILayout.Width(150f) };
+                        if (GUILayout.Button("Force Stop", optionArray2))
+                        {
+                            Lightmapping.ForceStop();
+                        }
+                    }
+                    GUILayoutOption[] optionArray3 = new GUILayoutOption[] { GUILayout.Width(150f) };
+                    if (GUILayout.Button("Cancel", optionArray3))
                     {
                         Lightmapping.Cancel();
                         UsabilityAnalytics.Track("/LightMapper/Cancel");
@@ -80,11 +89,11 @@
             GUI.enabled = enabled;
         }
 
-        [MenuItem("Window/Lighting/Settings", false, 0x832)]
+        [UnityEditor.MenuItem("Window/Lighting/Settings", false, 0x832)]
         private static void CreateLightingWindow()
         {
             LightingWindow window = EditorWindow.GetWindow<LightingWindow>();
-            window.minSize = new Vector2(300f, 390f);
+            window.minSize = new Vector2(320f, 390f);
             window.Show();
         }
 
@@ -122,7 +131,7 @@
         {
             Vector2 vector = EditorStyles.iconButton.CalcSize(EditorGUI.GUIContents.titleSettingsIcon);
             Rect position = GUILayoutUtility.GetRect(vector.x, vector.y);
-            if (EditorGUI.ButtonMouseDown(position, EditorGUI.GUIContents.titleSettingsIcon, FocusType.Passive, EditorStyles.iconButton))
+            if (EditorGUI.DropdownButton(position, EditorGUI.GUIContents.titleSettingsIcon, FocusType.Passive, EditorStyles.iconButton))
             {
                 GUIContent[] options = new GUIContent[] { new GUIContent("Reset") };
                 EditorUtility.DisplayCustomMenu(position, options, -1, new EditorUtility.SelectMenuItemFunction(this.ResetSettings), null);
@@ -237,7 +246,7 @@
             {
                 case Mode.LightingSettings:
                 {
-                    float height = this.m_PreviewResizer.ResizeHandle(base.position, 185f, 250f, 17f);
+                    float height = this.m_PreviewResizer.ResizeHandle(base.position, 195f, 240f, 17f);
                     Rect r = new Rect(0f, base.position.height - height, base.position.width, height);
                     if (height > 0f)
                     {
@@ -304,15 +313,15 @@
                     {
                         dictionary.Add(key, 1);
                     }
-                    bytes += TextureUtil.GetStorageMemorySize(data.lightmapColor);
+                    bytes += TextureUtil.GetStorageMemorySizeLong(data.lightmapColor);
                     if (data.lightmapDir != null)
                     {
-                        bytes += TextureUtil.GetStorageMemorySize(data.lightmapDir);
+                        bytes += TextureUtil.GetStorageMemorySizeLong(data.lightmapDir);
                         flag = true;
                     }
                     if (data.shadowMask != null)
                     {
-                        bytes += TextureUtil.GetStorageMemorySize(data.shadowMask);
+                        bytes += TextureUtil.GetStorageMemorySizeLong(data.shadowMask);
                         flag2 = true;
                     }
                 }
@@ -321,14 +330,14 @@
             builder.Append(num2);
             builder.Append(!flag ? " non-directional" : " directional");
             builder.Append(" lightmap");
-            if (num2 == 1)
+            if (num2 != 1)
             {
                 builder.Append("s");
             }
             if (flag2)
             {
                 builder.Append(" with shadowmask");
-                if (num2 == 1)
+                if (num2 != 1)
                 {
                     builder.Append("s");
                 }
@@ -358,6 +367,101 @@
             GUILayout.Label((num2 != 0) ? "" : "No Lightmaps", Styles.labelStyle, new GUILayoutOption[0]);
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
+            if (LightmapEditorSettings.giBakeBackend == LightmapEditorSettings.GIBakeBackend.PathTracer)
+            {
+                GUILayout.BeginVertical(new GUILayoutOption[0]);
+                GUILayout.Label("Occupied texels: " + InternalEditorUtility.CountToString(Lightmapping.occupiedTexelCount), Styles.labelStyle, new GUILayoutOption[0]);
+                if (Lightmapping.isRunning)
+                {
+                    int num4 = 0;
+                    int num5 = 0;
+                    int num6 = 0;
+                    int num7 = 0;
+                    int num8 = 0;
+                    int num9 = 0;
+                    int num10 = 0;
+                    int length = LightmapSettings.lightmaps.Length;
+                    for (int i = 0; i < length; i++)
+                    {
+                        LightmapConvergence lightmapConvergence = Lightmapping.GetLightmapConvergence(i);
+                        if (!lightmapConvergence.IsValid())
+                        {
+                            num10++;
+                        }
+                        else if (Lightmapping.GetVisibleTexelCount(i) > 0L)
+                        {
+                            num4++;
+                            if (lightmapConvergence.IsConverged())
+                            {
+                                num5++;
+                            }
+                            else
+                            {
+                                num6++;
+                            }
+                        }
+                        else
+                        {
+                            num7++;
+                            if (lightmapConvergence.IsConverged())
+                            {
+                                num8++;
+                            }
+                            else
+                            {
+                                num9++;
+                            }
+                        }
+                    }
+                    EditorGUILayout.LabelField("Lightmaps in view: " + num4, Styles.labelStyle, new GUILayoutOption[0]);
+                    EditorGUI.indentLevel++;
+                    EditorGUILayout.LabelField("converged: " + num5, Styles.labelStyle, new GUILayoutOption[0]);
+                    EditorGUILayout.LabelField("not converged: " + num6, Styles.labelStyle, new GUILayoutOption[0]);
+                    EditorGUI.indentLevel--;
+                    EditorGUILayout.LabelField("Lightmaps out of view: " + num7, Styles.labelStyle, new GUILayoutOption[0]);
+                    EditorGUI.indentLevel++;
+                    EditorGUILayout.LabelField("converged: " + num8, Styles.labelStyle, new GUILayoutOption[0]);
+                    EditorGUILayout.LabelField("not converged: " + num9, Styles.labelStyle, new GUILayoutOption[0]);
+                    EditorGUI.indentLevel--;
+                }
+                float lightmapBakeTimeTotal = Lightmapping.GetLightmapBakeTimeTotal();
+                float lightmapBakePerformanceTotal = Lightmapping.GetLightmapBakePerformanceTotal();
+                if (lightmapBakePerformanceTotal >= 0.0)
+                {
+                    GUILayout.Label("Bake performance: " + lightmapBakePerformanceTotal.ToString("0.00") + " mrays/sec", Styles.labelStyle, new GUILayoutOption[0]);
+                }
+                if (!Lightmapping.isRunning)
+                {
+                    float lightmapBakeTimeRaw = Lightmapping.GetLightmapBakeTimeRaw();
+                    if (lightmapBakeTimeTotal >= 0.0)
+                    {
+                        int num16 = (int) lightmapBakeTimeTotal;
+                        int num17 = num16 / 0xe10;
+                        num16 -= 0xe10 * num17;
+                        int num18 = num16 / 60;
+                        num16 -= 60 * num18;
+                        int num19 = num16;
+                        int num20 = (int) lightmapBakeTimeRaw;
+                        int num21 = num20 / 0xe10;
+                        num20 -= 0xe10 * num21;
+                        int num22 = num20 / 60;
+                        num20 -= 60 * num22;
+                        int num23 = num20;
+                        int num24 = Math.Max(0, (int) (lightmapBakeTimeTotal - lightmapBakeTimeRaw));
+                        int num25 = num24 / 0xe10;
+                        num24 -= 0xe10 * num25;
+                        int num26 = num24 / 60;
+                        num24 -= 60 * num26;
+                        int num27 = num24;
+                        GUILayout.Label("Total bake time: " + num17.ToString("0") + ":" + num18.ToString("00") + ":" + num19.ToString("00"), Styles.labelStyle, new GUILayoutOption[0]);
+                        if (Unsupported.IsDeveloperBuild())
+                        {
+                            GUILayout.Label("(Raw bake time: " + num21.ToString("0") + ":" + num22.ToString("00") + ":" + num23.ToString("00") + ", overhead:" + num25.ToString("0") + ":" + num26.ToString("00") + ":" + num27.ToString("00") + ")", Styles.labelStyle, new GUILayoutOption[0]);
+                        }
+                    }
+                }
+                GUILayout.EndVertical();
+            }
             GUILayout.EndVertical();
         }
 

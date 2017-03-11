@@ -8,7 +8,7 @@
 
     internal abstract class Response : ResponseBase, IResponse
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <extendedInfo>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <success>k__BackingField;

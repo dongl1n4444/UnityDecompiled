@@ -1,15 +1,100 @@
 ﻿namespace UnityEditor.TestTools.TestRunner
 {
     using System;
+    using System.IO;
+    using System.Runtime.CompilerServices;
     using UnityEditor;
+    using UnityEditor.Callbacks;
     using UnityEngine;
     using UnityEngine.TestTools.TestRunner;
     using UnityEngine.TestTools.TestRunner.GUI;
 
     internal static class Batch
     {
+        [CompilerGenerated]
+        private static EditorApplication.CallbackFunction <>f__mg$cache0;
+        [CompilerGenerated]
+        private static EditorApplication.CallbackFunction <>f__mg$cache1;
+        [CompilerGenerated]
+        private static EditorApplication.CallbackFunction <>f__mg$cache2;
+        [CompilerGenerated]
+        private static EditorApplication.CallbackFunction <>f__mg$cache3;
+        private static string s_DeferedBatchRunPath = "Temp/DeferedBatchRun";
+
+        private static void CheckForCompilationErrors()
+        {
+            if (EditorUtility.scriptCompilationFailed)
+            {
+                Debug.LogError("Scripts had compilation errors");
+                EditorApplication.Exit(3);
+            }
+        }
+
+        private static void CompilationWatch()
+        {
+            if (!EditorApplication.isCompiling)
+            {
+                if (<>f__mg$cache1 == null)
+                {
+                    <>f__mg$cache1 = new EditorApplication.CallbackFunction(Batch.CompilationWatch);
+                }
+                EditorApplication.update = (EditorApplication.CallbackFunction) Delegate.Remove(EditorApplication.update, <>f__mg$cache1);
+                CheckForCompilationErrors();
+            }
+        }
+
+        private static void DeferBatchRun(string testPlatform, string resultFilePath, string[] testFilters)
+        {
+            using (StreamWriter writer = new StreamWriter(s_DeferedBatchRunPath))
+            {
+                writer.WriteLine(testPlatform);
+                writer.WriteLine(resultFilePath);
+                writer.WriteLine(string.Join(";", testFilters));
+            }
+            if (<>f__mg$cache0 == null)
+            {
+                <>f__mg$cache0 = new EditorApplication.CallbackFunction(Batch.CompilationWatch);
+            }
+            EditorApplication.update = (EditorApplication.CallbackFunction) Delegate.Combine(EditorApplication.update, <>f__mg$cache0);
+        }
+
+        private static void DeferredRunInit()
+        {
+            string testPlatform = null;
+            string resultFilePath = null;
+            string[] testFilters = null;
+            if (<>f__mg$cache3 == null)
+            {
+                <>f__mg$cache3 = new EditorApplication.CallbackFunction(Batch.DeferredRunInit);
+            }
+            EditorApplication.update = (EditorApplication.CallbackFunction) Delegate.Remove(EditorApplication.update, <>f__mg$cache3);
+            using (StreamReader reader = new StreamReader(s_DeferedBatchRunPath))
+            {
+                string str3 = reader.ReadLine();
+                if (!string.IsNullOrEmpty(str3))
+                {
+                    testPlatform = str3;
+                }
+                str3 = reader.ReadLine();
+                if (!string.IsNullOrEmpty(str3))
+                {
+                    resultFilePath = str3;
+                }
+                str3 = reader.ReadLine();
+                if (!string.IsNullOrEmpty(str3))
+                {
+                    char[] separator = new char[] { ';' };
+                    testFilters = str3.Split(separator);
+                }
+            }
+            File.Delete(s_DeferedBatchRunPath);
+            InitiateRun(testPlatform, resultFilePath, testFilters);
+        }
+
         private static void InitiateRun(string testPlatform, string resultFilePath, string[] testFilters)
         {
+            CheckForCompilationErrors();
+            Debug.Log("Running tests for " + testPlatform);
             TestRunnerFilter filter = new TestRunnerFilter {
                 names = testFilters
             };
@@ -38,6 +123,19 @@
                     Debug.Log("Test platform not found (" + testPlatform + ")");
                     EditorApplication.Exit(4);
                 }
+            }
+        }
+
+        [DidReloadScripts]
+        private static void OnDidReloadScripts()
+        {
+            if (File.Exists(s_DeferedBatchRunPath))
+            {
+                if (<>f__mg$cache2 == null)
+                {
+                    <>f__mg$cache2 = new EditorApplication.CallbackFunction(Batch.DeferredRunInit);
+                }
+                EditorApplication.update = (EditorApplication.CallbackFunction) Delegate.Combine(EditorApplication.update, <>f__mg$cache2);
             }
         }
 
@@ -80,7 +178,14 @@
 
         private static void RunTests(string testPlatform, string resultFilePath, string[] testFilters)
         {
-            InitiateRun(testPlatform, resultFilePath, testFilters);
+            if (EditorApplication.isCompiling)
+            {
+                DeferBatchRun(testPlatform, resultFilePath, testFilters);
+            }
+            else
+            {
+                InitiateRun(testPlatform, resultFilePath, testFilters);
+            }
         }
 
         internal enum ReturnCodes

@@ -8,7 +8,7 @@
     using UnityEditor;
     using UnityEngine;
     using UnityEngine.Events;
-    using UnityEngine.Runtime.Networking.PlayerConnection;
+    using UnityEngine.Networking.PlayerConnection;
     using UnityEngine.Scripting;
 
     /// <summary>
@@ -17,13 +17,20 @@
     [Serializable]
     public class EditorConnection : ScriptableSingleton<EditorConnection>, IEditorPlayerConnection
     {
+        [CompilerGenerated]
+        private static Func<int, ConnectedPlayer> <>f__am$cache0;
         internal static IPlayerEditorConnectionNative connectionNative;
         [SerializeField]
         private List<int> m_connectedPlayers = new List<int>();
         [SerializeField]
-        private bool m_hasDoneInitilizeThisEditorSession;
-        [SerializeField]
         private PlayerEditorConnectionEvents m_PlayerEditorConnectionEvents = new PlayerEditorConnectionEvents();
+
+        private void Cleanup()
+        {
+            this.UnregisterAllPersistedListeners(this.m_PlayerEditorConnectionEvents.connectionEvent);
+            this.UnregisterAllPersistedListeners(this.m_PlayerEditorConnectionEvents.disconnectionEvent);
+            this.m_PlayerEditorConnectionEvents.messageTypeSubscribers.Clear();
+        }
 
         [RequiredByNativeCode]
         private static void ConnectedCallbackInternal(int playerId)
@@ -37,6 +44,10 @@
         {
             ScriptableSingleton<EditorConnection>.instance.m_connectedPlayers.Remove(playerId);
             ScriptableSingleton<EditorConnection>.instance.m_PlayerEditorConnectionEvents.disconnectionEvent.Invoke(playerId);
+            if (!ScriptableSingleton<EditorConnection>.instance.ConnectedPlayers.Any<ConnectedPlayer>())
+            {
+                ScriptableSingleton<EditorConnection>.instance.Cleanup();
+            }
         }
 
         private IPlayerEditorConnectionNative GetEditorConnectionNativeApi()
@@ -53,6 +64,14 @@
             return connectionNative;
         }
 
+        /// <summary>
+        /// <para>Initializes the EditorConnection.</para>
+        /// </summary>
+        public void Initialize()
+        {
+            this.GetEditorConnectionNativeApi().Initialize();
+        }
+
         [RequiredByNativeCode]
         private static void MessageCallbackInternal(IntPtr data, ulong size, ulong guid, string messageId)
         {
@@ -63,15 +82,6 @@
                 Marshal.Copy(data, destination, 0, (int) size);
             }
             ScriptableSingleton<EditorConnection>.instance.m_PlayerEditorConnectionEvents.InvokeMessageIdSubscribers(new Guid(messageId), destination, (int) guid);
-        }
-
-        public void OnEnable()
-        {
-            if (!this.m_hasDoneInitilizeThisEditorSession)
-            {
-                this.m_hasDoneInitilizeThisEditorSession = true;
-                this.GetEditorConnectionNativeApi().Initialize();
-            }
         }
 
         public void Register(Guid messageId, UnityAction<MessageEventArgs> callback)
@@ -139,6 +149,30 @@
             if (!Enumerable.Any<PlayerEditorConnectionEvents.MessageTypeSubscribers>(this.m_PlayerEditorConnectionEvents.messageTypeSubscribers, new Func<PlayerEditorConnectionEvents.MessageTypeSubscribers, bool>(storey.<>m__0)))
             {
                 this.GetEditorConnectionNativeApi().UnregisterInternal(storey.messageId);
+            }
+        }
+
+        private void UnregisterAllPersistedListeners(UnityEventBase connectionEvent)
+        {
+            int persistentEventCount = connectionEvent.GetPersistentEventCount();
+            for (int i = 0; i < persistentEventCount; i++)
+            {
+                connectionEvent.UnregisterPersistentListener(i);
+            }
+        }
+
+        /// <summary>
+        /// <para>A list of the connected players.</para>
+        /// </summary>
+        public List<ConnectedPlayer> ConnectedPlayers
+        {
+            get
+            {
+                if (<>f__am$cache0 == null)
+                {
+                    <>f__am$cache0 = x => new ConnectedPlayer(x);
+                }
+                return Enumerable.Select<int, ConnectedPlayer>(this.m_connectedPlayers, <>f__am$cache0).ToList<ConnectedPlayer>();
             }
         }
 

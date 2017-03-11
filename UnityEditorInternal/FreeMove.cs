@@ -100,7 +100,7 @@
                 }
                 case EventType.Layout:
                     Handles.matrix = Matrix4x4.identity;
-                    handleFunction(id, position, rotation, size, EventType.Layout);
+                    handleFunction(id, vector, Camera.current.transform.rotation, size, EventType.Layout);
                     Handles.matrix = matrix;
                     return position;
 
@@ -150,6 +150,7 @@
             return position;
         }
 
+        [Obsolete("DrawCapFunction is obsolete. Use the version with CapFunction instead. Example: Change SphereCap to SphereHandleCap.")]
         public static Vector3 Do(int id, Vector3 position, Quaternion rotation, float size, Vector3 snap, Handles.DrawCapFunction capFunc)
         {
             bool flag;

@@ -2,7 +2,6 @@
 {
     using NiceIO;
     using System;
-    using System.IO;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using Unity.IL2CPP.Building;
@@ -49,7 +48,7 @@
                 object obj2 = _logLock;
                 lock (obj2)
                 {
-                    using (System.IO.StreamWriter writer = new System.IO.StreamWriter(path.ToString(), true))
+                    using (StreamWriter writer = new StreamWriter(path.ToString(), true))
                     {
                         writer.WriteLine("{0},{1}", stats.TotalFiles, stats.CacheHits);
                     }

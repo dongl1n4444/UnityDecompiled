@@ -6,10 +6,13 @@
     using Mono.Collections.Generic;
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
+    using System.Text.RegularExpressions;
     using UnityEditor;
+    using UnityEditor.Utils;
     using UnityEngine;
 
     internal static class GuiHelper
@@ -18,7 +21,9 @@
         private static Func<MethodDefinition, bool> <>f__am$cache0;
         [CompilerGenerated]
         private static Func<Instruction, bool> <>f__am$cache1;
-        private const string k_StacktraceParserRegexp = @".* in (?'path'.*):(?'line'\d+)";
+        private const string k_LineGroup = "line";
+        private const string k_PathGroup = "path";
+        private const string k_StacktraceParserRegexp = @"\(at (?<path>.*):(?<line>\d+)\)";
 
         private static IEnumerable<TypeDefinition> CollectTypeDefinitions(IEnumerable<TypeDefinition> collection)
         {
@@ -42,7 +47,7 @@
             ReaderParameters parameters = new ReaderParameters {
                 ReadSymbols = true,
                 SymbolReaderProvider = new MdbReaderProvider(),
-                ReadingMode = ReadingMode.Immediate
+                ReadingMode = ReadingMode.Deferred
             };
             TypeDefinition baseType = Enumerable.Single<TypeDefinition>(CollectTypeDefinitions(AssemblyDefinition.ReadAssembly(storey.type.Assembly.Location, parameters).MainModule.Types), new Func<TypeDefinition, bool>(storey.<>m__0));
             MethodDefinition definition3 = null;
@@ -67,7 +72,7 @@
                     {
                         foreach (Instruction instruction in definition4.Body.Instructions)
                         {
-                            if (instruction.SequencePoint != null)
+                            if (instruction.get_SequencePoint() != null)
                             {
                                 definition3 = definition4;
                                 break;
@@ -77,33 +82,55 @@
                 }
                 baseType = baseType.BaseType as TypeDefinition;
             }
-            if (definition3 != null)
+            if ((definition3 != null) && definition3.HasBody)
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = i => i.SequencePoint != null;
+                    <>f__am$cache1 = i => i.get_SequencePoint() != null;
                 }
-                return Enumerable.First<Instruction>(definition3.Body.Instructions, <>f__am$cache1).SequencePoint;
+                return Enumerable.First<Instruction>(definition3.Body.Instructions, <>f__am$cache1).get_SequencePoint();
             }
             return null;
         }
 
+        public static bool OpenInEditor(string stacktrace)
+        {
+            if (!string.IsNullOrEmpty(stacktrace))
+            {
+                char[] separator = new char[] { '\n' };
+                string[] strArray = stacktrace.Split(separator);
+                Regex regex = new Regex(@"\(at (?<path>.*):(?<line>\d+)\)");
+                foreach (string str in strArray)
+                {
+                    Match match = regex.Match(str);
+                    string str2 = match.Groups["path"].Value;
+                    string str3 = match.Groups["line"].Value;
+                    if ((!string.IsNullOrEmpty(str2) && !string.IsNullOrEmpty(str3)) && File.Exists(str2))
+                    {
+                        OpenInEditorInternal(str2, int.Parse(str3));
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         public static void OpenInEditor(System.Type type, MethodInfo method)
         {
-            string filename = "";
+            string path = "";
             int line = -1;
             SequencePoint sequencePointOfTest = GetSequencePointOfTest(type, method);
             if (sequencePointOfTest != null)
             {
                 line = sequencePointOfTest.StartLine;
-                filename = sequencePointOfTest.Document.Url;
+                path = sequencePointOfTest.Document.Url;
             }
-            OpenInEditorInternal(filename, line);
+            OpenInEditorInternal(Paths.UnifyDirectorySeparator(path).Substring(Paths.UnifyDirectorySeparator(Application.dataPath).Length - "Assets".Length), line);
         }
 
-        private static void OpenInEditorInternal(string filename, int line)
+        private static void OpenInEditorInternal(string assetPath, int line)
         {
-            AssetDatabase.OpenAsset(AssetDatabase.LoadMainAssetAtPath(filename.Substring((Application.dataPath.Length - "Assets/".Length) + 1)), line);
+            AssetDatabase.OpenAsset(AssetDatabase.LoadMainAssetAtPath(assetPath), line);
         }
 
         [CompilerGenerated]

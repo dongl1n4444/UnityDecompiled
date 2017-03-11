@@ -8,7 +8,7 @@
     public sealed class StaticBatchingUtility
     {
         /// <summary>
-        /// <para>Combine will prepare all children of the staticBatchRoot for static batching.</para>
+        /// <para>StaticBatchingUtility.Combine prepares all children of the staticBatchRoot for static batching.</para>
         /// </summary>
         /// <param name="staticBatchRoot"></param>
         public static void Combine(GameObject staticBatchRoot)
@@ -17,7 +17,7 @@
         }
 
         /// <summary>
-        /// <para>Combine will prepare all gos for the static batching. staticBatchRoot will be treated as their parent.</para>
+        /// <para>StaticBatchingUtility.Combine prepares all gos for static batching. staticBatchRoot is treated as their parent.</para>
         /// </summary>
         /// <param name="gos"></param>
         /// <param name="staticBatchRoot"></param>

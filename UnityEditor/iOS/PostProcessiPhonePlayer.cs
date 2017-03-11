@@ -765,14 +765,6 @@
                 list6.Add("-mno-thumb");
                 list7.Add("-DINIT_SCRIPTING_BACKEND=1");
             }
-            if (usedFeatures.replayKit)
-            {
-                list6.Add("-DUNITY_REPLAY_KIT_USED=1");
-            }
-            else
-            {
-                list7.Add("-DUNITY_REPLAY_KIT_USED=1");
-            }
             project.UpdateBuildProperty(targetGuid, "OTHER_CFLAGS", list6.ToArray(), list7.ToArray());
             project.UpdateBuildProperty(targetGuid, "OTHER_LDFLAGS", list8.ToArray(), list9.ToArray());
             SetupFeatureDefines(project, targetGuid, bs);
@@ -871,7 +863,7 @@
         private static string CreateTagNameFromFileName(string filename) => 
             filename;
 
-        private static IncludedFileList CrossCompileManagedDlls(BuildSettings bs, ProjectPaths paths, AssemblyReferenceChecker checker, RuntimeClassRegistry usedClassRegistry)
+        private static IncludedFileList CrossCompileManagedDlls(BuildSettings bs, ProjectPaths paths, AssemblyReferenceChecker checker, RuntimeClassRegistry usedClassRegistry, BuildReport buildReport)
         {
             <CrossCompileManagedDlls>c__AnonStorey0 storey = new <CrossCompileManagedDlls>c__AnonStorey0 {
                 paths = paths,
@@ -889,11 +881,12 @@
                 bool stripping = (PlayerSettings.strippingLevel > StrippingLevel.Disabled) && (bs.sdkType == SdkType.Device);
                 if (stripping)
                 {
-                    iOSIl2CppPlatformProvider platformProvider = new iOSIl2CppPlatformProvider(BuildTarget.iOS, bs.isDevelopmentPlayer, storey.paths.stagingAreaData, bs.buildReport);
-                    AssemblyStripper.StripAssemblies(Path.GetFullPath(storey.paths.stagingAreaData), platformProvider, storey.usedClassRegistry);
+                    iOSIl2CppPlatformProvider provider = new iOSIl2CppPlatformProvider(BuildTarget.iOS, bs.isDevelopmentPlayer, storey.paths.stagingAreaData, bs.buildReport);
+                    AssemblyStripper.StripAssemblies(Path.GetFullPath(storey.paths.stagingAreaData), provider, storey.usedClassRegistry);
                 }
                 string file = Path.Combine(storey.paths.LibrariesStaging(), "RegisterMonoModules.cpp");
-                MonoAOTRegistration.WriteCPlusPlusFileForStaticAOTModuleRegistration(bs.target, file, crossCompileOptions, true, PlayerSettings.iOS.targetDevice.ToString(), stripping, storey.usedClassRegistry, checker, storey.paths.stagingAreaDataManaged);
+                iOSIl2CppPlatformProvider platformProvider = new iOSIl2CppPlatformProvider(BuildTarget.iOS, bs.isDevelopmentPlayer, storey.paths.stagingAreaData, buildReport);
+                MonoAOTRegistration.WriteCPlusPlusFileForStaticAOTModuleRegistration(bs.target, file, crossCompileOptions, true, PlayerSettings.iOS.targetDevice.ToString(), stripping, storey.usedClassRegistry, checker, storey.paths.stagingAreaDataManaged, platformProvider);
                 if (stripping)
                 {
                     string fullPath = Path.GetFullPath(Path.Combine(storey.paths.stagingAreaDataManaged, "tempUnstripped"));
@@ -903,8 +896,8 @@
                         if (string.Equals(extension, ".dll", StringComparison.InvariantCultureIgnoreCase) || string.Equals(extension, ".mdb", StringComparison.InvariantCultureIgnoreCase))
                         {
                             System.IO.File.Delete(Path.Combine(storey.paths.stagingAreaDataManaged, Path.GetFileName(str4)));
+                            System.IO.File.Move(str4, Path.Combine(storey.paths.stagingAreaDataManaged, Path.GetFileName(str4)));
                         }
-                        System.IO.File.Move(str4, Path.Combine(storey.paths.stagingAreaDataManaged, Path.GetFileName(str4)));
                     }
                     Directory.Delete(fullPath);
                 }
@@ -982,6 +975,10 @@
         {
             AvailableOrientations orientations = new AvailableOrientations();
             UIOrientation defaultInterfaceOrientation = PlayerSettings.defaultInterfaceOrientation;
+            if (PlayerSettings.virtualRealitySupported)
+            {
+                defaultInterfaceOrientation = UIOrientation.LandscapeLeft;
+            }
             bool flag = defaultInterfaceOrientation == UIOrientation.AutoRotation;
             if ((defaultInterfaceOrientation == UIOrientation.Portrait) || (flag && PlayerSettings.allowedAutorotateToPortrait))
             {
@@ -1511,10 +1508,10 @@
                 UnityEngine.Debug.LogWarning("iOS project doesn't seem to exist, can't append, using replace mode.");
                 bs.appendMode = false;
             }
-            PostProcess(bs, paths, args.usedClassRegistry);
+            PostProcess(bs, paths, args.usedClassRegistry, args.report);
         }
 
-        private static void PostProcess(BuildSettings bs, ProjectPaths paths, RuntimeClassRegistry usedClassRegistry)
+        private static void PostProcess(BuildSettings bs, ProjectPaths paths, RuntimeClassRegistry usedClassRegistry, BuildReport buildReport)
         {
             Regex[] ignoreList = new Regex[] { new Regex(@"lib.*\.a"), new Regex(@"\.DS_Store") };
             Utils.CopyRecursiveWithIgnoreList(paths.EditorTrampoline(), paths.StagingTrampoline(), ignoreList);
@@ -1537,7 +1534,7 @@
             bool collectMethods = true;
             bool ignoreSystemDlls = false;
             checker.CollectReferences(paths.stagingAreaDataManaged, collectMethods, 0f, ignoreSystemDlls);
-            IncludedFileList collection = CrossCompileManagedDlls(bs, paths, checker, usedClassRegistry);
+            IncludedFileList collection = CrossCompileManagedDlls(bs, paths, checker, usedClassRegistry, buildReport);
             includedFiles.AddRange(collection);
             if (ShouldStripByteCodeInManagedDlls(bs))
             {
@@ -1801,15 +1798,24 @@
             {
                 bs.appendMode = false;
             }
-            string bundleIdentifier = PlayerSettings.bundleIdentifier;
-            CheckIOSBundleIdentifier(bundleIdentifier, bs);
-            bs.productName = bundleIdentifier.Substring(bundleIdentifier.LastIndexOf(".") + 1);
-            bs.companyName = bundleIdentifier.Substring(0, bundleIdentifier.LastIndexOf("."));
+            BuildTargetGroup targetGroup = (args.target != BuildTarget.tvOS) ? BuildTargetGroup.iPhone : BuildTargetGroup.tvOS;
+            string applicationIdentifier = PlayerSettings.GetApplicationIdentifier(targetGroup);
+            CheckIOSBundleIdentifier(applicationIdentifier, bs);
+            bs.productName = applicationIdentifier.Substring(applicationIdentifier.LastIndexOf(".") + 1);
+            bs.companyName = applicationIdentifier.Substring(0, applicationIdentifier.LastIndexOf("."));
             bs.appleDeveloperTeamID = PlayerSettings.iOS.appleDeveloperTeamID;
             bs.automaticallySignBuild = PlayerSettings.iOS.appleEnableAutomaticSigning;
             bs.iOSManualProvisioningProfileUUID = PlayerSettings.iOS.iOSManualProvisioningProfileID;
             bs.tvOSManualProvisioningProfileUUID = PlayerSettings.iOS.tvOSManualProvisioningProfileID;
             bs.cloudProjectId = PlayerSettings.cloudProjectId;
+            if (args.target == BuildTarget.iOS)
+            {
+                bs.buildNumber = PlayerSettings.iOS.buildNumber;
+            }
+            else if (args.target == BuildTarget.tvOS)
+            {
+                bs.buildNumber = PlayerSettings.tvOS.buildNumber;
+            }
             bs.nativeCrashReportingEnabled = CrashReportingSettings.enabled;
             string configurationURL = UnityConnect.instance.GetConfigurationURL(CloudConfigUrl.CloudPerfEvents);
             if (!string.IsNullOrEmpty(configurationURL))
@@ -1951,6 +1957,14 @@
                 { 
                     "UNITY_USES_WEBCAM",
                     usedFeatures.camera
+                },
+                { 
+                    "UNITY_USES_REPLAY_KIT",
+                    usedFeatures.replayKit
+                },
+                { 
+                    "UNITY_DEVELOPER_BUILD",
+                    bs.isDevelopmentPlayer
                 }
             };
             UpdateDefinesInFile(installPath + "/Classes/Preprocessor.h", valuesToUpdate);
@@ -1977,7 +1991,7 @@
             PlistUpdater.CustomData data = new PlistUpdater.CustomData {
                 bundleIdentifier = bs.companyName + ".${PRODUCT_NAME}",
                 bundleVersion = PlayerSettings.bundleVersion,
-                buildNumber = PlayerSettings.iOS.buildNumber,
+                buildNumber = bs.buildNumber,
                 bundleDisplayName = !string.IsNullOrEmpty(applicationDisplayName) ? applicationDisplayName : "${PRODUCT_NAME}",
                 availableIconsList = GetAvailableIconsList(bs),
                 availableOrientationSet = GetAvailableOrientations(),
@@ -2235,6 +2249,7 @@
             public Version targetOsVersion;
             public string productName;
             public string companyName;
+            public string buildNumber;
             public iOSTargetDevice targetDevice;
             public string appleDeveloperTeamID;
             public bool automaticallySignBuild;

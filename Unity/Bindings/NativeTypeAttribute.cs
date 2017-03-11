@@ -7,7 +7,7 @@
     [AttributeUsage(AttributeTargets.Class)]
     internal class NativeTypeAttribute : Attribute
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <Header>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <Name>k__BackingField;

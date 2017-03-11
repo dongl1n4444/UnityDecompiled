@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CustomEditor(typeof(WheelCollider)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(WheelCollider))]
     internal class WheelColliderEditor : Editor
     {
         private SerializedProperty m_Center;

@@ -10,7 +10,7 @@
         private readonly GUIContent m_ObjectName;
         private Styles s_Styles;
 
-        public ObjectPreviewPopup(Object previewObject)
+        public ObjectPreviewPopup(UnityEngine.Object previewObject)
         {
             if (previewObject == null)
             {
@@ -30,7 +30,7 @@
         {
             if (this.m_Editor != null)
             {
-                Object.DestroyImmediate(this.m_Editor);
+                UnityEngine.Object.DestroyImmediate(this.m_Editor);
             }
         }
 

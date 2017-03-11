@@ -1,7 +1,9 @@
 ﻿namespace UnityEditor.Android.PostProcessor.Tasks
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEditor;
     using UnityEditor.Android;
@@ -16,6 +18,7 @@
         private string _installPath;
         private string _packageName;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ProgressHandler OnProgress;
 
         public void Execute(PostProcessorContext context)
@@ -55,6 +58,17 @@
             this._device.Launch(this._packageName, activityWithLaunchIntent, null);
         }
 
+        private void TryCleanupTemporaryOBB(string path)
+        {
+            try
+            {
+                this._device.Delete(path, null);
+            }
+            catch (Exception)
+            {
+            }
+        }
+
         private void UploadAPK(bool retryUpload)
         {
             if (this.OnProgress != null)
@@ -64,7 +78,7 @@
             string str = this._device.Install(this._installPath, null);
             if (!retryUpload && (str.Contains("[INSTALL_FAILED_UPDATE_INCOMPATIBLE]") || str.Contains("[INSTALL_PARSE_FAILED_INCONSISTENT_CERTIFICATES]")))
             {
-                Debug.LogWarning("Application update incompatible (signed with different keys?); removing previous installation (PlayerPrefs will be lost)...\n");
+                UnityEngine.Debug.LogWarning("Application update incompatible (signed with different keys?); removing previous installation (PlayerPrefs will be lost)...\n");
                 if (this.OnProgress != null)
                 {
                     this.OnProgress(this, "Removing " + this._packageName + " from device " + this._device.Describe());
@@ -76,7 +90,7 @@
             {
                 if (((str.Contains("protocol failure") || str.Contains("No space left on device")) || (str.Contains("[INSTALL_FAILED_INSUFFICIENT_STORAGE]") || str.Contains("[INSTALL_FAILED_UPDATE_INCOMPATIBLE]"))) || ((str.Contains("[INSTALL_FAILED_MEDIA_UNAVAILABLE]") || str.Contains("[INSTALL_PARSE_FAILED_INCONSISTENT_CERTIFICATES]")) || str.Contains("Failure [")))
                 {
-                    Debug.LogError("Installation failed with the following output:\n" + str);
+                    UnityEngine.Debug.LogError("Installation failed with the following output:\n" + str);
                     CancelPostProcess.AbortBuildPointToConsole("Unable to install APK!", "Installation failed.");
                 }
                 bool flag = this._developmentPlayer || Unsupported.IsDeveloperBuild();
@@ -105,10 +119,10 @@
                 string str3 = $"main.{bundleVersionCode.ToString()}.{this._packageName}.obb";
                 foreach (string str4 in strArray)
                 {
-                    string dst = $"{str4}/{"obb"}/{this._packageName}/{str3}";
+                    string str5 = $"{str4}/{"obb"}/{this._packageName}/{str3}";
                     try
                     {
-                        this._device.Push(path, dst, null);
+                        this._device.Push(path, str5, null);
                         flag = true;
                         break;
                     }
@@ -117,9 +131,27 @@
                         exception = exception2;
                     }
                 }
+                string dst = $"{this._device.ExternalStorageRoot}/{str3}";
                 if (!flag)
                 {
-                    Debug.LogException(exception);
+                    try
+                    {
+                        this._device.Push(path, dst, null);
+                        string str7 = $"{this._device.ExternalStorageRoot}/{"Android"}/{"obb"}/{this._packageName}";
+                        string destination = $"{str7}/{str3}";
+                        this._device.MakePath(str7, null);
+                        this._device.Move(dst, destination, null);
+                        flag = true;
+                    }
+                    catch (Exception exception3)
+                    {
+                        exception = exception3;
+                    }
+                }
+                if (!flag)
+                {
+                    this.TryCleanupTemporaryOBB(dst);
+                    UnityEngine.Debug.LogException(exception);
                     CancelPostProcess.AbortBuildPointToConsole("Unable to deploy OBB to device", "Failed pushing OBB file to the device.");
                 }
             }

@@ -38,7 +38,7 @@
         /// </summary>
         /// <param name="clip"></param>
         /// <param name="includeCurveData"></param>
-        [Obsolete("GetAllCurves is deprecated. Use GetCurveBindings and GetObjectReferenceCurveBindings instead."), ExcludeFromDocs]
+        [ExcludeFromDocs, Obsolete("GetAllCurves is deprecated. Use GetCurveBindings and GetObjectReferenceCurveBindings instead.")]
         public static AnimationClipCurveData[] GetAllCurves(AnimationClip clip)
         {
             bool includeCurveData = true;
@@ -78,7 +78,7 @@
         /// </summary>
         /// <param name="root"></param>
         /// <param name="binding"></param>
-        public static Object GetAnimatedObject(GameObject root, EditorCurveBinding binding) => 
+        public static UnityEngine.Object GetAnimatedObject(GameObject root, EditorCurveBinding binding) => 
             INTERNAL_CALL_GetAnimatedObject(root, ref binding);
 
         /// <summary>
@@ -134,17 +134,17 @@
         /// <param name="propertyName"></param>
         /// <param name="binding"></param>
         [Obsolete("This overload is deprecated. Use the one with EditorCurveBinding instead.")]
-        public static AnimationCurve GetEditorCurve(AnimationClip clip, string relativePath, Type type, string propertyName) => 
+        public static AnimationCurve GetEditorCurve(AnimationClip clip, string relativePath, System.Type type, string propertyName) => 
             GetEditorCurve(clip, EditorCurveBinding.FloatCurve(relativePath, type, propertyName));
 
-        public static Type GetEditorCurveValueType(GameObject root, EditorCurveBinding binding) => 
+        public static System.Type GetEditorCurveValueType(GameObject root, EditorCurveBinding binding) => 
             INTERNAL_CALL_GetEditorCurveValueType(root, ref binding);
 
         public static bool GetFloatValue(GameObject root, EditorCurveBinding binding, out float data) => 
             INTERNAL_CALL_GetFloatValue(root, ref binding, out data);
 
         [Obsolete("This overload is deprecated. Use the one with EditorCurveBinding instead.")]
-        public static bool GetFloatValue(GameObject root, string relativePath, Type type, string propertyName, out float data) => 
+        public static bool GetFloatValue(GameObject root, string relativePath, System.Type type, string propertyName, out float data) => 
             GetFloatValue(root, EditorCurveBinding.FloatCurve(relativePath, type, propertyName), out data);
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -152,11 +152,77 @@
         internal static bool GetKeyBroken(Keyframe key) => 
             ((key.tangentMode & kBrokenMask) != 0);
 
+        /// <summary>
+        /// <para>Retrieve the specified keyframe broken tangent flag.</para>
+        /// </summary>
+        /// <param name="curve">Curve to query.</param>
+        /// <param name="index">Keyframe index.</param>
+        /// <returns>
+        /// <para>Broken flag at specified index.</para>
+        /// </returns>
+        public static bool GetKeyBroken(AnimationCurve curve, int index)
+        {
+            if (curve == null)
+            {
+                throw new ArgumentNullException("curve");
+            }
+            if ((index < 0) || (index >= curve.length))
+            {
+                throw new ArgumentOutOfRangeException("index", $"Index ({index}) must be in the range of 0 to {curve.length - 1}.");
+            }
+            Keyframe key = curve[index];
+            return GetKeyBroken(key);
+        }
+
         internal static TangentMode GetKeyLeftTangentMode(Keyframe key) => 
             ((TangentMode) ((key.tangentMode & kLeftTangentMask) >> 1));
 
+        /// <summary>
+        /// <para>Retrieve the left tangent mode of the keyframe at specified index.</para>
+        /// </summary>
+        /// <param name="curve">Curve to query.</param>
+        /// <param name="index">Keyframe index.</param>
+        /// <returns>
+        /// <para>Tangent mode at specified index.</para>
+        /// </returns>
+        public static TangentMode GetKeyLeftTangentMode(AnimationCurve curve, int index)
+        {
+            if (curve == null)
+            {
+                throw new ArgumentNullException("curve");
+            }
+            if ((index < 0) || (index >= curve.length))
+            {
+                throw new ArgumentOutOfRangeException("index", $"Index ({index}) must be in the range of 0 to {curve.length - 1}.");
+            }
+            Keyframe key = curve[index];
+            return GetKeyLeftTangentMode(key);
+        }
+
         internal static TangentMode GetKeyRightTangentMode(Keyframe key) => 
             ((TangentMode) ((key.tangentMode & kRightTangentMask) >> 5));
+
+        /// <summary>
+        /// <para>Retrieve the right tangent mode of the keyframe at specified index.</para>
+        /// </summary>
+        /// <param name="curve">Curve to query.</param>
+        /// <param name="index">Keyframe index.</param>
+        /// <returns>
+        /// <para>Tangent mode at specified index.</para>
+        /// </returns>
+        public static TangentMode GetKeyRightTangentMode(AnimationCurve curve, int index)
+        {
+            if (curve == null)
+            {
+                throw new ArgumentNullException("curve");
+            }
+            if ((index < 0) || (index >= curve.length))
+            {
+                throw new ArgumentOutOfRangeException("index", $"Index ({index}) must be in the range of 0 to {curve.length - 1}.");
+            }
+            Keyframe key = curve[index];
+            return GetKeyRightTangentMode(key);
+        }
 
         /// <summary>
         /// <para>Return the object reference curve that the binding is pointing to.</para>
@@ -172,12 +238,12 @@
         /// <param name="clip"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern EditorCurveBinding[] GetObjectReferenceCurveBindings(AnimationClip clip);
-        public static bool GetObjectReferenceValue(GameObject root, EditorCurveBinding binding, out Object targetObject) => 
+        public static bool GetObjectReferenceValue(GameObject root, EditorCurveBinding binding, out UnityEngine.Object targetObject) => 
             INTERNAL_CALL_GetObjectReferenceValue(root, ref binding, out targetObject);
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern EditorCurveBinding[] GetScriptableObjectAnimatableBindings(ScriptableObject scriptableObject);
-        internal static Type GetScriptableObjectEditorCurveValueType(ScriptableObject scriptableObject, EditorCurveBinding binding) => 
+        internal static System.Type GetScriptableObjectEditorCurveValueType(ScriptableObject scriptableObject, EditorCurveBinding binding) => 
             INTERNAL_CALL_GetScriptableObjectEditorCurveValueType(scriptableObject, ref binding);
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -190,7 +256,7 @@
         internal static extern bool HasRootCurves(AnimationClip clip);
         [Obsolete("Use AnimationMode.InAnimationMode instead")]
         public static bool InAnimationMode() => 
-            AnimationMode.InAnimationMode();
+            UnityEditor.AnimationMode.InAnimationMode();
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_CalculateAutoTangent(AnimationCurve curve, int index);
@@ -209,21 +275,21 @@
         }
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private static extern Object INTERNAL_CALL_GetAnimatedObject(GameObject root, ref EditorCurveBinding binding);
+        private static extern UnityEngine.Object INTERNAL_CALL_GetAnimatedObject(GameObject root, ref EditorCurveBinding binding);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetClosestEuler(ref Quaternion q, ref Vector3 eulerHint, RotationOrder rotationOrder, out Vector3 value);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern AnimationCurve INTERNAL_CALL_GetEditorCurve(AnimationClip clip, ref EditorCurveBinding binding);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private static extern Type INTERNAL_CALL_GetEditorCurveValueType(GameObject root, ref EditorCurveBinding binding);
+        private static extern System.Type INTERNAL_CALL_GetEditorCurveValueType(GameObject root, ref EditorCurveBinding binding);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool INTERNAL_CALL_GetFloatValue(GameObject root, ref EditorCurveBinding binding, out float data);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern ObjectReferenceKeyframe[] INTERNAL_CALL_GetObjectReferenceCurve(AnimationClip clip, ref EditorCurveBinding binding);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private static extern bool INTERNAL_CALL_GetObjectReferenceValue(GameObject root, ref EditorCurveBinding binding, out Object targetObject);
+        private static extern bool INTERNAL_CALL_GetObjectReferenceValue(GameObject root, ref EditorCurveBinding binding, out UnityEngine.Object targetObject);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private static extern Type INTERNAL_CALL_GetScriptableObjectEditorCurveValueType(ScriptableObject scriptableObject, ref EditorCurveBinding binding);
+        private static extern System.Type INTERNAL_CALL_GetScriptableObjectEditorCurveValueType(ScriptableObject scriptableObject, ref EditorCurveBinding binding);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_SetEditorCurve(AnimationClip clip, ref EditorCurveBinding binding, AnimationCurve curve, bool syncEditorCurve);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -295,7 +361,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool IsValidPolynomialCurve(AnimationCurve curve);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern Type PropertyModificationToEditorCurveBinding(PropertyModification modification, GameObject gameObject, out EditorCurveBinding binding);
+        public static extern System.Type PropertyModificationToEditorCurveBinding(PropertyModification modification, GameObject gameObject, out EditorCurveBinding binding);
         /// <summary>
         /// <para>Set the additive reference pose from referenceClip at time for animation clip clip.</para>
         /// </summary>
@@ -358,7 +424,7 @@
         }
 
         [Obsolete("This overload is deprecated. Use the one with EditorCurveBinding instead.")]
-        public static void SetEditorCurve(AnimationClip clip, string relativePath, Type type, string propertyName, AnimationCurve curve)
+        public static void SetEditorCurve(AnimationClip clip, string relativePath, System.Type type, string propertyName, AnimationCurve curve)
         {
             SetEditorCurve(clip, EditorCurveBinding.FloatCurve(relativePath, type, propertyName), curve);
         }
@@ -420,7 +486,7 @@
             }
             if ((index < 0) || (index >= curve.length))
             {
-                throw new ArgumentException("Index out of bounds.");
+                throw new ArgumentOutOfRangeException("index", $"Index ({index}) must be in the range of 0 to {curve.length - 1}.");
             }
             Keyframe key = curve[index];
             SetKeyBroken(ref key, broken);
@@ -442,7 +508,7 @@
             }
             if ((index < 0) || (index >= curve.length))
             {
-                throw new ArgumentException("Index out of bounds.");
+                throw new ArgumentOutOfRangeException("index", $"Index ({index}) must be in the range of 0 to {curve.length - 1}.");
             }
             Keyframe key = curve[index];
             if (tangentMode != TangentMode.Free)
@@ -468,7 +534,7 @@
             }
             if ((index < 0) || (index >= curve.length))
             {
-                throw new ArgumentException("Index out of bounds.");
+                throw new ArgumentOutOfRangeException("index", $"Index ({index}) must be in the range of 0 to {curve.length - 1}.");
             }
             Keyframe key = curve[index];
             if (tangentMode != TangentMode.Free)
@@ -496,16 +562,16 @@
         }
 
         [Obsolete("Use AnimationMode.StartAnimationmode instead")]
-        public static void StartAnimationMode(Object[] objects)
+        public static void StartAnimationMode(UnityEngine.Object[] objects)
         {
             Debug.LogWarning("AnimationUtility.StartAnimationMode is deprecated. Use AnimationMode.StartAnimationMode with the new APIs. The objects passed to this function will no longer be reverted automatically. See AnimationMode.AddPropertyModification");
-            AnimationMode.StartAnimationMode();
+            UnityEditor.AnimationMode.StartAnimationMode();
         }
 
         [Obsolete("Use AnimationMode.StopAnimationMode instead")]
         public static void StopAnimationMode()
         {
-            AnimationMode.StopAnimationMode();
+            UnityEditor.AnimationMode.StopAnimationMode();
         }
 
         internal static void UpdateTangentsFromMode(AnimationCurve curve)

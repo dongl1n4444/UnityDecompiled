@@ -14,7 +14,6 @@
     {
         private const string ConsoleMessage = "See the Console for more details. ";
         private const string DevicesError = "Unable to list connected devices. Please make sure the Tizen SDK is installed and is properly configured in the Editor. See the Console for more details. ";
-        internal static string emcli_exe;
         private const string KillServerError = "Unable to kill the sdb server. Please make sure the Tizen SDK is installed and is properly configured in the Editor. See the Console for more details. ";
         internal static string sdb_exe;
         internal static string sdk_tools;
@@ -29,6 +28,12 @@
                 throw new ApplicationException("No connected Tizen devices found! Please connect a device and try deploying again.");
             }
             return devices;
+        }
+
+        public static string ConnectedDeviceModel()
+        {
+            string args = "sdb shell \"/usr/bin/xml sel -t -v \"/model-config/platform/key[@name='tizen.org/system/model_name']/text()\" /etc/config/model-config.xml\"";
+            return ExecuteSystemProcess(sdb_exe, args, "/");
         }
 
         public static bool CreateTpkPackage(string stagingArea)
@@ -141,21 +146,27 @@
         public static bool InstallTpkPackage(string installPath)
         {
             string args = "";
-            if (PlayerSettings.Tizen.deploymentTargetType == 1)
+            if (ThisIsAUnityTestProject())
             {
-                string[] components = new string[] { FileUtil.UnityGetDirectoryName(installPath), "Emulator", FileUtil.UnityGetFileName(installPath) };
-                args = " -e install \"" + Paths.Combine(components) + "\"";
+                string environmentVariable = Environment.GetEnvironmentVariable("TIZEN_RUN_TESTS_ON_EMULATOR");
+                if (environmentVariable == null)
+                {
+                }
+                if (int.Parse("0") == 1)
+                {
+                    string[] components = new string[] { FileUtil.UnityGetDirectoryName(installPath), "Emulator", FileUtil.UnityGetFileName(installPath) };
+                    args = " install \"" + Paths.Combine(components) + "\"";
+                }
+                else
+                {
+                    string[] textArray2 = new string[] { FileUtil.UnityGetDirectoryName(installPath), "Device", FileUtil.UnityGetFileName(installPath) };
+                    args = " install \"" + Paths.Combine(textArray2) + "\"";
+                }
             }
             else
             {
-                string[] textArray2 = new string[5];
-                textArray2[0] = " -s ";
-                textArray2[1] = PlayerSettings.Tizen.deploymentTarget;
-                textArray2[2] = " install \"";
-                string[] textArray3 = new string[] { FileUtil.UnityGetDirectoryName(installPath), "Device", FileUtil.UnityGetFileName(installPath) };
-                textArray2[3] = Paths.Combine(textArray3);
-                textArray2[4] = "\"";
-                args = string.Concat(textArray2);
+                string[] textArray3 = new string[] { " -s ", PlayerSettings.Tizen.deploymentTarget, " install \"", installPath, "\"" };
+                args = string.Concat(textArray3);
             }
             return IsValidResponse(ExecuteSystemProcess(sdb_exe, args, "/"), true);
         }
@@ -184,14 +195,8 @@
             }
         }
 
-        public static bool LaunchTpkPackage(string id, string stagingArea)
-        {
-            if (PlayerSettings.Tizen.deploymentTargetType == 0)
-            {
-                return IsValidResponse(ExecuteSystemProcess(GetTizenShellPath(), "run -s " + PlayerSettings.Tizen.deploymentTarget + " -p " + id, "/"), true);
-            }
-            return ((PlayerSettings.Tizen.deploymentTargetType == 1) && IsValidResponse(ExecuteSystemProcess(GetTizenShellPath(), "run -p " + id, "/"), true));
-        }
+        public static bool LaunchTpkPackage(string id, string stagingArea) => 
+            ((PlayerSettings.Tizen.deploymentTargetType != 2) && IsValidResponse(ExecuteSystemProcess(GetTizenShellPath(), "run -s " + PlayerSettings.Tizen.deploymentTarget + " -p " + id, "/"), true));
 
         public static string[] ListDevices()
         {
@@ -216,14 +221,21 @@
 
         public static string[] ListEmulators()
         {
-            string args = " list-vm";
-            string str2 = ExecuteSystemProcess(emcli_exe, args, "/");
+            string args = " devices";
+            string str2 = ExecuteSystemProcess(sdb_exe, args, "/");
             List<string> list = new List<string>();
             char[] separator = new char[] { '\n', '\r' };
             string[] strArray = str2.Split(separator, StringSplitOptions.RemoveEmptyEntries);
             foreach (string str3 in strArray)
             {
-                list.Add(str3);
+                if (!str3.Trim().EndsWith("attached") && (str3.Length > 0))
+                {
+                    string[] strArray3 = str3.Split((string[]) null, StringSplitOptions.RemoveEmptyEntries);
+                    if (strArray3[0].Contains("emulator"))
+                    {
+                        list.Add(strArray3[0]);
+                    }
+                }
             }
             return list.ToArray();
         }
@@ -239,12 +251,9 @@
             sdk_tools = Path.Combine(str, "tools");
             sdb_exe = "sdb";
             sdb_exe = Path.Combine(sdk_tools, sdb_exe);
-            emcli_exe = "em-cli";
-            emcli_exe = Path.Combine(sdk_tools, Path.Combine("emulator", Path.Combine("bin", emcli_exe)));
             if (Application.platform == RuntimePlatform.WindowsEditor)
             {
                 sdb_exe = sdb_exe + ".exe";
-                emcli_exe = emcli_exe + ".bat";
             }
         }
 
@@ -264,6 +273,20 @@
                 StandardOutputEncoding = Encoding.UTF8
             };
             return Command.Run(psi, waitingForProcessToExit, errorMsg);
+        }
+
+        public static string SelectedDeploymentTarget()
+        {
+            string str = "";
+            if (PlayerSettings.Tizen.deploymentTargetType == 0)
+            {
+                str = "device ";
+            }
+            else if (PlayerSettings.Tizen.deploymentTargetType == 1)
+            {
+                str = "emulator ";
+            }
+            return (str + PlayerSettings.Tizen.deploymentTarget);
         }
 
         public static void ShowErrDlgAndThrow(string title, string message)
@@ -314,13 +337,14 @@
 
         public static string StringFromMinOSVersion()
         {
-            int minOSVersion = (int) PlayerSettings.Tizen.minOSVersion;
-            if ((minOSVersion == 0) || (minOSVersion != 1))
+            if (PlayerSettings.Tizen.minOSVersion != TizenOSVersion.Version24)
             {
-                return "2.3";
             }
             return "2.4";
         }
+
+        public static bool ThisIsAUnityTestProject() => 
+            (((((PlayerSettings.productName == "RuntimeTests") || (PlayerSettings.productName == "NativeTests")) || ((PlayerSettings.productName == "UnityGraphicsTests") || (PlayerSettings.productName == "PerformanceRuntimeTests"))) || (((PlayerSettings.productName == "IntegrationTests") || (PlayerSettings.productName == "ExternalAssembly")) || (PlayerSettings.productName == "AnalyticsTest"))) || PlayerSettings.productName.Contains("AutoGeneratedProjectName"));
 
         public static bool ValidateSigningProfile(string stagingArea)
         {

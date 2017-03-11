@@ -5,11 +5,10 @@
     using System.Linq;
     using System.Runtime.CompilerServices;
     using Unity.IL2CPP.IoCServices;
-    using Unity.IL2CPP.WindowsRuntime;
 
     public class TypeProviderComponent : ITypeProviderService, ITypeProviderInitializerService, IDisposable
     {
-        private TypeDefinition _bindableIteratorToEnumeratorAdapterType;
+        private TypeDefinition _constantSplittableMapType;
         private TypeDefinition _iActivationFactoryType;
         private TypeDefinition _iBindableIterableType;
         private TypeDefinition _iBindableIteratorType;
@@ -82,15 +81,13 @@
             }
             this._iIterableType = this.OptionalResolve("Windows.Foundation.Collections", "IIterable`1", assembly);
             this._iBindableIterableType = this.OptionalResolve("Windows.UI.Xaml.Interop", "IBindableIterable", assembly);
-            this._iStringableType = this.OptionalResolve("Windows.Foundation", "IStringable", assembly);
             this._iBindableIteratorType = this.OptionalResolve("Windows.UI.Xaml.Interop", "IBindableIterator", assembly);
-            if (this._iBindableIteratorType != null)
-            {
-                this._bindableIteratorToEnumeratorAdapterType = BindableIteratorToEnumeratorAdapterTypeGenerator.Generate(mscorlib.MainModule);
-            }
+            this._iStringableType = this.OptionalResolve("Windows.Foundation", "IStringable", assembly);
+            AssemblyNameReference reference3 = new AssemblyNameReference("System.Runtime.WindowsRuntime", new Version(4, 0, 0, 0));
+            this._constantSplittableMapType = this.OptionalResolve("System.Runtime.InteropServices.WindowsRuntime", "ConstantSplittableMap`2", reference3);
         }
 
-        private TypeDefinition OptionalResolve(string namespaze, string name, AssemblyNameReference assembly)
+        public TypeDefinition OptionalResolve(string namespaze, string name, AssemblyNameReference assembly)
         {
             TypeReference reference = new TypeReference(namespaze, name, this._mscorlib.MainModule, assembly);
             try
@@ -103,9 +100,6 @@
             }
         }
 
-        public TypeReference BindableIteratorToEnumeratorAdapterTypeReference =>
-            this._bindableIteratorToEnumeratorAdapterType;
-
         public TypeReference BoolTypeReference =>
             this._mscorlib.MainModule.TypeSystem.Boolean;
 
@@ -114,6 +108,9 @@
 
         public TypeReference CharTypeReference =>
             this._mscorlib.MainModule.TypeSystem.Char;
+
+        public TypeDefinition ConstantSplittableMapType =>
+            this._constantSplittableMapType;
 
         public AssemblyDefinition Corlib =>
             this._mscorlib;

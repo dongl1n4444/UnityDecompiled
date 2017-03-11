@@ -370,7 +370,7 @@
         }
 
         /// <summary>
-        /// <para>When a GraphicRaycaster is raycasting into the scene it will first filter the elments using their RectTransform rect and then it will use this function to determine the elements hit by the raycast.</para>
+        /// <para>When a GraphicRaycaster is raycasting into the scene it does two things. First it filters the elements using their RectTransform rect. Then it uses this Raycast function to determine the elements hit by the raycast.</para>
         /// </summary>
         /// <param name="sp">Screen point.</param>
         /// <param name="eventCamera">Camera.</param>

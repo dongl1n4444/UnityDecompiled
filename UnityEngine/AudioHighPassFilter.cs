@@ -6,7 +6,7 @@
     using UnityEngine.Scripting;
 
     /// <summary>
-    /// <para>The Audio High Pass Filter passes high frequencies of an AudioSource and.</para>
+    /// <para>The Audio High Pass Filter passes high frequencies of an AudioSource, and cuts off signals with frequencies lower than the Cutoff Frequency.</para>
     /// </summary>
     [RequireComponent(typeof(AudioBehaviour))]
     public sealed class AudioHighPassFilter : Behaviour
@@ -16,7 +16,7 @@
         /// </summary>
         public float cutoffFrequency { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        [Obsolete("AudioHighPassFilter.highpassResonaceQ is obsolete. Use highpassResonanceQ instead (UnityUpgradable) -> highpassResonanceQ", true), EditorBrowsable(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("AudioHighPassFilter.highpassResonaceQ is obsolete. Use highpassResonanceQ instead (UnityUpgradable) -> highpassResonanceQ", true)]
         public float highpassResonaceQ
         {
             get => 

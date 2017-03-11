@@ -6,7 +6,7 @@
     /// <summary>
     /// <para>Use this attribute to rename a field without losing its serialized value.</para>
     /// </summary>
-    [RequiredByNativeCode, AttributeUsage(AttributeTargets.Field, AllowMultiple=true, Inherited=false)]
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple=true, Inherited=false), RequiredByNativeCode]
     public class FormerlySerializedAsAttribute : Attribute
     {
         private string m_oldName;

@@ -16,6 +16,7 @@
         internal static Vector3 Do(int id, Vector3 position, Vector3 direction, float size, Handles.CapFunction capFunction, float snap) => 
             Do(id, position, direction, direction, size, capFunction, snap);
 
+        [Obsolete("DrawCapFunction is obsolete. Use the version with CapFunction instead. Example: Change SphereCap to SphereHandleCap.")]
         internal static Vector3 Do(int id, Vector3 position, Vector3 direction, float size, Handles.DrawCapFunction drawFunc, float snap) => 
             Do(id, position, direction, direction, size, drawFunc, snap);
 
@@ -92,6 +93,7 @@
             return position;
         }
 
+        [Obsolete("DrawCapFunction is obsolete. Use the version with CapFunction instead. Example: Change SphereCap to SphereHandleCap.")]
         internal static Vector3 Do(int id, Vector3 position, Vector3 handleDirection, Vector3 slideDirection, float size, Handles.DrawCapFunction drawFunc, float snap)
         {
             Event current = Event.current;

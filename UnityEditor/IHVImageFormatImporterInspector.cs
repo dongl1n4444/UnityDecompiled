@@ -42,7 +42,7 @@
                     Texture tex = AssetDatabase.LoadMainAssetAtPath(importer.assetPath) as Texture;
                     if (this.m_FilterMode.intValue != -1)
                     {
-                        TextureUtil.SetFilterModeNoDirty(tex, (FilterMode) this.m_FilterMode.intValue);
+                        TextureUtil.SetFilterModeNoDirty(tex, (UnityEngine.FilterMode) this.m_FilterMode.intValue);
                     }
                     if (this.m_WrapMode.intValue != -1)
                     {
@@ -72,8 +72,8 @@
             controlRect = EditorGUILayout.GetControlRect(new GUILayoutOption[0]);
             EditorGUI.BeginProperty(controlRect, Styles.filterMode, this.m_FilterMode);
             EditorGUI.BeginChangeCheck();
-            FilterMode mode2 = (this.m_FilterMode.intValue != -1) ? ((FilterMode) this.m_FilterMode.intValue) : FilterMode.Bilinear;
-            mode2 = (FilterMode) EditorGUI.IntPopup(controlRect, Styles.filterMode, (int) mode2, Styles.filterModeOptions, Styles.filterModeValues);
+            UnityEngine.FilterMode mode2 = (this.m_FilterMode.intValue != -1) ? ((UnityEngine.FilterMode) this.m_FilterMode.intValue) : UnityEngine.FilterMode.Bilinear;
+            mode2 = (UnityEngine.FilterMode) EditorGUI.IntPopup(controlRect, Styles.filterMode, (int) mode2, Styles.filterModeOptions, Styles.filterModeValues);
             if (EditorGUI.EndChangeCheck())
             {
                 this.m_FilterMode.intValue = (int) mode2;

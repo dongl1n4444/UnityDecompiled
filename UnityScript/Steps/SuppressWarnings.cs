@@ -19,12 +19,12 @@
 
         public override void Run()
         {
-            this.get_Warnings().add_Adding(new EventHandler<CompilerWarningEventArgs>(this.Warnings_Adding));
+            this.Warnings.Adding += new EventHandler<CompilerWarningEventArgs>(this.Warnings_Adding);
         }
 
         public void Warnings_Adding(object sender, CompilerWarningEventArgs args)
         {
-            if (RuntimeServices.op_Member(args.get_Warning().get_Code(), (IList) this._suppressed))
+            if (RuntimeServices.op_Member(args.Warning.Code, (IList) this._suppressed))
             {
                 args.Cancel();
             }

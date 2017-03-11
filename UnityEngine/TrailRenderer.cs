@@ -16,6 +16,31 @@
         /// </summary>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void Clear();
+        /// <summary>
+        /// <para>Get the position of a vertex in the trail.</para>
+        /// </summary>
+        /// <param name="index">The index of the position to retrieve.</param>
+        /// <returns>
+        /// <para>The position at the specified index in the array.</para>
+        /// </returns>
+        public Vector3 GetPosition(int index)
+        {
+            Vector3 vector;
+            INTERNAL_CALL_GetPosition(this, index, out vector);
+            return vector;
+        }
+
+        /// <summary>
+        /// <para>Get the positions of all vertices in the trail.</para>
+        /// </summary>
+        /// <param name="positions">The array of positions to retrieve.</param>
+        /// <returns>
+        /// <para>How many positions were actually stored in the output array.</para>
+        /// </returns>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public extern int GetPositions(Vector3[] positions);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_GetPosition(TrailRenderer self, int index, out Vector3 value);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_endColor(out Color value);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -24,6 +49,11 @@
         private extern void INTERNAL_set_endColor(ref Color value);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_startColor(ref Color value);
+
+        /// <summary>
+        /// <para>Select whether the trail will face the camera, or the orientation of the Transform Component.</para>
+        /// </summary>
+        public LineAlignment alignment { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Does the GameObject of this trail renderer auto destructs?</para>
@@ -71,6 +101,17 @@
         /// <para>Set this to a value greater than 0, to get rounded corners between each segment of the trail.</para>
         /// </summary>
         public int numCornerVertices { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
+        /// <para>Get the number of line segments in the trail.</para>
+        /// </summary>
+        [Obsolete("Use positionCount property (UnityUpgradable) -> positionCount")]
+        public int numPositions { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        /// <summary>
+        /// <para>Get the number of line segments in the trail.</para>
+        /// </summary>
+        public int positionCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Set the color at the start of the trail.</para>

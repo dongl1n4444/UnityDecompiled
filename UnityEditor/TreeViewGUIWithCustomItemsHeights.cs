@@ -92,7 +92,7 @@
             int rowCount = this.m_TreeView.data.rowCount;
             if (rowCount != this.m_RowRects.Count)
             {
-                Debug.LogError("Mismatch in state: rows vs cached rects. Did you remember to hook up: dataSource.onVisibleRowsChanged += gui.CalculateRowRects ?");
+                UnityEngine.Debug.LogError("Mismatch in state: rows vs cached rects. Did you remember to hook up: dataSource.onVisibleRowsChanged += gui.CalculateRowRects ?");
                 this.CalculateRowRects();
             }
             int num4 = -1;
@@ -146,7 +146,7 @@
 
         public int GetNumRowsOnPageUpDown(TreeViewItem fromItem, bool pageUp, float heightOfTreeView)
         {
-            Debug.LogError("GetNumRowsOnPageUpDown: Not impemented");
+            UnityEngine.Debug.LogError("GetNumRowsOnPageUpDown: Not impemented");
             return (int) Mathf.Floor(heightOfTreeView / 30f);
         }
 
@@ -160,7 +160,7 @@
         {
             if (this.m_RowRects.Count == 0)
             {
-                Debug.LogError("Ensure precalc rects");
+                UnityEngine.Debug.LogError("Ensure precalc rects");
                 return new Rect();
             }
             return this.m_RowRects[row];

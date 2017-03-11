@@ -667,7 +667,7 @@
             this.myView.netId;
 
         /// <summary>
-        /// <para>The id of the player associated with thei behaviour.</para>
+        /// <para>The id of the player associated with the behaviour.</para>
         /// </summary>
         public short playerControllerId =>
             this.myView.playerControllerId;

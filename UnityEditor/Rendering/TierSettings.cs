@@ -48,6 +48,10 @@
         /// <para>The rendering path that should be used.</para>
         /// </summary>
         public RenderingPath renderingPath;
+        /// <summary>
+        /// <para>The RealtimeGICPUUsage to use for this tier.</para>
+        /// </summary>
+        public RealtimeGICPUUsage realtimeGICPUUsage;
     }
 }
 

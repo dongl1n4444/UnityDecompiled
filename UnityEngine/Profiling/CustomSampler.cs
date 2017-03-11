@@ -63,7 +63,7 @@
         /// <summary>
         /// <para>End profiling a piece of code with a custom label.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Conditional("ENABLE_PROFILER")]
+        [MethodImpl(MethodImplOptions.InternalCall), Conditional("ENABLE_PROFILER"), GeneratedByOldBindingsGenerator]
         public extern void End();
     }
 }

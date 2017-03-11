@@ -45,8 +45,14 @@
             base.m_NeedRefreshRows = true;
         }
 
-        public override bool IsExpandable(TreeViewItem item) => 
-            ((item is TestGroupTreeViewItem) || base.IsExpandable(item));
+        public override bool IsExpandable(TreeViewItem item)
+        {
+            if (item is TestTreeViewItem)
+            {
+                return ((TestTreeViewItem) item).IsGroupNode;
+            }
+            return base.IsExpandable(item);
+        }
 
         public override bool IsRenamingItemAllowed(TreeViewItem item) => 
             false;

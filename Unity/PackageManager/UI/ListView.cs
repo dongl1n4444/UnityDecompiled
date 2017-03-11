@@ -19,19 +19,19 @@
     internal class ListView
     {
         [CompilerGenerated]
-        private static Func<PackageInfo, bool> <>f__am$cache0;
+        private static Func<Unity.DataContract.PackageInfo, bool> <>f__am$cache0;
         [CompilerGenerated]
-        private static Func<PackageInfo, bool> <>f__am$cache1;
+        private static Func<Unity.DataContract.PackageInfo, bool> <>f__am$cache1;
         [CompilerGenerated]
-        private static Func<IvyModule, PackageInfo> <>f__am$cache2;
+        private static Func<IvyModule, Unity.DataContract.PackageInfo> <>f__am$cache2;
         [CompilerGenerated]
         private static Func<Installer, InstallerState> <>f__am$cache3;
         [CompilerGenerated]
-        private static Func<PackageInfo, PackageType> <>f__am$cache4;
+        private static Func<Unity.DataContract.PackageInfo, PackageType> <>f__am$cache4;
         [CompilerGenerated]
-        private static Func<PackageInfo, PackageType> <>f__am$cache5;
+        private static Func<Unity.DataContract.PackageInfo, PackageType> <>f__am$cache5;
         [CompilerGenerated]
-        private static Func<IvyModule, PackageInfo> <>f__am$cache6;
+        private static Func<IvyModule, Unity.DataContract.PackageInfo> <>f__am$cache6;
         [CompilerGenerated]
         private static Func<IvyModule, bool> <>f__am$cache7;
         [CompilerGenerated]
@@ -39,11 +39,11 @@
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IEnumerable<InstallerState> <installerStates>k__BackingField;
         private Dictionary<string, AnimBool> faders = new Dictionary<string, AnimBool>();
-        private static Dictionary<int, PackageInfo> hashToPackageCache = new Dictionary<int, PackageInfo>();
-        private IEnumerable<PackageInfo> m_AvailablePackages;
+        private static Dictionary<int, Unity.DataContract.PackageInfo> hashToPackageCache = new Dictionary<int, Unity.DataContract.PackageInfo>();
+        private IEnumerable<Unity.DataContract.PackageInfo> m_AvailablePackages;
         [SerializeField]
         private bool m_ListViewShouldTakeKeyboardControl = true;
-        private IEnumerable<PackageInfo> m_LocalPackages;
+        private IEnumerable<Unity.DataContract.PackageInfo> m_LocalPackages;
         private Window m_Parent;
         [NonSerialized]
         private bool m_RefreshingRemotePackages = false;
@@ -78,7 +78,7 @@
             packageNameComparer = new PackageNameComparer();
         }
 
-        private static string BuildPackageText(PackageInfo package, IEnumerable<IvyModule> allVersions)
+        private static string BuildPackageText(Unity.DataContract.PackageInfo package, IEnumerable<IvyModule> allVersions)
         {
             <BuildPackageText>c__AnonStorey3 storey = new <BuildPackageText>c__AnonStorey3();
             StringBuilder builder = new StringBuilder(package.name);
@@ -118,7 +118,7 @@
             {
                 <>f__am$cache2 = p => p.ToPackageInfo().Refresh();
             }
-            this.availablePackages = Enumerable.Select<IvyModule, PackageInfo>(Unity.PackageManager.PackageManager.Database.NewOrUpdatedPackages, <>f__am$cache2);
+            this.availablePackages = Enumerable.Select<IvyModule, Unity.DataContract.PackageInfo>(Unity.PackageManager.PackageManager.Database.NewOrUpdatedPackages, <>f__am$cache2);
             if (<>f__am$cache3 == null)
             {
                 <>f__am$cache3 = i => new InstallerState { 
@@ -131,7 +131,7 @@
                 };
             }
             this.installerStates = Enumerable.Select<Installer, InstallerState>(Unity.PackageManager.PackageManager.Instance.Installers.Values, <>f__am$cache3);
-            foreach (PackageInfo info in from p in this.allListedPackages
+            foreach (Unity.DataContract.PackageInfo info in from p in this.allListedPackages
                 where !this.faders.ContainsKey(p.packageName)
                 select p)
             {
@@ -147,12 +147,12 @@
             InstallerState state = Enumerable.FirstOrDefault<InstallerState>(this.installerStates, new Func<InstallerState, bool>(storey.<>m__0));
             if (state != null)
             {
-                Debug.Log($"Cancelling installation of {state.module.Name}");
+                UnityEngine.Debug.Log($"Cancelling installation of {state.module.Name}");
                 state.installer.Cancel(false);
             }
         }
 
-        private void DoPackageElement(PackageInfo package, int listsKeyboardID)
+        private void DoPackageElement(Unity.DataContract.PackageInfo package, int listsKeyboardID)
         {
             Event current = Event.current;
             int controlID = GUIUtility.GetControlID(FocusType.Passive);
@@ -162,13 +162,13 @@
             }
             IEnumerable<IvyModule> allVersions = Enumerable.OrderByDescending<IvyModule, PackageVersion>(Unity.PackageManager.PackageManager.Database.AllVersionsOfPackage(package.packageName), <>f__am$cache8);
             GUIContent content = new GUIContent(BuildPackageText(package, allVersions));
-            Rect position = GUILayoutUtility.GetRect(content, Styles.listElement);
+            Rect position = GUILayoutUtility.GetRect(content, Unity.PackageManager.UI.Styles.listElement);
             bool on = this.SelectedPackage == package;
             AnimBool @bool = this.faders[package.packageName];
             @bool.target = on;
             if (current.GetTypeForControl(controlID) == EventType.Repaint)
             {
-                Styles.listElement.Draw(position, content, false, false, on, GUIUtility.keyboardControl == listsKeyboardID);
+                Unity.PackageManager.UI.Styles.listElement.Draw(position, content, false, false, on, GUIUtility.keyboardControl == listsKeyboardID);
             }
             if (EditorGUILayout.BeginFadeGroup(@bool.faded))
             {
@@ -192,7 +192,7 @@
                             if (!state.running && !state.successful)
                             {
                                 GUILayout.Label(state.message, new GUILayoutOption[0]);
-                                if (GUILayout.Button(Styles.okButtonContent, new GUILayoutOption[0]))
+                                if (GUILayout.Button(Unity.PackageManager.UI.Styles.okButtonContent, new GUILayoutOption[0]))
                                 {
                                     this.CancelPackage(storey.module);
                                 }
@@ -200,31 +200,31 @@
                             else
                             {
                                 GUILayout.Label($"{state.message}... ({state.progress.ToString("P")})", new GUILayoutOption[0]);
-                                if (GUILayout.Button(Styles.cancelButtonContent, new GUILayoutOption[0]))
+                                if (GUILayout.Button(Unity.PackageManager.UI.Styles.cancelButtonContent, new GUILayoutOption[0]))
                                 {
                                     this.CancelPackage(storey.module);
                                 }
                             }
                             HandleUtility.Repaint();
                         }
-                        else if (!flag2 && GUILayout.Button(Styles.downloadButtonContent, new GUILayoutOption[0]))
+                        else if (!flag2 && GUILayout.Button(Unity.PackageManager.UI.Styles.downloadButtonContent, new GUILayoutOption[0]))
                         {
                             this.InstallPackage(storey.module);
                         }
                         else if (storey.module.Loaded)
                         {
-                            EditorGUILayout.HelpBox(Styles.loadedContent.text, MessageType.None);
+                            EditorGUILayout.HelpBox(Unity.PackageManager.UI.Styles.loadedContent.text, MessageType.None);
                         }
                         else if (flag2)
                         {
                             if (storey.module == package)
                             {
-                                if (GUILayout.Button(Styles.restartUnityContent, new GUILayoutOption[0]))
+                                if (GUILayout.Button(Unity.PackageManager.UI.Styles.restartUnityContent, new GUILayoutOption[0]))
                                 {
                                     EditorApplication.OpenProject(Environment.CurrentDirectory, new string[0]);
                                 }
                             }
-                            else if (GUILayout.Button(Styles.activateContent, new GUILayoutOption[0]))
+                            else if (GUILayout.Button(Unity.PackageManager.UI.Styles.activateContent, new GUILayoutOption[0]))
                             {
                                 Unity.PackageManager.PackageManager.Database.SelectPackage(storey.module);
                                 Unity.PackageManager.PackageManager.Instance.LocalIndexer.CacheResult();
@@ -244,7 +244,7 @@
             }
         }
 
-        private AnimBool FaderForPackage(PackageInfo package)
+        private AnimBool FaderForPackage(Unity.DataContract.PackageInfo package)
         {
             AnimBool @bool = new AnimBool {
                 speed = 4f
@@ -316,11 +316,11 @@
             }
         }
 
-        private void ListPackages(IEnumerable<PackageInfo> packages, int listsKeyboardID)
+        private void ListPackages(IEnumerable<Unity.DataContract.PackageInfo> packages, int listsKeyboardID)
         {
-            if (packages.Any<PackageInfo>())
+            if (packages.Any<Unity.DataContract.PackageInfo>())
             {
-                foreach (PackageInfo info in packages)
+                foreach (Unity.DataContract.PackageInfo info in packages)
                 {
                     this.DoPackageElement(info, listsKeyboardID);
                 }
@@ -339,7 +339,7 @@
             }
             this.Toolbar();
             GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true) };
-            this.scrollPosition = GUILayout.BeginScrollView(this.scrollPosition, Styles.listBackground, options);
+            this.scrollPosition = GUILayout.BeginScrollView(this.scrollPosition, Unity.PackageManager.UI.Styles.listBackground, options);
             int controlID = GUIUtility.GetControlID(FocusType.Keyboard);
             if (this.m_ListViewShouldTakeKeyboardControl)
             {
@@ -361,8 +361,8 @@
                         <OnGUI>c__AnonStorey0 storey = new <OnGUI>c__AnonStorey0 {
                             packageType = (PackageType) current
                         };
-                        IEnumerable<PackageInfo> source = Enumerable.Where<PackageInfo>(this.allListedPackages, new Func<PackageInfo, bool>(storey.<>m__0));
-                        if (source.Any<PackageInfo>())
+                        IEnumerable<Unity.DataContract.PackageInfo> source = Enumerable.Where<Unity.DataContract.PackageInfo>(this.allListedPackages, new Func<Unity.DataContract.PackageInfo, bool>(storey.<>m__0));
+                        if (source.Any<Unity.DataContract.PackageInfo>())
                         {
                             if (packageTypeContents.ContainsKey(storey.packageType))
                             {
@@ -396,12 +396,12 @@
             {
                 <>f__am$cache6 = m => m.ToPackageInfo();
             }
-            this.localPackages = Enumerable.Select<IvyModule, PackageInfo>(Unity.PackageManager.PackageManager.Database.NewestLocalPackages, <>f__am$cache6);
+            this.localPackages = Enumerable.Select<IvyModule, Unity.DataContract.PackageInfo>(Unity.PackageManager.PackageManager.Database.NewestLocalPackages, <>f__am$cache6);
         }
 
         private static void SectionHeader(string title)
         {
-            GUILayout.Label(title, Styles.listHeader, new GUILayoutOption[0]);
+            GUILayout.Label(title, Unity.PackageManager.UI.Styles.listHeader, new GUILayoutOption[0]);
         }
 
         private void SelectNext()
@@ -411,8 +411,8 @@
             {
                 <>f__am$cache4 = p => p.type;
             }
-            IEnumerable<PackageInfo> source = Enumerable.OrderBy<PackageInfo, PackageType>(this.allListedPackages, <>f__am$cache4);
-            foreach (PackageInfo info in source)
+            IEnumerable<Unity.DataContract.PackageInfo> source = Enumerable.OrderBy<Unity.DataContract.PackageInfo, PackageType>(this.allListedPackages, <>f__am$cache4);
+            foreach (Unity.DataContract.PackageInfo info in source)
             {
                 if (flag)
                 {
@@ -424,18 +424,18 @@
                     flag = true;
                 }
             }
-            this.SelectedPackage = source.First<PackageInfo>();
+            this.SelectedPackage = source.First<Unity.DataContract.PackageInfo>();
         }
 
         private void SelectPrev()
         {
-            PackageInfo info = null;
+            Unity.DataContract.PackageInfo info = null;
             if (<>f__am$cache5 == null)
             {
                 <>f__am$cache5 = p => p.type;
             }
-            IEnumerable<PackageInfo> enumerable = Enumerable.OrderBy<PackageInfo, PackageType>(this.allListedPackages, <>f__am$cache5);
-            foreach (PackageInfo info2 in enumerable)
+            IEnumerable<Unity.DataContract.PackageInfo> enumerable = Enumerable.OrderBy<Unity.DataContract.PackageInfo, PackageType>(this.allListedPackages, <>f__am$cache5);
+            foreach (Unity.DataContract.PackageInfo info2 in enumerable)
             {
                 if ((info != null) && (this.SelectedPackage == info2))
                 {
@@ -458,10 +458,10 @@
             EditorGUILayout.EndHorizontal();
         }
 
-        private IEnumerable<PackageInfo> allListedPackages =>
-            this.availablePackages.Union<PackageInfo>(this.localPackages, packageNameComparer);
+        private IEnumerable<Unity.DataContract.PackageInfo> allListedPackages =>
+            this.availablePackages.Union<Unity.DataContract.PackageInfo>(this.localPackages, packageNameComparer);
 
-        private IEnumerable<PackageInfo> availablePackages
+        private IEnumerable<Unity.DataContract.PackageInfo> availablePackages
         {
             get
             {
@@ -473,7 +473,7 @@
                 {
                     <>f__am$cache1 = p => p.type != PackageType.PackageManager;
                 }
-                return Enumerable.Where<PackageInfo>(this.m_AvailablePackages, <>f__am$cache1);
+                return Enumerable.Where<Unity.DataContract.PackageInfo>(this.m_AvailablePackages, <>f__am$cache1);
             }
             set
             {
@@ -483,7 +483,7 @@
 
         private IEnumerable<InstallerState> installerStates { get; set; }
 
-        private IEnumerable<PackageInfo> localPackages
+        private IEnumerable<Unity.DataContract.PackageInfo> localPackages
         {
             get
             {
@@ -495,7 +495,7 @@
                 {
                     <>f__am$cache0 = p => p.type != PackageType.PackageManager;
                 }
-                return Enumerable.Where<PackageInfo>(this.m_LocalPackages, <>f__am$cache0);
+                return Enumerable.Where<Unity.DataContract.PackageInfo>(this.m_LocalPackages, <>f__am$cache0);
             }
             set
             {
@@ -513,19 +513,19 @@
             }
         }
 
-        public PackageInfo SelectedPackage
+        public Unity.DataContract.PackageInfo SelectedPackage
         {
             get
             {
-                if ((this.selectedPackageHash == -1) && (this.allListedPackages.Count<PackageInfo>() > 0))
+                if ((this.selectedPackageHash == -1) && (this.allListedPackages.Count<Unity.DataContract.PackageInfo>() > 0))
                 {
-                    this.selectedPackageHash = this.allListedPackages.First<PackageInfo>().GetHashCode();
+                    this.selectedPackageHash = this.allListedPackages.First<Unity.DataContract.PackageInfo>().GetHashCode();
                 }
                 if (hashToPackageCache.ContainsKey(this.selectedPackageHash))
                 {
                     return hashToPackageCache[this.selectedPackageHash];
                 }
-                foreach (PackageInfo info2 in this.allListedPackages)
+                foreach (Unity.DataContract.PackageInfo info2 in this.allListedPackages)
                 {
                     if (info2.GetHashCode() == this.selectedPackageHash)
                     {
@@ -589,7 +589,7 @@
         {
             internal PackageType packageType;
 
-            internal bool <>m__0(PackageInfo p) => 
+            internal bool <>m__0(Unity.DataContract.PackageInfo p) => 
                 (p.type == this.packageType);
         }
 
@@ -603,12 +603,12 @@
             public bool successful;
         }
 
-        private class PackageNameComparer : IEqualityComparer<PackageInfo>
+        private class PackageNameComparer : IEqualityComparer<Unity.DataContract.PackageInfo>
         {
-            public bool Equals(PackageInfo x, PackageInfo y) => 
+            public bool Equals(Unity.DataContract.PackageInfo x, Unity.DataContract.PackageInfo y) => 
                 x.packageName.Equals(y.packageName);
 
-            public int GetHashCode(PackageInfo obj) => 
+            public int GetHashCode(Unity.DataContract.PackageInfo obj) => 
                 obj.packageName.GetHashCode();
         }
     }

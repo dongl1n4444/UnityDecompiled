@@ -5,71 +5,61 @@
     using System.Runtime.CompilerServices;
     using UnityEngine;
 
-    [CustomEditor(typeof(MeshRenderer)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(MeshRenderer))]
     internal class MeshRendererEditor : RendererEditorBase
     {
         [CompilerGenerated]
-        private static Func<Object, GameObject> <>f__am$cache0;
-        private SerializedProperty m_CastShadows;
+        private static Func<UnityEngine.Object, GameObject> <>f__am$cache0;
+        private const string kDisplayChartingKey = "MeshRendererEditor.Lighting.ShowChartingSettings";
+        private const string kDisplayLightingKey = "MeshRendererEditor.Lighting.ShowSettings";
+        private const string kDisplayLightmapKey = "MeshRendererEditor.Lighting.ShowLightmapSettings";
         private SerializedObject m_GameObjectsSerializedObject;
         private SerializedProperty m_GameObjectStaticFlags;
         private LightingSettingsInspector m_Lighting;
         private SerializedProperty m_Materials;
-        private SerializedProperty m_MotionVectors;
-        private SerializedProperty m_ReceiveShadows;
 
         private void InitializeLightingFields()
         {
-            this.m_Lighting = new LightingSettingsInspector();
-            this.m_Lighting.ShowSettings = EditorPrefs.GetBool(Styles.DisplayLightingKey, false);
-            this.m_Lighting.ShowChartingSettings = SessionState.GetBool(Styles.DisplayChartingKey, true);
-            this.m_Lighting.ShowLightmapSettings = SessionState.GetBool(Styles.DisplayLightmapKey, true);
+            this.m_Lighting = new LightingSettingsInspector(base.serializedObject);
+            this.m_Lighting.showSettings = EditorPrefs.GetBool("MeshRendererEditor.Lighting.ShowSettings", false);
+            this.m_Lighting.showChartingSettings = SessionState.GetBool("MeshRendererEditor.Lighting.ShowChartingSettings", true);
+            this.m_Lighting.showLightmapSettings = SessionState.GetBool("MeshRendererEditor.Lighting.ShowLightmapSettings", true);
         }
 
         private void LightingFieldsGUI()
         {
-            bool showSettings = this.m_Lighting.ShowSettings;
-            bool showChartingSettings = this.m_Lighting.ShowChartingSettings;
-            bool showLightmapSettings = this.m_Lighting.ShowLightmapSettings;
+            bool showSettings = this.m_Lighting.showSettings;
+            bool showChartingSettings = this.m_Lighting.showChartingSettings;
+            bool showLightmapSettings = this.m_Lighting.showLightmapSettings;
             if (this.m_Lighting.Begin())
             {
                 base.RenderProbeFields();
-                EditorGUILayout.PropertyField(this.m_CastShadows, Styles.CastShadows, true, new GUILayoutOption[0]);
-                bool disabled = SceneView.IsUsingDeferredRenderingPath();
-                using (new EditorGUI.DisabledScope(disabled))
-                {
-                    EditorGUILayout.PropertyField(this.m_ReceiveShadows, Styles.ReceiveShadows, true, new GUILayoutOption[0]);
-                }
-                EditorGUILayout.PropertyField(this.m_MotionVectors, true, new GUILayoutOption[0]);
-                this.m_Lighting.RenderMeshSettings(base.serializedObject);
+                this.m_Lighting.RenderMeshSettings(true);
             }
             this.m_Lighting.End();
-            if (this.m_Lighting.ShowSettings != showSettings)
+            if (this.m_Lighting.showSettings != showSettings)
             {
-                EditorPrefs.SetBool(Styles.DisplayLightingKey, this.m_Lighting.ShowSettings);
+                EditorPrefs.SetBool("MeshRendererEditor.Lighting.ShowSettings", this.m_Lighting.showSettings);
             }
-            if (this.m_Lighting.ShowChartingSettings != showChartingSettings)
+            if (this.m_Lighting.showChartingSettings != showChartingSettings)
             {
-                SessionState.SetBool(Styles.DisplayChartingKey, this.m_Lighting.ShowChartingSettings);
+                SessionState.SetBool("MeshRendererEditor.Lighting.ShowChartingSettings", this.m_Lighting.showChartingSettings);
             }
-            if (this.m_Lighting.ShowLightmapSettings != showLightmapSettings)
+            if (this.m_Lighting.showLightmapSettings != showLightmapSettings)
             {
-                SessionState.SetBool(Styles.DisplayLightmapKey, this.m_Lighting.ShowLightmapSettings);
+                SessionState.SetBool("MeshRendererEditor.Lighting.ShowLightmapSettings", this.m_Lighting.showLightmapSettings);
             }
         }
 
         public override void OnEnable()
         {
             base.OnEnable();
-            this.m_CastShadows = base.serializedObject.FindProperty("m_CastShadows");
-            this.m_ReceiveShadows = base.serializedObject.FindProperty("m_ReceiveShadows");
-            this.m_MotionVectors = base.serializedObject.FindProperty("m_MotionVectors");
             this.m_Materials = base.serializedObject.FindProperty("m_Materials");
             if (<>f__am$cache0 == null)
             {
                 <>f__am$cache0 = t => ((MeshRenderer) t).gameObject;
             }
-            this.m_GameObjectsSerializedObject = new SerializedObject(Enumerable.Select<Object, GameObject>(base.targets, <>f__am$cache0).ToArray<GameObject>());
+            this.m_GameObjectsSerializedObject = new SerializedObject(Enumerable.Select<UnityEngine.Object, GameObject>(base.targets, <>f__am$cache0).ToArray<GameObject>());
             this.m_GameObjectStaticFlags = this.m_GameObjectsSerializedObject.FindProperty("m_StaticEditorFlags");
             base.InitializeProbeFields();
             this.InitializeLightingFields();
@@ -80,35 +70,31 @@
             base.serializedObject.Update();
             this.LightingFieldsGUI();
             bool flag = false;
-            SerializedProperty materialsArray = base.serializedObject.FindProperty("m_Materials");
-            if (!materialsArray.hasMultipleDifferentValues)
+            if (!this.m_Materials.hasMultipleDifferentValues)
             {
                 MeshFilter component = ((MeshRenderer) base.serializedObject.targetObject).GetComponent<MeshFilter>();
-                flag = ((component != null) && (component.sharedMesh != null)) && (materialsArray.arraySize > component.sharedMesh.subMeshCount);
+                flag = ((component != null) && (component.sharedMesh != null)) && (this.m_Materials.arraySize > component.sharedMesh.subMeshCount);
             }
             EditorGUILayout.PropertyField(this.m_Materials, true, new GUILayoutOption[0]);
             if (!this.m_Materials.hasMultipleDifferentValues && flag)
             {
-                EditorGUILayout.HelpBox("This renderer has more materials than the Mesh has submeshes. Multiple materials will be applied to the same submesh, which costs performance. Consider using multiple shader passes.", MessageType.Warning, true);
+                EditorGUILayout.HelpBox(Styles.MaterialWarning, MessageType.Warning, true);
             }
-            if (ShaderUtil.MaterialsUseInstancingShader(materialsArray))
+            if (ShaderUtil.MaterialsUseInstancingShader(this.m_Materials))
             {
                 this.m_GameObjectsSerializedObject.Update();
                 if (!this.m_GameObjectStaticFlags.hasMultipleDifferentValues && ((this.m_GameObjectStaticFlags.intValue & 4) != 0))
                 {
-                    EditorGUILayout.HelpBox("This renderer is statically batched and uses an instanced shader at the same time. Instancing will be disabled in such a case. Consider disabling static batching if you want it to be instanced.", MessageType.Warning, true);
+                    EditorGUILayout.HelpBox(Styles.StaticBatchingWarning, MessageType.Warning, true);
                 }
             }
             base.serializedObject.ApplyModifiedProperties();
         }
 
-        private static class Styles
+        private class Styles
         {
-            public static readonly GUIContent CastShadows = EditorGUIUtility.TextContent("Cast Shadows");
-            public static readonly string DisplayChartingKey = "MeshRendererEditor.Lighting.ShowChartingSettings";
-            public static readonly string DisplayLightingKey = "MeshRendererEditor.Lighting.ShowSettings";
-            public static readonly string DisplayLightmapKey = "MeshRendererEditor.Lighting.ShowLightmapSettings";
-            public static readonly GUIContent ReceiveShadows = EditorGUIUtility.TextContent("Receive Shadows");
+            public static readonly string MaterialWarning = "This renderer has more materials than the Mesh has submeshes. Multiple materials will be applied to the same submesh, which costs performance. Consider using multiple shader passes.";
+            public static readonly string StaticBatchingWarning = "This renderer is statically batched and uses an instanced shader at the same time. Instancing will be disabled in such a case. Consider disabling static batching if you want it to be instanced.";
         }
     }
 }

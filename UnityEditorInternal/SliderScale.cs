@@ -70,7 +70,7 @@
                     {
                         num3 = (size * scale) / s_StartScale;
                     }
-                    Handles.CubeCap(id, position + ((Vector3) ((direction * num3) * s_ScaleDrawLength)), rotation, size * 0.1f);
+                    Handles.CubeHandleCap(id, position + ((Vector3) ((direction * num3) * s_ScaleDrawLength)), rotation, size * 0.1f, EventType.Repaint);
                     Handles.DrawLine(position, position + ((Vector3) (direction * ((num3 * s_ScaleDrawLength) - (size * 0.05f)))));
                     if (id == GUIUtility.keyboardControl)
                     {
@@ -163,6 +163,7 @@
             return value;
         }
 
+        [Obsolete("DrawCapFunction is obsolete. Use the version with CapFunction instead. Example: Change SphereCap to SphereHandleCap.")]
         public static float DoCenter(int id, float value, Vector3 position, Quaternion rotation, float size, Handles.DrawCapFunction capFunc, float snap)
         {
             Event current = Event.current;

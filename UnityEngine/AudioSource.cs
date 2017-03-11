@@ -53,9 +53,9 @@
         /// <summary>
         /// <para>Deprecated Version. Returns a block of the currently playing source's spectrum data.</para>
         /// </summary>
-        /// <param name="numSamples"></param>
-        /// <param name="channel"></param>
-        /// <param name="window"></param>
+        /// <param name="numSamples">The number of samples to retrieve. Must be a power of 2.</param>
+        /// <param name="channel">The channel to sample from.</param>
+        /// <param name="window">The FFTWindow type to use when sampling.</param>
         [Obsolete("GetSpectrumData returning a float[] is deprecated, use GetSpectrumData passing a pre allocated array instead.")]
         public float[] GetSpectrumData(int numSamples, int channel, FFTWindow window)
         {
@@ -287,7 +287,7 @@
         /// <summary>
         /// <para>Pan has been deprecated. Use panStereo instead.</para>
         /// </summary>
-        [Obsolete("AudioSource.pan has been deprecated. Use AudioSource.panStereo instead (UnityUpgradable) -> panStereo", true), EditorBrowsable(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("AudioSource.pan has been deprecated. Use AudioSource.panStereo instead (UnityUpgradable) -> panStereo", true)]
         public float pan
         {
             get => 
@@ -300,7 +300,7 @@
         /// <summary>
         /// <para>PanLevel has been deprecated. Use spatialBlend instead.</para>
         /// </summary>
-        [Obsolete("AudioSource.panLevel has been deprecated. Use AudioSource.spatialBlend instead (UnityUpgradable) -> spatialBlend", true), EditorBrowsable(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("AudioSource.panLevel has been deprecated. Use AudioSource.spatialBlend instead (UnityUpgradable) -> spatialBlend", true)]
         public float panLevel
         {
             get => 

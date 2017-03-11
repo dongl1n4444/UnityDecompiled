@@ -13,7 +13,7 @@
         internal static extern SystemLanguage GetCurrentEditorLanguage();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern SystemLanguage GetDefaultEditorLanguage();
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern string GetLocalizedString(string original);
         public static string MarkForTranslation(string value) => 
             value;

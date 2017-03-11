@@ -3,7 +3,7 @@
     using System;
     using UnityEditor.Audio;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(AudioMixerSnapshotController))]
+    [CustomEditor(typeof(AudioMixerSnapshotController)), CanEditMultipleObjects]
     internal class AudioMixerSnapshotControllerInspector : Editor
     {
         public override void OnInspectorGUI()

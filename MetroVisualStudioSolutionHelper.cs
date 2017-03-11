@@ -9,7 +9,6 @@ using System.Security.Cryptography;
 using System.Text;
 using UnityEditor;
 using UnityEditor.WSA;
-using UnityEditorInternal;
 using UnityEngine;
 
 internal static class MetroVisualStudioSolutionHelper
@@ -271,16 +270,6 @@ internal static class MetroVisualStudioSolutionHelper
         }
     }
 
-    public static void DeleteFileAccountingForReadOnly(string path)
-    {
-        FileInfo info = new FileInfo(path);
-        if (info.Exists)
-        {
-            info.Attributes &= ~FileAttributes.ReadOnly;
-            info.Delete();
-        }
-    }
-
     internal static string FixLineEndings(this string str) => 
         str.Replace("\n", "\r\n").Replace("\r\r", "\r");
 
@@ -384,22 +373,6 @@ internal static class MetroVisualStudioSolutionHelper
             Debug.LogWarning($"Splash screen style {PlayerSettings.SplashScreen.unityLogoStyle} not fully supported, please report a bug");
         }
         return nullable;
-    }
-
-    public static string GetUWPSDKVersion()
-    {
-        string str = RegistryUtil.GetRegistryStringValue(@"SOFTWARE\Microsoft\Microsoft SDKs\Windows\v10.0", "ProductVersion", null, RegistryView._32);
-        str = !string.IsNullOrEmpty(str) ? str : "10.0.10240";
-        Version version = new Version(str);
-        if (version.Build == -1)
-        {
-            str = str + ".0";
-        }
-        if (version.Revision == -1)
-        {
-            str = str + ".0";
-        }
-        return str;
     }
 
     internal static bool IsManifestFileName(this string file) => 
@@ -655,17 +628,26 @@ internal static class MetroVisualStudioSolutionHelper
         }
     }
 
-    internal static void WriteUnityCommonProps(string path, string playerPackage, string installPath, bool sourceBuild)
+    internal static void WriteUnityCommonProps(string path, string playerPackage, string installPath, bool sourceBuild, bool useCSharpProjects)
     {
+        string str;
         StringBuilder builder = new StringBuilder();
         builder.AppendLine("<Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">");
         builder.AppendLine("    <PropertyGroup>");
-        builder.AppendLine("        <UnityInstallationDir>" + FixPropsPath(Path.GetDirectoryName(EditorApplication.applicationPath)) + "</UnityInstallationDir>");
-        builder.AppendLine("        <UnityWSASolutionName>" + Utility.GetVsName() + "</UnityWSASolutionName>");
-        builder.AppendLine("        <UnityWSASolutionDir>" + FixPropsPath(installPath) + "</UnityWSASolutionDir>");
+        if (useCSharpProjects)
+        {
+            str = "$(UnityWSASolutionDir)";
+            builder.AppendLine("        <UnityWSASolutionName>" + Utility.GetVsName() + "</UnityWSASolutionName>");
+            builder.AppendLine("        <UnityWSASolutionDir>" + FixPropsPath(installPath) + "</UnityWSASolutionDir>");
+            builder.AppendLine("        <UnityProjectDir>" + FixPropsPath(Application.dataPath + @"\..") + "</UnityProjectDir>");
+        }
+        else
+        {
+            str = "$(SolutionDir)";
+        }
         if (UserBuildSettings.copyReferences && !sourceBuild)
         {
-            builder.AppendLine("        <UnityWSAPlayerDir>$(UnityWSASolutionDir)</UnityWSAPlayerDir>");
+            builder.AppendLine("        <UnityWSAPlayerDir>" + str + "</UnityWSAPlayerDir>");
         }
         else
         {
@@ -679,9 +661,8 @@ internal static class MetroVisualStudioSolutionHelper
             }
             else
             {
-                builder.AppendLine("        <UnityWSAToolsDir>$(UnityWSASolutionDir)" + Path.Combine("Unity", @"Tools\") + "</UnityWSAToolsDir>");
+                builder.AppendLine("        <UnityWSAToolsDir>" + str + Path.Combine("Unity", @"Tools\") + "</UnityWSAToolsDir>");
             }
-            builder.AppendLine("        <UnityProjectDir>" + FixPropsPath(Application.dataPath + @"\..") + "</UnityProjectDir>");
             if (ShouldAllowUnsafeCode())
             {
                 builder.AppendLine("        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>");
@@ -774,7 +755,6 @@ internal static class MetroVisualStudioSolutionHelper
             this.assemblyCSharpDllDestPath = "$(ProjectDir)" + Path.GetFileName(this.assemblyCSharpDllPath);
             this.assemblyCSharpFirstpassDllSourcePath = this.assemblyCSharpFirstpassDllPath;
             this.assemblyCSharpFirstpassDllDestPath = "$(ProjectDir)" + Path.GetFileName(this.assemblyCSharpFirstpassDllPath);
-            modifyAppXPackage.AppendLineWithPrefix("<Message Importance=\"high\" Text=\"UnityInstallationDir &quot;$(UnityInstallationDir)&quot;.\" />", new object[0]);
             modifyAppXPackage.AppendLineWithPrefix("<Message Importance=\"high\" Text=\"UnityWSAPlayerDir &quot;$(UnityWSAPlayerDir)&quot;.\" />", new object[0]);
             modifyAppXPackage.AppendLineWithPrefix("<Message Importance=\"high\" Text=\"UnityProjectDir &quot;$(UnityProjectDir)&quot;.\" />", new object[0]);
             this.CopyAssemblies();
@@ -824,7 +804,7 @@ internal static class MetroVisualStudioSolutionHelper
             modifyAppXPackage.Append(MetroVisualStudioSolutionHelper._assemblyConverterPlatform[this.wsaSDK]);
             if (this.wsaSDK == WSASDK.UWP)
             {
-                modifyAppXPackage.Append(" -lock=&quot;$(ProjectDir)project.lock.json&quot; -bits=$(UnityBits) -configuration=$(Configuration) -removeDebuggableAttribute=$(RemoveDebuggableAttribute)");
+                modifyAppXPackage.Append(" -lock=&quot;$(ProjectDir)project.lock.json&quot; -bits=$(UnityBits) -configuration=$(Configuration) -removeDebuggableAttribute=$(RemoveDebuggableAttribute) -uwpsdk=$(TargetPlatformVersion)");
             }
             string playersRootPath = MetroVisualStudioSolutionHelper.GetPlayersRootPath(this.wsaSDK, this.sourceBuild);
             modifyAppXPackage.Append(" -path=&quot;.&quot; -path=&quot;");

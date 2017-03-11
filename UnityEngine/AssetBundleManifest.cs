@@ -6,7 +6,7 @@
     using UnityEngine.Scripting;
 
     /// <summary>
-    /// <para>Manifest for all the assetBundle in the build.</para>
+    /// <para>Manifest for all the AssetBundles in the build.</para>
     /// </summary>
     public sealed class AssetBundleManifest : UnityEngine.Object
     {

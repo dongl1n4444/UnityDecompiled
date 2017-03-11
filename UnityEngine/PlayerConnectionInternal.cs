@@ -9,6 +9,8 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void Initialize();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern bool IsConnected();
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void RegisterInternal(string messageId);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SendMessage(string messageId, byte[] data, int playerId);
@@ -16,6 +18,9 @@
         {
             Initialize();
         }
+
+        bool IPlayerEditorConnectionNative.IsConnected() => 
+            IsConnected();
 
         void IPlayerEditorConnectionNative.RegisterInternal(Guid messageId)
         {

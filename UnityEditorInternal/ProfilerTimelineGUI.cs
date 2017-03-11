@@ -429,6 +429,10 @@
                 float num;
                 float num3;
                 float num2 = 16.66667f;
+                if (frameTime > 1000f)
+                {
+                    num2 = 100f;
+                }
                 HandleUtility.ApplyWireMaterial();
                 GL.Begin(1);
                 GL.Color(new Color(1f, 1f, 1f, 0.2f));
@@ -741,7 +745,7 @@
 
         private void UpdateSelectedObject(bool singleClick, bool doubleClick)
         {
-            Object gameObject = EditorUtility.InstanceIDToObject(this.m_SelectedEntry.instanceId);
+            UnityEngine.Object gameObject = EditorUtility.InstanceIDToObject(this.m_SelectedEntry.instanceId);
             if (gameObject is Component)
             {
                 gameObject = ((Component) gameObject).gameObject;
@@ -754,7 +758,7 @@
                 }
                 else if (doubleClick)
                 {
-                    Selection.objects = new List<Object> { gameObject }.ToArray();
+                    Selection.objects = new List<UnityEngine.Object> { gameObject }.ToArray();
                 }
             }
         }

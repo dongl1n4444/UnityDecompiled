@@ -9,7 +9,7 @@
         public string Name;
         public bool Enabled;
         public Func<bool> IsSelected;
-        public Action ConnectTo;
+        public System.Action ConnectTo;
     }
 }
 

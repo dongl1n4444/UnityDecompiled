@@ -106,7 +106,7 @@
         {
             this.Init();
             Rect position = new Rect(rect.xMax - 16f, rect.yMax - 16f, 16f, 16f);
-            if (EditorGUI.ButtonMouseDown(position, GUIContent.none, FocusType.Passive, GUIStyle.none))
+            if (EditorGUI.DropdownButton(position, GUIContent.none, FocusType.Passive, GUIStyle.none))
             {
                 GenericMenu menu = new GenericMenu();
                 menu.AddItem(new GUIContent("Auto"), false, new GenericMenu.MenuFunction2(this.SetPreviewAvatarOption), PreviewPopupOptions.Auto);
@@ -332,7 +332,7 @@
             this.m_OnAvatarChangeFunc();
         }
 
-        public static GameObject FindBestFittingRenderableGameObjectFromModelAsset(Object asset, ModelImporterAnimationType animationType)
+        public static GameObject FindBestFittingRenderableGameObjectFromModelAsset(UnityEngine.Object asset, ModelImporterAnimationType animationType)
         {
             if (asset != null)
             {
@@ -404,7 +404,7 @@
             {
                 return clip;
             }
-            BlendTree tree = motion as BlendTree;
+            UnityEditor.Animations.BlendTree tree = motion as UnityEditor.Animations.BlendTree;
             if (tree != null)
             {
                 AnimationClip[] animationClipsFlattened = tree.GetAnimationClipsFlattened();
@@ -501,7 +501,7 @@
             }
             if (this.m_FloorPlane == null)
             {
-                this.m_FloorPlane = Resources.GetBuiltinResource(typeof(Mesh), "New-Plane.fbx") as Mesh;
+                this.m_FloorPlane = UnityEngine.Resources.GetBuiltinResource(typeof(Mesh), "New-Plane.fbx") as Mesh;
             }
             if (this.m_FloorTexture == null)
             {
@@ -549,25 +549,25 @@
             if (this.m_ReferenceInstance == null)
             {
                 GameObject original = (GameObject) EditorGUIUtility.Load("Avatar/dial_flat.prefab");
-                this.m_ReferenceInstance = Object.Instantiate<GameObject>(original, Vector3.zero, Quaternion.identity);
+                this.m_ReferenceInstance = UnityEngine.Object.Instantiate<GameObject>(original, Vector3.zero, Quaternion.identity);
                 EditorUtility.InitInstantiatedPreviewRecursive(this.m_ReferenceInstance);
             }
             if (this.m_DirectionInstance == null)
             {
                 GameObject obj4 = (GameObject) EditorGUIUtility.Load("Avatar/arrow.fbx");
-                this.m_DirectionInstance = Object.Instantiate<GameObject>(obj4, Vector3.zero, Quaternion.identity);
+                this.m_DirectionInstance = UnityEngine.Object.Instantiate<GameObject>(obj4, Vector3.zero, Quaternion.identity);
                 EditorUtility.InitInstantiatedPreviewRecursive(this.m_DirectionInstance);
             }
             if (this.m_PivotInstance == null)
             {
                 GameObject obj5 = (GameObject) EditorGUIUtility.Load("Avatar/root.fbx");
-                this.m_PivotInstance = Object.Instantiate<GameObject>(obj5, Vector3.zero, Quaternion.identity);
+                this.m_PivotInstance = UnityEngine.Object.Instantiate<GameObject>(obj5, Vector3.zero, Quaternion.identity);
                 EditorUtility.InitInstantiatedPreviewRecursive(this.m_PivotInstance);
             }
             if (this.m_RootInstance == null)
             {
                 GameObject obj6 = (GameObject) EditorGUIUtility.Load("Avatar/root.fbx");
-                this.m_RootInstance = Object.Instantiate<GameObject>(obj6, Vector3.zero, Quaternion.identity);
+                this.m_RootInstance = UnityEngine.Object.Instantiate<GameObject>(obj6, Vector3.zero, Quaternion.identity);
                 EditorUtility.InitInstantiatedPreviewRecursive(this.m_RootInstance);
             }
             this.m_IKOnFeet = EditorPrefs.GetBool("AvatarpreviewShowIK", false);
@@ -592,15 +592,15 @@
                 this.m_PreviewUtility.Cleanup();
                 this.m_PreviewUtility = null;
             }
-            Object.DestroyImmediate(this.m_PreviewInstance);
-            Object.DestroyImmediate(this.m_FloorMaterial);
-            Object.DestroyImmediate(this.m_FloorMaterialSmall);
-            Object.DestroyImmediate(this.m_ShadowMaskMaterial);
-            Object.DestroyImmediate(this.m_ShadowPlaneMaterial);
-            Object.DestroyImmediate(this.m_ReferenceInstance);
-            Object.DestroyImmediate(this.m_RootInstance);
-            Object.DestroyImmediate(this.m_PivotInstance);
-            Object.DestroyImmediate(this.m_DirectionInstance);
+            UnityEngine.Object.DestroyImmediate(this.m_PreviewInstance);
+            UnityEngine.Object.DestroyImmediate(this.m_FloorMaterial);
+            UnityEngine.Object.DestroyImmediate(this.m_FloorMaterialSmall);
+            UnityEngine.Object.DestroyImmediate(this.m_ShadowMaskMaterial);
+            UnityEngine.Object.DestroyImmediate(this.m_ShadowPlaneMaterial);
+            UnityEngine.Object.DestroyImmediate(this.m_ReferenceInstance);
+            UnityEngine.Object.DestroyImmediate(this.m_RootInstance);
+            UnityEngine.Object.DestroyImmediate(this.m_PivotInstance);
+            UnityEngine.Object.DestroyImmediate(this.m_DirectionInstance);
             if (this.timeControl != null)
             {
                 this.timeControl.OnDisable();
@@ -715,7 +715,7 @@
             RenderTexture texture2 = RenderTexture.GetTemporary(0x100, 0x100, 0x10);
             texture2.isPowerOfTwo = true;
             texture2.wrapMode = TextureWrapMode.Clamp;
-            texture2.filterMode = FilterMode.Bilinear;
+            texture2.filterMode = UnityEngine.FilterMode.Bilinear;
             camera.targetTexture = texture2;
             this.SetPreviewCharacterEnabled(true, false);
             this.m_PreviewUtility.m_Camera.Render();
@@ -755,7 +755,7 @@
 
         public void ResetPreviewInstance()
         {
-            Object.DestroyImmediate(this.m_PreviewInstance);
+            UnityEngine.Object.DestroyImmediate(this.m_PreviewInstance);
             GameObject go = CalculatePreviewGameObject(this.m_SourceScenePreviewAnimator, this.m_SourcePreviewMotion, this.animationClipType);
             this.SetupBounds(go);
         }
@@ -763,7 +763,7 @@
         private void SetPreview(GameObject gameObject)
         {
             AvatarPreviewSelection.SetPreview(this.animationClipType, gameObject);
-            Object.DestroyImmediate(this.m_PreviewInstance);
+            UnityEngine.Object.DestroyImmediate(this.m_PreviewInstance);
             this.InitInstance(this.m_SourceScenePreviewAnimator, this.m_SourcePreviewMotion);
             if (this.m_OnAvatarChangeFunc != null)
             {

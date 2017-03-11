@@ -103,7 +103,7 @@
         /// </summary>
         public static void DirtyHierarchyWindowSorting()
         {
-            foreach (SceneHierarchyWindow window in Resources.FindObjectsOfTypeAll(typeof(SceneHierarchyWindow)))
+            foreach (SceneHierarchyWindow window in UnityEngine.Resources.FindObjectsOfTypeAll(typeof(SceneHierarchyWindow)))
             {
                 window.DirtySortingMethods();
             }
@@ -118,7 +118,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool ExecuteMenuItemOnGameObjects(string menuItemPath, GameObject[] objects);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        internal static extern bool ExecuteMenuItemWithTemporaryContext(string menuItemPath, Object[] objects);
+        internal static extern bool ExecuteMenuItemWithTemporaryContext(string menuItemPath, UnityEngine.Object[] objects);
         /// <summary>
         /// <para>Exit the Unity editor application.</para>
         /// </summary>
@@ -350,7 +350,7 @@
         /// </summary>
         public static void RepaintHierarchyWindow()
         {
-            foreach (SceneHierarchyWindow window in Resources.FindObjectsOfTypeAll(typeof(SceneHierarchyWindow)))
+            foreach (SceneHierarchyWindow window in UnityEngine.Resources.FindObjectsOfTypeAll(typeof(SceneHierarchyWindow)))
             {
                 window.Repaint();
             }
@@ -369,21 +369,15 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void ReportUNetWeaver(string filename, string msg, bool isError);
-        internal static void RequestRepaintAllViews()
-        {
-            foreach (GUIView view in Resources.FindObjectsOfTypeAll(typeof(GUIView)))
-            {
-                view.Repaint();
-            }
-        }
-
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern void RequestRepaintAllViews();
         /// <summary>
         /// <para>Saves all serializable assets that have not yet been written to disk (eg. Materials).</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use AssetDatabase.SaveAssets instead (UnityUpgradable) -> AssetDatabase.SaveAssets()", true), GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("Use AssetDatabase.SaveAssets instead (UnityUpgradable) -> AssetDatabase.SaveAssets()", true)]
         public static extern void SaveAssets();
         /// <summary>
-        /// <para>Ask the user if he wants to save the open scene.</para>
+        /// <para>Ask the user if they want to save the open scene.</para>
         /// </summary>
         [Obsolete("Use EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo")]
         public static bool SaveCurrentSceneIfUserWantsTo() => 
@@ -519,16 +513,16 @@
         public static bool isTemporaryProject { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
-        /// <para>Is editor currently updating? (Read Only)</para>
+        /// <para>True if the Editor is currently refreshing the AssetDatabase.</para>
         /// </summary>
         public static bool isUpdating { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        internal static Object renderSettings { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+        internal static UnityEngine.Object renderSettings { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         internal static bool supportsHiDPI =>
             (Application.platform == RuntimePlatform.OSXEditor);
 
-        internal static Object tagManager { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+        internal static UnityEngine.Object tagManager { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The time since the editor was started. (Read Only)</para>

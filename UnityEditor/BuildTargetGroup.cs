@@ -6,7 +6,7 @@
     /// <summary>
     /// <para>Build target group.</para>
     /// </summary>
-    [NativeEnum(Name="BuildTargetPlatformGroup")]
+    [NativeEnum(GenerateNativeType=false, Name="BuildTargetPlatformGroup", Header="Editor/Src/BuildPipeline/BuildTargetPlatformSpecific.h")]
     public enum BuildTargetGroup
     {
         /// <summary>

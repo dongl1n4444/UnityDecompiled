@@ -1,6 +1,7 @@
 ﻿namespace UnityEngine.Windows.Speech
 {
     using System;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEngine;
@@ -11,8 +12,10 @@
     /// </summary>
     public static class PhraseRecognitionSystem
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event ErrorDelegate OnError;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event StatusDelegate OnStatusChanged;
 
         [RequiredByNativeCode]

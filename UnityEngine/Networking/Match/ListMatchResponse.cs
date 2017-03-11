@@ -8,7 +8,7 @@
 
     internal class ListMatchResponse : BasicResponse
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private List<MatchDesc> <matches>k__BackingField;
 
         public ListMatchResponse()

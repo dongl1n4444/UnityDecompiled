@@ -104,10 +104,11 @@
                     }
                     if ((match == null) && this.ExpectedLogs.Any<LogMatch>())
                     {
-                        match = this.ExpectedLogs.Dequeue();
+                        match = this.ExpectedLogs.Peek();
                     }
                     if (match.Matches(event2))
                     {
+                        this.ExpectedLogs.Dequeue();
                         event2.IsHandled = true;
                         if (Enumerable.Any<LogEvent>(this.FailingLogs, new Func<LogEvent, bool>(match.Matches)))
                         {

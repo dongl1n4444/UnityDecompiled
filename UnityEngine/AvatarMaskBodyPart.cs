@@ -1,10 +1,12 @@
 ﻿namespace UnityEngine
 {
     using System;
+    using UnityEngine.Scripting.APIUpdating;
 
     /// <summary>
     /// <para>Avatar body part.</para>
     /// </summary>
+    [MovedFrom("UnityEditor.Animations")]
     public enum AvatarMaskBodyPart
     {
         Root,

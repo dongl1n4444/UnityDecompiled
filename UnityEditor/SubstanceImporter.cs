@@ -283,14 +283,13 @@
         /// <summary>
         /// <para>Set the import settings for the input ProceduralMaterial for the input platform.</para>
         /// </summary>
-        /// <param name="materialName">The name of the Procedural Material.</param>
+        /// <param name="material">The name of the Procedural Material.</param>
         /// <param name="platform">The name of the platform (can be empty).</param>
         /// <param name="maxTextureWidth">The maximum texture width for this Procedural Material.</param>
         /// <param name="maxTextureHeight">The maximum texture height for this Procedural Material.</param>
         /// <param name="textureFormat">The texture format (0=Compressed, 1=RAW) for this Procedural Material.</param>
         /// <param name="loadBehavior">The load behavior for this Procedural Material.
         /// Values match the ProceduralMaterial::ProceduralLoadingBehavior enum.</param>
-        /// <param name="material"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetPlatformTextureSettings(ProceduralMaterial material, string platform, int maxTextureWidth, int maxTextureHeight, int textureFormat, int loadBehavior);
         /// <summary>

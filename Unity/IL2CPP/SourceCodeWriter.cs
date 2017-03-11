@@ -75,24 +75,39 @@
                 }
                 writer.WriteLine("struct {0};", CppCodeWriter.Naming.ForType(reference));
             }
-            foreach (string str3 in base.RawForwardDeclarations)
+            foreach (string str3 in base.RawTypeForwardDeclarations)
             {
                 writer.WriteLine(str3 + ';');
             }
             writer.WriteLine();
-            foreach (GenericInstanceMethod method in base.GenericInstanceMethods)
+            foreach (ArrayType type in base.ArrayTypes)
             {
-                this.WriteGenericMethod(writer, method);
+                TypeDefinitionWriter.WriteArrayTypeDefinition(type, new CodeWriter(writer));
+            }
+            writer.WriteLine();
+            foreach (string str4 in base.RawMethodForwardDeclarations)
+            {
+                writer.WriteLine(str4 + ';');
+            }
+            writer.WriteLine();
+            foreach (MethodReference reference2 in base.SharedMethods)
+            {
+                WriteSharedMethodDeclaration(writer, reference2);
+            }
+            writer.WriteLine();
+            foreach (MethodReference reference3 in base.Methods)
+            {
+                WriteMethodDeclaration(writer, reference3);
             }
             writer.Flush();
         }
 
-        private void WriteGenericMethod(System.IO.StreamWriter writer, GenericInstanceMethod method)
+        private static void WriteMethodDeclaration(System.IO.StreamWriter writer, MethodReference method)
         {
             GenericInstanceType declaringType = method.DeclaringType as GenericInstanceType;
             if ((declaringType != null) && GenericsUtilities.CheckForMaximumRecursion(declaringType))
             {
-                Unity.IL2CPP.ILPreProcessor.TypeResolver resolver = new Unity.IL2CPP.ILPreProcessor.TypeResolver(method.DeclaringType as GenericInstanceType, method);
+                Unity.IL2CPP.ILPreProcessor.TypeResolver resolver = new Unity.IL2CPP.ILPreProcessor.TypeResolver(method.DeclaringType as GenericInstanceType, method as GenericInstanceMethod);
                 writer.WriteLine("{0};", MethodSignatureWriter.GetMethodSignature(CppCodeWriter.Naming.ForMethodNameOnly(method), CppCodeWriter.Naming.ForVariable(resolver.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveReturnTypeIfNeeded(method))), MethodSignatureWriter.FormatParameters(method, ParameterFormat.WithTypeAndName, false, true), "extern \"C\"", string.Empty));
             }
             else
@@ -101,14 +116,37 @@
                 {
                     writer.WriteLine("// {0}", method.FullName);
                 }
-                MethodReference sharedMethod = CppCodeWriter.GenericSharingAnalysis.GetSharedMethod(method);
-                if (CppCodeWriter.GenericSharingAnalysis.IsSharedMethod(method))
+                if (CppCodeWriter.GenericSharingAnalysis.CanShareMethod(method))
                 {
-                    writer.WriteLine("{0};", MethodSignatureWriter.GetSharedMethodSignatureRaw(method));
+                    object[] arg = new object[] { CppCodeWriter.Naming.ForMethodNameOnly(method), MethodSignatureWriter.FormatParameters(method, ParameterFormat.WithName, false, true), MethodSignatureWriter.GetMethodPointer(method), CppCodeWriter.Naming.ForMethod(CppCodeWriter.GenericSharingAnalysis.GetSharedMethod(method)) + "_gshared", MethodSignatureWriter.FormatParameters(method, ParameterFormat.WithName, false, true) };
+                    writer.WriteLine("#define {0}({1}) (({2}){3})({4})", arg);
                 }
-                string str = MethodSignatureWriter.FormatParameters(method, ParameterFormat.WithName, false, true);
-                object[] arg = new object[] { CppCodeWriter.Naming.ForMethodNameOnly(method), str, MethodSignatureWriter.GetMethodPointer(method), CppCodeWriter.Naming.ForMethod(sharedMethod) + "_gshared", str };
-                writer.WriteLine("#define {0}({1}) (({2}){3})({4})", arg);
+                else
+                {
+                    writer.WriteLine(MethodSignatureWriter.GetMethodSignatureRaw(method) + " IL2CPP_METHOD_ATTR;");
+                }
+            }
+        }
+
+        private static void WriteSharedMethodDeclaration(System.IO.StreamWriter writer, MethodReference method)
+        {
+            GenericInstanceType declaringType = method.DeclaringType as GenericInstanceType;
+            if ((declaringType != null) && GenericsUtilities.CheckForMaximumRecursion(declaringType))
+            {
+                Unity.IL2CPP.ILPreProcessor.TypeResolver resolver = new Unity.IL2CPP.ILPreProcessor.TypeResolver(method.DeclaringType as GenericInstanceType, method as GenericInstanceMethod);
+                writer.WriteLine("{0};", MethodSignatureWriter.GetMethodSignature(CppCodeWriter.Naming.ForMethodNameOnly(method), CppCodeWriter.Naming.ForVariable(resolver.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveReturnTypeIfNeeded(method))), MethodSignatureWriter.FormatParameters(method, ParameterFormat.WithTypeAndName, false, true), "extern \"C\"", string.Empty));
+            }
+            else
+            {
+                if (!CppCodeWriter.GenericSharingAnalysis.IsSharedMethod(method))
+                {
+                    throw new InvalidOperationException();
+                }
+                if (CodeGenOptions.EmitComments)
+                {
+                    writer.WriteLine("// {0}", method.FullName);
+                }
+                writer.WriteLine("{0};", MethodSignatureWriter.GetSharedMethodSignatureRaw(method));
             }
         }
 

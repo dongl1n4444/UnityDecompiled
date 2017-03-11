@@ -117,7 +117,7 @@
             Gradient gradient = presetObject as Gradient;
             if (gradient == null)
             {
-                Debug.LogError("Incorrect object passed " + presetObject);
+                UnityEngine.Debug.LogError("Incorrect object passed " + presetObject);
             }
             SetCurrentGradient(gradient);
             this.gradientChanged = true;
@@ -219,7 +219,7 @@
             {
                 if (s_GradientPicker == null)
                 {
-                    Debug.LogError("Gradient Picker not initalized, did you call Show first?");
+                    UnityEngine.Debug.LogError("Gradient Picker not initalized, did you call Show first?");
                 }
                 return s_GradientPicker;
             }

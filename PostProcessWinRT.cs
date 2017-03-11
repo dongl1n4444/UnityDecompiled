@@ -393,14 +393,14 @@ internal abstract class PostProcessWinRT
     public virtual void DeleteOldData()
     {
         string[] paths = new string[] { this.InstallPath, this.VisualStudioName, "Data" };
-        Utility.DeleteDirectory(Utility.CombinePath(paths));
+        Utility.DeleteDirectoryRecursive(Utility.CombinePath(paths));
     }
 
     private static void DeletePlugin(string pluginPath)
     {
-        MetroVisualStudioSolutionHelper.DeleteFileAccountingForReadOnly(pluginPath);
-        MetroVisualStudioSolutionHelper.DeleteFileAccountingForReadOnly(Path.ChangeExtension(pluginPath, ".pdb"));
-        MetroVisualStudioSolutionHelper.DeleteFileAccountingForReadOnly(pluginPath + ".mdb");
+        Utility.DeleteFileAccountingForReadOnly(pluginPath);
+        Utility.DeleteFileAccountingForReadOnly(Path.ChangeExtension(pluginPath, ".pdb"));
+        Utility.DeleteFileAccountingForReadOnly(pluginPath + ".mdb");
     }
 
     public virtual void EnumerateAllManagedAssemblies()
@@ -520,8 +520,7 @@ internal abstract class PostProcessWinRT
         if (Directory.Exists(this.StagingAreaDataManaged))
         {
             MetroVisualStudioSolutionHelper.RemoveReadOnlyAttributes(this.StagingAreaDataManaged);
-            FileUtil.CopyDirectoryRecursive(this.StagingAreaDataManaged, this.StagingArea);
-            Utility.DeleteDirectory(this.StagingAreaDataManaged);
+            Utility.MoveDirectory(this.StagingAreaDataManaged, this.StagingArea, null);
         }
         this.m_ManagedAssemblyLocation = this.StagingArea;
     }
@@ -548,88 +547,157 @@ internal abstract class PostProcessWinRT
     public virtual void Process()
     {
         this.ShowStep("Checking Requirements", Step.CheckRequirements);
-        this.CheckWindows();
-        this.CheckVisualStudio();
-        this.CheckSDK();
-        this.CheckSafeProjectOverwrite();
-        this.UpdatePlayerSettings();
-        this.CheckProfilerCapabilities();
+        using (new ProfilerBlock("PostProcessWinRT."))
+        {
+            this.CheckWindows();
+        }
+        using (new ProfilerBlock("PostProcessWinRT.CheckVisualStudio"))
+        {
+            this.CheckVisualStudio();
+        }
+        using (new ProfilerBlock("PostProcessWinRT.CheckSDK"))
+        {
+            this.CheckSDK();
+        }
+        using (new ProfilerBlock("PostProcessWinRT.CheckSafeProjectOverwrite"))
+        {
+            this.CheckSafeProjectOverwrite();
+        }
+        using (new ProfilerBlock("PostProcessWinRT.UpdatePlayerSettings"))
+        {
+            this.UpdatePlayerSettings();
+        }
+        using (new ProfilerBlock("PostProcessWinRT.CheckProfilerCapabilities"))
+        {
+            this.CheckProfilerCapabilities();
+        }
         this.ShowStep("Copying Unity resources", Step.CopyUnityResources);
-        this.CopyUnityResources();
-        this.CopyImages();
-        this.OverwriteUnityAssemblies();
-        this.EnumerateAllManagedAssemblies();
+        using (new ProfilerBlock("PostProcessWinRT.CopyUnityResources"))
+        {
+            this.CopyUnityResources();
+        }
+        using (new ProfilerBlock("PostProcessWinRT.CopyImages"))
+        {
+            this.CopyImages();
+        }
+        using (new ProfilerBlock("PostProcessWinRT.OverwriteUnityAssemblies"))
+        {
+            this.OverwriteUnityAssemblies();
+        }
         this.ShowStep("Copying plugins", Step.CopyPlugins);
-        this.CopyPlugins();
+        using (new ProfilerBlock("PostProcessWinRT.EnumerateAllManagedAssemblies"))
+        {
+            this.EnumerateAllManagedAssemblies();
+        }
+        using (new ProfilerBlock("PostProcessWinRT.CopyPlugins"))
+        {
+            this.CopyPlugins();
+        }
         if (!this.UseIL2CPP())
         {
             this.ShowStep("Patching assemblies, stage one", Step.RunSerializationWeaver);
-            this.RunSerializationWeaver();
-            this.MoveDataManagedToRoot();
+            using (new ProfilerBlock("PostProcessWinRT.RunSerializationWeaver"))
+            {
+                this.RunSerializationWeaver();
+            }
+            using (new ProfilerBlock("PostProcessWinRT.MoveDataManagedToRoot"))
+            {
+                this.MoveDataManagedToRoot();
+            }
             this.ShowStep("Patching assemblies, stage two", Step.RunReferenceRewriter);
-            this.RunReferenceRewriter();
-            this.ShowStep("Patching assemblies, stage three", Step.RunAssemblyConverter);
-            this.RunAssemblyConverter();
-            this.DeleteMdbFiles();
+            using (new ProfilerBlock("PostProcessWinRT.RunReferenceRewriter"))
+            {
+                this.RunReferenceRewriter();
+            }
+            using (new ProfilerBlock("PostProcessWinRT.DeleteMdbFiles"))
+            {
+                this.DeleteMdbFiles();
+            }
         }
         else
         {
-            this.CopyFrameworkAssemblies();
+            using (new ProfilerBlock("PostProcessWinRT.CopyFrameworkAssemblies"))
+            {
+                this.CopyFrameworkAssemblies();
+            }
             this.ShowStep("Patching assemblies", Step.RunReferenceRewriter);
-            this.RunReferenceRewriter();
-            this.RunIL2CPP();
+            using (new ProfilerBlock("PostProcessWinRT.RunReferenceRewriter"))
+            {
+                this.RunReferenceRewriter();
+            }
         }
-        this.CreateTestCertificate();
-        this.CreateManifest();
-        this.CreateCommandLineArgsPlaceholder();
+        using (new ProfilerBlock("PostProcessWinRT.CreateTestCertificate"))
+        {
+            this.CreateTestCertificate();
+        }
+        using (new ProfilerBlock("PostProcessWinRT.CreateManifest"))
+        {
+            this.CreateManifest();
+        }
+        using (new ProfilerBlock("PostProcessWinRT.CreateCommandLineArgsPlaceholder"))
+        {
+            this.CreateCommandLineArgsPlaceholder();
+        }
         this.ShowStep("Copying streaming assets", Step.CopyStreamingAssets);
-        this.CopyStreamingAssets();
-        this.RemoveReadOnlyFileAttributes();
-        this.CreateRegistryTxtFiles();
-        this.CopyTestCertificate();
+        using (new ProfilerBlock("PostProcessWinRT.CopyStreamingAssets"))
+        {
+            this.CopyStreamingAssets();
+        }
+        using (new ProfilerBlock("PostProcessWinRT.RemoveReadOnlyFileAttributes"))
+        {
+            this.RemoveReadOnlyFileAttributes();
+        }
+        if (this.UseIL2CPP())
+        {
+            using (new ProfilerBlock("PostProcessWinRT.RunIL2CPP"))
+            {
+                this.RunIL2CPP();
+            }
+        }
+        using (new ProfilerBlock("PostProcessWinRT.CreateRegistryTxtFiles"))
+        {
+            this.CreateRegistryTxtFiles();
+        }
+        using (new ProfilerBlock("PostProcessWinRT.CopyTestCertificate"))
+        {
+            this.CopyTestCertificate();
+        }
         this.ShowStep("Copying windows resource files", Step.CopyWindowsResourceFiles);
-        this.CreateWindowsResourceFile();
+        using (new ProfilerBlock("PostProcessWinRT.CreateWindowsResourceFile"))
+        {
+            this.CreateWindowsResourceFile();
+        }
         this.ShowStep("Copying template files", Step.CopyTemplateFiles);
-        this.CopyTemplate();
-        this.DeleteOldData();
+        using (new ProfilerBlock("PostProcessWinRT.CopyTemplate"))
+        {
+            this.CopyTemplate();
+        }
+        using (new ProfilerBlock("PostProcessWinRT.DeleteOldData"))
+        {
+            this.DeleteOldData();
+        }
         this.ShowStep("Creating Visual Studio solution", Step.CreatingVisualStudioSolution);
-        this.CreateVisualStudioSolution();
+        using (new ProfilerBlock("PostProcessWinRT.CreateVisualStudioSolution"))
+        {
+            this.CreateVisualStudioSolution();
+        }
         if (UserBuildSettings.copyReferences)
         {
             this.ShowStep("Copying player files", Step.CopyPlayerFiles);
-            this.CopyPlayerFiles();
+            using (new ProfilerBlock("PostProcessWinRT.CopyPlayerFiles"))
+            {
+                this.CopyPlayerFiles();
+            }
         }
-        this.ShowExplorer();
+        using (new ProfilerBlock("PostProcessWinRT.ShowExplorer"))
+        {
+            this.ShowExplorer();
+        }
     }
 
     public virtual void RemoveReadOnlyFileAttributes()
     {
         MetroVisualStudioSolutionHelper.RemoveReadOnlyAttributes(this.StagingArea);
-    }
-
-    public virtual void RunAssemblyConverter()
-    {
-        string str4;
-        string fileName = Utility.CombinePath(this.PlayerPackage, @"Tools\AssemblyConverter.exe");
-        string arguments = "-platform=" + this.GetAssemblyConverterPlatform();
-        foreach (Library library in this.Libraries)
-        {
-            if (library.AnyCpu && library.Process)
-            {
-                string str3 = arguments;
-                object[] objArray1 = new object[] { str3, " \"", Utility.CombinePath(this.StagingArea, library.ReferencePath), '"' };
-                arguments = string.Concat(objArray1);
-            }
-        }
-        if (Utility.RunAndWait(fileName, arguments, out str4, null) != 0)
-        {
-            throw new UnityException($"Failed to run assembly converter with command {arguments}.
-{str4}");
-        }
-        if (!string.IsNullOrEmpty(str4))
-        {
-            UnityEngine.Debug.LogError($"Assembly converter: {str4}");
-        }
     }
 
     protected virtual void RunAssemblyConverterNoMetadata(string assembly)
@@ -693,16 +761,23 @@ internal abstract class PostProcessWinRT
                         {
                             arguments = arguments + " --ignore=" + ignoredReferenceRewriterTypes;
                         }
-                        if (Utility.RunAndWait(fileName, arguments, out storey2.output, null) != 0)
+                        using (new ProfilerBlock("Run ReferenceRewriter for " + archReferencePath))
                         {
-                            throw new UnityException($"Failed to run reference rewriter with command {arguments}.
+                            if (Utility.RunAndWait(fileName, arguments, out storey2.output, null) != 0)
+                            {
+                                throw new UnityException($"Failed to run reference rewriter with command {arguments}.
 {storey2.output}");
+                            }
                         }
-                        if (string.IsNullOrEmpty(storey2.output))
+                        if (string.IsNullOrEmpty(storey2.output) && !this.UseIL2CPP())
                         {
-                            this.RunAssemblyConverterNoMetadata(archReferencePath);
+                            using (new ProfilerBlock("Run AssemblyConverter without metadata for " + archReferencePath))
+                            {
+                                this.RunAssemblyConverterNoMetadata(archReferencePath);
+                                continue;
+                            }
                         }
-                        else if (!Enumerable.Any<string>(ignoreOutputAssembliesForReferenceRewriter, new Func<string, bool>(storey2.<>m__0)))
+                        if (!Enumerable.Any<string>(ignoreOutputAssembliesForReferenceRewriter, new Func<string, bool>(storey2.<>m__0)))
                         {
                             char[] separator = new char[] { '\r', '\n' };
                             string[] strArray = storey2.output.Split(separator, StringSplitOptions.RemoveEmptyEntries);
@@ -775,7 +850,7 @@ internal abstract class PostProcessWinRT
                 }
             }
         }
-        Utility.DeleteDirectory(path);
+        Utility.DeleteDirectoryRecursive(path);
     }
 
     public virtual void ShowExplorer()
@@ -788,7 +863,7 @@ internal abstract class PostProcessWinRT
 
     private void ShowStep(string message, Step step)
     {
-        if (EditorUtility.DisplayCancelableProgressBar("Building Player", message, ((float) step) / 11f))
+        if (EditorUtility.DisplayCancelableProgressBar("Building Player", message, ((float) step) / 10f))
         {
             throw new OperationCanceledException();
         }
@@ -1096,7 +1171,7 @@ internal abstract class PostProcessWinRT
         internal bool $disposing;
         internal int $PC;
         internal PostProcessWinRT $this;
-        internal string <path>__1;
+        internal string <path>__0;
 
         [DebuggerHidden]
         public void Dispose()
@@ -1112,12 +1187,12 @@ internal abstract class PostProcessWinRT
             switch (num)
             {
                 case 0:
-                    this.<path>__1 = this.$this.GetReferenceAssembliesDirectory();
-                    if (string.IsNullOrEmpty(this.<path>__1))
+                    this.<path>__0 = this.$this.GetReferenceAssembliesDirectory();
+                    if (string.IsNullOrEmpty(this.<path>__0))
                     {
                         break;
                     }
-                    this.$current = this.<path>__1;
+                    this.$current = this.<path>__0;
                     if (!this.$disposing)
                     {
                         this.$PC = 1;
@@ -1196,7 +1271,6 @@ internal abstract class PostProcessWinRT
         CopyPlugins,
         RunSerializationWeaver,
         RunReferenceRewriter,
-        RunAssemblyConverter,
         CopyStreamingAssets,
         CopyWindowsResourceFiles,
         CopyTemplateFiles,

@@ -9,9 +9,12 @@
     {
         private static MethodInfo FindVisitMethodFor(System.Type type)
         {
-            System.Type[] types = new System.Type[] { type, typeof(Context) };
-            return typeof(Unity.Cecil.Visitor.Visitor).GetMethod("Visit", BindingFlags.NonPublic | BindingFlags.Instance, null, types, new ParameterModifier[0]);
+            System.Type[] parameters = new System.Type[] { type, typeof(Context) };
+            return GetMethodPortable(typeof(Unity.Cecil.Visitor.Visitor), "Visit", BindingFlags.NonPublic | BindingFlags.Instance, parameters);
         }
+
+        private static MethodInfo GetMethodPortable(System.Type type, string name, BindingFlags flags, System.Type[] parameters) => 
+            type.GetMethod(name, flags, null, parameters, new ParameterModifier[0]);
 
         protected virtual void Visit(ArrayType arrayType, Context context)
         {
@@ -192,7 +195,7 @@
 
         protected virtual void Visit(MethodDefinition methodDefinition, Context context)
         {
-            this.VisitTypeReference(methodDefinition.ReturnType, context.ReturnType(methodDefinition));
+            this.Visit(methodDefinition.MethodReturnType, context.ReturnType(methodDefinition));
             foreach (Mono.Cecil.CustomAttribute attribute in methodDefinition.CustomAttributes)
             {
                 this.Visit(attribute, context.Attribute(methodDefinition));
@@ -231,6 +234,11 @@
                     this.VisitTypeReference(reference, context.GenericArgument(data));
                 }
             }
+        }
+
+        protected virtual void Visit(MethodReturnType methodReturnType, Context context)
+        {
+            this.VisitTypeReference(methodReturnType.ReturnType, context.ReturnType(methodReturnType));
         }
 
         protected virtual void Visit(ModuleDefinition moduleDefinition, Context context)

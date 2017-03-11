@@ -10,7 +10,6 @@
     using System.Linq;
     using System.Runtime.CompilerServices;
     using Unity.IL2CPP.Common;
-    using Unity.IL2CPP.GenericsCollection;
     using Unity.IL2CPP.ILPreProcessor;
     using Unity.IL2CPP.IoC;
     using Unity.IL2CPP.IoCServices;
@@ -76,6 +75,8 @@
         public static ITypeProviderService TypeProvider;
         [Inject]
         public static IVirtualCallCollectorService VirtualCallCollector;
+        [Inject]
+        public static IWindowsRuntimeProjections WindowsRuntimeProjections;
 
         private static void AddStreamAndRecordHeader(string name, Stream headerStream, Stream dataStream, Stream stream)
         {
@@ -264,7 +265,7 @@
             return MetadataWriter.WriteTable<TableInfo>(writer, "extern const int32_t*", "g_FieldOffsetTable", fieldTableInfos, <>f__am$cache9);
         }
 
-        public static void WriteMetadata(NPath outputDir, NPath dataFolder, InflatedCollectionCollector generics, TypeDefinition[] allTypeDefinitions, ICollection<AssemblyDefinition> usedAssemblies, MethodTables methodTables, IMetadataCollection metadataCollector, AttributeCollection attributeCollection, VTableBuilder vTableBuilder, IMethodCollectorResults methodCollector, IInteropDataCollectorResults interopDataCollector, UnresolvedVirtualsTablesInfo virtualCallTables)
+        public static void WriteMetadata(NPath outputDir, NPath dataFolder, TypeDefinition[] allTypeDefinitions, ICollection<AssemblyDefinition> usedAssemblies, MethodTables methodTables, IMetadataCollection metadataCollector, AttributeCollection attributeCollection, VTableBuilder vTableBuilder, IMethodCollectorResults methodCollector, IInteropDataCollectorResults interopDataCollector, UnresolvedVirtualsTablesInfo virtualCallTables)
         {
             TableInfo info;
             <WriteMetadata>c__AnonStorey0 storey = new <WriteMetadata>c__AnonStorey0 {
@@ -548,7 +549,7 @@
                 {
                     int count = 0;
                     int num2 = 0;
-                    if (!definition.IsInterface || definition.IsComOrWindowsRuntimeType())
+                    if ((!definition.IsInterface || definition.IsComOrWindowsRuntimeType()) || (MetadataCacheWriter.WindowsRuntimeProjections.GetNativeToManagedAdapterClassFor(definition) != null))
                     {
                         VTable table = this.vTableBuilder.VTableFor(definition, null);
                         count = table.Slots.Count;
@@ -631,7 +632,7 @@
             {
                 foreach (ModuleDefinition definition in this.metadataCollector.GetModules())
                 {
-                    if (definition.FullyQualifiedName == null)
+                    if (definition.FileName == null)
                     {
                     }
                     stream.WriteInt(this.metadataCollector.GetStringIndex(Path.GetFileName(definition.Name)));

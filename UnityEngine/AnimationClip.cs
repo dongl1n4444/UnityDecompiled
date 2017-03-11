@@ -42,7 +42,7 @@
         }
 
         /// <summary>
-        /// <para>In order to insure better interpolation of quaternions, call this function after you are finished setting animation curves.</para>
+        /// <para>Realigns quaternion keys to ensure shortest interpolation paths.</para>
         /// </summary>
         public void EnsureQuaternionContinuity()
         {
@@ -71,8 +71,9 @@
         /// <summary>
         /// <para>Assigns the curve to animate a specific property.</para>
         /// </summary>
-        /// <param name="relativePath">Path to the game object this curve applies to. relativePath is formatted similar to a pathname, e.g. "rootspineleftArm".
-        /// If relativePath is empty it refers to the game object the animation clip is attached to.</param>
+        /// <param name="relativePath">Path to the game object this curve applies to. The relativePath
+        /// is formatted similar to a pathname, e.g. "rootspineleftArm".  If relativePath
+        /// is empty it refers to the game object the animation clip is attached to.</param>
         /// <param name="type">The class type of the component that is animated.</param>
         /// <param name="propertyName">The name or path to the property being animated.</param>
         /// <param name="curve">The animation curve.</param>

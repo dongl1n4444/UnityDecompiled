@@ -9,7 +9,7 @@
     public sealed class AssetStoreToolUtils
     {
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern bool BuildAssetStoreAssetBundle(Object targetObject, string targetPath);
+        public static extern bool BuildAssetStoreAssetBundle(UnityEngine.Object targetObject, string targetPath);
         public static bool PreviewAssetStoreAssetBundleInInspector(AssetBundle bundle, AssetStoreAsset info)
         {
             info.id = 0;

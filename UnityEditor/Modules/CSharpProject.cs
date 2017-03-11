@@ -8,7 +8,7 @@
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private System.Guid <Guid>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <Path>k__BackingField;
 
         public System.Guid Guid { get; set; }

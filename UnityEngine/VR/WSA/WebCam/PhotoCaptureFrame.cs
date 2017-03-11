@@ -13,7 +13,7 @@
     /// </summary>
     public sealed class PhotoCaptureFrame : IDisposable
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private int <dataLength>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <hasLocationData>k__BackingField;
@@ -56,7 +56,7 @@
             byteBuffer.AddRange(collection);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         internal static extern byte[] CopyRawImageDataIntoBuffer_Internal(IntPtr photoCaptureFrame);
         /// <summary>
         /// <para>Disposes the PhotoCaptureFrame and any resources it uses.</para>
@@ -84,11 +84,11 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern CapturePixelFormat GetCapturePixelFormat(IntPtr photoCaptureFrame);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern void GetData_Internal(IntPtr photoCaptureFrame, IntPtr targetBuffer);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern int GetDataLength(IntPtr photoCaptureFrame);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern bool GetHasLocationData(IntPtr photoCaptureFrame);
         [ThreadAndSerializationSafe]
         private static Matrix4x4 GetProjection(IntPtr photoCaptureFrame)

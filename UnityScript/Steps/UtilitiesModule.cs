@@ -17,7 +17,7 @@
 
         public static IConstructor ConstructorTakingNArgumentsFor(IType type, int arguments)
         {
-            foreach (IConstructor constructor in TypeSystemExtensions.GetConstructors(type))
+            foreach (IConstructor constructor in type.GetConstructors())
             {
                 if (constructor.GetParameters().Length == arguments)
                 {
@@ -29,7 +29,7 @@
 
         public static ClassDefinition GetScriptClass(CompilerContext context)
         {
-            object obj1 = context.get_Item("ScriptClass");
+            object obj1 = context["ScriptClass"];
             if (!(obj1 is ClassDefinition))
             {
             }
@@ -43,7 +43,7 @@
             {
                 Node node2;
                 MethodInvocationExpression expression1 = node2 = expression;
-                if ((1 != 0) && ((node2.get_ParentNode() is ExpressionStatement) || (node2.get_ParentNode() is YieldStatement)))
+                if ((1 != 0) && ((node2.ParentNode is ExpressionStatement) || (node2.ParentNode is YieldStatement)))
                 {
                 }
             }
@@ -53,14 +53,14 @@
         public static bool IsRhsOfAssignment(Expression node)
         {
             Expression expression2;
-            Node node2 = node.get_ParentNode();
-            if (node2 is BinaryExpression)
+            Node parentNode = node.ParentNode;
+            if (parentNode is BinaryExpression)
             {
                 BinaryExpression expression;
-                BinaryExpression expression1 = expression = node2;
-                if ((1 != 0) && (expression.get_Operator() == 15))
+                BinaryExpression expression1 = expression = (BinaryExpression) parentNode;
+                if ((1 != 0) && (expression.Operator == BinaryOperatorType.Assign))
                 {
-                    Expression expression3 = expression2 = expression.get_Right();
+                    Expression expression3 = expression2 = expression.Right;
                 }
             }
             return ((1 != 0) && (expression2 == node));
@@ -68,7 +68,7 @@
 
         public static void SetScriptClass(CompilerContext context, ClassDefinition klass)
         {
-            context.set_Item("ScriptClass", klass);
+            context["ScriptClass"] = klass;
         }
     }
 }

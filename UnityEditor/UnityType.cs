@@ -11,15 +11,15 @@
 
     internal sealed class UnityType
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private UnityType <baseClass>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private UnityTypeFlags <flags>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private string <name>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-        private string <nativeNamespace>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private string <nativeNamespace>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private int <persistentTypeID>k__BackingField;
         private uint descendantCount;
         private static Dictionary<int, UnityType> ms_idToTypeInfo;

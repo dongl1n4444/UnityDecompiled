@@ -7,6 +7,7 @@
 
     internal class SamsungTVSettingsEditorExtension : DefaultPlayerSettingsEditorExtension
     {
+        private SerializedProperty m_ApplicationBundleVersion;
         private SerializedProperty m_IgnoreAlphaClear;
         private SerializedProperty m_IPhoneSplashScreen;
         private SerializedProperty m_SamsungTVDeviceAddress;
@@ -26,6 +27,11 @@
         public override bool HasIdentificationGUI() => 
             true;
 
+        public override void IdentificationSectionGUI()
+        {
+            EditorGUILayout.PropertyField(this.m_ApplicationBundleVersion, EditorGUIUtility.TextContent("Version*"), new GUILayoutOption[0]);
+        }
+
         public override void OnEnable(PlayerSettingsEditor settingsEditor)
         {
             this.m_SamsungTVDeviceAddress = settingsEditor.FindPropertyAssert("stvDeviceAddress");
@@ -36,6 +42,7 @@
             this.m_SamsungTVProductCategory = settingsEditor.FindPropertyAssert("stvProductCategory");
             this.m_IPhoneSplashScreen = settingsEditor.FindPropertyAssert("iPhoneSplashScreen");
             this.m_IgnoreAlphaClear = settingsEditor.FindPropertyAssert("ignoreAlphaClear");
+            this.m_ApplicationBundleVersion = settingsEditor.FindPropertyAssert("bundleVersion");
             this.m_SettingsEditor = settingsEditor;
         }
 

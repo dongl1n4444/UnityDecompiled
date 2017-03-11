@@ -44,36 +44,36 @@
                         <ExtractZipFile>c__AnonStorey1 storey2 = new <ExtractZipFile>c__AnonStorey1 {
                             <>f__ref$0 = storey
                         };
-                        if (!current.get_IsDirectory())
+                        if (!current.IsDirectory)
                         {
-                            string str = current.get_Name();
+                            string name = current.Name;
                             Stream inputStream = file.GetInputStream(current);
-                            if (str.EndsWith("ivy.xml"))
+                            if (name.EndsWith("ivy.xml"))
                             {
-                                str = str.Replace("ivy.xml", "ivy-waiting-for-unzip-to-end");
+                                name = name.Replace("ivy.xml", "ivy-waiting-for-unzip-to-end");
                             }
-                            string path = Path.Combine(outFolder, str);
+                            string path = Path.Combine(outFolder, name);
                             string directoryName = Path.GetDirectoryName(path);
                             if (directoryName.Length > 0)
                             {
                                 Directory.CreateDirectory(directoryName);
                             }
-                            if (((Environment.OSVersion.Platform == PlatformID.Unix) || (Environment.OSVersion.Platform == PlatformID.MacOSX)) && (current.get_ExternalFileAttributes() > 0))
+                            if (((Environment.OSVersion.Platform == PlatformID.Unix) || (Environment.OSVersion.Platform == PlatformID.MacOSX)) && (current.ExternalFileAttributes > 0))
                             {
-                                Syscall.close(Syscall.open(path, OpenFlags.O_TRUNC | OpenFlags.O_CREAT, (FilePermissions) current.get_ExternalFileAttributes()));
+                                Syscall.close(Syscall.open(path, OpenFlags.O_TRUNC | OpenFlags.O_CREAT, (FilePermissions) current.ExternalFileAttributes));
                             }
                             storey2.targetFile = new FileInfo(path);
                             using (FileStream stream3 = storey2.targetFile.OpenWrite())
                             {
                                 Utils.Copy(inputStream, stream3, 0x1000, storey2.targetFile.Length, new Func<long, long, bool>(storey2.<>m__0), 100);
                             }
-                            storey2.targetFile.LastWriteTime = current.get_DateTime();
+                            storey2.targetFile.LastWriteTime = current.DateTime;
                             num++;
-                            storey.totalBytes += current.get_Size();
+                            storey.totalBytes += current.Size;
                             TimeSpan span = (TimeSpan) (DateTime.Now - now);
                             double num3 = span.TotalMilliseconds / ((double) num);
                             base.EstimatedDuration = Math.Max(1L, (long) ((stream.Length - storey.totalBytes) * num3));
-                            this.UpdateProgress(((float) num) / ((float) file.get_Size()));
+                            this.UpdateProgress(((float) num) / ((float) file.Size));
                         }
                     }
                 }

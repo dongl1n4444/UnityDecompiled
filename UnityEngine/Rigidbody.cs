@@ -57,10 +57,10 @@
         }
 
         /// <summary>
-        /// <para>Adds a force to the rigidbody.</para>
+        /// <para>Adds a force to the Rigidbody.</para>
         /// </summary>
         /// <param name="force">Force vector in world coordinates.</param>
-        /// <param name="mode"></param>
+        /// <param name="mode">Type of force to apply.</param>
         [ExcludeFromDocs]
         public void AddForce(Vector3 force)
         {
@@ -69,22 +69,22 @@
         }
 
         /// <summary>
-        /// <para>Adds a force to the rigidbody.</para>
+        /// <para>Adds a force to the Rigidbody.</para>
         /// </summary>
         /// <param name="force">Force vector in world coordinates.</param>
-        /// <param name="mode"></param>
+        /// <param name="mode">Type of force to apply.</param>
         public void AddForce(Vector3 force, [DefaultValue("ForceMode.Force")] ForceMode mode)
         {
             INTERNAL_CALL_AddForce(this, ref force, mode);
         }
 
         /// <summary>
-        /// <para>Adds a force to the rigidbody.</para>
+        /// <para>Adds a force to the Rigidbody.</para>
         /// </summary>
         /// <param name="x">Size of force along the world x-axis.</param>
         /// <param name="y">Size of force along the world y-axis.</param>
         /// <param name="z">Size of force along the world z-axis.</param>
-        /// <param name="mode"></param>
+        /// <param name="mode">Type of force to apply.</param>
         [ExcludeFromDocs]
         public void AddForce(float x, float y, float z)
         {
@@ -93,12 +93,12 @@
         }
 
         /// <summary>
-        /// <para>Adds a force to the rigidbody.</para>
+        /// <para>Adds a force to the Rigidbody.</para>
         /// </summary>
         /// <param name="x">Size of force along the world x-axis.</param>
         /// <param name="y">Size of force along the world y-axis.</param>
         /// <param name="z">Size of force along the world z-axis.</param>
-        /// <param name="mode"></param>
+        /// <param name="mode">Type of force to apply.</param>
         public void AddForce(float x, float y, float z, [DefaultValue("ForceMode.Force")] ForceMode mode)
         {
             this.AddForce(new Vector3(x, y, z), mode);
@@ -495,7 +495,7 @@
         public float angularDrag { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
-        /// <para>The angular velocity vector of the rigidbody.</para>
+        /// <para>The angular velocity vector of the rigidbody measured in radians per second.</para>
         /// </summary>
         public Vector3 angularVelocity
         {
@@ -630,7 +630,7 @@
         }
 
         /// <summary>
-        /// <para>The rotation of the rigdibody.</para>
+        /// <para>The rotation of the rigidbody.</para>
         /// </summary>
         public Quaternion rotation
         {

@@ -4,6 +4,7 @@
     using System.Diagnostics;
     using System.IO;
     using System.Runtime.CompilerServices;
+    using System.Text.RegularExpressions;
     using UnityEditor;
     using UnityEditor.Modules;
     using UnityEditor.Utils;
@@ -176,9 +177,9 @@
                 FileUtil.DeleteFileOrDirectory(this.StagingAreaContents + "/Resources/Data/Managed");
                 FileUtil.DeleteFileOrDirectory(this.StagingAreaContents + "/Resources/Data/il2cppOutput");
             }
-            string str7 = PostprocessBuildPlayer.GenerateBundleIdentifier(this.m_PostProcessArgs.companyName, this.m_PostProcessArgs.productName);
-            string[] input = new string[] { "UNITY_BUNDLE_IDENTIFIER", str7, "UnityPlayerExec", this.InstallNameWithoutExtension, "UnityPlayer", this.m_PostProcessArgs.productName };
-            FileUtil.ReplaceText(this.StagingAreaContents + "/Info.plist", input);
+            string str7 = FileUtil.NiceWinPath(this.StagingAreaContents + "/Info.plist");
+            string[] input = new string[] { "CFBundleShortVersionString", PlayerSettings.bundleVersion, "CFBundleVersion", PlayerSettings.macOS.buildNumber, "CFBundleIdentifier", PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.Standalone), "CFBundleExecutable", this.InstallNameWithoutExtension, "CFBundleName", this.m_PostProcessArgs.productName };
+            this.UpdateInfoPlist(str7, input);
             FileUtil.MoveFileOrDirectory(base.StagingArea + "/UnityPlayer.app", base.StagingArea + "/" + this.InstallNameWithoutExtension + ".app");
             this.m_PostProcessArgs.report.RelocateFiles(base.StagingArea + "/UnityPlayer.app", base.StagingArea + "/" + this.InstallNameWithoutExtension + ".app");
         }
@@ -205,6 +206,23 @@
 
         public bool SupportsScriptsOnlyBuild() => 
             false;
+
+        private void UpdateInfoPlist(string path, params string[] input)
+        {
+            string[] contents = File.ReadAllLines(path);
+            for (int i = 0; i < (contents.Length - 1); i++)
+            {
+                for (int j = 0; j < input.Length; j += 2)
+                {
+                    if (contents[i].Contains(input[j]))
+                    {
+                        i++;
+                        contents[i] = Regex.Replace(contents[i], "<string>.+</string>", $"<string>{input[j + 1]}</string>");
+                    }
+                }
+            }
+            File.WriteAllLines(path, contents);
+        }
 
         protected override string DestinationFolderForInstallingIntoBuildsFolder =>
             ("build/MacStandaloneSupport/Variations/" + this.GetVariationName() + "/UnityPlayer.app/Contents/Resources/Data");

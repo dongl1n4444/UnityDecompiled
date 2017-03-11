@@ -98,7 +98,7 @@
 
         public static void OpenIfCheckoutFailed(AssetList assets)
         {
-            Object[] objArray = Resources.FindObjectsOfTypeAll(typeof(WindowCheckoutFailure));
+            UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(WindowCheckoutFailure));
             WindowCheckoutFailure failure = (objArray.Length <= 0) ? null : (objArray[0] as WindowCheckoutFailure);
             bool alreadyOpen = failure != null;
             bool flag2 = alreadyOpen;

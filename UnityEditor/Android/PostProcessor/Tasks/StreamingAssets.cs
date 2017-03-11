@@ -1,8 +1,10 @@
 ﻿namespace UnityEditor.Android.PostProcessor.Tasks
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEditor;
     using UnityEditor.Android.PostProcessor;
@@ -10,6 +12,7 @@
 
     internal class StreamingAssets : IPostProcessorTask
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ProgressHandler OnProgress;
 
         public void Execute(PostProcessorContext context)
@@ -28,23 +31,32 @@
             string str4 = Paths.Combine(textArray3);
             string[] textArray4 = new string[] { str, "rawobb", "bin", "Data" };
             string str5 = Paths.Combine(textArray4);
-            string[] source = new string[] { ".ress", ".resource" };
+            string[] source = new string[] { ".ress", ".resource", ".unity3d", ".obb" };
             string[] fileSystemEntries = Directory.GetFileSystemEntries(path);
             foreach (string str6 in fileSystemEntries)
             {
-                if (source.Contains<string>(Path.GetExtension(str6).ToLower()))
+                string str7 = Path.GetExtension(str6).ToLower();
+                if (source.Contains<string>(str7))
                 {
-                    string str7 = str4;
+                    string str8 = str4;
                     string fileName = Path.GetFileName(str6);
-                    if ((flag && (string.Compare(fileName, "level0.resS", true) != 0)) && ((string.Compare(fileName, "sharedassets0.assets.resS", true) != 0) && (string.Compare(fileName, "sharedassets0.resource", true) != 0)))
+                    if (flag)
                     {
-                        str7 = str5;
+                        if (str7 == ".obb")
+                        {
+                            str8 = str5;
+                            fileName = Path.GetFileNameWithoutExtension(fileName);
+                        }
+                        else if (((string.Compare(fileName, "level0.resS", true) != 0) && (string.Compare(fileName, "sharedassets0.assets.resS", true) != 0)) && ((string.Compare(fileName, "sharedassets0.resource", true) != 0) && (string.Compare(fileName, "data.unity3d", true) != 0)))
+                        {
+                            str8 = str5;
+                        }
                     }
-                    if (!Directory.Exists(str7))
+                    if (!Directory.Exists(str8))
                     {
-                        Directory.CreateDirectory(str7);
+                        Directory.CreateDirectory(str8);
                     }
-                    string destFileName = Path.Combine(str7, fileName);
+                    string destFileName = Path.Combine(str8, fileName);
                     File.Move(str6, destFileName);
                 }
             }

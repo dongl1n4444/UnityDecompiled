@@ -3,7 +3,7 @@
     using System;
     using UnityEngine.Rendering;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(SortingGroup))]
+    [CustomEditor(typeof(SortingGroup)), CanEditMultipleObjects]
     internal class SortingGroupEditor : Editor
     {
         private SerializedProperty m_SortingLayerID;

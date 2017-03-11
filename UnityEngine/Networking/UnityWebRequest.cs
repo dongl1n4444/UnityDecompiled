@@ -43,9 +43,9 @@
         /// <para>The string "DELETE", commonly used as the verb for an HTTP DELETE request.</para>
         /// </summary>
         public const string kHttpVerbDELETE = "DELETE";
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <disposeDownloadHandlerOnDispose>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <disposeUploadHandlerOnDispose>k__BackingField;
         private static readonly string[] forbiddenHeaderKeys = new string[] { 
             "accept-charset", "access-control-request-headers", "access-control-request-method", "connection", "content-length", "date", "dnt", "expect", "host", "keep-alive", "origin", "referer", "te", "trailer", "transfer-encoding", "upgrade",
@@ -423,7 +423,7 @@
         public bool disposeUploadHandlerOnDispose { get; set; }
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void InternalCreate();
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         internal extern void InternalDestroy();
         private void InternalSetDefaults()
         {
@@ -847,7 +847,8 @@
             SSLCACertError,
             UnrecognizedContentEncoding,
             LoginFailed,
-            SSLShutdownFailed
+            SSLShutdownFailed,
+            NoInternetConnection
         }
 
         internal enum UnityWebRequestMethod

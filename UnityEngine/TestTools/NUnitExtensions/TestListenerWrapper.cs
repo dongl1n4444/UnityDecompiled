@@ -7,13 +7,15 @@
 
     internal class TestListenerWrapper : ITestListener
     {
+        private bool m_DelegateCalls;
         private TestFinishedEvent m_TestFinishedEvent;
         private TestStartedEvent m_TestStartedEvent;
 
-        public TestListenerWrapper(TestStartedEvent testStartedEvent, TestFinishedEvent testFinishedEvent)
+        public TestListenerWrapper(TestStartedEvent testStartedEvent, TestFinishedEvent testFinishedEvent, bool delegateCalls)
         {
             this.m_TestStartedEvent = testStartedEvent;
             this.m_TestFinishedEvent = testFinishedEvent;
+            this.m_DelegateCalls = delegateCalls;
         }
 
         public void TestFinished(ITestResult result)
@@ -22,7 +24,14 @@
                 result = result,
                 $this = this
             };
-            ActionDelegator.instance.Delegate(new Action(storey.<>m__0));
+            if (this.m_DelegateCalls)
+            {
+                ActionDelegator.instance.Delegate(new Action(storey.<>m__0));
+            }
+            else
+            {
+                this.m_TestFinishedEvent.Invoke(storey.result);
+            }
         }
 
         public void TestOutput(NUnit.Framework.Interfaces.TestOutput output)
@@ -35,7 +44,14 @@
                 test = test,
                 $this = this
             };
-            ActionDelegator.instance.Delegate(new Action(storey.<>m__0));
+            if (this.m_DelegateCalls)
+            {
+                ActionDelegator.instance.Delegate(new Action(storey.<>m__0));
+            }
+            else
+            {
+                this.m_TestStartedEvent.Invoke(storey.test);
+            }
         }
 
         [CompilerGenerated]

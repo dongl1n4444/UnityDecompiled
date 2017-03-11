@@ -56,7 +56,7 @@
         private void CreatePopupMenu(string title, GUIContent content, PopupElement[] elements, int selectedIndex, GenericMenu.MenuFunction2 func)
         {
             Rect position = EditorGUI.PrefixLabel(GUILayoutUtility.GetRect(content, EditorStyles.popup), 0, new GUIContent(title));
-            if (EditorGUI.ButtonMouseDown(position, content, FocusType.Passive, EditorStyles.popup))
+            if (EditorGUI.DropdownButton(position, content, FocusType.Passive, EditorStyles.popup))
             {
                 this.DoPopup(position, elements, selectedIndex, func);
             }
@@ -422,7 +422,7 @@
                     }
                     else
                     {
-                        ASMainWindow[] windowArray = Resources.FindObjectsOfTypeAll(typeof(ASMainWindow)) as ASMainWindow[];
+                        ASMainWindow[] windowArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(ASMainWindow)) as ASMainWindow[];
                         ASMainWindow window = (windowArray.Length <= 0) ? null : windowArray[0];
                         if (window != null)
                         {
@@ -442,28 +442,28 @@
             int index = GetIndexById(this.remoteDeviceList, unityRemoteDevice, 0);
             GUIContent content = new GUIContent(this.remoteDevicePopupList[index].content);
             Rect position = EditorGUI.PrefixLabel(GUILayoutUtility.GetRect(content, EditorStyles.popup), 0, new GUIContent("Device"));
-            if (EditorGUI.ButtonMouseDown(position, content, FocusType.Passive, EditorStyles.popup))
+            if (EditorGUI.DropdownButton(position, content, FocusType.Passive, EditorStyles.popup))
             {
                 this.DoPopup(position, this.remoteDevicePopupList, index, new GenericMenu.MenuFunction2(this.SetUnityRemoteDevice));
             }
             int num2 = GetIndexById(this.remoteCompressionList, EditorSettings.unityRemoteCompression, 0);
             content = new GUIContent(this.remoteCompressionList[num2].content);
             position = EditorGUI.PrefixLabel(GUILayoutUtility.GetRect(content, EditorStyles.popup), 0, new GUIContent("Compression"));
-            if (EditorGUI.ButtonMouseDown(position, content, FocusType.Passive, EditorStyles.popup))
+            if (EditorGUI.DropdownButton(position, content, FocusType.Passive, EditorStyles.popup))
             {
                 this.DoPopup(position, this.remoteCompressionList, num2, new GenericMenu.MenuFunction2(this.SetUnityRemoteCompression));
             }
             int num3 = GetIndexById(this.remoteResolutionList, EditorSettings.unityRemoteResolution, 0);
             content = new GUIContent(this.remoteResolutionList[num3].content);
             position = EditorGUI.PrefixLabel(GUILayoutUtility.GetRect(content, EditorStyles.popup), 0, new GUIContent("Resolution"));
-            if (EditorGUI.ButtonMouseDown(position, content, FocusType.Passive, EditorStyles.popup))
+            if (EditorGUI.DropdownButton(position, content, FocusType.Passive, EditorStyles.popup))
             {
                 this.DoPopup(position, this.remoteResolutionList, num3, new GenericMenu.MenuFunction2(this.SetUnityRemoteResolution));
             }
             int num4 = GetIndexById(this.remoteJoystickSourceList, EditorSettings.unityRemoteJoystickSource, 0);
             content = new GUIContent(this.remoteJoystickSourceList[num4].content);
             position = EditorGUI.PrefixLabel(GUILayoutUtility.GetRect(content, EditorStyles.popup), 0, new GUIContent("Joystick Source"));
-            if (EditorGUI.ButtonMouseDown(position, content, FocusType.Passive, EditorStyles.popup))
+            if (EditorGUI.DropdownButton(position, content, FocusType.Passive, EditorStyles.popup))
             {
                 this.DoPopup(position, this.remoteJoystickSourceList, num4, new GenericMenu.MenuFunction2(this.SetUnityRemoteJoystickSource));
             }

@@ -7,12 +7,12 @@
     using UnityEngine.Scripting;
 
     /// <summary>
-    /// <para>MonoBehaviour is the base class every script derives from.</para>
+    /// <para>MonoBehaviour is the base class from which every Unity script derives.</para>
     /// </summary>
     [RequiredByNativeCode]
     public class MonoBehaviour : Behaviour
     {
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public extern MonoBehaviour();
         /// <summary>
         /// <para>Cancels all Invoke calls on this MonoBehaviour.</para>

@@ -3,7 +3,7 @@
     using System;
     using UnityEngine.Scripting;
 
-    [RequiredByNativeCode, Obsolete("PostProcessAttribute has been renamed to CallbackOrderAttribute.")]
+    [Obsolete("PostProcessAttribute has been renamed to CallbackOrderAttribute."), RequiredByNativeCode]
     public abstract class PostProcessAttribute : CallbackOrderAttribute
     {
         [Obsolete("PostProcessAttribute has been renamed. Use m_CallbackOrder of CallbackOrderAttribute.")]

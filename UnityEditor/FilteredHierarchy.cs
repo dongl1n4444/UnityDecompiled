@@ -11,7 +11,7 @@
     {
         [CompilerGenerated]
         private static Comparison<FilterResult> <>f__am$cache0;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <foldersFirst>k__BackingField;
         private HierarchyType m_HierarchyType;
         private FilterResult[] m_Results = new FilterResult[0];
@@ -44,7 +44,7 @@
                     break;
 
                 default:
-                    Debug.LogError("Unhandled enum!");
+                    UnityEngine.Debug.LogError("Unhandled enum!");
                     break;
             }
         }
@@ -138,7 +138,7 @@
                     return list;
                 }
             }
-            Debug.LogError("Not main rep " + mainAssetInstanceID);
+            UnityEngine.Debug.LogError("Not main rep " + mainAssetInstanceID);
             return new List<int>();
         }
 
@@ -328,7 +328,7 @@
                         }
                         else if (this.type == HierarchyType.GameObjects)
                         {
-                            Object obj2 = EditorUtility.InstanceIDToObject(this.instanceID);
+                            UnityEngine.Object obj2 = EditorUtility.InstanceIDToObject(this.instanceID);
                             this.m_Icon = AssetPreview.GetMiniThumbnail(obj2);
                         }
                     }

@@ -80,16 +80,8 @@ internal class PreviewGUI
             case EventType.Used:
                 return vector;
         }
-        bool flag = false;
-        bool flag2 = false;
-        if (rect3.width > rect.width)
-        {
-            flag2 = true;
-        }
-        if (rect3.height > rect.height)
-        {
-            flag = true;
-        }
+        bool flag = ((int) rect3.width) > ((int) rect.width);
+        bool flag2 = ((int) rect3.height) > ((int) rect.height);
         int controlID = GUIUtility.GetControlID(sliderHash, FocusType.Passive);
         if (flag2)
         {

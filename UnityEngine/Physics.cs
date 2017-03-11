@@ -888,7 +888,7 @@
         /// <para>Same as above using ray.origin and ray.direction instead of origin and direction.</para>
         /// </summary>
         /// <param name="ray">The starting point and direction of the ray.</param>
-        /// <param name="maxDistance">The max distance the rayhit is allowed to be from the start of the ray.</param>
+        /// <param name="maxDistance">The max distance the ray should check for collisions.</param>
         /// <param name="layerMask">A that is used to selectively ignore colliders when casting a ray.</param>
         /// <param name="queryTriggerInteraction">Specifies whether this query should hit Triggers.</param>
         /// <returns>
@@ -923,15 +923,15 @@
             Raycast(ray.origin, ray.direction, out hitInfo, maxDistance, layerMask, queryTriggerInteraction);
 
         /// <summary>
-        /// <para>Casts a ray against all colliders in the scene.</para>
+        /// <para>Casts a ray, from point origin, in direction direction, of length maxDistance, against all colliders in the scene.</para>
         /// </summary>
         /// <param name="origin">The starting point of the ray in world coordinates.</param>
         /// <param name="direction">The direction of the ray.</param>
-        /// <param name="maxDistance">The max distance the rayhit is allowed to be from the start of the ray.</param>
-        /// <param name="layerMask">A that is used to selectively ignore colliders when casting a ray.</param>
+        /// <param name="maxDistance">The max distance the ray should check for collisions.</param>
+        /// <param name="layerMask">A that is used to selectively ignore Colliders when casting a ray.</param>
         /// <param name="queryTriggerInteraction">Specifies whether this query should hit Triggers.</param>
         /// <returns>
-        /// <para>True when the ray intersects any collider, otherwise false.</para>
+        /// <para>True if the ray intersects with a Collider, otherwise false.</para>
         /// </returns>
         public static bool Raycast(Vector3 origin, Vector3 direction, [DefaultValue("Mathf.Infinity")] float maxDistance, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("QueryTriggerInteraction.UseGlobal")] QueryTriggerInteraction queryTriggerInteraction) => 
             Internal_RaycastTest(origin, direction, maxDistance, layerMask, queryTriggerInteraction);
@@ -1367,7 +1367,7 @@
         public static int defaultSolverIterations { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
-        /// <para>The defaultSolverVelocityIterations affects how how accurately Rigidbody joints and collision contacts are resolved. (default 1). Must be positive.</para>
+        /// <para>The defaultSolverVelocityIterations affects how accurately the Rigidbody joints and collision contacts are resolved. (default 1). Must be positive.</para>
         /// </summary>
         public static int defaultSolverVelocityIterations { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 

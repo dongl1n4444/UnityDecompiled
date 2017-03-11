@@ -45,6 +45,8 @@
                 SetNameInternal(this.handle, value);
             }
         }
+        internal string guid =>
+            GetGUIDInternal(this.handle);
         /// <summary>
         /// <para>Returns true if the scene is loaded.</para>
         /// </summary>
@@ -126,6 +128,8 @@
         private static extern string GetNameInternal(int sceneHandle);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void SetNameInternal(int sceneHandle, string name);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern string GetGUIDInternal(int sceneHandle);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool GetIsLoadedInternal(int sceneHandle);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]

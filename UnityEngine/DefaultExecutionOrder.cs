@@ -5,7 +5,7 @@
     using System.Runtime.CompilerServices;
     using UnityEngine.Scripting;
 
-    [AttributeUsage(AttributeTargets.Class), UsedByNativeCode]
+    [UsedByNativeCode, AttributeUsage(AttributeTargets.Class)]
     public class DefaultExecutionOrder : Attribute
     {
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]

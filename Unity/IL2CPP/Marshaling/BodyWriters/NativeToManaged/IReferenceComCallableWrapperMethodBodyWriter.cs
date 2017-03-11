@@ -121,9 +121,7 @@
             {
                 argumentArray.Add(metadataAccess.HiddenMethodInfo(methodToCall));
             }
-            string str = MethodBodyWriter.GetMethodCallExpression(base._managedMethod, methodToCall, methodToCall, new Unity.IL2CPP.ILPreProcessor.TypeResolver(), MethodCallType.Normal, metadataAccess, new VTableBuilder(), argumentArray, false, null);
-            writer.AddIncludeForMethodDeclarations(methodToCall.DeclaringType);
-            return str;
+            return MethodBodyWriter.GetMethodCallExpression(base._managedMethod, methodToCall, methodToCall, new Unity.IL2CPP.ILPreProcessor.TypeResolver(), MethodCallType.Normal, metadataAccess, new VTableBuilder(), argumentArray, false, null);
         }
 
         private string GetPointerToValueExpression(IRuntimeMetadataAccess metadataAccess)

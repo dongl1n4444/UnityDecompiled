@@ -6,19 +6,39 @@
     using UnityEditorInternal;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(SkinnedMeshRenderer))]
+    [CustomEditor(typeof(SkinnedMeshRenderer)), CanEditMultipleObjects]
     internal class SkinnedMeshRendererEditor : RendererEditorBase
     {
+        private const string kDisplayLightingKey = "SkinnedMeshRendererEditor.Lighting.ShowSettings";
         private SerializedProperty m_AABB;
         private SerializedProperty m_BlendShapeWeights;
         private BoxBoundsHandle m_BoundsHandle = new BoxBoundsHandle(s_HandleControlIDHint);
-        private SerializedProperty m_CastShadows;
         private SerializedProperty m_DirtyAABB;
         private string[] m_ExcludedProperties;
+        private LightingSettingsInspector m_Lighting;
         private SerializedProperty m_Materials;
-        private SerializedProperty m_MotionVectors;
-        private SerializedProperty m_ReceiveShadows;
         private static int s_HandleControlIDHint = typeof(SkinnedMeshRendererEditor).Name.GetHashCode();
+
+        private void InitializeLightingFields()
+        {
+            this.m_Lighting = new LightingSettingsInspector(base.serializedObject);
+            this.m_Lighting.showSettings = EditorPrefs.GetBool("SkinnedMeshRendererEditor.Lighting.ShowSettings", false);
+        }
+
+        private void LightingFieldsGUI()
+        {
+            bool showSettings = this.m_Lighting.showSettings;
+            if (this.m_Lighting.Begin())
+            {
+                base.RenderProbeFields();
+                this.m_Lighting.RenderMeshSettings(false);
+            }
+            this.m_Lighting.End();
+            if (this.m_Lighting.showSettings != showSettings)
+            {
+                EditorPrefs.SetBool("SkinnedMeshRendererEditor.Lighting.ShowSettings", this.m_Lighting.showSettings);
+            }
+        }
 
         public void OnBlendShapeUI()
         {
@@ -62,17 +82,15 @@
         public override void OnEnable()
         {
             base.OnEnable();
-            this.m_CastShadows = base.serializedObject.FindProperty("m_CastShadows");
-            this.m_ReceiveShadows = base.serializedObject.FindProperty("m_ReceiveShadows");
-            this.m_MotionVectors = base.serializedObject.FindProperty("m_MotionVectors");
             this.m_Materials = base.serializedObject.FindProperty("m_Materials");
             this.m_BlendShapeWeights = base.serializedObject.FindProperty("m_BlendShapeWeights");
             this.m_AABB = base.serializedObject.FindProperty("m_AABB");
             this.m_DirtyAABB = base.serializedObject.FindProperty("m_DirtyAABB");
             this.m_BoundsHandle.SetColor(Handles.s_BoundingBoxHandleColor);
             base.InitializeProbeFields();
+            this.InitializeLightingFields();
             List<string> list = new List<string>();
-            string[] collection = new string[] { "m_CastShadows", "m_ReceiveShadows", "m_MotionVectors", "m_Materials", "m_BlendShapeWeights", "m_AABB" };
+            string[] collection = new string[] { "m_CastShadows", "m_ReceiveShadows", "m_MotionVectors", "m_Materials", "m_BlendShapeWeights", "m_AABB", "m_LightmapParameters" };
             list.AddRange(collection);
             list.AddRange(RendererEditorBase.Probes.GetFieldsStringArray());
             this.m_ExcludedProperties = list.ToArray();
@@ -82,19 +100,16 @@
         {
             base.serializedObject.Update();
             this.OnBlendShapeUI();
-            EditorGUILayout.PropertyField(this.m_CastShadows, new GUILayoutOption[0]);
-            EditorGUILayout.PropertyField(this.m_ReceiveShadows, new GUILayoutOption[0]);
-            EditorGUILayout.PropertyField(this.m_MotionVectors, new GUILayoutOption[0]);
-            EditorGUILayout.PropertyField(this.m_Materials, true, new GUILayoutOption[0]);
-            base.RenderProbeFields();
             Editor.DrawPropertiesExcluding(base.serializedObject, this.m_ExcludedProperties);
-            EditMode.DoEditModeInspectorModeButton(EditMode.SceneViewEditMode.Collider, "Edit Bounds", PrimitiveBoundsHandle.editModeButton, (base.target as SkinnedMeshRenderer).bounds, this);
+            UnityEditorInternal.EditMode.DoEditModeInspectorModeButton(UnityEditorInternal.EditMode.SceneViewEditMode.Collider, "Edit Bounds", PrimitiveBoundsHandle.editModeButton, (base.target as SkinnedMeshRenderer).bounds, this);
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(this.m_AABB, new GUIContent("Bounds"), new GUILayoutOption[0]);
             if (EditorGUI.EndChangeCheck())
             {
                 this.m_DirtyAABB.boolValue = false;
             }
+            this.LightingFieldsGUI();
+            EditorGUILayout.PropertyField(this.m_Materials, true, new GUILayoutOption[0]);
             base.serializedObject.ApplyModifiedProperties();
         }
 
@@ -110,12 +125,12 @@
             }
             else
             {
-                using (new Handles.MatrixScope(target.actualRootBone.localToWorldMatrix))
+                using (new Handles.DrawingScope(target.actualRootBone.localToWorldMatrix))
                 {
                     Bounds localBounds = target.localBounds;
                     this.m_BoundsHandle.center = localBounds.center;
                     this.m_BoundsHandle.size = localBounds.size;
-                    this.m_BoundsHandle.handleColor = ((EditMode.editMode != EditMode.SceneViewEditMode.Collider) || !EditMode.IsOwner(this)) ? Color.clear : this.m_BoundsHandle.wireframeColor;
+                    this.m_BoundsHandle.handleColor = ((UnityEditorInternal.EditMode.editMode != UnityEditorInternal.EditMode.SceneViewEditMode.Collider) || !UnityEditorInternal.EditMode.IsOwner(this)) ? Color.clear : this.m_BoundsHandle.wireframeColor;
                     EditorGUI.BeginChangeCheck();
                     this.m_BoundsHandle.DrawHandle();
                     if (EditorGUI.EndChangeCheck())

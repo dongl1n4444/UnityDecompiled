@@ -1,6 +1,7 @@
 ﻿namespace Unity.IL2CPP
 {
     using Mono.Cecil;
+    using Mono.Cecil.Cil;
     using mscorlib;
     using System;
     using System.Collections;
@@ -10,13 +11,13 @@
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+    using System.Text;
     using System.Threading;
     using Unity.IL2CPP.Common;
     using Unity.IL2CPP.ILPreProcessor;
     using Unity.IL2CPP.IoC;
     using Unity.IL2CPP.IoCServices;
     using Unity.IL2CPP.Metadata;
-    using Unity.IL2CPP.WindowsRuntime;
 
     public static class Extensions
     {
@@ -25,9 +26,11 @@
         [CompilerGenerated]
         private static Func<MethodDefinition, bool> <>f__am$cache1;
         [CompilerGenerated]
-        private static Func<CustomAttribute, bool> <>f__am$cache10;
+        private static Func<AssemblyDefinition, string> <>f__am$cache10;
         [CompilerGenerated]
         private static Func<CustomAttribute, bool> <>f__am$cache11;
+        [CompilerGenerated]
+        private static Func<CustomAttribute, bool> <>f__am$cache12;
         [CompilerGenerated]
         private static Func<FieldDefinition, bool> <>f__am$cache2;
         [CompilerGenerated]
@@ -39,31 +42,29 @@
         [CompilerGenerated]
         private static Func<FieldDefinition, bool> <>f__am$cache6;
         [CompilerGenerated]
-        private static Func<CustomAttribute, bool> <>f__am$cache7;
+        private static Func<TypeReference, bool> <>f__am$cache7;
         [CompilerGenerated]
-        private static Func<CustomAttribute, TypeReference> <>f__am$cache8;
+        private static Func<CustomAttribute, bool> <>f__am$cache8;
         [CompilerGenerated]
         private static Func<CustomAttribute, TypeReference> <>f__am$cache9;
         [CompilerGenerated]
         private static Func<CustomAttribute, TypeReference> <>f__am$cacheA;
         [CompilerGenerated]
-        private static Func<TypeReference, IEnumerable<MethodReference>> <>f__am$cacheB;
+        private static Func<CustomAttribute, TypeReference> <>f__am$cacheB;
         [CompilerGenerated]
-        private static Func<CustomAttribute, bool> <>f__am$cacheC;
+        private static Func<TypeReference, IEnumerable<MethodReference>> <>f__am$cacheC;
         [CompilerGenerated]
         private static Func<CustomAttribute, bool> <>f__am$cacheD;
         [CompilerGenerated]
-        private static Func<FieldDefinition, bool> <>f__am$cacheE;
+        private static Func<CustomAttribute, bool> <>f__am$cacheE;
         [CompilerGenerated]
-        private static Func<AssemblyDefinition, string> <>f__am$cacheF;
+        private static Func<FieldDefinition, bool> <>f__am$cacheF;
         [CompilerGenerated]
         private static Func<MethodDefinition, bool> <>f__mg$cache0;
         [CompilerGenerated]
         private static Func<TypeReference, bool> <>f__mg$cache1;
         [CompilerGenerated]
         private static Func<MethodDefinition, bool> <>f__mg$cache2;
-        [CompilerGenerated]
-        private static Func<TypeReference, IEnumerable<TypeReference>> <>f__mg$cache3;
         [CompilerGenerated]
         private static Dictionary<string, int> <>f__switch$map1;
         [Inject]
@@ -78,31 +79,35 @@
         public static IWindowsRuntimeProjections WindowsRuntimeProjections;
 
         [CompilerGenerated]
-        private static T <Chunk`1>m__14<T>(ChunkItem<T> x) => 
+        private static T <Chunk`1>m__15<T>(ChunkItem<T> x) => 
             x.Value;
 
         [CompilerGenerated]
-        private static ChunkItem<T> <Chunk`1>m__C<T>(T value, int index) => 
+        private static ChunkItem<T> <Chunk`1>m__D<T>(T value, int index) => 
             new ChunkItem<T> { 
                 Index = index,
                 Value = value
             };
 
         [CompilerGenerated]
-        private static List<T> <Chunk`1>m__D<T>(IGrouping<int, ChunkItem<T>> g) => 
+        private static List<T> <Chunk`1>m__E<T>(IGrouping<int, ChunkItem<T>> g) => 
             (from x in g select x.Value).ToList<T>();
 
-        private static void AddInterfacesRecursive(TypeReference type, HashSet<TypeReference> interfaces)
+        private static void AddInterfacesRecursive(TypeDefinition concreteType, TypeReference type, HashSet<TypeReference> interfaces)
         {
             if (!type.IsArray)
             {
                 Unity.IL2CPP.ILPreProcessor.TypeResolver resolver = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(type);
                 foreach (InterfaceImplementation implementation in type.Resolve().Interfaces)
                 {
-                    TypeReference item = resolver.Resolve(implementation.InterfaceType);
-                    if (interfaces.Add(item))
+                    TypeReference reference = resolver.Resolve(implementation.InterfaceType);
+                    if (!concreteType.IsWindowsRuntime)
                     {
-                        AddInterfacesRecursive(item, interfaces);
+                        reference = WindowsRuntimeProjections.ProjectToCLR(reference);
+                    }
+                    if (interfaces.Add(reference))
+                    {
+                        AddInterfacesRecursive(concreteType, reference, interfaces);
                     }
                 }
             }
@@ -144,10 +149,111 @@
 
         public static List<List<T>> Chunk<T>(this IEnumerable<T> foo, int size)
         {
-            <Chunk>c__AnonStorey8<T> storey = new <Chunk>c__AnonStorey8<T> {
+            <Chunk>c__AnonStorey4<T> storey = new <Chunk>c__AnonStorey4<T> {
                 size = size
             };
-            return foo.Select<T, ChunkItem<T>>(new Func<T, int, ChunkItem<T>>(Extensions.<Chunk`1>m__C<T>)).GroupBy<ChunkItem<T>, int>(new Func<ChunkItem<T>, int>(storey.<>m__0)).Select<IGrouping<int, ChunkItem<T>>, List<T>>(new Func<IGrouping<int, ChunkItem<T>>, List<T>>(Extensions.<Chunk`1>m__D<T>)).ToList<List<T>>();
+            return foo.Select<T, ChunkItem<T>>(new Func<T, int, ChunkItem<T>>(Extensions.<Chunk`1>m__D<T>)).GroupBy<ChunkItem<T>, int>(new Func<ChunkItem<T>, int>(storey.<>m__0)).Select<IGrouping<int, ChunkItem<T>>, List<T>>(new Func<IGrouping<int, ChunkItem<T>>, List<T>>(Extensions.<Chunk`1>m__E<T>)).ToList<List<T>>();
+        }
+
+        private static void CollectAllValidComOrWindowsRuntimeTypesAssignableFrom(TypeReference type, HashSet<TypeReference> collectedTypes, int genericDepth)
+        {
+            if (collectedTypes.Add(type) && !type.IsSystemObject())
+            {
+                if (type.IsArray)
+                {
+                    ArrayType type2 = (ArrayType) type;
+                    if (type2.IsVector)
+                    {
+                        TypeDefinition[] definitionArray = new TypeDefinition[] { TypeProvider.Corlib.MainModule.GetType("System.Collections.Generic.IList`1"), TypeProvider.Corlib.MainModule.GetType("System.Collections.Generic.ICollection`1"), TypeProvider.Corlib.MainModule.GetType("System.Collections.Generic.IEnumerable`1"), TypeProvider.Corlib.MainModule.GetType("System.Collections.Generic.IReadOnlyList`1"), TypeProvider.Corlib.MainModule.GetType("System.Collections.Generic.IReadOnlyCollection`1") };
+                        foreach (TypeDefinition definition in definitionArray)
+                        {
+                            if (definition != null)
+                            {
+                                GenericInstanceType type3 = new GenericInstanceType(definition) {
+                                    GenericArguments = { type2.ElementType }
+                                };
+                                CollectAllValidComOrWindowsRuntimeTypesAssignableFrom(type3, collectedTypes, genericDepth);
+                            }
+                        }
+                    }
+                    CollectAllValidComOrWindowsRuntimeTypesAssignableFrom(TypeProvider.SystemArray, collectedTypes, genericDepth);
+                }
+                else
+                {
+                    if (!type.IsValueType())
+                    {
+                        if (type.IsGenericInstance)
+                        {
+                            CollectComOrWindowsRuntimeTypesCovariantlyAssignableFrom((GenericInstanceType) type, collectedTypes, genericDepth);
+                        }
+                        TypeReference baseType = type.GetBaseType();
+                        if (baseType != null)
+                        {
+                            CollectAllValidComOrWindowsRuntimeTypesAssignableFrom(baseType, collectedTypes, !baseType.IsGenericInstance ? genericDepth : (genericDepth + 1));
+                        }
+                    }
+                    foreach (TypeReference reference2 in type.GetInterfaces())
+                    {
+                        CollectAllValidComOrWindowsRuntimeTypesAssignableFrom(reference2, collectedTypes, genericDepth);
+                    }
+                }
+            }
+        }
+
+        private static void CollectComOrWindowsRuntimeTypesCovariantlyAssignableFrom(GenericInstanceType type, HashSet<TypeReference> collectedTypes, int genericDepth)
+        {
+            TypeDefinition definition = type.Resolve();
+            if (definition.IsWindowsRuntime || (WindowsRuntimeProjections.ProjectToWindowsRuntime(definition) != definition))
+            {
+                if (genericDepth > 1)
+                {
+                    collectedTypes.Add(type);
+                }
+                else
+                {
+                    TypeReference[][] types = new TypeReference[type.GenericArguments.Count][];
+                    for (int i = 0; i < types.Length; i++)
+                    {
+                        TypeReference reference = type.GenericArguments[i];
+                        GenericParameter parameter = definition.GenericParameters[i];
+                        GenericParameterAttributes attributes = (GenericParameterAttributes) ((ushort) (parameter.Attributes & (GenericParameterAttributes.Contravariant | GenericParameterAttributes.Covariant)));
+                        switch (attributes)
+                        {
+                            case GenericParameterAttributes.NonVariant:
+                                types[i] = !reference.IsValidForWindowsRuntimeType() ? new TypeReference[0] : new TypeReference[] { reference };
+                                break;
+
+                            case GenericParameterAttributes.Covariant:
+                                if (<>f__am$cache7 == null)
+                                {
+                                    <>f__am$cache7 = t => t.IsValidForWindowsRuntimeType();
+                                }
+                                types[i] = GetAllValidComOrWindowsRuntimeTypesAssignableFrom(reference, genericDepth + 1).Where<TypeReference>(<>f__am$cache7).ToArray<TypeReference>();
+                                break;
+
+                            case GenericParameterAttributes.Contravariant:
+                                throw new NotSupportedException($"'{type.FullName}' type contains unsupported contravariant generic parameter '{parameter.Name}'.");
+
+                            default:
+                                throw new Exception($"'{parameter.Name}' generic parameter in '{type.FullName}' type contains invalid variance value '{attributes}'.");
+                        }
+                        if (types[i].Length == 0)
+                        {
+                            return;
+                        }
+                    }
+                    IEnumerable<TypeReference[]> typeCombinations = GetTypeCombinations(types, 0);
+                    foreach (TypeReference[] referenceArray2 in typeCombinations)
+                    {
+                        GenericInstanceType item = new GenericInstanceType(definition);
+                        foreach (TypeReference reference2 in referenceArray2)
+                        {
+                            item.GenericArguments.Add(reference2);
+                        }
+                        collectedTypes.Add(item);
+                    }
+                }
+            }
         }
 
         public static bool ContainsGenericParameters(this MethodReference method)
@@ -277,9 +383,9 @@
             {
                 return Enumerable.Empty<TypeReference>();
             }
-            if (<>f__am$cache9 == null)
+            if (<>f__am$cacheA == null)
             {
-                <>f__am$cache9 = delegate (CustomAttribute attribute) {
+                <>f__am$cacheA = delegate (CustomAttribute attribute) {
                     CustomAttributeArgument argument = attribute.ConstructorArguments[0];
                     if (argument.Type.IsSystemType())
                     {
@@ -288,15 +394,8 @@
                     return TypeProvider.IActivationFactoryTypeReference;
                 };
             }
-            return definition.GetTypesFromSpecificAttribute("Windows.Foundation.Metadata.ActivatableAttribute", <>f__am$cache9);
+            return definition.GetTypesFromSpecificAttribute("Windows.Foundation.Metadata.ActivatableAttribute", <>f__am$cacheA);
         }
-
-        [DebuggerHidden]
-        public static IEnumerable<GenericInstanceType> GetAllAssignableWindowsRuntimeTypes(this GenericInstanceType clrType) => 
-            new <GetAllAssignableWindowsRuntimeTypes>c__Iterator2 { 
-                clrType = clrType,
-                $PC = -2
-            };
 
         public static IEnumerable<TypeReference> GetAllFactoryTypes(this TypeReference type)
         {
@@ -306,6 +405,13 @@
                 return Enumerable.Empty<TypeReference>();
             }
             return definition.GetActivationFactoryTypes().Concat<TypeReference>(definition.GetComposableFactoryTypes()).Concat<TypeReference>(definition.GetStaticFactoryTypes()).Distinct<TypeReference>(new Unity.IL2CPP.Common.TypeReferenceEqualityComparer());
+        }
+
+        private static IEnumerable<TypeReference> GetAllValidComOrWindowsRuntimeTypesAssignableFrom(TypeReference type, int genericDepth)
+        {
+            HashSet<TypeReference> collectedTypes = new HashSet<TypeReference>(new Unity.IL2CPP.Common.TypeReferenceEqualityComparer());
+            CollectAllValidComOrWindowsRuntimeTypesAssignableFrom(type, collectedTypes, genericDepth);
+            return collectedTypes;
         }
 
         public static TypeReference GetBaseType(this TypeReference typeReference)
@@ -346,23 +452,23 @@
             {
                 return Enumerable.Empty<TypeReference>();
             }
-            if (<>f__am$cacheA == null)
+            if (<>f__am$cacheB == null)
             {
-                <>f__am$cacheA = attribute => (TypeReference) attribute.ConstructorArguments[0].Value;
+                <>f__am$cacheB = attribute => (TypeReference) attribute.ConstructorArguments[0].Value;
             }
-            return definition.GetTypesFromSpecificAttribute("Windows.Foundation.Metadata.ComposableAttribute", <>f__am$cacheA);
+            return definition.GetTypesFromSpecificAttribute("Windows.Foundation.Metadata.ComposableAttribute", <>f__am$cacheB);
         }
 
         public static IEnumerable<CustomAttribute> GetConstructibleCustomAttributes(this ICustomAttributeProvider customAttributeProvider)
         {
-            if (<>f__am$cache11 == null)
+            if (<>f__am$cache12 == null)
             {
-                <>f__am$cache11 = delegate (CustomAttribute ca) {
+                <>f__am$cache12 = delegate (CustomAttribute ca) {
                     TypeDefinition definition = ca.AttributeType.Resolve();
                     return (definition != null) && !definition.IsWindowsRuntime;
                 };
             }
-            return customAttributeProvider.CustomAttributes.Where<CustomAttribute>(<>f__am$cache11);
+            return customAttributeProvider.CustomAttributes.Where<CustomAttribute>(<>f__am$cache12);
         }
 
         public static Guid GetGuid(this TypeReference type) => 
@@ -371,8 +477,26 @@
         public static ReadOnlyCollection<TypeReference> GetInterfaces(this TypeReference type)
         {
             HashSet<TypeReference> interfaces = new HashSet<TypeReference>(new Unity.IL2CPP.Common.TypeReferenceEqualityComparer());
-            AddInterfacesRecursive(type, interfaces);
+            AddInterfacesRecursive(type.Resolve(), type, interfaces);
             return interfaces.ToList<TypeReference>().AsReadOnly();
+        }
+
+        public static IEnumerable<TypeReference> GetInterfacesImplementedByComCallableWrapper(this TypeReference type)
+        {
+            if (type.IsNullable())
+            {
+                return Enumerable.Empty<TypeReference>();
+            }
+            HashSet<TypeReference> set = new HashSet<TypeReference>(new Unity.IL2CPP.Common.TypeReferenceEqualityComparer());
+            foreach (TypeReference reference in GetAllValidComOrWindowsRuntimeTypesAssignableFrom(type, 0))
+            {
+                TypeReference reference2 = WindowsRuntimeProjections.ProjectToWindowsRuntime(reference);
+                if (reference2.IsComOrWindowsRuntimeInterface())
+                {
+                    set.Add(reference2);
+                }
+            }
+            return set;
         }
 
         public static ReadOnlyCollection<MethodReference> GetMethods(this TypeReference type)
@@ -395,6 +519,16 @@
             return list.AsReadOnly();
         }
 
+        public static string GetName(this VariableDefinition variable, MethodDefinition parentMethod)
+        {
+            string str;
+            if (parentMethod.DebugInformation.Scope.TryGetName(variable, out str))
+            {
+                return str;
+            }
+            return variable.Index.ToString();
+        }
+
         public static TypeReference GetNonPinnedAndNonByReferenceType(this TypeReference type)
         {
             type = Naming.RemoveModifiers(type);
@@ -414,7 +548,7 @@
 
         public static MethodReference GetOverridenInterfaceMethod(this MethodReference overridingMethod, IEnumerable<TypeReference> candidateInterfaces)
         {
-            <GetOverridenInterfaceMethod>c__AnonStorey7 storey = new <GetOverridenInterfaceMethod>c__AnonStorey7 {
+            <GetOverridenInterfaceMethod>c__AnonStorey3 storey = new <GetOverridenInterfaceMethod>c__AnonStorey3 {
                 overridingMethod = overridingMethod
             };
             MethodDefinition definition = storey.overridingMethod.Resolve();
@@ -426,11 +560,20 @@
                 }
                 return Unity.IL2CPP.ILPreProcessor.TypeResolver.For(storey.overridingMethod.DeclaringType, storey.overridingMethod).Resolve(definition.Overrides[0]);
             }
-            if (<>f__am$cacheB == null)
+            if (<>f__am$cacheC == null)
             {
-                <>f__am$cacheB = iface => iface.GetMethods();
+                <>f__am$cacheC = iface => iface.GetMethods();
             }
-            return candidateInterfaces.SelectMany<TypeReference, MethodReference>(<>f__am$cacheB).FirstOrDefault<MethodReference>(new Func<MethodReference, bool>(storey.<>m__0));
+            return candidateInterfaces.SelectMany<TypeReference, MethodReference>(<>f__am$cacheC).FirstOrDefault<MethodReference>(new Func<MethodReference, bool>(storey.<>m__0));
+        }
+
+        public static SequencePoint GetSequencePoint(this Instruction ins, MethodDefinition parentMethod)
+        {
+            if (!parentMethod.DebugInformation.HasSequencePoints)
+            {
+                return null;
+            }
+            return parentMethod.DebugInformation.GetSequencePoint(ins);
         }
 
         public static IEnumerable<TypeReference> GetStaticFactoryTypes(this TypeReference type)
@@ -440,16 +583,16 @@
             {
                 return Enumerable.Empty<TypeReference>();
             }
-            if (<>f__am$cache8 == null)
+            if (<>f__am$cache9 == null)
             {
-                <>f__am$cache8 = attribute => (TypeReference) attribute.ConstructorArguments[0].Value;
+                <>f__am$cache9 = attribute => (TypeReference) attribute.ConstructorArguments[0].Value;
             }
-            return definition.GetTypesFromSpecificAttribute("Windows.Foundation.Metadata.StaticAttribute", <>f__am$cache8);
+            return definition.GetTypesFromSpecificAttribute("Windows.Foundation.Metadata.StaticAttribute", <>f__am$cache9);
         }
 
         [DebuggerHidden]
         private static IEnumerable<TypeReference[]> GetTypeCombinations(TypeReference[][] types, int level = 0) => 
-            new <GetTypeCombinations>c__Iterator4 { 
+            new <GetTypeCombinations>c__Iterator1 { 
                 types = types,
                 level = level,
                 $PC = -2
@@ -465,7 +608,7 @@
 
         private static IEnumerable<TypeReference> GetTypesFromSpecificAttribute(this TypeDefinition type, string attributeName, Func<CustomAttribute, TypeReference> customAttributeSelector)
         {
-            <GetTypesFromSpecificAttribute>c__AnonStorey6 storey = new <GetTypesFromSpecificAttribute>c__AnonStorey6 {
+            <GetTypesFromSpecificAttribute>c__AnonStorey2 storey = new <GetTypesFromSpecificAttribute>c__AnonStorey2 {
                 attributeName = attributeName
             };
             return type.CustomAttributes.Where<CustomAttribute>(new Func<CustomAttribute, bool>(storey.<>m__0)).Select<CustomAttribute, TypeReference>(customAttributeSelector);
@@ -497,16 +640,6 @@
             }
             return type.GetMethods(<>f__am$cache0);
         }
-
-        public static IEnumerable<TypeReference> GetWindowsRuntimeCovariantTypes(this TypeReference type) => 
-            GetWindowsRuntimeCovariantTypesWithDuplicates(type).Distinct<TypeReference>(new Unity.IL2CPP.Common.TypeReferenceEqualityComparer());
-
-        [DebuggerHidden]
-        private static IEnumerable<TypeReference> GetWindowsRuntimeCovariantTypesWithDuplicates(TypeReference type) => 
-            new <GetWindowsRuntimeCovariantTypesWithDuplicates>c__Iterator3 { 
-                type = type,
-                $PC = -2
-            };
 
         public static string GetWindowsRuntimePrimitiveName(this TypeReference type)
         {
@@ -561,6 +694,38 @@
             return null;
         }
 
+        public static string GetWindowsRuntimeTypeName(this TypeReference type)
+        {
+            string windowsRuntimePrimitiveName = type.GetWindowsRuntimePrimitiveName();
+            if (windowsRuntimePrimitiveName != null)
+            {
+                return windowsRuntimePrimitiveName;
+            }
+            TypeReference reference = WindowsRuntimeProjections.ProjectToWindowsRuntime(type);
+            GenericInstanceType type2 = reference as GenericInstanceType;
+            if (type2 != null)
+            {
+                StringBuilder builder = new StringBuilder();
+                builder.Append(type2.Namespace);
+                builder.Append('.');
+                builder.Append(type2.Name);
+                builder.Append('<');
+                bool flag = false;
+                foreach (TypeReference reference2 in type2.GenericArguments)
+                {
+                    if (flag)
+                    {
+                        builder.Append(',');
+                    }
+                    flag = true;
+                    builder.Append(reference2.GetWindowsRuntimeTypeName());
+                }
+                builder.Append('>');
+                return builder.ToString();
+            }
+            return reference.FullName;
+        }
+
         public static bool HasActivationFactories(this TypeReference type)
         {
             TypeDefinition definition = type.Resolve();
@@ -568,11 +733,11 @@
             {
                 return false;
             }
-            if (<>f__am$cache7 == null)
+            if (<>f__am$cache8 == null)
             {
-                <>f__am$cache7 = ca => ((ca.AttributeType.FullName == "Windows.Foundation.Metadata.ActivatableAttribute") || (ca.AttributeType.FullName == "Windows.Foundation.Metadata.StaticAttribute")) || (ca.AttributeType.FullName == "Windows.Foundation.Metadata.ComposableAttribute");
+                <>f__am$cache8 = ca => ((ca.AttributeType.FullName == "Windows.Foundation.Metadata.ActivatableAttribute") || (ca.AttributeType.FullName == "Windows.Foundation.Metadata.StaticAttribute")) || (ca.AttributeType.FullName == "Windows.Foundation.Metadata.ComposableAttribute");
             }
-            return definition.CustomAttributes.Any<CustomAttribute>(<>f__am$cache7);
+            return definition.CustomAttributes.Any<CustomAttribute>(<>f__am$cache8);
         }
 
         public static bool HasCLSID(this TypeDefinition type)
@@ -580,7 +745,7 @@
             if (!type.IsInterface)
             {
             }
-            return ((<>f__am$cache10 == null) && type.CustomAttributes.Any<CustomAttribute>(<>f__am$cache10));
+            return ((<>f__am$cache11 == null) && type.CustomAttributes.Any<CustomAttribute>(<>f__am$cache11));
         }
 
         public static bool HasCLSID(this TypeReference type)
@@ -652,13 +817,6 @@
             }
             return list;
         }
-
-        [DebuggerHidden]
-        public static IEnumerable<TypeReference> ImplementedWindowsRuntimeProjectedInterfaces(this TypeReference type) => 
-            new <ImplementedWindowsRuntimeProjectedInterfaces>c__Iterator1 { 
-                type = type,
-                $PC = -2
-            };
 
         public static bool IsAttribute(this TypeReference type)
         {
@@ -769,8 +927,11 @@
         public static bool IsDefinedInUnityEngine(this MemberReference memberReference) => 
             memberReference.Module.Assembly.Name.Name.Contains("UnityEngine");
 
-        public static bool IsDelegate(this TypeDefinition type) => 
-            ((type.BaseType != null) && (type.BaseType.FullName == "System.MulticastDelegate"));
+        public static bool IsDelegate(this TypeReference typeReference)
+        {
+            TypeDefinition definition = typeReference.Resolve();
+            return (((definition != null) && (definition.BaseType != null)) && (definition.BaseType.FullName == "System.MulticastDelegate"));
+        }
 
         public static bool IsEnum(this TypeReference type)
         {
@@ -853,11 +1014,11 @@
             {
                 return true;
             }
-            if (<>f__am$cacheC == null)
+            if (<>f__am$cacheD == null)
             {
-                <>f__am$cacheC = ca => ca.AttributeType.Name != "ThreadStaticAttribute";
+                <>f__am$cacheD = ca => ca.AttributeType.Name != "ThreadStaticAttribute";
             }
-            return definition.CustomAttributes.All<CustomAttribute>(<>f__am$cacheC);
+            return definition.CustomAttributes.All<CustomAttribute>(<>f__am$cacheD);
         }
 
         public static bool IsNullable(this TypeReference type)
@@ -979,6 +1140,12 @@
         public static bool IsSpecialSystemBaseType(this TypeReference typeReference) => 
             (((typeReference.FullName == "System.Object") || (typeReference.FullName == "System.ValueType")) || (typeReference.FullName == "System.Enum"));
 
+        public static bool IsStatic(this MethodReference methodReference)
+        {
+            MethodDefinition definition = methodReference.Resolve();
+            return definition?.IsStatic;
+        }
+
         public static bool IsStaticConstructor(this MethodReference methodReference)
         {
             MethodDefinition definition = methodReference.Resolve();
@@ -1007,7 +1174,7 @@
             {
                 ReflectorVariable0 = false;
             }
-            return (ReflectorVariable0 ? ((<>f__am$cacheE != null) || definition.Fields.All<FieldDefinition>(<>f__am$cacheE)) : false);
+            return (ReflectorVariable0 ? ((<>f__am$cacheF != null) || definition.Fields.All<FieldDefinition>(<>f__am$cacheF)) : false);
         }
 
         public static bool IsSystemArray(this TypeReference typeReference) => 
@@ -1025,7 +1192,7 @@
             if (definition.IsStatic && definition.HasCustomAttributes)
             {
             }
-            return ((<>f__am$cacheD == null) && definition.CustomAttributes.Any<CustomAttribute>(<>f__am$cacheD));
+            return ((<>f__am$cacheE == null) && definition.CustomAttributes.Any<CustomAttribute>(<>f__am$cacheE));
         }
 
         public static bool IsUnsignedIntegralType(this TypeReference type) => 
@@ -1147,28 +1314,23 @@
         {
             if (type.IsArray)
             {
-                return (((((ArrayType) type).Rank == 1) && ArrayCCWWriter.IsArrayCCWSupported()) && type.GetWindowsRuntimeCovariantTypes().Any<TypeReference>());
+                return type.GetInterfacesImplementedByComCallableWrapper().Any<TypeReference>();
             }
             TypeDefinition definition = type.Resolve();
             if (definition.CanBoxToWindowsRuntime())
             {
                 return true;
             }
-            if (!definition.IsInterface && !definition.IsComOrWindowsRuntimeType())
+            if ((!definition.IsInterface && !definition.IsComOrWindowsRuntimeType()) && !definition.IsAbstract)
             {
-                if (type.ImplementedComOrWindowsRuntimeInterfaces().Any<TypeReference>())
-                {
-                    return true;
-                }
-                if (type.ImplementedWindowsRuntimeProjectedInterfaces().Any<TypeReference>())
+                if (type.GetInterfacesImplementedByComCallableWrapper().Any<TypeReference>())
                 {
                     return true;
                 }
                 while (definition.BaseType != null)
                 {
-                    type = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(type).Resolve(definition.BaseType);
-                    definition = type.Resolve();
-                    if (type.ImplementedComOrWindowsRuntimeInterfaces().Any<TypeReference>() || definition.IsComOrWindowsRuntimeType())
+                    definition = definition.BaseType.Resolve();
+                    if (definition.IsComOrWindowsRuntimeType())
                     {
                         return true;
                     }
@@ -1179,11 +1341,11 @@
 
         public static bool References(this AssemblyDefinition assemblyDoingTheReferencing, AssemblyDefinition assemblyBeingReference)
         {
-            if (<>f__am$cacheF == null)
+            if (<>f__am$cache10 == null)
             {
-                <>f__am$cacheF = eachAssemblyReference => eachAssemblyReference.Name.Name;
+                <>f__am$cache10 = eachAssemblyReference => eachAssemblyReference.Name.Name;
             }
-            return AssemblyDependencies.GetReferencedAssembliesFor(assemblyDoingTheReferencing).Select<AssemblyDefinition, string>(<>f__am$cacheF).Contains<string>(assemblyBeingReference.Name.Name);
+            return AssemblyDependencies.GetReferencedAssembliesFor(assemblyDoingTheReferencing).Select<AssemblyDefinition, string>(<>f__am$cache10).Contains<string>(assemblyBeingReference.Name.Name);
         }
 
         public static bool ShouldProcessAsInternalCall(this MethodReference methodReference)
@@ -1205,7 +1367,7 @@
         }
 
         [CompilerGenerated]
-        private sealed class <Chunk>c__AnonStorey8<T>
+        private sealed class <Chunk>c__AnonStorey4<T>
         {
             internal int size;
 
@@ -1214,164 +1376,7 @@
         }
 
         [CompilerGenerated]
-        private sealed class <GetAllAssignableWindowsRuntimeTypes>c__Iterator2 : IEnumerable, IEnumerable<GenericInstanceType>, IEnumerator, IDisposable, IEnumerator<GenericInstanceType>
-        {
-            internal GenericInstanceType $current;
-            internal bool $disposing;
-            internal IEnumerator<TypeReference[]> $locvar0;
-            internal TypeReference[] $locvar1;
-            internal int $locvar2;
-            internal int $PC;
-            internal TypeDefinition <clrTypeDefinition>__1;
-            internal TypeReference[] <combination>__2;
-            internal IEnumerable<TypeReference[]> <genericArgumentTypeCombinations>__1;
-            internal TypeReference[][] <genericArgumentTypes>__1;
-            internal GenericInstanceType <result>__3;
-            internal TypeDefinition <windowsRuntimeTypeDefinition>__1;
-            internal GenericInstanceType clrType;
-
-            [DebuggerHidden]
-            public void Dispose()
-            {
-                uint num = (uint) this.$PC;
-                this.$disposing = true;
-                this.$PC = -1;
-                switch (num)
-                {
-                    case 1:
-                        try
-                        {
-                        }
-                        finally
-                        {
-                            if (this.$locvar0 != null)
-                            {
-                                this.$locvar0.Dispose();
-                            }
-                        }
-                        break;
-                }
-            }
-
-            public bool MoveNext()
-            {
-                uint num = (uint) this.$PC;
-                this.$PC = -1;
-                bool flag = false;
-                switch (num)
-                {
-                    case 0:
-                        this.<clrTypeDefinition>__1 = this.clrType.Resolve();
-                        this.<windowsRuntimeTypeDefinition>__1 = Extensions.WindowsRuntimeProjections.ProjectToWindowsRuntime(this.<clrTypeDefinition>__1);
-                        if (this.<windowsRuntimeTypeDefinition>__1 != this.<clrTypeDefinition>__1)
-                        {
-                            this.<genericArgumentTypes>__1 = new TypeReference[this.clrType.GenericArguments.Count][];
-                            for (int i = 0; i < this.<genericArgumentTypes>__1.Length; i++)
-                            {
-                                TypeReference type = this.clrType.GenericArguments[i];
-                                GenericParameter parameter = this.<clrTypeDefinition>__1.GenericParameters[i];
-                                GenericParameterAttributes attributes = (GenericParameterAttributes) ((ushort) (parameter.Attributes & (GenericParameterAttributes.Contravariant | GenericParameterAttributes.Covariant)));
-                                switch (attributes)
-                                {
-                                    case GenericParameterAttributes.NonVariant:
-                                        this.<genericArgumentTypes>__1[i] = !type.IsValidForWindowsRuntimeType() ? new TypeReference[0] : new TypeReference[] { type };
-                                        break;
-
-                                    case GenericParameterAttributes.Covariant:
-                                        this.<genericArgumentTypes>__1[i] = type.GetWindowsRuntimeCovariantTypes().ToArray<TypeReference>();
-                                        break;
-
-                                    case GenericParameterAttributes.Contravariant:
-                                        throw new NotSupportedException($"'{this.clrType.FullName}' type contains unsupported contravariant generic parameter '{parameter.Name}'.");
-
-                                    default:
-                                        throw new Exception($"'{parameter.Name}' generic parameter in '{this.clrType.FullName}' type contains invalid variance value '{attributes}'.");
-                                }
-                                if (this.<genericArgumentTypes>__1[i].Length == 0)
-                                {
-                                    goto Label_0294;
-                                }
-                            }
-                            this.<genericArgumentTypeCombinations>__1 = Extensions.GetTypeCombinations(this.<genericArgumentTypes>__1, 0);
-                            this.$locvar0 = this.<genericArgumentTypeCombinations>__1.GetEnumerator();
-                            num = 0xfffffffd;
-                            break;
-                        }
-                        goto Label_0294;
-
-                    case 1:
-                        break;
-
-                    default:
-                        goto Label_0294;
-                }
-                try
-                {
-                    while (this.$locvar0.MoveNext())
-                    {
-                        this.<combination>__2 = this.$locvar0.Current;
-                        this.<result>__3 = new GenericInstanceType(this.<windowsRuntimeTypeDefinition>__1);
-                        this.$locvar1 = this.<combination>__2;
-                        this.$locvar2 = 0;
-                        while (this.$locvar2 < this.$locvar1.Length)
-                        {
-                            TypeReference item = this.$locvar1[this.$locvar2];
-                            this.<result>__3.GenericArguments.Add(item);
-                            this.$locvar2++;
-                        }
-                        this.$current = this.<result>__3;
-                        if (!this.$disposing)
-                        {
-                            this.$PC = 1;
-                        }
-                        flag = true;
-                        return true;
-                    }
-                }
-                finally
-                {
-                    if (!flag)
-                    {
-                    }
-                    if (this.$locvar0 != null)
-                    {
-                        this.$locvar0.Dispose();
-                    }
-                }
-                this.$PC = -1;
-            Label_0294:
-                return false;
-            }
-
-            [DebuggerHidden]
-            public void Reset()
-            {
-                throw new NotSupportedException();
-            }
-
-            [DebuggerHidden]
-            IEnumerator<GenericInstanceType> IEnumerable<GenericInstanceType>.GetEnumerator()
-            {
-                if (Interlocked.CompareExchange(ref this.$PC, 0, -2) == -2)
-                {
-                    return this;
-                }
-                return new Extensions.<GetAllAssignableWindowsRuntimeTypes>c__Iterator2 { clrType = this.clrType };
-            }
-
-            [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator() => 
-                this.System.Collections.Generic.IEnumerable<Mono.Cecil.GenericInstanceType>.GetEnumerator();
-
-            GenericInstanceType IEnumerator<GenericInstanceType>.Current =>
-                this.$current;
-
-            object IEnumerator.Current =>
-                this.$current;
-        }
-
-        [CompilerGenerated]
-        private sealed class <GetOverridenInterfaceMethod>c__AnonStorey7
+        private sealed class <GetOverridenInterfaceMethod>c__AnonStorey3
         {
             internal MethodReference overridingMethod;
 
@@ -1380,7 +1385,7 @@
         }
 
         [CompilerGenerated]
-        private sealed class <GetTypeCombinations>c__Iterator4 : IEnumerable, IEnumerable<TypeReference[]>, IEnumerator, IDisposable, IEnumerator<TypeReference[]>
+        private sealed class <GetTypeCombinations>c__Iterator1 : IEnumerable, IEnumerable<TypeReference[]>, IEnumerator, IDisposable, IEnumerator<TypeReference[]>
         {
             internal TypeReference[] $current;
             internal bool $disposing;
@@ -1390,13 +1395,13 @@
             internal TypeReference[] $locvar3;
             internal int $locvar4;
             internal int $PC;
-            internal TypeReference[] <combination>__5;
-            internal IEnumerable<TypeReference[]> <combinations>__4;
-            internal TypeReference[] <levelTypes>__1;
-            internal TypeReference[] <result>__3;
-            internal TypeReference[] <result>__7;
-            internal TypeReference <type>__2;
-            internal TypeReference <type>__6;
+            internal TypeReference[] <combination>__4;
+            internal IEnumerable<TypeReference[]> <combinations>__3;
+            internal TypeReference[] <levelTypes>__0;
+            internal TypeReference[] <result>__2;
+            internal TypeReference[] <result>__6;
+            internal TypeReference <type>__1;
+            internal TypeReference <type>__5;
             internal int level;
             internal TypeReference[][] types;
 
@@ -1431,15 +1436,15 @@
                 switch (num)
                 {
                     case 0:
-                        this.<levelTypes>__1 = this.types[this.level];
+                        this.<levelTypes>__0 = this.types[this.level];
                         if ((this.level + 1) != this.types.Length)
                         {
-                            this.<combinations>__4 = Extensions.GetTypeCombinations(this.types, this.level + 1);
-                            this.$locvar2 = this.<combinations>__4.GetEnumerator();
+                            this.<combinations>__3 = Extensions.GetTypeCombinations(this.types, this.level + 1);
+                            this.$locvar2 = this.<combinations>__3.GetEnumerator();
                             num = 0xfffffffd;
                             goto Label_011F;
                         }
-                        this.$locvar0 = this.<levelTypes>__1;
+                        this.$locvar0 = this.<levelTypes>__0;
                         this.$locvar1 = 0;
                         break;
 
@@ -1455,10 +1460,10 @@
                 }
                 if (this.$locvar1 < this.$locvar0.Length)
                 {
-                    this.<type>__2 = this.$locvar0[this.$locvar1];
-                    this.<result>__3 = new TypeReference[this.types.Length];
-                    this.<result>__3[this.types.Length - 1] = this.<type>__2;
-                    this.$current = this.<result>__3;
+                    this.<type>__1 = this.$locvar0[this.$locvar1];
+                    this.<result>__2 = new TypeReference[this.types.Length];
+                    this.<result>__2[this.types.Length - 1] = this.<type>__1;
+                    this.$current = this.<result>__2;
                     if (!this.$disposing)
                     {
                         this.$PC = 1;
@@ -1476,15 +1481,15 @@
                     }
                     while (this.$locvar2.MoveNext())
                     {
-                        this.<combination>__5 = this.$locvar2.Current;
-                        this.$locvar3 = this.<levelTypes>__1;
+                        this.<combination>__4 = this.$locvar2.Current;
+                        this.$locvar3 = this.<levelTypes>__0;
                         this.$locvar4 = 0;
                         while (this.$locvar4 < this.$locvar3.Length)
                         {
-                            this.<type>__6 = this.$locvar3[this.$locvar4];
-                            this.<result>__7 = (TypeReference[]) this.<combination>__5.Clone();
-                            this.<result>__7[this.level] = this.<type>__6;
-                            this.$current = this.<result>__7;
+                            this.<type>__5 = this.$locvar3[this.$locvar4];
+                            this.<result>__6 = (TypeReference[]) this.<combination>__4.Clone();
+                            this.<result>__6[this.level] = this.<type>__5;
+                            this.$current = this.<result>__6;
                             if (!this.$disposing)
                             {
                                 this.$PC = 2;
@@ -1527,7 +1532,7 @@
                 {
                     return this;
                 }
-                return new Extensions.<GetTypeCombinations>c__Iterator4 { 
+                return new Extensions.<GetTypeCombinations>c__Iterator1 { 
                     types = this.types,
                     level = this.level
                 };
@@ -1618,444 +1623,12 @@
         }
 
         [CompilerGenerated]
-        private sealed class <GetTypesFromSpecificAttribute>c__AnonStorey6
+        private sealed class <GetTypesFromSpecificAttribute>c__AnonStorey2
         {
             internal string attributeName;
 
             internal bool <>m__0(CustomAttribute ca) => 
                 (ca.AttributeType.FullName == this.attributeName);
-        }
-
-        [CompilerGenerated]
-        private sealed class <GetWindowsRuntimeCovariantTypesWithDuplicates>c__Iterator3 : IEnumerable, IEnumerable<TypeReference>, IEnumerator, IDisposable, IEnumerator<TypeReference>
-        {
-            internal TypeReference $current;
-            internal bool $disposing;
-            internal IEnumerator<TypeReference> $locvar0;
-            internal IEnumerator<TypeReference> $locvar1;
-            internal IEnumerator<TypeReference> $locvar2;
-            internal int $PC;
-            internal TypeReference <baseType>__3;
-            internal TypeReference <covariantType>__2;
-            internal TypeReference <covariantType>__4;
-            internal TypeReference <covariantType>__5;
-            internal TypeDefinition <iEnumerableType>__1;
-            internal GenericInstanceType <iEnumerableTypeTypeGenericInstanceType>__3;
-            internal TypeReference type;
-
-            [DebuggerHidden]
-            public void Dispose()
-            {
-                uint num = (uint) this.$PC;
-                this.$disposing = true;
-                this.$PC = -1;
-                switch (num)
-                {
-                    case 2:
-                        try
-                        {
-                        }
-                        finally
-                        {
-                            if (this.$locvar0 != null)
-                            {
-                                this.$locvar0.Dispose();
-                            }
-                        }
-                        break;
-
-                    case 3:
-                        try
-                        {
-                        }
-                        finally
-                        {
-                            if (this.$locvar1 != null)
-                            {
-                                this.$locvar1.Dispose();
-                            }
-                        }
-                        break;
-
-                    case 4:
-                        try
-                        {
-                        }
-                        finally
-                        {
-                            if (this.$locvar2 != null)
-                            {
-                                this.$locvar2.Dispose();
-                            }
-                        }
-                        break;
-                }
-            }
-
-            public bool MoveNext()
-            {
-                uint num = (uint) this.$PC;
-                this.$PC = -1;
-                bool flag = false;
-                switch (num)
-                {
-                    case 0:
-                        if (!this.type.IsValidForWindowsRuntimeType())
-                        {
-                            break;
-                        }
-                        this.$current = this.type;
-                        if (!this.$disposing)
-                        {
-                            this.$PC = 1;
-                        }
-                        goto Label_02E4;
-
-                    case 1:
-                        break;
-
-                    case 2:
-                        goto Label_00D9;
-
-                    case 3:
-                        goto Label_01B7;
-
-                    case 4:
-                        goto Label_0267;
-
-                    default:
-                        goto Label_02E2;
-                }
-                if (this.type.IsValueType() || this.type.IsSystemObject())
-                {
-                    goto Label_02E2;
-                }
-                if (!this.type.IsArray)
-                {
-                    TypeReference baseType = this.type.GetBaseType();
-                    if (baseType == null)
-                    {
-                    }
-                    this.<baseType>__3 = Extensions.TypeProvider.ObjectTypeReference;
-                    this.$locvar1 = this.<baseType>__3.GetWindowsRuntimeCovariantTypes().GetEnumerator();
-                    num = 0xfffffffd;
-                    goto Label_01B7;
-                }
-                this.<iEnumerableType>__1 = Extensions.TypeProvider.Corlib.MainModule.GetType("System.Collections.Generic.IEnumerable`1");
-                this.$locvar0 = ((ArrayType) this.type).ElementType.GetWindowsRuntimeCovariantTypes().GetEnumerator();
-                num = 0xfffffffd;
-            Label_00D9:
-                try
-                {
-                    while (this.$locvar0.MoveNext())
-                    {
-                        this.<covariantType>__2 = this.$locvar0.Current;
-                        this.<iEnumerableTypeTypeGenericInstanceType>__3 = new GenericInstanceType(this.<iEnumerableType>__1);
-                        this.<iEnumerableTypeTypeGenericInstanceType>__3.GenericArguments.Add(this.<covariantType>__2);
-                        this.$current = this.<iEnumerableTypeTypeGenericInstanceType>__3;
-                        if (!this.$disposing)
-                        {
-                            this.$PC = 2;
-                        }
-                        flag = true;
-                        goto Label_02E4;
-                    }
-                }
-                finally
-                {
-                    if (!flag)
-                    {
-                    }
-                    if (this.$locvar0 != null)
-                    {
-                        this.$locvar0.Dispose();
-                    }
-                }
-                goto Label_02E2;
-            Label_01B7:
-                try
-                {
-                    while (this.$locvar1.MoveNext())
-                    {
-                        this.<covariantType>__4 = this.$locvar1.Current;
-                        this.$current = this.<covariantType>__4;
-                        if (!this.$disposing)
-                        {
-                            this.$PC = 3;
-                        }
-                        flag = true;
-                        goto Label_02E4;
-                    }
-                }
-                finally
-                {
-                    if (!flag)
-                    {
-                    }
-                    if (this.$locvar1 != null)
-                    {
-                        this.$locvar1.Dispose();
-                    }
-                }
-                if (Extensions.<>f__mg$cache3 == null)
-                {
-                    Extensions.<>f__mg$cache3 = new Func<TypeReference, IEnumerable<TypeReference>>(Extensions.GetWindowsRuntimeCovariantTypes);
-                }
-                this.$locvar2 = this.type.GetInterfaces().SelectMany<TypeReference, TypeReference>(Extensions.<>f__mg$cache3).GetEnumerator();
-                num = 0xfffffffd;
-            Label_0267:
-                try
-                {
-                    while (this.$locvar2.MoveNext())
-                    {
-                        this.<covariantType>__5 = this.$locvar2.Current;
-                        this.$current = this.<covariantType>__5;
-                        if (!this.$disposing)
-                        {
-                            this.$PC = 4;
-                        }
-                        flag = true;
-                        goto Label_02E4;
-                    }
-                }
-                finally
-                {
-                    if (!flag)
-                    {
-                    }
-                    if (this.$locvar2 != null)
-                    {
-                        this.$locvar2.Dispose();
-                    }
-                }
-                this.$PC = -1;
-            Label_02E2:
-                return false;
-            Label_02E4:
-                return true;
-            }
-
-            [DebuggerHidden]
-            public void Reset()
-            {
-                throw new NotSupportedException();
-            }
-
-            [DebuggerHidden]
-            IEnumerator<TypeReference> IEnumerable<TypeReference>.GetEnumerator()
-            {
-                if (Interlocked.CompareExchange(ref this.$PC, 0, -2) == -2)
-                {
-                    return this;
-                }
-                return new Extensions.<GetWindowsRuntimeCovariantTypesWithDuplicates>c__Iterator3 { type = this.type };
-            }
-
-            [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator() => 
-                this.System.Collections.Generic.IEnumerable<Mono.Cecil.TypeReference>.GetEnumerator();
-
-            TypeReference IEnumerator<TypeReference>.Current =>
-                this.$current;
-
-            object IEnumerator.Current =>
-                this.$current;
-        }
-
-        [CompilerGenerated]
-        private sealed class <ImplementedWindowsRuntimeProjectedInterfaces>c__Iterator1 : IEnumerable, IEnumerable<TypeReference>, IEnumerator, IDisposable, IEnumerator<TypeReference>
-        {
-            internal TypeReference $current;
-            internal bool $disposing;
-            internal IEnumerator<TypeReference> $locvar0;
-            internal IEnumerator<GenericInstanceType> $locvar1;
-            private <ImplementedWindowsRuntimeProjectedInterfaces>c__AnonStorey5 $locvar2;
-            internal int $PC;
-            private static Func<GenericInstanceType, bool> <>f__am$cache0;
-            internal TypeReference <clrInterface>__2;
-            internal GenericInstanceType <genericType>__3;
-            internal GenericInstanceType <windowsRuntimeInterface>__4;
-            internal TypeReference <windowsRuntimeInterface>__5;
-            internal TypeReference type;
-
-            private static bool <>m__0(GenericInstanceType i) => 
-                Extensions.WindowsRuntimeProjections.IsSupportedProjectedInterfaceWindowsRuntime(i);
-
-            [DebuggerHidden]
-            public void Dispose()
-            {
-                uint num = (uint) this.$PC;
-                this.$disposing = true;
-                this.$PC = -1;
-                switch (num)
-                {
-                    case 1:
-                    case 2:
-                        try
-                        {
-                            switch (num)
-                            {
-                                case 1:
-                                    try
-                                    {
-                                    }
-                                    finally
-                                    {
-                                        if (this.$locvar1 != null)
-                                        {
-                                            this.$locvar1.Dispose();
-                                        }
-                                    }
-                                    return;
-                            }
-                        }
-                        finally
-                        {
-                            if (this.$locvar0 != null)
-                            {
-                                this.$locvar0.Dispose();
-                            }
-                        }
-                        break;
-                }
-            }
-
-            public bool MoveNext()
-            {
-                uint num = (uint) this.$PC;
-                this.$PC = -1;
-                bool flag = false;
-                switch (num)
-                {
-                    case 0:
-                        this.$locvar2 = new <ImplementedWindowsRuntimeProjectedInterfaces>c__AnonStorey5();
-                        this.$locvar2.typeResolver = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(this.type);
-                        this.$locvar0 = this.type.Resolve().Interfaces.Select<InterfaceImplementation, TypeReference>(new Func<InterfaceImplementation, TypeReference>(this.$locvar2.<>m__0)).GetEnumerator();
-                        num = 0xfffffffd;
-                        break;
-
-                    case 1:
-                    case 2:
-                        break;
-
-                    default:
-                        goto Label_0210;
-                }
-                try
-                {
-                    switch (num)
-                    {
-                        case 1:
-                            goto Label_00FE;
-
-                        case 2:
-                            goto Label_01D8;
-                    }
-                    while (this.$locvar0.MoveNext())
-                    {
-                        this.<clrInterface>__2 = this.$locvar0.Current;
-                        this.<genericType>__3 = this.<clrInterface>__2 as GenericInstanceType;
-                        if (this.<genericType>__3 == null)
-                        {
-                            goto Label_0178;
-                        }
-                        if (<>f__am$cache0 == null)
-                        {
-                            <>f__am$cache0 = new Func<GenericInstanceType, bool>(Extensions.<ImplementedWindowsRuntimeProjectedInterfaces>c__Iterator1.<>m__0);
-                        }
-                        this.$locvar1 = this.<genericType>__3.GetAllAssignableWindowsRuntimeTypes().Where<GenericInstanceType>(<>f__am$cache0).GetEnumerator();
-                        num = 0xfffffffd;
-                    Label_00FE:
-                        try
-                        {
-                            while (this.$locvar1.MoveNext())
-                            {
-                                this.<windowsRuntimeInterface>__4 = this.$locvar1.Current;
-                                this.$current = this.<windowsRuntimeInterface>__4;
-                                if (!this.$disposing)
-                                {
-                                    this.$PC = 1;
-                                }
-                                flag = true;
-                                goto Label_0212;
-                            }
-                        }
-                        finally
-                        {
-                            if (!flag)
-                            {
-                            }
-                            if (this.$locvar1 != null)
-                            {
-                                this.$locvar1.Dispose();
-                            }
-                        }
-                        continue;
-                    Label_0178:
-                        this.<windowsRuntimeInterface>__5 = Extensions.WindowsRuntimeProjections.ProjectToWindowsRuntime(this.<clrInterface>__2);
-                        if ((this.<windowsRuntimeInterface>__5 != this.<clrInterface>__2) && Extensions.WindowsRuntimeProjections.IsSupportedProjectedInterfaceWindowsRuntime(this.<windowsRuntimeInterface>__5))
-                        {
-                            this.$current = this.<windowsRuntimeInterface>__5;
-                            if (!this.$disposing)
-                            {
-                                this.$PC = 2;
-                            }
-                            flag = true;
-                            goto Label_0212;
-                        }
-                    Label_01D8:;
-                    }
-                }
-                finally
-                {
-                    if (!flag)
-                    {
-                    }
-                    if (this.$locvar0 != null)
-                    {
-                        this.$locvar0.Dispose();
-                    }
-                }
-                this.$PC = -1;
-            Label_0210:
-                return false;
-            Label_0212:
-                return true;
-            }
-
-            [DebuggerHidden]
-            public void Reset()
-            {
-                throw new NotSupportedException();
-            }
-
-            [DebuggerHidden]
-            IEnumerator<TypeReference> IEnumerable<TypeReference>.GetEnumerator()
-            {
-                if (Interlocked.CompareExchange(ref this.$PC, 0, -2) == -2)
-                {
-                    return this;
-                }
-                return new Extensions.<ImplementedWindowsRuntimeProjectedInterfaces>c__Iterator1 { type = this.type };
-            }
-
-            [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator() => 
-                this.System.Collections.Generic.IEnumerable<Mono.Cecil.TypeReference>.GetEnumerator();
-
-            TypeReference IEnumerator<TypeReference>.Current =>
-                this.$current;
-
-            object IEnumerator.Current =>
-                this.$current;
-
-            private sealed class <ImplementedWindowsRuntimeProjectedInterfaces>c__AnonStorey5
-            {
-                internal Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver;
-
-                internal TypeReference <>m__0(InterfaceImplementation i) => 
-                    this.typeResolver.Resolve(i.InterfaceType);
-            }
         }
 
         [StructLayout(LayoutKind.Sequential)]

@@ -17,7 +17,7 @@
         /// <summary>
         /// <para>The type of the component / material being animated.</para>
         /// </summary>
-        public Type type;
+        public System.Type type;
         /// <summary>
         /// <para>The name of the property being animated.</para>
         /// </summary>

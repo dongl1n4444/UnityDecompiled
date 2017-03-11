@@ -52,7 +52,7 @@
                 }
                 catch (Exception exception)
                 {
-                    Debug.LogError("Failed to fix pragmas in file '" + str + "'.\n" + exception.Message);
+                    UnityEngine.Debug.LogError("Failed to fix pragmas in file '" + str + "'.\n" + exception.Message);
                 }
             }
             return list.ToArray();
@@ -86,7 +86,7 @@
                 }
                 catch (Exception exception)
                 {
-                    Debug.LogError("Failed to fix pragmas in file '" + str + "'.\n" + exception.Message);
+                    UnityEngine.Debug.LogError("Failed to fix pragmas in file '" + str + "'.\n" + exception.Message);
                 }
             }
         }

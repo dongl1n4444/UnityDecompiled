@@ -9,7 +9,7 @@
     {
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private NativeStructGenerateOption <GenerateMarshallingType>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <Header>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <Name>k__BackingField;

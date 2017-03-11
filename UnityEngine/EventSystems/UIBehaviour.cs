@@ -66,7 +66,7 @@
         }
 
         /// <summary>
-        /// <para>See MonoBehaviour.OnDidApplyAnimationProperties.</para>
+        /// <para>See UI.LayoutGroup.OnDidApplyAnimationProperties.</para>
         /// </summary>
         protected virtual void OnDidApplyAnimationProperties()
         {
@@ -87,7 +87,7 @@
         }
 
         /// <summary>
-        /// <para>See MonoBehaviour.OnRectTransformDimensionsChange.</para>
+        /// <para>This callback is called if an associated RectTransform has its dimensions changed. The call is also made to all child rect transforms, even if the child transform itself doesn't change - as it could have, depending on its anchoring.</para>
         /// </summary>
         protected virtual void OnRectTransformDimensionsChange()
         {

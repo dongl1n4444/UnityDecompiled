@@ -26,21 +26,21 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool GetCullingParameters_Internal(Camera camera, out CullingParameters cullingParameters, int managedCullingParametersSize);
-        internal static void Internal_Cull(ref CullingParameters parameters, RenderLoop renderLoop, out CullResults results)
+        internal static void Internal_Cull(ref CullingParameters parameters, ScriptableRenderContext renderLoop, out CullResults results)
         {
             INTERNAL_CALL_Internal_Cull(ref parameters, ref renderLoop, out results);
         }
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private static extern void INTERNAL_CALL_Internal_Cull(ref CullingParameters parameters, ref RenderLoop renderLoop, out CullResults results);
-        public static CullResults Cull(ref CullingParameters parameters, RenderLoop renderLoop)
+        private static extern void INTERNAL_CALL_Internal_Cull(ref CullingParameters parameters, ref ScriptableRenderContext renderLoop, out CullResults results);
+        public static CullResults Cull(ref CullingParameters parameters, ScriptableRenderContext renderLoop)
         {
             CullResults results;
             Internal_Cull(ref parameters, renderLoop, out results);
             return results;
         }
 
-        public static bool Cull(Camera camera, RenderLoop renderLoop, out CullResults results)
+        public static bool Cull(Camera camera, ScriptableRenderContext renderLoop, out CullResults results)
         {
             CullingParameters parameters;
             results.cullResults = IntPtr.Zero;

@@ -6,6 +6,7 @@
     using System.IO;
     using System.Text.RegularExpressions;
     using Unity.IL2CPP;
+    using Unity.IL2CPP.Portability;
     using Unity.TinyProfiling;
 
     public class SymbolsCollector
@@ -21,7 +22,7 @@
             {
                 if (!this.m_visitedCppFiles.Contains(CppSourcePath.ToString()))
                 {
-                    using (StreamReader reader = new StreamReader(CppSourcePath.ToString()))
+                    using (System.IO.StreamReader reader = new Unity.IL2CPP.Portability.StreamReader(CppSourcePath.ToString()))
                     {
                         uint num = 0;
                         while (!reader.EndOfStream)
@@ -51,7 +52,7 @@
                     string[] append = new string[] { "LineNumberMappings.json" };
                     NPath path = outputPath.Combine(append);
                     Directory.CreateDirectory(outputPath.ToString());
-                    using (StreamWriter writer = new StreamWriter(path.ToString()))
+                    using (System.IO.StreamWriter writer = new Unity.IL2CPP.Portability.StreamWriter(path.ToString()))
                     {
                         this.m_SymbolsMetadataContainer.SerializeToJson(writer);
                     }

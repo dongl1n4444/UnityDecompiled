@@ -1,6 +1,7 @@
 ﻿namespace UnityEngine.WSA
 {
     using System;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEngine;
@@ -11,15 +12,17 @@
     /// </summary>
     public sealed class Application
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event WindowActivated windowActivated;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event WindowSizeChanged windowSizeChanged;
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern string GetAdvertisingIdentifier();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern string GetAppArguments();
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         internal static extern bool InternalTryInvokeOnAppThread(AppCallbackItem item, bool waitUntilDone);
         [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         internal static extern bool InternalTryInvokeOnUIThread(AppCallbackItem item, bool waitUntilDone);

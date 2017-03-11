@@ -30,12 +30,20 @@
         public static extern int GetMipmapCount(Texture t);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int GetRowBytesFromWidthAndFormat(int width, TextureFormat format);
+        [Obsolete("GetRuntimeMemorySize has been deprecated since it is limited to 2GB. Please use GetRuntimeMemorySizeLong() instead.")]
+        public static int GetRuntimeMemorySize(Texture t) => 
+            ((int) GetRuntimeMemorySizeLong(t));
+
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern long GetRuntimeMemorySize(Texture t);
+        public static extern long GetRuntimeMemorySizeLong(Texture t);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern Texture2D GetSourceTexture(Cubemap cubemapRef, CubemapFace face);
+        [Obsolete("GetStorageMemorySize has been deprecated since it is limited to 2GB. Please use GetStorageMemorySizeLong() instead.")]
+        public static int GetStorageMemorySize(Texture t) => 
+            ((int) GetStorageMemorySizeLong(t));
+
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern long GetStorageMemorySize(Texture t);
+        public static extern long GetStorageMemorySizeLong(Texture t);
         public static Vector4 GetTexelSizeVector(Texture t)
         {
             Vector4 vector;
@@ -78,7 +86,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetAnisoLevelNoDirty(Texture tex, int level);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern void SetFilterModeNoDirty(Texture tex, FilterMode mode);
+        public static extern void SetFilterModeNoDirty(Texture tex, UnityEngine.FilterMode mode);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetMipMapBiasNoDirty(Texture tex, float bias);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]

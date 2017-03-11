@@ -1,7 +1,9 @@
 ﻿namespace UnityEngine.Advertisements.Editor
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEngine;
     using UnityEngine.Advertisements;
@@ -14,6 +16,7 @@
         private Texture2D m_PortraitTexture;
         private bool m_Showing;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event EventHandler<FinishEventArgs> OnFinish;
 
         public void Load(string extensionPath)

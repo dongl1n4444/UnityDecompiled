@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(TextAsset))]
+    [CustomEditor(typeof(TextAsset)), CanEditMultipleObjects]
     internal class TextAssetInspector : Editor
     {
         private const int kMaxChars = 0x1b58;

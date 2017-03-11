@@ -131,12 +131,12 @@
             {
                 this.m_PreviewUtility.Cleanup();
                 this.m_PreviewUtility = null;
-                Object.DestroyImmediate(this.m_ShadedMesh, true);
-                Object.DestroyImmediate(this.m_GeometryMesh, true);
+                UnityEngine.Object.DestroyImmediate(this.m_ShadedMesh, true);
+                UnityEngine.Object.DestroyImmediate(this.m_GeometryMesh, true);
                 this.m_GeometryMaterial = null;
                 if (this.m_WireframeMaterial != null)
                 {
-                    Object.DestroyImmediate(this.m_WireframeMaterial, true);
+                    UnityEngine.Object.DestroyImmediate(this.m_WireframeMaterial, true);
                 }
             }
         }
@@ -197,7 +197,7 @@
                 GUIContent content = !this.m_PreviewShaded ? Styles.m_Geometry : Styles.m_Shaded;
                 GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(75f) };
                 Rect position = GUILayoutUtility.GetRect(content, Styles.m_DropdownButton, options);
-                if (EditorGUI.ButtonMouseDown(position, content, FocusType.Passive, Styles.m_DropdownButton))
+                if (EditorGUI.DropdownButton(position, content, FocusType.Passive, Styles.m_DropdownButton))
                 {
                     GUIUtility.hotControl = 0;
                     GenericMenu menu = new GenericMenu();
@@ -208,7 +208,7 @@
             }
         }
 
-        public override Texture2D RenderStaticPreview(string assetPath, Object[] subAssets, int width, int height)
+        public override Texture2D RenderStaticPreview(string assetPath, UnityEngine.Object[] subAssets, int width, int height)
         {
             if (!ShaderUtil.hardwareSupportsRectRenderTexture)
             {

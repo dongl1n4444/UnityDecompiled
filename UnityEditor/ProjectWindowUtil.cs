@@ -21,7 +21,7 @@
             StartNameEditingIfProjectWindowExists(0, ScriptableObject.CreateInstance<DoCreateAnimatorController>(), "New Animator Controller.controller", image, null);
         }
 
-        public static void CreateAsset(Object asset, string pathName)
+        public static void CreateAsset(UnityEngine.Object asset, string pathName)
         {
             StartNameEditingIfProjectWindowExists(asset.GetInstanceID(), ScriptableObject.CreateInstance<DoCreateNewAsset>(), pathName, AssetPreview.GetMiniThumbnail(asset), null);
         }
@@ -37,11 +37,11 @@
             StartNameEditingIfProjectWindowExists(0, ScriptableObject.CreateInstance<DoCreateFolder>(), "New Folder", EditorGUIUtility.IconContent(EditorResourcesUtility.emptyFolderIconName).image as Texture2D, null);
         }
 
-        [MenuItem("Assets/Create/GUI Skin", false, 0x259)]
+        [UnityEditor.MenuItem("Assets/Create/GUI Skin", false, 0x259)]
         public static void CreateNewGUISkin()
         {
             GUISkin dest = ScriptableObject.CreateInstance<GUISkin>();
-            GUISkin builtinResource = Resources.GetBuiltinResource(typeof(GUISkin), "GameSkin/GameSkin.guiskin") as GUISkin;
+            GUISkin builtinResource = UnityEngine.Resources.GetBuiltinResource(typeof(GUISkin), "GameSkin/GameSkin.guiskin") as GUISkin;
             if (builtinResource != null)
             {
                 EditorUtility.CopySerialized(builtinResource, dest);
@@ -65,7 +65,8 @@
 
         private static void CreateScriptAsset(string templatePath, string destName)
         {
-            if (Path.GetFileName(templatePath).ToLower().Contains("editortest"))
+            string fileName = Path.GetFileName(templatePath);
+            if (fileName.ToLower().Contains("editortest") || fileName.ToLower().Contains("editmode"))
             {
                 string uniquePathNameAtSelectedPath = AssetDatabase.GetUniquePathNameAtSelectedPath(destName);
                 if (!uniquePathNameAtSelectedPath.ToLower().Contains("/editor/"))
@@ -106,7 +107,7 @@
             StartNameEditingIfProjectWindowExists(0, ScriptableObject.CreateInstance<DoCreateScriptAsset>(), destName, icon, templatePath);
         }
 
-        internal static Object CreateScriptAssetFromTemplate(string pathName, string resourceFile)
+        internal static UnityEngine.Object CreateScriptAssetFromTemplate(string pathName, string resourceFile)
         {
             string fullPath = Path.GetFullPath(pathName);
             string contents = File.ReadAllText(resourceFile).Replace("#NOTRIM#", "");
@@ -127,7 +128,7 @@
             UTF8Encoding encoding = new UTF8Encoding(true);
             File.WriteAllText(fullPath, contents, encoding);
             AssetDatabase.ImportAsset(pathName);
-            return AssetDatabase.LoadAssetAtPath(pathName, typeof(Object));
+            return AssetDatabase.LoadAssetAtPath(pathName, typeof(UnityEngine.Object));
         }
 
         private static void CreateSpritePolygon(int sides)
@@ -178,9 +179,9 @@
         internal static void DuplicateSelectedAssets()
         {
             AssetDatabase.Refresh();
-            Object[] objects = Selection.objects;
+            UnityEngine.Object[] objects = Selection.objects;
             bool flag = true;
-            foreach (Object obj2 in objects)
+            foreach (UnityEngine.Object obj2 in objects)
             {
                 AnimationClip clip = obj2 as AnimationClip;
                 if (((clip == null) || ((clip.hideFlags & HideFlags.NotEditable) == HideFlags.None)) || !AssetDatabase.Contains(clip))
@@ -192,7 +193,7 @@
             bool flag2 = false;
             if (flag)
             {
-                foreach (Object obj3 in objects)
+                foreach (UnityEngine.Object obj3 in objects)
                 {
                     AnimationClip source = obj3 as AnimationClip;
                     if ((source != null) && ((source.hideFlags & HideFlags.NotEditable) != HideFlags.None))
@@ -207,8 +208,8 @@
             }
             else
             {
-                Object[] filtered = Selection.GetFiltered(typeof(Object), SelectionMode.Assets);
-                foreach (Object obj4 in filtered)
+                UnityEngine.Object[] filtered = Selection.GetFiltered(typeof(UnityEngine.Object), UnityEditor.SelectionMode.Assets);
+                foreach (UnityEngine.Object obj4 in filtered)
                 {
                     string assetPath = AssetDatabase.GetAssetPath(obj4);
                     string newPath = AssetDatabase.GenerateUniqueAssetPath(assetPath);
@@ -227,7 +228,7 @@
                 }
             }
             AssetDatabase.Refresh();
-            Object[] objArray6 = new Object[list.Count];
+            UnityEngine.Object[] objArray6 = new UnityEngine.Object[list.Count];
             for (int i = 0; i < list.Count; i++)
             {
                 objArray6[i] = AssetDatabase.LoadMainAssetAtPath(list[i] as string);
@@ -328,14 +329,14 @@
             return null;
         }
 
-        internal static Object[] GetDragAndDropObjects(int draggedInstanceID, List<int> selectedInstanceIDs)
+        internal static UnityEngine.Object[] GetDragAndDropObjects(int draggedInstanceID, List<int> selectedInstanceIDs)
         {
-            List<Object> list = new List<Object>(selectedInstanceIDs.Count);
+            List<UnityEngine.Object> list = new List<UnityEngine.Object>(selectedInstanceIDs.Count);
             if (selectedInstanceIDs.Contains(draggedInstanceID))
             {
                 for (int i = 0; i < selectedInstanceIDs.Count; i++)
                 {
-                    Object objectFromInstanceID = InternalEditorUtility.GetObjectFromInstanceID(selectedInstanceIDs[i]);
+                    UnityEngine.Object objectFromInstanceID = InternalEditorUtility.GetObjectFromInstanceID(selectedInstanceIDs[i]);
                     if (objectFromInstanceID != null)
                     {
                         list.Add(objectFromInstanceID);
@@ -344,7 +345,7 @@
             }
             else
             {
-                Object item = InternalEditorUtility.GetObjectFromInstanceID(draggedInstanceID);
+                UnityEngine.Object item = InternalEditorUtility.GetObjectFromInstanceID(draggedInstanceID);
                 if (item != null)
                 {
                     list.Add(item);
@@ -385,7 +386,7 @@
         public static bool IsFolder(int instanceID) => 
             AssetDatabase.IsValidFolder(AssetDatabase.GetAssetPath(instanceID));
 
-        public static void ShowCreatedAsset(Object o)
+        public static void ShowCreatedAsset(UnityEngine.Object o)
         {
             Selection.activeObject = o;
             if (o != null)
@@ -401,7 +402,7 @@
             if (IsFavoritesItem(draggedInstanceID))
             {
                 DragAndDrop.SetGenericData(k_DraggingFavoriteGenericData, draggedInstanceID);
-                DragAndDrop.objectReferences = new Object[0];
+                DragAndDrop.objectReferences = new UnityEngine.Object[0];
             }
             else
             {

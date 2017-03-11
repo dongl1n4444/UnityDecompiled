@@ -23,7 +23,13 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool GetInstanceResolution(Renderer renderer, out int width, out int height);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        internal static extern Object GetLightmapSettings();
+        internal static extern UnityEngine.Object GetLightmapSettings();
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern bool GetPVRAtlasHash(int instanceID, out Hash128 atlasHash);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern bool GetPVRAtlasInstanceOffset(int instanceID, out int atlasInstanceOffset);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern bool GetPVRInstanceHash(int instanceID, out Hash128 instanceHash);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool GetSystemResolution(Renderer renderer, out int width, out int height);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -149,6 +155,21 @@
             }
         }
 
+        /// <summary>
+        /// <para>Determines which backend to use for baking lightmaps.</para>
+        /// </summary>
+        public static GIBakeBackend giBakeBackend { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
+        /// <para>Determines the filtering kernel for the Progressive Path Tracer backend.</para>
+        /// </summary>
+        public static PathTracerFilter giPathTracerFilter { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
+        /// <para>Determines which sampling strategy to use for baking lightmaps with the path tracing backend.</para>
+        /// </summary>
+        public static PathTracerSampling giPathTracerSampling { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
         [Obsolete("LightmapEditorSettings.lastUsedResolution has been deprecated.", false)]
         public static float lastUsedResolution
         {
@@ -239,6 +260,43 @@
         /// <para>Whether to use texture compression on the generated lightmaps.</para>
         /// </summary>
         public static bool textureCompression { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
+        /// <para>Backends available for baking lightmaps.</para>
+        /// </summary>
+        public enum GIBakeBackend
+        {
+            Radiosity,
+            PathTracer
+        }
+
+        /// <summary>
+        /// <para>The available filter kernels for the Progressive Path Tracer GI backend.</para>
+        /// </summary>
+        public enum PathTracerFilter
+        {
+            Gaussian,
+            ATrous
+        }
+
+        /// <summary>
+        /// <para>The available filtering modes for the Progressive Path Tracer GI backend.</para>
+        /// </summary>
+        public enum PathTracerFilterMode
+        {
+            None,
+            Auto,
+            Advanced
+        }
+
+        /// <summary>
+        /// <para>Available sampling strategies for baking lightmaps with the path tracing backend.</para>
+        /// </summary>
+        public enum PathTracerSampling
+        {
+            Auto,
+            Fixed
+        }
     }
 }
 

@@ -504,6 +504,7 @@
 
         private void SerializeMode2D(NetworkWriter writer)
         {
+            this.VerifySerializeComponentExists();
             if (base.isServer && (this.m_LastClientSyncTime != 0f))
             {
                 writer.Write((Vector2) this.m_TargetSyncPosition);
@@ -543,6 +544,7 @@
 
         private void SerializeMode3D(NetworkWriter writer)
         {
+            this.VerifySerializeComponentExists();
             if (base.isServer && (this.m_LastClientSyncTime != 0f))
             {
                 writer.Write(this.m_TargetSyncPosition);
@@ -572,6 +574,7 @@
 
         private void SerializeModeCharacterController(NetworkWriter writer)
         {
+            this.VerifySerializeComponentExists();
             if (base.isServer && (this.m_LastClientSyncTime != 0f))
             {
                 writer.Write(this.m_TargetSyncPosition);
@@ -1128,6 +1131,42 @@
             {
                 this.SendTransform();
                 this.m_LastClientSendTime = Time.time;
+            }
+        }
+
+        private void VerifySerializeComponentExists()
+        {
+            bool flag = false;
+            System.Type type = null;
+            switch (this.transformSyncMode)
+            {
+                case TransformSyncMode.SyncCharacterController:
+                    if (this.m_CharacterController == null)
+                    {
+                        flag = true;
+                        type = typeof(CharacterController);
+                    }
+                    break;
+
+                case TransformSyncMode.SyncRigidbody2D:
+                    if (this.m_RigidBody2D == null)
+                    {
+                        flag = true;
+                        type = typeof(Rigidbody2D);
+                    }
+                    break;
+
+                case TransformSyncMode.SyncRigidbody3D:
+                    if (this.m_RigidBody3D == null)
+                    {
+                        flag = true;
+                        type = typeof(Rigidbody);
+                    }
+                    break;
+            }
+            if (flag && (type != null))
+            {
+                throw new InvalidOperationException($"transformSyncMode set to {this.transformSyncMode} but no {type.Name} component was found, did you call NetworkServer.Spawn on a prefab?");
             }
         }
 

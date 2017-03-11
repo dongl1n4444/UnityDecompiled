@@ -31,7 +31,7 @@
         [CompilerGenerated]
         private static CapFunction <>f__mg$cache6;
         [CompilerGenerated]
-        private static DrawCapFunction <>f__mg$cache7;
+        private static CapFunction <>f__mg$cache7;
         [CompilerGenerated]
         private static CapFunction <>f__mg$cache8;
         [CompilerGenerated]
@@ -77,6 +77,7 @@
         internal static Color staticColor = new Color(0.5f, 0.5f, 0.5f, 0f);
         private static Vector3[] verts = new Vector3[] { Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero };
 
+        [Obsolete("Use ArrowHandleCap instead")]
         public static void ArrowCap(int controlID, Vector3 position, Quaternion rotation, float size)
         {
             if (Event.current.type == EventType.Repaint)
@@ -91,9 +92,9 @@
         /// <para>Draw an arrow like those used by the move tool.</para>
         /// </summary>
         /// <param name="controlID">The control ID for the handle.</param>
-        /// <param name="position">The world-space position of the handle's start point.</param>
-        /// <param name="rotation">The rotation of the handle.</param>
-        /// <param name="size">The size of the handle in world-space units.</param>
+        /// <param name="position">The position of the handle in the space of Handles.matrix.</param>
+        /// <param name="rotation">The rotation of the handle in the space of Handles.matrix.</param>
+        /// <param name="size">The size of the handle in the space of Handles.matrix. Use HandleUtility.GetHandleSize if you want a constant screen-space size.</param>
         /// <param name="eventType">Event type for the handle to act upon. By design it handles EventType.Layout and EventType.Repaint events.</param>
         public static void ArrowHandleCap(int controlID, Vector3 position, Quaternion rotation, float size, EventType eventType)
         {
@@ -161,15 +162,18 @@
         public static bool Button(Vector3 position, Quaternion direction, float size, float pickSize, CapFunction capFunction) => 
             UnityEditorInternal.Button.Do(GUIUtility.GetControlID(s_ButtonHash, FocusType.Passive), position, direction, size, pickSize, capFunction);
 
+        [Obsolete("DrawCapFunction is obsolete. Use the version with CapFunction instead. Example: Change SphereCap to SphereHandleCap.")]
         public static bool Button(Vector3 position, Quaternion direction, float size, float pickSize, DrawCapFunction capFunc) => 
             UnityEditorInternal.Button.Do(GUIUtility.GetControlID(s_ButtonHash, FocusType.Passive), position, direction, size, pickSize, capFunc);
 
         internal static bool Button(int controlID, Vector3 position, Quaternion direction, float size, float pickSize, CapFunction capFunction) => 
             UnityEditorInternal.Button.Do(controlID, position, direction, size, pickSize, capFunction);
 
+        [Obsolete("DrawCapFunction is obsolete. Use the version with CapFunction instead. Example: Change SphereCap to SphereHandleCap.")]
         internal static bool Button(int controlID, Vector3 position, Quaternion direction, float size, float pickSize, DrawCapFunction capFunc) => 
             UnityEditorInternal.Button.Do(controlID, position, direction, size, pickSize, capFunc);
 
+        [Obsolete("Use CircleHandleCap instead")]
         public static void CircleCap(int controlID, Vector3 position, Quaternion rotation, float size)
         {
             if (Event.current.type == EventType.Repaint)
@@ -184,9 +188,9 @@
         /// <para>Draw a circle handle. Pass this into handle functions.</para>
         /// </summary>
         /// <param name="controlID">The control ID for the handle.</param>
-        /// <param name="position">The world-space position of the handle's start point.</param>
-        /// <param name="rotation">The rotation of the handle.</param>
-        /// <param name="size">The size of the handle in world-space units.</param>
+        /// <param name="position">The position of the handle in the space of Handles.matrix.</param>
+        /// <param name="rotation">The rotation of the handle in the space of Handles.matrix.</param>
+        /// <param name="size">The size of the handle in the space of Handles.matrix. Use HandleUtility.GetHandleSize if you want a constant screen-space size.</param>
         /// <param name="eventType">Event type for the handle to act upon. By design it handles EventType.Layout and EventType.Repaint events.</param>
         public static void CircleHandleCap(int controlID, Vector3 position, Quaternion rotation, float size, EventType eventType)
         {
@@ -235,6 +239,7 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void ClearHandles();
+        [Obsolete("Use ConeHandleCap instead")]
         public static void ConeCap(int controlID, Vector3 position, Quaternion rotation, float size)
         {
             if (Event.current.type == EventType.Repaint)
@@ -253,9 +258,9 @@
         /// <para>Draw a cone handle. Pass this into handle functions.</para>
         /// </summary>
         /// <param name="controlID">The control ID for the handle.</param>
-        /// <param name="position">The world-space position of the handle's start point.</param>
-        /// <param name="rotation">The rotation of the handle.</param>
-        /// <param name="size">The size of the handle in world-space units.</param>
+        /// <param name="position">The position of the handle in the space of Handles.matrix.</param>
+        /// <param name="rotation">The rotation of the handle in the space of Handles.matrix.</param>
+        /// <param name="size">The size of the handle in the space of Handles.matrix. Use HandleUtility.GetHandleSize if you want a constant screen-space size.</param>
         /// <param name="eventType">Event type for the handle to act upon. By design it handles EventType.Layout and EventType.Repaint events.</param>
         public static void ConeHandleCap(int controlID, Vector3 position, Quaternion rotation, float size, EventType eventType)
         {
@@ -272,6 +277,7 @@
             }
         }
 
+        [Obsolete("Use CubeHandleCap instead")]
         public static void CubeCap(int controlID, Vector3 position, Quaternion rotation, float size)
         {
             if (Event.current.type == EventType.Repaint)
@@ -284,9 +290,9 @@
         /// <para>Draw a cube handle. Pass this into handle functions.</para>
         /// </summary>
         /// <param name="controlID">The control ID for the handle.</param>
-        /// <param name="position">The world-space position of the handle's start point.</param>
-        /// <param name="rotation">The rotation of the handle.</param>
-        /// <param name="size">The size of the handle in world-space units.</param>
+        /// <param name="position">The position of the handle in the space of Handles.matrix.</param>
+        /// <param name="rotation">The rotation of the handle in the space of Handles.matrix.</param>
+        /// <param name="size">The size of the handle in the space of Handles.matrix. Use HandleUtility.GetHandleSize if you want a constant screen-space size.</param>
         /// <param name="eventType">Event type for the handle to act upon. By design it handles EventType.Layout and EventType.Repaint events.</param>
         public static void CubeHandleCap(int controlID, Vector3 position, Quaternion rotation, float size, EventType eventType)
         {
@@ -303,6 +309,7 @@
             }
         }
 
+        [Obsolete("Use CylinderHandleCap instead")]
         public static void CylinderCap(int controlID, Vector3 position, Quaternion rotation, float size)
         {
             if (Event.current.type == EventType.Repaint)
@@ -315,9 +322,9 @@
         /// <para>Draw a cylinder handle. Pass this into handle functions.</para>
         /// </summary>
         /// <param name="controlID">The control ID for the handle.</param>
-        /// <param name="position">The world-space position of the handle's start point.</param>
-        /// <param name="rotation">The rotation of the handle.</param>
-        /// <param name="size">The size of the handle in world-space units.</param>
+        /// <param name="position">The position of the handle in the space of Handles.matrix.</param>
+        /// <param name="rotation">The rotation of the handle in the space of Handles.matrix.</param>
+        /// <param name="size">The size of the handle in the space of Handles.matrix. Use HandleUtility.GetHandleSize if you want a constant screen-space size.</param>
         /// <param name="eventType">Event type for the handle to act upon. By design it handles EventType.Layout and EventType.Repaint events.</param>
         public static void CylinderHandleCap(int controlID, Vector3 position, Quaternion rotation, float size, EventType eventType)
         {
@@ -433,10 +440,10 @@
                             GUIUtility.hotControl = num5;
                             if (current.shift)
                             {
-                                Object[] objects = Selection.objects;
-                                if (!ArrayUtility.Contains<Object>(objects, target))
+                                UnityEngine.Object[] objects = Selection.objects;
+                                if (!ArrayUtility.Contains<UnityEngine.Object>(objects, target))
                                 {
-                                    ArrayUtility.Add<Object>(ref objects, target);
+                                    ArrayUtility.Add<UnityEngine.Object>(ref objects, target);
                                     Selection.objects = objects;
                                 }
                             }
@@ -470,7 +477,7 @@
                         if (!current.alt && (GUIUtility.hotControl == hashCode))
                         {
                             DragAndDrop.PrepareStartDrag();
-                            DragAndDrop.objectReferences = new Object[] { target };
+                            DragAndDrop.objectReferences = new UnityEngine.Object[] { target };
                             DragAndDrop.StartDrag(ObjectNames.GetDragAndDropTitle(target));
                             current.Use();
                         }
@@ -868,7 +875,7 @@
                     GUI.changed = false;
                     if (<>f__mg$cache7 == null)
                     {
-                        <>f__mg$cache7 = new DrawCapFunction(Handles.DotCap);
+                        <>f__mg$cache7 = new CapFunction(Handles.DotHandleCap);
                     }
                     vector6 = Slider1D.Do(controlID, vector6, vectorArray[i], HandleUtility.GetHandleSize(vector6) * 0.03f, <>f__mg$cache7, 0f);
                     if (GUI.changed)
@@ -904,7 +911,7 @@
             num2 = SizeSlider(position, -d, num2);
             r = SizeSlider(position, vector3, r);
             r = SizeSlider(position, -vector3, r);
-            if (((Tools.current != Tool.Move) && (Tools.current != Tool.Scale)) || (Tools.pivotRotation != PivotRotation.Local))
+            if (((Tools.current != UnityEditor.Tool.Move) && (Tools.current != UnityEditor.Tool.Scale)) || (Tools.pivotRotation != PivotRotation.Local))
             {
                 DrawLine(position, position + vector);
             }
@@ -1068,6 +1075,7 @@
             return radius;
         }
 
+        [Obsolete("Use DotHandleCap instead")]
         public static void DotCap(int controlID, Vector3 position, Quaternion rotation, float size)
         {
             if (Event.current.type == EventType.Repaint)
@@ -1091,9 +1099,9 @@
         /// <para>Draw a dot handle. Pass this into handle functions.</para>
         /// </summary>
         /// <param name="controlID">The control ID for the handle.</param>
-        /// <param name="position">The world-space position of the handle's start point.</param>
-        /// <param name="rotation">The rotation of the handle.</param>
-        /// <param name="size">The size of the handle in world-space units.</param>
+        /// <param name="position">The position of the handle in the space of Handles.matrix.</param>
+        /// <param name="rotation">The rotation of the handle in the space of Handles.matrix.</param>
+        /// <param name="size">The size of the handle in the space of Handles.matrix. Use HandleUtility.GetHandleSize if you want a constant screen-space size.</param>
         /// <param name="eventType">Event type for the handle to act upon. By design it handles EventType.Layout and EventType.Repaint events.</param>
         public static void DotHandleCap(int controlID, Vector3 position, Quaternion rotation, float size, EventType eventType)
         {
@@ -1292,46 +1300,36 @@
         {
             if (Event.current.type == EventType.Repaint)
             {
-                Rect pixelRect = camera.pixelRect;
-                Rect rect = camera.rect;
-                try
+                if (camera.targetTexture == null)
                 {
-                    if (camera.targetTexture == null)
-                    {
-                        Rect rect3 = EditorGUIUtility.PointsToPixels(GUIClip.Unclip(position));
-                        camera.pixelRect = new Rect(rect3.xMin, Screen.height - rect3.yMax, rect3.width, rect3.height);
-                    }
-                    else
-                    {
-                        camera.rect = new Rect(0f, 0f, 1f, 1f);
-                    }
-                    if (drawMode == DrawCameraMode.Normal)
-                    {
-                        RenderTexture targetTexture = camera.targetTexture;
-                        camera.targetTexture = RenderTexture.active;
-                        camera.Render();
-                        camera.targetTexture = targetTexture;
-                    }
-                    else
-                    {
-                        if (drawGrid)
-                        {
-                            Internal_DrawCameraWithGrid(camera, (int) drawMode, ref gridParam);
-                        }
-                        else
-                        {
-                            Internal_DrawCamera(camera, (int) drawMode);
-                        }
-                        if (finish)
-                        {
-                            Internal_FinishDrawingCamera(camera);
-                        }
-                    }
+                    Rect rect = EditorGUIUtility.PointsToPixels(GUIClip.Unclip(position));
+                    camera.pixelRect = new Rect(rect.xMin, Screen.height - rect.yMax, rect.width, rect.height);
                 }
-                finally
+                else
                 {
-                    camera.pixelRect = pixelRect;
-                    camera.rect = rect;
+                    camera.rect = new Rect(0f, 0f, 1f, 1f);
+                }
+                if (drawMode == DrawCameraMode.Normal)
+                {
+                    RenderTexture targetTexture = camera.targetTexture;
+                    camera.targetTexture = RenderTexture.active;
+                    camera.Render();
+                    camera.targetTexture = targetTexture;
+                }
+                else
+                {
+                    if (drawGrid)
+                    {
+                        Internal_DrawCameraWithGrid(camera, (int) drawMode, ref gridParam);
+                    }
+                    else
+                    {
+                        Internal_DrawCamera(camera, (int) drawMode);
+                    }
+                    if (finish)
+                    {
+                        Internal_FinishDrawingCamera(camera);
+                    }
                 }
             }
             else
@@ -1757,6 +1755,7 @@
         public static Vector3 FreeMoveHandle(Vector3 position, Quaternion rotation, float size, Vector3 snap, CapFunction capFunction) => 
             FreeMove.Do(GUIUtility.GetControlID(s_FreeMoveHandleHash, FocusType.Keyboard), position, rotation, size, snap, capFunction);
 
+        [Obsolete("DrawCapFunction is obsolete. Use the version with CapFunction instead. Example: Change SphereCap to SphereHandleCap.")]
         public static Vector3 FreeMoveHandle(Vector3 position, Quaternion rotation, float size, Vector3 snap, DrawCapFunction capFunc) => 
             FreeMove.Do(GUIUtility.GetControlID(s_FreeMoveHandleHash, FocusType.Keyboard), position, rotation, size, snap, capFunc);
 
@@ -2043,14 +2042,12 @@
         }
 
         /// <summary>
-        /// <para>Make a 3D Scene view position handle.</para>
+        /// <para>Make a position handle.</para>
         /// </summary>
         /// <param name="position">Center of the handle in 3D space.</param>
         /// <param name="rotation">Orientation of the handle in 3D space.</param>
         /// <returns>
-        /// <para>The new value modified by the user's interaction with the handle. If the user has not moved the handle, it will return the same value as you passed into the function.
-        /// 
-        /// Note: Use HandleUtility.GetHandleSize where you might want to have constant screen-sized handles.</para>
+        /// <para>The new value modified by the user's interaction with the handle. If the user has not moved the handle, it will return the same value as you passed into the function.</para>
         /// </returns>
         public static Vector3 PositionHandle(Vector3 position, Quaternion rotation) => 
             DoPositionHandle(position, rotation);
@@ -2085,6 +2082,7 @@
         public static float RadiusHandle(Quaternion rotation, Vector3 position, float radius, bool handlesOnly) => 
             DoRadiusHandle(rotation, position, radius, handlesOnly);
 
+        [Obsolete("Use RectangleHandleCap instead")]
         public static void RectangleCap(int controlID, Vector3 position, Quaternion rotation, float size)
         {
             RectangleCap(controlID, position, rotation, new Vector2(size, size));
@@ -2109,9 +2107,9 @@
         /// <para>Draw a rectangle handle. Pass this into handle functions.</para>
         /// </summary>
         /// <param name="controlID">The control ID for the handle.</param>
-        /// <param name="position">The world-space position of the handle's start point.</param>
-        /// <param name="rotation">The rotation of the handle.</param>
-        /// <param name="size">The size of the handle in world-space units.</param>
+        /// <param name="position">The position of the handle in the space of Handles.matrix.</param>
+        /// <param name="rotation">The rotation of the handle in the space of Handles.matrix.</param>
+        /// <param name="size">The size of the handle in the space of Handles.matrix. Use HandleUtility.GetHandleSize if you want a constant screen-space size.</param>
         /// <param name="eventType">Event type for the handle to act upon. By design it handles EventType.Layout and EventType.Repaint events.</param>
         public static void RectangleHandleCap(int controlID, Vector3 position, Quaternion rotation, float size, EventType eventType)
         {
@@ -2180,18 +2178,16 @@
             DoScaleHandle(scale, position, rotation, size);
 
         /// <summary>
-        /// <para>Make a directional scale slider.
-        /// 
-        /// Note: Use HandleUtility.GetHandleSize where you might want to have constant screen-sized handles.</para>
+        /// <para>Make a directional scale slider.</para>
         /// </summary>
         /// <param name="scale">The value the user can modify.</param>
-        /// <param name="position">The position of the handle.</param>
-        /// <param name="direction">The direction of the handle.</param>
-        /// <param name="rotation">The rotation of whole object.</param>
-        /// <param name="size">The size of the handle.</param>
-        /// <param name="snap">The new value after the user has modified it.</param>
+        /// <param name="position">The position of the handle in the space of Handles.matrix.</param>
+        /// <param name="direction">The direction of the handle in the space of Handles.matrix.</param>
+        /// <param name="rotation">The rotation of the handle in the space of Handles.matrix.</param>
+        /// <param name="size">The size of the handle in the space of Handles.matrix. Use HandleUtility.GetHandleSize if you want a constant screen-space size.</param>
+        /// <param name="snap">The snap increment. See Handles.SnapValue.</param>
         /// <returns>
-        /// <para>The value modified by the user's interaction with the handle.</para>
+        /// <para>The new value modified by the user's interaction with the handle. If the user has not moved the handle, it will return the same value as you passed into the function.</para>
         /// </returns>
         public static float ScaleSlider(float scale, Vector3 position, Vector3 direction, Quaternion rotation, float size, float snap) => 
             SliderScale.DoAxis(GUIUtility.GetControlID(s_ScaleSliderHash, FocusType.Keyboard), scale, position, direction, rotation, size, snap);
@@ -2199,6 +2195,7 @@
         public static float ScaleValueHandle(float value, Vector3 position, Quaternion rotation, float size, CapFunction capFunction, float snap) => 
             SliderScale.DoCenter(GUIUtility.GetControlID(s_ScaleValueHandleHash, FocusType.Keyboard), value, position, rotation, size, capFunction, snap);
 
+        [Obsolete("DrawCapFunction is obsolete. Use the version with CapFunction instead. Example: Change SphereCap to SphereHandleCap.")]
         public static float ScaleValueHandle(float value, Vector3 position, Quaternion rotation, float size, DrawCapFunction capFunc, float snap) => 
             SliderScale.DoCenter(GUIUtility.GetControlID(s_ScaleValueHandleHash, FocusType.Keyboard), value, position, rotation, size, capFunc, snap);
 
@@ -2273,24 +2270,29 @@
 
         internal static void SetupIgnoreRaySnapObjects()
         {
-            HandleUtility.ignoreRaySnapObjects = Selection.GetTransforms(SelectionMode.Editable | SelectionMode.Deep);
+            HandleUtility.ignoreRaySnapObjects = Selection.GetTransforms(UnityEditor.SelectionMode.Editable | UnityEditor.SelectionMode.Deep);
+        }
+
+        internal static void ShowStaticLabel(Vector3 pos)
+        {
+            color = Color.white;
+            zTest = CompareFunction.Always;
+            GUIStyle style = "SC ViewAxisLabel";
+            style.alignment = TextAnchor.MiddleLeft;
+            style.fixedWidth = 0f;
+            BeginGUI();
+            Rect position = HandleUtility.WorldPointToSizedRect(pos, EditorGUIUtility.TempContent("Static"), style);
+            position.x += 10f;
+            position.y += 10f;
+            GUI.Label(position, EditorGUIUtility.TempContent("Static"), style);
+            EndGUI();
         }
 
         internal static void ShowStaticLabelIfNeeded(Vector3 pos)
         {
             if ((!Tools.s_Hidden && EditorApplication.isPlaying) && GameObjectUtility.ContainsStatic(Selection.gameObjects))
             {
-                color = Color.white;
-                zTest = CompareFunction.Always;
-                GUIStyle style = "SC ViewAxisLabel";
-                style.alignment = TextAnchor.MiddleLeft;
-                style.fixedWidth = 0f;
-                BeginGUI();
-                Rect position = HandleUtility.WorldPointToSizedRect(pos, EditorGUIUtility.TempContent("Static"), style);
-                position.x += 10f;
-                position.y += 10f;
-                GUI.Label(position, EditorGUIUtility.TempContent("Static"), style);
-                EndGUI();
+                ShowStaticLabel(pos);
             }
         }
 
@@ -2314,15 +2316,15 @@
         }
 
         /// <summary>
-        /// <para>Make a 3D slider.</para>
+        /// <para>Make a 3D slider that moves along one axis.</para>
         /// </summary>
-        /// <param name="position">The position of the current point.</param>
-        /// <param name="direction">The direction of the sliding.</param>
-        /// <param name="size">3D size the size of the handle.</param>
-        /// <param name="snap">The snap value (see Handles.SnapValue).</param>
-        /// <param name="capFunction">The function to call for doing the actual drawing - by default, it's Handles.ArrowHAndleCap, but any function that has the same signature can be used.</param>
+        /// <param name="position">The position of the current point in the space of Handles.matrix.</param>
+        /// <param name="direction">The direction axis of the slider in the space of Handles.matrix.</param>
+        /// <param name="size">The size of the handle in the space of Handles.matrix. Use HandleUtility.GetHandleSize if you want a constant screen-space size.</param>
+        /// <param name="snap">The snap increment. See Handles.SnapValue.</param>
+        /// <param name="capFunction">The function to call for doing the actual drawing. By default it is Handles.ArrowHandleCap, but any function that has the same signature can be used.</param>
         /// <returns>
-        /// <para>The new value modified by the user's interaction with the handle. If the user has not moved the handle, it will return the same value as you passed into the function.</para>
+        /// <para>The new value modified by the user's interaction with the handle. If the user has not moved the handle, it will return the position value passed into the function.</para>
         /// </returns>
         public static Vector3 Slider(Vector3 position, Vector3 direction)
         {
@@ -2336,6 +2338,7 @@
         public static Vector3 Slider(Vector3 position, Vector3 direction, float size, CapFunction capFunction, float snap) => 
             Slider1D.Do(GUIUtility.GetControlID(s_SliderHash, FocusType.Keyboard), position, direction, size, capFunction, snap);
 
+        [Obsolete("DrawCapFunction is obsolete. Use the version with CapFunction instead. Example: Change SphereCap to SphereHandleCap.")]
         public static Vector3 Slider(Vector3 position, Vector3 direction, float size, DrawCapFunction drawFunc, float snap) => 
             Slider1D.Do(GUIUtility.GetControlID(s_SliderHash, FocusType.Keyboard), position, direction, size, drawFunc, snap);
 
@@ -2353,14 +2356,14 @@
             return Slider2D(handlePos, handleDir, slideDir1, slideDir2, handleSize, capFunction, snap, drawHelper);
         }
 
-        [ExcludeFromDocs]
+        [Obsolete("DrawCapFunction is obsolete. Use the version with CapFunction instead. Example: Change SphereCap to SphereHandleCap."), ExcludeFromDocs]
         public static Vector3 Slider2D(Vector3 handlePos, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, DrawCapFunction drawFunc, float snap)
         {
             bool drawHelper = false;
             return Slider2D(handlePos, handleDir, slideDir1, slideDir2, handleSize, drawFunc, snap, drawHelper);
         }
 
-        [ExcludeFromDocs]
+        [Obsolete("DrawCapFunction is obsolete. Use the version with CapFunction instead. Example: Change SphereCap to SphereHandleCap."), ExcludeFromDocs]
         public static Vector3 Slider2D(Vector3 handlePos, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, DrawCapFunction drawFunc, Vector2 snap)
         {
             bool drawHelper = false;
@@ -2374,7 +2377,7 @@
             return Slider2D(id, handlePos, handleDir, slideDir1, slideDir2, handleSize, capFunction, snap, drawHelper);
         }
 
-        [ExcludeFromDocs]
+        [ExcludeFromDocs, Obsolete("DrawCapFunction is obsolete. Use the version with CapFunction instead. Example: Change SphereCap to SphereHandleCap.")]
         public static Vector3 Slider2D(int id, Vector3 handlePos, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, DrawCapFunction drawFunc, Vector2 snap)
         {
             bool drawHelper = false;
@@ -2387,15 +2390,18 @@
         public static Vector3 Slider2D(Vector3 handlePos, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, CapFunction capFunction, Vector2 snap, [DefaultValue("false")] bool drawHelper) => 
             UnityEditorInternal.Slider2D.Do(GUIUtility.GetControlID(s_Slider2DHash, FocusType.Keyboard), handlePos, new Vector3(0f, 0f, 0f), handleDir, slideDir1, slideDir2, handleSize, capFunction, snap, drawHelper);
 
+        [Obsolete("DrawCapFunction is obsolete. Use the version with CapFunction instead. Example: Change SphereCap to SphereHandleCap.")]
         public static Vector3 Slider2D(Vector3 handlePos, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, DrawCapFunction drawFunc, float snap, [DefaultValue("false")] bool drawHelper) => 
             Slider2D(GUIUtility.GetControlID(s_Slider2DHash, FocusType.Keyboard), handlePos, new Vector3(0f, 0f, 0f), handleDir, slideDir1, slideDir2, handleSize, drawFunc, new Vector2(snap, snap), drawHelper);
 
+        [Obsolete("DrawCapFunction is obsolete. Use the version with CapFunction instead. Example: Change SphereCap to SphereHandleCap.")]
         public static Vector3 Slider2D(Vector3 handlePos, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, DrawCapFunction drawFunc, Vector2 snap, [DefaultValue("false")] bool drawHelper) => 
             UnityEditorInternal.Slider2D.Do(GUIUtility.GetControlID(s_Slider2DHash, FocusType.Keyboard), handlePos, new Vector3(0f, 0f, 0f), handleDir, slideDir1, slideDir2, handleSize, drawFunc, snap, drawHelper);
 
         public static Vector3 Slider2D(int id, Vector3 handlePos, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, CapFunction capFunction, Vector2 snap, [DefaultValue("false")] bool drawHelper) => 
             UnityEditorInternal.Slider2D.Do(id, handlePos, new Vector3(0f, 0f, 0f), handleDir, slideDir1, slideDir2, handleSize, capFunction, snap, drawHelper);
 
+        [Obsolete("DrawCapFunction is obsolete. Use the version with CapFunction instead. Example: Change SphereCap to SphereHandleCap.")]
         public static Vector3 Slider2D(int id, Vector3 handlePos, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, DrawCapFunction drawFunc, Vector2 snap, [DefaultValue("false")] bool drawHelper) => 
             UnityEditorInternal.Slider2D.Do(id, handlePos, new Vector3(0f, 0f, 0f), handleDir, slideDir1, slideDir2, handleSize, drawFunc, snap, drawHelper);
 
@@ -2406,7 +2412,7 @@
             return Slider2D(id, handlePos, offset, handleDir, slideDir1, slideDir2, handleSize, capFunction, snap, drawHelper);
         }
 
-        [ExcludeFromDocs]
+        [Obsolete("DrawCapFunction is obsolete. Use the version with CapFunction instead. Example: Change SphereCap to SphereHandleCap."), ExcludeFromDocs]
         public static Vector3 Slider2D(int id, Vector3 handlePos, Vector3 offset, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, DrawCapFunction drawFunc, Vector2 snap)
         {
             bool drawHelper = false;
@@ -2416,6 +2422,7 @@
         public static Vector3 Slider2D(int id, Vector3 handlePos, Vector3 offset, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, CapFunction capFunction, Vector2 snap, [DefaultValue("false")] bool drawHelper) => 
             UnityEditorInternal.Slider2D.Do(id, handlePos, offset, handleDir, slideDir1, slideDir2, handleSize, capFunction, snap, drawHelper);
 
+        [Obsolete("DrawCapFunction is obsolete. Use the version with CapFunction instead. Example: Change SphereCap to SphereHandleCap.")]
         public static Vector3 Slider2D(int id, Vector3 handlePos, Vector3 offset, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, DrawCapFunction drawFunc, Vector2 snap, [DefaultValue("false")] bool drawHelper) => 
             UnityEditorInternal.Slider2D.Do(id, handlePos, offset, handleDir, slideDir1, slideDir2, handleSize, drawFunc, snap, drawHelper);
 
@@ -2436,6 +2443,7 @@
             return val;
         }
 
+        [Obsolete("Use SphereHandleCap instead")]
         public static void SphereCap(int controlID, Vector3 position, Quaternion rotation, float size)
         {
             if (Event.current.type == EventType.Repaint)
@@ -2448,10 +2456,10 @@
         /// <para>Draw a sphere handle. Pass this into handle functions.</para>
         /// </summary>
         /// <param name="controlID">The control ID for the handle.</param>
-        /// <param name="position">The world-space position of the handle's start point.</param>
-        /// <param name="rotation">The rotation of the handle.</param>
+        /// <param name="position">The position of the handle in the space of Handles.matrix.</param>
+        /// <param name="rotation">The rotation of the handle in the space of Handles.matrix.</param>
         /// <param name="eventType">Event type for the handle to act upon. By design it handles EventType.Layout and EventType.Repaint events.</param>
-        /// <param name="size">The size of the handle in world-space units.</param>
+        /// <param name="size">The size of the handle in the space of Handles.matrix. Use HandleUtility.GetHandleSize if you want a constant screen-space size.</param>
         public static void SphereHandleCap(int controlID, Vector3 position, Quaternion rotation, float size, EventType eventType)
         {
             if (eventType != EventType.Layout)
@@ -2594,20 +2602,79 @@
         /// <para>The function to use for drawing the handle e.g. Handles.RectangleCap.</para>
         /// </summary>
         /// <param name="controlID">The control ID for the handle.</param>
-        /// <param name="position">The world-space position of the handle's start point.</param>
-        /// <param name="rotation">The rotation of the handle.</param>
+        /// <param name="position">The position of the handle in the space of Handles.matrix.</param>
+        /// <param name="rotation">The rotation of the handle in the space of Handles.matrix.</param>
         /// <param name="size">The size of the handle in world-space units.</param>
         /// <param name="eventType">Event type for the handle to act upon. By design it handles EventType.Layout and EventType.Repaint events.</param>
         public delegate void CapFunction(int controlID, Vector3 position, Quaternion rotation, float size, EventType eventType);
 
-        /// <summary>
-        /// <para>The function to use for drawing the handle e.g. Handles.RectangleCap.</para>
-        /// </summary>
-        /// <param name="controlID"></param>
-        /// <param name="position"></param>
-        /// <param name="rotation"></param>
-        /// <param name="size"></param>
+        [Obsolete("This delegate is obsolete. Use CapFunction instead.")]
         public delegate void DrawCapFunction(int controlID, Vector3 position, Quaternion rotation, float size);
+
+        /// <summary>
+        /// <para>Disposable helper struct for automatically setting and reverting Handles.color and/or Handles.matrix.</para>
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct DrawingScope : IDisposable
+        {
+            private bool m_Disposed;
+            private Color m_OriginalColor;
+            private Matrix4x4 m_OriginalMatrix;
+            /// <summary>
+            /// <para>Create a new DrawingScope and set Handles.color and/or Handles.matrix to the specified values.</para>
+            /// </summary>
+            /// <param name="matrix">The matrix to use for displaying Handles inside the scope block.</param>
+            /// <param name="color">The color to use for displaying Handles inside the scope block.</param>
+            public DrawingScope(Color color) : this(color, Handles.matrix)
+            {
+            }
+
+            /// <summary>
+            /// <para>Create a new DrawingScope and set Handles.color and/or Handles.matrix to the specified values.</para>
+            /// </summary>
+            /// <param name="matrix">The matrix to use for displaying Handles inside the scope block.</param>
+            /// <param name="color">The color to use for displaying Handles inside the scope block.</param>
+            public DrawingScope(Matrix4x4 matrix) : this(Handles.color, matrix)
+            {
+            }
+
+            /// <summary>
+            /// <para>Create a new DrawingScope and set Handles.color and/or Handles.matrix to the specified values.</para>
+            /// </summary>
+            /// <param name="matrix">The matrix to use for displaying Handles inside the scope block.</param>
+            /// <param name="color">The color to use for displaying Handles inside the scope block.</param>
+            public DrawingScope(Color color, Matrix4x4 matrix)
+            {
+                this.m_Disposed = false;
+                this.m_OriginalColor = Handles.color;
+                this.m_OriginalMatrix = Handles.matrix;
+                Handles.matrix = matrix;
+                Handles.color = color;
+            }
+
+            /// <summary>
+            /// <para>The value of Handles.color at the time this DrawingScope was created.</para>
+            /// </summary>
+            public Color originalColor =>
+                this.m_OriginalColor;
+            /// <summary>
+            /// <para>The value of Handles.matrix at the time this DrawingScope was created.</para>
+            /// </summary>
+            public Matrix4x4 originalMatrix =>
+                this.m_OriginalMatrix;
+            /// <summary>
+            /// <para>Automatically reverts Handles.color and Handles.matrix to their values prior to entering the scope, when the scope is exited. You do not need to call this method manually.</para>
+            /// </summary>
+            public void Dispose()
+            {
+                if (!this.m_Disposed)
+                {
+                    this.m_Disposed = true;
+                    Handles.color = this.m_OriginalColor;
+                    Handles.matrix = this.m_OriginalMatrix;
+                }
+            }
+        }
 
         internal enum FilterMode
         {
@@ -2616,44 +2683,18 @@
             ShowRest
         }
 
-        /// <summary>
-        /// <para>Disposable helper struct for automatically setting and reverting Handles.matrix.</para>
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        public struct MatrixScope : IDisposable
-        {
-            private bool m_Disposed;
-            private Matrix4x4 m_OldMatrix;
-            /// <summary>
-            /// <para>Create a new MatrixScope and set Handles.matrix to the specified value.</para>
-            /// </summary>
-            /// <param name="matrix">The matrix to use for displaying Handles inside the scope block.</param>
-            public MatrixScope(Matrix4x4 matrix)
-            {
-                this.m_Disposed = false;
-                this.m_OldMatrix = Handles.matrix;
-                Handles.matrix = matrix;
-            }
-
-            /// <summary>
-            /// <para>Automatically reverts Handles.matrix to its value prior to entering the scope, when the scope is exited. You do not need to call this manually.</para>
-            /// </summary>
-            public void Dispose()
-            {
-                if (!this.m_Disposed)
-                {
-                    this.m_Disposed = true;
-                    Handles.matrix = this.m_OldMatrix;
-                }
-            }
-        }
-
         private enum PlaneHandle
         {
             xzPlane,
             xyPlane,
             yzPlane
         }
+
+        /// <summary>
+        /// <para>A delegate type for getting a handle's size based on its current position.</para>
+        /// </summary>
+        /// <param name="position">The current position of the handle in the space of Handles.matrix.</param>
+        public delegate float SizeFunction(Vector3 position);
     }
 }
 

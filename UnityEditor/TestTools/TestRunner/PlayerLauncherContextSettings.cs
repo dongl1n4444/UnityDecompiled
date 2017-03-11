@@ -8,6 +8,7 @@
     {
         private bool m_ApplicationRunInBackground;
         private ResolutionDialogSetting m_DisplayResolutionDialog;
+        private bool m_Disposed;
         private EditorBuildSettingsScene[] m_EditorBuildSettings;
         private bool m_FullScreen;
         private bool m_ResizableWindow;
@@ -28,15 +29,21 @@
             PlayerSettings.displayResolutionDialog = this.m_DisplayResolutionDialog;
             PlayerSettings.resizableWindow = this.m_ResizableWindow;
             PlayerSettings.SplashScreen.show = this.m_ShowUnitySplashScreen;
+            EditorApplication.UnlockReloadAssemblies();
         }
 
         public void Dispose()
         {
-            this.CleanupProjectParameters();
+            if (!this.m_Disposed)
+            {
+                this.CleanupProjectParameters();
+                this.m_Disposed = true;
+            }
         }
 
         private void SetupProjectParameters()
         {
+            EditorApplication.LockReloadAssemblies();
             this.m_ApplicationRunInBackground = Application.runInBackground;
             Application.runInBackground = true;
             this.m_EditorBuildSettings = EditorBuildSettings.scenes;

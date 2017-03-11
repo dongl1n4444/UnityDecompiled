@@ -24,6 +24,8 @@
         /// <param name="keyword"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void EnableKeyword(string keyword);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern Array ExtractArrayFromList(object list);
         /// <summary>
         /// <para>Finds a shader with the given name.</para>
         /// </summary>
@@ -356,15 +358,7 @@
 
         public static void SetGlobalFloatArray(int nameID, List<float> values)
         {
-            if (values == null)
-            {
-                throw new ArgumentNullException("values");
-            }
-            if (values.Count == 0)
-            {
-                throw new ArgumentException("Zero-sized array is not allowed.");
-            }
-            SetGlobalFloatArrayImplList(nameID, values);
+            SetGlobalFloatArray(nameID, (float[]) ExtractArrayFromList(values));
         }
 
         /// <summary>
@@ -404,8 +398,6 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void SetGlobalFloatArrayImpl(int nameID, float[] values);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private static extern void SetGlobalFloatArrayImplList(int nameID, object values);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void SetGlobalFloatImpl(int nameID, float value);
         /// <summary>
@@ -456,15 +448,7 @@
 
         public static void SetGlobalMatrixArray(int nameID, List<Matrix4x4> values)
         {
-            if (values == null)
-            {
-                throw new ArgumentNullException("values");
-            }
-            if (values.Count == 0)
-            {
-                throw new ArgumentException("Zero-sized array is not allowed.");
-            }
-            SetGlobalMatrixArrayImplList(nameID, values);
+            SetGlobalMatrixArray(nameID, (Matrix4x4[]) ExtractArrayFromList(values));
         }
 
         /// <summary>
@@ -504,8 +488,6 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void SetGlobalMatrixArrayImpl(int nameID, Matrix4x4[] values);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private static extern void SetGlobalMatrixArrayImplList(int nameID, object values);
         private static void SetGlobalMatrixImpl(int nameID, Matrix4x4 value)
         {
             INTERNAL_CALL_SetGlobalMatrixImpl(nameID, ref value);
@@ -569,15 +551,7 @@
 
         public static void SetGlobalVectorArray(int nameID, List<Vector4> values)
         {
-            if (values == null)
-            {
-                throw new ArgumentNullException("values");
-            }
-            if (values.Count == 0)
-            {
-                throw new ArgumentException("Zero-sized array is not allowed.");
-            }
-            SetGlobalVectorArrayImplList(nameID, values);
+            SetGlobalVectorArray(nameID, (Vector4[]) ExtractArrayFromList(values));
         }
 
         /// <summary>
@@ -617,8 +591,6 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void SetGlobalVectorArrayImpl(int nameID, Vector4[] values);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private static extern void SetGlobalVectorArrayImplList(int nameID, object values);
         private static void SetGlobalVectorImpl(int nameID, Vector4 value)
         {
             INTERNAL_CALL_SetGlobalVectorImpl(nameID, ref value);
@@ -638,6 +610,11 @@
         /// <para>Shader LOD level for all shaders.</para>
         /// </summary>
         public static int globalMaximumLOD { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
+        /// <para>Render pipeline currently in use.</para>
+        /// </summary>
+        public static string globalRenderPipeline { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Shader hardware tier classification for current device.</para>

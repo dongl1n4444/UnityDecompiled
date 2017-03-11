@@ -14,7 +14,9 @@
         {
             _platformRunners.Add(typeof(MacOSXRuntimePlatform), new DesktopRunner(new MacOSXRuntimePlatform()));
             _platformRunners.Add(typeof(WindowsDesktopRuntimePlatform), new DesktopRunner(new WindowsDesktopRuntimePlatform()));
+            _platformRunners.Add(typeof(LinuxRuntimePlatform), new DesktopRunner(new LinuxRuntimePlatform()));
             _platformRunners.Add(typeof(WinRTRuntimePlatform), new WinRTRunner());
+            _platformRunners.Add(typeof(TizenRuntimePlatform), new TizenRunner());
         }
 
         protected Runner()
@@ -45,7 +47,7 @@
             string str = result.StdErr.Trim() + result.StdOut.Trim();
             if (result.ExitCode != 0)
             {
-                throw new ApplicationException(string.Format("Process {0} ended with exitcode {1}{3}{2}{3}", new object[] { executable, result.ExitCode, str, Environment.NewLine }));
+                throw new RunnerFailedException(string.Format("Process {0} ended with exitcode {1}{3}{2}{3}", new object[] { executable, result.ExitCode, str, Environment.NewLine }));
             }
             return str;
         }

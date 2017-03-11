@@ -27,10 +27,10 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_localBounds(ref Bounds value);
         /// <summary>
-        /// <para>Sets weight of BlendShape on this renderer.</para>
+        /// <para>Sets the weight in percent of a BlendShape on this Renderer.</para>
         /// </summary>
-        /// <param name="index"></param>
-        /// <param name="value"></param>
+        /// <param name="index">The index of the BlendShape to modify.</param>
+        /// <param name="value">The weight in percent for this BlendShape.</param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetBlendShapeWeight(int index, float value);
 

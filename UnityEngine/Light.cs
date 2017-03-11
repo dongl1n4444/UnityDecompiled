@@ -116,8 +116,6 @@
         /// </summary>
         public float bounceIntensity { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        internal float CCT { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
-
         /// <summary>
         /// <para>The color of the light.</para>
         /// </summary>
@@ -134,6 +132,16 @@
                 this.INTERNAL_set_color(ref value);
             }
         }
+
+        /// <summary>
+        /// <para>
+        /// The color temperature of the light.
+        /// Correlated Color Temperature (abbreviated as CCT) is multiplied with the color filter when calculating the final color of a light source. The color temperature of the electromagnetic radiation emitted from an ideal black body is defined as its surface temperature in Kelvin. White is 6500K according to the D65 standard. Candle light is 1800K.
+        /// If you want to use lightsUseCCT, lightsUseLinearIntensity has to be enabled to ensure physically correct output.
+        /// See Also: GraphicsSettings.lightsUseLinearIntensity, GraphicsSettings.lightsUseCCT.
+        /// </para>
+        /// </summary>
+        public float colorTemperature { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Number of command buffers set up on this light (Read Only).</para>
@@ -169,8 +177,6 @@
         /// <para>Is the light contribution already stored in lightmaps and/or lightprobes (Read Only).</para>
         /// </summary>
         public bool isBaked { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
-
-        internal bool isStatic { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>This property describes what part of a light's contribution can be baked.</para>

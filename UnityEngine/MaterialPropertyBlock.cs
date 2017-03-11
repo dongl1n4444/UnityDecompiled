@@ -83,8 +83,10 @@
         /// </summary>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void Clear();
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         internal extern void DestroyBlock();
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern Array ExtractArrayFromList(object list);
         ~MaterialPropertyBlock()
         {
             this.DestroyBlock();
@@ -361,15 +363,7 @@
 
         public void SetFloatArray(int nameID, List<float> values)
         {
-            if (values == null)
-            {
-                throw new ArgumentNullException("values");
-            }
-            if (values.Count == 0)
-            {
-                throw new ArgumentException("Zero-sized array is not allowed.");
-            }
-            this.SetFloatArrayImplList(nameID, values);
+            this.SetFloatArray(nameID, (float[]) ExtractArrayFromList(values));
         }
 
         /// <summary>
@@ -410,8 +404,6 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetFloatArrayImpl(int nameID, float[] values);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private extern void SetFloatArrayImplList(int nameID, object list);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetFloatImpl(int nameID, float value);
         /// <summary>
         /// <para>Set a matrix property.</para>
@@ -437,15 +429,7 @@
 
         public void SetMatrixArray(int nameID, List<Matrix4x4> values)
         {
-            if (values == null)
-            {
-                throw new ArgumentNullException("values");
-            }
-            if (values.Count == 0)
-            {
-                throw new ArgumentException("Zero-sized array is not allowed.");
-            }
-            this.SetMatrixArrayImplList(nameID, values);
+            this.SetMatrixArray(nameID, (Matrix4x4[]) ExtractArrayFromList(values));
         }
 
         /// <summary>
@@ -485,8 +469,6 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetMatrixArrayImpl(int nameID, Matrix4x4[] values);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private extern void SetMatrixArrayImplList(int nameID, object list);
         private void SetMatrixImpl(int nameID, Matrix4x4 value)
         {
             INTERNAL_CALL_SetMatrixImpl(this, nameID, ref value);
@@ -544,15 +526,7 @@
 
         public void SetVectorArray(int nameID, List<Vector4> values)
         {
-            if (values == null)
-            {
-                throw new ArgumentNullException("values");
-            }
-            if (values.Count == 0)
-            {
-                throw new ArgumentException("Zero-sized array is not allowed.");
-            }
-            this.SetVectorArrayImplList(nameID, values);
+            this.SetVectorArray(nameID, (Vector4[]) ExtractArrayFromList(values));
         }
 
         /// <summary>
@@ -592,8 +566,6 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetVectorArrayImpl(int nameID, Vector4[] values);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private extern void SetVectorArrayImplList(int nameID, object list);
         private void SetVectorImpl(int nameID, Vector4 value)
         {
             INTERNAL_CALL_SetVectorImpl(this, nameID, ref value);

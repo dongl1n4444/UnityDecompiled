@@ -82,7 +82,7 @@
                 ScriptableObjectSaveLoadHelper<CurvePresetLibrary> helper = new ScriptableObjectSaveLoadHelper<CurvePresetLibrary>(GetExtension(this.m_CurveLibraryType), SaveType.Text);
                 this.m_CurveLibraryEditor = new PresetLibraryEditor<CurvePresetLibrary>(helper, this.m_CurveLibraryEditorState, new Action<int, object>(this.ItemClickedCallback));
                 this.m_CurveLibraryEditor.addDefaultPresets = (Action<PresetLibrary>) Delegate.Combine(this.m_CurveLibraryEditor.addDefaultPresets, new Action<PresetLibrary>(this.AddDefaultPresetsToLibrary));
-                this.m_CurveLibraryEditor.presetsWasReordered = (Action) Delegate.Combine(this.m_CurveLibraryEditor.presetsWasReordered, new Action(this.OnPresetsWasReordered));
+                this.m_CurveLibraryEditor.presetsWasReordered = (System.Action) Delegate.Combine(this.m_CurveLibraryEditor.presetsWasReordered, new System.Action(this.OnPresetsWasReordered));
                 this.m_CurveLibraryEditor.previewAspect = 4f;
                 this.m_CurveLibraryEditor.minMaxPreviewHeight = new Vector2(24f, 24f);
                 this.m_CurveLibraryEditor.showHeader = true;

@@ -42,7 +42,11 @@
         /// <summary>
         /// <para>Android 7.1, "Nougat", API level 25.</para>
         /// </summary>
-        AndroidApiLevel25 = 0x19
+        AndroidApiLevel25 = 0x19,
+        /// <summary>
+        /// <para>Sets the target API level automatically, according to the latest installed SDK on your computer.</para>
+        /// </summary>
+        AndroidApiLevelAuto = 0
     }
 }
 

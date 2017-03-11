@@ -8,7 +8,7 @@
     /// <summary>
     /// <para>A script interface for the.</para>
     /// </summary>
-    [NativeClass("TextRenderingPrivate::TextMesh"), RequireComponent(typeof(Transform), typeof(MeshRenderer))]
+    [RequireComponent(typeof(Transform), typeof(MeshRenderer)), NativeClass("TextRenderingPrivate::TextMesh")]
     public sealed class TextMesh : Component
     {
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]

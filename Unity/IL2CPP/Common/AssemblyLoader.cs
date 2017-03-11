@@ -165,7 +165,10 @@
                 }
                 if (definition.MainModule.MetadataKind == MetadataKind.WindowsMetadata)
                 {
-                    return this.AddWindowsMetadataAssembly(definition);
+                    using (definition)
+                    {
+                        return this.AddWindowsMetadataAssembly(definition);
+                    }
                 }
                 this._resolver.CacheAssembly(definition);
                 return definition;

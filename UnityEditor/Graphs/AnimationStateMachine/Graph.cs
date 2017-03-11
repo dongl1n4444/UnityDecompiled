@@ -340,7 +340,7 @@
                         return this.m_StateMachineNodeLookup[machine.stateMachine];
                     }
                 }
-                if (this.parentStateMachine != null)
+                if ((this.parentStateMachine != null) && this.rootStateMachine.HasStateMachine(stateMachine))
                 {
                     return this.m_StateMachineNodeLookup[this.parentStateMachine];
                 }

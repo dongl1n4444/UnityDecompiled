@@ -181,7 +181,7 @@
             }
             GUI.SetNextControlName("UploadCommentField");
             Rect position = GUILayoutUtility.GetRect(new GUIContent(), EditorStyles.textField);
-            s_UploadComment = GUI.TextField(position, s_UploadComment);
+            s_UploadComment = EditorGUI.TextField(position, s_UploadComment);
             if (string.IsNullOrEmpty(s_UploadComment) && (GUI.GetNameOfFocusedControl() != "UploadCommentField"))
             {
                 using (new EditorGUI.DisabledScope(true))

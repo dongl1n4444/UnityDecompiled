@@ -12,7 +12,7 @@
 
     internal class SpritePolygonModeModule : SpriteFrameModuleBase, ISpriteEditorModule
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private int <polygonSides>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <showChangeShapeWindow>k__BackingField;
@@ -28,7 +28,7 @@
         }
 
         public override bool CanBeActivated() => 
-            (base.spriteImportMode == SpriteImportMode.Polygon);
+            (UnityEditor.SpriteUtility.GetSpriteImportMode(base.assetDatabase, base.spriteEditor.selectedTexture) == SpriteImportMode.Polygon);
 
         private void DeterminePolygonSides()
         {
@@ -161,7 +161,7 @@
             {
                 SpriteRect rect = base.m_RectsCache.RectAt(i);
                 SpriteOutline item = new SpriteOutline();
-                item.AddRange(SpriteUtility.GeneratePolygonOutlineVerticesOfSize(this.polygonSides, (int) rect.rect.width, (int) rect.rect.height));
+                item.AddRange(UnityEditor.Sprites.SpriteUtility.GeneratePolygonOutlineVerticesOfSize(this.polygonSides, (int) rect.rect.width, (int) rect.rect.height));
                 rect.outline.Clear();
                 rect.outline.Add(item);
                 base.spriteEditor.SetDataModified();
@@ -177,6 +177,7 @@
 
         public override void OnModuleActivate()
         {
+            base.OnModuleActivate();
             base.m_RectsCache = base.spriteEditor.spriteRects;
             this.showChangeShapeWindow = this.polygonSprite;
             if (this.polygonSprite)

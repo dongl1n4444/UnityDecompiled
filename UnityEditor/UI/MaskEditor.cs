@@ -7,7 +7,7 @@
     /// <summary>
     /// <para>Custom Editor for the Mask component.</para>
     /// </summary>
-    [CustomEditor(typeof(UnityEngine.UI.Mask), true), CanEditMultipleObjects]
+    [CustomEditor(typeof(Mask), true), CanEditMultipleObjects]
     public class MaskEditor : Editor
     {
         private SerializedProperty m_ShowMaskGraphic;
@@ -19,7 +19,7 @@
 
         public override void OnInspectorGUI()
         {
-            Graphic component = (base.target as UnityEngine.UI.Mask).GetComponent<Graphic>();
+            Graphic component = (base.target as Mask).GetComponent<Graphic>();
             if ((component != null) && !component.IsActive())
             {
                 EditorGUILayout.HelpBox("Masking disabled due to Graphic component being disabled.", MessageType.Warning);

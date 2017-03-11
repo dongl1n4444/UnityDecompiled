@@ -5,6 +5,7 @@
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+    using UnityEngine.Experimental.Director;
     using UnityEngine.Internal;
     using UnityEngine.Scripting;
 
@@ -222,7 +223,7 @@
         /// <para>Gets the list of AnimatorClipInfo currently played by the current state.</para>
         /// </summary>
         /// <param name="layerIndex">The layer's index.</param>
-        [Obsolete("GetCurrentAnimationClipState is obsolete. Use GetCurrentAnimatorClipInfo instead (UnityUpgradable) -> GetCurrentAnimatorClipInfo(*)", true), EditorBrowsable(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("GetCurrentAnimationClipState is obsolete. Use GetCurrentAnimatorClipInfo instead (UnityUpgradable) -> GetCurrentAnimatorClipInfo(*)", true)]
         public AnimationInfo[] GetCurrentAnimationClipState(int layerIndex) => 
             null;
 
@@ -549,6 +550,8 @@
         private extern void INTERNAL_set_rootPosition(ref Vector3 value);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_rootRotation(ref Quaternion value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern void InternalGetCurrentGraph(ref PlayableGraph graph);
         [ExcludeFromDocs]
         public void InterruptMatchTarget()
         {
@@ -568,7 +571,7 @@
         /// <para>Returns true if the transform is controlled by the Animator\.</para>
         /// </summary>
         /// <param name="transform">The transform that is queried.</param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("use mask and layers to control subset of transfroms in a skeleton", true)]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("use mask and layers to control subset of transfroms in a skeleton", true), GeneratedByOldBindingsGenerator]
         public extern bool IsControlled(Transform transform);
         /// <summary>
         /// <para>See IAnimatorControllerPlayable.IsInTransition.</para>
@@ -1213,7 +1216,7 @@
         /// <para>Generates an parameter id from a string.</para>
         /// </summary>
         /// <param name="name">The string to convert to Id.</param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern int StringToHash(string name);
         /// <summary>
         /// <para>Evaluates the animator based on deltaTime.</para>
@@ -1343,6 +1346,11 @@
         public float gravityWeight { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
+        /// <para>Returns true if Animator has any playables assigned to it.</para>
+        /// </summary>
+        public bool hasBoundPlayables { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        /// <summary>
         /// <para>Returns true if the current rig has root motion.</para>
         /// </summary>
         public bool hasRootMotion { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
@@ -1428,6 +1436,19 @@
         /// <para>Gets the pivot weight.</para>
         /// </summary>
         public float pivotWeight { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        /// <summary>
+        /// <para>The PlayableGraph created by the Animator.</para>
+        /// </summary>
+        public PlayableGraph playableGraph
+        {
+            get
+            {
+                PlayableGraph graph = new PlayableGraph();
+                this.InternalGetCurrentGraph(ref graph);
+                return graph;
+            }
+        }
 
         /// <summary>
         /// <para>Sets the playback position in the recording buffer.</para>

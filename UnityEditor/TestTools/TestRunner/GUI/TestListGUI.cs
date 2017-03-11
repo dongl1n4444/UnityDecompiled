@@ -14,6 +14,8 @@
     internal abstract class TestListGUI
     {
         [SerializeField]
+        private string m_ResultStacktrace;
+        [SerializeField]
         private string m_ResultText;
         private Vector2 m_TestInfoScroll;
         private Vector2 m_TestListScroll;
@@ -24,6 +26,8 @@
         protected TestRunnerWindow m_Window;
         [SerializeField]
         public List<TestRunnerResult> newResultList = new List<TestRunnerResult>();
+        private static GUIContent s_GUIOpenErrorLine = new GUIContent("Open error line");
+        private static GUIContent s_GUIOpenTest = new GUIContent("Open source code");
         private static GUIContent s_GUIRun = new GUIContent("Run");
         private static GUIContent s_GUIRunAllTests = new GUIContent("Run All", "Run all tests");
         private static GUIContent s_GUIRunSelectedTests = new GUIContent("Run Selected", "Run selected test(s)");
@@ -32,15 +36,28 @@
         {
         }
 
+        private TestTreeViewItem GetSelectedTest()
+        {
+            foreach (int num in this.m_TestListState.selectedIDs)
+            {
+                TreeViewItem item = this.m_TestListTree.FindItem(num);
+                if (item is TestTreeViewItem)
+                {
+                    return (item as TestTreeViewItem);
+                }
+            }
+            return null;
+        }
+
         private string[] GetSelectedTests()
         {
             List<string> list = new List<string>();
             foreach (int num in this.m_TestListState.selectedIDs)
             {
                 TreeViewItem item = this.m_TestListTree.FindItem(num);
-                if (item is PlaymodeTestTreeViewItem)
+                if (item is TestTreeViewItem)
                 {
-                    string fullName = (item as PlaymodeTestTreeViewItem).fullName;
+                    string fullName = (item as TestTreeViewItem).FullName;
                     list.Add(fullName);
                 }
             }
@@ -83,6 +100,7 @@
             if (GUILayout.Button(s_GUIRunAllTests, EditorStyles.toolbarButton, new GUILayoutOption[0]))
             {
                 this.RunTests(TestRunnerFilter.empty);
+                GUIUtility.ExitGUI();
             }
             using (new EditorGUI.DisabledScope(!this.m_TestListTree.HasSelection()))
             {
@@ -92,16 +110,13 @@
                     foreach (int num in this.m_TestListTree.GetSelection())
                     {
                         TreeViewItem item = this.m_TestListTree.FindItem(num);
-                        if (item is TestLineTreeViewItem)
+                        if (item is TestTreeViewItem)
                         {
-                            list.Add((item as TestLineTreeViewItem).fullName);
-                        }
-                        else if (item is TestGroupTreeViewItem)
-                        {
-                            list.Add((item as TestGroupTreeViewItem).fullName);
+                            list.Add((item as TestTreeViewItem).FullName);
                         }
                     }
                     this.RunTests(new TestRunnerFilter(list.ToArray()));
+                    GUIUtility.ExitGUI();
                 }
             }
             GUILayout.FlexibleSpace();
@@ -127,7 +142,7 @@
             EditorGUILayout.HelpBox("No tests to show", MessageType.Info);
         }
 
-        public void RenderTestList()
+        public virtual void RenderTestList()
         {
             if ((this.m_TestListTree.data.rowCount == 0) || !this.m_TestListTree.data.GetItem(0).hasChildren)
             {
@@ -162,7 +177,7 @@
 
         protected virtual void TestContextClick(int id)
         {
-            <TestContextClick>c__AnonStorey1 storey = new <TestContextClick>c__AnonStorey1 {
+            <TestContextClick>c__AnonStorey2 storey = new <TestContextClick>c__AnonStorey2 {
                 $this = this
             };
             if (id != 0)
@@ -170,6 +185,22 @@
                 GenericMenu menu = new GenericMenu();
                 storey.testsToRun = this.GetSelectedTests();
                 bool flag = this.m_TestListState.selectedIDs.Count > 1;
+                if (!flag)
+                {
+                    <TestContextClick>c__AnonStorey1 storey2 = new <TestContextClick>c__AnonStorey1 {
+                        <>f__ref$2 = storey,
+                        testNode = this.GetSelectedTest()
+                    };
+                    if (!storey2.testNode.IsGroupNode)
+                    {
+                        if (!string.IsNullOrEmpty(this.m_ResultStacktrace))
+                        {
+                            menu.AddItem(s_GUIOpenErrorLine, false, new GenericMenu.MenuFunction2(storey2.<>m__0), "");
+                        }
+                        menu.AddItem(s_GUIOpenTest, false, new GenericMenu.MenuFunction2(storey2.<>m__1), "");
+                        menu.AddSeparator("");
+                    }
+                }
                 menu.AddItem(!flag ? s_GUIRun : s_GUIRunSelectedTests, false, new GenericMenu.MenuFunction2(storey.<>m__0), "");
                 menu.ShowAsContext();
             }
@@ -178,19 +209,12 @@
         protected virtual void TestDoubleClickCallback(int id)
         {
             TreeViewItem item = this.m_TestListTree.FindItem(id);
-            if (item is TestLineTreeViewItem)
+            if (item is TestTreeViewItem)
             {
-                TestLineTreeViewItem item2 = item as TestLineTreeViewItem;
-                Event current = Event.current;
-                if (current.control || current.command)
-                {
-                    GuiHelper.OpenInEditor(item2.type, item2.method);
-                }
-                else
-                {
-                    TestRunnerFilter filter = new TestRunnerFilter(item2.fullName);
-                    this.RunTests(filter);
-                }
+                TestTreeViewItem item2 = item as TestTreeViewItem;
+                TestRunnerFilter filter = new TestRunnerFilter(item2.FullName);
+                this.RunTests(filter);
+                GUIUtility.ExitGUI();
             }
         }
 
@@ -199,9 +223,11 @@
             if (selected.Length == 1)
             {
                 TreeViewItem item = this.m_TestListTree.FindItem(selected[0]);
-                if (item is PlaymodeTestTreeViewItem)
+                if (item is TestTreeViewItem)
                 {
-                    this.m_ResultText = (item as PlaymodeTestTreeViewItem).GetResultText();
+                    TestTreeViewItem item2 = item as TestTreeViewItem;
+                    this.m_ResultText = item2.GetResultText();
+                    this.m_ResultStacktrace = item2.result.stacktrace;
                 }
             }
             else if (selected.Length == 0)
@@ -210,20 +236,46 @@
             }
         }
 
-        public void UpdateResult(ITestResult result)
+        public void UpdateResult(ITestResult testResult)
+        {
+            TestRunnerResult result = new TestRunnerResult(testResult);
+            this.UpdateResult(result);
+        }
+
+        public void UpdateResult(TestRunnerResult result)
         {
             <UpdateResult>c__AnonStorey0 storey = new <UpdateResult>c__AnonStorey0 {
-                r = TestRunnerResult.FromNUnitResult(result)
+                result = result
             };
             TestRunnerResult result2 = Enumerable.FirstOrDefault<TestRunnerResult>(this.newResultList, new Func<TestRunnerResult, bool>(storey.<>m__0));
             if (result2 != null)
             {
-                result2.Update(storey.r);
+                result2.Update(storey.result);
             }
         }
 
         [CompilerGenerated]
         private sealed class <TestContextClick>c__AnonStorey1
+        {
+            internal TestListGUI.<TestContextClick>c__AnonStorey2 <>f__ref$2;
+            internal TestTreeViewItem testNode;
+
+            internal void <>m__0(object data)
+            {
+                if (!GuiHelper.OpenInEditor(this.<>f__ref$2.$this.m_ResultStacktrace))
+                {
+                    GuiHelper.OpenInEditor(this.testNode.type, this.testNode.method);
+                }
+            }
+
+            internal void <>m__1(object data)
+            {
+                GuiHelper.OpenInEditor(this.testNode.type, this.testNode.method);
+            }
+        }
+
+        [CompilerGenerated]
+        private sealed class <TestContextClick>c__AnonStorey2
         {
             internal TestListGUI $this;
             internal string[] testsToRun;
@@ -240,10 +292,10 @@
         [CompilerGenerated]
         private sealed class <UpdateResult>c__AnonStorey0
         {
-            internal TestRunnerResult r;
+            internal TestRunnerResult result;
 
-            internal bool <>m__0(TestRunnerResult rrr) => 
-                (rrr.id == this.r.id);
+            internal bool <>m__0(TestRunnerResult x) => 
+                (x.id == this.result.id);
         }
     }
 }

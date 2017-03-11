@@ -34,7 +34,7 @@
                 if (m_GameView.maximizeOnPlay)
                 {
                     DockArea parent = m_GameView.m_Parent as DockArea;
-                    if ((parent != null) && !parent.actualView.m_Parent.window.maximized)
+                    if (parent != null)
                     {
                         m_MaximizePending = WindowLayout.MaximizePrepare(parent.actualView);
                     }

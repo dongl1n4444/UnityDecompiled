@@ -18,7 +18,7 @@
             this.Init();
         }
 
-        private bool CheckIfChild(Object subEmitter)
+        private bool CheckIfChild(UnityEngine.Object subEmitter)
         {
             ParticleSystem root = ParticleSystemEditorUtils.GetRoot(base.m_ParticleSystemUI.m_ParticleSystems[0]);
             if (!IsChild(subEmitter as ParticleSystem, root))
@@ -30,7 +30,7 @@
                 }
                 if (EditorUtility.IsPersistent(subEmitter))
                 {
-                    GameObject obj2 = Object.Instantiate(subEmitter) as GameObject;
+                    GameObject obj2 = UnityEngine.Object.Instantiate(subEmitter) as GameObject;
                     if (obj2 != null)
                     {
                         obj2.transform.parent = base.m_ParticleSystemUI.m_ParticleSystems[0].transform;
@@ -57,9 +57,9 @@
             objectRefProp.objectReferenceValue = obj2.GetComponent<ParticleSystem>();
         }
 
-        private List<Object> GetSubEmitterProperties()
+        private List<UnityEngine.Object> GetSubEmitterProperties()
         {
-            List<Object> list = new List<Object>();
+            List<UnityEngine.Object> list = new List<UnityEngine.Object>();
             IEnumerator enumerator = this.m_SubEmitters.GetEnumerator();
             while (enumerator.MoveNext())
             {
@@ -98,7 +98,7 @@
             }
             else
             {
-                List<Object> subEmitterProperties = this.GetSubEmitterProperties();
+                List<UnityEngine.Object> subEmitterProperties = this.GetSubEmitterProperties();
                 GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Height(16f) };
                 GUILayout.BeginHorizontal(options);
                 GUILayoutOption[] optionArray2 = new GUILayoutOption[] { GUILayout.ExpandWidth(true) };
@@ -110,7 +110,7 @@
                 {
                     this.ShowSubEmitter(i);
                 }
-                List<Object> list2 = this.GetSubEmitterProperties();
+                List<UnityEngine.Object> list2 = this.GetSubEmitterProperties();
                 for (int j = 0; j < Mathf.Min(subEmitterProperties.Count, list2.Count); j++)
                 {
                     if (subEmitterProperties[j] != list2[j])
@@ -187,7 +187,7 @@
             if ((this.m_CheckObjectIndex >= 0) && !ObjectSelector.isVisible)
             {
                 SerializedProperty property2 = this.m_SubEmitters.GetArrayElementAtIndex(this.m_CheckObjectIndex).FindPropertyRelative("emitter");
-                Object objectReferenceValue = property2.objectReferenceValue;
+                UnityEngine.Object objectReferenceValue = property2.objectReferenceValue;
                 ParticleSystem subEmitter = objectReferenceValue as ParticleSystem;
                 if (subEmitter != null)
                 {

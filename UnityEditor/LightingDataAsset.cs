@@ -8,7 +8,7 @@
     /// <summary>
     /// <para>The lighting data asset used by the active scene.</para>
     /// </summary>
-    public sealed class LightingDataAsset : Object
+    public sealed class LightingDataAsset : UnityEngine.Object
     {
         internal bool isValid { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 

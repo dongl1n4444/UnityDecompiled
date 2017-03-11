@@ -81,12 +81,12 @@
             {
                 if (MethodSignatureWriter.NeedsHiddenMethodInfo(defaultConstructor, MethodCallType.Normal, true))
                 {
-                    object[] objArray2 = new object[] { DefaultMarshalInfoWriter.Naming.ForMethodNameOnly(defaultConstructor), destinationVariable.Load(), metadataAccess.HiddenMethodInfo(defaultConstructor) };
+                    object[] objArray2 = new object[] { metadataAccess.Method(defaultConstructor), destinationVariable.Load(), metadataAccess.HiddenMethodInfo(defaultConstructor) };
                     writer.WriteLine("{0}({1}, {2});", objArray2);
                 }
                 else
                 {
-                    object[] objArray3 = new object[] { DefaultMarshalInfoWriter.Naming.ForMethodNameOnly(defaultConstructor), destinationVariable.Load() };
+                    object[] objArray3 = new object[] { metadataAccess.Method(defaultConstructor), destinationVariable.Load() };
                     writer.WriteLine("{0}({1});", objArray3);
                 }
             }
@@ -187,7 +187,7 @@
         public override void WriteIncludesForMarshaling(CppCodeWriter writer)
         {
             base.WriteIncludesForMarshaling(writer);
-            writer.AddIncludeForMethodDeclarations(base._typeRef);
+            this.WriteMarshalFunctionDeclarations(writer);
         }
 
         protected abstract void WriteMarshalCleanupFunction(CppCodeWriter writer);
@@ -228,18 +228,12 @@
             writer.AddForwardDeclaration(this._type);
             writer.AddForwardDeclaration($"struct {this._marshaledTypeName}");
             writer.WriteLine();
-            writer.WriteCommentedLine("Methods for marshaling");
-            object[] args = new object[] { DefaultMarshalInfoWriter.Naming.ForTypeNameOnly(this._type) };
-            writer.WriteLine("struct {0};", args);
-            object[] objArray2 = new object[] { this._marshaledTypeName };
-            writer.WriteLine("struct {0};", objArray2);
+            writer.AddForwardDeclaration($"struct {DefaultMarshalInfoWriter.Naming.ForTypeNameOnly(this._type)};");
+            writer.AddForwardDeclaration($"struct {this._marshaledTypeName};");
             writer.WriteLine();
-            object[] objArray3 = new object[] { this._marshalToNativeFunctionDeclaration };
-            writer.WriteLine("{0};", objArray3);
-            object[] objArray4 = new object[] { this._marshalFromNativeFunctionDeclaration };
-            writer.WriteLine("{0};", objArray4);
-            object[] objArray5 = new object[] { this._marshalCleanupFunctionDeclaration };
-            writer.WriteLine("{0};", objArray5);
+            writer.AddMethodForwardDeclaration(this._marshalToNativeFunctionDeclaration);
+            writer.AddMethodForwardDeclaration(this._marshalFromNativeFunctionDeclaration);
+            writer.AddMethodForwardDeclaration(this._marshalCleanupFunctionDeclaration);
         }
 
         public override void WriteMarshalFunctionDefinitions(CppCodeWriter writer, IInteropDataCollector interopDataCollector)

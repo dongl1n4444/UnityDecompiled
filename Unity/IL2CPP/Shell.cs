@@ -132,6 +132,9 @@
             return ExecuteAndCaptureOutput(executeArgs);
         }
 
+        public static ExecuteResult ExecuteWithLiveOutput(ExecuteArgs executeArgs) => 
+            Execute(executeArgs, LiveOutput.Instance);
+
         private static Process NewProcess(ExecuteArgs executeArgs)
         {
             Process process = new Process {
@@ -246,6 +249,25 @@
             void AboutToCleanup(string tempOutputFile, string tempErrorFile);
             void OnStderrReceived(string data);
             void OnStdoutReceived(string data);
+        }
+
+        private class LiveOutput : Shell.IExecuteController
+        {
+            public static readonly Shell.IExecuteController Instance = new Shell.LiveOutput();
+
+            public void AboutToCleanup(string tempOutputFile, string tempErrorFile)
+            {
+            }
+
+            public void OnStderrReceived(string data)
+            {
+                Console.WriteLine(data);
+            }
+
+            public void OnStdoutReceived(string data)
+            {
+                Console.WriteLine(data);
+            }
         }
     }
 }

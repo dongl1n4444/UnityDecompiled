@@ -4,6 +4,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine;
+    using UnityEngine.Experimental.Rendering;
     using UnityEngine.Scripting;
 
     /// <summary>
@@ -50,9 +51,30 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetShaderMode(BuiltinShaderType type, BuiltinShaderMode mode);
 
-        internal static bool lightsUseCCT { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+        private static ScriptableObject INTERNAL_renderPipelineAsset { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        internal static bool lightsUseLinearIntensity { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+        /// <summary>
+        /// <para>Whether to use a Light's color temperature when calculating the final color of that Light."</para>
+        /// </summary>
+        public static bool lightsUseColorTemperature { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
+        /// <para>If this is true, Light intensity is multiplied against linear color values. If it is false, gamma color values are used.</para>
+        /// </summary>
+        public static bool lightsUseLinearIntensity { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
+        /// <para>The RenderPipelineAsset that describes how the Scene should be rendered.</para>
+        /// </summary>
+        public static RenderPipelineAsset renderPipelineAsset
+        {
+            get => 
+                (INTERNAL_renderPipelineAsset as RenderPipelineAsset);
+            set
+            {
+                INTERNAL_renderPipelineAsset = value;
+            }
+        }
 
         /// <summary>
         /// <para>An axis that describes the direction along which the distances of objects are measured for the purpose of sorting.</para>

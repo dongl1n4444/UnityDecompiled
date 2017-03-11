@@ -29,7 +29,7 @@
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
-            EditorGUILayout.HelpBox("StateMachine Transitions (displayed in orange) are not previewable. To preview a transition please select a State Transition (displayed in white)", MessageType.Info);
+            EditorGUILayout.HelpBox("Default Entry transitions (displayed in orange) are not previewable. To preview a transition please select a State transition (displayed in white).", MessageType.Info);
         }
     }
 }

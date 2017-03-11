@@ -61,23 +61,24 @@
                     destinationArray[j].copyAvatar = this.m_CopyAvatar.boolValue;
                 }
             }
-            base.serializedObject.ApplyModifiedProperties();
+            base.Apply();
             for (int k = 0; k < base.targets.Length; k++)
             {
                 if ((sourceArray[k].usesOwnAvatar && !destinationArray[k].usesOwnAvatar) && !destinationArray[k].copyAvatar)
                 {
                     SerializedObject serializedObject = new SerializedObject(base.targets[k]);
                     AvatarSetupTool.ClearAll(serializedObject);
-                    serializedObject.ApplyModifiedProperties();
+                    serializedObject.ApplyModifiedPropertiesWithoutUndo();
                 }
                 if ((!this.m_CopyAvatar.boolValue && !destinationArray[k].humanoid) && (this.rootIndex > 0))
                 {
                     ModelImporter importer = base.targets[k] as ModelImporter;
                     GameObject original = AssetDatabase.LoadMainAssetAtPath(importer.assetPath) as GameObject;
                     Animator component = original.GetComponent<Animator>();
-                    if ((component != null) && !component.hasTransformHierarchy)
+                    bool flag = (component != null) && !component.hasTransformHierarchy;
+                    if (flag)
                     {
-                        original = Object.Instantiate<GameObject>(original);
+                        original = UnityEngine.Object.Instantiate<GameObject>(original);
                         AnimatorUtility.DeoptimizeTransformHierarchy(original);
                     }
                     Transform transform = original.transform.Find(this.m_RootMotionBoneList[this.rootIndex].text);
@@ -85,7 +86,11 @@
                     {
                         this.m_RootMotionBoneRotation.quaternionValue = transform.rotation;
                     }
-                    new SerializedObject(base.targets[k]).ApplyModifiedProperties();
+                    new SerializedObject(base.targets[k]).ApplyModifiedPropertiesWithoutUndo();
+                    if (flag)
+                    {
+                        UnityEngine.Object.DestroyImmediate(original);
+                    }
                 }
                 if (!sourceArray[k].usesOwnAvatar && destinationArray[k].usesOwnAvatar)
                 {
@@ -100,16 +105,16 @@
                     bool flag2 = (animator2 != null) && !animator2.hasTransformHierarchy;
                     if (flag2)
                     {
-                        obj7 = Object.Instantiate<GameObject>(obj7);
+                        obj7 = UnityEngine.Object.Instantiate<GameObject>(obj7);
                         AnimatorUtility.DeoptimizeTransformHierarchy(obj7);
                     }
                     AvatarSetupTool.AutoSetupOnInstance(obj7, modelImporterSerializedObject);
                     this.m_IsBiped = AvatarBipedMapper.IsBiped(obj7.transform, this.m_BipedMappingReport);
                     if (flag2)
                     {
-                        Object.DestroyImmediate(obj7);
+                        UnityEngine.Object.DestroyImmediate(obj7);
                     }
-                    modelImporterSerializedObject.ApplyModifiedProperties();
+                    modelImporterSerializedObject.ApplyModifiedPropertiesWithoutUndo();
                 }
             }
         }
@@ -229,7 +234,7 @@
                         }
                         else
                         {
-                            Debug.Log("Cannot configure avatar, inspector is locked");
+                            UnityEngine.Debug.Log("Cannot configure avatar, inspector is locked");
                         }
                     }
                 }
@@ -276,7 +281,7 @@
 
         private static bool DoesHumanDescriptionMatch(ModelImporter importer, ModelImporter otherImporter)
         {
-            Object[] objs = new Object[] { importer, otherImporter };
+            UnityEngine.Object[] objs = new UnityEngine.Object[] { importer, otherImporter };
             SerializedObject obj2 = new SerializedObject(objs) {
                 maxArraySizeForMultiEditing = Math.Max(importer.transformPaths.Length, otherImporter.transformPaths.Length)
             };

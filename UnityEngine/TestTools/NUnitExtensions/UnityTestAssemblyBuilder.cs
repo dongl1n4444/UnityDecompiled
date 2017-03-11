@@ -6,8 +6,11 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using UnityEngine;
+    using UnityEngine.TestTools;
+    using UnityEngine.TestTools.Utils;
 
     internal class UnityTestAssemblyBuilder : DefaultTestAssemblyBuilder
     {
@@ -20,6 +23,21 @@
                 suite.Add(test);
             }
             return suite;
+        }
+
+        public static UnityTestAssemblyBuilder GetNUnitTestBuilder(TestPlatform testPlatform) => 
+            new UnityTestAssemblyBuilder();
+
+        public static Dictionary<string, object> GetNUnitTestBuilderSettings(TestPlatform testPlatform) => 
+            new Dictionary<string, object> { { 
+                "TestParameters",
+                ("platform=" + testPlatform)
+            } };
+
+        internal static Assembly[] GetUserAssemblies(bool includeEditorAssemblies)
+        {
+            TestAssemblyProvider provider = new TestAssemblyProvider();
+            return provider.GetUserAssemblies(includeEditorAssemblies).ToArray<Assembly>();
         }
     }
 }

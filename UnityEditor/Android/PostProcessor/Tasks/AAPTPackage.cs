@@ -1,8 +1,10 @@
 ﻿namespace UnityEditor.Android.PostProcessor.Tasks
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEditor;
     using UnityEditor.Android;
@@ -14,6 +16,7 @@
         private string _stagingArea;
         public const int kNumberOfAAPTRetries = 3;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ProgressHandler OnProgress;
 
         private void AAPTPack(PostProcessorContext context, string apkName, string directory, bool compress)
@@ -29,7 +32,7 @@
             string str4 = TasksCommon.Exec(tools.AAPT, args, this._stagingArea, "Android Asset Packaging Tool failed.", 3);
             if (!str4.Contains("Found 0 custom asset files") && (!str4.Contains("Done!") || !File.Exists(Path.Combine(this._stagingArea, apkName))))
             {
-                Debug.LogError($"Android Asset Packaging Tool failed: {tools.AAPT} {args} 
+                UnityEngine.Debug.LogError($"Android Asset Packaging Tool failed: {tools.AAPT} {args} 
  {str4}");
                 CancelPostProcess.AbortBuildPointToConsole("AAPT Failed!", "Android Asset Packaging Tool failed.");
             }
@@ -58,12 +61,12 @@
                 FileInfo info = new FileInfo(fileName);
                 if (!File.Exists(fileName) || (info.Length == 0L))
                 {
-                    Debug.LogError(message);
+                    UnityEngine.Debug.LogError(message);
                     CancelPostProcess.AbortBuildPointToConsole("OBB Builder Failed!", "Failed to build OBB package.");
                 }
                 if (info.Length >= 0x80000000L)
                 {
-                    Debug.LogError(message);
+                    UnityEngine.Debug.LogError(message);
                     CancelPostProcess.AbortBuildPointToConsole("OBB Builder Failed!", "OBB file too big for Android Market (max 2GB).");
                 }
                 AndroidXmlDocument document = context.Get<AndroidXmlDocument>("SettingsXml");

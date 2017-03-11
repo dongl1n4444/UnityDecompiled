@@ -1,6 +1,7 @@
 ﻿namespace UnityEngine
 {
     using System;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Threading;
@@ -12,6 +13,7 @@
     [NativeClass("UI::RectTransform")]
     public sealed class RectTransform : Transform
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event ReapplyDrivenProperties reapplyDrivenProperties;
 
         /// <summary>
@@ -22,7 +24,7 @@
         {
             if ((fourCornersArray == null) || (fourCornersArray.Length < 4))
             {
-                Debug.LogError("Calling GetLocalCorners with an array that is null or has less than 4 elements.");
+                UnityEngine.Debug.LogError("Calling GetLocalCorners with an array that is null or has less than 4 elements.");
             }
             else
             {
@@ -70,7 +72,7 @@
         {
             if ((fourCornersArray == null) || (fourCornersArray.Length < 4))
             {
-                Debug.LogError("Calling GetWorldCorners with an array that is null or has less than 4 elements.");
+                UnityEngine.Debug.LogError("Calling GetWorldCorners with an array that is null or has less than 4 elements.");
             }
             else
             {

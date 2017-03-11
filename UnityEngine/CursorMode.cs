@@ -3,7 +3,7 @@
     using System;
 
     /// <summary>
-    /// <para>How should the custom cursor be rendered.</para>
+    /// <para>Determines whether the mouse cursor is rendered using software rendering or, on supported platforms, hardware rendering.</para>
     /// </summary>
     public enum CursorMode
     {

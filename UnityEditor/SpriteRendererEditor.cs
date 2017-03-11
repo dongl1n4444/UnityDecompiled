@@ -6,7 +6,7 @@
     using UnityEngine;
     using UnityEngine.Events;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(SpriteRenderer))]
+    [CustomEditor(typeof(SpriteRenderer)), CanEditMultipleObjects]
     internal class SpriteRendererEditor : RendererEditorBase
     {
         private SerializedProperty m_AdaptiveModeThreshold;
@@ -109,7 +109,7 @@
 
         private string GetSpriteNotFullRectWarning()
         {
-            foreach (Object obj2 in base.targets)
+            foreach (UnityEngine.Object obj2 in base.targets)
             {
                 if (!(obj2 as SpriteRenderer).shouldSupportTiling)
                 {
@@ -166,8 +166,8 @@
             }
             Rect position = GUILayoutUtility.GetRect(EditorGUILayout.kLabelFloatMinW, EditorGUILayout.kLabelFloatMaxW, (float) 16f, (float) 16f);
             EditorGUI.showMixedValue = this.m_Material.hasMultipleDifferentValues;
-            Object objectReferenceValue = this.m_Material.GetArrayElementAtIndex(0).objectReferenceValue;
-            Object obj3 = EditorGUI.ObjectField(position, Contents.materialLabel, objectReferenceValue, typeof(Material), false);
+            UnityEngine.Object objectReferenceValue = this.m_Material.GetArrayElementAtIndex(0).objectReferenceValue;
+            UnityEngine.Object obj3 = EditorGUI.ObjectField(position, Contents.materialLabel, objectReferenceValue, typeof(Material), false);
             if (obj3 != objectReferenceValue)
             {
                 this.m_Material.GetArrayElementAtIndex(0).objectReferenceValue = obj3;

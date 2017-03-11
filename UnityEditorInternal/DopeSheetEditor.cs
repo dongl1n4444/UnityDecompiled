@@ -13,7 +13,7 @@
     internal class DopeSheetEditor : TimeArea, CurveUpdater
     {
         [CompilerGenerated]
-        private static Comparison<Object> <>f__am$cache0;
+        private static Comparison<UnityEngine.Object> <>f__am$cache0;
         private const float k_KeyframeOffset = -6.5f;
         private const float k_PptrKeyframeOffset = -1f;
         private const int kLabelMarginHorizontal = 8;
@@ -72,7 +72,7 @@
             return false;
         }
 
-        private EditorCurveBinding? CreateNewPptrDopeline(AnimationWindowSelectionItem selectedItem, Type valueType)
+        private EditorCurveBinding? CreateNewPptrDopeline(AnimationWindowSelectionItem selectedItem, System.Type valueType)
         {
             List<EditorCurveBinding> animatableProperties = null;
             if (selectedItem.rootGameObject != null)
@@ -108,7 +108,7 @@
             return null;
         }
 
-        private void CreateNewPPtrKeyframe(float time, Object value, AnimationWindowCurve targetCurve)
+        private void CreateNewPPtrKeyframe(float time, UnityEngine.Object value, AnimationWindowCurve targetCurve)
         {
             ObjectReferenceKeyframe key = new ObjectReferenceKeyframe {
                 time = time,
@@ -155,7 +155,7 @@
             {
                 return false;
             }
-            Type type = DragAndDrop.objectReferences[0].GetType();
+            System.Type type = DragAndDrop.objectReferences[0].GetType();
             AnimationWindowCurve curve = null;
             if (dopeLine.valueType == type)
             {
@@ -205,7 +205,7 @@
             return true;
         }
 
-        private bool DopelineForValueTypeExists(Type valueType)
+        private bool DopelineForValueTypeExists(System.Type valueType)
         {
             <DopelineForValueTypeExists>c__AnonStorey0 storey = new <DopelineForValueTypeExists>c__AnonStorey0 {
                 valueType = valueType
@@ -236,7 +236,7 @@
                     Texture2D texture = null;
                     if (keyframe.isPPtrCurve && dopeline.tallMode)
                     {
-                        texture = (keyframe.value != null) ? AssetPreview.GetAssetPreview(((Object) keyframe.value).GetInstanceID(), this.assetPreviewManagerID) : null;
+                        texture = (keyframe.value != null) ? AssetPreview.GetAssetPreview(((UnityEngine.Object) keyframe.value).GetInstanceID(), this.assetPreviewManagerID) : null;
                     }
                     if (texture != null)
                     {
@@ -271,7 +271,7 @@
                 float time = Mathf.Max(this.state.PixelToTime(Event.current.mousePosition.x, AnimationWindowState.SnapMode.SnapToClipFrame), 0f);
                 Color color8 = Color.gray.RGBMultiplied((float) 1.2f);
                 Texture2D assetPreview = null;
-                foreach (Object obj2 in this.GetSortedDragAndDropObjectReferences())
+                foreach (UnityEngine.Object obj2 in this.GetSortedDragAndDropObjectReferences())
                 {
                     Rect dragAndDropRect = this.GetDragAndDropRect(dopeline, time);
                     if (dopeline.isPptrDopeline && dopeline.tallMode)
@@ -520,7 +520,7 @@
             return menu;
         }
 
-        private AnimationWindowCurve GetCurveOfType(DopeLine dopeLine, Type type)
+        private AnimationWindowCurve GetCurveOfType(DopeLine dopeLine, System.Type type)
         {
             foreach (AnimationWindowCurve curve in dopeLine.curves)
             {
@@ -557,10 +557,6 @@
             {
                 width = dopeline.position.height;
             }
-            if (dopeline.isPptrDopeline && dopeline.tallMode)
-            {
-                return new Rect(this.state.TimeToPixel(this.state.SnapToFrame(time, AnimationWindowState.SnapMode.SnapToClipFrame)) + this.GetKeyframeOffset(dopeline, keyframe), dopeline.position.yMin, width, dopeline.position.height);
-            }
             return new Rect(this.state.TimeToPixel(this.state.SnapToFrame(time, AnimationWindowState.SnapMode.SnapToClipFrame)) + this.GetKeyframeOffset(dopeline, keyframe), dopeline.position.yMin, width, dopeline.position.height);
         }
 
@@ -573,14 +569,14 @@
             return keyframeRect;
         }
 
-        private Object[] GetSortedDragAndDropObjectReferences()
+        private UnityEngine.Object[] GetSortedDragAndDropObjectReferences()
         {
-            Object[] objectReferences = DragAndDrop.objectReferences;
+            UnityEngine.Object[] objectReferences = DragAndDrop.objectReferences;
             if (<>f__am$cache0 == null)
             {
                 <>f__am$cache0 = (a, b) => EditorUtility.NaturalCompare(a.name, b.name);
             }
-            Array.Sort<Object>(objectReferences, <>f__am$cache0);
+            Array.Sort<UnityEngine.Object>(objectReferences, <>f__am$cache0);
             return objectReferences;
         }
 
@@ -686,7 +682,7 @@
                     this.m_IsDraggingPlayheadStarted = true;
                     GUIUtility.hotControl = controlID;
                     this.m_DragStartTime = this.state.PixelToTime(Event.current.mousePosition.x);
-                    this.state.StartLiveEdit();
+                    this.m_RectangleTool.OnStartMove(new Vector2(this.m_DragStartTime, 0f), this.m_RectangleTool.rippleTimeClutch);
                     Event.current.Use();
                 }
                 float maxValue = float.MaxValue;
@@ -695,18 +691,16 @@
                     maxValue = Mathf.Min(keyframe.time, maxValue);
                 }
                 float a = this.state.SnapToFrame(this.state.PixelToTime(Event.current.mousePosition.x), AnimationWindowState.SnapMode.SnapToClipFrame);
-                float deltaTime = a - this.m_DragStartTime;
                 if (this.m_IsDragging && !Mathf.Approximately(a, this.m_DragStartTime))
                 {
-                    this.state.MoveSelectedKeys(deltaTime, true);
+                    this.m_RectangleTool.OnMove(new Vector2(a, 0f));
                     Event.current.Use();
                 }
                 if (typeForControl == EventType.MouseUp)
                 {
                     if (this.m_IsDragging && (GUIUtility.hotControl == controlID))
                     {
-                        this.state.MoveSelectedKeys(deltaTime, true);
-                        this.state.EndLiveEdit();
+                        this.m_RectangleTool.OnEndMove();
                         Event.current.Use();
                         this.m_IsDragging = false;
                     }
@@ -952,10 +946,10 @@
                 string undoLabel = "Drop Key";
                 this.state.SaveKeySelection(undoLabel);
                 this.state.ClearSelections();
-                Object[] sortedDragAndDropObjectReferences = this.GetSortedDragAndDropObjectReferences();
-                foreach (Object obj2 in sortedDragAndDropObjectReferences)
+                UnityEngine.Object[] sortedDragAndDropObjectReferences = this.GetSortedDragAndDropObjectReferences();
+                foreach (UnityEngine.Object obj2 in sortedDragAndDropObjectReferences)
                 {
-                    Object obj3 = obj2;
+                    UnityEngine.Object obj3 = obj2;
                     if (obj3 is Texture2D)
                     {
                         obj3 = SpriteUtility.TextureToSprite(obj2 as Texture2D);
@@ -1042,14 +1036,14 @@
             }
             for (int i = 0; i < DragAndDrop.objectReferences.Length; i++)
             {
-                Object obj2 = DragAndDrop.objectReferences[i];
+                UnityEngine.Object obj2 = DragAndDrop.objectReferences[i];
                 if (obj2 == null)
                 {
                     return false;
                 }
                 if (i < (DragAndDrop.objectReferences.Length - 1))
                 {
-                    Object obj3 = DragAndDrop.objectReferences[i + 1];
+                    UnityEngine.Object obj3 = DragAndDrop.objectReferences[i + 1];
                     bool flag2 = ((obj2 is Texture2D) || (obj2 is Sprite)) && ((obj3 is Texture2D) || (obj3 is Sprite));
                     if ((obj2.GetType() != obj3.GetType()) && !flag2)
                     {
@@ -1088,7 +1082,7 @@
         [CompilerGenerated]
         private sealed class <DopelineForValueTypeExists>c__AnonStorey0
         {
-            internal Type valueType;
+            internal System.Type valueType;
 
             internal bool <>m__0(AnimationWindowCurve curve) => 
                 (curve.valueType == this.valueType);

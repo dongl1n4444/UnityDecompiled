@@ -84,14 +84,14 @@
             return builder.ToString();
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public extern void Dispose();
         /// <summary>
         /// <para>Opens the assets in an associated editor.</para>
         /// </summary>
         public void Edit()
         {
-            Object target = this.Load();
+            UnityEngine.Object target = this.Load();
             if (target != null)
             {
                 AssetDatabase.OpenAsset(target);
@@ -103,7 +103,7 @@
             this.Dispose();
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private extern void InternalCreateFromString(string clientPath);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         public extern bool IsChildOf(Asset other);
@@ -128,13 +128,13 @@
         /// <summary>
         /// <para>Loads the asset to memory.</para>
         /// </summary>
-        public Object Load()
+        public UnityEngine.Object Load()
         {
             if ((this.state == States.DeletedLocal) || this.isMeta)
             {
                 return null;
             }
-            return AssetDatabase.LoadAssetAtPath(this.path, typeof(Object));
+            return AssetDatabase.LoadAssetAtPath(this.path, typeof(UnityEngine.Object));
         }
 
         internal string StateToString() => 

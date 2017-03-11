@@ -7,7 +7,7 @@
     [AttributeUsage(AttributeTargets.Parameter)]
     public class PathReferenceAttribute : Attribute
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <BasePath>k__BackingField;
 
         public PathReferenceAttribute()

@@ -12,7 +12,7 @@
         /// <para>In the player on Android devices.</para>
         /// </summary>
         Android = 11,
-        [Obsolete("BB10Player export is no longer supported in Unity 5.4+."), EditorBrowsable(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("BB10Player export is no longer supported in Unity 5.4+.")]
         BB10Player = 0x16,
         [Obsolete("BlackBerryPlayer export is no longer supported in Unity 5.4+.")]
         BlackBerryPlayer = 0x16,
@@ -39,19 +39,19 @@
         [Obsolete("NaCl export is no longer supported in Unity 5.0+.")]
         NaCl = 12,
         /// <summary>
-        /// <para>In the Dashboard widget on Mac OS X.</para>
+        /// <para>In the Dashboard widget on macOS.</para>
         /// </summary>
         OSXDashboardPlayer = 4,
         /// <summary>
-        /// <para>In the Unity editor on Mac OS X.</para>
+        /// <para>In the Unity editor on macOS.</para>
         /// </summary>
         OSXEditor = 0,
         /// <summary>
-        /// <para>In the player on Mac OS X.</para>
+        /// <para>In the player on macOS.</para>
         /// </summary>
         OSXPlayer = 1,
         /// <summary>
-        /// <para>In the web player on Mac OS X.</para>
+        /// <para>In the web player on macOS.</para>
         /// </summary>
         [Obsolete("WebPlayer export is no longer supported in Unity 5.4+.")]
         OSXWebPlayer = 3,

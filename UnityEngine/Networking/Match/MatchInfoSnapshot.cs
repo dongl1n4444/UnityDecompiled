@@ -11,23 +11,23 @@
     /// </summary>
     public class MatchInfoSnapshot
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private int <averageEloScore>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private int <currentSize>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private List<MatchInfoDirectConnectSnapshot> <directConnectInfos>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private NodeID <hostNodeId>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <isPrivate>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Dictionary<string, long> <matchAttributes>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private int <maxSize>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <name>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private NetworkID <networkId>k__BackingField;
 
         public MatchInfoSnapshot()
@@ -103,11 +103,11 @@
         {
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private HostPriority <hostPriority>k__BackingField;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private NodeID <nodeId>k__BackingField;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private string <privateAddress>k__BackingField;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private string <publicAddress>k__BackingField;
 
             public MatchInfoDirectConnectSnapshot()

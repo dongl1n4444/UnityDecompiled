@@ -124,7 +124,7 @@
         private string GetIl2CppExe() => 
             (this.m_PlatformProvider.il2CppFolder + "/build/il2cpp.exe");
 
-        private static string GetMapFileParserPath() => 
+        public static string GetMapFileParserPath() => 
             Path.GetFullPath(Path.Combine(EditorApplication.applicationContentsPath, (Application.platform != RuntimePlatform.WindowsEditor) ? "Tools/MapFileParser/MapFileParser" : @"Tools\MapFileParser\MapFileParser.exe"));
 
         private HashSet<string> GetUserAssemblies(string managedDir)

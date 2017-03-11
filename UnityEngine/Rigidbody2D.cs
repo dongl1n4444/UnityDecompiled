@@ -91,7 +91,6 @@
         /// <param name="direction">Vector representing the direction to cast each Collider2D shape.</param>
         /// <param name="results">Array to receive results.</param>
         /// <param name="distance">Maximum distance over which to cast the shape(s).</param>
-        /// <param name="contactFilter">Filter results defined by the contact filter.</param>
         /// <returns>
         /// <para>The number of results returned.</para>
         /// </returns>
@@ -109,9 +108,9 @@
         /// <para>All the Collider2D shapes attached to the Rigidbody2D are cast into the scene starting at each collider position ignoring the colliders attached to the same Rigidbody2D.</para>
         /// </summary>
         /// <param name="direction">Vector representing the direction to cast each Collider2D shape.</param>
+        /// <param name="contactFilter">Filter results defined by the contact filter.</param>
         /// <param name="results">Array to receive results.</param>
         /// <param name="distance">Maximum distance over which to cast the shape(s).</param>
-        /// <param name="contactFilter">Filter results defined by the contact filter.</param>
         /// <returns>
         /// <para>The number of results returned.</para>
         /// </returns>
@@ -119,13 +118,29 @@
             this.Internal_Cast(direction, distance, contactFilter, results);
 
         /// <summary>
-        /// <para>Retrieves all contacts of the Rigidbody.</para>
+        /// <para>Calculates the minimum distance of this collider against all Collider2D attached to this Rigidbody2D.</para>
         /// </summary>
-        /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
-        /// <param name="colliders">An array of Collider2D used to receive the results.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z or depth buffer, or normal angle.</param>
+        /// <param name="collider">A collider used to calculate the minimum distance against all colliders attached to this Rigidbody2D.</param>
         /// <returns>
-        /// <para>Returns the number of contacts placed in the contacts array.</para>
+        /// <para>The minimum distance of collider against all colliders attached to this Rigidbody2D.</para>
+        /// </returns>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public extern ColliderDistance2D Distance(Collider2D collider);
+        /// <summary>
+        /// <para>Returns all Collider2D that are attached to this Rigidbody2D.</para>
+        /// </summary>
+        /// <param name="results">An array of Collider2D used to receive the results.</param>
+        /// <returns>
+        /// <para>Returns the number of Collider2D placed in the results array.</para>
+        /// </returns>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public extern int GetAttachedColliders(Collider2D[] results);
+        /// <summary>
+        /// <para>Retrieves all colliders in contact with any of the collider(s) attached to this rigidbody.</para>
+        /// </summary>
+        /// <param name="colliders">An array of Collider2D used to receive the results.</param>
+        /// <returns>
+        /// <para>Returns the number of colliders placed in the colliders array.</para>
         /// </returns>
         public int GetContacts(Collider2D[] colliders)
         {
@@ -134,11 +149,9 @@
         }
 
         /// <summary>
-        /// <para>Retrieves all contacts of the Rigidbody.</para>
+        /// <para>Retrieves all contact points for all of the collider(s) attached to this rigidbody.</para>
         /// </summary>
         /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
-        /// <param name="colliders">An array of Collider2D used to receive the results.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z or depth buffer, or normal angle.</param>
         /// <returns>
         /// <para>Returns the number of contacts placed in the contacts array.</para>
         /// </returns>
@@ -149,23 +162,21 @@
         }
 
         /// <summary>
-        /// <para>Retrieves all contacts of the Rigidbody.</para>
+        /// <para>Retrieves all colliders in contact with any of the collider(s) attached to this rigidbody, with the results filtered by the ContactFilter2D.</para>
         /// </summary>
-        /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
+        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
         /// <param name="colliders">An array of Collider2D used to receive the results.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z or depth buffer, or normal angle.</param>
         /// <returns>
-        /// <para>Returns the number of contacts placed in the contacts array.</para>
+        /// <para>Returns the number of colliders placed in the colliders array.</para>
         /// </returns>
         public int GetContacts(ContactFilter2D contactFilter, Collider2D[] colliders) => 
             Physics2D.GetContacts(this, contactFilter, colliders);
 
         /// <summary>
-        /// <para>Retrieves all contacts of the Rigidbody.</para>
+        /// <para>Retrieves all contact points for all of the collider(s) attached to this rigidbody, with the results filtered by the ContactFilter2D.</para>
         /// </summary>
+        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
         /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
-        /// <param name="colliders">An array of Collider2D used to receive the results.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z or depth buffer, or normal angle.</param>
         /// <returns>
         /// <para>Returns the number of contacts placed in the contacts array.</para>
         /// </returns>
@@ -269,6 +280,8 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_MoveRotation(Rigidbody2D self, float angle);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern int INTERNAL_CALL_OverlapCollider(Rigidbody2D self, ref ContactFilter2D contactFilter, Collider2D[] results);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool INTERNAL_CALL_OverlapPoint(Rigidbody2D self, ref Vector2 point);
         private int Internal_Cast(Vector2 direction, float distance, ContactFilter2D contactFilter, RaycastHit2D[] results) => 
             INTERNAL_CALL_Internal_Cast(this, ref direction, distance, ref contactFilter, results);
@@ -331,31 +344,29 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool IsSleeping();
         /// <summary>
-        /// <para>Checks whether the rigidbody is touching other colliders.</para>
+        /// <para>Checks whether the collider  is touching any of the collider(s) attached to this rigidbody or not.</para>
         /// </summary>
         /// <param name="collider">The collider to check if it is touching any of the collider(s) attached to this rigidbody.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z or depth buffer, or normal angle.</param>
         /// <returns>
         /// <para>Whether the collider is touching any of the collider(s) attached to this rigidbody or not.</para>
         /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool IsTouching(Collider2D collider);
         /// <summary>
-        /// <para>Checks whether the rigidbody is touching other colliders.</para>
+        /// <para>Checks whether any collider is touching any of the collider(s) attached to this rigidbody or not with the results filtered by the ContactFilter2D.</para>
         /// </summary>
-        /// <param name="collider">The collider to check if it is touching any of the collider(s) attached to this rigidbody.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z or depth buffer, or normal angle.</param>
+        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
         /// <returns>
-        /// <para>Whether the collider is touching any of the collider(s) attached to this rigidbody or not.</para>
+        /// <para>Whether any collider is touching any of the collider(s) attached to this rigidbody or not.</para>
         /// </returns>
         public bool IsTouching(ContactFilter2D contactFilter) => 
             INTERNAL_CALL_IsTouching(this, ref contactFilter);
 
         /// <summary>
-        /// <para>Checks whether the rigidbody is touching other colliders.</para>
+        /// <para>Checks whether the collider  is touching any of the collider(s) attached to this rigidbody or not with the results filtered by the ContactFilter2D.</para>
         /// </summary>
         /// <param name="collider">The collider to check if it is touching any of the collider(s) attached to this rigidbody.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z or depth buffer, or normal angle.</param>
+        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
         /// <returns>
         /// <para>Whether the collider is touching any of the collider(s) attached to this rigidbody or not.</para>
         /// </returns>
@@ -397,6 +408,17 @@
         }
 
         /// <summary>
+        /// <para>Get a list of all colliders that overlap all colliders attached to this Rigidbody2D.</para>
+        /// </summary>
+        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth.  Note that normal angle is not used for overlap testing.</param>
+        /// <param name="results">The array to receive results.  The size of the array determines the maximum number of results that can be returned.</param>
+        /// <returns>
+        /// <para>Returns the number of results placed in the results array.</para>
+        /// </returns>
+        public int OverlapCollider(ContactFilter2D contactFilter, Collider2D[] results) => 
+            INTERNAL_CALL_OverlapCollider(this, ref contactFilter, results);
+
+        /// <summary>
         /// <para>Check if any of the Rigidbody2D colliders overlap a point in space.</para>
         /// </summary>
         /// <param name="point">A point in world space.</param>
@@ -428,6 +450,11 @@
         /// <para>Angular velocity in degrees per second.</para>
         /// </summary>
         public float angularVelocity { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
+        /// <para>Returns the number of Collider2D attached to this Rigidbody2D.</para>
+        /// </summary>
+        public int attachedColliderCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The physical behaviour type of the Rigidbody2D.</para>
@@ -528,7 +555,7 @@
         }
 
         /// <summary>
-        /// <para>The rotation of the rigdibody.</para>
+        /// <para>The rotation of the rigidbody.</para>
         /// </summary>
         public float rotation { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 

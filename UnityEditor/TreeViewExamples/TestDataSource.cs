@@ -8,7 +8,7 @@
 
     internal class TestDataSource : TreeViewDataSource
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private int <itemCounter>k__BackingField;
         private BackendData m_Backend;
 

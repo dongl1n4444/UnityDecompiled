@@ -110,8 +110,8 @@
             {
                 return method;
             }
-            TypeDefinition type = reference2.Resolve();
-            if ((type == null) || !type.IsDelegate())
+            TypeDefinition typeReference = reference2.Resolve();
+            if ((typeReference == null) || !typeReference.IsDelegate())
             {
                 return method;
             }
@@ -119,12 +119,12 @@
             {
                 <>f__am$cache3 = m => m.Name == "Invoke";
             }
-            MethodDefinition definition3 = type.Methods.SingleOrDefault<MethodDefinition>(<>f__am$cache3);
+            MethodDefinition definition3 = typeReference.Methods.SingleOrDefault<MethodDefinition>(<>f__am$cache3);
             if (definition3 == null)
             {
                 return method;
             }
-            if (!VirtualMethodResolution.MethodSignaturesMatchIgnoreStaticness(Unity.IL2CPP.ILPreProcessor.TypeResolver.For(Unity.IL2CPP.ILPreProcessor.TypeResolver.For(method.DeclaringType, method).Resolve(type)).Resolve(definition3), method))
+            if (!VirtualMethodResolution.MethodSignaturesMatchIgnoreStaticness(Unity.IL2CPP.ILPreProcessor.TypeResolver.For(Unity.IL2CPP.ILPreProcessor.TypeResolver.For(method.DeclaringType, method).Resolve(typeReference)).Resolve(definition3), method))
             {
                 return method;
             }
@@ -195,7 +195,7 @@
 
         public void WriteMethodDefinition(CppCodeWriter writer, IInteropDataCollector interopDataCollector)
         {
-            MethodWriter.WriteMethodWithMetadataInitialization(writer, this.GetMethodSignature(), base._managedMethod.FullName, (bodyWriter, metadataUsage, methodUsage) => base.WriteMethodBody(bodyWriter, MethodWriter.GetDefaultRuntimeMetadataAccess(base._managedMethod, metadataUsage, methodUsage)), InteropMethodInfo.Naming.ForReversePInvokeWrapperMethod(base._managedMethod));
+            MethodWriter.WriteMethodWithMetadataInitialization(writer, this.GetMethodSignature(), base._managedMethod.FullName, (bodyWriter, metadataUsage, methodUsage) => base.WriteMethodBody(bodyWriter, MethodWriter.GetDefaultRuntimeMetadataAccess(base._managedMethod, metadataUsage, methodUsage, null)), InteropMethodInfo.Naming.ForReversePInvokeWrapperMethod(base._managedMethod));
             interopDataCollector.AddReversePInvokeWrapper(base._managedMethod);
         }
 

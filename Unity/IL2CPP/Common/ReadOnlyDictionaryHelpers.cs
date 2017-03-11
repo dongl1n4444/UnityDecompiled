@@ -3,6 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using Unity.IL2CPP.Portability;
 
     internal static class ReadOnlyDictionaryHelpers
     {
@@ -43,8 +44,8 @@
                 else
                 {
                     Type elementType = array.GetType().GetElementType();
-                    Type c = typeof(T);
-                    if (!elementType.IsAssignableFrom(c) && !c.IsAssignableFrom(elementType))
+                    Type other = typeof(T);
+                    if (!elementType.IsAssignableFromPortable(other) && !other.IsAssignableFromPortable(elementType))
                     {
                         throw new ArgumentException();
                     }

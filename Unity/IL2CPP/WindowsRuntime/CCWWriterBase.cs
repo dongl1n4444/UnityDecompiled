@@ -15,7 +15,10 @@
         [CompilerGenerated]
         private static Func<TypeReference, string> <>f__am$cache0;
         [CompilerGenerated]
-        private static Func<TypeReference, string> <>f__am$cache1;
+        private static Func<TypeReference, bool> <>f__am$cache1;
+        [CompilerGenerated]
+        private static Func<TypeReference, string> <>f__am$cache2;
+        private static readonly Guid IID_IMarshal = new Guid(3, 0, 0, 0xc0, 0, 0, 0, 0, 0, 0, 70);
         [Inject]
         public static INamingService Naming;
         [Inject]
@@ -124,9 +127,22 @@
             writer.WriteLine("virtual il2cpp_hresult_t STDCALL QueryInterface(const Il2CppGuid& iid, void** object) IL2CPP_OVERRIDE");
             using (new BlockWriter(writer, false))
             {
+                if (<>f__am$cache1 == null)
+                {
+                    <>f__am$cache1 = i => i.GetGuid() == IID_IMarshal;
+                }
+                bool flag = this.AllImplementedInterfaces.Any<TypeReference>(<>f__am$cache1);
                 writer.WriteLine("if (::memcmp(&iid, &Il2CppIUnknown::IID, sizeof(Il2CppGuid)) == 0");
-                writer.WriteLine(" || ::memcmp(&iid, &Il2CppIInspectable::IID, sizeof(Il2CppGuid)) == 0");
-                writer.WriteLine(" || ::memcmp(&iid, &Il2CppIAgileObject::IID, sizeof(Il2CppGuid)) == 0)");
+                writer.Write(" || ::memcmp(&iid, &Il2CppIInspectable::IID, sizeof(Il2CppGuid)) == 0");
+                if (!flag)
+                {
+                    writer.WriteLine();
+                    writer.WriteLine(" || ::memcmp(&iid, &Il2CppIAgileObject::IID, sizeof(Il2CppGuid)) == 0)");
+                }
+                else
+                {
+                    writer.WriteLine(")");
+                }
                 using (new BlockWriter(writer, false))
                 {
                     writer.WriteLine("*object = GetIdentity();");
@@ -137,11 +153,11 @@
                 WriteQueryInterfaceForInterface(writer, "Il2CppIManagedObjectHolder");
                 if (this.InterfacesToForwardToBaseClass.Count > 0)
                 {
-                    if (<>f__am$cache1 == null)
+                    if (<>f__am$cache2 == null)
                     {
-                        <>f__am$cache1 = i => $"::memcmp(&iid, &{Naming.ForTypeNameOnly(i)}::IID, sizeof(Il2CppGuid)) == 0";
+                        <>f__am$cache2 = i => $"::memcmp(&iid, &{Naming.ForTypeNameOnly(i)}::IID, sizeof(Il2CppGuid)) == 0";
                     }
-                    string str = this.InterfacesToForwardToBaseClass.Select<TypeReference, string>(<>f__am$cache1).AggregateWith(" || ");
+                    string str = this.InterfacesToForwardToBaseClass.Select<TypeReference, string>(<>f__am$cache2).AggregateWith(" || ");
                     writer.WriteLine($"if ({str})");
                     using (new BlockWriter(writer, false))
                     {
@@ -155,7 +171,10 @@
                 {
                     WriteQueryInterfaceForInterface(writer, str4);
                 }
-                WriteQueryInterfaceForInterface(writer, "Il2CppIMarshal");
+                if (!flag)
+                {
+                    WriteQueryInterfaceForInterface(writer, "Il2CppIMarshal");
+                }
                 writer.WriteLine("*object = NULL;");
                 writer.WriteLine("return IL2CPP_E_NOINTERFACE;");
             }

@@ -17,17 +17,17 @@
         private static Func<Vector3, Vector2> <>f__am$cache0;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IAssetDatabase <assetDatabase>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IEventSystem <eventSystem>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IGUIUtility <guiUtility>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <shapeEditorDirty>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IShapeEditorFactory <shapeEditorFactory>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ISpriteEditor <spriteEditorWindow>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IUndoSystem <undoSystem>k__BackingField;
         private readonly string k_DeleteCommandName = "Delete";
         private const float k_HandleSize = 5f;
@@ -55,18 +55,11 @@
             this.m_OutlineTexture = outlineTexture;
             this.m_ShapeSelectionUI = new ShapeEditorRectSelectionTool(gu);
             this.m_ShapeSelectionUI.RectSelect += new Action<Rect, ShapeEditor.SelectionType>(this.RectSelect);
-            this.m_ShapeSelectionUI.ClearSelection += new Action(this.ClearSelection);
+            this.m_ShapeSelectionUI.ClearSelection += new System.Action(this.ClearSelection);
         }
 
-        public bool CanBeActivated()
-        {
-            string assetPath = this.assetDatabase.GetAssetPath((Object) this.spriteEditorWindow.selectedTexture);
-            if (string.IsNullOrEmpty(assetPath))
-            {
-                return false;
-            }
-            return (this.assetDatabase.GetAssetImporterFromPath(assetPath).spriteImportMode != SpriteImportMode.None);
-        }
+        public bool CanBeActivated() => 
+            (UnityEditor.SpriteUtility.GetSpriteImportMode(this.assetDatabase, this.spriteEditorWindow.selectedTexture) != SpriteImportMode.None);
 
         private static Vector2 CapPointToRect(Vector2 so, Rect r)
         {
@@ -260,7 +253,7 @@
                 Vector2[][] vectorArray;
                 int width = 0;
                 int height = 0;
-                (AssetImporter.GetAtPath(AssetDatabase.GetAssetPath((Object) texture)) as TextureImporter).GetWidthAndHeight(ref width, ref height);
+                (AssetImporter.GetAtPath(AssetDatabase.GetAssetPath((UnityEngine.Object) texture)) as UnityEditor.TextureImporter).GetWidthAndHeight(ref width, ref height);
                 int num3 = texture.width;
                 int num4 = texture.height;
                 Vector2 vector = new Vector2(((float) num3) / ((float) width), ((float) num4) / ((float) height));
@@ -269,7 +262,7 @@
                 rect2.xMax *= vector.x;
                 rect2.yMin *= vector.y;
                 rect2.yMax *= vector.y;
-                SpriteUtility.GenerateOutline((Texture2D) texture, rect2, detail, alphaTolerance, true, out vectorArray);
+                UnityEditor.Sprites.SpriteUtility.GenerateOutline((UnityEngine.Texture2D) texture, rect2, detail, alphaTolerance, true, out vectorArray);
                 Rect r = new Rect {
                     size = rect.size,
                     center = Vector2.zero
@@ -429,9 +422,9 @@
                         }
                         this.m_ShapeEditors[i].LocalToScreen = <>f__am$cache0;
                         this.m_ShapeEditors[i].ScreenToLocal = new Func<Vector2, Vector3>(this.ScreenToLocal);
-                        this.m_ShapeEditors[i].RecordUndo = new Action(this.RecordUndo);
+                        this.m_ShapeEditors[i].RecordUndo = new System.Action(this.RecordUndo);
                         this.m_ShapeEditors[i].GetHandleSize = new Func<float>(this.GetHandleSize);
-                        this.m_ShapeEditors[i].lineTexture = (Texture2D) this.m_OutlineTexture;
+                        this.m_ShapeEditors[i].lineTexture = (UnityEngine.Texture2D) this.m_OutlineTexture;
                         this.m_ShapeEditors[i].Snap = new Func<Vector3, Vector3>(this.SnapPoint);
                         this.m_ShapeEditors[i].GetPointPosition = new Func<int, Vector3>(storey.<>m__1);
                         this.m_ShapeEditors[i].SetPointPosition = new Action<int, Vector3>(storey.<>m__2);

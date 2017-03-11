@@ -14,6 +14,8 @@
         [SerializeField]
         private uint m_AckDelay;
         [SerializeField]
+        private ConnectionAcksType m_AcksType;
+        [SerializeField]
         private uint m_AllCostTimeout;
         [SerializeField]
         private float m_BandwidthPeakFactor;
@@ -27,8 +29,6 @@
         private ushort m_FragmentSize;
         [SerializeField]
         private uint m_InitialBandwidth;
-        [SerializeField]
-        private bool m_IsAcksLong;
         [SerializeField]
         private ushort m_MaxCombinedReliableMessageCount;
         [SerializeField]
@@ -53,6 +53,12 @@
         private uint m_ResendTimeout;
         [SerializeField]
         private uint m_SendDelay;
+        [SerializeField]
+        private string m_SSLCAFilePath;
+        [SerializeField]
+        private string m_SSLCertFilePath;
+        [SerializeField]
+        private string m_SSLPrivateKeyFilePath;
         [SerializeField]
         private uint m_UdpSocketReceiveBufferMaxSize;
         [SerializeField]
@@ -84,12 +90,15 @@
             this.m_MaxCombinedReliableMessageSize = 100;
             this.m_MaxCombinedReliableMessageCount = 10;
             this.m_MaxSentMessageQueueSize = 0x200;
-            this.m_IsAcksLong = false;
+            this.m_AcksType = ConnectionAcksType.Acks32;
             this.m_UsePlatformSpecificProtocols = false;
             this.m_InitialBandwidth = 0;
             this.m_BandwidthPeakFactor = 2f;
             this.m_WebSocketReceiveBufferMaxSize = 0;
             this.m_UdpSocketReceiveBufferMaxSize = 0;
+            this.m_SSLCertFilePath = null;
+            this.m_SSLPrivateKeyFilePath = null;
+            this.m_SSLCAFilePath = null;
         }
 
         /// <summary>
@@ -120,7 +129,7 @@
             this.m_MaxCombinedReliableMessageSize = config.MaxCombinedReliableMessageSize;
             this.m_MaxCombinedReliableMessageCount = config.m_MaxCombinedReliableMessageCount;
             this.m_MaxSentMessageQueueSize = config.m_MaxSentMessageQueueSize;
-            this.m_IsAcksLong = config.m_IsAcksLong;
+            this.m_AcksType = config.m_AcksType;
             this.m_UsePlatformSpecificProtocols = config.m_UsePlatformSpecificProtocols;
             this.m_InitialBandwidth = config.m_InitialBandwidth;
             if (this.m_InitialBandwidth == 0)
@@ -130,6 +139,9 @@
             this.m_BandwidthPeakFactor = config.m_BandwidthPeakFactor;
             this.m_WebSocketReceiveBufferMaxSize = config.m_WebSocketReceiveBufferMaxSize;
             this.m_UdpSocketReceiveBufferMaxSize = config.m_UdpSocketReceiveBufferMaxSize;
+            this.m_SSLCertFilePath = config.m_SSLCertFilePath;
+            this.m_SSLPrivateKeyFilePath = config.m_SSLPrivateKeyFilePath;
+            this.m_SSLCAFilePath = config.m_SSLCAFilePath;
             foreach (ChannelQOS lqos in config.m_Channels)
             {
                 this.m_Channels.Add(new ChannelQOS(lqos));
@@ -212,6 +224,21 @@
             set
             {
                 this.m_AckDelay = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Determines the size of the buffer used to store reliable messages that are waiting for acknowledgement. It can be set to Ack32, Ack64, Ack96, or Ack128. Depends of this setting buffer can hold 32, 64, 96, or 128 messages. Default value = Ack32.
+        /// 
+        /// Messages sent on reliable quality of service channels are stored in a special buffer while they wait for acknowledgement from the peer. This buffer can be either 32, 64, 96 or 128 positions long. It is recommended to begin with this value set to Ack32, which defines a buffer up to 32 messages in size. If you receive NoResources errors often when you send reliable messages, change this value to the next possible size.</para>
+        /// </summary>
+        public ConnectionAcksType AcksType
+        {
+            get => 
+                this.m_AcksType;
+            set
+            {
+                this.m_AcksType = value;
             }
         }
 
@@ -321,18 +348,21 @@
             }
         }
 
-        /// <summary>
-        /// <para>Determines the size of the buffer used to store reliable messages that are waiting for acknowledgement. If set to false the buffer can hold 32 messages. If set to true, the buffer can hold 64 messages. Default value = false.
-        /// 
-        /// Messages sent on reliable quality of service channels are stored in a special buffer while they wait for acknowledgement from the peer. This buffer can be either 32 positions long or 64 positions long. It is recommended to begin with this value set to false, which defines a buffer up to 32 messages in size. If you receive NoResources errors often when you send reliable messages, change this value to true. This will double the size of the buffer.</para>
-        /// </summary>
+        [Obsolete("IsAcksLong is deprecated. Use AcksType = ConnectionAcksType.Acks64", false)]
         public bool IsAcksLong
         {
             get => 
-                this.m_IsAcksLong;
+                (this.m_AcksType != ConnectionAcksType.Acks32);
             set
             {
-                this.m_IsAcksLong = value;
+                if (value && (this.m_AcksType == ConnectionAcksType.Acks32))
+                {
+                    this.m_AcksType = ConnectionAcksType.Acks64;
+                }
+                else if (!value)
+                {
+                    this.m_AcksType = ConnectionAcksType.Acks32;
+                }
             }
         }
 
@@ -524,6 +554,45 @@
             set
             {
                 this.m_SendDelay = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Defines the path to the file containing the certification authority (CA) certificate for WebSocket via SSL communication.</para>
+        /// </summary>
+        public string SSLCAFilePath
+        {
+            get => 
+                this.m_SSLCAFilePath;
+            set
+            {
+                this.m_SSLCAFilePath = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Defines path to SSL certificate file, for WebSocket via SSL communication.</para>
+        /// </summary>
+        public string SSLCertFilePath
+        {
+            get => 
+                this.m_SSLCertFilePath;
+            set
+            {
+                this.m_SSLCertFilePath = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Defines the path to the file containing the private key for WebSocket via SSL communication.</para>
+        /// </summary>
+        public string SSLPrivateKeyFilePath
+        {
+            get => 
+                this.m_SSLPrivateKeyFilePath;
+            set
+            {
+                this.m_SSLPrivateKeyFilePath = value;
             }
         }
 

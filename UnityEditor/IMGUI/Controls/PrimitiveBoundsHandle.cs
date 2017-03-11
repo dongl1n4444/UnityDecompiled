@@ -15,16 +15,16 @@
         [CompilerGenerated]
         private static Handles.CapFunction <>f__mg$cache0;
         [CompilerGenerated]
-        private static GetMidpointHandleSizeCallback <>f__mg$cache1;
+        private static Handles.SizeFunction <>f__mg$cache1;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private Axes <axes>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Color <handleColor>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Handles.CapFunction <midpointHandleDrawFunction>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-        private GetMidpointHandleSizeCallback <midpointHandleSizeFunction>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private Handles.SizeFunction <midpointHandleSizeFunction>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Color <wireframeColor>k__BackingField;
         private Bounds m_Bounds;
         private Bounds m_BoundsOnClick;
@@ -71,6 +71,9 @@
             }
             Handles.color *= new Color(1f, 1f, 1f, a);
         }
+
+        private static float DefaultMidpointHandleSizeFunction(Vector3 position) => 
+            (HandleUtility.GetHandleSize(position) * s_DefaultMidpointHandleSize);
 
         /// <summary>
         /// <para>A function to display this instance in the current handle camera using its current configuration.</para>
@@ -129,7 +132,7 @@
                         {
                             num6 = 2;
                         }
-                        float num7 = size[num6] / this.m_BoundsOnClick.size[num6];
+                        float num7 = !Mathf.Approximately(this.m_BoundsOnClick.size[num6], 0f) ? (size[num6] / this.m_BoundsOnClick.size[num6]) : 1f;
                         int num8 = s_NextAxis[num6];
                         size[num8] = num7 * this.m_BoundsOnClick.size[num8];
                         num8 = s_NextAxis[num8];
@@ -149,9 +152,6 @@
         /// <para>Draw a wireframe shape for this instance. Subclasses must implement this method.</para>
         /// </summary>
         protected abstract void DrawWireframe();
-        private static float GetMidpointHandleSizeDefault(Vector3 position) => 
-            (HandleUtility.GetHandleSize(position) * s_DefaultMidpointHandleSize);
-
         /// <summary>
         /// <para>Gets the current size of the bounding volume for this instance.</para>
         /// </summary>
@@ -205,7 +205,7 @@
             if (Handles.color.a > 0f)
             {
                 Handles.CapFunction function;
-                GetMidpointHandleSizeCallback callback;
+                Handles.SizeFunction function2;
                 Vector3 normalized = Vector3.Cross(localTangent, localBinormal).normalized;
                 Handles.CapFunction midpointHandleDrawFunction = this.midpointHandleDrawFunction;
                 if (midpointHandleDrawFunction != null)
@@ -220,20 +220,20 @@
                     }
                     function = <>f__mg$cache0;
                 }
-                GetMidpointHandleSizeCallback midpointHandleSizeFunction = this.midpointHandleSizeFunction;
+                Handles.SizeFunction midpointHandleSizeFunction = this.midpointHandleSizeFunction;
                 if (midpointHandleSizeFunction != null)
                 {
-                    callback = midpointHandleSizeFunction;
+                    function2 = midpointHandleSizeFunction;
                 }
                 else
                 {
                     if (<>f__mg$cache1 == null)
                     {
-                        <>f__mg$cache1 = new GetMidpointHandleSizeCallback(PrimitiveBoundsHandle.GetMidpointHandleSizeDefault);
+                        <>f__mg$cache1 = new Handles.SizeFunction(PrimitiveBoundsHandle.DefaultMidpointHandleSizeFunction);
                     }
-                    callback = <>f__mg$cache1;
+                    function2 = <>f__mg$cache1;
                 }
-                localPos = Slider1D.Do(id, localPos, normalized, callback(localPos), function, SnapSettings.scale);
+                localPos = Slider1D.Do(id, localPos, normalized, function2(localPos), function, SnapSettings.scale);
             }
             Handles.color = color;
             return localPos;
@@ -339,9 +339,9 @@
         public Handles.CapFunction midpointHandleDrawFunction { get; set; }
 
         /// <summary>
-        /// <para>An optional GetMidpointHandleSizeCallback to specify how large the control handles should be. Defaults to a fixed screen-space size.</para>
+        /// <para>An optional Handles.HandleSizeFunction to specify how large the control handles should be in the space of Handles.matrix. Defaults to a fixed screen-space size.</para>
         /// </summary>
-        public GetMidpointHandleSizeCallback midpointHandleSizeFunction { get; set; }
+        public Handles.SizeFunction midpointHandleSizeFunction { get; set; }
 
         /// <summary>
         /// <para>Specifies the color of the wireframe shape.</para>
@@ -377,11 +377,8 @@
         }
 
         /// <summary>
-        /// <para>A delegate type for getting a control handle's size based on its current position.</para>
+        /// <para>An enumeration of directions the handle moves in.</para>
         /// </summary>
-        /// <param name="position">The current position of the handle in the space of Handles.matrix.</param>
-        public delegate float GetMidpointHandleSizeCallback(Vector3 position);
-
         protected enum HandleDirection
         {
             PositiveX,

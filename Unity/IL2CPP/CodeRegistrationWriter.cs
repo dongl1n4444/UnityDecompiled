@@ -7,10 +7,10 @@
     using System.Globalization;
     using System.Linq;
     using System.Runtime.CompilerServices;
-    using Unity.IL2CPP.GenericsCollection;
     using Unity.IL2CPP.IoC;
     using Unity.IL2CPP.IoCServices;
     using Unity.IL2CPP.Marshaling;
+    using Unity.IL2CPP.Marshaling.BodyWriters.NativeToManaged;
     using Unity.IL2CPP.Marshaling.MarshalInfoWriters;
     using Unity.IL2CPP.Metadata;
     using Unity.TinyProfiling;
@@ -28,11 +28,11 @@
         [Inject]
         public static IWindowsRuntimeProjections WindowsRuntimeProjections;
 
-        public static void WriteCodeRegistration(NPath outputDir, IMethodCollectorResults methodCollector, IInteropDataCollectorResults interopDataCollector, InflatedCollectionCollector genericsCollectionCollector, MethodTables methodPointerTables, TableInfo attributeGeneratorTable, UnresolvedVirtualsTablesInfo virtualCallTables)
+        public static void WriteCodeRegistration(NPath outputDir, IMethodCollectorResults methodCollector, IInteropDataCollectorResults interopDataCollector, MethodTables methodPointerTables, TableInfo attributeGeneratorTable, UnresolvedVirtualsTablesInfo virtualCallTables)
         {
             TableInfo methodPointersTable = WriteMethodPointerTable(outputDir, methodCollector);
             TableInfo reversePInvokeWrappersTable = WriteReversePInvokeWrappersTable(outputDir, interopDataCollector);
-            TableInfo genericMethodPointerTable = WriteGenericMethodPointerTable(outputDir, methodCollector, genericsCollectionCollector, methodPointerTables);
+            TableInfo genericMethodPointerTable = WriteGenericMethodPointerTable(outputDir, methodCollector, methodPointerTables);
             TableInfo invokerTable = WriteInvokerTable(outputDir);
             TableInfo interopDataTable = WriteInteropDataTable(outputDir, interopDataCollector);
             WriteCodeRegistration(outputDir, invokerTable, methodPointersTable, reversePInvokeWrappersTable, genericMethodPointerTable, attributeGeneratorTable, virtualCallTables, interopDataTable);
@@ -89,14 +89,14 @@
             }
         }
 
-        private static TableInfo WriteGenericMethodPointerTable(NPath outputDir, IMethodCollectorResults methodCollector, InflatedCollectionCollector genericsCollectionCollector, MethodTables methodPointerTables)
+        private static TableInfo WriteGenericMethodPointerTable(NPath outputDir, IMethodCollectorResults methodCollector, MethodTables methodPointerTables)
         {
             using (TinyProfiler.Section("GenericMethodPointerTable", "Il2CppGenericMethodPointerTable.cpp"))
             {
                 string[] append = new string[] { "Il2CppGenericMethodPointerTable.cpp" };
                 using (SourceCodeWriter writer = new SourceCodeWriter(outputDir.Combine(append)))
                 {
-                    return new MethodTableWriter(writer).Write(genericsCollectionCollector, methodPointerTables, methodCollector);
+                    return new MethodTableWriter(writer).Write(methodPointerTables, methodCollector);
                 }
             }
         }
@@ -182,7 +182,7 @@
                         writer.AddCodeGenIncludes();
                         foreach (MethodReference reference in reversePInvokeWrappers)
                         {
-                            writer.AddIncludeForMethodDeclarations(reference.DeclaringType);
+                            ReversePInvokeMethodBodyWriter.Create(reference).WriteMethodDeclaration(writer);
                         }
                         if (<>f__am$cache0 == null)
                         {

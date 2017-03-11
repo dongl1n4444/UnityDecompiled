@@ -237,9 +237,9 @@
             long num = DateTime.Now.Ticks / 0x2710L;
             if (num >= (s_LastClosedTime + 50L))
             {
-                if (Event.current != null)
+                if (UnityEngine.Event.current != null)
                 {
-                    Event.current.Use();
+                    UnityEngine.Event.current.Use();
                 }
                 ScriptableObject.CreateInstance<SpriteEditorMenu>().Init(buttonRect, sf, previewTexture, selectedTexture);
                 return true;

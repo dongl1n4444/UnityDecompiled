@@ -29,7 +29,17 @@
         private extern void INTERNAL_set_suspension(ref JointSuspension2D value);
 
         /// <summary>
-        /// <para>The current joint speed.</para>
+        /// <para>The current joint angle (in degrees) defined as the relative angle between the two Rigidbody2D that the joint connects to.</para>
+        /// </summary>
+        public float jointAngle { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        /// <summary>
+        /// <para>The current joint linear speed in meters/sec.</para>
+        /// </summary>
+        public float jointLinearSpeed { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        /// <summary>
+        /// <para>The current joint rotational speed in degrees/sec.</para>
         /// </summary>
         public float jointSpeed { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 

@@ -19,7 +19,7 @@
         private int m_ShowMode;
         [SerializeField]
         private string m_Title = "";
-        [FormerlySerializedAs("m_MainView"), SerializeField]
+        [SerializeField, FormerlySerializedAs("m_MainView")]
         private View m_RootView;
         [SerializeField]
         private Vector2 m_MinSize = new Vector2(120f, 80f);
@@ -218,17 +218,17 @@
                 {
                     ((GUIView) this.m_RootView).RemoveFromAuxWindowList();
                 }
-                Object.DestroyImmediate(this.m_RootView, true);
+                UnityEngine.Object.DestroyImmediate(this.m_RootView, true);
                 this.m_RootView = null;
             }
-            Object.DestroyImmediate(this, true);
+            UnityEngine.Object.DestroyImmediate(this, true);
         }
 
         public void Close()
         {
             this.Save();
             this.InternalClose();
-            Object.DestroyImmediate(this, true);
+            UnityEngine.Object.DestroyImmediate(this, true);
         }
 
         internal bool IsNotDocked() => 

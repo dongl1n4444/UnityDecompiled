@@ -7,7 +7,7 @@
 
     public sealed class ProfilerDriver
     {
-        public static string directConnectionPort = "54999";
+        public static string directConnectionPort = "34999";
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void BeginFrame();
@@ -50,6 +50,8 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool IsIdentifierOnLocalhost(int guid);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern bool LoadProfile(string filename, bool keepExistingData);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void QueryFunctionCallees(string fullName);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void QueryInstrumentableFunctions();
@@ -59,6 +61,8 @@
         public static extern void RequestObjectMemoryInfo(bool gatherObjectReferences);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void ResetHistory();
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern void SaveProfile(string filename);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetAudioCaptureFlags(int flags);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]

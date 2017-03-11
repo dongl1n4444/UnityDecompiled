@@ -10,6 +10,8 @@
     public class ProductDefinition
     {
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private bool <enabled>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <id>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <storeSpecificId>k__BackingField;
@@ -35,11 +37,16 @@
         /// <param name="id">Store-independent ID.</param>
         /// <param name="storeSpecificId">Store-specific ID.</param>
         /// <param name="type">Product type.</param>
-        public ProductDefinition(string id, string storeSpecificId, ProductType type)
+        public ProductDefinition(string id, string storeSpecificId, ProductType type) : this(id, storeSpecificId, type, true)
+        {
+        }
+
+        public ProductDefinition(string id, string storeSpecificId, ProductType type, bool enabled)
         {
             this.id = id;
             this.storeSpecificId = storeSpecificId;
             this.type = type;
+            this.enabled = enabled;
         }
 
         /// <summary>
@@ -71,6 +78,11 @@
         /// </returns>
         public override int GetHashCode() => 
             this.id.GetHashCode();
+
+        /// <summary>
+        /// <para>This flag indicates whether a product should be offered for sale. It is controlled through the cloud catalog dashboard.</para>
+        /// </summary>
+        public bool enabled { get; private set; }
 
         /// <summary>
         /// <para>Unity IAP product ID. Potentially independent of store IDs.</para>

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections;
+    using UnityEditorInternal;
     using UnityEngine;
 
     internal class LightingWindowLightmapPreviewTab
@@ -153,8 +154,6 @@
                 for (int i = 0; i < lightmaps.Length; i++)
                 {
                     GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-                    GUILayout.FlexibleSpace();
-                    GUILayout.Label(i.ToString(), new GUILayoutOption[0]);
                     GUILayout.Space(5f);
                     lightmaps[i].lightmapColor = this.LightmapField(lightmaps[i].lightmapColor, i);
                     if (flag)
@@ -167,6 +166,34 @@
                         GUILayout.Space(10f);
                         lightmaps[i].shadowMask = this.LightmapField(lightmaps[i].shadowMask, i);
                     }
+                    GUILayout.Space(5f);
+                    LightmapConvergence lightmapConvergence = Lightmapping.GetLightmapConvergence(i);
+                    GUILayout.BeginVertical(new GUILayoutOption[0]);
+                    GUILayout.Label("Index: " + i, EditorStyles.miniBoldLabel, new GUILayoutOption[0]);
+                    if (lightmapConvergence.IsValid())
+                    {
+                        GUILayout.Label("Occupied: " + InternalEditorUtility.CountToString((ulong) lightmapConvergence.occupiedTexelCount), EditorStyles.miniLabel, new GUILayoutOption[0]);
+                        object[] objArray1 = new object[] { "Direct: ", lightmapConvergence.minDirectSamples, " / ", lightmapConvergence.maxDirectSamples, " / ", lightmapConvergence.avgDirectSamples, "|min / max / avg samples per texel" };
+                        GUILayout.Label(EditorGUIUtility.TextContent(string.Concat(objArray1)), EditorStyles.miniLabel, new GUILayoutOption[0]);
+                        object[] objArray2 = new object[] { "GI: ", lightmapConvergence.minGISamples, " / ", lightmapConvergence.maxGISamples, " / ", lightmapConvergence.avgGISamples, "|min / max / avg samples per texel" };
+                        GUILayout.Label(EditorGUIUtility.TextContent(string.Concat(objArray2)), EditorStyles.miniLabel, new GUILayoutOption[0]);
+                    }
+                    else
+                    {
+                        GUILayout.Label("Occupied: N/A", EditorStyles.miniLabel, new GUILayoutOption[0]);
+                        GUILayout.Label("Direct: N/A", EditorStyles.miniLabel, new GUILayoutOption[0]);
+                        GUILayout.Label("GI: N/A", EditorStyles.miniLabel, new GUILayoutOption[0]);
+                    }
+                    float lightmapBakePerformance = Lightmapping.GetLightmapBakePerformance(i);
+                    if (lightmapBakePerformance >= 0.0)
+                    {
+                        GUILayout.Label(lightmapBakePerformance.ToString("0.00") + " mrays/sec", EditorStyles.miniLabel, new GUILayoutOption[0]);
+                    }
+                    else
+                    {
+                        GUILayout.Label("N/A mrays/sec", EditorStyles.miniLabel, new GUILayoutOption[0]);
+                    }
+                    GUILayout.EndVertical();
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
                 }
@@ -189,7 +216,7 @@
         {
             int num = (int) userData;
             ArrayList list = new ArrayList();
-            MeshRenderer[] rendererArray = Object.FindObjectsOfType(typeof(MeshRenderer)) as MeshRenderer[];
+            MeshRenderer[] rendererArray = UnityEngine.Object.FindObjectsOfType(typeof(MeshRenderer)) as MeshRenderer[];
             foreach (MeshRenderer renderer in rendererArray)
             {
                 if ((renderer != null) && (renderer.lightmapIndex == num))
@@ -197,7 +224,7 @@
                     list.Add(renderer.gameObject);
                 }
             }
-            Terrain[] terrainArray = Object.FindObjectsOfType(typeof(Terrain)) as Terrain[];
+            Terrain[] terrainArray = UnityEngine.Object.FindObjectsOfType(typeof(Terrain)) as Terrain[];
             foreach (Terrain terrain in terrainArray)
             {
                 if ((terrain != null) && (terrain.lightmapIndex == num))
@@ -205,7 +232,7 @@
                     list.Add(terrain.gameObject);
                 }
             }
-            Selection.objects = list.ToArray(typeof(Object)) as Object[];
+            Selection.objects = list.ToArray(typeof(UnityEngine.Object)) as UnityEngine.Object[];
         }
 
         public void UpdateLightmapSelection()

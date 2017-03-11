@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Runtime.CompilerServices;
     using Unity.IL2CPP.Com;
+    using Unity.IL2CPP.Common;
     using Unity.IL2CPP.Debugger;
     using Unity.IL2CPP.FileNaming;
     using Unity.IL2CPP.GenericsCollection;
@@ -28,23 +29,21 @@
         [CompilerGenerated]
         private static Func<TypeDefinition, bool> <>f__am$cache0;
         [CompilerGenerated]
-        private static Func<MethodDefinition, bool> <>f__am$cache1;
+        private static Action<Action> <>f__am$cache1;
         [CompilerGenerated]
-        private static Action<Action> <>f__am$cache2;
+        private static Func<KeyValuePair<MethodReference, uint>, MethodReference> <>f__am$cache2;
         [CompilerGenerated]
-        private static Func<KeyValuePair<MethodReference, uint>, MethodReference> <>f__am$cache3;
+        private static Func<GenericInstanceMethod, string> <>f__am$cache3;
         [CompilerGenerated]
-        private static Func<GenericInstanceMethod, string> <>f__am$cache4;
+        private static Func<TypeReference, string> <>f__am$cache4;
         [CompilerGenerated]
-        private static Func<TypeReference, string> <>f__am$cache5;
+        private static Func<InteropData, bool> <>f__am$cache5;
         [CompilerGenerated]
-        private static Func<InteropData, bool> <>f__am$cache6;
+        private static Func<InteropData, TypeReference> <>f__am$cache6;
         [CompilerGenerated]
-        private static Func<InteropData, TypeReference> <>f__am$cache7;
+        private static Action<CppCodeWriter, TypeReference> <>f__am$cache7;
         [CompilerGenerated]
         private static Action<CppCodeWriter, TypeReference> <>f__am$cache8;
-        [CompilerGenerated]
-        private static Func<ArrayType, ModuleDefinition> <>f__mg$cache0;
         [Inject]
         public static IIl2CppGenericMethodCollectorReaderService Il2CppGenericMethodCollector;
         [Inject]
@@ -57,6 +56,8 @@
         public static ITypeProviderService TypeProvider;
         [Inject]
         public static IVirtualCallCollectorService VirtualCallCollector;
+        [Inject]
+        public static IWindowsRuntimeProjections WindowsRuntimeProjections;
 
         public SourceWriter(VTableBuilder vTableBuilder, IDebuggerSupport debuggerSupport, NPath outputDir)
         {
@@ -65,7 +66,23 @@
             this._outputDir = outputDir;
         }
 
-        public void Write(AssemblyDefinition assemblyDefinition, ReadOnlyInflatedCollectionCollector allGenerics, NPath outputDir, TypeDefinition[] typeList, AttributeCollection attributeCollection, MethodCollector methodCollector, IInteropDataCollector interopDataCollector, IMetadataCollection metadataCollection, SymbolsCollector symbolsCollector)
+        private static HashSet<TypeReference> CollectImplementedProjectedInterfacesByComCallableWrappersOf(TypeReference[] typesWithComCallableWrappers)
+        {
+            HashSet<TypeReference> set = new HashSet<TypeReference>(new Unity.IL2CPP.Common.TypeReferenceEqualityComparer());
+            foreach (TypeReference reference in typesWithComCallableWrappers)
+            {
+                foreach (TypeReference reference2 in reference.GetInterfacesImplementedByComCallableWrapper())
+                {
+                    if (WindowsRuntimeProjections.ProjectToCLR(reference2) != reference2)
+                    {
+                        set.Add(reference2);
+                    }
+                }
+            }
+            return set;
+        }
+
+        public void Write(AssemblyDefinition assemblyDefinition, ReadOnlyInflatedCollectionCollector allGenerics, NPath outputDir, TypeDefinition[] typeList, AttributeCollection attributeCollection, MethodCollector methodCollector, IMethodVerifier methodVerifier, IInteropDataCollector interopDataCollector, IMetadataCollection metadataCollection, SymbolsCollector symbolsCollector)
         {
             string fileName = FileNameProvider.Instance.ForModule(assemblyDefinition.MainModule);
             using (TinyProfiler.Section("Code", ""))
@@ -82,25 +99,14 @@
                         this.WriteTypeDefinitionFor(this._outputDir, definition, allGenerics, interopDataCollector);
                     }
                 }
-                using (TinyProfiler.Section("Methods", "Declarations"))
-                {
-                    foreach (TypeDefinition definition2 in definitionArray)
-                    {
-                        if (<>f__am$cache1 == null)
-                        {
-                            <>f__am$cache1 = m => !m.HasGenericParameters;
-                        }
-                        this.WriteMethodDeclarationsFor(this._outputDir, <>f__am$cache1, definition2);
-                    }
-                }
                 using (TinyProfiler.Section("Methods", "Definitions"))
                 {
-                    this.WriteMethodSourceFiles(this._outputDir, fileName, definitionArray, methodCollector, interopDataCollector, symbolsCollector, true);
+                    this.WriteMethodSourceFiles(this._outputDir, fileName, definitionArray, methodCollector, methodVerifier, interopDataCollector, symbolsCollector, true);
                 }
             }
         }
 
-        public static void WriteCollectedMetadata(InflatedCollectionCollector genericsCollectionCollector, ICollection<AssemblyDefinition> usedAssemblies, NPath outputDir, NPath dataFolder, IMetadataCollection metadataCollection, AttributeCollection attributeCollection, VTableBuilder vTableBuilder, IMethodCollectorResults methodCollector, IInteropDataCollectorResults interopDataCollector)
+        public static void WriteCollectedMetadata(ICollection<AssemblyDefinition> usedAssemblies, NPath outputDir, NPath dataFolder, IMetadataCollection metadataCollection, AttributeCollection attributeCollection, VTableBuilder vTableBuilder, IMethodCollectorResults methodCollector, IInteropDataCollectorResults interopDataCollector)
         {
             TableInfo info;
             using (TinyProfiler.Section("Attributes", ""))
@@ -112,41 +118,38 @@
                     info = new AttributesSupport(writer, attributeCollection).WriteAttributes(usedAssemblies);
                 }
             }
-            if (<>f__am$cache3 == null)
+            if (<>f__am$cache2 == null)
             {
-                <>f__am$cache3 = item => item.Key;
+                <>f__am$cache2 = item => item.Key;
             }
-            MethodTables methodPointerTables = MethodTables.CollectMethodTables(Il2CppGenericMethodCollector.Items.Select<KeyValuePair<MethodReference, uint>, MethodReference>(<>f__am$cache3));
+            MethodTables methodPointerTables = MethodTables.CollectMethodTables(Il2CppGenericMethodCollector.Items.Select<KeyValuePair<MethodReference, uint>, MethodReference>(<>f__am$cache2));
             UnresolvedVirtualsTablesInfo virtualCallTables = VirtualCallCollector.WriteUnresolvedStubs(outputDir);
             using (TinyProfiler.Section("WriteCodeRegistration", ""))
             {
-                CodeRegistrationWriter.WriteCodeRegistration(outputDir, methodCollector, interopDataCollector, genericsCollectionCollector, methodPointerTables, info, virtualCallTables);
+                CodeRegistrationWriter.WriteCodeRegistration(outputDir, methodCollector, interopDataCollector, methodPointerTables, info, virtualCallTables);
             }
             using (TinyProfiler.Section("WriteMetadata", ""))
             {
-                MetadataCacheWriter.WriteMetadata(outputDir, dataFolder, genericsCollectionCollector, null, usedAssemblies, methodPointerTables, metadataCollection, attributeCollection, vTableBuilder, methodCollector, interopDataCollector, virtualCallTables);
+                MetadataCacheWriter.WriteMetadata(outputDir, dataFolder, null, usedAssemblies, methodPointerTables, metadataCollection, attributeCollection, vTableBuilder, methodCollector, interopDataCollector, virtualCallTables);
             }
         }
 
         public static void WriteComCallableWrappers(NPath outputDirectory, IInteropDataCollectorResults interopDataCollector)
         {
+            HashSet<TypeReference> set;
+            if (<>f__am$cache5 == null)
+            {
+                <>f__am$cache5 = interopData => interopData.HasCreateCCWFunction;
+            }
             if (<>f__am$cache6 == null)
             {
-                <>f__am$cache6 = interopData => interopData.HasCreateCCWFunction;
+                <>f__am$cache6 = interopData => interopData.Type;
             }
+            TypeReference[] items = interopDataCollector.GetInteropData().Where<InteropData>(<>f__am$cache5).Select<InteropData, TypeReference>(<>f__am$cache6).ToArray<TypeReference>();
             if (<>f__am$cache7 == null)
             {
-                <>f__am$cache7 = interopData => interopData.Type;
-            }
-            TypeReference[] items = interopDataCollector.GetInteropData().Where<InteropData>(<>f__am$cache6).Select<InteropData, TypeReference>(<>f__am$cache7).ToArray<TypeReference>();
-            if (<>f__am$cache8 == null)
-            {
-                <>f__am$cache8 = delegate (CppCodeWriter writer, TypeReference type) {
-                    if (type.IsArray)
-                    {
-                        new ArrayCCWWriter((ArrayType) type).Write(writer);
-                    }
-                    else if (type.Resolve().IsDelegate())
+                <>f__am$cache7 = delegate (CppCodeWriter writer, TypeReference type) {
+                    if (!type.IsArray && type.Resolve().IsDelegate())
                     {
                         new DelegateCCWWriter(type).Write(writer);
                     }
@@ -170,7 +173,16 @@
                     }
                 };
             }
-            WriteEqualSizedChunks<TypeReference>(outputDirectory, items, "Il2CppComCallableWrappers", 0x100000L, <>f__am$cache8);
+            WriteEqualSizedChunks<TypeReference>(outputDirectory, items, "Il2CppComCallableWrappers", 0x100000L, <>f__am$cache7);
+            using (TinyProfiler.Section("Collect implemented projected interfaces by COM Callable Wrappers", ""))
+            {
+                set = CollectImplementedProjectedInterfacesByComCallableWrappersOf(items);
+            }
+            if (<>f__am$cache8 == null)
+            {
+                <>f__am$cache8 = (writer, interfaceType) => ProjectedComCallableWrapperMethodWriterDriver.WriteFor(writer, interfaceType);
+            }
+            WriteEqualSizedChunks<TypeReference>(outputDirectory, set, "Il2CppProjectedComCallableWrapperMethods", 0x100000L, <>f__am$cache8);
         }
 
         private static void WriteEqualSizedChunks<T>(NPath outputDir, ICollection<T> items, string fileName, long chunkSize, Action<CppCodeWriter, T> writeItemAction)
@@ -211,7 +223,7 @@
             using (SourceCodeWriter writer = new SourceCodeWriter(this._outputDir.Combine(append)))
             {
                 writer.WriteLine("#pragma once");
-                string[] strArray = new string[] { "System.Object", "System.Array", "System.String", "System.Type", "System.IntPtr", "System.Exception", "System.RuntimeTypeHandle", "System.RuntimeFieldHandle", "System.RuntimeArgumentHandle", "System.RuntimeMethodHandle", "System.Text.StringBuilder", "System.MulticastDelegate", "System.Reflection.MethodBase" };
+                string[] strArray = new string[] { "System.Object", "System.Array", "System.String", "System.Type", "System.IntPtr", "System.Exception", "System.RuntimeTypeHandle", "System.RuntimeFieldHandle", "System.RuntimeArgumentHandle", "System.RuntimeMethodHandle", "System.Text.StringBuilder", "System.MulticastDelegate", "System.Reflection.MethodBase", "System.Reflection.Assembly" };
                 foreach (string str in strArray)
                 {
                     TypeDefinition type = TypeProvider.Corlib.MainModule.GetType(str);
@@ -229,7 +241,7 @@
             }
         }
 
-        private void WriteGenericComDefinitions(ReadOnlyInflatedCollectionCollector genericsCollectionCollector, IInteropDataCollector interopDataCollector)
+        private void WriteGenericComDefinitions(ReadOnlyInflatedCollectionCollector genericsCollectionCollector, IMethodVerifier methodVerifier, IInteropDataCollector interopDataCollector)
         {
             <WriteGenericComDefinitions>c__AnonStorey1 storey = new <WriteGenericComDefinitions>c__AnonStorey1 {
                 interopDataCollector = interopDataCollector
@@ -237,7 +249,7 @@
             WriteEqualSizedChunks<GenericInstanceType>(this._outputDir, genericsCollectionCollector.TypeDeclarations, "Il2CppGenericComDefinitions", 0x7d000L, new Action<CppCodeWriter, GenericInstanceType>(storey.<>m__0));
         }
 
-        private void WriteGenericMethodDefinition(CppCodeWriter writer, GenericInstanceMethod method, IMethodCollector methodCollector)
+        private void WriteGenericMethodDefinition(CppCodeWriter writer, GenericInstanceMethod method, IMethodCollector methodCollector, IMethodVerifier methodVerifier)
         {
             writer.AddStdInclude("cstring");
             writer.AddStdInclude("string.h");
@@ -250,20 +262,19 @@
                 writer.AddInclude("il2cpp-debugger.h");
             }
             writer.AddInclude("codegen/il2cpp-codegen.h");
-            writer.AddIncludesForMethodDeclaration(method);
             writer.AddIncludeForTypeDefinition(method.DeclaringType);
-            new MethodWriter(method.DeclaringType, writer, this._vTableBuilder).WriteMethodDefinition(method, methodCollector);
+            new MethodWriter(method.DeclaringType, writer, this._vTableBuilder).WriteMethodDefinition(method, methodCollector, methodVerifier);
         }
 
-        private void WriteGenericMethods(ReadOnlyInflatedCollectionCollector genericsCollectionCollector)
+        private void WriteGenericMethods(ReadOnlyInflatedCollectionCollector genericsCollectionCollector, IMethodVerifier methodVerifier)
         {
             int num = 0;
             NullMethodCollector methodCollector = new NullMethodCollector();
-            if (<>f__am$cache4 == null)
+            if (<>f__am$cache3 == null)
             {
-                <>f__am$cache4 = mr => mr.FullName;
+                <>f__am$cache3 = mr => mr.FullName;
             }
-            IOrderedEnumerable<GenericInstanceMethod> foo = genericsCollectionCollector.Methods.OrderBy<GenericInstanceMethod, string>(<>f__am$cache4);
+            IOrderedEnumerable<GenericInstanceMethod> foo = genericsCollectionCollector.Methods.OrderBy<GenericInstanceMethod, string>(<>f__am$cache3);
             foreach (List<GenericInstanceMethod> list in foo.Chunk<GenericInstanceMethod>(0x3e8))
             {
                 string[] append = new string[] { "GenericMethods" + num++ + ".cpp" };
@@ -271,17 +282,18 @@
                 {
                     foreach (GenericInstanceMethod method in list)
                     {
-                        this.WriteGenericMethodDefinition(writer, method, methodCollector);
+                        this.WriteGenericMethodDefinition(writer, method, methodCollector, methodVerifier);
                     }
                 }
             }
         }
 
-        internal void WriteGenerics(ReadOnlyInflatedCollectionCollector genericsCollectionCollector, IEnumerable<TypeDefinition> allTypeDefinitions, IMethodCollector methodCollector, IInteropDataCollector interopDataCollector, IMetadataCollection metadataCollection, SymbolsCollector symbolsCollector)
+        internal void WriteGenerics(ReadOnlyInflatedCollectionCollector genericsCollectionCollector, IEnumerable<TypeDefinition> allTypeDefinitions, IMethodVerifier methodVerifier, IMethodCollector methodCollector, IInteropDataCollector interopDataCollector, IMetadataCollection metadataCollection, SymbolsCollector symbolsCollector)
         {
             <WriteGenerics>c__AnonStorey0 storey = new <WriteGenerics>c__AnonStorey0 {
                 genericsCollectionCollector = genericsCollectionCollector,
                 interopDataCollector = interopDataCollector,
+                methodVerifier = methodVerifier,
                 methodCollector = methodCollector,
                 symbolsCollector = symbolsCollector,
                 $this = this
@@ -292,14 +304,13 @@
                 new Action(storey.<>m__2),
                 new Action(storey.<>m__3),
                 new Action(storey.<>m__4),
-                new Action(storey.<>m__5),
                 new Action(this.WriteGeneratedCodeGen)
             };
-            if (<>f__am$cache2 == null)
+            if (<>f__am$cache1 == null)
             {
-                <>f__am$cache2 = s => s();
+                <>f__am$cache1 = s => s();
             }
-            ParallelHelper.ForEach<Action>(source, <>f__am$cache2, true, false);
+            Unity.IL2CPP.ParallelHelper.ForEach<Action>(source, <>f__am$cache1, true, false);
         }
 
         private static void WriteMarshalingDefinitions(CppCodeWriter writer, TypeReference type, IInteropDataCollector interopDataCollector)
@@ -340,40 +351,14 @@
             }
         }
 
-        private void WriteMethodDeclarationsFor(NPath outputDirectory, Func<MethodDefinition, bool> filter, GenericInstanceType type)
-        {
-            string[] append = new string[] { FileNameProvider.Instance.ForMethodDeclarations(type) };
-            using (SourceCodeWriter writer = new SourceCodeWriter(outputDirectory.Combine(append)))
-            {
-                writer.AddStdInclude("stdint.h");
-                writer.AddStdInclude("assert.h");
-                writer.AddStdInclude("exception");
-                writer.AddInclude("codegen/il2cpp-codegen.h");
-                new MethodWriter(type, writer, this._vTableBuilder).WriteMethodDeclarationsFor(filter);
-            }
-        }
-
-        private void WriteMethodDeclarationsFor(NPath outputDirectory, Func<MethodDefinition, bool> filter, TypeDefinition type)
-        {
-            string[] append = new string[] { FileNameProvider.Instance.ForMethodDeclarations(type) };
-            using (SourceCodeWriter writer = new SourceCodeWriter(outputDirectory.Combine(append)))
-            {
-                writer.AddStdInclude("stdint.h");
-                writer.AddStdInclude("assert.h");
-                writer.AddStdInclude("exception");
-                writer.AddInclude("codegen/il2cpp-codegen.h");
-                new MethodWriter(type, writer, this._vTableBuilder).WriteMethodDeclarationsFor(filter);
-            }
-        }
-
-        private void WriteMethodSourceFiles(NPath outputDirectory, string fileName, IEnumerable<TypeReference> typeList, IMethodCollector methodCollector, IInteropDataCollector interopDataCollector, SymbolsCollector symbolsCollector, bool writeMarshalingDefinitions)
+        private void WriteMethodSourceFiles(NPath outputDirectory, string fileName, IEnumerable<TypeReference> typeList, IMethodCollector methodCollector, IMethodVerifier methodVerifier, IInteropDataCollector interopDataCollector, SymbolsCollector symbolsCollector, bool writeMarshalingDefinitions)
         {
             int num = 0;
-            if (<>f__am$cache5 == null)
+            if (<>f__am$cache4 == null)
             {
-                <>f__am$cache5 = tr => tr.FullName;
+                <>f__am$cache4 = tr => tr.FullName;
             }
-            IOrderedEnumerable<TypeReference> foo = typeList.OrderBy<TypeReference, string>(<>f__am$cache5);
+            IOrderedEnumerable<TypeReference> foo = typeList.OrderBy<TypeReference, string>(<>f__am$cache4);
             foreach (List<TypeReference> list in foo.Chunk<TypeReference>(100))
             {
                 object[] objArray1 = new object[] { "Bulk_", fileName, "_", num++, ".cpp" };
@@ -398,12 +383,11 @@
                         foreach (TypeReference reference in list)
                         {
                             writer.AddIncludeForTypeDefinition(reference);
-                            writer.AddIncludeForMethodDeclarations(reference);
                             if (writeMarshalingDefinitions)
                             {
                                 WriteMarshalingDefinitions(writer, reference, interopDataCollector);
                             }
-                            new MethodWriter(reference, writer, this._vTableBuilder).WriteMethodDefinitions(methodCollector);
+                            new MethodWriter(reference, writer, this._vTableBuilder).WriteMethodDefinitions(methodCollector, methodVerifier);
                         }
                         writer.WriteClangWarningEnables();
                     }
@@ -452,11 +436,10 @@
         private sealed class <WriteGenerics>c__AnonStorey0
         {
             internal SourceWriter $this;
-            private static Func<GenericInstanceType, bool> <>f__am$cache0;
-            private static Func<MethodDefinition, bool> <>f__am$cache1;
             internal ReadOnlyInflatedCollectionCollector genericsCollectionCollector;
             internal IInteropDataCollector interopDataCollector;
             internal IMethodCollector methodCollector;
+            internal IMethodVerifier methodVerifier;
             internal SymbolsCollector symbolsCollector;
 
             internal void <>m__0()
@@ -472,48 +455,19 @@
 
             internal void <>m__1()
             {
-                using (TinyProfiler.Section("GenericInstanceTypes Methods", ""))
+                using (TinyProfiler.Section("Arrays Definitions", ""))
                 {
-                    if (<>f__am$cache0 == null)
+                    foreach (ArrayType type in this.genericsCollectionCollector.Arrays)
                     {
-                        <>f__am$cache0 = t => !t.IsInterface() || t.IsComOrWindowsRuntimeInterface();
-                    }
-                    foreach (GenericInstanceType type in this.genericsCollectionCollector.TypeMethodDeclarations.Where<GenericInstanceType>(<>f__am$cache0))
-                    {
-                        if (<>f__am$cache1 == null)
+                        if (type.NeedsComCallableWrapper())
                         {
-                            <>f__am$cache1 = m => !m.HasGenericParameters;
+                            this.interopDataCollector.AddCCWMarshallingFunction(type);
                         }
-                        this.$this.WriteMethodDeclarationsFor(this.$this._outputDir, <>f__am$cache1, type);
                     }
                 }
             }
 
             internal void <>m__2()
-            {
-                using (TinyProfiler.Section("Arrays Definitions", ""))
-                {
-                    if (SourceWriter.<>f__mg$cache0 == null)
-                    {
-                        SourceWriter.<>f__mg$cache0 = new Func<ArrayType, ModuleDefinition>(ArrayUtilities.ModuleDefinitionForElementTypeOf);
-                    }
-                    foreach (IGrouping<ModuleDefinition, ArrayType> grouping in this.genericsCollectionCollector.Arrays.GroupBy<ArrayType, ModuleDefinition>(SourceWriter.<>f__mg$cache0))
-                    {
-                        string[] append = new string[] { FileNameProvider.Instance.ForModule(grouping.Key) + "_ArrayTypes.h" };
-                        using (SourceCodeWriter writer = new SourceCodeWriter(this.$this._outputDir.Combine(append)))
-                        {
-                            writer.AddIncludeForTypeDefinition(SourceWriter.TypeProvider.Corlib.MainModule.GetType("System.Array"));
-                            foreach (ArrayType type in grouping)
-                            {
-                                writer.AddIncludeOrExternForTypeDefinition(type.ElementType);
-                                new TypeDefinitionWriter().WriteArrayTypeDefinition(type, writer, this.interopDataCollector);
-                            }
-                        }
-                    }
-                }
-            }
-
-            internal void <>m__3()
             {
                 using (TinyProfiler.Section("EmptyTypes Definitions", ""))
                 {
@@ -524,31 +478,25 @@
                 }
             }
 
-            internal void <>m__4()
+            internal void <>m__3()
             {
                 using (TinyProfiler.Section("GenericInstanceMethods", ""))
                 {
-                    this.$this.WriteGenericMethods(this.genericsCollectionCollector);
+                    this.$this.WriteGenericMethods(this.genericsCollectionCollector, this.methodVerifier);
                 }
                 using (TinyProfiler.Section("GenericInstanceTypes", ""))
                 {
-                    this.$this.WriteMethodSourceFiles(this.$this._outputDir, "Generics", (IEnumerable<TypeReference>) this.genericsCollectionCollector.Types, this.methodCollector, this.interopDataCollector, this.symbolsCollector, false);
+                    this.$this.WriteMethodSourceFiles(this.$this._outputDir, "Generics", (IEnumerable<TypeReference>) this.genericsCollectionCollector.Types, this.methodCollector, this.methodVerifier, this.interopDataCollector, this.symbolsCollector, false);
                 }
             }
 
-            internal void <>m__5()
+            internal void <>m__4()
             {
                 using (TinyProfiler.Section("GenericComDefinitions", ""))
                 {
-                    this.$this.WriteGenericComDefinitions(this.genericsCollectionCollector, this.interopDataCollector);
+                    this.$this.WriteGenericComDefinitions(this.genericsCollectionCollector, this.methodVerifier, this.interopDataCollector);
                 }
             }
-
-            private static bool <>m__6(GenericInstanceType t) => 
-                (!t.IsInterface() || t.IsComOrWindowsRuntimeInterface());
-
-            private static bool <>m__7(MethodDefinition m) => 
-                !m.HasGenericParameters;
         }
     }
 }

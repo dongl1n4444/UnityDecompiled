@@ -47,6 +47,7 @@
         private bool m_ReopenLastUsedProjectOnStartup;
         private string[] m_ScriptAppDisplayNames;
         private string[] m_ScriptApps;
+        private string[] m_ScriptAppsEditions;
         private string m_ScriptEditorArgs = "";
         private RefString m_ScriptEditorPath = new RefString("");
         private List<Section> m_Sections;
@@ -68,8 +69,8 @@
         {
             foreach (Assembly assembly in EditorAssemblies.loadedAssemblies)
             {
-                Type[] typesFromAssembly = AssemblyHelper.GetTypesFromAssembly(assembly);
-                foreach (Type type in typesFromAssembly)
+                System.Type[] typesFromAssembly = AssemblyHelper.GetTypesFromAssembly(assembly);
+                foreach (System.Type type in typesFromAssembly)
                 {
                     foreach (MethodInfo info in type.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static))
                     {
@@ -147,12 +148,13 @@
             return array;
         }
 
-        private string[] BuildFriendlyAppNameList(string[] appPathList, string defaultBuiltIn)
+        private string[] BuildFriendlyAppNameList(string[] appPathList, string[] appEditionList, string defaultBuiltIn)
         {
             List<string> list = new List<string>();
-            foreach (string str in appPathList)
+            for (int i = 0; i < appPathList.Length; i++)
             {
-                switch (str)
+                string app = appPathList[i];
+                switch (app)
                 {
                     case "internal":
                     case "":
@@ -160,8 +162,15 @@
                         break;
 
                     default:
-                        list.Add(this.StripMicrosoftFromVisualStudioName(OSUtil.GetAppFriendlyName(str)));
+                    {
+                        string str2 = this.StripMicrosoftFromVisualStudioName(OSUtil.GetAppFriendlyName(app));
+                        if ((appEditionList != null) && !string.IsNullOrEmpty(appEditionList[i]))
+                        {
+                            str2 = $"{str2} ({appEditionList[i]})";
+                        }
+                        list.Add(str2);
                         break;
+                    }
                 }
             }
             return list.ToArray();
@@ -192,7 +201,7 @@
             }
         }
 
-        private void FilePopup(string label, string selectedString, ref string[] names, ref string[] paths, RefString outString, string defaultString, Action onChanged)
+        private void FilePopup(string label, string selectedString, ref string[] names, ref string[] paths, RefString outString, string defaultString, System.Action onChanged)
         {
             GUIStyle popup = EditorStyles.popup;
             GUILayout.BeginHorizontal(new GUILayoutOption[0]);
@@ -205,7 +214,7 @@
             GUIContent content = new GUIContent((selected.Length != 0) ? names[selected[0]] : defaultString);
             Rect position = GUILayoutUtility.GetRect(GUIContent.none, popup);
             AppsListUserData userData = new AppsListUserData(paths, outString, onChanged);
-            if (EditorGUI.ButtonMouseDown(position, content, FocusType.Passive, popup))
+            if (EditorGUI.DropdownButton(position, content, FocusType.Passive, popup))
             {
                 ArrayUtility.Add<string>(ref names, "Browse...");
                 EditorUtility.DisplayCustomMenu(position, names, selected, new EditorUtility.SelectMenuItemFunction(this.AppsListClick), userData);
@@ -366,33 +375,36 @@
             this.m_ExternalEditorSupportsUnityProj = EditorPrefs.GetBool("kExternalEditorSupportsUnityProj", false);
             this.m_ImageAppPath.str = EditorPrefs.GetString("kImagesDefaultApp");
             this.m_ScriptApps = this.BuildAppPathList((string) this.m_ScriptEditorPath, "RecentlyUsedScriptApp", "internal");
+            this.m_ScriptAppsEditions = new string[this.m_ScriptApps.Length];
             if (Application.platform == RuntimePlatform.WindowsEditor)
             {
-                foreach (string str in SyncVS.InstalledVisualStudios.Values)
+                foreach (VisualStudioPath[] pathArray in SyncVS.InstalledVisualStudios.Values)
                 {
-                    if (Array.IndexOf<string>(this.m_ScriptApps, str) == -1)
+                    foreach (VisualStudioPath path in pathArray)
                     {
-                        if (this.m_ScriptApps.Length < 10)
+                        int index = Array.IndexOf<string>(this.m_ScriptApps, path.Path);
+                        if (index == -1)
                         {
-                            ArrayUtility.Add<string>(ref this.m_ScriptApps, str);
+                            ArrayUtility.Add<string>(ref this.m_ScriptApps, path.Path);
+                            ArrayUtility.Add<string>(ref this.m_ScriptAppsEditions, path.Edition);
                         }
                         else
                         {
-                            this.m_ScriptApps[1] = str;
+                            this.m_ScriptAppsEditions[index] = path.Edition;
                         }
                     }
                 }
             }
             this.m_ImageApps = this.BuildAppPathList((string) this.m_ImageAppPath, "RecentlyUsedImageApp", "");
-            this.m_ScriptAppDisplayNames = this.BuildFriendlyAppNameList(this.m_ScriptApps, "MonoDevelop (built-in)");
-            this.m_ImageAppDisplayNames = this.BuildFriendlyAppNameList(this.m_ImageApps, "Open by file extension");
+            this.m_ScriptAppDisplayNames = this.BuildFriendlyAppNameList(this.m_ScriptApps, this.m_ScriptAppsEditions, "MonoDevelop (built-in)");
+            this.m_ImageAppDisplayNames = this.BuildFriendlyAppNameList(this.m_ImageApps, null, "Open by file extension");
             this.m_DiffTools = InternalEditorUtility.GetAvailableDiffTools();
             if (((this.m_DiffTools == null) || (this.m_DiffTools.Length == 0)) && InternalEditorUtility.HasTeamLicense())
             {
                 this.m_noDiffToolsMessage = InternalEditorUtility.GetNoDiffToolsDetectedMessage();
             }
-            string str2 = EditorPrefs.GetString("kDiffsDefaultApp");
-            this.m_DiffToolIndex = ArrayUtility.IndexOf<string>(this.m_DiffTools, str2);
+            string str = EditorPrefs.GetString("kDiffsDefaultApp");
+            this.m_DiffToolIndex = ArrayUtility.IndexOf<string>(this.m_DiffTools, str);
             if (this.m_DiffToolIndex == -1)
             {
                 this.m_DiffToolIndex = 0;
@@ -492,7 +504,7 @@
 
         private void ShowExternalApplications()
         {
-            this.FilePopup("External Script Editor", (string) this.m_ScriptEditorPath, ref this.m_ScriptAppDisplayNames, ref this.m_ScriptApps, this.m_ScriptEditorPath, "internal", new Action(this.OnScriptEditorChanged));
+            this.FilePopup("External Script Editor", (string) this.m_ScriptEditorPath, ref this.m_ScriptAppDisplayNames, ref this.m_ScriptApps, this.m_ScriptEditorPath, "internal", new System.Action(this.OnScriptEditorChanged));
             if (!this.IsSelectedScriptEditorSpecial())
             {
                 string scriptEditorArgs = this.m_ScriptEditorArgs;
@@ -665,7 +677,7 @@
                     EditorGUILayout.PrefixLabel(Styles.cacheFolderLocation, miniButton);
                     Rect position = GUILayoutUtility.GetRect(GUIContent.none, miniButton);
                     GUIContent content = !string.IsNullOrEmpty(this.m_GICacheSettings.m_CachePath) ? new GUIContent(this.m_GICacheSettings.m_CachePath) : Styles.browse;
-                    if (EditorGUI.ButtonMouseDown(position, content, FocusType.Passive, miniButton))
+                    if (EditorGUI.DropdownButton(position, content, FocusType.Passive, miniButton))
                     {
                         string cachePath = this.m_GICacheSettings.m_CachePath;
                         string str2 = EditorUtility.OpenFolderPanel(Styles.browseGICacheLocation.text, cachePath, "");
@@ -972,11 +984,11 @@
 
         private class AppsListUserData
         {
-            public Action onChanged;
+            public System.Action onChanged;
             public string[] paths;
             public PreferencesWindow.RefString str;
 
-            public AppsListUserData(string[] paths, PreferencesWindow.RefString str, Action onChanged)
+            public AppsListUserData(string[] paths, PreferencesWindow.RefString str, System.Action onChanged)
             {
                 this.paths = paths;
                 this.str = str;

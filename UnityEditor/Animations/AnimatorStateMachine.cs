@@ -13,7 +13,7 @@
     /// <summary>
     /// <para>A graph controlling the interaction of states. Each state references a motion.</para>
     /// </summary>
-    public sealed class AnimatorStateMachine : Object
+    public sealed class AnimatorStateMachine : UnityEngine.Object
     {
         private PushUndoIfNeeded undoHandler = new PushUndoIfNeeded(true);
 
@@ -28,7 +28,9 @@
             AnimatorStateTransition[] anyStateTransitions = this.anyStateTransitions;
             AnimatorStateTransition objectToAdd = new AnimatorStateTransition {
                 hasExitTime = false,
-                hasFixedDuration = true
+                hasFixedDuration = true,
+                duration = 0.25f,
+                exitTime = 0.75f
             };
             if (AssetDatabase.GetAssetPath(this) != "")
             {
@@ -213,7 +215,7 @@
         /// </summary>
         /// <param name="stateMachineBehaviourType"></param>
         [TypeInferenceRule(TypeInferenceRules.TypeReferencedByFirstArgument)]
-        public StateMachineBehaviour AddStateMachineBehaviour(Type stateMachineBehaviourType) => 
+        public StateMachineBehaviour AddStateMachineBehaviour(System.Type stateMachineBehaviourType) => 
             ((StateMachineBehaviour) this.Internal_AddStateMachineBehaviourWithType(stateMachineBehaviourType));
 
         /// <summary>
@@ -425,7 +427,7 @@
         }
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private extern ScriptableObject Internal_AddStateMachineBehaviourWithType(Type stateMachineBehaviourType);
+        private extern ScriptableObject Internal_AddStateMachineBehaviourWithType(System.Type stateMachineBehaviourType);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_Create(AnimatorStateMachine mono);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]

@@ -4,7 +4,7 @@
     using UnityEngine;
     using UnityEngine.Rendering;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(RenderTexture))]
+    [CustomEditor(typeof(RenderTexture)), CanEditMultipleObjects]
     internal class RenderTextureEditor : TextureInspector
     {
         private SerializedProperty m_AntiAliasing;
@@ -34,14 +34,14 @@
             }
             if (QualitySettings.desiredColorSpace == ColorSpace.Linear)
             {
-                bool flag = this.IsHDRFormat(target.format);
+                bool flag = IsHDRFormat(target.format);
                 bool flag2 = target.sRGB && !flag;
                 str = str + " " + (!flag2 ? "Linear" : "sRGB");
             }
-            return ((str + "  " + target.format) + "  " + EditorUtility.FormatBytes(TextureUtil.GetRuntimeMemorySize(target)));
+            return ((str + "  " + target.format) + "  " + EditorUtility.FormatBytes(TextureUtil.GetRuntimeMemorySizeLong(target)));
         }
 
-        protected bool IsHDRFormat(RenderTextureFormat format) => 
+        public static bool IsHDRFormat(RenderTextureFormat format) => 
             (((((format == RenderTextureFormat.ARGBHalf) || (format == RenderTextureFormat.RGB111110Float)) || ((format == RenderTextureFormat.RGFloat) || (format == RenderTextureFormat.ARGBFloat))) || (((format == RenderTextureFormat.ARGBFloat) || (format == RenderTextureFormat.RFloat)) || (format == RenderTextureFormat.RGHalf))) || (format == RenderTextureFormat.RHalf));
 
         protected override void OnEnable()
@@ -95,7 +95,7 @@
             {
                 EditorGUILayout.PropertyField(this.m_DepthFormat, styles.depthBuffer, new GUILayoutOption[0]);
             }
-            bool flag2 = this.IsHDRFormat((RenderTextureFormat) this.m_ColorFormat.intValue);
+            bool flag2 = IsHDRFormat((RenderTextureFormat) this.m_ColorFormat.intValue);
             using (new EditorGUI.DisabledScope(flag2))
             {
                 EditorGUILayout.PropertyField(this.m_sRGB, styles.sRGBTexture, new GUILayoutOption[0]);
@@ -117,7 +117,6 @@
             {
                 target.Release();
             }
-            base.isInspectorDirty = true;
             EditorGUILayout.Space();
             base.DoWrapModePopup();
             base.DoFilterModePopup();

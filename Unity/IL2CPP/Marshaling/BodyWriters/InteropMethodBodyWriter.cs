@@ -11,8 +11,10 @@
     using Unity.IL2CPP.Marshaling;
     using Unity.IL2CPP.Marshaling.MarshalInfoWriters;
 
-    internal abstract class InteropMethodBodyWriter : InteropMethodInfo
+    public abstract class InteropMethodBodyWriter : InteropMethodInfo
     {
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private bool <AreParametersMarshaled>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <IsReturnValueMarshaled>k__BackingField;
         [Inject]
@@ -20,6 +22,7 @@
 
         protected InteropMethodBodyWriter(MethodReference interopMethod, MethodReference methodForParameterNames, InteropMarshaler marshaler) : base(interopMethod, methodForParameterNames, marshaler)
         {
+            this.<AreParametersMarshaled>k__BackingField = true;
             this.<IsReturnValueMarshaled>k__BackingField = true;
         }
 
@@ -158,7 +161,7 @@
         private void WriteMethodBodyImpl(CppCodeWriter writer, IRuntimeMetadataAccess metadataAccess)
         {
             this.WriteMethodPrologue(writer, metadataAccess);
-            string[] localVariableNames = this.WriteMarshalInputParameters(writer, metadataAccess);
+            string[] localVariableNames = !this.AreParametersMarshaled ? null : this.WriteMarshalInputParameters(writer, metadataAccess);
             string unmarshaledReturnValueVariableName = null;
             object[] args = new object[] { base._marshaler.GetPrettyCalleeName() };
             writer.WriteLine("// {0} invocation", args);
@@ -177,7 +180,10 @@
                     unmarshaledReturnValueVariableName = InteropMethodInfo.Naming.ForInteropReturnValue();
                 }
             }
-            this.WriteMarshalOutputParameters(writer, localVariableNames, metadataAccess);
+            if (this.AreParametersMarshaled)
+            {
+                this.WriteMarshalOutputParameters(writer, localVariableNames, metadataAccess);
+            }
             this.WriteMethodEpilogue(writer, metadataAccess);
             this.WriteReturnStatement(writer, unmarshaledReturnValueVariableName, metadataAccess);
         }
@@ -198,6 +204,9 @@
                 writer.WriteLine("return {0};", args);
             }
         }
+
+        protected virtual bool AreParametersMarshaled =>
+            this.<AreParametersMarshaled>k__BackingField;
 
         protected sealed override MethodReference InteropMethod =>
             base.InteropMethod;

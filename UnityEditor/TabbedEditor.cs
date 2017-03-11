@@ -8,7 +8,7 @@
         private Editor m_ActiveEditor;
         private int m_ActiveEditorIndex = 0;
         protected string[] m_SubEditorNames = null;
-        protected Type[] m_SubEditorTypes = null;
+        protected System.Type[] m_SubEditorTypes = null;
 
         protected TabbedEditor()
         {
@@ -19,7 +19,7 @@
 
         private void OnDestroy()
         {
-            Object.DestroyImmediate(this.activeEditor);
+            UnityEngine.Object.DestroyImmediate(this.activeEditor);
         }
 
         internal virtual void OnEnable()
@@ -42,7 +42,7 @@
                 EditorPrefs.SetInt(base.GetType().Name + "ActiveEditorIndex", this.m_ActiveEditorIndex);
                 Editor activeEditor = this.activeEditor;
                 this.m_ActiveEditor = null;
-                Object.DestroyImmediate(activeEditor);
+                UnityEngine.Object.DestroyImmediate(activeEditor);
                 this.m_ActiveEditor = Editor.CreateEditor(base.targets, this.m_SubEditorTypes[this.m_ActiveEditorIndex]);
             }
             GUILayout.FlexibleSpace();

@@ -666,6 +666,8 @@
             private float m_Time;
             private short m_MinCount;
             private short m_MaxCount;
+            private int m_RepeatCount;
+            private float m_RepeatInterval;
             /// <summary>
             /// <para>Construct a new Burst with a time and count.</para>
             /// </summary>
@@ -678,6 +680,8 @@
                 this.m_Time = _time;
                 this.m_MinCount = _count;
                 this.m_MaxCount = _count;
+                this.m_RepeatCount = 0;
+                this.m_RepeatInterval = 0f;
             }
 
             /// <summary>
@@ -692,6 +696,17 @@
                 this.m_Time = _time;
                 this.m_MinCount = _minCount;
                 this.m_MaxCount = _maxCount;
+                this.m_RepeatCount = 0;
+                this.m_RepeatInterval = 0f;
+            }
+
+            public Burst(float _time, short _minCount, short _maxCount, int _cycleCount, float _repeatInterval)
+            {
+                this.m_Time = _time;
+                this.m_MinCount = _minCount;
+                this.m_MaxCount = _maxCount;
+                this.m_RepeatCount = _cycleCount - 1;
+                this.m_RepeatInterval = _repeatInterval;
             }
 
             /// <summary>
@@ -728,6 +743,30 @@
                 set
                 {
                     this.m_MaxCount = value;
+                }
+            }
+            /// <summary>
+            /// <para>How many times to play the burst. (0 means infinitely).</para>
+            /// </summary>
+            public int cycleCount
+            {
+                get => 
+                    (this.m_RepeatCount + 1);
+                set
+                {
+                    this.m_RepeatCount = value - 1;
+                }
+            }
+            /// <summary>
+            /// <para>How often to repeat the burst, in seconds.</para>
+            /// </summary>
+            public float repeatInterval
+            {
+                get => 
+                    this.m_RepeatInterval;
+                set
+                {
+                    this.m_RepeatInterval = value;
                 }
             }
         }
@@ -2087,7 +2126,7 @@
         internal delegate bool IteratorDelegate(ParticleSystem ps);
 
         /// <summary>
-        /// <para>Access the particle system lights module.</para>
+        /// <para>Access the ParticleSystem Lights Module.</para>
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
         public struct LightsModule
@@ -3392,7 +3431,8 @@
         }
 
         /// <summary>
-        /// <para>Script interface for a Min-Max Gradient.</para>
+        /// <para>MinMaxGradient contains two Gradients, and returns a Color based on ParticleSystem.MinMaxGradient.mode. Depending on the mode, the Color returned may be randomized.
+        /// Gradients are edited via the ParticleSystem Inspector once a ParticleSystemGradientMode requiring them has been selected. Some modes do not require gradients, only colors.</para>
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
         public struct MinMaxGradient
@@ -3587,7 +3627,9 @@
         }
 
         /// <summary>
-        /// <para>Script interface for the Noise module.</para>
+        /// <para>Script interface for the Noise Module.
+        /// 
+        /// The Noise Module allows you to apply turbulence to the movement of your particles. Use the low quality settings to create computationally efficient Noise, or simulate smoother, richer Noise with the higher quality settings. You can also choose to define the behavior of the Noise individually for each axis.</para>
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
         public struct NoiseModule
@@ -4720,7 +4762,7 @@
                 }
             }
             /// <summary>
-            /// <para>Set particles to face their initial direction of travel.</para>
+            /// <para>Align particles based on their initial direction of travel.</para>
             /// </summary>
             public bool alignToDirection
             {
@@ -4741,6 +4783,58 @@
                 set
                 {
                     SetRadius(this.m_ParticleSystem, value);
+                }
+            }
+            /// <summary>
+            /// <para>The mode used for generating particles along the radius.</para>
+            /// </summary>
+            public ParticleSystemShapeMultiModeValue radiusMode
+            {
+                get => 
+                    ((ParticleSystemShapeMultiModeValue) GetRadiusMode(this.m_ParticleSystem));
+                set
+                {
+                    SetRadiusMode(this.m_ParticleSystem, (int) value);
+                }
+            }
+            /// <summary>
+            /// <para>Control the gap between emission points along the radius.</para>
+            /// </summary>
+            public float radiusSpread
+            {
+                get => 
+                    GetRadiusSpread(this.m_ParticleSystem);
+                set
+                {
+                    SetRadiusSpread(this.m_ParticleSystem, value);
+                }
+            }
+            /// <summary>
+            /// <para>When using one of the animated modes, how quickly to move the emission position along the radius.</para>
+            /// </summary>
+            public ParticleSystem.MinMaxCurve radiusSpeed
+            {
+                get
+                {
+                    ParticleSystem.MinMaxCurve curve = new ParticleSystem.MinMaxCurve();
+                    GetRadiusSpeed(this.m_ParticleSystem, ref curve);
+                    return curve;
+                }
+                set
+                {
+                    SetRadiusSpeed(this.m_ParticleSystem, ref value);
+                }
+            }
+            /// <summary>
+            /// <para>A multiplier of the radius speed of the emission shape.</para>
+            /// </summary>
+            public float radiusSpeedMultiplier
+            {
+                get => 
+                    GetRadiusSpeedMultiplier(this.m_ParticleSystem);
+                set
+                {
+                    SetRadiusSpeedMultiplier(this.m_ParticleSystem, value);
                 }
             }
             /// <summary>
@@ -4900,6 +4994,58 @@
                 }
             }
             /// <summary>
+            /// <para>The mode used for generating particles around the arc.</para>
+            /// </summary>
+            public ParticleSystemShapeMultiModeValue arcMode
+            {
+                get => 
+                    ((ParticleSystemShapeMultiModeValue) GetArcMode(this.m_ParticleSystem));
+                set
+                {
+                    SetArcMode(this.m_ParticleSystem, (int) value);
+                }
+            }
+            /// <summary>
+            /// <para>Control the gap between emission points around the arc.</para>
+            /// </summary>
+            public float arcSpread
+            {
+                get => 
+                    GetArcSpread(this.m_ParticleSystem);
+                set
+                {
+                    SetArcSpread(this.m_ParticleSystem, value);
+                }
+            }
+            /// <summary>
+            /// <para>When using one of the animated modes, how quickly to move the emission position around the arc.</para>
+            /// </summary>
+            public ParticleSystem.MinMaxCurve arcSpeed
+            {
+                get
+                {
+                    ParticleSystem.MinMaxCurve curve = new ParticleSystem.MinMaxCurve();
+                    GetArcSpeed(this.m_ParticleSystem, ref curve);
+                    return curve;
+                }
+                set
+                {
+                    SetArcSpeed(this.m_ParticleSystem, ref value);
+                }
+            }
+            /// <summary>
+            /// <para>A multiplier of the arc speed of the emission shape.</para>
+            /// </summary>
+            public float arcSpeedMultiplier
+            {
+                get => 
+                    GetArcSpeedMultiplier(this.m_ParticleSystem);
+                set
+                {
+                    SetArcSpeedMultiplier(this.m_ParticleSystem, value);
+                }
+            }
+            /// <summary>
             /// <para>Randomizes the starting direction of particles.</para>
             /// </summary>
             [Obsolete("randomDirection property is deprecated. Use randomDirectionAmount instead.")]
@@ -4936,6 +5082,22 @@
             private static extern void SetRadius(ParticleSystem system, float value);
             [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
             private static extern float GetRadius(ParticleSystem system);
+            [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+            private static extern void SetRadiusMode(ParticleSystem system, int value);
+            [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+            private static extern int GetRadiusMode(ParticleSystem system);
+            [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+            private static extern void SetRadiusSpread(ParticleSystem system, float value);
+            [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+            private static extern float GetRadiusSpread(ParticleSystem system);
+            [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+            private static extern void SetRadiusSpeed(ParticleSystem system, ref ParticleSystem.MinMaxCurve curve);
+            [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+            private static extern void GetRadiusSpeed(ParticleSystem system, ref ParticleSystem.MinMaxCurve curve);
+            [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+            private static extern void SetRadiusSpeedMultiplier(ParticleSystem system, float value);
+            [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+            private static extern float GetRadiusSpeedMultiplier(ParticleSystem system);
             [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
             private static extern void SetAngle(ParticleSystem system, float value);
             [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -5000,6 +5162,22 @@
             private static extern void SetArc(ParticleSystem system, float value);
             [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
             private static extern float GetArc(ParticleSystem system);
+            [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+            private static extern void SetArcMode(ParticleSystem system, int value);
+            [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+            private static extern int GetArcMode(ParticleSystem system);
+            [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+            private static extern void SetArcSpread(ParticleSystem system, float value);
+            [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+            private static extern float GetArcSpread(ParticleSystem system);
+            [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+            private static extern void SetArcSpeed(ParticleSystem system, ref ParticleSystem.MinMaxCurve curve);
+            [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+            private static extern void GetArcSpeed(ParticleSystem system, ref ParticleSystem.MinMaxCurve curve);
+            [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+            private static extern void SetArcSpeedMultiplier(ParticleSystem system, float value);
+            [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+            private static extern float GetArcSpeedMultiplier(ParticleSystem system);
         }
 
         /// <summary>

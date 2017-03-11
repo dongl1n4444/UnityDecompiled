@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
     using UnityEditorInternal;
     using UnityEngine;
     using UnityEngine.Profiling;
@@ -48,9 +49,10 @@
 
         private void AddClip(TakeInfo takeInfo)
         {
+            string str = this.MakeUniqueClipName(takeInfo.name);
             this.m_ClipAnimations.InsertArrayElementAtIndex(this.m_ClipAnimations.arraySize);
             AnimationClipInfoProperties animationClipInfoAtIndex = this.GetAnimationClipInfoAtIndex(this.m_ClipAnimations.arraySize - 1);
-            animationClipInfoAtIndex.name = this.MakeUniqueClipName(takeInfo.defaultClipName);
+            animationClipInfoAtIndex.name = str;
             this.SetupTakeNameAndFrames(animationClipInfoAtIndex, takeInfo);
             animationClipInfoAtIndex.wrapMode = 0;
             animationClipInfoAtIndex.loop = false;
@@ -336,17 +338,17 @@
         {
             if (this.m_AnimationClipEditor != null)
             {
-                Object.DestroyImmediate(this.m_AnimationClipEditor);
+                UnityEngine.Object.DestroyImmediate(this.m_AnimationClipEditor);
                 this.m_AnimationClipEditor = null;
             }
             if (this.m_MaskInspector != null)
             {
-                Object.DestroyImmediate(this.m_MaskInspector);
+                UnityEngine.Object.DestroyImmediate(this.m_MaskInspector);
                 this.m_MaskInspector = null;
             }
             if (this.m_Mask != null)
             {
-                Object.DestroyImmediate(this.m_Mask);
+                UnityEngine.Object.DestroyImmediate(this.m_Mask);
                 this.m_Mask = null;
             }
         }
@@ -374,6 +376,28 @@
             GUI.Label(rect, "End", styles.numberStyle);
         }
 
+        private int FindNextDuplicateNumber(string baseName)
+        {
+            int num = -1;
+            for (int i = 0; i < this.m_ClipAnimations.arraySize; i++)
+            {
+                int num3;
+                AnimationClipInfoProperties animationClipInfoAtIndex = this.GetAnimationClipInfoAtIndex(i);
+                if (this.RemoveDuplicateSuffix(animationClipInfoAtIndex.name, out num3) == baseName)
+                {
+                    if (num == -1)
+                    {
+                        num = 1;
+                    }
+                    if (num3 != -1)
+                    {
+                        num = Math.Max(num, num3 + 1);
+                    }
+                }
+            }
+            return num;
+        }
+
         private AnimationClipInfoProperties GetAnimationClipInfoAtIndex(int index) => 
             new AnimationClipInfoProperties(this.m_ClipAnimations.GetArrayElementAtIndex(index));
 
@@ -384,17 +408,6 @@
                 return this.GetAnimationClipInfoAtIndex(this.selectedClipIndex);
             }
             return null;
-        }
-
-        private bool HasClipWithSameName(string name)
-        {
-            bool flag = false;
-            for (int i = 0; (i < this.m_ClipAnimations.arraySize) && !flag; i++)
-            {
-                AnimationClipInfoProperties animationClipInfoAtIndex = this.GetAnimationClipInfoAtIndex(i);
-                flag = name == animationClipInfoAtIndex.name;
-            }
-            return flag;
         }
 
         public override bool HasPreviewGUI() => 
@@ -418,39 +431,15 @@
 
         private string MakeUniqueClipName(string name)
         {
-            string str;
-            string str2;
-            string str3;
-            int length = name.Length;
-            while ((length > 0) && !char.IsDigit(name[length - 1]))
+            int num;
+            string baseName = this.RemoveDuplicateSuffix(name, out num);
+            int num2 = this.FindNextDuplicateNumber(baseName);
+            if (num2 != -1)
             {
-                length--;
+                object[] objArray1 = new object[] { baseName, " (", num2, ")" };
+                name = string.Concat(objArray1);
             }
-            int num2 = length;
-            while ((num2 > 0) && char.IsDigit(name[num2 - 1]))
-            {
-                num2--;
-            }
-            if (num2 == length)
-            {
-                str = name;
-                str2 = "";
-                str3 = "{0:000}";
-            }
-            else
-            {
-                str = name.Substring(0, num2);
-                str2 = name.Substring(length);
-                str3 = "{0:" + new string('0', length - num2) + "}";
-            }
-            int num3 = 1;
-            string str4 = str + string.Format(str3, num3) + str2;
-            while (this.HasClipWithSameName(str4))
-            {
-                num3++;
-                str4 = str + string.Format(str3, num3) + str2;
-            }
-            return str4;
+            return name;
         }
 
         public void OnDestroy()
@@ -601,6 +590,38 @@
             this.SelectClip(Mathf.Min(list.index, list.count - 1));
         }
 
+        private string RemoveDuplicateSuffix(string name, out int number)
+        {
+            number = -1;
+            int length = name.Length;
+            if ((length < 4) || (name[length - 1] != ')'))
+            {
+                return name;
+            }
+            int num2 = name.LastIndexOf('(', length - 2);
+            if ((num2 == -1) || (name[num2 - 1] != ' '))
+            {
+                return name;
+            }
+            int num3 = (length - num2) - 2;
+            if (num3 == 0)
+            {
+                return name;
+            }
+            int num4 = 0;
+            while ((num4 < num3) && char.IsDigit(name[(num2 + 1) + num4]))
+            {
+                num4++;
+            }
+            if (num4 != num3)
+            {
+                return name;
+            }
+            string s = name.Substring(num2 + 1, num3);
+            number = int.Parse(s);
+            return name.Substring(0, num2 - 1);
+        }
+
         internal override void ResetValues()
         {
             base.ResetValues();
@@ -724,7 +745,7 @@
             {
                 if (base.serializedObject.FindProperty("m_ClipAnimations").arraySize != 0)
                 {
-                    Debug.LogError("Transferring default clips failed, target already has clips");
+                    UnityEngine.Debug.LogError("Transferring default clips failed, target already has clips");
                 }
                 base.serializedObject.CopyFromSerializedProperty(this.m_ClipAnimations);
                 this.m_ClipAnimations = base.serializedObject.FindProperty("m_ClipAnimations");

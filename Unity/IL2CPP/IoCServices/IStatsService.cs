@@ -18,6 +18,7 @@
         void RecordMemoryBarrierEmitted(MethodDefinition methodDefinition);
         void RecordMetadataStream(string name, long size);
         void RecordMethod(MethodReference method);
+        void RecordNativeToManagedInterfaceAdapter();
         void RecordNullCheckEmitted(MethodDefinition methodDefinition);
         void RecordStringLiteral(string str);
         void RecordStrippedComCallableWrapperMethod();
@@ -65,6 +66,8 @@
         int MethodHashCollisions { get; set; }
 
         int Methods { get; set; }
+
+        int NativeToManagedInterfaceAdapters { get; }
 
         Dictionary<string, int> NullCheckMethodsCount { get; }
 

@@ -16,7 +16,7 @@
                 this.sides = 5;
                 flag = true;
             }
-            SpriteUtility.CreateSpritePolygonAssetAtPath(pathName, this.sides);
+            UnityEditor.Sprites.SpriteUtility.CreateSpritePolygonAssetAtPath(pathName, this.sides);
             if (flag)
             {
                 Selection.activeObject = AssetDatabase.LoadMainAssetAtPath(pathName);

@@ -355,7 +355,7 @@
         }
 
         /// <summary>
-        /// <para>Make a graphical box.</para>
+        /// <para>Create a Box on the GUI Layer.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the box.</param>
         /// <param name="text">Text to display on the box.</param>
@@ -368,7 +368,7 @@
         }
 
         /// <summary>
-        /// <para>Make a graphical box.</para>
+        /// <para>Create a Box on the GUI Layer.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the box.</param>
         /// <param name="text">Text to display on the box.</param>
@@ -381,7 +381,7 @@
         }
 
         /// <summary>
-        /// <para>Make a graphical box.</para>
+        /// <para>Create a Box on the GUI Layer.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the box.</param>
         /// <param name="text">Text to display on the box.</param>
@@ -394,7 +394,7 @@
         }
 
         /// <summary>
-        /// <para>Make a graphical box.</para>
+        /// <para>Create a Box on the GUI Layer.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the box.</param>
         /// <param name="text">Text to display on the box.</param>
@@ -407,7 +407,7 @@
         }
 
         /// <summary>
-        /// <para>Make a graphical box.</para>
+        /// <para>Create a Box on the GUI Layer.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the box.</param>
         /// <param name="text">Text to display on the box.</param>
@@ -425,7 +425,7 @@
         }
 
         /// <summary>
-        /// <para>Make a graphical box.</para>
+        /// <para>Create a Box on the GUI Layer.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the box.</param>
         /// <param name="text">Text to display on the box.</param>
@@ -989,7 +989,7 @@
         }
 
         /// <summary>
-        /// <para>Draw a texture within a rectangle with the given texture coordinates. Use this function for clipping or tiling the image within the given rectangle.</para>
+        /// <para>Draw a texture within a rectangle with the given texture coordinates.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to draw the texture within.</param>
         /// <param name="image">Texture to display.</param>
@@ -1001,7 +1001,7 @@
         }
 
         /// <summary>
-        /// <para>Draw a texture within a rectangle with the given texture coordinates. Use this function for clipping or tiling the image within the given rectangle.</para>
+        /// <para>Draw a texture within a rectangle with the given texture coordinates.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to draw the texture within.</param>
         /// <param name="image">Texture to display.</param>

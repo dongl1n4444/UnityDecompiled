@@ -17,19 +17,19 @@
     public sealed class Packer
     {
         [CompilerGenerated]
-        private static Func<Type, string> <>f__am$cache0;
+        private static Func<System.Type, string> <>f__am$cache0;
         /// <summary>
         /// <para>Name of the default Sprite Packer policy.</para>
         /// </summary>
         public static string kDefaultPolicy = typeof(DefaultPackerPolicy).Name;
         private static string[] m_policies = null;
-        private static Dictionary<string, Type> m_policyTypeCache = null;
+        private static Dictionary<string, System.Type> m_policyTypeCache = null;
         private static string m_selectedPolicy = null;
 
         internal static void ExecuteSelectedPolicy(BuildTarget target, int[] textureImporterInstanceIDs)
         {
             RegenerateList();
-            Type type = m_policyTypeCache[m_selectedPolicy];
+            System.Type type = m_policyTypeCache[m_selectedPolicy];
             (Activator.CreateInstance(type) as IPackerPolicy).OnGroupAtlases(target, new PackerJob(), textureImporterInstanceIDs);
         }
 
@@ -44,7 +44,7 @@
         internal static string GetSelectedPolicyId()
         {
             RegenerateList();
-            Type type = m_policyTypeCache[m_selectedPolicy];
+            System.Type type = m_policyTypeCache[m_selectedPolicy];
             IPackerPolicy policy = Activator.CreateInstance(type) as IPackerPolicy;
             return $"{type.AssemblyQualifiedName}::{policy.GetVersion()}";
         }
@@ -76,14 +76,14 @@
         {
             if (m_policies == null)
             {
-                List<Type> list = new List<Type>();
+                List<System.Type> list = new List<System.Type>();
                 Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
                 foreach (Assembly assembly in assemblies)
                 {
                     try
                     {
-                        Type[] types = assembly.GetTypes();
-                        foreach (Type type in types)
+                        System.Type[] types = assembly.GetTypes();
+                        foreach (System.Type type in types)
                         {
                             if (typeof(IPackerPolicy).IsAssignableFrom(type) && (type != typeof(IPackerPolicy)))
                             {
@@ -100,13 +100,13 @@
                 {
                     <>f__am$cache0 = t => t.Name;
                 }
-                m_policies = Enumerable.Select<Type, string>(list, <>f__am$cache0).ToArray<string>();
-                m_policyTypeCache = new Dictionary<string, Type>();
-                foreach (Type type2 in list)
+                m_policies = Enumerable.Select<System.Type, string>(list, <>f__am$cache0).ToArray<string>();
+                m_policyTypeCache = new Dictionary<string, System.Type>();
+                foreach (System.Type type2 in list)
                 {
                     if (m_policyTypeCache.ContainsKey(type2.Name))
                     {
-                        Type type3 = m_policyTypeCache[type2.Name];
+                        System.Type type3 = m_policyTypeCache[type2.Name];
                         Debug.LogError($"Duplicate Sprite Packer policies found: {type2.FullName} and {type3.FullName}. Please rename one.");
                     }
                     else

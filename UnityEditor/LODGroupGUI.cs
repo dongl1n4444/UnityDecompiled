@@ -227,11 +227,11 @@
 
         public class LODInfo
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private int <LODLevel>k__BackingField;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private string <LODName>k__BackingField;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private float <RawScreenPercent>k__BackingField;
             public Rect m_ButtonPosition;
             public Rect m_RangePosition;

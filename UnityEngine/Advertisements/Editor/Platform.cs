@@ -1,6 +1,7 @@
 ﻿namespace UnityEngine.Advertisements.Editor
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Net;
     using System.Runtime.CompilerServices;
@@ -25,6 +26,7 @@
             }
         }
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event EventHandler<FinishEventArgs> OnFinish;
 
         public event EventHandler<ReadyEventArgs> OnReady
@@ -37,6 +39,7 @@
             }
         }
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event EventHandler<StartEventArgs> OnStart;
 
         public Platform(string extensionPath)
@@ -74,7 +77,7 @@
                 gameId = gameId,
                 $this = this
             };
-            Debug.Log(string.Concat(new object[] { "UnityAdsEditor: Initialize(", storey.gameId, ", ", testMode, ");" }));
+            UnityEngine.Debug.Log(string.Concat(new object[] { "UnityAdsEditor: Initialize(", storey.gameId, ", ", testMode, ");" }));
             string[] textArray1 = new string[3];
             textArray1[0] = s_BaseUrl;
             textArray1[1] = storey.gameId;
@@ -140,7 +143,7 @@
             Application.isEditor;
 
         public string version =>
-            "2.0.6";
+            "2.0.8";
 
         [CompilerGenerated]
         private sealed class <Initialize>c__AnonStorey0
@@ -159,14 +162,14 @@
                     this.$this.m_Configuration = new Configuration(configurationResponse);
                     if (!this.$this.m_Configuration.enabled)
                     {
-                        Debug.LogWarning("gameId " + this.gameId + " is not enabled");
+                        UnityEngine.Debug.LogWarning("gameId " + this.gameId + " is not enabled");
                     }
                 }
                 catch (Exception exception)
                 {
-                    Debug.LogError("Failed to parse configuration for gameId: " + this.gameId);
-                    Debug.Log(configurationResponse);
-                    Debug.LogException(exception);
+                    UnityEngine.Debug.LogError("Failed to parse configuration for gameId: " + this.gameId);
+                    UnityEngine.Debug.Log(configurationResponse);
+                    UnityEngine.Debug.LogException(exception);
                 }
                 reader.Close();
                 response.Close();

@@ -5,7 +5,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.CompilerServices;
-    using Unity.IL2CPP.GenericsCollection;
     using Unity.IL2CPP.IoC;
     using Unity.IL2CPP.IoCServices;
     using Unity.IL2CPP.Metadata;
@@ -29,10 +28,10 @@
             this._writer = writer;
         }
 
-        public TableInfo Write(InflatedCollectionCollector generics, MethodTables methodTables, IMethodCollectorResults methodCollector)
+        public TableInfo Write(MethodTables methodTables, IMethodCollectorResults methodCollector)
         {
             IncludeWriter.WriteRegistrationIncludes(this._writer);
-            WriteIncludesFor(this._writer, generics);
+            WriteIncludesFor(this._writer);
             if (<>f__am$cache0 == null)
             {
                 <>f__am$cache0 = value => value.Value;
@@ -46,7 +45,7 @@
             return new TableInfo(values.Length, "extern const Il2CppMethodPointer", "g_Il2CppGenericMethodPointers");
         }
 
-        private static void WriteIncludesFor(CppCodeWriter writer, InflatedCollectionCollector generics)
+        private static void WriteIncludesFor(CppCodeWriter writer)
         {
             HashSet<string> set = new HashSet<string>();
             if (<>f__am$cache2 == null)

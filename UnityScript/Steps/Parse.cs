@@ -15,8 +15,8 @@
         {
             PropertyAccessorNormalizer normalizer;
             PropertyAccessorNormalizer normalizer1 = normalizer = new PropertyAccessorNormalizer();
-            CompilerErrorCollection collection1 = normalizer.Errors = this.get_Errors();
-            this.get_CompileUnit().Accept(normalizer);
+            CompilerErrorCollection collection1 = normalizer.Errors = this.Errors;
+            this.CompileUnit.Accept(normalizer);
         }
 
         private void ParseInput(ICompilerInput input)
@@ -25,7 +25,7 @@
             IDisposable disposable = (reader = input.Open()) as IDisposable;
             try
             {
-                UnityScriptParser.ParseReader(reader, input.get_Name(), this.get_Context(), this.get_CompileUnit());
+                UnityScriptParser.ParseReader(reader, input.Name, this.Context, this.CompileUnit);
             }
             finally
             {
@@ -39,7 +39,7 @@
 
         private void ParseInputs()
         {
-            foreach (ICompilerInput input in this.get_Parameters().get_Input())
+            foreach (ICompilerInput input in this.Parameters.Input)
             {
                 try
                 {
@@ -47,7 +47,7 @@
                 }
                 catch (Exception exception)
                 {
-                    this.get_Errors().Add(CompilerErrorFactory.InputError(input.get_Name(), exception));
+                    this.Errors.Add(CompilerErrorFactory.InputError(input.Name, exception));
                 }
             }
         }
@@ -65,17 +65,17 @@
 
             public void CheckSetterReturnType(Method setter)
             {
-                if (setter.get_ReturnType() != null)
+                if (setter.ReturnType != null)
                 {
-                    this.ReportError(UnityScriptCompilerErrors.SetterCanNotDeclareReturnType(setter.get_ReturnType().get_LexicalInfo()));
+                    this.ReportError(UnityScriptCompilerErrors.SetterCanNotDeclareReturnType(setter.ReturnType.LexicalInfo));
                 }
             }
 
             public void NormalizeGetter(Method getter)
             {
-                if ((getter != null) && (getter.get_Parameters().get_Count() != 0))
+                if ((getter != null) && (getter.Parameters.Count != 0))
                 {
-                    this.ReportError(UnityScriptCompilerErrors.InvalidPropertyGetter(getter.get_LexicalInfo()));
+                    this.ReportError(UnityScriptCompilerErrors.InvalidPropertyGetter(getter.LexicalInfo));
                 }
             }
 
@@ -90,20 +90,20 @@
 
             public void NormalizeSetterParameters(Method setter)
             {
-                if ((setter.get_Parameters().get_Count() != 1) || (setter.get_Parameters().get_Item(0).get_Name() != "value"))
+                if ((setter.Parameters.Count != 1) || (setter.Parameters[0].Name != "value"))
                 {
-                    this.ReportError(UnityScriptCompilerErrors.InvalidPropertySetter(setter.get_LexicalInfo()));
+                    this.ReportError(UnityScriptCompilerErrors.InvalidPropertySetter(setter.LexicalInfo));
                 }
                 else
                 {
-                    setter.get_Parameters().Clear();
+                    setter.Parameters.Clear();
                 }
             }
 
             public override void OnProperty(Property node)
             {
-                this.NormalizeSetter(node.get_Setter());
-                this.NormalizeGetter(node.get_Getter());
+                this.NormalizeSetter(node.Setter);
+                this.NormalizeGetter(node.Getter);
             }
 
             public void ReportError(CompilerError error)

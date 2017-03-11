@@ -13,9 +13,6 @@
 
         public static AssemblyHashAlgorithm GetHashAlgorithmPortable(this AssemblyName assembly) => 
             assembly.HashAlgorithm;
-
-        public static StrongNameKeyPair GetKeyPairPortable(this AssemblyName assembly) => 
-            assembly.KeyPair;
     }
 }
 

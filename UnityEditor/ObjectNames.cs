@@ -16,24 +16,24 @@
         /// </summary>
         /// <param name="obj"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern string GetClassName(Object obj);
+        public static extern string GetClassName(UnityEngine.Object obj);
         /// <summary>
         /// <para>Drag and drop title for an object.</para>
         /// </summary>
         /// <param name="obj"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern string GetDragAndDropTitle(Object obj);
+        public static extern string GetDragAndDropTitle(UnityEngine.Object obj);
         /// <summary>
         /// <para>Inspector title for an object.</para>
         /// </summary>
         /// <param name="obj"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern string GetInspectorTitle(Object obj);
+        public static extern string GetInspectorTitle(UnityEngine.Object obj);
         [Obsolete("Please use GetInspectorTitle instead")]
-        public static string GetPropertyEditorTitle(Object obj) => 
+        public static string GetPropertyEditorTitle(UnityEngine.Object obj) => 
             GetInspectorTitle(obj);
 
-        internal static string GetTypeName(Object obj)
+        internal static string GetTypeName(UnityEngine.Object obj)
         {
             if (obj == null)
             {
@@ -52,7 +52,7 @@
             {
                 return "Folder";
             }
-            if (obj.GetType() == typeof(Object))
+            if (obj.GetType() == typeof(UnityEngine.Object))
             {
                 return (Path.GetExtension(path) + " File");
             }
@@ -87,7 +87,7 @@
         /// <param name="obj"></param>
         /// <param name="name"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern void SetNameSmart(Object obj, string name);
+        public static extern void SetNameSmart(UnityEngine.Object obj, string name);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void SetNameSmartWithInstanceID(int instanceID, string name);
     }

@@ -39,10 +39,13 @@
         private Action<Task> taskStarting;
         protected bool transient;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event TaskFinishedHandler OnFinish;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event TaskProgressHandler OnProgress;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event TaskStartedHandler OnStart;
 
         protected Task()

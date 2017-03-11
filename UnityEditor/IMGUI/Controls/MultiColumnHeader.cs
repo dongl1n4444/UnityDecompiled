@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Threading;
@@ -26,8 +27,10 @@
         private bool m_ResizeToFit = false;
         private MultiColumnHeaderState m_State;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event HeaderCallback sortingChanged;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event HeaderCallback visibleColumnsChanged;
 
         /// <summary>
@@ -147,7 +150,7 @@
                     break;
 
                 default:
-                    Debug.LogError("Unhandled enum");
+                    UnityEngine.Debug.LogError("Unhandled enum");
                     break;
             }
             return new Rect(Mathf.Round(f), y, fixedWidth, 16f);
@@ -248,7 +251,7 @@
         }
 
         /// <summary>
-        /// <para>Check the sorting direction state for a column.</para>
+        /// <para>Check the sorting order state for a column.</para>
         /// </summary>
         /// <param name="columnIndex">Column index.</param>
         /// <returns>
@@ -394,10 +397,10 @@
         }
 
         /// <summary>
-        /// <para>Set both the curent sorting column and its sorting direction.</para>
+        /// <para>Sets the primary sorting column and its sorting order.</para>
         /// </summary>
         /// <param name="columnIndex">Column to sort.</param>
-        /// <param name="sortAscending">Sorting direction for the column specified.</param>
+        /// <param name="sortAscending">Sorting order for the column specified.</param>
         public void SetSorting(int columnIndex, bool sortAscending)
         {
             bool flag = false;
@@ -411,6 +414,55 @@
             {
                 column.sortedAscending = sortAscending;
                 flag = true;
+            }
+            if (flag)
+            {
+                this.OnSortingChanged();
+            }
+        }
+
+        /// <summary>
+        /// <para>Sets multiple sorting columns and the associated sorting orders.</para>
+        /// </summary>
+        /// <param name="columnIndices">Column indices of the sorted columns.</param>
+        /// <param name="sortAscending">Sorting order for the column indices specified.</param>
+        public void SetSortingColumns(int[] columnIndices, bool[] sortAscending)
+        {
+            if (columnIndices == null)
+            {
+                throw new ArgumentNullException("columnIndices");
+            }
+            if (sortAscending == null)
+            {
+                throw new ArgumentNullException("sortAscending");
+            }
+            if (columnIndices.Length != sortAscending.Length)
+            {
+                throw new ArgumentException("Input arrays should have same length");
+            }
+            if (columnIndices.Length > this.state.maximumNumberOfSortedColumns)
+            {
+                object[] objArray1 = new object[] { "The maximum number of sorted columns is ", this.state.maximumNumberOfSortedColumns, ". Trying to set ", columnIndices.Length, " columns." };
+                throw new ArgumentException(string.Concat(objArray1));
+            }
+            if (columnIndices.Length != columnIndices.Distinct<int>().Count<int>())
+            {
+                throw new ArgumentException("Duplicate column indices are not allowed", "columnIndices");
+            }
+            bool flag = false;
+            if (!columnIndices.SequenceEqual<int>(this.state.sortedColumns))
+            {
+                this.state.sortedColumns = columnIndices;
+                flag = true;
+            }
+            for (int i = 0; i < columnIndices.Length; i++)
+            {
+                MultiColumnHeaderState.Column column = this.GetColumn(columnIndices[i]);
+                if (column.sortedAscending != sortAscending[i])
+                {
+                    column.sortedAscending = sortAscending[i];
+                    flag = true;
+                }
             }
             if (flag)
             {
@@ -512,12 +564,6 @@
                 this.m_Height = value;
             }
         }
-
-        /// <summary>
-        /// <para>The index of the previous sorted column (if any).</para>
-        /// </summary>
-        public int previousSortedColumnIndex =>
-            this.state.previousSortedColumnIndex;
 
         /// <summary>
         /// <para>The index of the column that is set to be the primary sorting column. This is the column that shows the sorting arrow above the header text.</para>

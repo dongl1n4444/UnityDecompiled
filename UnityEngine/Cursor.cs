@@ -5,7 +5,7 @@
     using UnityEngine.Scripting;
 
     /// <summary>
-    /// <para>Cursor API for setting the cursor that is used for rendering.</para>
+    /// <para>Cursor API for setting the cursor (mouse pointer).</para>
     /// </summary>
     public sealed class Cursor
     {
@@ -28,12 +28,12 @@
         }
 
         /// <summary>
-        /// <para>How should the cursor be handled?</para>
+        /// <para>Determines whether the hardware pointer is locked to the center of the view, constrained to the window, or not constrained at all.</para>
         /// </summary>
         public static CursorLockMode lockState { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
-        /// <para>Should the cursor be visible?</para>
+        /// <para>Determines whether the hardware pointer is visible or not.</para>
         /// </summary>
         public static bool visible { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
     }

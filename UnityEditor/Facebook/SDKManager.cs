@@ -40,6 +40,7 @@
             }
             string str = Enumerable.FirstOrDefault<string>(GetCurrentPlugins(), <>f__am$cache2);
             bool flag = false;
+            string sdkVersion = PlayerSettings.Facebook.sdkVersion;
             if (!string.IsNullOrEmpty(str))
             {
                 <CheckSDKToUse>c__AnonStorey0 storey = new <CheckSDKToUse>c__AnonStorey0();
@@ -50,16 +51,30 @@
                 if (Enumerable.Any<string>(availableSDKs, new Func<string, bool>(storey.<>m__0)))
                 {
                     PlayerSettings.Facebook.sdkVersion = sdkAsPlugin;
-                    return flag;
                 }
-                PlayerSettings.Facebook.sdkVersion = sdkAsPluginIncompatible;
-                return flag;
+                else
+                {
+                    PlayerSettings.Facebook.sdkVersion = sdkAsPluginIncompatible;
+                }
             }
-            if ((PlayerSettings.Facebook.sdkVersion == sdkAsPlugin) || (PlayerSettings.Facebook.sdkVersion == sdkAsPluginIncompatible))
+            else if ((PlayerSettings.Facebook.sdkVersion == sdkAsPlugin) || (PlayerSettings.Facebook.sdkVersion == sdkAsPluginIncompatible))
             {
                 PlayerSettings.Facebook.sdkVersion = BuiltinDefaultSDKVersion;
             }
+            if (sdkVersion != PlayerSettings.Facebook.sdkVersion)
+            {
+                RegisterAdditionalUnityExtensions();
+            }
             return flag;
+        }
+
+        private static void FallbackToBuiltinSDKVersion()
+        {
+            if (PlayerSettings.Facebook.sdkVersion != BuiltinDefaultSDKVersion)
+            {
+                PlayerSettings.Facebook.sdkVersion = BuiltinDefaultSDKVersion;
+                RegisterAdditionalUnityExtensions();
+            }
         }
 
         private static string[] GetCurrentPlugins()
@@ -146,22 +161,24 @@
 
         public static void Initialize()
         {
-            <Initialize>c__AnonStorey1 storey = new <Initialize>c__AnonStorey1();
             GetLocallyAvailableSDKs();
-            string[] components = new string[] { PlayerPackage, "SDKUpdater.exe" };
-            if (<>f__mg$cache0 == null)
+            if (SDKManagerData.CanRefreshSDKNow())
             {
-                <>f__mg$cache0 = new Action<ProcessStartInfo>(SDKManager.SetupStartInfo);
-            }
-            storey.p = Utilities.CreateManagedProgram(Paths.Combine(components), "", <>f__mg$cache0);
-            storey.p.Start(new EventHandler(storey.<>m__0));
-            storey.p.LogProcessStartInfo();
-            string sdkVersion = PlayerSettings.Facebook.sdkVersion;
-            if (GetSDKPath(sdkVersion) == null)
-            {
-                Console.WriteLine("Waiting for facebook SDK update, since required SDK version " + sdkVersion + " is not available.");
-                storey.p.WaitForExit();
-                GetLocallyAvailableSDKs();
+                <Initialize>c__AnonStorey1 storey = new <Initialize>c__AnonStorey1();
+                string[] components = new string[] { PlayerPackage, "SDKUpdater.exe" };
+                if (<>f__mg$cache0 == null)
+                {
+                    <>f__mg$cache0 = new Action<ProcessStartInfo>(SDKManager.SetupStartInfo);
+                }
+                storey.p = Utilities.CreateManagedProgram(Paths.Combine(components), "", <>f__mg$cache0);
+                storey.p.Start(new EventHandler(storey.<>m__0));
+                string sdkVersion = PlayerSettings.Facebook.sdkVersion;
+                if (GetSDKPath(sdkVersion) == null)
+                {
+                    Console.WriteLine("Waiting for facebook SDK update, since required SDK version " + sdkVersion + " is not available.");
+                    storey.p.WaitForExit();
+                    GetLocallyAvailableSDKs();
+                }
             }
         }
 
@@ -182,20 +199,28 @@
             UpdateProjectSDKIfNeeded();
             GetLocallyAvailableSDKs();
             bool flag = CheckSDKToUse();
-            XElement element = XDocument.Load(Path.Combine(ProjectSDKPath, "ivy.xml")).Element("ivy-module").Element("publications");
-            foreach (XElement element2 in element.Elements())
+            try
             {
-                string str = element2.Attribute("name").Value;
-                string str2 = element2.Attribute("ext").Value;
-                string guid = element2.Attribute((XName) (extraNs + "guid")).Value;
-                string dllLocation = Path.Combine(ProjectSDKPath, $"{str}.{str2}");
-                InternalEditorUtility.RegisterExtensionDll(dllLocation, guid);
-                AssetDatabase.ImportAsset(dllLocation, ImportAssetOptions.ForceUpdate);
-                PluginImporter atPath = AssetImporter.GetAtPath(dllLocation) as PluginImporter;
-                if (atPath != null)
+                XElement element = XDocument.Load(Path.Combine(ProjectSDKPath, "ivy.xml")).Element("ivy-module").Element("publications");
+                foreach (XElement element2 in element.Elements())
                 {
-                    SetupImporterForDll(atPath, !flag);
+                    string str = element2.Attribute("name").Value;
+                    string str2 = element2.Attribute("ext").Value;
+                    string guid = element2.Attribute((XName) (extraNs + "guid")).Value;
+                    string dllLocation = Path.Combine(ProjectSDKPath, $"{str}.{str2}");
+                    InternalEditorUtility.RegisterExtensionDll(dllLocation, guid);
+                    AssetDatabase.ImportAsset(dllLocation, ImportAssetOptions.ForceUpdate);
+                    PluginImporter atPath = AssetImporter.GetAtPath(dllLocation) as PluginImporter;
+                    if (atPath != null)
+                    {
+                        SetupImporterForDll(atPath, !flag);
+                    }
                 }
+            }
+            catch (Exception exception)
+            {
+                UnityEngine.Debug.LogError(string.Concat(new object[] { "Falling back to default Facebook SDK. Failed to import FacebookSDK from '", ProjectSDKPath, "' with error: ", exception }));
+                FallbackToBuiltinSDKVersion();
             }
         }
 
@@ -274,7 +299,15 @@
             if ((sdkVersion != sdkAsPlugin) && (sdkVersion != sdkAsPluginIncompatible))
             {
                 string path = Path.Combine(ProjectSDKPath, "version.txt");
-                string str3 = File.ReadAllText(path);
+                string str3 = "";
+                try
+                {
+                    str3 = File.ReadAllText(path);
+                }
+                catch
+                {
+                    str3 = "error";
+                }
                 if ((str3 != sdkVersion) && (GetSDKPath(sdkVersion) != null))
                 {
                     Console.WriteLine("Switching Facebook SDK from " + str3 + " to " + sdkVersion);
@@ -374,7 +407,6 @@
 
             internal void <>m__0(object sender, EventArgs e)
             {
-                Console.WriteLine("SDKUpdater. Exit code:    {0}. Output:    {1}", this.p.ExitCode, this.p.GetAllOutput());
                 if (this.p.ExitCode != 0)
                 {
                     UnityEngine.Debug.LogError("SDKUpdater failed: " + this.p.GetAllOutput());

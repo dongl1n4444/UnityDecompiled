@@ -25,10 +25,10 @@
             new TransactionLog(Debug.logger, Application.persistentDataPath).Clear();
         }
 
-        internal static void FetchAndMergeProducts(bool useCatalog, HashSet<ProductDefinition> applicationProducts, CloudCatalogManager catalog, Action<HashSet<ProductDefinition>> callback)
+        internal static void FetchAndMergeProducts(bool useCatalog, HashSet<ProductDefinition> localProductSet, CloudCatalogManager catalog, Action<HashSet<ProductDefinition>> callback)
         {
             <FetchAndMergeProducts>c__AnonStorey1 storey = new <FetchAndMergeProducts>c__AnonStorey1 {
-                applicationProducts = applicationProducts,
+                localProductSet = localProductSet,
                 callback = callback
             };
             if (useCatalog)
@@ -37,7 +37,7 @@
             }
             else
             {
-                storey.callback(storey.applicationProducts);
+                storey.callback(storey.localProductSet);
             }
         }
 
@@ -68,12 +68,7 @@
             target.name = "Unity IAP";
             target.hideFlags = HideFlags.HideInInspector | HideFlags.HideInHierarchy;
             AsyncUtil util = target.AddComponent<AsyncUtil>();
-            string persistentDataPath = Application.persistentDataPath;
-            if (string.IsNullOrEmpty(persistentDataPath))
-            {
-                persistentDataPath = Application.temporaryCachePath;
-            }
-            string path = Path.Combine(Path.Combine(persistentDataPath, "Unity"), Path.Combine(Application.cloudProjectId, "IAP"));
+            string path = Path.Combine(Path.Combine(Application.persistentDataPath, "Unity"), Path.Combine(Application.cloudProjectId, "IAP"));
             string cacheFile = null;
             try
             {
@@ -90,13 +85,18 @@
         [CompilerGenerated]
         private sealed class <FetchAndMergeProducts>c__AnonStorey1
         {
-            internal HashSet<ProductDefinition> applicationProducts;
             internal Action<HashSet<ProductDefinition>> callback;
+            internal HashSet<ProductDefinition> localProductSet;
 
-            internal void <>m__0(HashSet<ProductDefinition> response)
+            internal void <>m__0(HashSet<ProductDefinition> cloudProducts)
             {
-                response.UnionWith(this.applicationProducts);
-                this.callback(response);
+                HashSet<ProductDefinition> set = new HashSet<ProductDefinition>(this.localProductSet);
+                foreach (ProductDefinition definition in cloudProducts)
+                {
+                    set.Remove(definition);
+                    set.Add(definition);
+                }
+                this.callback(set);
             }
         }
 

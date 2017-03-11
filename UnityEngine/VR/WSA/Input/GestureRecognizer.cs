@@ -1,6 +1,7 @@
 ﻿namespace UnityEngine.VR.WSA.Input
 {
     using System;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Threading;
@@ -14,34 +15,49 @@
     {
         private IntPtr m_Recognizer;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event GestureErrorDelegate GestureErrorEvent;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event HoldCanceledEventDelegate HoldCanceledEvent;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event HoldCompletedEventDelegate HoldCompletedEvent;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event HoldStartedEventDelegate HoldStartedEvent;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ManipulationCanceledEventDelegate ManipulationCanceledEvent;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ManipulationCompletedEventDelegate ManipulationCompletedEvent;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ManipulationStartedEventDelegate ManipulationStartedEvent;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ManipulationUpdatedEventDelegate ManipulationUpdatedEvent;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event NavigationCanceledEventDelegate NavigationCanceledEvent;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event NavigationCompletedEventDelegate NavigationCompletedEvent;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event NavigationStartedEventDelegate NavigationStartedEvent;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event NavigationUpdatedEventDelegate NavigationUpdatedEvent;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event RecognitionEndedEventDelegate RecognitionEndedEvent;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event RecognitionStartedEventDelegate RecognitionStartedEvent;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event TappedEventDelegate TappedEvent;
 
         /// <summary>
@@ -65,7 +81,7 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Destroy(IntPtr recognizer);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern void DestroyThreaded(IntPtr recognizer);
         /// <summary>
         /// <para>Disposes the resources used by gesture recognizer.</para>

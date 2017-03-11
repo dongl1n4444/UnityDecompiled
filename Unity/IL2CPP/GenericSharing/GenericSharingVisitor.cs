@@ -175,7 +175,7 @@
             switch (code)
             {
                 case Code.Callvirt:
-                    goto Label_02AC;
+                    goto Label_0292;
 
                 case Code.Ldobj:
                 case Code.Ldfld:
@@ -263,18 +263,15 @@
                         case Code.Ldvirtftn:
                         {
                             MethodReference reference11 = (MethodReference) instruction.Operand;
-                            if (!reference11.Resolve().IsVirtual)
-                            {
-                                this.AddMethodUsage(reference11);
-                            }
-                            else if (reference11.DeclaringType.IsInterface())
+                            this.AddMethodUsage(reference11);
+                            if (reference11.DeclaringType.IsInterface())
                             {
                                 this.AddClassUsage(reference11.DeclaringType);
                             }
                             return;
                         }
                         case Code.Call:
-                            goto Label_02AC;
+                            goto Label_0292;
 
                         case Code.Sizeof:
                         {
@@ -294,7 +291,7 @@
             TypeReference operand = (TypeReference) instruction.Operand;
             this.AddClassUsage(operand);
             return;
-        Label_02AC:
+        Label_0292:
             reference12 = (MethodReference) instruction.Operand;
             if (!Naming.IsSpecialArrayMethod(reference12) && (!reference12.DeclaringType.IsSystemArray() || ((reference12.Name != "GetGenericValueImpl") && (reference12.Name != "SetGenericValueImpl"))))
             {

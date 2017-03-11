@@ -20,7 +20,7 @@
         /// <para>LODGroup culling parameters.</para>
         /// </summary>
         public LODParameters lodParameters;
-        private <_cullingPlanes>__FixedBuffer1 _cullingPlanes;
+        private <_cullingPlanes>__FixedBuffer0 _cullingPlanes;
         /// <summary>
         /// <para>Number of culling planes to use.</para>
         /// </summary>
@@ -29,7 +29,7 @@
         /// <para>Layer mask used for culling.</para>
         /// </summary>
         public int cullingMask;
-        private <_layerFarCullDistances>__FixedBuffer2 _layerFarCullDistances;
+        private <_layerFarCullDistances>__FixedBuffer1 _layerFarCullDistances;
         private int layerCull;
         /// <summary>
         /// <para>World to clip space matrix.</para>
@@ -123,14 +123,14 @@
                 numRef[((index * 4) + 3) * 4] = plane.distance;
             }
         }
-        [StructLayout(LayoutKind.Sequential, Size=160), CompilerGenerated, UnsafeValueType]
-        public struct <_cullingPlanes>__FixedBuffer1
+        [StructLayout(LayoutKind.Sequential, Size=160), UnsafeValueType, CompilerGenerated]
+        public struct <_cullingPlanes>__FixedBuffer0
         {
             public float FixedElementField;
         }
 
-        [StructLayout(LayoutKind.Sequential, Size=0x80), CompilerGenerated, UnsafeValueType]
-        public struct <_layerFarCullDistances>__FixedBuffer2
+        [StructLayout(LayoutKind.Sequential, Size=0x80), UnsafeValueType, CompilerGenerated]
+        public struct <_layerFarCullDistances>__FixedBuffer1
         {
             public float FixedElementField;
         }

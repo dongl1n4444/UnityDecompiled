@@ -279,7 +279,7 @@
                 ManagedMarshalValue destinationVariable = new ManagedMarshalValue(this.parameter.NameInGeneratedCode);
                 if (this.parameter.IsOut)
                 {
-                    writer.WriteMarshalOutParameterFromNative(bodyWriter, this.valueName, destinationVariable, this.parameters, false, false, this.metadataAccess);
+                    writer.WriteMarshalOutParameterFromNative(bodyWriter, this.valueName, destinationVariable, this.parameters, false, false, this.parameter.IsIn, this.metadataAccess);
                 }
                 else
                 {

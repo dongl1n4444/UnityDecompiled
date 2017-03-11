@@ -24,7 +24,7 @@
                 AvatarMask mask = new AvatarMask();
                 this.defaultClipAnimations[0].ConfigureMaskFromClip(ref mask);
                 clip.ConfigureClipFromMask(mask);
-                Object.DestroyImmediate(mask);
+                UnityEngine.Object.DestroyImmediate(mask);
             }
             else
             {
@@ -167,12 +167,12 @@
         public bool importMaterials { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
-        /// <para>Use normals vectors from file.</para>
+        /// <para>Vertex normal import options.</para>
         /// </summary>
         public ModelImporterNormals importNormals { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
-        /// <para>Use tangent vectors from file.</para>
+        /// <para>Vertex tangent import options.</para>
         /// </summary>
         public ModelImporterTangents importTangents { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 

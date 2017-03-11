@@ -3,7 +3,7 @@
     using System;
 
     /// <summary>
-    /// <para>This is legacy!</para>
+    /// <para>Vertex normal generation options for ModelImporter.</para>
     /// </summary>
     public enum ModelImporterNormals
     {

@@ -45,7 +45,7 @@
         {
             for (int i = components.Count - 1; i >= 0; i--)
             {
-                Object.DestroyImmediate(components[i]);
+                UnityEngine.Object.DestroyImmediate(components[i]);
             }
         }
 

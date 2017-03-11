@@ -89,7 +89,7 @@ internal abstract class BaseExposedPropertyDrawer : PropertyDrawer
         bool showContextMenu = exposedPropertyTable != null;
         PropertyName exposedPropertyName = new PropertyName(stringValue);
         OverrideState currentOverrideState = OverrideState.DefaultValue;
-        Object currentReferenceValue = this.Resolve(exposedPropertyName, exposedPropertyTable, defaultValue.objectReferenceValue, out currentOverrideState);
+        UnityEngine.Object currentReferenceValue = this.Resolve(exposedPropertyName, exposedPropertyTable, defaultValue.objectReferenceValue, out currentOverrideState);
         Color color = GUI.color;
         bool boldDefaultFont = EditorGUIUtility.GetBoldDefaultFont();
         Rect rect3 = this.DrawLabel(showContextMenu, currentOverrideState, label, position, exposedPropertyTable, stringValue, exposedName, defaultValue);
@@ -125,11 +125,11 @@ internal abstract class BaseExposedPropertyDrawer : PropertyDrawer
         }
     }
 
-    protected abstract void OnRenderProperty(Rect position, PropertyName exposedPropertyNameString, Object currentReferenceValue, SerializedProperty exposedPropertyDefault, SerializedProperty exposedPropertyName, ExposedPropertyMode mode, IExposedPropertyTable exposedProperties);
+    protected abstract void OnRenderProperty(Rect position, PropertyName exposedPropertyNameString, UnityEngine.Object currentReferenceValue, SerializedProperty exposedPropertyDefault, SerializedProperty exposedPropertyName, ExposedPropertyMode mode, IExposedPropertyTable exposedProperties);
     protected abstract void PopulateContextMenu(GenericMenu menu, OverrideState overrideState, IExposedPropertyTable exposedPropertyTable, SerializedProperty exposedName, SerializedProperty defaultValue);
-    protected Object Resolve(PropertyName exposedPropertyName, IExposedPropertyTable exposedPropertyTable, Object defaultValue, out OverrideState currentOverrideState)
+    protected UnityEngine.Object Resolve(PropertyName exposedPropertyName, IExposedPropertyTable exposedPropertyTable, UnityEngine.Object defaultValue, out OverrideState currentOverrideState)
     {
-        Object referenceValue = null;
+        UnityEngine.Object referenceValue = null;
         bool idValid = false;
         bool flag2 = !PropertyName.IsNullOrEmpty(exposedPropertyName);
         currentOverrideState = OverrideState.DefaultValue;

@@ -45,7 +45,7 @@
 
         internal static void OnAdded(Task task)
         {
-            WindowChange[] changeArray = Resources.FindObjectsOfTypeAll(typeof(WindowChange)) as WindowChange[];
+            WindowChange[] changeArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(WindowChange)) as WindowChange[];
             if (changeArray.Length != 0)
             {
                 WindowChange change = changeArray[0];
@@ -267,7 +267,7 @@
 
         internal static void OnSubmitted(Task task)
         {
-            WindowChange[] changeArray = Resources.FindObjectsOfTypeAll(typeof(WindowChange)) as WindowChange[];
+            WindowChange[] changeArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(WindowChange)) as WindowChange[];
             if (changeArray.Length != 0)
             {
                 WindowChange change = changeArray[0];

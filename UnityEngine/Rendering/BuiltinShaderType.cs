@@ -12,10 +12,9 @@
         LegacyDeferredLighting,
         ScreenSpaceShadows,
         DepthNormals,
+        MotionVectors,
         LightHalo,
-        LensFlare,
-        Sprite,
-        MotionVectors
+        LensFlare
     }
 }
 

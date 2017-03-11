@@ -561,7 +561,7 @@
 
         internal static bool Show(Rect rect, GameObject[] gos)
         {
-            Object[] objArray = Resources.FindObjectsOfTypeAll(typeof(AddComponentWindow));
+            UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(AddComponentWindow));
             if (objArray.Length > 0)
             {
                 ((EditorWindow) objArray[0]).Close();

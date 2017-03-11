@@ -191,7 +191,7 @@
                 {
                     return environmentVariable;
                 }
-                Debug.Log("Env variables ProgramFiles(x86) & ProgramFiles didn't exist, trying hard coded paths");
+                UnityEngine.Debug.Log("Env variables ProgramFiles(x86) & ProgramFiles didn't exist, trying hard coded paths");
                 string fullPath = Path.GetFullPath(Environment.GetEnvironmentVariable("windir") + @"\..\..");
                 string path = fullPath + "Program Files (x86)";
                 string str5 = fullPath + "Program Files";

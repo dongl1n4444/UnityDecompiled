@@ -164,6 +164,10 @@
         private void Init()
         {
             JSProxyMgr.GetInstance().AddGlobalObject("UnityConnectEditor", this);
+            if (Application.HasARGV("createProject"))
+            {
+                this.ShowService("Hub", true);
+            }
         }
 
         protected void InstanceStateChanged(ConnectInfo state)
@@ -174,7 +178,10 @@
                 if ((actualServiceName != this.m_CurrentServiceName) || ((s_UnityConnectEditorWindow != null) && (this.m_Services[actualServiceName].serviceUrl != s_UnityConnectEditorWindow.currentUrl)))
                 {
                     bool forceFocus = ((s_UnityConnectEditorWindow != null) && (s_UnityConnectEditorWindow.webView != null)) && s_UnityConnectEditorWindow.webView.HasApplicationFocus();
-                    this.ShowService(actualServiceName, forceFocus);
+                    if (forceFocus)
+                    {
+                        this.ShowService(actualServiceName, forceFocus);
+                    }
                 }
             }
         }
@@ -245,7 +252,7 @@
         {
             get
             {
-                UnityConnectEditorWindow[] windowArray = Resources.FindObjectsOfTypeAll(typeof(UnityConnectEditorWindow)) as UnityConnectEditorWindow[];
+                UnityConnectEditorWindow[] windowArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(UnityConnectEditorWindow)) as UnityConnectEditorWindow[];
                 if (windowArray == null)
                 {
                 }

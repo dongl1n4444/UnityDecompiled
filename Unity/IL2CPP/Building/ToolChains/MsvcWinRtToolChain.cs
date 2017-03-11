@@ -382,7 +382,7 @@
             internal int $PC;
             internal MsvcWinRtToolChain $this;
             internal NPath <includePath>__1;
-            internal NPath <unityIl2CppWinRT>__1;
+            internal NPath <unityIl2CppWinRT>__0;
 
             [DebuggerHidden]
             public void Dispose()
@@ -453,10 +453,10 @@
                     }
                 }
                 string[] append = new string[] { "Unity.IL2CPP.WinRT" };
-                this.<unityIl2CppWinRT>__1 = CommonPaths.Il2CppRoot.Combine(append);
-                if (this.<unityIl2CppWinRT>__1.DirectoryExists(""))
+                this.<unityIl2CppWinRT>__0 = CommonPaths.Il2CppRoot.Combine(append);
+                if (this.<unityIl2CppWinRT>__0.DirectoryExists(""))
                 {
-                    this.$current = this.<unityIl2CppWinRT>__1;
+                    this.$current = this.<unityIl2CppWinRT>__0;
                     if (!this.$disposing)
                     {
                         this.$PC = 2;

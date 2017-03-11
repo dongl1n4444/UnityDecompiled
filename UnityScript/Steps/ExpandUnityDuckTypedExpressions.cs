@@ -20,7 +20,7 @@
         public override void ExpandQuackInvocation(MethodInvocationExpression node)
         {
             this.ExpandQuackInvocation(node, this.UnityRuntimeServices_Invoke);
-            node.get_Arguments().Add(this.get_CodeBuilder().CreateTypeofExpression(this.UnityScriptTypeSystem.ScriptBaseType));
+            node.Arguments.Add(this.CodeBuilder.CreateTypeofExpression(this.UnityScriptTypeSystem.ScriptBaseType));
         }
 
         public override IMethod GetGetPropertyMethod() => 
@@ -42,29 +42,29 @@
             {
             }
             this._expando = Pragmas.IsEnabledOn(module, "expando");
-            bool flag = this.get_Parameters().get_Strict();
+            bool strict = this.Parameters.Strict;
             try
             {
-                this.get_Parameters().set_Strict(Pragmas.IsEnabledOn(module, "strict"));
+                this.Parameters.Strict = Pragmas.IsEnabledOn(module, "strict");
                 base.OnModule(module);
             }
             finally
             {
-                this.get_Parameters().set_Strict(flag);
+                this.Parameters.Strict = strict;
             }
         }
 
         public IMethod ResolveUnityRuntimeMethod(string methodName) => 
-            this.get_NameResolutionService().ResolveMethod(this.UnityRuntimeServicesType, methodName);
+            this.NameResolutionService.ResolveMethod(this.UnityRuntimeServicesType, methodName);
 
         public IType UnityRuntimeServicesType =>
-            this.get_TypeSystemServices().Map(typeof(UnityRuntimeServices));
+            this.TypeSystemServices.Map(typeof(UnityRuntimeServices));
 
         public UnityScriptCompilerParameters UnityScriptParameters =>
-            ((UnityScriptCompilerParameters) this.get_Parameters());
+            ((UnityScriptCompilerParameters) this.Parameters);
 
         public UnityScript.TypeSystem.UnityScriptTypeSystem UnityScriptTypeSystem =>
-            ((UnityScript.TypeSystem.UnityScriptTypeSystem) this.get_TypeSystemServices());
+            ((UnityScript.TypeSystem.UnityScriptTypeSystem) this.TypeSystemServices);
     }
 }
 

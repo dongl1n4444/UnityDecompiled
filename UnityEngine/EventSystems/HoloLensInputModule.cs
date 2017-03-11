@@ -42,22 +42,30 @@
             base.m_InputOverride = this.m_HoloLensInput;
         }
 
-        protected override bool ForceAutoSelect() => 
-            true;
-
+        [Obsolete("This method was never intended for public consumption - if you needed it as a workaround for something, please report the accompanying bug.", true)]
         public void HoloLensInput_GestureNotifier()
+        {
+        }
+
+        [Obsolete("This method was never intended for public consumption - if you needed it as a workaround for something, please report the accompanying bug.")]
+        public EventSystem HoloLensInput_GetEventSystem() => 
+            base.eventSystem;
+
+        [Obsolete("HoloLensInput_GetScreenOffsetScalar has been deprecated. Use normalizedNavigationToScreenOffsetScalar instead. (UnityUpgradable) -> normalizedNavigationToScreenOffsetScalar")]
+        public float HoloLensInput_GetScreenOffsetScalar() => 
+            this.normalizedNavigationToScreenOffsetScalar;
+
+        [Obsolete("HoloLensInput_GetTimeToPressOnTap has been deprecated. Use timeToPressOnTap instead. (UnityUpgradable) -> timeToPressOnTap")]
+        public float HoloLensInput_GetTimeToPressOnTap() => 
+            this.timeToPressOnTap;
+
+        internal void Internal_GestureNotifier()
         {
             this.m_HasGestureToProcess = true;
         }
 
-        public EventSystem HoloLensInput_GetEventSystem() => 
-            base.eventSystem;
-
-        public float HoloLensInput_GetScreenOffsetScalar() => 
-            this.m_NormalizedNavigationToScreenOffsetScalar;
-
-        public float HoloLensInput_GetTimeToPressOnTap() => 
-            this.m_TimeToPressOnTap;
+        internal GameObject Internal_GetCurrentFocusedGameObject() => 
+            base.GetCurrentFocusedGameObject();
 
         /// <summary>
         /// <para>See BaseInputModule.</para>

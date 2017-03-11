@@ -155,6 +155,7 @@
             private SerializedProperty m_FogKeepExp2;
             private SerializedProperty m_FogKeepLinear;
             private SerializedProperty m_FogStripping;
+            private SerializedProperty m_InstancingStripping;
             private SerializedProperty m_LightmapKeepDirCombined;
             private SerializedProperty m_LightmapKeepDynamicDirCombined;
             private SerializedProperty m_LightmapKeepDynamicPlain;
@@ -176,6 +177,7 @@
                 this.m_FogKeepLinear = base.serializedObject.FindProperty("m_FogKeepLinear");
                 this.m_FogKeepExp = base.serializedObject.FindProperty("m_FogKeepExp");
                 this.m_FogKeepExp2 = base.serializedObject.FindProperty("m_FogKeepExp2");
+                this.m_InstancingStripping = base.serializedObject.FindProperty("m_InstancingStripping");
             }
 
             public override void OnInspectorGUI()
@@ -220,6 +222,7 @@
                     EditorGUILayout.EndHorizontal();
                     EditorGUI.indentLevel--;
                 }
+                EditorGUILayout.PropertyField(this.m_InstancingStripping, Styles.instancingVariants, new GUILayoutOption[0]);
                 base.serializedObject.ApplyModifiedProperties();
                 if (flag)
                 {
@@ -238,14 +241,15 @@
                 public static readonly GUIContent fogExp2 = EditorGUIUtility.TextContent("Exponential Squared|Include support for Exponential Squared fog.");
                 public static readonly GUIContent fogFromScene = EditorGUIUtility.TextContent("From current scene|Calculate fog modes used by the current scene.");
                 public static readonly GUIContent fogLinear = EditorGUIUtility.TextContent("Linear|Include support for Linear fog.");
-                public static readonly GUIContent fogModes = EditorGUIUtility.TextContent("Fog modes");
+                public static readonly GUIContent fogModes = EditorGUIUtility.TextContent("Fog Modes");
+                public static readonly GUIContent instancingVariants = EditorGUIUtility.TextContent("Instancing Variants");
                 public static readonly GUIContent lightmapDirCombined = EditorGUIUtility.TextContent("Baked Directional|Include support for baked directional lightmaps.");
                 public static readonly GUIContent lightmapDynamicDirCombined = EditorGUIUtility.TextContent("Realtime Directional|Include support for realtime directional lightmaps.");
                 public static readonly GUIContent lightmapDynamicPlain = EditorGUIUtility.TextContent("Realtime Non-Directional|Include support for realtime non-directional lightmaps.");
                 public static readonly GUIContent lightmapFromScene = EditorGUIUtility.TextContent("From current scene|Calculate lightmap modes used by the current scene.");
                 public static readonly GUIContent lightmapKeepShadowMask = EditorGUIUtility.TextContent("Baked Shadow Mask|Include support for baked shadow occlusion.");
                 public static readonly GUIContent lightmapKeepSubtractive = EditorGUIUtility.TextContent("Baked Subtractive|Include support for baked substractive lightmaps.");
-                public static readonly GUIContent lightmapModes = EditorGUIUtility.TextContent("Lightmap modes");
+                public static readonly GUIContent lightmapModes = EditorGUIUtility.TextContent("Lightmap Modes");
                 public static readonly GUIContent lightmapPlain = EditorGUIUtility.TextContent("Baked Non-Directional|Include support for baked non-directional lightmaps.");
                 public static readonly GUIContent shaderPreloadClear = EditorGUIUtility.TextContent("Clear|Clear currently tracked shader variant information.");
                 public static readonly GUIContent shaderPreloadSave = EditorGUIUtility.TextContent("Save to asset...|Save currently tracked shaders into a Shader Variant Manifest asset.");
@@ -282,6 +286,7 @@
                 EditorGUILayout.LabelField(Styles.useHDR, new GUILayoutOption[0]);
                 EditorGUILayout.LabelField(Styles.hdrMode, new GUILayoutOption[0]);
                 EditorGUILayout.LabelField(Styles.renderingPath, new GUILayoutOption[0]);
+                EditorGUILayout.LabelField(Styles.realtimeGICPUUsage, new GUILayoutOption[0]);
             }
 
             internal void OnGuiHorizontal(BuildTargetGroup platform)
@@ -420,12 +425,16 @@
                 tierSettings.hdr = EditorGUILayout.Toggle(tierSettings.hdr, new GUILayoutOption[0]);
                 tierSettings.hdrMode = this.HDRModePopup(tierSettings.hdrMode);
                 tierSettings.renderingPath = this.RenderingPathPopup(tierSettings.renderingPath);
+                tierSettings.realtimeGICPUUsage = this.RealtimeGICPUUsagePopup(tierSettings.realtimeGICPUUsage);
                 if (EditorGUI.EndChangeCheck())
                 {
                     EditorGraphicsSettings.RegisterUndoForGraphicsSettings();
                     EditorGraphicsSettings.SetTierSettings(platform, tier, tierSettings);
                 }
             }
+
+            internal RealtimeGICPUUsage RealtimeGICPUUsagePopup(RealtimeGICPUUsage usage) => 
+                ((RealtimeGICPUUsage) EditorGUILayout.IntPopup((int) usage, Styles.realtimeGICPUUsageName, Styles.realtimeGICPUUsageValue, new GUILayoutOption[0]));
 
             internal RenderingPath RenderingPathPopup(RenderingPath rp) => 
                 ((RenderingPath) EditorGUILayout.IntPopup((int) rp, Styles.renderingPathName, Styles.renderingPathValue, new GUILayoutOption[0]));
@@ -442,6 +451,9 @@
                 public static readonly GUIContent hdrMode;
                 public static readonly GUIContent[] hdrModeName;
                 public static readonly int[] hdrModeValue;
+                public static readonly GUIContent realtimeGICPUUsage;
+                public static readonly GUIContent[] realtimeGICPUUsageName;
+                public static readonly int[] realtimeGICPUUsageValue;
                 public static readonly GUIContent reflectionProbeBlending;
                 public static readonly GUIContent reflectionProbeBoxProjection;
                 public static readonly GUIContent renderingPath;
@@ -466,6 +478,8 @@
                     renderingPathValue = new int[] { 1, 3, 0, 2 };
                     hdrModeName = new GUIContent[] { new GUIContent("FP16"), new GUIContent("R11G11B10") };
                     hdrModeValue = new int[] { 1, 2 };
+                    realtimeGICPUUsageName = new GUIContent[] { new GUIContent("Low"), new GUIContent("Medium"), new GUIContent("High"), new GUIContent("Unlimited") };
+                    realtimeGICPUUsageValue = new int[] { 0x19, 50, 0x4b, 100 };
                     tierName = new GUIContent[] { new GUIContent("Low (Tier1)"), new GUIContent("Medium (Tier 2)"), new GUIContent("High (Tier 3)") };
                     empty = EditorGUIUtility.TextContent("");
                     autoSettings = EditorGUIUtility.TextContent("Use Defaults");
@@ -480,6 +494,7 @@
                     renderingPath = EditorGUIUtility.TextContent("Rendering Path");
                     useHDR = EditorGUIUtility.TextContent("Use HDR");
                     hdrMode = EditorGUIUtility.TextContent("HDR Mode");
+                    realtimeGICPUUsage = EditorGUIUtility.TextContent("Realtime Global Illumination CPU Usage|How many CPU worker threads to create for Realtime Global Illumination lighting calculations in the Player. Increasing this makes the system react faster to changes in lighting at a cost of using more CPU time. The higher the CPU Usage value, the more worker threads are created for solving Realtime GI.");
                 }
             }
         }

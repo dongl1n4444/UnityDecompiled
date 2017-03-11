@@ -90,7 +90,7 @@
         public override string WriteMarshalEmptyVariableToNative(CppCodeWriter writer, ManagedMarshalValue variableName, IList<MarshaledParameter> methodParameters)
         {
             string str = $"_{variableName.GetNiceName()}_marshaled";
-            if ((((((ByReferenceType) base._typeRef).ElementType.MetadataType == MetadataType.Class) && !(this._elementTypeMarshalInfoWriter is UnmarshalableMarshalInfoWriter)) && (!(this._elementTypeMarshalInfoWriter is SafeHandleMarshalInfoWriter) && !(this._elementTypeMarshalInfoWriter is ComObjectMarshalInfoWriter))) && (!(this._elementTypeMarshalInfoWriter is DelegateMarshalInfoWriter) && !(this._elementTypeMarshalInfoWriter is StringMarshalInfoWriter)))
+            if ((((((ByReferenceType) base._typeRef).ElementType.MetadataType == MetadataType.Class) && !(this._elementTypeMarshalInfoWriter is UnmarshalableMarshalInfoWriter)) && (!(this._elementTypeMarshalInfoWriter is SafeHandleMarshalInfoWriter) && !(this._elementTypeMarshalInfoWriter is ComObjectMarshalInfoWriter))) && ((!(this._elementTypeMarshalInfoWriter is DelegateMarshalInfoWriter) && !(this._elementTypeMarshalInfoWriter is WindowsRuntimeDelegateMarshalInfoWriter)) && !(this._elementTypeMarshalInfoWriter is StringMarshalInfoWriter)))
             {
                 this.WriteNativeVariableDeclarationOfType(writer, str);
                 return str;

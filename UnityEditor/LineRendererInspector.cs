@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(LineRenderer))]
+    [CustomEditor(typeof(LineRenderer)), CanEditMultipleObjects]
     internal class LineRendererInspector : RendererEditorBase
     {
         private SerializedProperty m_Alignment;

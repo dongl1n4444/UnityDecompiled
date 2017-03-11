@@ -14,7 +14,7 @@
         /// <summary>
         /// <para>Stretch the source to fill the target resolution without preserving the aspect ratio.</para>
         /// </summary>
-        Stretch = 4
+        Stretch = 5
     }
 }
 

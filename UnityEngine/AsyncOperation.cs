@@ -12,7 +12,7 @@
     public class AsyncOperation : YieldInstruction
     {
         internal IntPtr m_Ptr;
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private extern void InternalDestroy();
         ~AsyncOperation()
         {

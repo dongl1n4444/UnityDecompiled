@@ -67,7 +67,7 @@
                 Rect rect2 = GUILayoutUtility.GetRect(buttonContent, style, options);
                 buttonRect = rect2;
             }
-            return EditorGUI.ButtonMouseDown(buttonRect, buttonContent, FocusType.Passive, style);
+            return EditorGUI.DropdownButton(buttonRect, buttonContent, FocusType.Passive, style);
         }
 
         public static bool Slider(GUIContent label, ref float value, float displayScale, float displayExponent, string unit, float leftValue, float rightValue, AudioMixerController controller, AudioParameterPath path, params GUILayoutOption[] options)

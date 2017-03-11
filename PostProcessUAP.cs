@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 using UnityEditor;
 using UnityEditor.Modules;
 using UnityEditor.Scripting.Compilers;
+using UnityEditor.Utils;
 using UnityEditor.WSA;
 using UnityEngine;
 
 internal abstract class PostProcessUAP : PostProcessWSA
 {
     private static Dictionary<PlayerSettings.SplashScreen.UnityLogoStyle, string> _defaultSplashScreens;
-    private static string[] _uwpReferences;
 
     public PostProcessUAP(BuildPostProcessArgs args, string stagingArea = null) : base(args, WSASDK.UWP, stagingArea)
     {
@@ -111,8 +111,23 @@ internal abstract class PostProcessUAP : PostProcessWSA
     protected override string GetPlayerFilesTargetDirectory() => 
         base.GetPlayerFilesTargetDirectory(!Utility.UseIl2CppScriptingBackend() ? @"UAP\dotnet" : @"UAP\il2cpp");
 
-    protected override string GetResourceCompilerPath() => 
-        Path.Combine(MetroCompilationExtension.GetWindowsKitDirectory(WSASDK.UWP), @"bin\x86\rc.exe");
+    protected override string GetResourceCompilerPath()
+    {
+        string windowsKitDirectory = MetroCompilationExtension.GetWindowsKitDirectory(WSASDK.UWP);
+        string desiredUWPSDKString = Utility.GetDesiredUWPSDKString();
+        string[] components = new string[] { windowsKitDirectory, "bin", desiredUWPSDKString, "x86", "rc.exe" };
+        string path = Paths.Combine(components);
+        if (!File.Exists(path))
+        {
+            string[] textArray2 = new string[] { windowsKitDirectory, "bin", "x86", "rc.exe" };
+            path = Paths.Combine(textArray2);
+            if (!File.Exists(path))
+            {
+                throw new FileNotFoundException("Could not find rc.exe in the Windows SDK directory!");
+            }
+        }
+        return path;
+    }
 
     protected override string GetSDKNotFoundErrorMessage() => 
         "Make sure Visual Studio 2015 is installed.";
@@ -120,21 +135,7 @@ internal abstract class PostProcessUAP : PostProcessWSA
     protected override Version GetToolsVersion() => 
         new Version(14, 0);
 
-    protected static string[] UWPReferences
-    {
-        get
-        {
-            string[] strArray;
-            if (_uwpReferences != null)
-            {
-                strArray = _uwpReferences;
-            }
-            else
-            {
-                strArray = _uwpReferences = UnityEditor.Scripting.Compilers.UWPReferences.GetReferences();
-            }
-            return strArray;
-        }
-    }
+    protected static string[] UWPReferences =>
+        UnityEditor.Scripting.Compilers.UWPReferences.GetReferences(Utility.GetDesiredUWPSDK());
 }
 

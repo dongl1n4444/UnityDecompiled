@@ -18,9 +18,9 @@
         [CompilerGenerated]
         private static Func<DistanceToControl> <>f__am$cache10;
         [CompilerGenerated]
-        private static Action <>f__am$cache11;
+        private static System.Action <>f__am$cache11;
         [CompilerGenerated]
-        private static Action <>f__am$cache12;
+        private static System.Action <>f__am$cache12;
         [CompilerGenerated]
         private static Func<Vector3, Vector3> <>f__am$cache13;
         [CompilerGenerated]
@@ -83,13 +83,13 @@
         private static Handles.CapFunction <>f__mg$cache9;
         [CompilerGenerated]
         private static Handles.CapFunction <>f__mg$cacheA;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private int <activePoint>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private IEvent <currentEvent>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IEventSystem <eventSystem>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private IGUIUtility <guiUtility>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static Color <handleFillColor>k__BackingField;
@@ -97,8 +97,8 @@
         private static Color <handleOutlineColor>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <inEditMode>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-        private Texture2D <lineTexture>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UnityEngine.Texture2D <lineTexture>k__BackingField;
         public Func<DistanceToControl> DistanceToCircle;
         public Func<DistanceToControl> DistanceToDiamond;
         public Func<DistanceToControl> DistanceToRectangle;
@@ -148,9 +148,9 @@
         private int m_ShapeEditorUpdateDone;
         public Action<int> OnPointClick;
         public Func<bool> OpenEnded;
-        public Action RecordUndo;
+        public System.Action RecordUndo;
         public Action<int> RemovePointAt;
-        public Action Repaint;
+        public System.Action Repaint;
         public Func<Vector2, Vector3> ScreenToLocal;
         public Action<int, Vector3> SetPointLTangent;
         public Action<int, Vector3> SetPointPosition;
@@ -247,12 +247,12 @@
             this.DistanceToCircle = <>f__am$cache10;
             if (<>f__am$cache11 == null)
             {
-                <>f__am$cache11 = new Action(ShapeEditor.<Repaint>m__11);
+                <>f__am$cache11 = new System.Action(ShapeEditor.<Repaint>m__11);
             }
             this.Repaint = <>f__am$cache11;
             if (<>f__am$cache12 == null)
             {
-                <>f__am$cache12 = new Action(ShapeEditor.<RecordUndo>m__12);
+                <>f__am$cache12 = new System.Action(ShapeEditor.<RecordUndo>m__12);
             }
             this.RecordUndo = <>f__am$cache12;
             if (<>f__am$cache13 == null)
@@ -1040,7 +1040,7 @@
         public void OnDisable()
         {
             this.m_RectSelectionTool.RectSelect -= new Action<Rect, SelectionType>(this.SelectPointsInRect);
-            this.m_RectSelectionTool.ClearSelection -= new Action(this.ClearSelectedPoints);
+            this.m_RectSelectionTool.ClearSelection -= new System.Action(this.ClearSelectedPoints);
             this.m_RectSelectionTool = null;
         }
 
@@ -1084,7 +1084,7 @@
 
         public void Points()
         {
-            bool flag = ((Event.current.type == EventType.ExecuteCommand) || (Event.current.type == EventType.ValidateCommand)) && ((Event.current.commandName == "SoftDelete") || (Event.current.commandName == "Delete"));
+            bool flag = ((UnityEngine.Event.current.type == EventType.ExecuteCommand) || (UnityEngine.Event.current.type == EventType.ValidateCommand)) && ((UnityEngine.Event.current.commandName == "SoftDelete") || (UnityEngine.Event.current.commandName == "Delete"));
             for (int i = 0; i < this.GetPointsCount(); i++)
             {
                 if (i != this.m_NewPointIndex)
@@ -1266,11 +1266,11 @@
             if (this.m_RectSelectionTool != null)
             {
                 this.m_RectSelectionTool.RectSelect -= new Action<Rect, SelectionType>(this.SelectPointsInRect);
-                this.m_RectSelectionTool.ClearSelection -= new Action(this.ClearSelectedPoints);
+                this.m_RectSelectionTool.ClearSelection -= new System.Action(this.ClearSelectedPoints);
             }
             this.m_RectSelectionTool = sers;
             this.m_RectSelectionTool.RectSelect += new Action<Rect, SelectionType>(this.SelectPointsInRect);
-            this.m_RectSelectionTool.ClearSelection += new Action(this.ClearSelectedPoints);
+            this.m_RectSelectionTool.ClearSelection += new System.Action(this.ClearSelectedPoints);
         }
 
         private void StoreMouseDownState()
@@ -1382,7 +1382,7 @@
 
         public bool inEditMode { get; set; }
 
-        public Texture2D lineTexture { get; set; }
+        public UnityEngine.Texture2D lineTexture { get; set; }
 
         public HashSet<int> selectedPoints =>
             this.m_Selection.indices;

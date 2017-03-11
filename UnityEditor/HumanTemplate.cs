@@ -5,7 +5,7 @@
     using UnityEngine;
     using UnityEngine.Scripting;
 
-    public sealed class HumanTemplate : Object
+    public sealed class HumanTemplate : UnityEngine.Object
     {
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern HumanTemplate();

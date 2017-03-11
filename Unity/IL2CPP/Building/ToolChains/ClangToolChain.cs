@@ -751,7 +751,7 @@
                         {
                             this.$PC = 1;
                         }
-                        goto Label_00ED;
+                        goto Label_0110;
 
                     case 1:
                         this.$current = "-Wno-extern-initializer";
@@ -759,7 +759,7 @@
                         {
                             this.$PC = 2;
                         }
-                        goto Label_00ED;
+                        goto Label_0110;
 
                     case 2:
                         this.$current = "-Wno-trigraphs";
@@ -767,7 +767,7 @@
                         {
                             this.$PC = 3;
                         }
-                        goto Label_00ED;
+                        goto Label_0110;
 
                     case 3:
                         this.$current = "-Wno-tautological-compare";
@@ -775,7 +775,7 @@
                         {
                             this.$PC = 4;
                         }
-                        goto Label_00ED;
+                        goto Label_0110;
 
                     case 4:
                         this.$current = "-Wswitch";
@@ -783,18 +783,26 @@
                         {
                             this.$PC = 5;
                         }
-                        goto Label_00ED;
+                        goto Label_0110;
 
                     case 5:
+                        this.$current = "-Wno-invalid-offsetof";
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 6;
+                        }
+                        goto Label_0110;
+
+                    case 6:
                         break;
 
                     default:
-                        goto Label_00EB;
+                        goto Label_010E;
                 }
                 this.$PC = -1;
-            Label_00EB:
+            Label_010E:
                 return false;
-            Label_00ED:
+            Label_0110:
                 return true;
             }
 

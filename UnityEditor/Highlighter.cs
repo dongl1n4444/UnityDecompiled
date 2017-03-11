@@ -19,7 +19,7 @@
         private static EditorApplication.CallbackFunction <>f__mg$cache1;
         [CompilerGenerated]
         private static EditorApplication.CallbackFunction <>f__mg$cache2;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private static bool <active>k__BackingField;
         private const int kExpansionMovementSize = 5;
         private const float kPopupDuration = 0.33f;
@@ -94,19 +94,19 @@
             bool flag = false;
             if (s_RecursionLock || searching)
             {
-                Debug.LogWarning("Highlighter recursion detected.  You are calling Highlighter.Highlight() with too much abandon.  Avoid highlighting during layout and repaint events.");
+                UnityEngine.Debug.LogWarning("Highlighter recursion detected.  You are calling Highlighter.Highlight() with too much abandon.  Avoid highlighting during layout and repaint events.");
                 return flag;
             }
             if ((Event.current != null) && (Event.current.type == EventType.Layout))
             {
-                Debug.LogWarning("You are calling Highlighter.Highlight() inorrectly.  Avoid highlighting during layout and repaint events.");
+                UnityEngine.Debug.LogWarning("You are calling Highlighter.Highlight() inorrectly.  Avoid highlighting during layout and repaint events.");
                 return flag;
             }
             s_RecursionLock = true;
             Stop();
             if (!SetWindow(windowTitle))
             {
-                Debug.LogWarning("Window " + windowTitle + " not found.");
+                UnityEngine.Debug.LogWarning("Window " + windowTitle + " not found.");
             }
             else if (mode != HighlightSearchMode.None)
             {
@@ -130,7 +130,7 @@
                 }
                 else
                 {
-                    Debug.LogWarning("Item " + text + " not found in window " + windowTitle + ".");
+                    UnityEngine.Debug.LogWarning("Item " + text + " not found in window " + windowTitle + ".");
                     Stop();
                 }
                 InternalEditorUtility.RepaintAllViews();
@@ -193,7 +193,7 @@
 
         private static bool SetWindow(string windowTitle)
         {
-            Object[] objArray = Resources.FindObjectsOfTypeAll(typeof(GUIView));
+            UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(GUIView));
             GUIView view = null;
             foreach (GUIView view2 in objArray)
             {
@@ -265,7 +265,7 @@
                     rect = new RectOffset(((int) rect.width) / 2, ((int) rect.width) / 2, ((int) rect.height) / 2, ((int) rect.height) / 2).Add(rect);
                 }
                 s_RepaintRegion = rect;
-                foreach (GUIView view in Resources.FindObjectsOfTypeAll(typeof(GUIView)))
+                foreach (GUIView view in UnityEngine.Resources.FindObjectsOfTypeAll(typeof(GUIView)))
                 {
                     if (view.window == s_View.window)
                     {

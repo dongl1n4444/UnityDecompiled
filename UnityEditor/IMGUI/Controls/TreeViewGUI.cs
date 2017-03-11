@@ -10,13 +10,13 @@
 
     internal abstract class TreeViewGUI : ITreeViewGUI
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private float <extraSpaceBeforeIconAndLabel>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private float <iconLeftPadding>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-        private Action<TreeViewItem, Rect> <iconOverlayGUI>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Action<TreeViewItem, Rect> <iconOverlayGUI>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private float <iconRightPadding>k__BackingField;
         public float customFoldoutYOffset;
         public float extraInsertionMarkerIndent;

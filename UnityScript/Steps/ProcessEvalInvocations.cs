@@ -25,69 +25,69 @@
         public void AddLocalVariablesAsFields(BooClassBuilder builder)
         {
             Field field;
-            foreach (Local local in this.CurrentMethodNode.get_Locals())
+            foreach (Local local in this.CurrentMethodNode.Locals)
             {
-                InternalLocal entity = this.GetEntity(local);
-                if (!entity.get_IsPrivateScope())
+                InternalLocal entity = (InternalLocal) this.GetEntity(local);
+                if (!entity.IsPrivateScope)
                 {
-                    field = builder.AddPublicField(entity.get_Name(), entity.get_Type());
+                    field = builder.AddPublicField(entity.Name, entity.Type);
                     this.SetEvaluationContextField(local, (InternalField) this.GetEntity(field));
                 }
             }
-            foreach (ParameterDeclaration declaration in this.CurrentMethodNode.get_Parameters())
+            foreach (ParameterDeclaration declaration in this.CurrentMethodNode.Parameters)
             {
-                InternalParameter parameter = this.GetEntity(declaration);
-                field = builder.AddPublicField(parameter.get_Name(), parameter.get_Type());
+                InternalParameter parameter = (InternalParameter) this.GetEntity(declaration);
+                field = builder.AddPublicField(parameter.Name, parameter.Type);
                 this.SetEvaluationContextField(declaration, (InternalField) this.GetEntity(field));
             }
         }
 
         public void ChainConstructorsFromBaseType(BooClassBuilder builder)
         {
-            foreach (IConstructor constructor in TypeSystemExtensions.GetConstructors(builder.get_Entity().get_BaseType()))
+            foreach (IConstructor constructor in builder.Entity.BaseType.GetConstructors())
             {
-                ExpressionStatement statement = this.get_CodeBuilder().CreateSuperConstructorInvocation(constructor);
-                MethodInvocationExpression expression = statement.get_Expression() as MethodInvocationExpression;
+                ExpressionStatement stmt = this.CodeBuilder.CreateSuperConstructorInvocation(constructor);
+                MethodInvocationExpression expression = stmt.Expression as MethodInvocationExpression;
                 BooMethodBuilder builder2 = builder.AddConstructor();
                 int index = 0;
                 IParameter[] parameters = constructor.GetParameters();
                 int length = parameters.Length;
                 while (index < length)
                 {
-                    ParameterDeclaration declaration = builder2.AddParameter(parameters[index].get_Name(), parameters[index].get_Type());
-                    expression.get_Arguments().Add(this.get_CodeBuilder().CreateReference(declaration));
+                    ParameterDeclaration parameter = builder2.AddParameter(parameters[index].Name, parameters[index].Type);
+                    expression.Arguments.Add(this.CodeBuilder.CreateReference(parameter));
                     index++;
                 }
-                builder2.get_Body().Add(statement);
+                builder2.Body.Add(stmt);
             }
         }
 
         public MemberReferenceExpression CreateEvaluationContextFieldReference(InternalField field) => 
-            this.get_CodeBuilder().CreateMemberReference(this.CreateEvaluationContextReference(), field);
+            this.CodeBuilder.CreateMemberReference(this.CreateEvaluationContextReference(), field);
 
         public ReferenceExpression CreateEvaluationContextReference() => 
-            this.get_CodeBuilder().CreateReference(this._evaluationContextLocal);
+            this.CodeBuilder.CreateReference(this._evaluationContextLocal);
 
         public MethodInvocationExpression CreateEvaluatorInvocation(MethodInvocationExpression node) => 
-            this.get_CodeBuilder().CreateMethodInvocation(Evaluator_Eval, this.CreateEvaluationContextReference(), node.get_Arguments().get_Item(0));
+            this.CodeBuilder.CreateMethodInvocation(Evaluator_Eval, this.CreateEvaluationContextReference(), node.Arguments[0]);
 
         public IType DefineEvaluationContext()
         {
-            string[] textArray1 = new string[] { "EvaluationContext" };
-            BooClassBuilder builder = this.get_CodeBuilder().CreateClass(this.get_Context().GetUniqueName(textArray1), 8);
+            string[] components = new string[] { "EvaluationContext" };
+            BooClassBuilder builder = this.CodeBuilder.CreateClass(this.Context.GetUniqueName(components), TypeMemberModifiers.Public);
             builder.AddBaseType(this.Map(typeof(EvaluationContext)));
             this.ChainConstructorsFromBaseType(builder);
             this.AddLocalVariablesAsFields(builder);
-            this.CurrentTypeNode.get_Members().Add(builder.get_ClassDefinition());
-            return builder.get_Entity();
+            this.CurrentTypeNode.Members.Add(builder.ClassDefinition);
+            return builder.Entity;
         }
 
         public Expression EvaluationDomainProviderReference() => 
-            (!this._currentMethod.get_IsStatic() ? this.get_CodeBuilder().CreateSelfReference(this.CurrentType) : this.get_CodeBuilder().CreateReference(My<EvaluationDomainProviderImplementor>.Instance.StaticEvaluationDomainProviderFor((ClassDefinition) this.CurrentTypeNode)));
+            (!this._currentMethod.IsStatic ? ((Expression) this.CodeBuilder.CreateSelfReference(this.CurrentType)) : ((Expression) this.CodeBuilder.CreateReference(My<EvaluationDomainProviderImplementor>.Instance.StaticEvaluationDomainProviderFor((ClassDefinition) this.CurrentTypeNode))));
 
         public InternalField GetEvaluationContextField(Node node)
         {
-            object obj1 = node.get_Item("EvaluationContextField");
+            object obj1 = node["EvaluationContextField"];
             if (!(obj1 is InternalField))
             {
             }
@@ -95,7 +95,7 @@
         }
 
         public bool IsEvalInvocation(MethodInvocationExpression node) => 
-            (node.get_Target().get_Entity() == UnityScriptTypeSystem.UnityScriptEval);
+            (node.Target.Entity == UnityScriptTypeSystem.UnityScriptEval);
 
         public override void LeaveClassDefinition(ClassDefinition node)
         {
@@ -111,7 +111,7 @@
             {
                 if (!string.IsNullOrEmpty(this.UnityScriptParameters.DisableEval))
                 {
-                    this.Error(node, UnityScriptCompilerErrors.EvalHasBeenDisabled(node.get_Target().get_LexicalInfo(), this.UnityScriptParameters.DisableEval));
+                    this.Error(node, UnityScriptCompilerErrors.EvalHasBeenDisabled(node.Target.LexicalInfo, this.UnityScriptParameters.DisableEval));
                 }
                 else
                 {
@@ -121,7 +121,7 @@
         }
 
         public IType Map(Type type) => 
-            this.get_TypeSystemServices().Map(type);
+            this.TypeSystemServices.Map(type);
 
         public override void OnConstructor(Constructor node)
         {
@@ -132,71 +132,71 @@
         {
             if (EvalAnnotation.IsMarked(node))
             {
-                this._currentMethod = this.GetEntity(node);
+                this._currentMethod = (InternalMethod) this.GetEntity(node);
                 IType evaluationContextType = this.DefineEvaluationContext();
-                Block block = this.PrepareEvaluationContextInitialization(evaluationContextType);
-                this.Visit(node.get_Body());
-                node.get_Body().Insert(0, block);
+                Block stmt = this.PrepareEvaluationContextInitialization(evaluationContextType);
+                this.Visit(node.Body);
+                node.Body.Insert(0, stmt);
             }
         }
 
         public override void OnReferenceExpression(ReferenceExpression node)
         {
-            IInternalEntity entity = node.get_Entity() as IInternalEntity;
+            IInternalEntity entity = node.Entity as IInternalEntity;
             if (entity != null)
             {
-                InternalField evaluationContextField = this.GetEvaluationContextField(entity.get_Node());
+                InternalField evaluationContextField = this.GetEvaluationContextField(entity.Node);
                 if (evaluationContextField != null)
                 {
-                    node.get_ParentNode().Replace(node, this.CreateEvaluationContextFieldReference(evaluationContextField));
+                    node.ParentNode.Replace(node, this.CreateEvaluationContextFieldReference(evaluationContextField));
                 }
             }
         }
 
         public Block PrepareEvaluationContextInitialization(IType evaluationContextType)
         {
-            this._evaluationContextLocal = this.get_CodeBuilder().DeclareTempLocal(this.CurrentMethodNode, evaluationContextType);
+            this._evaluationContextLocal = this.CodeBuilder.DeclareTempLocal(this.CurrentMethodNode, evaluationContextType);
             Block block = new Block();
-            block.Add(this.get_CodeBuilder().CreateAssignment(this.CreateEvaluationContextReference(), this.get_CodeBuilder().CreateConstructorInvocation(UtilitiesModule.ConstructorTakingNArgumentsFor(evaluationContextType, 1), this.EvaluationDomainProviderReference())));
-            foreach (ParameterDeclaration declaration in this.CurrentMethodNode.get_Parameters())
+            block.Add(this.CodeBuilder.CreateAssignment(this.CreateEvaluationContextReference(), this.CodeBuilder.CreateConstructorInvocation(UtilitiesModule.ConstructorTakingNArgumentsFor(evaluationContextType, 1), this.EvaluationDomainProviderReference())));
+            foreach (ParameterDeclaration declaration in this.CurrentMethodNode.Parameters)
             {
-                block.Add(this.get_CodeBuilder().CreateAssignment(this.CreateEvaluationContextFieldReference(this.GetEvaluationContextField(declaration)), this.get_CodeBuilder().CreateReference(declaration)));
+                block.Add(this.CodeBuilder.CreateAssignment(this.CreateEvaluationContextFieldReference(this.GetEvaluationContextField(declaration)), this.CodeBuilder.CreateReference(declaration)));
             }
             return block;
         }
 
         public void ReplaceEvalByEvaluatorEval(MethodInvocationExpression node)
         {
-            node.get_ParentNode().Replace(node, this.CreateEvaluatorInvocation(node));
+            node.ParentNode.Replace(node, this.CreateEvaluatorInvocation(node));
         }
 
         public override void Run()
         {
-            if (this.get_Errors().Count <= 0)
+            if (this.Errors.Count <= 0)
             {
-                this.Visit(this.get_CompileUnit());
+                this.Visit(this.CompileUnit);
             }
         }
 
         public void SetEvaluationContextField(Node node, InternalField field)
         {
-            node.set_Item("EvaluationContextField", field);
+            node["EvaluationContextField"] = field;
         }
 
         public Block CurrentMethodBody =>
-            this.CurrentMethodNode.get_Body();
+            this.CurrentMethodNode.Body;
 
         public Method CurrentMethodNode =>
-            this._currentMethod.get_Method();
+            this._currentMethod.Method;
 
         public IType CurrentType =>
-            this._currentMethod.get_DeclaringType();
+            this._currentMethod.DeclaringType;
 
         public TypeDefinition CurrentTypeNode =>
-            this.CurrentMethodNode.get_DeclaringType();
+            this.CurrentMethodNode.DeclaringType;
 
         public UnityScriptCompilerParameters UnityScriptParameters =>
-            ((UnityScriptCompilerParameters) base._context.get_Parameters());
+            ((UnityScriptCompilerParameters) base._context.Parameters);
     }
 }
 

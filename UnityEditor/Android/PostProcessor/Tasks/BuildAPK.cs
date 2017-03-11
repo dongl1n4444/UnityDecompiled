@@ -1,8 +1,10 @@
 ﻿namespace UnityEditor.Android.PostProcessor.Tasks
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEditor;
     using UnityEditor.Android;
@@ -13,6 +15,7 @@
     {
         private string _stagingArea;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ProgressHandler OnProgress;
 
         private void AlignPackage(PostProcessorContext context)
@@ -24,7 +27,7 @@
             string message = TasksCommon.Exec(tools.ZIPALIGN, args, this._stagingArea, errorMsg, 0);
             if ((message.Contains("zipalign") || message.Contains("Warning")) || !File.Exists(Path.Combine(str2, "Package.apk")))
             {
-                Debug.LogError(message);
+                UnityEngine.Debug.LogError(message);
                 CancelPostProcess.AbortBuildPointToConsole("APK Aligning Failed!", errorMsg);
             }
         }
@@ -67,7 +70,7 @@
             FileInfo info = new FileInfo(fileName);
             if (!File.Exists(fileName) || (info.Length == 0L))
             {
-                Debug.LogError(message);
+                UnityEngine.Debug.LogError(message);
                 CancelPostProcess.AbortBuildPointToConsole("APK Builder Failed!", "Failed to build APK package.");
             }
         }

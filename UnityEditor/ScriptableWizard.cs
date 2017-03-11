@@ -25,7 +25,7 @@
             DisplayWizard<T>(title, createButtonName, "");
 
         [ExcludeFromDocs]
-        public static ScriptableWizard DisplayWizard(string title, Type klass)
+        public static ScriptableWizard DisplayWizard(string title, System.Type klass)
         {
             string otherButtonName = "";
             string createButtonName = "Create";
@@ -36,7 +36,7 @@
             ((T) DisplayWizard(title, typeof(T), createButtonName, otherButtonName));
 
         [ExcludeFromDocs]
-        public static ScriptableWizard DisplayWizard(string title, Type klass, string createButtonName)
+        public static ScriptableWizard DisplayWizard(string title, System.Type klass, string createButtonName)
         {
             string otherButtonName = "";
             return DisplayWizard(title, klass, createButtonName, otherButtonName);
@@ -52,7 +52,7 @@
         /// <returns>
         /// <para>The wizard.</para>
         /// </returns>
-        public static ScriptableWizard DisplayWizard(string title, Type klass, [DefaultValue("\"Create\"")] string createButtonName, [DefaultValue("\"\"")] string otherButtonName)
+        public static ScriptableWizard DisplayWizard(string title, System.Type klass, [DefaultValue("\"Create\"")] string createButtonName, [DefaultValue("\"\"")] string otherButtonName)
         {
             ScriptableWizard wizard = ScriptableObject.CreateInstance(klass) as ScriptableWizard;
             wizard.m_CreateButton = createButtonName;
@@ -86,7 +86,7 @@
 
         private void OnDestroy()
         {
-            Object.DestroyImmediate(this.m_Inspector);
+            UnityEngine.Object.DestroyImmediate(this.m_Inspector);
         }
 
         private void OnGUI()

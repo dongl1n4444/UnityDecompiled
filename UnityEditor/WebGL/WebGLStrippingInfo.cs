@@ -55,12 +55,25 @@
             if (flag2)
             {
                 int num2;
-                storey.functionSizes = GetFunctionSizesFromWast("Temp/StagingArea/Data/linkresult_wasm/build.wast", out num2, storey.minificationMap);
+                string wastPath = "Temp/StagingArea/Data/linkresult_wasm/build.wast";
+                ProcessStartInfo si = new ProcessStartInfo(EmscriptenPaths.binaryenDisExecutable) {
+                    Arguments = "\"" + this.builtCodePath + "\" -o " + wastPath,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+                Program program = new Program(si);
+                program.Start();
+                program.WaitForExit();
+                if (program.ExitCode != 0)
+                {
+                    throw new Exception("wasm-dis failed with arguments: " + si.Arguments);
+                }
+                storey.functionSizes = GetFunctionSizesFromWast(wastPath, out num2, storey.minificationMap);
                 base.totalSize = (int) new FileInfo(this.builtCodePath).Length;
                 float num3 = ((float) base.totalSize) / ((float) num2);
-                foreach (string str6 in storey.functionSizes.Keys.ToList<string>())
+                foreach (string str7 in storey.functionSizes.Keys.ToList<string>())
                 {
-                    storey.functionSizes[str6] = (int) (((float) storey.functionSizes[str6]) * num3);
+                    storey.functionSizes[str7] = (int) (((float) storey.functionSizes[str7]) * num3);
                 }
             }
             else
@@ -90,34 +103,34 @@
                     string key = symbolArtifacts[pair.Key].Replace('\\', '/');
                     if (flag)
                     {
-                        string str9;
+                        string str10;
                         if (!dictionary5.ContainsKey(key))
                         {
                             dictionary5[key] = 0;
                         }
-                        (dictionary6 = dictionary5)[str9 = key] = dictionary6[str9] + pair.Value;
+                        (dictionary6 = dictionary5)[str10 = key] = dictionary6[str10] + pair.Value;
                     }
                     if (key.LastIndexOf('/') != -1)
                     {
-                        string str11;
-                        string str10 = key.Substring(0, key.LastIndexOf('/'));
-                        if (!sizes.ContainsKey(str10))
+                        string str12;
+                        string str11 = key.Substring(0, key.LastIndexOf('/'));
+                        if (!sizes.ContainsKey(str11))
                         {
-                            sizes[str10] = 0;
+                            sizes[str11] = 0;
                         }
-                        (dictionary6 = sizes)[str11 = str10] = dictionary6[str11] + pair.Value;
+                        (dictionary6 = sizes)[str12 = str11] = dictionary6[str12] + pair.Value;
                     }
                 }
                 if (dictionary2.ContainsKey(pair.Key))
                 {
-                    string str13;
-                    string str12 = dictionary2[pair.Key];
-                    str12 = StrippingInfo.ModuleName(str12.Substring(0, str12.Length - "Module_Dynamic.bc".Length));
-                    if (!dictionary4.ContainsKey(str12))
+                    string str14;
+                    string str13 = dictionary2[pair.Key];
+                    str13 = StrippingInfo.ModuleName(str13.Substring(0, str13.Length - "Module_Dynamic.bc".Length));
+                    if (!dictionary4.ContainsKey(str13))
                     {
-                        dictionary4[str12] = 0;
+                        dictionary4[str13] = 0;
                     }
-                    (dictionary6 = dictionary4)[str13 = str12] = dictionary6[str13] + pair.Value;
+                    (dictionary6 = dictionary4)[str14 = str13] = dictionary6[str14] + pair.Value;
                     num += pair.Value;
                 }
             }
@@ -210,6 +223,10 @@
             Program program = new Program(si);
             program.Start();
             program.WaitForExit();
+            if (program.ExitCode != 0)
+            {
+                throw new Exception("wasm-opt failed with arguments: " + si.Arguments);
+            }
             string[] standardOutput = program.GetStandardOutput();
             Dictionary<string, int> dictionary = new Dictionary<string, int>();
             totalWastSize = 0;

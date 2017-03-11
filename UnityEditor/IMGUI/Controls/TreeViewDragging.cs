@@ -12,7 +12,7 @@
     {
         [CompilerGenerated]
         private static Func<TreeViewItem, int> <>f__am$cache0;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <drawRowMarkerAbove>k__BackingField;
         private const double k_DropExpandTimeout = 0.7;
         protected DropData m_DropData = new DropData();
@@ -163,7 +163,7 @@
         {
             this.DragCleanup(revertExpanded);
             DragAndDrop.AcceptDrag();
-            List<Object> list = new List<Object>(DragAndDrop.objectReferences);
+            List<UnityEngine.Object> list = new List<UnityEngine.Object>(DragAndDrop.objectReferences);
             bool draggedItemsFromOwnTreeView = true;
             if (((list.Count > 0) && (list[0] != null)) && (TreeViewUtility.FindItemInList<TreeViewItem>(list[0].GetInstanceID(), this.m_TreeView.data.GetRows()) == null))
             {
@@ -216,7 +216,7 @@
                     }
                     return num2;
                 }
-                Debug.LogError("Did not find targetItem,; should be a child of parentItem");
+                UnityEngine.Debug.LogError("Did not find targetItem,; should be a child of parentItem");
             }
             return -1;
         }

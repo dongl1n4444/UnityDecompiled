@@ -9,7 +9,7 @@
         private readonly CallbackController m_CallbackController;
         private readonly bool m_MouseDownButton;
 
-        public ButtonWithAnimatedIconRotation(Func<float> angleCallback, Action repaintCallback, float repaintsPerSecond, bool mouseDownButton)
+        public ButtonWithAnimatedIconRotation(Func<float> angleCallback, System.Action repaintCallback, float repaintsPerSecond, bool mouseDownButton)
         {
             this.m_CallbackController = new CallbackController(repaintCallback, repaintsPerSecond);
             this.m_AngleCallback = angleCallback;

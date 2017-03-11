@@ -16,9 +16,9 @@
         /// <para>Create SerializedObject for inspected object.</para>
         /// </summary>
         /// <param name="obj"></param>
-        public SerializedObject(Object obj)
+        public SerializedObject(UnityEngine.Object obj)
         {
-            Object[] monoObjs = new Object[] { obj };
+            UnityEngine.Object[] monoObjs = new UnityEngine.Object[] { obj };
             this.InternalCreate(monoObjs, null);
         }
 
@@ -26,7 +26,7 @@
         /// <para>Create SerializedObject for inspected object.</para>
         /// </summary>
         /// <param name="objs"></param>
-        public SerializedObject(Object[] objs)
+        public SerializedObject(UnityEngine.Object[] objs)
         {
             this.InternalCreate(objs, null);
         }
@@ -36,9 +36,9 @@
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="context"></param>
-        public SerializedObject(Object obj, Object context)
+        public SerializedObject(UnityEngine.Object obj, UnityEngine.Object context)
         {
-            Object[] monoObjs = new Object[] { obj };
+            UnityEngine.Object[] monoObjs = new UnityEngine.Object[] { obj };
             this.InternalCreate(monoObjs, context);
         }
 
@@ -47,7 +47,7 @@
         /// </summary>
         /// <param name="objs"></param>
         /// <param name="context"></param>
-        public SerializedObject(Object[] objs, Object context)
+        public SerializedObject(UnityEngine.Object[] objs, UnityEngine.Object context)
         {
             this.InternalCreate(objs, context);
         }
@@ -70,7 +70,7 @@
         /// <param name="prop"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void CopyFromSerializedProperty(SerializedProperty prop);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         public extern void Dispose();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern PropertyModification ExtractPropertyModification(string propertyPath);
@@ -107,7 +107,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern SerializedProperty GetIterator_Internal();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private extern void InternalCreate(Object[] monoObjs, Object context);
+        private extern void InternalCreate(UnityEngine.Object[] monoObjs, UnityEngine.Object context);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern SerializedObject LoadFromCache(int instanceID);
         /// <summary>
@@ -121,7 +121,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void Update();
         /// <summary>
-        /// <para>his has been made obsolete. See SerializedObject.UpdateIfRequiredOrScript instead.</para>
+        /// <para>This has been made obsolete. See SerializedObject.UpdateIfRequiredOrScript instead.</para>
         /// </summary>
         [MethodImpl(MethodImplOptions.InternalCall), Obsolete("UpdateIfDirtyOrScript has been deprecated. Use UpdateIfRequiredOrScript instead.", false), GeneratedByOldBindingsGenerator]
         public extern void UpdateIfDirtyOrScript();
@@ -134,7 +134,7 @@
         /// <summary>
         /// <para>The context used to store and resolve ExposedReference types. This is set by the SerializedObject constructor.</para>
         /// </summary>
-        public Object context { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+        public UnityEngine.Object context { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         internal bool hasModifiedProperties { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
@@ -153,12 +153,12 @@
         /// <summary>
         /// <para>The inspected object (Read Only).</para>
         /// </summary>
-        public Object targetObject { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+        public UnityEngine.Object targetObject { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The inspected objects (Read Only).</para>
         /// </summary>
-        public Object[] targetObjects { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+        public UnityEngine.Object[] targetObjects { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

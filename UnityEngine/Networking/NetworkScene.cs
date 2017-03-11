@@ -29,7 +29,7 @@
             foreach (NetworkInstanceId id in this.m_LocalObjects.Keys)
             {
                 NetworkIdentity identity = this.m_LocalObjects[id];
-                if ((identity != null) && (identity.gameObject != null))
+                if (((identity != null) && (identity.gameObject != null)) && !InvokeUnSpawnHandler(identity.assetId, identity.gameObject))
                 {
                     if (identity.sceneId.IsEmpty())
                     {

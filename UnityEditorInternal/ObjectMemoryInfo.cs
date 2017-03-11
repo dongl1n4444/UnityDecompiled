@@ -7,7 +7,7 @@
     public sealed class ObjectMemoryInfo
     {
         public int instanceId;
-        public int memorySize;
+        public long memorySize;
         public int count;
         public int reason;
         public string name;

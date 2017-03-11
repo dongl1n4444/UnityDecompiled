@@ -174,7 +174,7 @@
 
         protected void WriteCleanupLoop(CppCodeWriter outerWriter, string variableName, IRuntimeMetadataAccess metadataAccess, Func<CppCodeWriter, string> writeLoopCountVariable)
         {
-            <WriteCleanupLoop>c__AnonStorey6 storey = new <WriteCleanupLoop>c__AnonStorey6 {
+            <WriteCleanupLoop>c__AnonStorey4 storey = new <WriteCleanupLoop>c__AnonStorey4 {
                 variableName = variableName,
                 metadataAccess = metadataAccess,
                 $this = this
@@ -196,7 +196,7 @@
 
         private void WriteLoop(CppCodeWriter outerWriter, Func<CppCodeWriter, string> writeLoopCountVariable, Action<CppCodeWriter> writeLoopBody)
         {
-            <WriteLoop>c__AnonStorey3 storey = new <WriteLoop>c__AnonStorey3 {
+            <WriteLoop>c__AnonStorey1 storey = new <WriteLoop>c__AnonStorey1 {
                 writeLoopCountVariable = writeLoopCountVariable
             };
             if (<>f__am$cache0 == null)
@@ -214,27 +214,18 @@
 
         public override string WriteMarshalEmptyVariableFromNative(CppCodeWriter writer, string variableName, IList<MarshaledParameter> methodParameters, IRuntimeMetadataAccess metadataAccess)
         {
-            <WriteMarshalEmptyVariableFromNative>c__AnonStorey2 storey = new <WriteMarshalEmptyVariableFromNative>c__AnonStorey2 {
-                methodParameters = methodParameters,
-                metadataAccess = metadataAccess,
-                $this = this,
-                emptyVariableName = $"_{DefaultMarshalInfoWriter.CleanVariableName(variableName)}_empty"
-            };
-            ManagedMarshalValue value2 = new ManagedMarshalValue(storey.emptyVariableName);
-            writer.WriteVariable(base._typeRef, storey.emptyVariableName);
+            string objectVariableName = $"_{DefaultMarshalInfoWriter.CleanVariableName(variableName)}_empty";
+            ManagedMarshalValue value2 = new ManagedMarshalValue(objectVariableName);
+            writer.WriteVariable(base._typeRef, objectVariableName);
             object[] args = new object[] { variableName, DefaultMarshalInfoWriter.Naming.Null };
             writer.WriteLine("if ({0} != {1})", args);
             using (new BlockWriter(writer, false))
             {
-                <WriteMarshalEmptyVariableFromNative>c__AnonStorey1 storey2 = new <WriteMarshalEmptyVariableFromNative>c__AnonStorey1 {
-                    <>f__ref$2 = storey,
-                    arraySize = this.MarshaledArraySizeFor(variableName, storey.methodParameters)
-                };
-                object[] objArray2 = new object[] { DefaultMarshalInfoWriter.Naming.ForVariable(this._arrayType), storey.metadataAccess.TypeInfoFor(this._arrayType), storey2.arraySize };
-                writer.WriteLine(value2.Store("reinterpret_cast<{0}>(SZArrayNew({1}, {2}));", objArray2));
-                this.WriteLoop(writer, new Func<CppCodeWriter, string>(storey2.<>m__0), new Action<CppCodeWriter>(storey2.<>m__1));
+                string str2 = this.MarshaledArraySizeFor(variableName, methodParameters);
+                object[] objArray2 = new object[] { DefaultMarshalInfoWriter.Naming.ForVariable(this._arrayType), metadataAccess.TypeInfoFor(this._arrayType), str2 };
+                writer.WriteLine(value2.Store("reinterpret_cast<{0}>(SZArrayNew({1}, {2}))", objArray2));
             }
-            return storey.emptyVariableName;
+            return objectVariableName;
         }
 
         public override string WriteMarshalEmptyVariableToNative(CppCodeWriter writer, ManagedMarshalValue variableName, IList<MarshaledParameter> methodParameters)
@@ -257,7 +248,7 @@
 
         protected void WriteMarshalFromNativeLoop(CppCodeWriter outerWriter, string variableName, ManagedMarshalValue destinationVariable, IList<MarshaledParameter> methodParameters, bool returnValue, bool forNativeWrapperOfManagedMethod, IRuntimeMetadataAccess metadataAccess, Func<CppCodeWriter, string> writeLoopCountVariable)
         {
-            <WriteMarshalFromNativeLoop>c__AnonStorey5 storey = new <WriteMarshalFromNativeLoop>c__AnonStorey5 {
+            <WriteMarshalFromNativeLoop>c__AnonStorey3 storey = new <WriteMarshalFromNativeLoop>c__AnonStorey3 {
                 variableName = variableName,
                 methodParameters = methodParameters,
                 returnValue = returnValue,
@@ -269,7 +260,7 @@
             this.WriteLoop(outerWriter, writeLoopCountVariable, new Action<CppCodeWriter>(storey.<>m__0));
         }
 
-        public abstract override void WriteMarshalOutParameterFromNative(CppCodeWriter writer, string variableName, ManagedMarshalValue destinationVariable, IList<MarshaledParameter> methodParameters, bool returnValue, bool forNativeWrapperOfManagedMethod, IRuntimeMetadataAccess metadataAccess);
+        public abstract override void WriteMarshalOutParameterFromNative(CppCodeWriter writer, string variableName, ManagedMarshalValue destinationVariable, IList<MarshaledParameter> methodParameters, bool returnValue, bool forNativeWrapperOfManagedMethod, bool isIn, IRuntimeMetadataAccess metadataAccess);
         public override void WriteMarshalOutParameterToNative(CppCodeWriter writer, ManagedMarshalValue sourceVariable, string destinationVariable, string managedVariableName, IList<MarshaledParameter> methodParameters, IRuntimeMetadataAccess metadataAccess)
         {
             <WriteMarshalOutParameterToNative>c__AnonStorey0 storey = new <WriteMarshalOutParameterToNative>c__AnonStorey0 {
@@ -295,7 +286,7 @@
 
         protected void WriteMarshalToNativeLoop(CppCodeWriter outerWriter, ManagedMarshalValue sourceVariable, string destinationVariable, string managedVariableName, IRuntimeMetadataAccess metadataAccess, Func<CppCodeWriter, string> writeLoopCountVariable)
         {
-            <WriteMarshalToNativeLoop>c__AnonStorey4 storey = new <WriteMarshalToNativeLoop>c__AnonStorey4 {
+            <WriteMarshalToNativeLoop>c__AnonStorey2 storey = new <WriteMarshalToNativeLoop>c__AnonStorey2 {
                 sourceVariable = sourceVariable,
                 destinationVariable = destinationVariable,
                 managedVariableName = managedVariableName,
@@ -318,7 +309,7 @@
             ((this._elementTypeMarshalInfoWriter is StringMarshalInfoWriter) && (this._marshalType != MarshalType.WindowsRuntime));
 
         [CompilerGenerated]
-        private sealed class <WriteCleanupLoop>c__AnonStorey6
+        private sealed class <WriteCleanupLoop>c__AnonStorey4
         {
             internal ArrayMarshalInfoWriter $this;
             internal IRuntimeMetadataAccess metadataAccess;
@@ -331,7 +322,7 @@
         }
 
         [CompilerGenerated]
-        private sealed class <WriteLoop>c__AnonStorey3
+        private sealed class <WriteLoop>c__AnonStorey1
         {
             internal Func<CppCodeWriter, string> writeLoopCountVariable;
 
@@ -344,33 +335,7 @@
         }
 
         [CompilerGenerated]
-        private sealed class <WriteMarshalEmptyVariableFromNative>c__AnonStorey1
-        {
-            internal ArrayMarshalInfoWriter.<WriteMarshalEmptyVariableFromNative>c__AnonStorey2 <>f__ref$2;
-            internal string arraySize;
-
-            internal string <>m__0(CppCodeWriter bodyWriter) => 
-                this.arraySize;
-
-            internal void <>m__1(CppCodeWriter bodyWriter)
-            {
-                string str = this.<>f__ref$2.$this._elementTypeMarshalInfoWriter.WriteMarshalEmptyVariableFromNative(bodyWriter, "_item", this.<>f__ref$2.methodParameters, this.<>f__ref$2.metadataAccess);
-                object[] args = new object[] { Emit.StoreArrayElement(this.<>f__ref$2.emptyVariableName, "i", str, false) };
-                bodyWriter.WriteLine("{0};", args);
-            }
-        }
-
-        [CompilerGenerated]
-        private sealed class <WriteMarshalEmptyVariableFromNative>c__AnonStorey2
-        {
-            internal ArrayMarshalInfoWriter $this;
-            internal string emptyVariableName;
-            internal IRuntimeMetadataAccess metadataAccess;
-            internal IList<MarshaledParameter> methodParameters;
-        }
-
-        [CompilerGenerated]
-        private sealed class <WriteMarshalFromNativeLoop>c__AnonStorey5
+        private sealed class <WriteMarshalFromNativeLoop>c__AnonStorey3
         {
             internal ArrayMarshalInfoWriter $this;
             internal ManagedMarshalValue destinationVariable;
@@ -401,7 +366,7 @@
         }
 
         [CompilerGenerated]
-        private sealed class <WriteMarshalToNativeLoop>c__AnonStorey4
+        private sealed class <WriteMarshalToNativeLoop>c__AnonStorey2
         {
             internal ArrayMarshalInfoWriter $this;
             internal string destinationVariable;

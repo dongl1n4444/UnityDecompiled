@@ -69,7 +69,7 @@
             writer.WriteLine("bool {0} = false;", args);
             object[] objArray2 = new object[1];
             string[] arguments = new string[] { variableName, DefaultMarshalInfoWriter.Naming.AddressOf(str), metadataAccess.HiddenMethodInfo(this._addRefMethod) };
-            objArray2[0] = Emit.Call(DefaultMarshalInfoWriter.Naming.ForMethod(this._addRefMethod), arguments);
+            objArray2[0] = Emit.Call(metadataAccess.Method(this._addRefMethod), arguments);
             writer.WriteLine("{0};", objArray2);
         }
 
@@ -109,8 +109,6 @@
 
         public override void WriteIncludesForMarshaling(CppCodeWriter writer)
         {
-            writer.AddIncludeForMethodDeclarations(base._typeRef);
-            writer.AddIncludeForMethodDeclarations(this._safeHandleTypeDefinition);
         }
 
         public override void WriteMarshalCleanupEmptyVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, string managedVariableName)
@@ -126,7 +124,7 @@
                 writer.BeginBlock();
                 object[] objArray2 = new object[1];
                 string[] arguments = new string[] { managedVariableName, metadataAccess.HiddenMethodInfo(this._releaseMethod) };
-                objArray2[0] = Emit.Call(DefaultMarshalInfoWriter.Naming.ForMethod(this._releaseMethod), arguments);
+                objArray2[0] = Emit.Call(metadataAccess.Method(this._releaseMethod), arguments);
                 writer.WriteLine("{0};", objArray2);
                 writer.EndBlock(false);
             }

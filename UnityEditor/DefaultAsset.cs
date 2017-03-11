@@ -8,7 +8,7 @@
     /// <summary>
     /// <para>DefaultAsset is used for assets that does not have a specific type (yet).</para>
     /// </summary>
-    public sealed class DefaultAsset : Object
+    public sealed class DefaultAsset : UnityEngine.Object
     {
         internal bool isWarning { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 

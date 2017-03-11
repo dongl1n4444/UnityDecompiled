@@ -53,7 +53,7 @@
             {
                 <>f__am$cache4 = p => p.ToString();
             }
-            return string.Concat(cppCompilationInstruction.IncludePaths.Where<NPath>(<>f__am$cache3).OrderBy<NPath, string>(<>f__am$cache4).Select<NPath, string>(new Func<NPath, string>(this.HashOfAllIncludableFilesInDirectory)));
+            return string.Concat(cppCompilationInstruction.IncludePaths.Where<NPath>(<>f__am$cache3).OrderBy<NPath, string>(<>f__am$cache4, StringComparer.Ordinal).Select<NPath, string>(new Func<NPath, string>(this.HashOfAllIncludableFilesInDirectory)));
         }
 
         public string HashForAllIncludableFilesInDirectories(IEnumerable<NPath> directories)
@@ -66,7 +66,7 @@
             {
                 <>f__am$cache6 = p => p.ToString();
             }
-            return string.Concat(directories.Where<NPath>(<>f__am$cache5).OrderBy<NPath, string>(<>f__am$cache6).Select<NPath, string>(new Func<NPath, string>(this.HashOfAllIncludableFilesInDirectory)));
+            return string.Concat(directories.Where<NPath>(<>f__am$cache5).OrderBy<NPath, string>(<>f__am$cache6, StringComparer.Ordinal).Select<NPath, string>(new Func<NPath, string>(this.HashOfAllIncludableFilesInDirectory)));
         }
 
         private string HashOfAllIncludableFilesInDirectory(NPath directory)
@@ -122,7 +122,7 @@
                 {
                     <>f__am$cache0 = p => p.ToString();
                 }
-                return this.directory.Files(e, true).OrderBy<NPath, string>(<>f__am$cache0);
+                return this.directory.Files(e, true).OrderBy<NPath, string>(<>f__am$cache0, StringComparer.Ordinal);
             }
 
             private static string <>m__1(NPath p) => 

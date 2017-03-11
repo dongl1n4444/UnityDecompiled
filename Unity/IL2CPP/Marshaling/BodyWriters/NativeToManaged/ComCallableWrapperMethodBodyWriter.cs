@@ -11,7 +11,7 @@
     using Unity.IL2CPP.Marshaling.BodyWriters;
     using Unity.IL2CPP.Metadata;
 
-    internal class ComCallableWrapperMethodBodyWriter : NativeToManagedInteropMethodBodyWriter
+    public class ComCallableWrapperMethodBodyWriter : NativeToManagedInteropMethodBodyWriter
     {
         [CompilerGenerated]
         private static Func<MethodDefinition, bool> <>f__am$cache0;
@@ -84,17 +84,18 @@
 
         protected virtual void WriteInteropCallStatementWithinTryBlock(CppCodeWriter writer, string[] localVariableNames, IRuntimeMetadataAccess metadataAccess)
         {
+            string thisArgument = $"{InteropMethodInfo.Naming.ThisParameterName}Value";
             if (base._managedMethod.DeclaringType.IsValueType())
             {
-                object[] args = new object[] { InteropMethodInfo.Naming.ForTypeNameOnly(base._managedMethod.DeclaringType), InteropMethodInfo.Naming.ThisParameterName, metadataAccess.TypeInfoFor(base._managedMethod.DeclaringType), this.ManagedObjectExpression };
+                object[] args = new object[] { InteropMethodInfo.Naming.ForTypeNameOnly(base._managedMethod.DeclaringType), thisArgument, metadataAccess.TypeInfoFor(base._managedMethod.DeclaringType), this.ManagedObjectExpression };
                 writer.WriteLine("{0}* {1} = ({0}*)UnBox({3}, {2});", args);
             }
             else
             {
-                object[] objArray2 = new object[] { InteropMethodInfo.Naming.ForVariable(base._managedMethod.DeclaringType), InteropMethodInfo.Naming.ThisParameterName, this.ManagedObjectExpression };
+                object[] objArray2 = new object[] { InteropMethodInfo.Naming.ForVariable(base._managedMethod.DeclaringType), thisArgument, this.ManagedObjectExpression };
                 writer.WriteLine("{0} {1} = ({0}){2};", objArray2);
             }
-            string block = base.GetMethodCallExpression(metadataAccess, InteropMethodInfo.Naming.ThisParameterName, localVariableNames);
+            string block = base.GetMethodCallExpression(metadataAccess, thisArgument, localVariableNames);
             if (base.GetMethodReturnType().ReturnType.MetadataType != MetadataType.Void)
             {
                 object[] objArray3 = new object[] { InteropMethodInfo.Naming.ForInteropReturnValue(), block };

@@ -12,9 +12,9 @@
         private ArgumentCache m_Arguments = new ArgumentCache();
         [FormerlySerializedAs("enabled"), FormerlySerializedAs("m_Enabled"), SerializeField]
         private UnityEventCallState m_CallState = UnityEventCallState.RuntimeOnly;
-        [SerializeField, FormerlySerializedAs("methodName")]
+        [FormerlySerializedAs("methodName"), SerializeField]
         private string m_MethodName;
-        [SerializeField, FormerlySerializedAs("mode")]
+        [FormerlySerializedAs("mode"), SerializeField]
         private PersistentListenerMode m_Mode = PersistentListenerMode.EventDefined;
         [FormerlySerializedAs("instance"), SerializeField]
         private UnityEngine.Object m_Target;

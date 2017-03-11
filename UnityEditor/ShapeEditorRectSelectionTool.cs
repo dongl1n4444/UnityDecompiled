@@ -11,8 +11,8 @@
         [CompilerGenerated]
         private static Action<Rect, ShapeEditor.SelectionType> <>f__am$cache0;
         [CompilerGenerated]
-        private static Action <>f__am$cache1;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private static System.Action <>f__am$cache1;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IGUIUtility <guiUtility>k__BackingField;
         private const float k_MinSelectionSize = 6f;
         private bool m_RectSelecting;
@@ -20,8 +20,10 @@
         private Vector2 m_SelectMousePoint;
         private Vector2 m_SelectStartPoint;
 
-        public event Action ClearSelection;
+        [field: DebuggerBrowsable(0), CompilerGenerated]
+        public event System.Action ClearSelection;
 
+        [field: DebuggerBrowsable(0), CompilerGenerated]
         public event Action<Rect, ShapeEditor.SelectionType> RectSelect;
 
         public ShapeEditorRectSelectionTool(IGUIUtility gu)
@@ -33,7 +35,7 @@
             this.RectSelect = <>f__am$cache0;
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Action(ShapeEditorRectSelectionTool.<ClearSelection>m__1);
+                <>f__am$cache1 = new System.Action(ShapeEditorRectSelectionTool.<ClearSelection>m__1);
             }
             this.ClearSelection = <>f__am$cache1;
             this.guiUtility = gu;

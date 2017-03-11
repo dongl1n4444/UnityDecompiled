@@ -3,11 +3,14 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using UnityEngine;
 
     [CustomEditor(typeof(ParticleSystem)), CanEditMultipleObjects]
     internal class ParticleSystemInspector : Editor, ParticleEffectUIOwner
     {
+        [CompilerGenerated]
+        private static Func<ParticleSystem, bool> <>f__am$cache0;
         private GUIContent closeWindowText = new GUIContent("Close Editor");
         private GUIContent hideWindowText = new GUIContent("Hide Editor");
         private ParticleEffectUI m_ParticleEffectUI;
@@ -26,7 +29,7 @@
 
         public override void DrawPreview(Rect previewArea)
         {
-            Object[] targets = new Object[] { base.targets[0] };
+            UnityEngine.Object[] targets = new UnityEngine.Object[] { base.targets[0] };
             ObjectPreview.DrawPreview(this, previewArea, targets);
         }
 
@@ -46,18 +49,23 @@
 
         private void Init(bool forceInit)
         {
-            IEnumerable<ParticleSystem> source = base.targets.OfType<ParticleSystem>();
-            if ((source != null) && source.Any<ParticleSystem>())
+            if (<>f__am$cache0 == null)
             {
-                if (this.m_ParticleEffectUI == null)
-                {
-                    this.m_ParticleEffectUI = new ParticleEffectUI(this);
-                    this.m_ParticleEffectUI.InitializeIfNeeded(source);
-                }
-                else if (forceInit)
-                {
-                    this.m_ParticleEffectUI.InitializeIfNeeded(source);
-                }
+                <>f__am$cache0 = p => p != null;
+            }
+            IEnumerable<ParticleSystem> source = Enumerable.Where<ParticleSystem>(base.targets.OfType<ParticleSystem>(), <>f__am$cache0);
+            if ((source == null) || !source.Any<ParticleSystem>())
+            {
+                this.m_ParticleEffectUI = null;
+            }
+            else if (this.m_ParticleEffectUI == null)
+            {
+                this.m_ParticleEffectUI = new ParticleEffectUI(this);
+                this.m_ParticleEffectUI.InitializeIfNeeded(source);
+            }
+            else if (forceInit)
+            {
+                this.m_ParticleEffectUI.InitializeIfNeeded(source);
             }
         }
 
@@ -114,14 +122,6 @@
 
         public override void OnPreviewSettings()
         {
-        }
-
-        public void OnSceneGUI()
-        {
-            if (this.ShouldShowInspector() && (this.m_ParticleEffectUI != null))
-            {
-                this.m_ParticleEffectUI.OnSceneGUI();
-            }
         }
 
         public void OnSceneViewGUI(SceneView sceneView)
@@ -196,6 +196,7 @@
                         {
                             this.Clear();
                             ParticleSystemWindow.CreateWindow();
+                            ParticleSystemWindow.GetInstance().customEditor = this;
                             GUIUtility.ExitGUI();
                         }
                     }
@@ -206,6 +207,7 @@
 
         private void UndoRedoPerformed()
         {
+            this.Init(true);
             if (this.m_ParticleEffectUI != null)
             {
                 this.m_ParticleEffectUI.UndoRedoPerformed();
@@ -214,6 +216,9 @@
 
         public override bool UseDefaultMargins() => 
             false;
+
+        public Editor customEditor =>
+            this;
 
         public static GUIContent playBackTitle
         {

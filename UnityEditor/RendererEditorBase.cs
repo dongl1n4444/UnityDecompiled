@@ -28,7 +28,7 @@
         protected void RenderCommonProbeFields(bool useMiniStyle)
         {
             bool isDeferredRenderingPath = SceneView.IsUsingDeferredRenderingPath();
-            bool isDeferredReflections = isDeferredRenderingPath && (GraphicsSettings.GetShaderMode(BuiltinShaderType.DeferredReflections) != BuiltinShaderMode.Disabled);
+            bool isDeferredReflections = isDeferredRenderingPath && (GraphicsSettings.GetShaderMode(BuiltinShaderType.DeferredReflections) != UnityEngine.Rendering.BuiltinShaderMode.Disabled);
             this.m_Probes.RenderReflectionProbeUsage(useMiniStyle, isDeferredRenderingPath, isDeferredReflections);
             this.m_Probes.RenderProbeAnchor(useMiniStyle);
         }
@@ -63,19 +63,19 @@
             private GUIContent[] m_LightProbeBlendModeOptions;
             private SerializedProperty m_LightProbeUsage;
             private string[] m_LightProbeUsageNames;
-            private GUIContent m_LightProbeUsageStyle = EditorGUIUtility.TextContent("Light Probes|Probe-based lighting interpolation mode. This mode is disabled when the object has the lightmap static flag set.");
+            private GUIContent m_LightProbeUsageStyle = EditorGUIUtility.TextContent("Light Probes|Specifies how Light Probes will handle the interpolation of lighting and occlusion. Disabled if the object is set to Lightmap Static.");
             private GUIContent m_LightProbeVolumeNote = EditorGUIUtility.TextContent("A valid Light Probe Proxy Volume component could not be found.");
             private SerializedProperty m_LightProbeVolumeOverride;
             private GUIContent m_LightProbeVolumeOverrideStyle = EditorGUIUtility.TextContent("Proxy Volume Override|If set, the Renderer will use the Light Probe Proxy Volume component from another GameObject.");
             private GUIContent m_LightProbeVolumeUnsupportedNote = EditorGUIUtility.TextContent("The Light Probe Proxy Volume feature is unsupported by the current graphics hardware or API configuration. Simple 'Blend Probes' mode will be used instead.");
             private GUIContent m_LightProbeVolumeUnsupportedOnTreesNote = EditorGUIUtility.TextContent("The Light Probe Proxy Volume feature is not supported on tree rendering. Simple 'Blend Probes' mode will be used instead.");
             private SerializedProperty m_ProbeAnchor;
-            private GUIContent m_ProbeAnchorStyle = EditorGUIUtility.TextContent("Anchor Override|If set, the Renderer will use this Transform's position to sample light probes and find the matching reflection probe.");
+            private GUIContent m_ProbeAnchorStyle = EditorGUIUtility.TextContent("Anchor Override|Specifies the Transform position that will be used for sampling the light probes and reflection probes.");
             private SerializedProperty m_ReceiveShadows;
             private SerializedProperty m_ReflectionProbeUsage;
             private string[] m_ReflectionProbeUsageNames;
             private GUIContent[] m_ReflectionProbeUsageOptions;
-            private GUIContent m_ReflectionProbeUsageStyle = EditorGUIUtility.TextContent("Reflection Probes");
+            private GUIContent m_ReflectionProbeUsageStyle = EditorGUIUtility.TextContent("Reflection Probes|Specifies if or how the object is affected by reflections in the Scene.  This property cannot be disabled in deferred rendering modes.");
 
             public Probes()
             {
@@ -155,15 +155,15 @@
             internal bool IsUsingLightProbeProxyVolume(int selectionCount) => 
                 (((selectionCount == 1) && (this.m_LightProbeUsage.intValue == 2)) || (((selectionCount > 1) && !this.m_LightProbeUsage.hasMultipleDifferentValues) && (this.m_LightProbeUsage.intValue == 2)));
 
-            internal void OnGUI(Object[] selection, Renderer renderer, bool useMiniStyle)
+            internal void OnGUI(UnityEngine.Object[] selection, Renderer renderer, bool useMiniStyle)
             {
                 int selectionCount = 1;
                 bool isDeferredRenderingPath = SceneView.IsUsingDeferredRenderingPath();
-                bool isDeferredReflections = isDeferredRenderingPath && (GraphicsSettings.GetShaderMode(BuiltinShaderType.DeferredReflections) != BuiltinShaderMode.Disabled);
+                bool isDeferredReflections = isDeferredRenderingPath && (GraphicsSettings.GetShaderMode(BuiltinShaderType.DeferredReflections) != UnityEngine.Rendering.BuiltinShaderMode.Disabled);
                 bool usesLightMaps = false;
                 if (selection != null)
                 {
-                    foreach (Object obj2 in selection)
+                    foreach (UnityEngine.Object obj2 in selection)
                     {
                         if (LightmapEditorSettings.IsLightmappedOrDynamicLightmappedForRendering((Renderer) obj2))
                         {
@@ -312,7 +312,7 @@
                         position.x += position.width;
                         position.width = num4;
                         ReflectionProbeBlendInfo info = blendInfos[i];
-                        EditorGUI.ObjectField(position, info.probe, typeof(ReflectionProbe), true);
+                        EditorGUI.ObjectField(position, info.probe, typeof(UnityEngine.ReflectionProbe), true);
                         position.x += position.width;
                         position.width = num2;
                         ReflectionProbeBlendInfo info2 = blendInfos[i];

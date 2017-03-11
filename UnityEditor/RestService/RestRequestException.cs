@@ -8,7 +8,7 @@
     {
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UnityEditor.RestService.HttpStatusCode <HttpStatusCode>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <RestErrorDescription>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <RestErrorString>k__BackingField;

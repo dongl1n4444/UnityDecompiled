@@ -11,7 +11,7 @@
         private bool <IsFreeFunction>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <IsThreadSafe>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <Name>k__BackingField;
 
         public bool IsFreeFunction { get; set; }

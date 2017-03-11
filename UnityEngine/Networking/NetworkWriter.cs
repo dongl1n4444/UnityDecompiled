@@ -95,6 +95,14 @@
             return destinationArray;
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(bool value)
         {
             if (value)
@@ -107,16 +115,40 @@
             }
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(byte value)
         {
             this.m_Buffer.WriteByte(value);
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(char value)
         {
             this.m_Buffer.WriteByte((byte) value);
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(decimal value)
         {
             int[] bits = decimal.GetBits(value);
@@ -126,38 +158,94 @@
             this.Write(bits[3]);
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(double value)
         {
             s_FloatConverter.doubleValue = value;
             this.Write(s_FloatConverter.longValue);
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(short value)
         {
             this.m_Buffer.WriteByte2((byte) (value & 0xff), (byte) ((value >> 8) & 0xff));
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(int value)
         {
             this.m_Buffer.WriteByte4((byte) (value & 0xff), (byte) ((value >> 8) & 0xff), (byte) ((value >> 0x10) & 0xff), (byte) ((value >> 0x18) & 0xff));
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(long value)
         {
             this.m_Buffer.WriteByte8((byte) (value & 0xffL), (byte) ((value >> 8) & 0xffL), (byte) ((value >> 0x10) & 0xffL), (byte) ((value >> 0x18) & 0xffL), (byte) ((value >> 0x20) & 0xffL), (byte) ((value >> 40) & 0xffL), (byte) ((value >> 0x30) & 0xffL), (byte) ((value >> 0x38) & 0xffL));
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(sbyte value)
         {
             this.m_Buffer.WriteByte((byte) value);
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(float value)
         {
             s_FloatConverter.floatValue = value;
             this.Write(s_FloatConverter.intValue);
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(string value)
         {
             if (value == null)
@@ -177,21 +265,53 @@
             }
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(ushort value)
         {
             this.m_Buffer.WriteByte2((byte) (value & 0xff), (byte) ((value >> 8) & 0xff));
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(uint value)
         {
             this.m_Buffer.WriteByte4((byte) (value & 0xff), (byte) ((value >> 8) & 0xff), (byte) ((value >> 0x10) & 0xff), (byte) ((value >> 0x18) & 0xff));
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(ulong value)
         {
             this.m_Buffer.WriteByte8((byte) (value & ((ulong) 0xffL)), (byte) ((value >> 8) & ((ulong) 0xffL)), (byte) ((value >> 0x10) & ((ulong) 0xffL)), (byte) ((value >> 0x18) & ((ulong) 0xffL)), (byte) ((value >> 0x20) & ((ulong) 0xffL)), (byte) ((value >> 40) & ((ulong) 0xffL)), (byte) ((value >> 0x30) & ((ulong) 0xffL)), (byte) ((value >> 0x38) & ((ulong) 0xffL)));
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(Color value)
         {
             this.Write(value.r);
@@ -200,6 +320,14 @@
             this.Write(value.a);
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(Color32 value)
         {
             this.Write(value.r);
@@ -209,9 +337,13 @@
         }
 
         /// <summary>
-        /// <para>This writes a reference to a GameObject with a NetworkIdentity component to the stream. The object should have been spawned for clients to know about it.</para>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
         /// </summary>
         /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(GameObject value)
         {
             if (value == null)
@@ -236,6 +368,14 @@
             }
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(Matrix4x4 value)
         {
             this.Write(value.m00);
@@ -256,11 +396,27 @@
             this.Write(value.m33);
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(MessageBase msg)
         {
             msg.Serialize(this);
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(NetworkHash128 value)
         {
             this.Write(value.i0);
@@ -281,6 +437,14 @@
             this.Write(value.i15);
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(NetworkIdentity value)
         {
             if (value == null)
@@ -293,22 +457,54 @@
             }
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(NetworkInstanceId value)
         {
             this.WritePackedUInt32(value.Value);
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(NetworkSceneId value)
         {
             this.WritePackedUInt32(value.Value);
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(Plane value)
         {
             this.Write(value.normal);
             this.Write(value.distance);
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(Quaternion value)
         {
             this.Write(value.x);
@@ -317,12 +513,28 @@
             this.Write(value.w);
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(Ray value)
         {
             this.Write(value.direction);
             this.Write(value.origin);
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(Rect value)
         {
             this.Write(value.xMin);
@@ -331,6 +543,14 @@
             this.Write(value.height);
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(Transform value)
         {
             if ((value == null) || (value.gameObject == null))
@@ -355,12 +575,28 @@
             }
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(Vector2 value)
         {
             this.Write(value.x);
             this.Write(value.y);
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(Vector3 value)
         {
             this.Write(value.x);
@@ -368,6 +604,14 @@
             this.Write(value.z);
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(Vector4 value)
         {
             this.Write(value.x);
@@ -376,6 +620,14 @@
             this.Write(value.w);
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(byte[] buffer, int count)
         {
             if (count > 0xffff)
@@ -391,6 +643,14 @@
             }
         }
 
+        /// <summary>
+        /// <para>This writes a reference to an object, value, buffer or network message, together with a NetworkIdentity component to the stream.</para>
+        /// </summary>
+        /// <param name="value">The object to write.</param>
+        /// <param name="buffer">The byte buffer to write.</param>
+        /// <param name="count">The number of bytes in the byte buffer to write.</param>
+        /// <param name="offset">The byte buffer array element to start writing from.</param>
+        /// <param name="msg">The network message to write.</param>
         public void Write(byte[] buffer, int offset, int count)
         {
             if (count > 0xffff)

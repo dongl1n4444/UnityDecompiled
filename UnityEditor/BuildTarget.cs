@@ -6,7 +6,7 @@
     /// <summary>
     /// <para>Target build platform.</para>
     /// </summary>
-    [NativeEnum(Name="BuildTargetPlatform")]
+    [NativeEnum(Name="BuildTargetPlatform", Header="Runtime/Serialize/SerializationMetaFlags.h")]
     public enum BuildTarget
     {
         /// <summary>
@@ -61,15 +61,15 @@
         /// </summary>
         StandaloneLinuxUniversal = 0x19,
         /// <summary>
-        /// <para>Build an OS X standalone (Intel only).</para>
+        /// <para>Build a macOS standalone (Intel only).</para>
         /// </summary>
         StandaloneOSXIntel = 4,
         /// <summary>
-        /// <para>Build an OSX Intel 64-bit standalone.</para>
+        /// <para>Build a macOS Intel 64-bit standalone.</para>
         /// </summary>
         StandaloneOSXIntel64 = 0x1b,
         /// <summary>
-        /// <para>Build a universal OSX standalone.</para>
+        /// <para>Build a universal macOS standalone.</para>
         /// </summary>
         StandaloneOSXUniversal = 2,
         /// <summary>

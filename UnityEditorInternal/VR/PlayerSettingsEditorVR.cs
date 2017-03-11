@@ -7,6 +7,7 @@
     using UnityEditor;
     using UnityEditorInternal;
     using UnityEngine;
+    using UnityEngine.Rendering;
 
     internal class PlayerSettingsEditorVR
     {
@@ -59,6 +60,10 @@
         {
             if (this.m_VRDeviceActiveUI.ContainsKey(target))
             {
+                if ((target == BuildTargetGroup.iPhone) && (devices.Contains<string>("cardboard") && (PlayerSettings.iOS.cameraUsageDescription == "")))
+                {
+                    PlayerSettings.iOS.cameraUsageDescription = "Used to scan QR codes";
+                }
                 VREditor.SetVREnabledDevicesOnTargetGroup(target, devices);
                 this.m_VRDeviceActiveUI[target].list = devices;
             }
@@ -140,7 +145,7 @@
                 this.m_MapVRUIStringToDeviceKey[editor.deviceNameUI] = editor.deviceNameKey;
                 if (!this.m_CustomOptions.TryGetValue(editor.deviceNameKey, out options))
                 {
-                    Type type = Type.GetType("UnityEditorInternal.VR.VRCustomOptions" + editor.deviceNameKey, false, true);
+                    System.Type type = System.Type.GetType("UnityEditorInternal.VR.VRCustomOptions" + editor.deviceNameKey, false, true);
                     if (type != null)
                     {
                         options = (VRCustomOptions) Activator.CreateInstance(type);
@@ -178,6 +183,56 @@
             }
         }
 
+        internal void SinglePassStereoGUI(BuildTargetGroup targetGroup, SerializedProperty stereoRenderingPath)
+        {
+            bool flag = TargetSupportsSinglePassStereoRendering(targetGroup);
+            bool flag2 = TargetSupportsStereoInstancingRendering(targetGroup);
+            if (PlayerSettings.virtualRealitySupported)
+            {
+                int num = (1 + (!flag ? 0 : 1)) + (!flag2 ? 0 : 1);
+                GUIContent[] displayedOptions = new GUIContent[num];
+                int[] optionValues = new int[num];
+                int[] numArray1 = new int[3];
+                numArray1[1] = 1;
+                numArray1[2] = 2;
+                int[] numArray2 = numArray1;
+                int index = 0;
+                displayedOptions[index] = Styles.kStereoRenderingMethodsAll[0];
+                optionValues[index++] = numArray2[0];
+                if (flag)
+                {
+                    displayedOptions[index] = Styles.kStereoRenderingMethodsAll[1];
+                    optionValues[index++] = numArray2[1];
+                }
+                if (flag2)
+                {
+                    displayedOptions[index] = Styles.kStereoRenderingMethodsAll[2];
+                    optionValues[index++] = numArray2[2];
+                }
+                if (!flag2 && (stereoRenderingPath.intValue == 2))
+                {
+                    stereoRenderingPath.intValue = 1;
+                }
+                if (!flag && (stereoRenderingPath.intValue == 1))
+                {
+                    stereoRenderingPath.intValue = 0;
+                }
+                EditorGUILayout.IntPopup(stereoRenderingPath, displayedOptions, optionValues, EditorGUIUtility.TextContent("Stereo Rendering Method*"), new GUILayoutOption[0]);
+                if ((stereoRenderingPath.intValue == 1) && (targetGroup == BuildTargetGroup.Android))
+                {
+                    GraphicsDeviceType[] graphicsAPIs = PlayerSettings.GetGraphicsAPIs(BuildTarget.Android);
+                    if ((graphicsAPIs.Length > 0) && (graphicsAPIs[0] == GraphicsDeviceType.OpenGLES3))
+                    {
+                        EditorGUILayout.HelpBox(Styles.singlepassAndroidWarning2.text, MessageType.Warning);
+                    }
+                    else
+                    {
+                        EditorGUILayout.HelpBox(Styles.singlepassAndroidWarning.text, MessageType.Error);
+                    }
+                }
+            }
+        }
+
         internal bool TargetGroupSupportsVirtualReality(BuildTargetGroup targetGroup)
         {
             if (!this.m_AllVRDevicesForBuildTarget.ContainsKey(targetGroup))
@@ -187,6 +242,12 @@
             VRDeviceInfoEditor[] editorArray = this.m_AllVRDevicesForBuildTarget[targetGroup];
             return (editorArray.Length > 0);
         }
+
+        private static bool TargetSupportsSinglePassStereoRendering(BuildTargetGroup targetGroup) => 
+            (((targetGroup == BuildTargetGroup.Standalone) || (targetGroup == BuildTargetGroup.Android)) || (targetGroup == BuildTargetGroup.PS4));
+
+        private static bool TargetSupportsStereoInstancingRendering(BuildTargetGroup targetGroup) => 
+            (targetGroup == BuildTargetGroup.WSA);
 
         private void VRDevicesGUIOneBuildTarget(BuildTargetGroup targetGroup)
         {
@@ -275,6 +336,14 @@
             {
                 this.$this.SelectVRDeviceElement(this.targetGroup, list);
             }
+        }
+
+        private static class Styles
+        {
+            public static readonly GUIContent[] kStereoRenderingMethodsAll = new GUIContent[] { new GUIContent("Multi Pass"), new GUIContent("Single Pass"), new GUIContent("Single Pass Instanced") };
+            public static readonly GUIContent singlepassAndroidWarning = EditorGUIUtility.TextContent("Single-pass stereo rendering requires OpenGL ES 3. Please make sure that it's the first one listed under Graphics APIs.");
+            public static readonly GUIContent singlepassAndroidWarning2 = EditorGUIUtility.TextContent("Single-pass stereo rendering is only supported on Daydream devices.");
+            public static readonly GUIContent singlePassStereoRendering = EditorGUIUtility.TextContent("Single-Pass Stereo Rendering");
         }
     }
 }

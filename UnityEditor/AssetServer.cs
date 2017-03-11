@@ -152,7 +152,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int GetServerItemChangeset(string guid, int changeset);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        internal static extern AssetStatus GetStatus(Object asset);
+        internal static extern AssetStatus GetStatus(UnityEngine.Object asset);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern AssetStatus GetStatusGUID(string guidString);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]

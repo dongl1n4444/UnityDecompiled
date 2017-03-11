@@ -16,39 +16,39 @@
     {
         [CompilerGenerated]
         private static Func<TreeViewItem, int> <>f__am$cache0;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Action<int> <contextClickItemCallback>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Action <contextClickOutsideItemsCallback>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private System.Action <contextClickOutsideItemsCallback>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ITreeViewDataSource <data>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <deselectOnUnhandledMouseDown>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private Action<int[], bool> <dragEndedCallback>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private ITreeViewDragging <dragging>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Action <expandedStateChanged>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private System.Action <expandedStateChanged>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private ITreeViewGUI <gui>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private GUIStyle <horizontalScrollbarStyle>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Action<int> <itemDoubleClickedCallback>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-        private Action <keyboardInputCallback>k__BackingField;
+        private System.Action <keyboardInputCallback>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private Action<int, Rect> <onGUIRowCallback>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private Action<Vector2> <scrollChanged>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Action<string> <searchChanged>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Action<int[]> <selectionChangedCallback>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private TreeViewState <state>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private GUIStyle <verticalScrollbarStyle>k__BackingField;
         internal const string kExpansionAnimationPrefKey = "TreeViewExpansionAnimation";
         private const float kSpaceForScrollBar = 16f;
@@ -108,9 +108,9 @@
             return (((item != null) && this.data.IsRenamingItemAllowed(item)) && this.gui.BeginRename(item, delay));
         }
 
-        private void ChangeExpandedState(TreeViewItem item, bool expand)
+        private void ChangeExpandedState(TreeViewItem item, bool expand, bool includeChildren)
         {
-            if (Event.current.alt)
+            if (includeChildren)
             {
                 this.data.SetExpandedWithChildren(item, expand);
             }
@@ -209,7 +209,7 @@
         {
             if ((row < 0) || (row >= this.data.rowCount))
             {
-                Debug.LogError(string.Concat(new object[] { "Invalid. Org row: ", row, " Num rows ", this.data.rowCount }));
+                UnityEngine.Debug.LogError(string.Concat(new object[] { "Invalid. Org row: ", row, " Num rows ", this.data.rowCount }));
             }
             else
             {
@@ -280,7 +280,7 @@
         {
             if (!setup.expanding)
             {
-                this.ChangeExpandedState(setup.item, false);
+                this.ChangeExpandedState(setup.item, false, setup.includeChildren);
             }
         }
 
@@ -322,7 +322,7 @@
         }
 
         private float GetAnimationDuration(float height) => 
-            ((height <= 60f) ? ((height * 0.1f) / 60f) : 0.1f);
+            ((height <= 60f) ? ((height * 0.07f) / 60f) : 0.07f);
 
         public Vector2 GetContentSize() => 
             this.gui.GetTotalSize();
@@ -558,7 +558,7 @@
                     if (Event.current.clickCount != 2)
                     {
                         List<int> draggedItemIDs = this.GetNewSelection(item, true, false);
-                        if ((this.dragging != null) && this.dragging.CanStartDrag(item, draggedItemIDs, Event.current.mousePosition))
+                        if (((this.dragging != null) && (draggedItemIDs.Count != 0)) && this.dragging.CanStartDrag(item, draggedItemIDs, Event.current.mousePosition))
                         {
                             this.m_DragSelection = draggedItemIDs;
                             DragAndDropDelay stateObject = (DragAndDropDelay) GUIUtility.GetStateObject(typeof(DragAndDropDelay), itemControlID);
@@ -664,7 +664,7 @@
             {
                 dragging.OnInitialize();
             }
-            this.expandedStateChanged = (Action) Delegate.Combine(this.expandedStateChanged, new Action(this.ExpandedStateHasChanged));
+            this.expandedStateChanged = (System.Action) Delegate.Combine(this.expandedStateChanged, new System.Action(this.ExpandedStateHasChanged));
             this.m_FramingAnimFloat = new AnimFloat(this.state.scrollPos.y, new UnityAction(this.AnimatedScrollChanged));
         }
 
@@ -838,6 +838,7 @@
 
         public void OffsetSelection(int offset)
         {
+            this.expansionAnimator.SkipAnimating();
             IList<TreeViewItem> rows = this.data.GetRows();
             if (rows.Count != 0)
             {
@@ -857,8 +858,12 @@
         {
             int num;
             int num2;
-            this.m_TotalRect = rect;
             this.m_KeyboardControlID = keyboardControlID;
+            Event current = Event.current;
+            if (current.type == EventType.Repaint)
+            {
+                this.m_TotalRect = rect;
+            }
             if (this.m_GUIView == null)
             {
                 this.m_GUIView = GUIView.current;
@@ -867,7 +872,6 @@
             {
                 this.EndNameEditing(true);
             }
-            Event current = Event.current;
             if (this.m_GrabKeyboardFocus || ((current.type == EventType.MouseDown) && this.m_TotalRect.Contains(current.mousePosition)))
             {
                 this.m_GrabKeyboardFocus = false;
@@ -1043,7 +1047,7 @@
                 second.AddRange(ids.Except<int>(second));
                 if (ids.Count != second.Count)
                 {
-                    Debug.LogError(string.Concat(new object[] { "SortIDsInVisiblityOrder failed: ", ids.Count, " != ", second.Count }));
+                    UnityEngine.Debug.LogError(string.Concat(new object[] { "SortIDsInVisiblityOrder failed: ", ids.Count, " != ", second.Count }));
                 }
             }
             return second;
@@ -1051,11 +1055,12 @@
 
         public void UserInputChangedExpandedState(TreeViewItem item, int row, bool expand)
         {
+            bool alt = Event.current.alt;
             if (this.useExpansionAnimation)
             {
                 if (expand)
                 {
-                    this.ChangeExpandedState(item, true);
+                    this.ChangeExpandedState(item, true, alt);
                 }
                 int startRow = row + 1;
                 int lastChildRowUnder = this.GetLastChildRowUnder(row);
@@ -1069,6 +1074,7 @@
                     startRowRect = this.gui.GetRowRect(startRow, width),
                     rowsRect = rect2,
                     expanding = expand,
+                    includeChildren = alt,
                     animationEnded = new Action<TreeViewAnimationInput>(this.ExpansionAnimationEnded),
                     item = item,
                     treeView = this
@@ -1077,7 +1083,7 @@
             }
             else
             {
-                this.ChangeExpandedState(item, expand);
+                this.ChangeExpandedState(item, expand, alt);
             }
         }
 
@@ -1086,7 +1092,7 @@
 
         public Action<int> contextClickItemCallback { get; set; }
 
-        public Action contextClickOutsideItemsCallback { get; set; }
+        public System.Action contextClickOutsideItemsCallback { get; set; }
 
         public ITreeViewDataSource data { get; set; }
 
@@ -1096,7 +1102,7 @@
 
         public ITreeViewDragging dragging { get; set; }
 
-        public Action expandedStateChanged { get; set; }
+        public System.Action expandedStateChanged { get; set; }
 
         public TreeViewItemExpansionAnimator expansionAnimator =>
             this.m_ExpansionAnimator;
@@ -1113,7 +1119,7 @@
 
         public Action<int> itemDoubleClickedCallback { get; set; }
 
-        public Action keyboardInputCallback { get; set; }
+        public System.Action keyboardInputCallback { get; set; }
 
         public Action<int, Rect> onGUIRowCallback { get; set; }
 
@@ -1127,7 +1133,7 @@
                 this.state.searchString;
             set
             {
-                if (this.state.searchString != value)
+                if (!object.ReferenceEquals(this.state.searchString, value) && (this.state.searchString != value))
                 {
                     this.state.searchString = value;
                     this.data.OnSearchChanged();

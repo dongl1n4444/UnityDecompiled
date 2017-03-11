@@ -2,43 +2,67 @@
 {
     using Mono.Cecil;
     using System;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
     using Unity.IL2CPP;
+    using Unity.IL2CPP.ILPreProcessor;
     using Unity.IL2CPP.IoC;
     using Unity.IL2CPP.IoCServices;
+    using Unity.IL2CPP.Marshaling.BodyWriters;
+    using Unity.IL2CPP.Marshaling.BodyWriters.NativeToManaged;
 
-    internal sealed class EnumerableCCWWriter : EnumerableCCWWriterBase
+    internal sealed class EnumerableCCWWriter : IProjectedComCallableWrapperMethodWriter
     {
+        [CompilerGenerated]
+        private static Func<MethodDefinition, bool> <>f__am$cache0;
         [Inject]
-        public static IWindowsRuntimeProjectionsInitializer WindowsRuntimeProjectionsInitializer;
+        public static IWindowsRuntimeProjections WindowsRuntimeProjections;
 
-        private EnumerableCCWWriter(TypeReference type) : base(type)
+        public ComCallableWrapperMethodBodyWriter GetBodyWriter(MethodReference method)
         {
+            TypeReference declaringType = method.DeclaringType;
+            Unity.IL2CPP.ILPreProcessor.TypeResolver resolver = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(declaringType);
+            TypeReference typeReference = WindowsRuntimeProjections.ProjectToCLR(declaringType);
+            Unity.IL2CPP.ILPreProcessor.TypeResolver resolver2 = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(typeReference);
+            if (<>f__am$cache0 == null)
+            {
+                <>f__am$cache0 = m => m.Name == "GetEnumerator";
+            }
+            MethodDefinition definition = typeReference.Resolve().Methods.First<MethodDefinition>(<>f__am$cache0);
+            MethodReference getEnumeratorMethod = resolver2.Resolve(definition);
+            return new FirstMethodBodyWriter(getEnumeratorMethod, method, resolver.Resolve(method.ReturnType));
         }
 
-        public static void WriteMethodDefinitions(TypeReference type, CppCodeWriter writer)
+        public void WriteDependenciesFor(CppCodeWriter writer, TypeReference interfaceType)
         {
-            bool flag = EnumeratorToBindableIteratorAdapterWriter.WriteDefinitions(writer);
-            if (flag)
+            if (interfaceType.Resolve().HasGenericParameters)
             {
-                EnumerableCCWWriter writer2 = new EnumerableCCWWriter(type);
-                flag = writer2.HasIEnumerable();
-                if (flag)
-                {
-                    writer2.WriteMethodDefinitions(writer);
-                }
+                GenericEnumeratorToIteratorAdapterWriter.WriteDefinitions(writer, (GenericInstanceType) interfaceType);
             }
-            WindowsRuntimeProjectionsInitializer.HasIEnumerableCCW = flag;
+            else
+            {
+                EnumeratorToBindableIteratorAdapterWriter.WriteDefinitions(writer);
+            }
         }
 
-        public static void WriteTypeDefinition(TypeReference type, CppCodeWriter writer)
+        private sealed class FirstMethodBodyWriter : ProjectedMethodBodyWriter
         {
-            EnumerableCCWWriter writer2 = new EnumerableCCWWriter(type);
-            bool flag = writer2.HasIEnumerable();
-            if (flag)
+            private readonly string _adapterTypeName;
+
+            public FirstMethodBodyWriter(MethodReference getEnumeratorMethod, MethodReference firstMethod, TypeReference iteratorType) : base(getEnumeratorMethod, firstMethod)
             {
-                writer2.WriteTypeDefinition(writer);
+                this._adapterTypeName = InteropMethodInfo.Naming.ForWindowsRuntimeAdapterClass(iteratorType);
             }
-            WindowsRuntimeProjectionsInitializer.HasIEnumerableCCW = flag;
+
+            protected override void WriteReturnStatementEpilogue(CppCodeWriter writer, string unmarshaledReturnValueVariableName)
+            {
+                string str = Emit.Call(this._adapterTypeName + "::__CreateInstance", unmarshaledReturnValueVariableName);
+                writer.WriteStatement(Emit.Assign('*' + InteropMethodInfo.Naming.ForComInterfaceReturnParameterName(), $"({unmarshaledReturnValueVariableName} != NULL) ? {str} : {InteropMethodInfo.Naming.Null}"));
+                writer.WriteStatement("return IL2CPP_S_OK");
+            }
+
+            protected override bool IsReturnValueMarshaled =>
+                false;
         }
     }
 }

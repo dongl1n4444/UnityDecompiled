@@ -1,6 +1,8 @@
 ﻿namespace UnityEditor.MemoryProfiler
 {
     using System;
+    using System.Diagnostics;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEditorInternal;
 
@@ -9,6 +11,7 @@
     /// </summary>
     public static class MemorySnapshot
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event Action<PackedMemorySnapshot> OnSnapshotReceived;
 
         private static void DispatchSnapshot(PackedMemorySnapshot snapshot)

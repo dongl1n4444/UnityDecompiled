@@ -303,10 +303,10 @@
                 };
                 if (((storey.scene.path.Length != 0) || EditorSceneManager.SaveScene(storey.scene, "", false)) && !Enumerable.Any<EditorBuildSettingsScene>(list, new Func<EditorBuildSettingsScene, bool>(storey.<>m__0)))
                 {
-                    EditorBuildSettingsScene item = new EditorBuildSettingsScene {
-                        path = storey.scene.path,
-                        enabled = true
-                    };
+                    GUID guid;
+                    GUID.TryParse(storey.scene.guid, out guid);
+                    GUID guid2 = new GUID();
+                    EditorBuildSettingsScene item = !(guid == guid2) ? new EditorBuildSettingsScene(guid, true) : new EditorBuildSettingsScene(storey.scene.path, true);
                     list.Add(item);
                     flag = true;
                 }
@@ -728,7 +728,7 @@
             GUILayout.Space(10f);
             GUILayout.BeginVertical(new GUILayoutOption[0]);
             string message = "";
-            bool disabled = !AssetDatabase.IsOpenForEdit("ProjectSettings/EditorBuildSettings.asset", out message);
+            bool disabled = !AssetDatabase.IsOpenForEdit("ProjectSettings/EditorBuildSettings.asset", out message, StatusQueryOptions.UseCachedIfPossible);
             using (new EditorGUI.DisabledScope(disabled))
             {
                 this.ActiveScenesGUI();
@@ -1043,7 +1043,7 @@
             if (GUI.Toggle(position, on, title.text, styles.platformSelector) && (EditorUserBuildSettings.selectedBuildTargetGroup != bp.targetGroup))
             {
                 EditorUserBuildSettings.selectedBuildTargetGroup = bp.targetGroup;
-                Object[] objArray = Resources.FindObjectsOfTypeAll(typeof(InspectorWindow));
+                UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(InspectorWindow));
                 for (int i = 0; i < objArray.Length; i++)
                 {
                     InspectorWindow window = objArray[i] as InspectorWindow;

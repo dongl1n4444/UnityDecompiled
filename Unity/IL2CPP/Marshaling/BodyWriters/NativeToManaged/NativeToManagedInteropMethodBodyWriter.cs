@@ -8,7 +8,7 @@
     using Unity.IL2CPP.Marshaling.BodyWriters;
     using Unity.IL2CPP.Metadata;
 
-    internal abstract class NativeToManagedInteropMethodBodyWriter : InteropMethodBodyWriter
+    public abstract class NativeToManagedInteropMethodBodyWriter : InteropMethodBodyWriter
     {
         protected readonly MethodReference _managedMethod;
 
@@ -17,18 +17,26 @@
             this._managedMethod = managedMethod;
         }
 
-        protected string GetMethodCallExpression(IRuntimeMetadataAccess metadataAccess, string thisArgument, IEnumerable<string> localVariableNames)
+        protected string GetMethodCallExpression(IRuntimeMetadataAccess metadataAccess, string thisArgument, string[] localVariableNames)
+        {
+            MethodCallType methodCallType = !this._managedMethod.DeclaringType.IsInterface() ? MethodCallType.Normal : MethodCallType.Virtual;
+            return this.GetMethodCallExpression(metadataAccess, thisArgument, this._managedMethod, methodCallType, localVariableNames);
+        }
+
+        protected string GetMethodCallExpression(IRuntimeMetadataAccess metadataAccess, string thisVariableName, MethodReference method, MethodCallType methodCallType, params string[] args)
         {
             List<string> argumentArray = new List<string> {
-                thisArgument
+                thisVariableName
             };
-            argumentArray.AddRange(localVariableNames);
-            MethodCallType callType = !this._managedMethod.DeclaringType.IsInterface() ? MethodCallType.Normal : MethodCallType.Virtual;
-            if (MethodSignatureWriter.NeedsHiddenMethodInfo(this._managedMethod, callType, false))
+            if (args.Length > 0)
             {
-                argumentArray.Add(metadataAccess.HiddenMethodInfo(this._managedMethod));
+                argumentArray.AddRange(args);
             }
-            return MethodBodyWriter.GetMethodCallExpression(this._managedMethod, this._managedMethod, this._managedMethod, base._typeResolver, callType, metadataAccess, new VTableBuilder(), argumentArray, false, null);
+            if (MethodSignatureWriter.NeedsHiddenMethodInfo(method, methodCallType, false))
+            {
+                argumentArray.Add(metadataAccess.HiddenMethodInfo(method));
+            }
+            return MethodBodyWriter.GetMethodCallExpression(this._managedMethod, method, method, base._typeResolver, methodCallType, metadataAccess, new VTableBuilder(), argumentArray, false, null);
         }
 
         protected override void WriteMethodPrologue(CppCodeWriter writer, IRuntimeMetadataAccess metadataAccess)

@@ -445,7 +445,7 @@ internal class ParticleSystemCurveEditor
 
     private void PresetDropDown(Rect rect)
     {
-        if (EditorGUI.ButtonMouseDown(rect, EditorGUI.GUIContents.titleSettingsIcon, FocusType.Passive, EditorStyles.inspectorTitlebarText) && (this.CreateDoubleCurveFromTopMostCurve() != null))
+        if (EditorGUI.DropdownButton(rect, EditorGUI.GUIContents.titleSettingsIcon, FocusType.Passive, EditorStyles.inspectorTitlebarText) && (this.CreateDoubleCurveFromTopMostCurve() != null))
         {
             this.InitDoubleCurvePresets();
             if (this.m_DoubleCurvePresets != null)

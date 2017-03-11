@@ -2,7 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEditor;
     using UnityEditor.Android;
@@ -12,6 +14,7 @@
 
     internal class CheckDevice : IPostProcessorTask
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ProgressHandler OnProgress;
 
         public void Execute(PostProcessorContext context)
@@ -86,7 +89,7 @@
                     str3 = "The connected device does not support Vulkan.";
                     str3 = str3 + " Please select OpenGLES under Player Settings instead.";
                 }
-                else if (((num2 >= 0) && (num2 < num3)) || (PlayerSettings.openGLRequireES31AEP && !flag))
+                else if (((num2 >= 0) && (num2 < num3)) || (((num3 == 0x30001) && PlayerSettings.openGLRequireES31AEP) && !flag))
                 {
                     str3 = "The connected device is not compatible with the selected OpenGLES version.";
                     str3 = str3 + " Please select a lower OpenGLES version under Player Settings instead.";

@@ -199,7 +199,7 @@
             }
         }
 
-        [Obsolete("Assert.Equals should not be used for Assertions", true), EditorBrowsable(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Assert.Equals should not be used for Assertions", true)]
         public static bool Equals(object obj1, object obj2)
         {
             throw new InvalidOperationException("Assert.Equals should not be used for Assertions");

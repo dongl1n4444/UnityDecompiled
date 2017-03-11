@@ -37,7 +37,7 @@
             bool flag = UnityEditor.Animations.AnimatorController.CanAddStateMachineBehaviours();
             using (new EditorGUI.DisabledScope(!flag))
             {
-                flag2 = EditorGUI.ButtonMouseDown(position, styles.addBehaviourLabel, FocusType.Passive, styles.addBehaviourButtonStyle);
+                flag2 = EditorGUI.DropdownButton(position, styles.addBehaviourLabel, FocusType.Passive, styles.addBehaviourButtonStyle);
             }
             if (flag2)
             {

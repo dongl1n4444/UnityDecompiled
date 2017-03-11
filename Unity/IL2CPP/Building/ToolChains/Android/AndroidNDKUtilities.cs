@@ -9,6 +9,7 @@
     using System.Threading;
     using Unity.IL2CPP.Building;
     using Unity.IL2CPP.Common;
+    using Unity.IL2CPP.Common.Portability40;
 
     public class AndroidNDKUtilities
     {
@@ -112,7 +113,7 @@
             {
                 if (PlatformUtils.IsWindows())
                 {
-                    return (!Environment.Is64BitOperatingSystem ? "windows" : "windows-x86_64");
+                    return (!EnvironmentPortable.Is64BitOperatingSystemPortable ? "windows" : "windows-x86_64");
                 }
                 if (PlatformUtils.IsLinux())
                 {

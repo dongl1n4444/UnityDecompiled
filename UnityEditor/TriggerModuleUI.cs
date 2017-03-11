@@ -133,7 +133,7 @@
             }
         }
 
-        public override void OnSceneGUI()
+        public override void OnSceneViewGUI()
         {
             if (s_VisualizeBounds)
             {

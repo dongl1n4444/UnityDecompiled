@@ -33,7 +33,7 @@
             base.WriteCleanupLoop(writer, variableName, metadataAccess, bodyWriter => base._arraySize.ToString(CultureInfo.InvariantCulture));
         }
 
-        public override void WriteMarshalOutParameterFromNative(CppCodeWriter writer, string variableName, ManagedMarshalValue destinationVariable, IList<MarshaledParameter> methodParameters, bool returnValue, bool forNativeWrapperOfManagedMethod, IRuntimeMetadataAccess metadataAccess)
+        public override void WriteMarshalOutParameterFromNative(CppCodeWriter writer, string variableName, ManagedMarshalValue destinationVariable, IList<MarshaledParameter> methodParameters, bool returnValue, bool forNativeWrapperOfManagedMethod, bool isIn, IRuntimeMetadataAccess metadataAccess)
         {
             <WriteMarshalOutParameterFromNative>c__AnonStorey1 storey = new <WriteMarshalOutParameterFromNative>c__AnonStorey1 {
                 variableName = variableName,

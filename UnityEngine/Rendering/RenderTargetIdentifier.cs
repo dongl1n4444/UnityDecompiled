@@ -80,6 +80,34 @@
 
         public static implicit operator RenderTargetIdentifier(Texture tex) => 
             new RenderTargetIdentifier(tex);
+
+        public override string ToString()
+        {
+            object[] args = new object[] { this.m_Type, this.m_NameID, this.m_InstanceID };
+            return UnityString.Format("Type {0} NameID {1} InstanceID {2}", args);
+        }
+
+        public override int GetHashCode() => 
+            ((((this.m_Type.GetHashCode() * 0x17) + this.m_NameID.GetHashCode()) * 0x17) + this.m_InstanceID.GetHashCode());
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is RenderTargetIdentifier))
+            {
+                return false;
+            }
+            RenderTargetIdentifier identifier = (RenderTargetIdentifier) obj;
+            return (((this.m_Type == identifier.m_Type) && (this.m_NameID == identifier.m_NameID)) && (this.m_InstanceID == identifier.m_InstanceID));
+        }
+
+        public bool Equals(RenderTargetIdentifier rhs) => 
+            (((this.m_Type == rhs.m_Type) && (this.m_NameID == rhs.m_NameID)) && (this.m_InstanceID == rhs.m_InstanceID));
+
+        public static bool operator ==(RenderTargetIdentifier lhs, RenderTargetIdentifier rhs) => 
+            (((lhs.m_Type == rhs.m_Type) && (lhs.m_NameID == rhs.m_NameID)) && (lhs.m_InstanceID == rhs.m_InstanceID));
+
+        public static bool operator !=(RenderTargetIdentifier lhs, RenderTargetIdentifier rhs) => 
+            (((lhs.m_Type != rhs.m_Type) || (lhs.m_NameID != rhs.m_NameID)) || (lhs.m_InstanceID != rhs.m_InstanceID));
     }
 }
 

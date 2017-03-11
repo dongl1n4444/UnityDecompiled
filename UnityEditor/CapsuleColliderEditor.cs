@@ -46,8 +46,14 @@
             target.center = base.TransformHandleCenterToColliderSpace(target.transform, this.m_BoundsHandle.center);
             Vector3 scaleVector = this.GetCapsuleColliderHandleScale(target.transform.lossyScale, target.direction, out num);
             scaleVector = base.InvertScaleVector(scaleVector);
-            target.height = this.m_BoundsHandle.height * Mathf.Abs(scaleVector[target.direction]);
-            target.radius = this.m_BoundsHandle.radius / num;
+            if (num != 0f)
+            {
+                target.radius = this.m_BoundsHandle.radius / num;
+            }
+            if (scaleVector[target.direction] != 0f)
+            {
+                target.height = this.m_BoundsHandle.height * Mathf.Abs(scaleVector[target.direction]);
+            }
         }
 
         private Vector3 GetCapsuleColliderHandleScale(Vector3 lossyScale, int capsuleDirection, out float radiusScaleFactor)
@@ -90,6 +96,32 @@
             EditorGUILayout.PropertyField(this.m_Height, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(this.m_Direction, new GUILayoutOption[0]);
             base.serializedObject.ApplyModifiedProperties();
+        }
+
+        protected override void OnSceneGUI()
+        {
+            float num;
+            CapsuleCollider target = (CapsuleCollider) base.target;
+            this.GetCapsuleColliderHandleScale(target.transform.lossyScale, target.direction, out num);
+            this.boundsHandle.axes = PrimitiveBoundsHandle.Axes.All;
+            if (num == 0f)
+            {
+                switch (target.direction)
+                {
+                    case 0:
+                        this.boundsHandle.axes = PrimitiveBoundsHandle.Axes.X;
+                        break;
+
+                    case 1:
+                        this.boundsHandle.axes = PrimitiveBoundsHandle.Axes.Y;
+                        break;
+
+                    case 2:
+                        this.boundsHandle.axes = PrimitiveBoundsHandle.Axes.Z;
+                        break;
+                }
+            }
+            base.OnSceneGUI();
         }
 
         protected override PrimitiveBoundsHandle boundsHandle =>

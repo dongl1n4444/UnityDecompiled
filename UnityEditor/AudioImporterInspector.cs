@@ -102,7 +102,7 @@
                 list.Add(AudioCompressionFormat.Vorbis);
             }
             list.Add(AudioCompressionFormat.ADPCM);
-            if ((((platform != BuildTargetGroup.Standalone) && (platform != BuildTargetGroup.WSA)) && ((platform != BuildTargetGroup.WiiU) && (platform != BuildTargetGroup.XboxOne))) && (platform != BuildTargetGroup.Unknown))
+            if (((platform != BuildTargetGroup.Standalone) && (platform != BuildTargetGroup.WSA)) && ((platform != BuildTargetGroup.WiiU) && (platform != BuildTargetGroup.Unknown)))
             {
                 list.Add(AudioCompressionFormat.MP3);
             }
@@ -549,12 +549,12 @@
         {
             internal AudioImporter $current;
             internal bool $disposing;
-            internal Object[] $locvar0;
+            internal UnityEngine.Object[] $locvar0;
             internal int $locvar1;
             internal int $PC;
             internal AudioImporterInspector $this;
             internal AudioImporter <audioImporter>__2;
-            internal Object <importer>__1;
+            internal UnityEngine.Object <importer>__1;
 
             [DebuggerHidden]
             public void Dispose()

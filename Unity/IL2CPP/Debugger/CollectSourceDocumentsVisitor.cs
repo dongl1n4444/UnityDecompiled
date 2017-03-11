@@ -34,7 +34,7 @@
             {
                 foreach (Instruction instruction in method.Body.Instructions)
                 {
-                    this.Visit(instruction);
+                    this.Visit(instruction, method);
                 }
             }
         }
@@ -47,12 +47,15 @@
             }
         }
 
-        private void Visit(Instruction instruction)
+        private void Visit(Instruction instruction, MethodDefinition method)
         {
-            SequencePoint sequencePoint = instruction.SequencePoint;
-            if ((sequencePoint != null) && (sequencePoint.Document != null))
+            if (method.DebugInformation.HasSequencePoints)
             {
-                this.Documents.Add(sequencePoint.Document.Url);
+                SequencePoint sequencePoint = method.DebugInformation.GetSequencePoint(instruction);
+                if ((sequencePoint != null) && (sequencePoint.Document != null))
+                {
+                    this.Documents.Add(sequencePoint.Document.Url);
+                }
             }
         }
 

@@ -273,7 +273,7 @@
             }
         }
 
-        public override Texture2D RenderStaticPreview(string assetPath, Object[] subAssets, int width, int height)
+        public override Texture2D RenderStaticPreview(string assetPath, UnityEngine.Object[] subAssets, int width, int height)
         {
             AudioClip target = base.target as AudioClip;
             AudioImporter atPath = AssetImporter.GetAtPath(assetPath) as AudioImporter;

@@ -14,10 +14,10 @@
         private Vector3 m_Center;
         private Vector3 m_Extents;
         /// <summary>
-        /// <para>Creates new Bounds with a given center and total size. Bound extents will be half the given size.</para>
+        /// <para>Creates a new Bounds.</para>
         /// </summary>
-        /// <param name="center"></param>
-        /// <param name="size"></param>
+        /// <param name="center">The location of the origin of the Bounds.</param>
+        /// <param name="size">The dimensions of the Bounds.</param>
         public Bounds(Vector3 center, Vector3 size)
         {
             this.m_Center = center;

@@ -129,7 +129,7 @@
                         SpriteRenderer component = data.transform.GetComponent<SpriteRenderer>();
                         if ((component != null) && (component.drawMode != SpriteDrawMode.Simple))
                         {
-                            Object[] objectsToUndo = new Object[] { component, data.transform };
+                            UnityEngine.Object[] objectsToUndo = new UnityEngine.Object[] { component, data.transform };
                             Undo.RecordObjects(objectsToUndo, "Resize");
                         }
                         else

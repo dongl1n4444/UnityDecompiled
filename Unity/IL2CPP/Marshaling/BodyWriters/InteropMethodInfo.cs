@@ -11,7 +11,7 @@
     using Unity.IL2CPP.Marshaling;
     using Unity.IL2CPP.Marshaling.BodyWriters.NativeToManaged;
 
-    internal class InteropMethodInfo
+    public class InteropMethodInfo
     {
         protected readonly InteropMarshaler _marshaler;
         protected readonly Unity.IL2CPP.ILPreProcessor.TypeResolver _typeResolver;

@@ -2,16 +2,20 @@
 {
     using System;
     using System.Collections.Generic;
+    using UnityEngine;
 
     internal class CollabTesting
     {
         private static IEnumerator<bool> _enumerator = null;
-        private static Action<bool> _runAfter = null;
+        private static Action _runAfter = null;
 
-        public static void End(bool success)
+        public static void End()
         {
-            _runAfter(success);
-            _enumerator = null;
+            if (_enumerator != null)
+            {
+                _runAfter();
+                _enumerator = null;
+            }
         }
 
         public static void Execute()
@@ -22,11 +26,12 @@
                 {
                     if (!_enumerator.MoveNext())
                     {
-                        End(true);
+                        End();
                     }
                 }
                 catch (Exception)
                 {
+                    Debug.LogError("Something Went wrong with the test framework itself");
                     throw;
                 }
             }
@@ -37,13 +42,16 @@
             Execute();
         }
 
-        public static Action<bool> AfterRun
+        public static Action AfterRun
         {
             set
             {
                 _runAfter = value;
             }
         }
+
+        public static bool IsRunning =>
+            (_enumerator != null);
 
         public static Func<IEnumerable<bool>> Tick
         {

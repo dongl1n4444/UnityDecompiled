@@ -34,18 +34,21 @@
         {
         }
 
-        public override void WriteMarshalOutParameterFromNative(CppCodeWriter writer, string variableName, ManagedMarshalValue destinationVariable, IList<MarshaledParameter> methodParameters, bool returnValue, bool forNativeWrapperOfManagedMethod, IRuntimeMetadataAccess metadataAccess)
+        public override void WriteMarshalOutParameterFromNative(CppCodeWriter writer, string variableName, ManagedMarshalValue destinationVariable, IList<MarshaledParameter> methodParameters, bool returnValue, bool forNativeWrapperOfManagedMethod, bool isIn, IRuntimeMetadataAccess metadataAccess)
         {
             <WriteMarshalOutParameterFromNative>c__AnonStorey3 storey = new <WriteMarshalOutParameterFromNative>c__AnonStorey3 {
                 destinationVariable = destinationVariable,
                 variableName = variableName,
                 $this = this
             };
-            object[] args = new object[] { storey.variableName, DefaultMarshalInfoWriter.Naming.Null };
-            writer.WriteLine("if ({0} != {1})", args);
-            using (new BlockWriter(writer, false))
+            if (!isIn)
             {
-                base.WriteMarshalFromNativeLoop(writer, storey.variableName, storey.destinationVariable, methodParameters, returnValue, forNativeWrapperOfManagedMethod, metadataAccess, new Func<CppCodeWriter, string>(storey.<>m__0));
+                object[] args = new object[] { storey.variableName, DefaultMarshalInfoWriter.Naming.Null };
+                writer.WriteLine("if ({0} != {1})", args);
+                using (new BlockWriter(writer, false))
+                {
+                    base.WriteMarshalFromNativeLoop(writer, storey.variableName, storey.destinationVariable, methodParameters, returnValue, forNativeWrapperOfManagedMethod, metadataAccess, new Func<CppCodeWriter, string>(storey.<>m__0));
+                }
             }
         }
 

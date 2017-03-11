@@ -65,7 +65,7 @@
                 {
                     s_PreviewTexture = new Texture2D(0x60, 0x60, TextureFormat.RGBA32, false, true);
                     s_PreviewTexture.name = "ParticleNoisePreview";
-                    s_PreviewTexture.filterMode = FilterMode.Bilinear;
+                    s_PreviewTexture.filterMode = UnityEngine.FilterMode.Bilinear;
                     s_PreviewTexture.hideFlags = HideFlags.HideAndDontSave;
                     s_Texts.previewTexture.image = s_PreviewTexture;
                     s_Texts.previewTextureMultiEdit.image = s_PreviewTexture;
@@ -107,12 +107,12 @@
                 GUILayout.BeginVertical(new GUILayoutOption[0]);
             }
             EditorGUI.BeginChangeCheck();
-            bool flag = ModuleUI.GUIToggle(s_Texts.separateAxes, this.m_SeparateAxes, new GUILayoutOption[0]);
+            bool addToCurveEditor = ModuleUI.GUIToggle(s_Texts.separateAxes, this.m_SeparateAxes, new GUILayoutOption[0]);
             bool flag2 = EditorGUI.EndChangeCheck();
             EditorGUI.BeginChangeCheck();
             if (flag2)
             {
-                if (flag)
+                if (addToCurveEditor)
                 {
                     this.m_StrengthX.RemoveCurveFromEditor();
                     this.m_RemapX.RemoveCurveFromEditor();
@@ -127,13 +127,17 @@
                     this.m_RemapZ.RemoveCurveFromEditor();
                 }
             }
-            MinMaxCurveState state = this.m_StrengthX.state;
-            this.m_StrengthY.state = state;
-            this.m_StrengthZ.state = state;
-            state = this.m_RemapX.state;
-            this.m_RemapY.state = state;
-            this.m_RemapZ.state = state;
-            if (flag)
+            if (!this.m_StrengthX.stateHasMultipleDifferentValues)
+            {
+                this.m_StrengthZ.SetMinMaxState(this.m_StrengthX.state, addToCurveEditor);
+                this.m_StrengthY.SetMinMaxState(this.m_StrengthX.state, addToCurveEditor);
+            }
+            if (!this.m_RemapX.stateHasMultipleDifferentValues)
+            {
+                this.m_RemapZ.SetMinMaxState(this.m_RemapX.state, addToCurveEditor);
+                this.m_RemapY.SetMinMaxState(this.m_RemapX.state, addToCurveEditor);
+            }
+            if (addToCurveEditor)
             {
                 this.m_StrengthX.m_DisplayName = s_Texts.x;
                 base.GUITripleMinMaxCurve(GUIContent.none, s_Texts.x, this.m_StrengthX, s_Texts.y, this.m_StrengthY, s_Texts.z, this.m_StrengthZ, null, new GUILayoutOption[0]);
@@ -156,7 +160,7 @@
             bool flag3 = ModuleUI.GUIToggle(s_Texts.remap, this.m_RemapEnabled, new GUILayoutOption[0]);
             using (new EditorGUI.DisabledScope(!flag3))
             {
-                if (flag)
+                if (addToCurveEditor)
                 {
                     this.m_RemapX.m_DisplayName = s_Texts.x;
                     base.GUITripleMinMaxCurve(GUIContent.none, s_Texts.x, this.m_RemapX, s_Texts.y, this.m_RemapY, s_Texts.z, this.m_RemapZ, null, new GUILayoutOption[0]);

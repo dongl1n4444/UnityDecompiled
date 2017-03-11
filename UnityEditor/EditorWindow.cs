@@ -15,16 +15,16 @@
     {
         private const double kWarningFadeoutTime = 1.0;
         private const double kWarningFadeoutWait = 4.0;
-        [HideInInspector, SerializeField]
+        [SerializeField, HideInInspector]
         private bool m_AutoRepaintOnSceneChange;
-        [HideInInspector, SerializeField]
+        [SerializeField, HideInInspector]
         private int m_DepthBufferBits = 0;
         private bool m_DontClearBackground;
         internal float m_FadeoutTime = 0f;
         private Rect m_GameViewClippedRect;
         private Rect m_GameViewRect;
         private Vector2 m_GameViewTargetSize;
-        [SerializeField, HideInInspector]
+        [HideInInspector, SerializeField]
         private Vector2 m_MaxSize = new Vector2(4000f, 4000f);
         [SerializeField, HideInInspector]
         private Vector2 m_MinSize = new Vector2(100f, 100f);
@@ -32,7 +32,7 @@
         private Vector2 m_NotificationSize;
         [NonSerialized]
         internal HostView m_Parent;
-        [HideInInspector, SerializeField]
+        [SerializeField, HideInInspector]
         internal Rect m_Pos = new Rect(0f, 0f, 320f, 240f);
         [HideInInspector, SerializeField]
         internal GUIContent m_TitleContent;
@@ -101,7 +101,7 @@
             {
                 this.m_Parent.window.Close();
             }
-            Object.DestroyImmediate(this, true);
+            UnityEngine.Object.DestroyImmediate(this, true);
         }
 
         internal static void CreateNewWindowForEditorWindow(EditorWindow window, bool loadPosition, bool showImmediately)
@@ -181,9 +181,9 @@
         /// <para>Focuses the first found EditorWindow of specified type if it is open.</para>
         /// </summary>
         /// <param name="t">The type of the window. Must derive from EditorWindow.</param>
-        public static void FocusWindowIfItsOpen(Type t)
+        public static void FocusWindowIfItsOpen(System.Type t)
         {
-            Object[] objArray = Resources.FindObjectsOfTypeAll(t);
+            UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(t);
             EditorWindow window = (objArray.Length <= 0) ? null : (objArray[0] as EditorWindow);
             if (window != null)
             {
@@ -191,7 +191,7 @@
             }
         }
 
-        private static EditorWindowTitleAttribute GetEditorWindowTitleAttribute(Type t)
+        private static EditorWindowTitleAttribute GetEditorWindowTitleAttribute(System.Type t)
         {
             object[] customAttributes = t.GetCustomAttributes(true);
             foreach (object obj2 in customAttributes)
@@ -208,7 +208,7 @@
         internal GUIContent GetLocalizedTitleContent() => 
             GetLocalizedTitleContentFromType(base.GetType());
 
-        internal static GUIContent GetLocalizedTitleContentFromType(Type t)
+        internal static GUIContent GetLocalizedTitleContentFromType(System.Type t)
         {
             EditorWindowTitleAttribute editorWindowTitleAttribute = GetEditorWindowTitleAttribute(t);
             if (editorWindowTitleAttribute != null)
@@ -258,7 +258,7 @@
         /// <param name="title">If GetWindow creates a new window, it will get this title. If this value is null, use the class name as title.</param>
         /// <param name="focus">Whether to give the window focus, if it already exists. (If GetWindow creates a new window, it will always get focus).</param>
         [ExcludeFromDocs]
-        public static EditorWindow GetWindow(Type t)
+        public static EditorWindow GetWindow(System.Type t)
         {
             bool focus = true;
             string title = null;
@@ -266,7 +266,7 @@
             return GetWindow(t, utility, title, focus);
         }
 
-        public static T GetWindow<T>(params Type[] desiredDockNextTo) where T: EditorWindow => 
+        public static T GetWindow<T>(params System.Type[] desiredDockNextTo) where T: EditorWindow => 
             GetWindow<T>(null, true, desiredDockNextTo);
 
         public static T GetWindow<T>(bool utility, string title) where T: EditorWindow => 
@@ -275,7 +275,7 @@
         public static T GetWindow<T>(string title, bool focus) where T: EditorWindow => 
             GetWindow<T>(false, title, focus);
 
-        public static T GetWindow<T>(string title, params Type[] desiredDockNextTo) where T: EditorWindow => 
+        public static T GetWindow<T>(string title, params System.Type[] desiredDockNextTo) where T: EditorWindow => 
             GetWindow<T>(title, true, desiredDockNextTo);
 
         /// <summary>
@@ -286,7 +286,7 @@
         /// <param name="title">If GetWindow creates a new window, it will get this title. If this value is null, use the class name as title.</param>
         /// <param name="focus">Whether to give the window focus, if it already exists. (If GetWindow creates a new window, it will always get focus).</param>
         [ExcludeFromDocs]
-        public static EditorWindow GetWindow(Type t, bool utility)
+        public static EditorWindow GetWindow(System.Type t, bool utility)
         {
             bool focus = true;
             string title = null;
@@ -296,9 +296,9 @@
         public static T GetWindow<T>(bool utility, string title, bool focus) where T: EditorWindow => 
             (GetWindow(typeof(T), utility, title, focus) as T);
 
-        public static T GetWindow<T>(string title, bool focus, params Type[] desiredDockNextTo) where T: EditorWindow
+        public static T GetWindow<T>(string title, bool focus, params System.Type[] desiredDockNextTo) where T: EditorWindow
         {
-            T[] localArray = Resources.FindObjectsOfTypeAll(typeof(T)) as T[];
+            T[] localArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(T)) as T[];
             T pane = (localArray.Length <= 0) ? null : localArray[0];
             if (pane != null)
             {
@@ -313,7 +313,7 @@
             {
                 pane.titleContent = new GUIContent(title);
             }
-            Type[] typeArray = desiredDockNextTo;
+            System.Type[] typeArray = desiredDockNextTo;
             for (int i = 0; i < typeArray.Length; i++)
             {
                 <GetWindow>c__AnonStorey0<T> storey = new <GetWindow>c__AnonStorey0<T> {
@@ -345,7 +345,7 @@
         /// <param name="title">If GetWindow creates a new window, it will get this title. If this value is null, use the class name as title.</param>
         /// <param name="focus">Whether to give the window focus, if it already exists. (If GetWindow creates a new window, it will always get focus).</param>
         [ExcludeFromDocs]
-        public static EditorWindow GetWindow(Type t, bool utility, string title)
+        public static EditorWindow GetWindow(System.Type t, bool utility, string title)
         {
             bool focus = true;
             return GetWindow(t, utility, title, focus);
@@ -358,18 +358,18 @@
         /// <param name="utility">Set this to true, to create a floating utility window, false to create a normal window.</param>
         /// <param name="title">If GetWindow creates a new window, it will get this title. If this value is null, use the class name as title.</param>
         /// <param name="focus">Whether to give the window focus, if it already exists. (If GetWindow creates a new window, it will always get focus).</param>
-        public static EditorWindow GetWindow(Type t, [DefaultValue("false")] bool utility, [DefaultValue("null")] string title, [DefaultValue("true")] bool focus) => 
+        public static EditorWindow GetWindow(System.Type t, [DefaultValue("false")] bool utility, [DefaultValue("null")] string title, [DefaultValue("true")] bool focus) => 
             GetWindowPrivate(t, utility, title, focus);
 
         internal static T GetWindowDontShow<T>() where T: EditorWindow
         {
-            Object[] objArray = Resources.FindObjectsOfTypeAll(typeof(T));
+            UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(T));
             return ((objArray.Length <= 0) ? ScriptableObject.CreateInstance<T>() : ((T) objArray[0]));
         }
 
-        private static EditorWindow GetWindowPrivate(Type t, bool utility, string title, bool focus)
+        private static EditorWindow GetWindowPrivate(System.Type t, bool utility, string title, bool focus)
         {
-            Object[] objArray = Resources.FindObjectsOfTypeAll(t);
+            UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(t);
             EditorWindow window = (objArray.Length <= 0) ? null : ((EditorWindow) objArray[0]);
             if (window == null)
             {
@@ -405,7 +405,7 @@
         /// <param name="utility">Set this to true, to create a floating utility window, false to create a normal window.</param>
         /// <param name="title">If GetWindow creates a new window, it will get this title. If this value is null, use the class name as title.</param>
         [ExcludeFromDocs]
-        public static EditorWindow GetWindowWithRect(Type t, Rect rect)
+        public static EditorWindow GetWindowWithRect(System.Type t, Rect rect)
         {
             string title = null;
             bool utility = false;
@@ -423,7 +423,7 @@
         /// <param name="utility">Set this to true, to create a floating utility window, false to create a normal window.</param>
         /// <param name="title">If GetWindow creates a new window, it will get this title. If this value is null, use the class name as title.</param>
         [ExcludeFromDocs]
-        public static EditorWindow GetWindowWithRect(Type t, Rect rect, bool utility)
+        public static EditorWindow GetWindowWithRect(System.Type t, Rect rect, bool utility)
         {
             string title = null;
             return GetWindowWithRect(t, rect, utility, title);
@@ -439,13 +439,13 @@
         /// <param name="rect">The position on the screen where a newly created window will show.</param>
         /// <param name="utility">Set this to true, to create a floating utility window, false to create a normal window.</param>
         /// <param name="title">If GetWindow creates a new window, it will get this title. If this value is null, use the class name as title.</param>
-        public static EditorWindow GetWindowWithRect(Type t, Rect rect, [DefaultValue("false")] bool utility, [DefaultValue("null")] string title) => 
+        public static EditorWindow GetWindowWithRect(System.Type t, Rect rect, [DefaultValue("false")] bool utility, [DefaultValue("null")] string title) => 
             GetWindowWithRectPrivate(t, rect, utility, title);
 
         public static T GetWindowWithRect<T>(Rect rect, bool utility, string title, bool focus) where T: EditorWindow
         {
             T local;
-            Object[] objArray = Resources.FindObjectsOfTypeAll(typeof(T));
+            UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(typeof(T));
             if (objArray.Length > 0)
             {
                 local = (T) objArray[0];
@@ -472,9 +472,9 @@
             return local;
         }
 
-        private static EditorWindow GetWindowWithRectPrivate(Type t, Rect rect, bool utility, string title)
+        private static EditorWindow GetWindowWithRectPrivate(System.Type t, Rect rect, bool utility, string title)
         {
-            Object[] objArray = Resources.FindObjectsOfTypeAll(t);
+            UnityEngine.Object[] objArray = UnityEngine.Resources.FindObjectsOfTypeAll(t);
             EditorWindow window = (objArray.Length <= 0) ? null : ((EditorWindow) objArray[0]);
             if (window == null)
             {
@@ -898,7 +898,12 @@
                     }
                     else if (((parent.parent != null) && (parent.m_Panes.Count == 1)) && (parent.parent.parent == null))
                     {
-                        parent.window.position = parent.borderSize.Add(value);
+                        Rect rect = parent.borderSize.Add(value);
+                        if (parent.background != null)
+                        {
+                            rect.y -= parent.background.margin.top;
+                        }
+                        parent.window.position = rect;
                     }
                     else
                     {
@@ -982,7 +987,7 @@
         [CompilerGenerated]
         private sealed class <GetWindow>c__AnonStorey0<T> where T: EditorWindow
         {
-            internal Type desired;
+            internal System.Type desired;
 
             internal bool <>m__0(EditorWindow pane) => 
                 (pane.GetType() == this.desired);

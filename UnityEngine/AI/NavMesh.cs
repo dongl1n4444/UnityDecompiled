@@ -17,17 +17,43 @@
         /// <para>Area mask constant that includes all NavMesh areas.</para>
         /// </summary>
         public const int AllAreas = -1;
+        /// <summary>
+        /// <para>Set a function to be called before the NavMesh is updated during the frame update execution.</para>
+        /// </summary>
         public static OnNavMeshPreUpdate onPreUpdate;
 
+        /// <summary>
+        /// <para>Adds a link to the NavMesh. The link is described by the NavMeshLinkData struct.</para>
+        /// </summary>
+        /// <param name="link">Describing the properties of the link.</param>
+        /// <returns>
+        /// <para>Representing the added link.</para>
+        /// </returns>
         public static NavMeshLinkInstance AddLink(NavMeshLinkData link) => 
             new NavMeshLinkInstance { id = AddLinkInternal(link, Vector3.zero, Quaternion.identity) };
 
+        /// <summary>
+        /// <para>Adds a link to the NavMesh. The link is described by the NavMeshLinkData struct.</para>
+        /// </summary>
+        /// <param name="link">Describing the properties of the link.</param>
+        /// <param name="position">Translate the link to this position.</param>
+        /// <param name="rotation">Rotate the link to this orientation.</param>
+        /// <returns>
+        /// <para>Representing the added link.</para>
+        /// </returns>
         public static NavMeshLinkInstance AddLink(NavMeshLinkData link, Vector3 position, Quaternion rotation) => 
             new NavMeshLinkInstance { id = AddLinkInternal(link, position, rotation) };
 
         internal static int AddLinkInternal(NavMeshLinkData link, Vector3 position, Quaternion rotation) => 
             INTERNAL_CALL_AddLinkInternal(ref link, ref position, ref rotation);
 
+        /// <summary>
+        /// <para>Adds the specified NavMeshData to the game.</para>
+        /// </summary>
+        /// <param name="navMeshData">Contains the data for the navmesh.</param>
+        /// <returns>
+        /// <para>Representing the added navmesh.</para>
+        /// </returns>
         public static NavMeshDataInstance AddNavMeshData(NavMeshData navMeshData)
         {
             if (navMeshData == null)
@@ -37,6 +63,15 @@
             return new NavMeshDataInstance { id = AddNavMeshDataInternal(navMeshData) };
         }
 
+        /// <summary>
+        /// <para>Adds the specified NavMeshData to the game.</para>
+        /// </summary>
+        /// <param name="navMeshData">Contains the data for the navmesh.</param>
+        /// <param name="position">Translate the navmesh to this position.</param>
+        /// <param name="rotation">Rotate the navmesh to this orientation.</param>
+        /// <returns>
+        /// <para>Representing the added navmesh.</para>
+        /// </returns>
         public static NavMeshDataInstance AddNavMeshData(NavMeshData navMeshData, Vector3 position, Quaternion rotation)
         {
             if (navMeshData == null)
@@ -51,7 +86,7 @@
         internal static int AddNavMeshDataTransformedInternal(NavMeshData navMeshData, Vector3 position, Quaternion rotation) => 
             INTERNAL_CALL_AddNavMeshDataTransformedInternal(navMeshData, ref position, ref rotation);
 
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("AddOffMeshLinks has no effect and is deprecated.")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("AddOffMeshLinks has no effect and is deprecated."), GeneratedByOldBindingsGenerator]
         public static extern void AddOffMeshLinks();
         /// <summary>
         /// <para>Calculate a path between two points and store the resulting path.</para>
@@ -69,6 +104,16 @@
             return CalculatePathInternal(sourcePosition, targetPosition, areaMask, path);
         }
 
+        /// <summary>
+        /// <para>Calculates a path between two positions mapped to the NavMesh, subject to the constraints and costs defined by the filter argument.</para>
+        /// </summary>
+        /// <param name="sourcePosition">The initial position of the path requested.</param>
+        /// <param name="targetPosition">The final position of the path requested.</param>
+        /// <param name="filter">A filter specifying the cost of NavMesh areas that can be passed when calculating a path.</param>
+        /// <param name="path">The resulting path.</param>
+        /// <returns>
+        /// <para>True if a either a complete or partial path is found and false otherwise.</para>
+        /// </returns>
         public static bool CalculatePath(Vector3 sourcePosition, Vector3 targetPosition, NavMeshQueryFilter filter, NavMeshPath path)
         {
             path.ClearCorners();
@@ -87,6 +132,12 @@
         public static NavMeshTriangulation CalculateTriangulation() => 
             ((NavMeshTriangulation) TriangulateInternal());
 
+        /// <summary>
+        /// <para>Creates and returns a new entry of NavMesh build settings available for runtime NavMesh building.</para>
+        /// </summary>
+        /// <returns>
+        /// <para>The created settings.</para>
+        /// </returns>
         public static NavMeshBuildSettings CreateSettings()
         {
             NavMeshBuildSettings settings;
@@ -134,6 +185,13 @@
         public static extern int GetNavMeshLayerFromName(string layerName);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern int GetPathfindingIterationsPerFrame();
+        /// <summary>
+        /// <para>Returns an existing entry of NavMesh build settings.</para>
+        /// </summary>
+        /// <param name="agentTypeID">The ID to look for.</param>
+        /// <returns>
+        /// <para>The settings found.</para>
+        /// </returns>
         public static NavMeshBuildSettings GetSettingsByID(int agentTypeID)
         {
             NavMeshBuildSettings settings;
@@ -141,6 +199,13 @@
             return settings;
         }
 
+        /// <summary>
+        /// <para>Returns an existing entry of NavMesh build settings by its ordered index.</para>
+        /// </summary>
+        /// <param name="index">The index to retrieve from.</param>
+        /// <returns>
+        /// <para>The found settings.</para>
+        /// </returns>
         public static NavMeshBuildSettings GetSettingsByIndex(int index)
         {
             NavMeshBuildSettings settings;
@@ -148,8 +213,21 @@
             return settings;
         }
 
+        /// <summary>
+        /// <para>Returns the number of registered NavMesh build settings.</para>
+        /// </summary>
+        /// <returns>
+        /// <para>The number of registered entries.</para>
+        /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int GetSettingsCount();
+        /// <summary>
+        /// <para>Returns the name associated with the NavMesh build settings matching the provided agent type ID.</para>
+        /// </summary>
+        /// <param name="agentTypeID">The ID to look for.</param>
+        /// <returns>
+        /// <para>The name associated with the ID found.</para>
+        /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetSettingsNameFromID(int agentTypeID);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -208,6 +286,10 @@
         private static bool RaycastFilter(Vector3 sourcePosition, Vector3 targetPosition, out NavMeshHit hit, int type, int mask) => 
             INTERNAL_CALL_RaycastFilter(ref sourcePosition, ref targetPosition, out hit, type, mask);
 
+        /// <summary>
+        /// <para>Removes a link from the NavMesh.</para>
+        /// </summary>
+        /// <param name="handle">The instance of a link to remove.</param>
         public static void RemoveLink(NavMeshLinkInstance handle)
         {
             RemoveLinkInternal(handle.id);
@@ -215,6 +297,10 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void RemoveLinkInternal(int handle);
+        /// <summary>
+        /// <para>Removes the specified NavMeshDataInstance from the game, making it unavailable for agents and queries.</para>
+        /// </summary>
+        /// <param name="handle">The instance of a NavMesh to remove.</param>
         public static void RemoveNavMeshData(NavMeshDataInstance handle)
         {
             RemoveNavMeshDataInternal(handle.id);
@@ -222,6 +308,10 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void RemoveNavMeshDataInternal(int handle);
+        /// <summary>
+        /// <para>Removes the build settings matching the agent type ID.</para>
+        /// </summary>
+        /// <param name="agentTypeID">The ID of the entry to remove.</param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void RemoveSettings(int agentTypeID);
         [MethodImpl(MethodImplOptions.InternalCall), Obsolete("RestoreNavMesh has no effect and is deprecated."), GeneratedByOldBindingsGenerator]
@@ -249,7 +339,7 @@
         /// </summary>
         /// <param name="layer"></param>
         /// <param name="cost"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("Use SetAreaCost instead.")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use SetAreaCost instead."), GeneratedByOldBindingsGenerator]
         public static extern void SetLayerCost(int layer, float cost);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void SetPathfindingIterationsPerFrame(int iter);
@@ -284,6 +374,9 @@
             }
         }
 
+        /// <summary>
+        /// <para>A delegate which can be used to register callback methods to be invoked before the NavMesh system updates.</para>
+        /// </summary>
         public delegate void OnNavMeshPreUpdate();
     }
 }

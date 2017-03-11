@@ -49,8 +49,10 @@
             this._specifiedCompilerFlags = other._specifiedCompilerFlags;
             this._specifiedLinkerFlags = other._specifiedLinkerFlags;
             this._cppToolChain = other._cppToolChain;
+            this._libIL2CPPAsDynamicLibrary = other._libIL2CPPAsDynamicLibrary;
             this._dataFolder = other._dataFolder;
             this._libil2cppCacheDirectory = other._libil2cppCacheDirectory;
+            this._mapFileParser = other._mapFileParser;
         }
 
         public IL2CPPOutputBuildDescription(NPath sourceDirectory, NPath cacheDirectory, NPath outputFile, DotNetProfile dotnetProfile, CppToolChain cppToolChain, NPath dataFolder, bool forceRebuildMapFileParser, bool libil2cppAsDynamicLibrary, IEnumerable<string> additionalDefines = null, IEnumerable<NPath> additionalIncludeDirectories = null, IEnumerable<NPath> staticLibraries = null, IEnumerable<string> specifiedCompilerFlags = null, IEnumerable<string> specifiedLinkerFlags = null, NPath libil2cppCacheDirectory = null, NPath mapFileParser = null)
@@ -162,7 +164,8 @@
         {
             NPath[] foldersToGlob = new NPath[] { LibIL2CPPDir };
             string[] append = new string[] { "extra/gc.c" };
-            return (from sourceFile in SourceFilesIn(foldersToGlob).Append<NPath>(BoehmDir.Combine(append)) select this.CppCompilationInstructionFor(sourceFile, this._libil2cppCacheDirectory));
+            string[] textArray2 = new string[] { "extra/krait_signal_handler.c" };
+            return (from sourceFile in SourceFilesIn(foldersToGlob).Append<NPath>(BoehmDir.Combine(append)).Append<NPath>(BoehmDir.Combine(textArray2)) select this.CppCompilationInstructionFor(sourceFile, this._libil2cppCacheDirectory));
         }
 
         public override void OnBeforeLink(NPath workingDirectory, IEnumerable<NPath> objectFiles, CppToolChainContext toolChainContext, bool forceRebuild, bool verbose)

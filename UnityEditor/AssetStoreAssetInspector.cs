@@ -9,12 +9,12 @@
     [CustomEditor(typeof(AssetStoreAssetInspector))]
     internal class AssetStoreAssetInspector : Editor
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private static bool <OfflineNoticeEnabled>k__BackingField;
         private int lastAssetID;
         internal static PaymentAvailability m_PaymentAvailability;
         private EditorWrapper m_PreviewEditor;
-        private Object m_PreviewObject;
+        private UnityEngine.Object m_PreviewObject;
         private bool packageInfoShown = true;
         internal static string s_PaymentMethodCard = "";
         internal static string s_PaymentMethodExpire = "";
@@ -470,7 +470,7 @@
                 {
                     return null;
                 }
-                Object preview = firstAsset.Preview;
+                UnityEngine.Object preview = firstAsset.Preview;
                 if (preview == null)
                 {
                     return null;

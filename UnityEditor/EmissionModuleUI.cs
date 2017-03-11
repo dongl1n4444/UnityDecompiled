@@ -1,93 +1,102 @@
 ﻿namespace UnityEditor
 {
     using System;
+    using System.Runtime.CompilerServices;
+    using UnityEditorInternal;
     using UnityEngine;
 
     internal class EmissionModuleUI : ModuleUI
     {
-        private const int k_MaxNumBursts = 4;
+        [CompilerGenerated]
+        private static GenericMenu.MenuFunction2 <>f__mg$cache0;
+        private const float k_BurstDragWidth = 15f;
+        private const int k_MaxNumBursts = 8;
         private SerializedProperty m_BurstCount;
-        private SerializedProperty[] m_BurstParticleMaxCount;
-        private SerializedProperty[] m_BurstParticleMinCount;
-        private SerializedProperty[] m_BurstTime;
+        private ReorderableList m_BurstList;
+        private SerializedProperty m_Bursts;
         public SerializedMinMaxCurve m_Distance;
         public SerializedMinMaxCurve m_Time;
         private static Texts s_Texts;
 
         public EmissionModuleUI(ParticleSystemUI owner, SerializedObject o, string displayName) : base(owner, o, "EmissionModule", displayName)
         {
-            this.m_BurstTime = new SerializedProperty[4];
-            this.m_BurstParticleMinCount = new SerializedProperty[4];
-            this.m_BurstParticleMaxCount = new SerializedProperty[4];
             base.m_ToolTip = "Emission of the emitter. This controls the rate at which particles are emitted as well as burst emissions.";
         }
 
         private void DoBurstGUI(InitialModuleUI initial)
         {
             EditorGUILayout.Space();
-            Rect controlRect = ModuleUI.GetControlRect(13, new GUILayoutOption[0]);
-            GUI.Label(controlRect, s_Texts.burst, ParticleSystemStyles.Get().label);
-            float dragWidth = 20f;
-            float num2 = 40f;
-            float width = (((num2 + dragWidth) * 3f) + dragWidth) - 1f;
-            float a = controlRect.width - width;
-            a = Mathf.Min(a, EditorGUIUtility.labelWidth);
-            int intValue = this.m_BurstCount.intValue;
-            Rect position = new Rect(controlRect.x + a, controlRect.y, width, 3f);
-            GUI.Label(position, GUIContent.none, ParticleSystemStyles.Get().line);
-            Rect rect3 = new Rect((controlRect.x + dragWidth) + a, controlRect.y, num2 + dragWidth, controlRect.height);
-            GUI.Label(rect3, "Time", ParticleSystemStyles.Get().label);
-            rect3.x += dragWidth + num2;
-            GUI.Label(rect3, "Min", ParticleSystemStyles.Get().label);
-            rect3.x += dragWidth + num2;
-            GUI.Label(rect3, "Max", ParticleSystemStyles.Get().label);
-            position.y += 12f;
-            GUI.Label(position, GUIContent.none, ParticleSystemStyles.Get().line);
-            float floatValue = initial.m_LengthInSec.floatValue;
-            int num7 = intValue;
-            for (int i = 0; i < intValue; i++)
+            GUI.Label(ModuleUI.GetControlRect(13, new GUILayoutOption[0]), s_Texts.burst, ParticleSystemStyles.Get().label);
+            this.m_BurstList.displayAdd = this.m_Bursts.arraySize < 8;
+            this.m_BurstList.DoLayoutList();
+        }
+
+        private void DrawBurstListElementCallback(Rect rect, int index, bool isActive, bool isFocused)
+        {
+            SerializedProperty arrayElementAtIndex = this.m_Bursts.GetArrayElementAtIndex(index);
+            SerializedProperty floatProp = arrayElementAtIndex.FindPropertyRelative("time");
+            SerializedProperty intProp = arrayElementAtIndex.FindPropertyRelative("minCount");
+            SerializedProperty property4 = arrayElementAtIndex.FindPropertyRelative("maxCount");
+            SerializedProperty property5 = arrayElementAtIndex.FindPropertyRelative("cycleCount");
+            SerializedProperty property6 = arrayElementAtIndex.FindPropertyRelative("repeatInterval");
+            rect.width /= 5f;
+            ModuleUI.FloatDraggable(rect, floatProp, 1f, 15f, "n2");
+            rect.x += rect.width;
+            ModuleUI.IntDraggable(rect, null, intProp, 15f);
+            rect.x += rect.width;
+            ModuleUI.IntDraggable(rect, null, property4, 15f);
+            rect.x += rect.width;
+            rect.width -= 13f;
+            if (property5.intValue == 0)
             {
-                SerializedProperty floatProp = this.m_BurstTime[i];
-                SerializedProperty property2 = this.m_BurstParticleMinCount[i];
-                SerializedProperty property3 = this.m_BurstParticleMaxCount[i];
-                controlRect = ModuleUI.GetControlRect(13, new GUILayoutOption[0]);
-                rect3 = new Rect(controlRect.x + a, controlRect.y, dragWidth + num2, controlRect.height);
-                float num9 = ModuleUI.FloatDraggable(rect3, floatProp, 1f, dragWidth, "n2");
-                if (num9 < 0f)
+                rect.x += 15f;
+                rect.width -= 15f;
+                EditorGUI.LabelField(rect, s_Texts.burstCycleCountInfinite, ParticleSystemStyles.Get().label);
+            }
+            else
+            {
+                ModuleUI.IntDraggable(rect, null, property5, 15f);
+            }
+            rect.width += 13f;
+            GUIMMModePopUp(ModuleUI.GetPopupRect(rect), property5);
+            rect.x += rect.width;
+            ModuleUI.FloatDraggable(rect, property6, 1f, 15f, "n2");
+            rect.x += rect.width;
+        }
+
+        private void DrawBurstListHeaderCallback(Rect rect)
+        {
+            rect.x += 35f;
+            rect.width -= 20f;
+            rect.width /= 5f;
+            EditorGUI.LabelField(rect, s_Texts.burstTime, ParticleSystemStyles.Get().label);
+            rect.x += rect.width;
+            EditorGUI.LabelField(rect, s_Texts.burstMin, ParticleSystemStyles.Get().label);
+            rect.x += rect.width;
+            EditorGUI.LabelField(rect, s_Texts.burstMax, ParticleSystemStyles.Get().label);
+            rect.x += rect.width;
+            EditorGUI.LabelField(rect, s_Texts.burstCycleCount, ParticleSystemStyles.Get().label);
+            rect.x += rect.width;
+            EditorGUI.LabelField(rect, s_Texts.burstRepeatInterval, ParticleSystemStyles.Get().label);
+            rect.x += rect.width;
+        }
+
+        private static void GUIMMModePopUp(Rect rect, SerializedProperty modeProp)
+        {
+            if (EditorGUI.DropdownButton(rect, GUIContent.none, FocusType.Passive, ParticleSystemStyles.Get().minMaxCurveStateDropDown))
+            {
+                GUIContent[] contentArray = new GUIContent[] { new GUIContent("Infinite"), new GUIContent("Count") };
+                GenericMenu menu = new GenericMenu();
+                for (int i = 0; i < contentArray.Length; i++)
                 {
-                    floatProp.floatValue = 0f;
-                }
-                if (num9 > floatValue)
-                {
-                    floatProp.floatValue = floatValue;
-                }
-                int num10 = property2.intValue;
-                int num11 = property3.intValue;
-                rect3.x += rect3.width;
-                property2.intValue = ModuleUI.IntDraggable(rect3, null, num10, dragWidth);
-                rect3.x += rect3.width;
-                property3.intValue = ModuleUI.IntDraggable(rect3, null, num11, dragWidth);
-                if (i == (intValue - 1))
-                {
-                    rect3.x = position.xMax - 12f;
-                    if (ModuleUI.MinusButton(rect3))
+                    if (<>f__mg$cache0 == null)
                     {
-                        intValue--;
+                        <>f__mg$cache0 = new GenericMenu.MenuFunction2(EmissionModuleUI.SelectModeCallback);
                     }
+                    menu.AddItem(contentArray[i], modeProp.intValue == i, <>f__mg$cache0, new ModeCallbackData(i, modeProp));
                 }
-            }
-            if (intValue < 4)
-            {
-                rect3 = ModuleUI.GetControlRect(13, new GUILayoutOption[0]);
-                rect3.xMin = rect3.xMax - 12f;
-                if (ModuleUI.PlusButton(rect3))
-                {
-                    intValue++;
-                }
-            }
-            if (intValue != num7)
-            {
-                this.m_BurstCount.intValue = intValue;
+                menu.ShowAsContext();
+                Event.current.Use();
             }
         }
 
@@ -103,20 +112,34 @@
                 this.m_Time.m_AllowRandom = false;
                 this.m_Distance = new SerializedMinMaxCurve(this, s_Texts.rateOverDistance, "rateOverDistance");
                 this.m_Distance.m_AllowRandom = false;
-                this.m_BurstTime[0] = base.GetProperty("time0");
-                this.m_BurstTime[1] = base.GetProperty("time1");
-                this.m_BurstTime[2] = base.GetProperty("time2");
-                this.m_BurstTime[3] = base.GetProperty("time3");
-                this.m_BurstParticleMinCount[0] = base.GetProperty("cnt0");
-                this.m_BurstParticleMinCount[1] = base.GetProperty("cnt1");
-                this.m_BurstParticleMinCount[2] = base.GetProperty("cnt2");
-                this.m_BurstParticleMinCount[3] = base.GetProperty("cnt3");
-                this.m_BurstParticleMaxCount[0] = base.GetProperty("cntmax0");
-                this.m_BurstParticleMaxCount[1] = base.GetProperty("cntmax1");
-                this.m_BurstParticleMaxCount[2] = base.GetProperty("cntmax2");
-                this.m_BurstParticleMaxCount[3] = base.GetProperty("cntmax3");
                 this.m_BurstCount = base.GetProperty("m_BurstCount");
+                this.m_Bursts = base.GetProperty("m_Bursts");
+                this.m_BurstList = new ReorderableList(base.serializedObject, this.m_Bursts, true, true, true, true);
+                this.m_BurstList.elementHeight = 16f;
+                this.m_BurstList.onAddCallback = new ReorderableList.AddCallbackDelegate(this.OnBurstListAddCallback);
+                this.m_BurstList.onRemoveCallback = new ReorderableList.RemoveCallbackDelegate(this.OnBurstListRemoveCallback);
+                this.m_BurstList.drawHeaderCallback = new ReorderableList.HeaderCallbackDelegate(this.DrawBurstListHeaderCallback);
+                this.m_BurstList.drawElementCallback = new ReorderableList.ElementCallbackDelegate(this.DrawBurstListElementCallback);
             }
+        }
+
+        private void OnBurstListAddCallback(ReorderableList list)
+        {
+            ReorderableList.defaultBehaviours.DoAddButton(list);
+            this.m_BurstCount.intValue++;
+            SerializedProperty arrayElementAtIndex = this.m_Bursts.GetArrayElementAtIndex(list.index);
+            SerializedProperty property2 = arrayElementAtIndex.FindPropertyRelative("minCount");
+            SerializedProperty property3 = arrayElementAtIndex.FindPropertyRelative("maxCount");
+            SerializedProperty property4 = arrayElementAtIndex.FindPropertyRelative("cycleCount");
+            property2.intValue = 30;
+            property3.intValue = 30;
+            property4.intValue = 1;
+        }
+
+        private void OnBurstListRemoveCallback(ReorderableList list)
+        {
+            ReorderableList.defaultBehaviours.DoRemoveButton(list);
+            this.m_BurstCount.intValue--;
         }
 
         public override void OnInspectorGUI(InitialModuleUI initial)
@@ -130,6 +153,12 @@
             }
         }
 
+        private static void SelectModeCallback(object obj)
+        {
+            ModeCallbackData data = (ModeCallbackData) obj;
+            data.modeProp.intValue = data.selectedState;
+        }
+
         public override void UpdateCullingSupportedString(ref string text)
         {
             this.Init();
@@ -139,9 +168,27 @@
             }
         }
 
+        private class ModeCallbackData
+        {
+            public SerializedProperty modeProp;
+            public int selectedState;
+
+            public ModeCallbackData(int i, SerializedProperty p)
+            {
+                this.modeProp = p;
+                this.selectedState = i;
+            }
+        }
+
         private class Texts
         {
             public GUIContent burst = EditorGUIUtility.TextContent("Bursts|Emission of extra particles at specific times during the duration of the system.");
+            public GUIContent burstCycleCount = EditorGUIUtility.TextContent("Cycles|How many times to emit the burst. Use the dropdown to repeat infinitely.");
+            public GUIContent burstCycleCountInfinite = EditorGUIUtility.TextContent("Infinite");
+            public GUIContent burstMax = EditorGUIUtility.TextContent("Max|The maximum number of particles to emit.");
+            public GUIContent burstMin = EditorGUIUtility.TextContent("Min|The minimum number of particles to emit.");
+            public GUIContent burstRepeatInterval = EditorGUIUtility.TextContent("Interval|Repeat the burst every N seconds.");
+            public GUIContent burstTime = EditorGUIUtility.TextContent("Time|When the burst will trigger.");
             public GUIContent rateOverDistance = EditorGUIUtility.TextContent("Rate over Distance|The number of particles emitted per distance unit.");
             public GUIContent rateOverTime = EditorGUIUtility.TextContent("Rate over Time|The number of particles emitted per second.");
         }

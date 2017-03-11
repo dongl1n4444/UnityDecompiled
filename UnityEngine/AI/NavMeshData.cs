@@ -6,13 +6,23 @@
     using UnityEngine;
     using UnityEngine.Scripting;
 
+    /// <summary>
+    /// <para>Contains and represents NavMesh data.</para>
+    /// </summary>
     public sealed class NavMeshData : UnityEngine.Object
     {
+        /// <summary>
+        /// <para>Constructs a new object for representing a NavMesh for the default agent type.</para>
+        /// </summary>
         public NavMeshData()
         {
             Internal_Create(this, 0);
         }
 
+        /// <summary>
+        /// <para>Constructs a new object representing a NavMesh for the specified agent type.</para>
+        /// </summary>
+        /// <param name="agentTypeID">The agent type ID to create a NavMesh for.</param>
         public NavMeshData(int agentTypeID)
         {
             Internal_Create(this, agentTypeID);
@@ -59,6 +69,9 @@
             }
         }
 
+        /// <summary>
+        /// <para>Returns the bounding volume of the input geometry used to build this NavMesh (Read Only).</para>
+        /// </summary>
         public Bounds sourceBounds
         {
             get

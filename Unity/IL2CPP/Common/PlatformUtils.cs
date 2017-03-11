@@ -9,6 +9,7 @@
     {
         private static Architecture _nativeCompilerArchitecture;
         private static bool _runningOnIl2Cpp;
+        private static bool _runningOnNetCore;
         private static bool _runningWithMono;
 
         static PlatformUtils()
@@ -26,6 +27,21 @@
                     _runningWithMono = true;
                 }
             }
+            if (!_runningOnIl2Cpp && !_runningWithMono)
+            {
+                foreach (Assembly assembly in AppDomainPortable.GetAllAssembliesInCurrentAppDomainPortable())
+                {
+                    if (assembly.FullName.StartsWith("Microsoft.Extensions.PlatformAbstractions"))
+                    {
+                        object obj2 = assembly.CreateInstance("Microsoft.Extensions.PlatformAbstractions.ApplicationEnvironment");
+                        if ((obj2 != null) && obj2.GetType().GetMethod("get_RuntimeFramework").Invoke(obj2, null).ToString().StartsWith(".NETCoreApp"))
+                        {
+                            _runningOnNetCore = true;
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         public static bool IsLinux() => 
@@ -39,6 +55,9 @@
 
         public static bool RunningOnIl2Cpp() => 
             _runningOnIl2Cpp;
+
+        public static bool RunningOnNetCore() => 
+            _runningOnNetCore;
 
         public static bool RunningWithMono() => 
             _runningWithMono;

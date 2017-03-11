@@ -8,7 +8,6 @@
     [CustomEditor(typeof(EntryNode))]
     internal class EntryNodeInspector : Editor
     {
-        private SerializedProperty m_DefaultState;
         private SourceNodeTransitionEditor m_TransitionsEditor = null;
 
         private void Init()

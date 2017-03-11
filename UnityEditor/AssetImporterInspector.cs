@@ -93,7 +93,7 @@
 
         private string[] GetAssetPaths()
         {
-            Object[] targets = base.targets;
+            UnityEngine.Object[] targets = base.targets;
             string[] strArray = new string[targets.Length];
             for (int i = 0; i < targets.Length; i++)
             {

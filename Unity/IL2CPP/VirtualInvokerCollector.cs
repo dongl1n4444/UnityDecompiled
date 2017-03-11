@@ -55,7 +55,7 @@
 
         private static string InvokeParametersFor(InvokerData data, bool isGeneric)
         {
-            string[] first = !isGeneric ? new string[] { "Il2CppMethodSlot slot", "void* obj" } : new string[] { "const MethodInfo* method", "void* obj" };
+            string[] first = !isGeneric ? new string[] { "Il2CppMethodSlot slot", "Il2CppObject* obj" } : new string[] { "const MethodInfo* method", "Il2CppObject* obj" };
             if (<>f__am$cache4 == null)
             {
                 <>f__am$cache4 = (m, i) => string.Format("T{0} p{0}", i + 1);
@@ -71,7 +71,7 @@
                 {
                     if (definition2.IsVirtual && (this._processGenerics == definition2.HasGenericParameters))
                     {
-                        this._invokerData.Add(new InvokerData(definition2.ReturnType.MetadataType == MetadataType.Void, definition2.Parameters.Count, false));
+                        this._invokerData.Add(new InvokerData(definition2.ReturnType.MetadataType == MetadataType.Void, definition2.Parameters.Count));
                     }
                 }
             }
@@ -132,14 +132,14 @@
                     object[] objArray5 = new object[] { ReturnTypeFor(data), InvokeParametersFor(data, this._processGenerics) };
                     writer.WriteLine("static inline {0} Invoke ({1})", objArray5);
                     writer.BeginBlock();
-                    writer.WriteLine("VirtualInvokeData invokeData;");
                     if (this._processGenerics)
                     {
+                        writer.WriteLine("VirtualInvokeData invokeData;");
                         writer.WriteLine("il2cpp_codegen_get_generic_virtual_invoke_data(method, obj, &invokeData);");
                     }
                     else
                     {
-                        writer.WriteLine("il2cpp_codegen_get_virtual_invoke_data (slot, obj, &invokeData);");
+                        writer.WriteLine("const VirtualInvokeData& invokeData = il2cpp_codegen_get_virtual_invoke_data(slot, obj);");
                     }
                     object[] objArray6 = new object[] { !data.VoidReturn ? "return " : "", str, CallParametersFor(data) };
                     writer.WriteLine("{0}(({1})invokeData.methodPtr)({2});", objArray6);

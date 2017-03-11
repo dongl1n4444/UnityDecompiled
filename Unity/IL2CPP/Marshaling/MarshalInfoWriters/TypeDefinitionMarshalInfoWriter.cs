@@ -28,7 +28,7 @@
         {
             string uniqueIdentifier = $"{DefaultMarshalInfoWriter.Naming.ForType(base._type)}_{MarshalingUtils.MarshalTypeToString(base._marshalType)}_MarshalCleanupMethodDefinition";
             MethodWriter.WriteMethodWithMetadataInitialization(writer, base._marshalCleanupFunctionDeclaration, base._marshalToNativeFunctionName, delegate (CppCodeWriter bodyWriter, MetadataUsage metadataUsage, MethodUsage methodUsage) {
-                DefaultRuntimeMetadataAccess metadataAccess = new DefaultRuntimeMetadataAccess(null, metadataUsage, methodUsage);
+                DefaultRuntimeMetadataAccess metadataAccess = new DefaultRuntimeMetadataAccess(null, metadataUsage, methodUsage, null);
                 for (int j = 0; j < base.Fields.Length; j++)
                 {
                     base.FieldMarshalInfoWriters[j].WriteMarshalCleanupVariable(bodyWriter, base.FieldMarshalInfoWriters[j].UndecorateVariable($"marshaled.{DefaultMarshalInfoWriter.Naming.ForField(base.Fields[j])}"), metadataAccess, null);
@@ -40,7 +40,7 @@
         {
             string uniqueIdentifier = $"{DefaultMarshalInfoWriter.Naming.ForType(base._type)}_{MarshalingUtils.MarshalTypeToString(base._marshalType)}_FromNativeMethodDefinition";
             MethodWriter.WriteMethodWithMetadataInitialization(writer, base._marshalFromNativeFunctionDeclaration, base._marshalFromNativeFunctionName, delegate (CppCodeWriter bodyWriter, MetadataUsage metadataUsage, MethodUsage methodUsage) {
-                DefaultRuntimeMetadataAccess metadataAccess = new DefaultRuntimeMetadataAccess(null, metadataUsage, methodUsage);
+                DefaultRuntimeMetadataAccess metadataAccess = new DefaultRuntimeMetadataAccess(null, metadataUsage, methodUsage, null);
                 for (int j = 0; j < base.Fields.Length; j++)
                 {
                     FieldDefinition field = base.Fields[j];
@@ -64,7 +64,7 @@
         {
             string uniqueIdentifier = $"{DefaultMarshalInfoWriter.Naming.ForType(base._type)}_{MarshalingUtils.MarshalTypeToString(base._marshalType)}_ToNativeMethodDefinition";
             MethodWriter.WriteMethodWithMetadataInitialization(writer, base._marshalToNativeFunctionDeclaration, base._marshalToNativeFunctionName, delegate (CppCodeWriter bodyWriter, MetadataUsage metadataUsage, MethodUsage methodUsage) {
-                DefaultRuntimeMetadataAccess metadataAccess = new DefaultRuntimeMetadataAccess(null, metadataUsage, methodUsage);
+                DefaultRuntimeMetadataAccess metadataAccess = new DefaultRuntimeMetadataAccess(null, metadataUsage, methodUsage, null);
                 for (int j = 0; j < base.Fields.Length; j++)
                 {
                     base.FieldMarshalInfoWriters[j].WriteMarshalVariableToNative(bodyWriter, new ManagedMarshalValue("unmarshaled", base.Fields[j]), base.FieldMarshalInfoWriters[j].UndecorateVariable($"marshaled.{DefaultMarshalInfoWriter.Naming.ForField(base.Fields[j])}"), null, metadataAccess);

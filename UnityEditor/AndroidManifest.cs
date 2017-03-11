@@ -13,7 +13,7 @@
 
         static AndroidManifest()
         {
-            string[] textArray1 = new string[] { "mcc", "mnc", "locale", "touchscreen", "keyboard", "keyboardHidden", "navigation", "orientation", "screenLayout", "uiMode", "screenSize", "smallestScreenSize", "fontScale" };
+            string[] textArray1 = new string[] { "mcc", "mnc", "locale", "touchscreen", "keyboard", "keyboardHidden", "navigation", "orientation", "screenLayout", "uiMode", "screenSize", "smallestScreenSize", "fontScale", "layoutDirection" };
             AndroidConfigChanges = string.Join("|", textArray1);
         }
 

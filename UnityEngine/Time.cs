@@ -30,9 +30,24 @@
         public static float fixedTime { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
+        /// <para>The timeScale-independent interval in seconds from the last fixed frame to the current one (Read Only).</para>
+        /// </summary>
+        public static float fixedUnscaledDeltaTime { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        /// <summary>
+        /// <para>The timeScale-independent time the latest MonoBehaviour.FixedUpdate has started (Read Only). This is the time in seconds since the start of the game.</para>
+        /// </summary>
+        public static float fixedUnscaledTime { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        /// <summary>
         /// <para>The total number of frames that have passed (Read Only).</para>
         /// </summary>
         public static int frameCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        /// <summary>
+        /// <para>Returns true if called inside a fixed time step callback (like MonoBehaviour's MonoBehaviour.FixedUpdate), otherwise returns false.</para>
+        /// </summary>
+        public static bool inFixedTimeStep { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The maximum time a frame can take. Physics and other fixed frame rate updates (like MonoBehaviour's MonoBehaviour.FixedUpdate).</para>
@@ -72,12 +87,12 @@
         public static float timeSinceLevelLoad { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
-        /// <para>The timeScale-independent time in seconds it took to complete the last frame (Read Only).</para>
+        /// <para>The timeScale-independent interval in seconds from the last frame to the current one (Read Only).</para>
         /// </summary>
         public static float unscaledDeltaTime { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
-        /// <para>The timeScale-independant time at the beginning of this frame (Read Only). This is the time in seconds since the start of the game.</para>
+        /// <para>The timeScale-independent time for this frame (Read Only). This is the time in seconds since the start of the game.</para>
         /// </summary>
         public static float unscaledTime { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }

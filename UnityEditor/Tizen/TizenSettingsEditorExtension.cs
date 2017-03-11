@@ -9,6 +9,7 @@
     internal class TizenSettingsEditorExtension : DefaultPlayerSettingsEditorExtension
     {
         private Vector2 capScrollViewPosition = Vector2.zero;
+        private SerializedProperty m_ApplicationBundleVersion;
         private SerializedProperty m_IPhoneSplashScreen;
         private GUIContent m_LabelAll = EditorGUIUtility.TextContent("All");
         private GUIContent m_LabelCapabilities = EditorGUIUtility.TextContent("Capabilities");
@@ -20,6 +21,7 @@
         private GUIContent m_LabelMobile = EditorGUIUtility.TextContent("Mobile");
         private GUIContent m_LabelProfile = EditorGUIUtility.TextContent("Signing Profile Name");
         private GUIContent m_LabelURL = EditorGUIUtility.TextContent("Product URL");
+        private PlayerSettingsEditor m_SettingsEditor;
         private SerializedProperty m_TizenMinOSVersion;
         private SerializedProperty m_TizenProductDescription;
         private SerializedProperty m_TizenProductURL;
@@ -37,6 +39,8 @@
 
         public override void IdentificationSectionGUI()
         {
+            PlayerSettingsEditor.ShowApplicationIdentifierUI(this.m_SettingsEditor.serializedObject, BuildTargetGroup.Tizen, "Package ID", "Changed Tizen Package ID");
+            EditorGUILayout.PropertyField(this.m_ApplicationBundleVersion, EditorGUIUtility.TextContent("Version*"), new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(this.m_TizenMinOSVersion, EditorGUIUtility.TextContent("Minimum API Level"), new GUILayoutOption[0]);
         }
 
@@ -47,6 +51,8 @@
             this.m_TizenProfileName = settingsEditor.FindPropertyAssert("tizenSigningProfileName");
             this.m_TizenMinOSVersion = settingsEditor.FindPropertyAssert("tizenMinOSVersion");
             this.m_IPhoneSplashScreen = settingsEditor.FindPropertyAssert("iPhoneSplashScreen");
+            this.m_ApplicationBundleVersion = settingsEditor.FindPropertyAssert("bundleVersion");
+            this.m_SettingsEditor = settingsEditor;
         }
 
         public override void PublishSectionGUI(float h, float kLabelFloatMinW, float kLabelFloatMaxW)
@@ -97,9 +103,18 @@
                 {
                     PlayerSettings.TizenCapability current = (PlayerSettings.TizenCapability) enumerator.Current;
                     GUILayout.BeginHorizontal(new GUILayoutOption[0]);
+                    if (current == PlayerSettings.TizenCapability.PackageManagerInfo)
+                    {
+                        GUI.enabled = false;
+                    }
                     bool capability = PlayerSettings.Tizen.GetCapability(current);
                     GUILayoutOption[] optionArray2 = new GUILayoutOption[] { GUILayout.MinWidth(150f) };
                     bool flag = GUILayout.Toggle(capability, current.ToString(), optionArray2);
+                    if (current == PlayerSettings.TizenCapability.PackageManagerInfo)
+                    {
+                        flag = true;
+                        GUI.enabled = true;
+                    }
                     PlayerSettings.Tizen.SetCapability(current, flag);
                     GUILayout.EndHorizontal();
                 }

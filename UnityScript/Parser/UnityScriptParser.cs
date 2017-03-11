@@ -457,43 +457,41 @@
         {
             Method method;
             string name = nameToken.getText();
-            LexicalInfo info = ToLexicalInfo(nameToken);
-            Method method1 = method = new Method(info);
-            method.set_Name(name);
-            Method node = !IsConstructorName(name, type) ? method : new Constructor(info);
+            LexicalInfo lexicalInfoProvider = ToLexicalInfo(nameToken);
+            Method item = !IsConstructorName(name, type) ? method : new Constructor(lexicalInfoProvider);
             if ((getter != null) || (setter != null))
             {
-                Property property = type.get_Members().get_Item(name) as Property;
+                Property property = type.Members[name] as Property;
                 if (property == null)
                 {
                     Property property2;
-                    Property property1 = property2 = new Property(info);
-                    property2.set_Name(name);
+                    Property property1 = property2 = new Property(lexicalInfoProvider);
+                    string text2 = property2.Name = name;
                     property = property2;
-                    type.get_Members().Add(property);
+                    type.Members.Add(property);
                 }
                 if (getter != null)
                 {
-                    if (property.get_Getter() != null)
+                    if (property.Getter != null)
                     {
                         throw new AssertionFailedException("p.Getter is null");
                     }
-                    property.set_Getter(node);
+                    property.Getter = item;
                 }
                 else
                 {
-                    if (property.get_Setter() != null)
+                    if (property.Setter != null)
                     {
                         throw new AssertionFailedException("p.Setter is null");
                     }
-                    property.set_Setter(node);
+                    property.Setter = item;
                 }
                 this.FlushAttributes(property);
-                return node;
+                return item;
             }
-            type.get_Members().Add(node);
-            this.FlushAttributes(node);
-            return node;
+            type.Members.Add(item);
+            this.FlushAttributes(item);
+            return item;
         }
 
         public TypeReference anonymous_function_type()
@@ -503,22 +501,22 @@
             try
             {
                 CallableTypeReference reference2;
-                ParameterDeclarationCollection declarations;
+                ParameterDeclarationCollection parameters;
                 token = this.LT(1);
                 this.match(0x13);
                 if (base.inputState.guessing == 0)
                 {
                     reference = reference2 = new CallableTypeReference(ToLexicalInfo(token));
-                    declarations = reference2.get_Parameters();
+                    parameters = reference2.Parameters;
                 }
-                this.function_type_parameters(declarations);
+                this.function_type_parameters(parameters);
                 if ((this.LA(1) == 0x42) && ((this.LA(2) == 0x13) || (this.LA(2) == 0x3b)))
                 {
                     this.match(0x42);
                     TypeReference reference3 = this.type_reference();
                     if (base.inputState.guessing == 0)
                     {
-                        reference2.set_ReturnType(reference3);
+                        reference2.ReturnType = reference3;
                     }
                     return reference;
                 }
@@ -566,7 +564,7 @@
                 this.match(0x45);
                 if (base.inputState.guessing == 0)
                 {
-                    expression = CodeFactory.NewArrayInitializer(elementType.get_LexicalInfo(), elementType, dimensions);
+                    expression = UnityScript.Parser.CodeFactory.NewArrayInitializer(elementType.LexicalInfo, elementType, dimensions);
                 }
             }
             catch (RecognitionException exception)
@@ -593,7 +591,7 @@
                 bool flag = false;
                 if (tokenSet_16_.member(this.LA(1)) && tokenSet_59_.member(this.LA(2)))
                 {
-                    int num = this.mark();
+                    int pos = this.mark();
                     flag = true;
                     base.inputState.guessing++;
                     try
@@ -605,7 +603,7 @@
                     {
                         flag = false;
                     }
-                    this.rewind(num);
+                    this.rewind(pos);
                     base.inputState.guessing--;
                 }
                 if (flag)
@@ -656,15 +654,15 @@
                         {
                             Declaration declaration2;
                             Declaration declaration1 = declaration2 = new Declaration(ToLexicalInfo(token2));
-                            declaration2.set_Name(token2.getText());
+                            string text1 = declaration2.Name = token2.getText();
                             declaration = declaration2;
                         }
-                        expression = CodeFactory.NewArrayComprehension(ToLexicalInfo(token), projection, declaration, expression3, expression4);
+                        expression = UnityScript.Parser.CodeFactory.NewArrayComprehension(ToLexicalInfo(token), projection, declaration, expression3, expression4);
                     }
                 }
                 else
                 {
-                    ExpressionCollection expressions;
+                    ExpressionCollection items;
                     if (!tokenSet_60_.member(this.LA(1)) || !tokenSet_20_.member(this.LA(2)))
                     {
                         throw new NoViableAltException(this.LT(1), this.getFilename());
@@ -673,9 +671,9 @@
                     {
                         ArrayLiteralExpression expression5;
                         expression = expression5 = new ArrayLiteralExpression(ToLexicalInfo(token));
-                        expressions = expression5.get_Items();
+                        items = expression5.Items;
                     }
-                    this.expression_list(expressions);
+                    this.expression_list(items);
                 }
                 this.match(0x45);
             }
@@ -712,7 +710,7 @@
                 if ((((num == 0x34) || (num == 0x35)) || ((num == 0x36) || (num == 0x37))) || ((((num == 0x47) || (num == 0x4a)) || ((num == 0x4e) || (num == 0x5e))) || ((num == 0x62) || (num == 0x66))))
                 {
                     IToken token11;
-                    BinaryOperatorType type;
+                    BinaryOperatorType assign;
                     num = this.LA(1);
                     switch (num)
                     {
@@ -722,7 +720,7 @@
                             if (base.inputState.guessing == 0)
                             {
                                 token11 = token;
-                                type = 15;
+                                assign = BinaryOperatorType.Assign;
                             }
                             break;
 
@@ -732,7 +730,7 @@
                             if (base.inputState.guessing == 0)
                             {
                                 token11 = token2;
-                                type = 0x10;
+                                assign = BinaryOperatorType.InPlaceAddition;
                             }
                             break;
 
@@ -742,7 +740,7 @@
                             if (base.inputState.guessing == 0)
                             {
                                 token11 = token3;
-                                type = 0x11;
+                                assign = BinaryOperatorType.InPlaceSubtraction;
                             }
                             break;
 
@@ -752,7 +750,7 @@
                             if (base.inputState.guessing == 0)
                             {
                                 token11 = token4;
-                                type = 0x12;
+                                assign = BinaryOperatorType.InPlaceMultiply;
                             }
                             break;
 
@@ -762,7 +760,7 @@
                             if (base.inputState.guessing == 0)
                             {
                                 token11 = token5;
-                                type = 0x13;
+                                assign = BinaryOperatorType.InPlaceDivision;
                             }
                             break;
 
@@ -772,7 +770,7 @@
                             if (base.inputState.guessing == 0)
                             {
                                 token11 = token6;
-                                type = 0x16;
+                                assign = BinaryOperatorType.InPlaceBitwiseOr;
                             }
                             break;
 
@@ -782,7 +780,7 @@
                             if (base.inputState.guessing == 0)
                             {
                                 token11 = token7;
-                                type = 0x15;
+                                assign = BinaryOperatorType.InPlaceBitwiseAnd;
                             }
                             break;
 
@@ -792,7 +790,7 @@
                             if (base.inputState.guessing == 0)
                             {
                                 token11 = token8;
-                                type = 0x21;
+                                assign = BinaryOperatorType.InPlaceExclusiveOr;
                             }
                             break;
 
@@ -802,7 +800,7 @@
                             if (base.inputState.guessing == 0)
                             {
                                 token11 = token9;
-                                type = 0x23;
+                                assign = BinaryOperatorType.InPlaceShiftLeft;
                             }
                             break;
 
@@ -812,7 +810,7 @@
                             if (base.inputState.guessing == 0)
                             {
                                 token11 = token10;
-                                type = 0x25;
+                                assign = BinaryOperatorType.InPlaceShiftRight;
                             }
                             break;
 
@@ -822,10 +820,11 @@
                     Expression expression2 = this.assignment_expression();
                     if (base.inputState.guessing == 0)
                     {
-                        BinaryExpression expression3 = new BinaryExpression(ToLexicalInfo(token11));
-                        expression3.set_Operator(type);
-                        expression3.set_Left(expression);
-                        expression3.set_Right(expression2);
+                        BinaryExpression expression3 = new BinaryExpression(ToLexicalInfo(token11)) {
+                            Operator = assign,
+                            Left = expression,
+                            Right = expression2
+                        };
                         expression = expression3;
                     }
                     return expression;
@@ -968,10 +967,10 @@
             try
             {
                 this.match(0x63);
-                Attribute attribute = this.attribute_constructor();
+                Boo.Lang.Compiler.Ast.Attribute item = this.attribute_constructor();
                 if (base.inputState.guessing == 0)
                 {
-                    this._attributes.Add(attribute);
+                    this._attributes.Add(item);
                 }
             }
             catch (RecognitionException exception)
@@ -985,15 +984,15 @@
             }
         }
 
-        public Attribute attribute_constructor()
+        public Boo.Lang.Compiler.Ast.Attribute attribute_constructor()
         {
-            Attribute attr = null;
+            Boo.Lang.Compiler.Ast.Attribute attr = null;
             try
             {
                 Token token = this.qname();
                 if (base.inputState.guessing == 0)
                 {
-                    attr = new Attribute(ToLexicalInfo(token), token.getText());
+                    attr = new Boo.Lang.Compiler.Ast.Attribute(ToLexicalInfo(token), token.getText());
                 }
                 if ((this.LA(1) == 0x3f) && tokenSet_22_.member(this.LA(2)))
                 {
@@ -1060,7 +1059,7 @@
             return attr;
         }
 
-        public void attribute_parameter(Attribute attr)
+        public void attribute_parameter(Boo.Lang.Compiler.Ast.Attribute attr)
         {
             try
             {
@@ -1068,7 +1067,7 @@
                 bool flag = false;
                 if (((this.LA(1) == 12) || (this.LA(1) == 0x3b)) && ((this.LA(2) == 0x41) || (this.LA(2) == 0x4e)))
                 {
-                    int num = this.mark();
+                    int pos = this.mark();
                     flag = true;
                     base.inputState.guessing++;
                     try
@@ -1080,7 +1079,7 @@
                     {
                         flag = false;
                     }
-                    this.rewind(num);
+                    this.rewind(pos);
                     base.inputState.guessing--;
                 }
                 if (!flag)
@@ -1092,17 +1091,17 @@
                     expression2 = this.expression();
                     if (base.inputState.guessing == 0)
                     {
-                        attr.get_Arguments().Add(expression2);
+                        attr.Arguments.Add(expression2);
                     }
                 }
                 else
                 {
-                    Expression expression = this.reference_expression();
+                    Expression first = this.reference_expression();
                     this.match(0x4e);
                     expression2 = this.expression();
                     if (base.inputState.guessing == 0)
                     {
-                        attr.get_NamedArguments().Add(new ExpressionPair(expression, expression2));
+                        attr.NamedArguments.Add(new ExpressionPair(first, expression2));
                     }
                 }
             }
@@ -1160,21 +1159,21 @@
                 expression = this.equality();
                 while ((this.LA(1) == 0x48) && tokenSet_16_.member(this.LA(2)))
                 {
-                    BinaryOperatorType type;
+                    BinaryOperatorType bitwiseAnd;
                     token = this.LT(1);
                     this.match(0x48);
                     if (base.inputState.guessing == 0)
                     {
-                        type = 0x1f;
+                        bitwiseAnd = BinaryOperatorType.BitwiseAnd;
                     }
                     Expression expression2 = this.equality();
                     if (base.inputState.guessing == 0)
                     {
                         BinaryExpression expression3;
                         BinaryExpression expression1 = expression3 = new BinaryExpression(ToLexicalInfo(token));
-                        expression3.set_Operator(type);
-                        expression3.set_Left(expression);
-                        expression3.set_Right(expression2);
+                        BinaryOperatorType type1 = expression3.Operator = bitwiseAnd;
+                        Expression expression6 = expression3.Left = expression;
+                        Expression expression7 = expression3.Right = expression2;
                         expression = expression3;
                     }
                 }
@@ -1202,21 +1201,21 @@
                 expression = this.bitwise_xor();
                 while ((this.LA(1) == 70) && tokenSet_16_.member(this.LA(2)))
                 {
-                    BinaryOperatorType type;
+                    BinaryOperatorType bitwiseOr;
                     token = this.LT(1);
                     this.match(70);
                     if (base.inputState.guessing == 0)
                     {
-                        type = 30;
+                        bitwiseOr = BinaryOperatorType.BitwiseOr;
                     }
                     Expression expression2 = this.bitwise_xor();
                     if (base.inputState.guessing == 0)
                     {
                         BinaryExpression expression3;
                         BinaryExpression expression1 = expression3 = new BinaryExpression(ToLexicalInfo(token));
-                        expression3.set_Operator(type);
-                        expression3.set_Left(expression);
-                        expression3.set_Right(expression2);
+                        BinaryOperatorType type1 = expression3.Operator = bitwiseOr;
+                        Expression expression6 = expression3.Left = expression;
+                        Expression expression7 = expression3.Right = expression2;
                         expression = expression3;
                     }
                 }
@@ -1244,21 +1243,21 @@
                 expression = this.bitwise_and();
                 while ((this.LA(1) == 0x49) && tokenSet_16_.member(this.LA(2)))
                 {
-                    BinaryOperatorType type;
+                    BinaryOperatorType exclusiveOr;
                     token = this.LT(1);
                     this.match(0x49);
                     if (base.inputState.guessing == 0)
                     {
-                        type = 0x20;
+                        exclusiveOr = BinaryOperatorType.ExclusiveOr;
                     }
                     Expression expression2 = this.bitwise_and();
                     if (base.inputState.guessing == 0)
                     {
                         BinaryExpression expression3;
                         BinaryExpression expression1 = expression3 = new BinaryExpression(ToLexicalInfo(token));
-                        expression3.set_Operator(type);
-                        expression3.set_Left(expression);
-                        expression3.set_Right(expression2);
+                        BinaryOperatorType type1 = expression3.Operator = exclusiveOr;
+                        Expression expression6 = expression3.Left = expression;
+                        Expression expression7 = expression3.Right = expression2;
                         expression = expression3;
                     }
                 }
@@ -1321,7 +1320,7 @@
                         {
                             BoolLiteralExpression expression2;
                             BoolLiteralExpression expression1 = expression2 = new BoolLiteralExpression(ToLexicalInfo(token));
-                            expression2.set_Value(true);
+                            int num1 = (int) (expression2.Value = true);
                             expression = expression2;
                         }
                         return expression;
@@ -1333,7 +1332,7 @@
                         {
                             BoolLiteralExpression expression3;
                             BoolLiteralExpression expression4 = expression3 = new BoolLiteralExpression(ToLexicalInfo(token2));
-                            expression3.set_Value(false);
+                            int num2 = (int) (expression3.Value = false);
                             expression = expression3;
                         }
                         return expression;
@@ -1502,7 +1501,7 @@
             {
                 TypeReference reference;
                 ClassDefinition definition2;
-                TypeReferenceCollection references;
+                TypeReferenceCollection baseTypes;
                 switch (this.LA(1))
                 {
                     case 0x23:
@@ -1537,25 +1536,25 @@
                 {
                     ClassDefinition definition;
                     ClassDefinition definition1 = definition = new ClassDefinition(ToLexicalInfo(token2));
-                    definition.set_Name(token2.getText());
+                    string text1 = definition.Name = token2.getText();
                     member = definition2 = definition;
-                    references = definition2.get_BaseTypes();
+                    baseTypes = definition2.BaseTypes;
                     if (reference != null)
                     {
-                        references.Add(reference);
+                        baseTypes.Add(reference);
                     }
                     if (token != null)
                     {
-                        definition2.set_Modifiers(definition2.get_Modifiers() | 0x400);
+                        definition2.Modifiers |= TypeMemberModifiers.Partial;
                     }
                     this.FlushAttributes(definition2);
-                    parent.get_Members().Add(definition2);
+                    parent.Members.Add(definition2);
                 }
                 switch (this.LA(1))
                 {
                     case 0x17:
                         this.match(0x17);
-                        this.type_reference_list(references);
+                        this.type_reference_list(baseTypes);
                         break;
 
                     case 0x3d:
@@ -1566,7 +1565,7 @@
                 }
                 if (base.inputState.guessing == 0)
                 {
-                    foreach (TypeReference reference2 in references)
+                    foreach (TypeReference reference2 in baseTypes)
                     {
                         if (reference2 == reference)
                         {
@@ -1581,7 +1580,7 @@
                 this.match(0x3d);
                 while (true)
                 {
-                    TypeMemberModifiers modifiers;
+                    TypeMemberModifiers none;
                     TypeMember member2;
                     if (!tokenSet_29_.member(this.LA(1)))
                     {
@@ -1589,7 +1588,7 @@
                     }
                     if (base.inputState.guessing == 0)
                     {
-                        modifiers = 0;
+                        none = TypeMemberModifiers.None;
                     }
                     switch (this.LA(1))
                     {
@@ -1619,7 +1618,7 @@
                     }
                     if (tokenSet_30_.member(this.LA(1)) && tokenSet_31_.member(this.LA(2)))
                     {
-                        modifiers = this.member_modifiers();
+                        none = this.member_modifiers();
                     }
                     else if (!tokenSet_26_.member(this.LA(1)) || !tokenSet_32_.member(this.LA(2)))
                     {
@@ -1655,7 +1654,7 @@
                     }
                     if ((base.inputState.guessing == 0) && (member2 != null))
                     {
-                        member2.set_Modifiers(member2.get_Modifiers() | modifiers);
+                        member2.Modifiers |= none;
                     }
                 }
                 token3 = this.LT(1);
@@ -1694,7 +1693,7 @@
             IToken token6 = null;
             IToken token7 = null;
             Expression expression2 = null;
-            BinaryOperatorType type = 0;
+            BinaryOperatorType none = BinaryOperatorType.None;
             IToken token8 = null;
             try
             {
@@ -1717,7 +1716,7 @@
                                 this.match(0x18);
                                 if (base.inputState.guessing == 0)
                                 {
-                                    type = 0x1b;
+                                    none = BinaryOperatorType.NotMember;
                                     token8 = token;
                                 }
                                 break;
@@ -1727,7 +1726,7 @@
                                 this.match(0x18);
                                 if (base.inputState.guessing == 0)
                                 {
-                                    type = 0x1a;
+                                    none = BinaryOperatorType.Member;
                                     token8 = token2;
                                 }
                                 break;
@@ -1737,7 +1736,7 @@
                                 this.match(0x5f);
                                 if (base.inputState.guessing == 0)
                                 {
-                                    type = 9;
+                                    none = BinaryOperatorType.GreaterThan;
                                     token8 = token3;
                                 }
                                 break;
@@ -1747,7 +1746,7 @@
                                 this.match(0x60);
                                 if (base.inputState.guessing == 0)
                                 {
-                                    type = 10;
+                                    none = BinaryOperatorType.GreaterThanOrEqual;
                                     token8 = token4;
                                 }
                                 break;
@@ -1757,7 +1756,7 @@
                                 this.match(0x5b);
                                 if (base.inputState.guessing == 0)
                                 {
-                                    type = 7;
+                                    none = BinaryOperatorType.LessThan;
                                     token8 = token5;
                                 }
                                 break;
@@ -1767,7 +1766,7 @@
                                 this.match(0x5c);
                                 if (base.inputState.guessing == 0)
                                 {
-                                    type = 8;
+                                    none = BinaryOperatorType.LessThanOrEqual;
                                     token8 = token6;
                                 }
                                 break;
@@ -1785,20 +1784,21 @@
                         }
                         token7 = this.LT(1);
                         this.match(0x1a);
-                        TypeReference reference = this.type_reference();
+                        TypeReference typeReference = this.type_reference();
                         if (base.inputState.guessing == 0)
                         {
-                            type = 0x19;
+                            none = BinaryOperatorType.TypeTest;
                             token8 = token7;
-                            expression2 = new TypeofExpression(reference.get_LexicalInfo(), reference);
+                            expression2 = new TypeofExpression(typeReference.LexicalInfo, typeReference);
                         }
                     }
                     if (base.inputState.guessing == 0)
                     {
-                        BinaryExpression expression3 = new BinaryExpression(ToLexicalInfo(token8));
-                        expression3.set_Operator(type);
-                        expression3.set_Left(expression);
-                        expression3.set_Right(expression2);
+                        BinaryExpression expression3 = new BinaryExpression(ToLexicalInfo(token8)) {
+                            Operator = none,
+                            Left = expression,
+                            Right = expression2
+                        };
                         expression = expression3;
                     }
                 }
@@ -1883,9 +1883,9 @@
                     {
                         ConditionalExpression expression4;
                         ConditionalExpression expression1 = expression4 = new ConditionalExpression(ToLexicalInfo(token));
-                        expression4.set_Condition(expression);
-                        expression4.set_TrueValue(expression2);
-                        expression4.set_FalseValue(expression3);
+                        Expression expression8 = expression4.Condition = expression;
+                        Expression expression9 = expression4.TrueValue = expression2;
+                        Expression expression10 = expression4.FalseValue = expression3;
                         expression = expression4;
                     }
                     return expression;
@@ -1929,7 +1929,7 @@
                     {
                         GotoStatement statement;
                         GotoStatement statement1 = statement = new GotoStatement(ToLexicalInfo(token));
-                        statement.set_Label(new ReferenceExpression(currentLoopLabel));
+                        ReferenceExpression expression1 = statement.Label = new ReferenceExpression(currentLoopLabel);
                         b.Add(statement);
                     }
                     else
@@ -2033,8 +2033,8 @@
                 {
                     Declaration declaration2;
                     Declaration declaration1 = declaration2 = new Declaration(ToLexicalInfo(token));
-                    declaration2.set_Name(token.getText());
-                    declaration2.set_Type(reference);
+                    string text1 = declaration2.Name = token.getText();
+                    TypeReference reference1 = declaration2.Type = reference;
                     declaration = declaration2;
                 }
             }
@@ -2130,11 +2130,11 @@
                 if (base.inputState.guessing == 0)
                 {
                     DeclarationStatement statement;
-                    DeclarationStatement statement1 = statement = new DeclarationStatement(declaration.get_LexicalInfo());
-                    statement.set_Declaration(declaration);
-                    statement.set_Initializer(expression);
-                    DeclarationStatement statement2 = statement;
-                    b.Add(statement2);
+                    DeclarationStatement statement1 = statement = new DeclarationStatement(declaration.LexicalInfo);
+                    Declaration declaration1 = statement.Declaration = declaration;
+                    Expression expression1 = statement.Initializer = expression;
+                    DeclarationStatement stmt = statement;
+                    b.Add(stmt);
                 }
             }
             catch (RecognitionException exception)
@@ -2162,22 +2162,22 @@
                 {
                     WhileStatement statement;
                     WhileStatement statement1 = statement = new WhileStatement(ToLexicalInfo(token));
-                    statement.set_Condition(new BoolLiteralExpression(true));
+                    BoolLiteralExpression expression1 = statement.Condition = new BoolLiteralExpression(true);
                     statement2 = statement;
-                    block = statement2.get_Block();
+                    block = statement2.Block;
                     container.Add(statement2);
                     this.EnterLoop(statement2);
                 }
                 this.block(block);
                 token2 = this.LT(1);
                 this.match(0x2f);
-                Expression expression = this.paren_expression();
+                Expression condition = this.paren_expression();
                 this.eos();
                 if (base.inputState.guessing == 0)
                 {
                     BreakStatement statement3;
                     BreakStatement statement4 = statement3 = new BreakStatement(ToLexicalInfo(token2));
-                    statement3.set_Modifier(new StatementModifier(2, expression));
+                    StatementModifier modifier1 = statement3.Modifier = new StatementModifier(StatementModifierType.Unless, condition);
                     block.Add(statement3);
                     this.LeaveLoop(statement2);
                 }
@@ -2203,7 +2203,7 @@
                 this.match(0x6a);
                 if (base.inputState.guessing == 0)
                 {
-                    expression = CodeFactory.NewDoubleLiteralExpression(ToLexicalInfo(token), token.getText());
+                    expression = UnityScript.Parser.CodeFactory.NewDoubleLiteralExpression(ToLexicalInfo(token), token.getText());
                 }
             }
             catch (RecognitionException exception)
@@ -2243,10 +2243,10 @@
                 {
                     EnumDefinition definition;
                     EnumDefinition definition1 = definition = new EnumDefinition(ToLexicalInfo(token));
-                    definition.set_Name(token.getText());
+                    string text1 = definition.Name = token.getText();
                     node = definition2 = definition;
                     this.FlushAttributes(node);
-                    container.get_Members().Add(definition2);
+                    container.Members.Add(definition2);
                 }
                 this.match(0x3d);
                 switch (this.LA(1))
@@ -2341,11 +2341,11 @@
                 {
                     EnumMember member;
                     EnumMember member1 = member = new EnumMember(ToLexicalInfo(token));
-                    member.set_Name(token.getText());
-                    member.set_Initializer(expression);
+                    string text1 = member.Name = token.getText();
+                    IntegerLiteralExpression expression1 = member.Initializer = expression;
                     EnumMember node = member;
                     this.FlushAttributes(node);
-                    container.get_Members().Add(node);
+                    container.Members.Add(node);
                 }
             }
             catch (RecognitionException exception)
@@ -2415,21 +2415,21 @@
 
         public Expression equality()
         {
-            Expression expression = null;
+            Expression left = null;
             IToken token = null;
             IToken token2 = null;
             IToken token3 = null;
             IToken token4 = null;
             try
             {
-                expression = this.comparison();
+                left = this.comparison();
                 while (true)
                 {
-                    BinaryOperatorType type;
+                    BinaryOperatorType equality;
                     IToken token5;
                     if (!tokenSet_58_.member(this.LA(1)) || !tokenSet_16_.member(this.LA(2)))
                     {
-                        return expression;
+                        return left;
                     }
                     switch (this.LA(1))
                     {
@@ -2438,7 +2438,7 @@
                             this.match(0x55);
                             if (base.inputState.guessing == 0)
                             {
-                                type = 11;
+                                equality = BinaryOperatorType.Equality;
                                 token5 = token;
                             }
                             break;
@@ -2448,7 +2448,7 @@
                             this.match(0x56);
                             if (base.inputState.guessing == 0)
                             {
-                                type = 12;
+                                equality = BinaryOperatorType.Inequality;
                                 token5 = token2;
                             }
                             break;
@@ -2458,7 +2458,7 @@
                             this.match(0x59);
                             if (base.inputState.guessing == 0)
                             {
-                                type = 0x17;
+                                equality = BinaryOperatorType.ReferenceEquality;
                                 token5 = token3;
                             }
                             break;
@@ -2468,7 +2468,7 @@
                             this.match(90);
                             if (base.inputState.guessing == 0)
                             {
-                                type = 0x18;
+                                equality = BinaryOperatorType.ReferenceInequality;
                                 token5 = token4;
                             }
                             break;
@@ -2476,10 +2476,10 @@
                         default:
                             throw new NoViableAltException(this.LT(1), this.getFilename());
                     }
-                    Expression expression2 = this.comparison();
+                    Expression right = this.comparison();
                     if (base.inputState.guessing == 0)
                     {
-                        expression = new BinaryExpression(ToLexicalInfo(token5), type, expression, expression2);
+                        left = new BinaryExpression(ToLexicalInfo(token5), equality, left, right);
                     }
                 }
             }
@@ -2491,9 +2491,9 @@
                 }
                 this.reportError(exception);
                 this.recover(exception, tokenSet_20_);
-                return expression;
+                return left;
             }
-            return expression;
+            return left;
         }
 
         public Expression expression()
@@ -2522,18 +2522,18 @@
             {
                 if (tokenSet_16_.member(this.LA(1)) && tokenSet_17_.member(this.LA(2)))
                 {
-                    Expression expression = this.expression();
+                    Expression item = this.expression();
                     if (base.inputState.guessing == 0)
                     {
-                        ec.Add(expression);
+                        ec.Add(item);
                     }
                     while (this.LA(1) == 0x43)
                     {
                         this.match(0x43);
-                        expression = this.expression();
+                        item = this.expression();
                         if (base.inputState.guessing == 0)
                         {
-                            ec.Add(expression);
+                            ec.Add(item);
                         }
                     }
                 }
@@ -2559,13 +2559,13 @@
             IToken token = null;
             try
             {
-                Expression expression = this.expression();
+                Expression first = this.expression();
                 token = this.LT(1);
                 this.match(0x42);
-                Expression expression2 = this.expression();
+                Expression second = this.expression();
                 if (base.inputState.guessing == 0)
                 {
-                    pair = new ExpressionPair(ToLexicalInfo(token), expression, expression2);
+                    pair = new ExpressionPair(ToLexicalInfo(token), first, second);
                 }
             }
             catch (RecognitionException exception)
@@ -2751,16 +2751,16 @@
                     return node;
                 }
                 Field field1 = field = new Field(ToLexicalInfo(token));
-                field.set_Name(token.getText());
-                field.set_Type(reference);
-                field.set_Initializer(expression);
+                string text1 = field.Name = token.getText();
+                TypeReference reference1 = field.Type = reference;
+                Expression expression1 = field.Initializer = expression;
                 node = field;
                 if (token2 != null)
                 {
                     SetEndSourceLocation(node, token2);
                 }
                 this.FlushAttributes(node);
-                cd.get_Members().Add(node);
+                cd.Members.Add(node);
             }
             catch (RecognitionException exception)
             {
@@ -2785,9 +2785,7 @@
                 this.match(0x11);
                 if (base.inputState.guessing == 0)
                 {
-                    Block block2;
-                    s.set_EnsureBlock(block2 = new Block(ToLexicalInfo(token)));
-                    block = block2;
+                    block = s.EnsureBlock = new Block(ToLexicalInfo(token));
                 }
                 this.compound_or_single_stmt(block);
             }
@@ -2804,13 +2802,13 @@
 
         public void FlushAttributes(INodeWithAttributes node)
         {
-            node.get_Attributes().AddRange(this._attributes);
+            node.Attributes.AddRange(this._attributes);
             this._attributes.Clear();
         }
 
         public Statement for_c(Block container)
         {
-            Statement statement = null;
+            Statement stmt = null;
             try
             {
                 Expression expression;
@@ -2824,10 +2822,10 @@
                         this.declaration_statement(container);
                         if (base.inputState.guessing == 0)
                         {
-                            statement = container.get_Statements().get_Item(-1) as DeclarationStatement;
-                            if (statement != null)
+                            stmt = container.Statements[-1] as DeclarationStatement;
+                            if (stmt != null)
                             {
-                                statement.Annotate("PrivateScope");
+                                stmt.Annotate("PrivateScope");
                             }
                         }
                         break;
@@ -2941,33 +2939,33 @@
                 {
                     WhileStatement statement2;
                     WhileStatement statement1 = statement2 = new WhileStatement();
-                    statement2.set_Condition(expression);
+                    Expression expression1 = statement2.Condition = expression;
                     statement3 = statement2;
                     if (expression == null)
                     {
                         BoolLiteralExpression expression3;
-                        BoolLiteralExpression expression1 = expression3 = new BoolLiteralExpression();
-                        expression3.set_Value(true);
-                        statement3.set_Condition(expression3);
+                        BoolLiteralExpression expression5 = expression3 = new BoolLiteralExpression();
+                        int num1 = (int) (expression3.Value = true);
+                        statement3.Condition = expression3;
                     }
-                    block = statement3.get_Block();
-                    statement = statement3;
+                    block = statement3.Block;
+                    stmt = statement3;
                     str = this.SetUpLoopLabel(statement3);
-                    container.Add(statement);
+                    container.Add(stmt);
                     this.EnterLoop(statement3);
                 }
                 this.match(0x40);
                 this.compound_or_single_stmt(block);
                 if (base.inputState.guessing != 0)
                 {
-                    return statement;
+                    return stmt;
                 }
                 this.LeaveLoop(statement3);
                 if (this.IsLabelInUse(statement3))
                 {
                     LabelStatement statement4;
                     LabelStatement statement5 = statement4 = new LabelStatement();
-                    statement4.set_Name(str);
+                    string text1 = statement4.Name = str;
                     block.Add(statement4);
                 }
                 if (expression2 != null)
@@ -2983,9 +2981,9 @@
                 }
                 this.reportError(exception);
                 this.recover(exception, tokenSet_15_);
-                return statement;
+                return stmt;
             }
-            return statement;
+            return stmt;
         }
 
         public Statement for_in(Block container)
@@ -3008,7 +3006,7 @@
                         {
                             Declaration declaration;
                             Declaration declaration1 = declaration = new Declaration(ToLexicalInfo(token));
-                            declaration.set_Name(token.getText());
+                            string text1 = declaration.Name = token.getText();
                             declaration2 = declaration;
                         }
                         break;
@@ -3031,10 +3029,10 @@
                 {
                     ForStatement statement2;
                     ForStatement statement1 = statement2 = new ForStatement();
-                    statement2.set_Iterator(expression);
+                    Expression expression1 = statement2.Iterator = expression;
                     ForStatement statement3 = statement2;
-                    statement3.get_Declarations().Add(declaration2);
-                    block = statement3.get_Block();
+                    statement3.Declarations.Add(declaration2);
+                    block = statement3.Block;
                     stmt = statement3;
                     container.Add(stmt);
                     this.EnterLoop(stmt);
@@ -3084,7 +3082,7 @@
                     bool flag = false;
                     if (tokenSet_45_.member(this.LA(1)) && tokenSet_46_.member(this.LA(2)))
                     {
-                        int num2 = this.mark();
+                        int pos = this.mark();
                         flag = true;
                         base.inputState.guessing++;
                         try
@@ -3113,7 +3111,7 @@
                         {
                             flag = false;
                         }
-                        this.rewind(num2);
+                        this.rewind(pos);
                         base.inputState.guessing--;
                     }
                     if (flag)
@@ -3131,7 +3129,7 @@
                 }
                 if ((base.inputState.guessing == 0) && (statement != null))
                 {
-                    statement.set_LexicalInfo(ToLexicalInfo(token));
+                    statement.LexicalInfo = ToLexicalInfo(token);
                 }
             }
             catch (RecognitionException exception2)
@@ -3175,7 +3173,7 @@
                         TypeReference reference = this.type_reference();
                         if (base.inputState.guessing == 0)
                         {
-                            method.set_ReturnType(reference);
+                            method.ReturnType = reference;
                         }
                         break;
                     }
@@ -3185,10 +3183,10 @@
                     default:
                         throw new NoViableAltException(this.LT(1), this.getFilename());
                 }
-                this.compound_statement(method.get_Body());
+                this.compound_statement(method.Body);
                 if (base.inputState.guessing == 0)
                 {
-                    method.set_EndSourceLocation(method.get_Body().get_EndSourceLocation());
+                    method.EndSourceLocation = method.Body.EndSourceLocation;
                 }
             }
             catch (RecognitionException exception)
@@ -3208,14 +3206,14 @@
             IToken token = null;
             try
             {
-                Block block;
+                Block body;
                 token = this.LT(1);
                 this.match(0x13);
                 if (base.inputState.guessing == 0)
                 {
                     m = new BlockExpression(ToLexicalInfo(token));
                     m.Annotate("inline");
-                    block = m.get_Body();
+                    body = m.Body;
                 }
                 this.match(0x3f);
                 switch (this.LA(1))
@@ -3243,7 +3241,7 @@
                         TypeReference reference = this.type_reference();
                         if (base.inputState.guessing == 0)
                         {
-                            m.set_ReturnType(reference);
+                            m.ReturnType = reference;
                         }
                         break;
                     }
@@ -3278,17 +3276,17 @@
                 }
                 if ((this.LA(1) == 0x3d) && tokenSet_13_.member(this.LA(2)))
                 {
-                    this.block(block);
+                    this.block(body);
                     return m;
                 }
                 if (!tokenSet_16_.member(this.LA(1)) || !tokenSet_20_.member(this.LA(2)))
                 {
                     throw new NoViableAltException(this.LT(1), this.getFilename());
                 }
-                Expression expression2 = this.expression();
+                Expression expression = this.expression();
                 if (base.inputState.guessing == 0)
                 {
-                    block.Add(expression2);
+                    body.Add(expression);
                 }
                 return m;
             }
@@ -3370,8 +3368,8 @@
                         {
                             ParameterDeclaration declaration;
                             ParameterDeclaration declaration1 = declaration = new ParameterDeclaration();
-                            declaration.set_Type(reference);
-                            declaration.set_Name("arg" + parameters.Count);
+                            TypeReference reference1 = declaration.Type = reference;
+                            string text1 = declaration.Name = "arg" + parameters.Count;
                             parameters.Add(declaration);
                         }
                         while (this.LA(1) == 0x43)
@@ -3382,8 +3380,8 @@
                             {
                                 ParameterDeclaration declaration2;
                                 ParameterDeclaration declaration3 = declaration2 = new ParameterDeclaration();
-                                declaration2.set_Type(reference);
-                                declaration2.set_Name("arg" + parameters.Count);
+                                TypeReference reference4 = declaration2.Type = reference;
+                                string text2 = declaration2.Name = "arg" + parameters.Count;
                                 parameters.Add(declaration2);
                             }
                         }
@@ -3415,7 +3413,7 @@
             {
             }
             Node node = (Node) RuntimeServices.Coerce(local1, typeof(Node));
-            object obj2 = node.get_Item("UpdateLabel");
+            object obj2 = node["UpdateLabel"];
             if ((obj2 != null) && !node.ContainsAnnotation("LabelInUse"))
             {
                 node.Annotate("LabelInUse");
@@ -3433,7 +3431,7 @@
         {
             HashLiteralExpression expression = null;
             IToken token = null;
-            ExpressionPair pair = null;
+            ExpressionPair item = null;
             try
             {
                 token = this.LT(1);
@@ -3468,18 +3466,18 @@
                     case 0x6b:
                     case 0x6c:
                     case 0x6d:
-                        pair = this.expression_pair();
+                        item = this.expression_pair();
                         if (base.inputState.guessing == 0)
                         {
-                            expression.get_Items().Add(pair);
+                            expression.Items.Add(item);
                         }
                         while (this.LA(1) == 0x43)
                         {
                             this.match(0x43);
-                            pair = this.expression_pair();
+                            item = this.expression_pair();
                             if (base.inputState.guessing == 0)
                             {
-                                expression.get_Items().Add(pair);
+                                expression.Items.Add(item);
                             }
                         }
                         break;
@@ -3583,12 +3581,10 @@
                 if (base.inputState.guessing == 0)
                 {
                     IfStatement statement;
-                    Block block2;
                     IfStatement statement1 = statement = new IfStatement(ToLexicalInfo(token));
-                    statement.set_Condition(expression);
+                    Expression expression1 = statement.Condition = expression;
                     statement2 = statement;
-                    statement2.set_TrueBlock(block2 = new Block());
-                    block = block2;
+                    block = statement2.TrueBlock = new Block();
                     container.Add(statement2);
                 }
                 this.compound_or_single_stmt(block);
@@ -3598,9 +3594,7 @@
                     this.match(11);
                     if (base.inputState.guessing == 0)
                     {
-                        Block block3;
-                        statement2.set_FalseBlock(block3 = new Block(ToLexicalInfo(token2)));
-                        block = block3;
+                        block = statement2.FalseBlock = new Block(ToLexicalInfo(token2));
                     }
                     this.compound_or_single_stmt(block);
                 }
@@ -3631,7 +3625,7 @@
                 this.eos();
                 if (base.inputState.guessing == 0)
                 {
-                    container.get_Imports().Add(new Import(ToLexicalInfo(token), new ReferenceExpression(ToLexicalInfo(token2), token2.getText())));
+                    container.Imports.Add(new Import(ToLexicalInfo(token), new ReferenceExpression(ToLexicalInfo(token2), token2.getText())));
                 }
             }
             catch (RecognitionException exception)
@@ -3701,7 +3695,7 @@
             try
             {
                 InterfaceDefinition definition2;
-                TypeReferenceCollection references;
+                TypeReferenceCollection baseTypes;
                 this.match(0x19);
                 token = this.LT(1);
                 this.match(0x3b);
@@ -3709,17 +3703,17 @@
                 {
                     InterfaceDefinition definition;
                     InterfaceDefinition definition1 = definition = new InterfaceDefinition(ToLexicalInfo(token));
-                    definition.set_Name(token.getText());
+                    string text1 = definition.Name = token.getText();
                     member = definition2 = definition;
-                    references = definition2.get_BaseTypes();
+                    baseTypes = definition2.BaseTypes;
                     this.FlushAttributes(definition2);
-                    parent.get_Members().Add(definition2);
+                    parent.Members.Add(definition2);
                 }
                 switch (this.LA(1))
                 {
                     case 14:
                         this.match(14);
-                        this.type_reference_list(references);
+                        this.type_reference_list(baseTypes);
                         break;
 
                     case 0x3d:
@@ -3834,7 +3828,7 @@
                         TypeReference reference = this.type_reference();
                         if (base.inputState.guessing == 0)
                         {
-                            method.set_ReturnType(reference);
+                            method.ReturnType = reference;
                         }
                         break;
                     }
@@ -3865,12 +3859,12 @@
 
         public static bool IsConstructorName(string name, TypeDefinition type)
         {
-            bool flag1 = type.get_NodeType() != 11;
+            bool flag1 = type.NodeType != NodeType.Module;
             if (!flag1)
             {
                 return flag1;
             }
-            return (name == type.get_Name());
+            return (name == type.Name);
         }
 
         public bool IsLabelInUse(Node node) => 
@@ -3965,9 +3959,9 @@
                     {
                         BinaryExpression expression3;
                         BinaryExpression expression1 = expression3 = new BinaryExpression(ToLexicalInfo(token));
-                        expression3.set_Operator(0x1d);
-                        expression3.set_Left(expression);
-                        expression3.set_Right(expression2);
+                        int num1 = (int) (expression3.Operator = BinaryOperatorType.And);
+                        Expression expression6 = expression3.Left = expression;
+                        Expression expression7 = expression3.Right = expression2;
                         expression = expression3;
                     }
                 }
@@ -4002,9 +3996,9 @@
                     {
                         BinaryExpression expression3;
                         BinaryExpression expression1 = expression3 = new BinaryExpression(ToLexicalInfo(token));
-                        expression3.set_Operator(0x1c);
-                        expression3.set_Left(expression);
-                        expression3.set_Right(expression2);
+                        int num1 = (int) (expression3.Operator = BinaryOperatorType.Or);
+                        Expression expression6 = expression3.Left = expression;
+                        Expression expression7 = expression3.Right = expression2;
                         expression = expression3;
                     }
                 }
@@ -4025,16 +4019,16 @@
 
         public void macro_application_block(Block container)
         {
-            MacroStatement statement = new MacroStatement();
-            ExpressionCollection ec = statement.get_Arguments();
-            Block b = statement.get_Body();
+            MacroStatement stmt = new MacroStatement();
+            ExpressionCollection arguments = stmt.Arguments;
+            Block body = stmt.Body;
             try
             {
                 Token token = this.member();
                 bool flag = false;
                 if ((this.LA(1) == 0x3d) && tokenSet_13_.member(this.LA(2)))
                 {
-                    int num = this.mark();
+                    int pos = this.mark();
                     flag = true;
                     base.inputState.guessing++;
                     try
@@ -4045,12 +4039,12 @@
                     {
                         flag = false;
                     }
-                    this.rewind(num);
+                    this.rewind(pos);
                     base.inputState.guessing--;
                 }
                 if (flag)
                 {
-                    this.compound_statement(b);
+                    this.compound_statement(body);
                 }
                 else
                 {
@@ -4058,14 +4052,14 @@
                     {
                         throw new NoViableAltException(this.LT(1), this.getFilename());
                     }
-                    this.expression_list(ec);
-                    this.compound_statement(b);
+                    this.expression_list(arguments);
+                    this.compound_statement(body);
                 }
                 if (base.inputState.guessing == 0)
                 {
-                    statement.set_LexicalInfo(ToLexicalInfo(token));
-                    statement.set_Name(token.getText());
-                    container.Add(statement);
+                    stmt.LexicalInfo = ToLexicalInfo(token);
+                    stmt.Name = token.getText();
+                    container.Add(stmt);
                 }
             }
             catch (RecognitionException exception2)
@@ -4129,7 +4123,7 @@
                         this.match(0x3b);
                         if (base.inputState.guessing == 0)
                         {
-                            token = token2;
+                            token = (Token) token2;
                         }
                         return token;
 
@@ -4138,7 +4132,7 @@
                         this.match(0x25);
                         if (base.inputState.guessing == 0)
                         {
-                            token = token3;
+                            token = (Token) token3;
                         }
                         return token;
 
@@ -4147,7 +4141,7 @@
                         this.match(20);
                         if (base.inputState.guessing == 0)
                         {
-                            token = token4;
+                            token = (Token) token4;
                         }
                         return token;
 
@@ -4156,7 +4150,7 @@
                         this.match(12);
                         if (base.inputState.guessing == 0)
                         {
-                            token = token5;
+                            token = (Token) token5;
                         }
                         return token;
                 }
@@ -4177,9 +4171,9 @@
 
         public TypeMemberModifiers member_modifiers()
         {
-            TypeMemberModifiers modifiers = new TypeMemberModifiers();
+            TypeMemberModifiers none = new TypeMemberModifiers();
             IToken token = null;
-            modifiers = 0;
+            none = TypeMemberModifiers.None;
             try
             {
                 int num;
@@ -4191,7 +4185,7 @@
                         this.match(0x10);
                         if (base.inputState.guessing == 0)
                         {
-                            modifiers |= 0x40;
+                            none |= TypeMemberModifiers.Final;
                         }
                         goto Label_0011;
 
@@ -4199,7 +4193,7 @@
                         this.match(0x22);
                         if (base.inputState.guessing == 0)
                         {
-                            modifiers |= 0x100;
+                            none |= TypeMemberModifiers.Override;
                         }
                         goto Label_0011;
 
@@ -4207,7 +4201,7 @@
                         this.match(0x1f);
                         if (base.inputState.guessing == 0)
                         {
-                            modifiers |= 8;
+                            none |= TypeMemberModifiers.Public;
                         }
                         goto Label_0011;
 
@@ -4215,7 +4209,7 @@
                         this.match(0x24);
                         if (base.inputState.guessing == 0)
                         {
-                            modifiers |= 1;
+                            none |= TypeMemberModifiers.Private;
                         }
                         goto Label_0011;
 
@@ -4223,7 +4217,7 @@
                         this.match(0x20);
                         if (base.inputState.guessing == 0)
                         {
-                            modifiers |= 4;
+                            none |= TypeMemberModifiers.Protected;
                         }
                         goto Label_0011;
 
@@ -4231,7 +4225,7 @@
                         this.match(0x21);
                         if (base.inputState.guessing == 0)
                         {
-                            modifiers |= 2;
+                            none |= TypeMemberModifiers.Internal;
                         }
                         goto Label_0011;
 
@@ -4239,7 +4233,7 @@
                         this.match(0x26);
                         if (base.inputState.guessing == 0)
                         {
-                            modifiers |= 0x20;
+                            none |= TypeMemberModifiers.Static;
                         }
                         goto Label_0011;
 
@@ -4247,13 +4241,13 @@
                         this.match(0x1b);
                         if (base.inputState.guessing == 0)
                         {
-                            modifiers |= 0x800;
+                            none |= TypeMemberModifiers.New;
                         }
                         goto Label_0011;
                 }
                 if (num != 0x2e)
                 {
-                    return modifiers;
+                    return none;
                 }
                 token = this.LT(1);
                 this.match(0x2e);
@@ -4271,9 +4265,9 @@
                 }
                 this.reportError(exception);
                 this.recover(exception, tokenSet_26_);
-                return modifiers;
+                return none;
             }
-            return modifiers;
+            return none;
         }
 
         public Expression member_reference_expression(Expression target)
@@ -4286,7 +4280,7 @@
                 int num = this.LA(1);
                 if (num == 0x5b)
                 {
-                    TypeReferenceCollection references;
+                    TypeReferenceCollection genericArguments;
                     token = this.LT(1);
                     this.match(0x5b);
                     if (base.inputState.guessing == 0)
@@ -4294,11 +4288,11 @@
                         GenericReferenceExpression expression2;
                         GenericReferenceExpression expression3;
                         GenericReferenceExpression expression1 = expression2 = new GenericReferenceExpression(ToLexicalInfo(token));
-                        expression2.set_Target(expression);
+                        Expression expression7 = expression2.Target = expression;
                         expression = expression3 = expression2;
-                        references = expression3.get_GenericArguments();
+                        genericArguments = expression3.GenericArguments;
                     }
-                    this.type_reference_list(references);
+                    this.type_reference_list(genericArguments);
                     this.match(0x5f);
                     return expression;
                 }
@@ -4310,9 +4304,9 @@
                 if (base.inputState.guessing == 0)
                 {
                     MemberReferenceExpression expression4;
-                    MemberReferenceExpression expression7 = expression4 = new MemberReferenceExpression(ToLexicalInfo(token2));
-                    expression4.set_Target(expression);
-                    expression4.set_Name(token2.getText());
+                    MemberReferenceExpression expression8 = expression4 = new MemberReferenceExpression(ToLexicalInfo(token2));
+                    Expression expression9 = expression4.Target = expression;
+                    string text1 = expression4.Name = token2.getText();
                     expression = expression4;
                 }
                 return expression;
@@ -4806,7 +4800,7 @@
                 TypeMember member = this.field_member(m);
                 if (base.inputState.guessing == 0)
                 {
-                    member.set_Modifiers(member.get_Modifiers() | modifiers);
+                    member.Modifiers |= modifiers;
                 }
             }
             catch (RecognitionException exception)
@@ -4822,13 +4816,13 @@
 
         public void module_member(Module module)
         {
-            Block b = module.get_Globals();
+            Block globals = module.Globals;
             try
             {
                 bool flag = false;
                 if ((tokenSet_7_.member(this.LA(1)) && tokenSet_8_.member(this.LA(2))) && this.GlobalVariablesBecomeFields())
                 {
-                    int num = this.mark();
+                    int pos = this.mark();
                     flag = true;
                     base.inputState.guessing++;
                     try
@@ -4840,7 +4834,7 @@
                     {
                         flag = false;
                     }
-                    this.rewind(num);
+                    this.rewind(pos);
                     base.inputState.guessing--;
                 }
                 if (flag)
@@ -4849,7 +4843,7 @@
                 }
                 else if ((this.LA(1) == 0x2d) && tokenSet_9_.member(this.LA(2)))
                 {
-                    this.declaration_statement(b);
+                    this.declaration_statement(globals);
                     this.eos();
                 }
                 else
@@ -4884,7 +4878,7 @@
                     }
                     if ((base.inputState.guessing == 0) && (member != null))
                     {
-                        member.set_Modifiers(member.get_Modifiers() | modifiers);
+                        member.Modifiers |= modifiers;
                     }
                 }
             }
@@ -4901,9 +4895,9 @@
 
         public TypeMemberModifiers module_member_modifiers()
         {
-            TypeMemberModifiers modifiers = new TypeMemberModifiers();
+            TypeMemberModifiers none = new TypeMemberModifiers();
             IToken token = null;
-            modifiers = 0;
+            none = TypeMemberModifiers.None;
             try
             {
                 int num;
@@ -4915,7 +4909,7 @@
                         this.match(0x10);
                         if (base.inputState.guessing == 0)
                         {
-                            modifiers |= 0x40;
+                            none |= TypeMemberModifiers.Final;
                         }
                         goto Label_0011;
 
@@ -4923,7 +4917,7 @@
                         this.match(0x1f);
                         if (base.inputState.guessing == 0)
                         {
-                            modifiers |= 8;
+                            none |= TypeMemberModifiers.Public;
                         }
                         goto Label_0011;
 
@@ -4931,7 +4925,7 @@
                         this.match(0x24);
                         if (base.inputState.guessing == 0)
                         {
-                            modifiers |= 1;
+                            none |= TypeMemberModifiers.Private;
                         }
                         goto Label_0011;
 
@@ -4939,7 +4933,7 @@
                         this.match(0x20);
                         if (base.inputState.guessing == 0)
                         {
-                            modifiers |= 4;
+                            none |= TypeMemberModifiers.Protected;
                         }
                         goto Label_0011;
 
@@ -4947,7 +4941,7 @@
                         this.match(0x21);
                         if (base.inputState.guessing == 0)
                         {
-                            modifiers |= 2;
+                            none |= TypeMemberModifiers.Internal;
                         }
                         goto Label_0011;
 
@@ -4955,13 +4949,13 @@
                         this.match(0x26);
                         if (base.inputState.guessing == 0)
                         {
-                            modifiers |= 0x20;
+                            none |= TypeMemberModifiers.Static;
                         }
                         goto Label_0011;
                 }
                 if (num != 0x2e)
                 {
-                    return modifiers;
+                    return none;
                 }
                 token = this.LT(1);
                 this.match(0x2e);
@@ -4979,9 +4973,9 @@
                 }
                 this.reportError(exception);
                 this.recover(exception, tokenSet_26_);
-                return modifiers;
+                return none;
             }
-            return modifiers;
+            return none;
         }
 
         public Expression new_array_expression()
@@ -5010,11 +5004,11 @@
             Expression expression = null;
             try
             {
-                ExpressionCollection expressions;
+                ExpressionCollection arguments;
                 bool flag = false;
                 if ((this.LA(1) == 0x1b) && (this.LA(2) == 0x3b))
                 {
-                    int num = this.mark();
+                    int pos = this.mark();
                     flag = true;
                     base.inputState.guessing++;
                     try
@@ -5025,7 +5019,7 @@
                     {
                         flag = false;
                     }
-                    this.rewind(num);
+                    this.rewind(pos);
                     base.inputState.guessing--;
                 }
                 if (flag)
@@ -5042,13 +5036,13 @@
                 {
                     MethodInvocationExpression expression3;
                     MethodInvocationExpression expression4;
-                    MethodInvocationExpression expression1 = expression3 = new MethodInvocationExpression(expression2.get_LexicalInfo());
-                    expression3.set_Target(expression2);
+                    MethodInvocationExpression expression1 = expression3 = new MethodInvocationExpression(expression2.LexicalInfo);
+                    Expression expression6 = expression3.Target = expression2;
                     expression = expression4 = expression3;
-                    expressions = expression4.get_Arguments();
+                    arguments = expression4.Arguments;
                 }
                 this.match(0x3f);
-                this.expression_list(expressions);
+                this.expression_list(arguments);
                 this.match(0x40);
                 return expression;
             }
@@ -5130,11 +5124,11 @@
                 {
                     ParameterDeclaration declaration;
                     ParameterDeclaration declaration1 = declaration = new ParameterDeclaration(ToLexicalInfo(token));
-                    declaration.set_Name(token.getText());
-                    declaration.set_Type(reference);
-                    ParameterDeclaration node = declaration;
-                    m.get_Parameters().Add(node);
-                    this.FlushAttributes(node);
+                    string text1 = declaration.Name = token.getText();
+                    TypeReference reference1 = declaration.Type = reference;
+                    ParameterDeclaration item = declaration;
+                    m.Parameters.Add(item);
+                    this.FlushAttributes(item);
                 }
             }
             catch (RecognitionException exception)
@@ -5239,7 +5233,7 @@
             UnityScriptLexer lexer = UnityScriptLexerFor(reader, fileName, TabSizeFromContext(context));
             if (lexer == null)
             {
-                targetCompileUnit.get_Modules().Add(CodeFactory.NewModule(fileName));
+                targetCompileUnit.Modules.Add(UnityScript.Parser.CodeFactory.NewModule(fileName));
             }
             else
             {
@@ -5261,14 +5255,14 @@
 
         public Expression postfix_unary_expression()
         {
-            Expression expression = null;
+            Expression operand = null;
             IToken token = null;
             IToken token2 = null;
             try
             {
                 IToken token3;
-                UnaryOperatorType type;
-                expression = this.slicing_expression();
+                UnaryOperatorType postIncrement;
+                operand = this.slicing_expression();
                 if ((this.LA(1) == 0x4f) && tokenSet_20_.member(this.LA(2)))
                 {
                     token = this.LT(1);
@@ -5276,7 +5270,7 @@
                     if (base.inputState.guessing == 0)
                     {
                         token3 = token;
-                        type = 4;
+                        postIncrement = UnaryOperatorType.PostIncrement;
                     }
                 }
                 else if ((this.LA(1) == 80) && tokenSet_20_.member(this.LA(2)))
@@ -5286,7 +5280,7 @@
                     if (base.inputState.guessing == 0)
                     {
                         token3 = token2;
-                        type = 5;
+                        postIncrement = UnaryOperatorType.PostDecrement;
                     }
                 }
                 else if (!tokenSet_20_.member(this.LA(1)) || !tokenSet_28_.member(this.LA(2)))
@@ -5295,7 +5289,7 @@
                 }
                 if ((base.inputState.guessing == 0) && (token3 != null))
                 {
-                    expression = new UnaryExpression(ToLexicalInfo(token3), type, expression);
+                    operand = new UnaryExpression(ToLexicalInfo(token3), postIncrement, operand);
                 }
             }
             catch (RecognitionException exception)
@@ -5306,9 +5300,9 @@
                 }
                 this.reportError(exception);
                 this.recover(exception, tokenSet_20_);
-                return expression;
+                return operand;
             }
-            return expression;
+            return operand;
         }
 
         public void pragma_directive(Module container)
@@ -5374,13 +5368,13 @@
 
         public Expression prefix_unary_expression()
         {
-            Expression expression = null;
+            Expression operand = null;
             IToken token = null;
             IToken token2 = null;
             IToken token3 = null;
             IToken token4 = null;
             IToken token5 = null;
-            UnaryOperatorType type = 0;
+            UnaryOperatorType none = UnaryOperatorType.None;
             try
             {
                 IToken token6;
@@ -5392,7 +5386,7 @@
                         if (base.inputState.guessing == 0)
                         {
                             token6 = token;
-                            type = 1;
+                            none = UnaryOperatorType.UnaryNegation;
                         }
                         break;
 
@@ -5402,7 +5396,7 @@
                         if (base.inputState.guessing == 0)
                         {
                             token6 = token2;
-                            type = 2;
+                            none = UnaryOperatorType.Increment;
                         }
                         break;
 
@@ -5412,7 +5406,7 @@
                         if (base.inputState.guessing == 0)
                         {
                             token6 = token3;
-                            type = 3;
+                            none = UnaryOperatorType.Decrement;
                         }
                         break;
 
@@ -5422,7 +5416,7 @@
                         if (base.inputState.guessing == 0)
                         {
                             token6 = token4;
-                            type = 6;
+                            none = UnaryOperatorType.LogicalNot;
                         }
                         break;
 
@@ -5432,17 +5426,17 @@
                         if (base.inputState.guessing == 0)
                         {
                             token6 = token5;
-                            type = 8;
+                            none = UnaryOperatorType.OnesComplement;
                         }
                         break;
 
                     default:
                         throw new NoViableAltException(this.LT(1), this.getFilename());
                 }
-                expression = this.unary_expression();
+                operand = this.unary_expression();
                 if (base.inputState.guessing == 0)
                 {
-                    expression = new UnaryExpression(ToLexicalInfo(token6), type, expression);
+                    operand = new UnaryExpression(ToLexicalInfo(token6), none, operand);
                 }
             }
             catch (RecognitionException exception)
@@ -5453,9 +5447,9 @@
                 }
                 this.reportError(exception);
                 this.recover(exception, tokenSet_20_);
-                return expression;
+                return operand;
             }
-            return expression;
+            return operand;
         }
 
         public Token qname()
@@ -5470,7 +5464,7 @@
                 this.match(0x3b);
                 if (base.inputState.guessing == 0)
                 {
-                    token = token2;
+                    token = (Token) token2;
                     builder = new StringBuilder();
                     builder.Append(token2.getText());
                 }
@@ -5557,21 +5551,21 @@
 
         public override void reportError(RecognitionException x)
         {
-            LexicalInfo info = new LexicalInfo(x.getFilename(), x.getLine(), x.getColumn());
+            LexicalInfo lexicalInfo = new LexicalInfo(x.getFilename(), x.getLine(), x.getColumn());
             NoViableAltException exception = x as NoViableAltException;
             if (exception != null)
             {
-                this.ReportError(CompilerErrorFactory.UnexpectedToken(info, x, exception.token.getText()));
+                this.ReportError(CompilerErrorFactory.UnexpectedToken(lexicalInfo, x, exception.token.getText()));
             }
             else
             {
-                this.ReportError(CompilerErrorFactory.GenericParserError(info, x));
+                this.ReportError(CompilerErrorFactory.GenericParserError(lexicalInfo, x));
             }
         }
 
         protected void ReportError(CompilerError error)
         {
-            this._context.get_Errors().Add(error);
+            this._context.Errors.Add(error);
         }
 
         public void return_statement(Block b)
@@ -5594,7 +5588,7 @@
                 {
                     ReturnStatement statement;
                     ReturnStatement statement1 = statement = new ReturnStatement(ToLexicalInfo(token));
-                    statement.set_Expression(expression);
+                    Expression expression1 = statement.Expression = expression;
                     b.Add(statement);
                 }
             }
@@ -5617,17 +5611,17 @@
                 this.match(0x63);
                 token = this.LT(1);
                 this.match(0x3b);
-                Attribute attribute = this.attribute_constructor();
+                Boo.Lang.Compiler.Ast.Attribute item = this.attribute_constructor();
                 if (base.inputState.guessing == 0)
                 {
                     string str = token.getText();
                     if (str == "assembly")
                     {
-                        m.get_AssemblyAttributes().Add(attribute);
+                        m.AssemblyAttributes.Add(item);
                     }
                     else if (str == "script")
                     {
-                        m.get_Attributes().Add(attribute);
+                        m.Attributes.Add(item);
                     }
                     else
                     {
@@ -5688,14 +5682,14 @@
 
         public static void SetEndSourceLocation(Node node, IToken token)
         {
-            node.set_EndSourceLocation(ToSourceLocation(token));
+            node.EndSourceLocation = ToSourceLocation(token);
         }
 
         public string SetUpLoopLabel(Node node)
         {
-            string[] textArray1 = new string[] { "for" };
-            string uniqueName = this._context.GetUniqueName(textArray1);
-            node.set_Item("UpdateLabel", uniqueName);
+            string[] components = new string[] { "for" };
+            string uniqueName = this._context.GetUniqueName(components);
+            node["UpdateLabel"] = uniqueName;
             return uniqueName;
         }
 
@@ -5709,7 +5703,7 @@
                 expression = this.sum();
                 while (true)
                 {
-                    BinaryOperatorType type;
+                    BinaryOperatorType shiftLeft;
                     IToken token3;
                     if ((this.LA(1) != 0x5d) && (this.LA(1) != 0x61))
                     {
@@ -5726,7 +5720,7 @@
                             this.match(0x5d);
                             if (base.inputState.guessing == 0)
                             {
-                                type = 0x22;
+                                shiftLeft = BinaryOperatorType.ShiftLeft;
                                 token3 = token;
                             }
                             break;
@@ -5736,7 +5730,7 @@
                             this.match(0x61);
                             if (base.inputState.guessing == 0)
                             {
-                                type = 0x24;
+                                shiftLeft = BinaryOperatorType.ShiftRight;
                                 token3 = token2;
                             }
                             break;
@@ -5749,9 +5743,9 @@
                     {
                         BinaryExpression expression3;
                         BinaryExpression expression1 = expression3 = new BinaryExpression(ToLexicalInfo(token3));
-                        expression3.set_Operator(type);
-                        expression3.set_Left(expression);
-                        expression3.set_Right(expression2);
+                        BinaryOperatorType type1 = expression3.Operator = shiftLeft;
+                        Expression expression6 = expression3.Left = expression;
+                        Expression expression7 = expression3.Right = expression2;
                         expression = expression3;
                     }
                 }
@@ -5799,7 +5793,7 @@
                 {
                     ReferenceExpression expression2;
                     ReferenceExpression expression1 = expression2 = new ReferenceExpression(ToLexicalInfo(token));
-                    expression2.set_Name(token.getText());
+                    string text1 = expression2.Name = token.getText();
                     expression = expression2;
                 }
             }
@@ -5824,16 +5818,16 @@
                 Token token = this.qname();
                 if ((this.LA(1) == 0x41) && (this.LA(2) == 0x5b))
                 {
-                    TypeReferenceCollection references;
+                    TypeReferenceCollection genericArguments;
                     this.match(0x41);
                     this.match(0x5b);
                     if (base.inputState.guessing == 0)
                     {
                         GenericTypeReference reference2;
                         reference = reference2 = new GenericTypeReference(ToLexicalInfo(token), token.getText());
-                        references = reference2.get_GenericArguments();
+                        genericArguments = reference2.GenericArguments;
                     }
-                    this.type_reference_list(references);
+                    this.type_reference_list(genericArguments);
                     this.match(0x5f);
                     return reference;
                 }
@@ -5845,7 +5839,7 @@
                 {
                     SimpleTypeReference reference3;
                     SimpleTypeReference reference1 = reference3 = new SimpleTypeReference(ToLexicalInfo(token));
-                    reference3.set_Name(token.getText());
+                    string text1 = reference3.Name = token.getText();
                     reference = reference3;
                 }
                 return reference;
@@ -5865,9 +5859,9 @@
 
         public void slice(SlicingExpression se)
         {
-            Expression expression = null;
-            Expression expression2 = null;
-            Expression expression3 = null;
+            Expression begin = null;
+            Expression end = null;
+            Expression step = null;
             try
             {
                 int num = this.LA(1);
@@ -5876,7 +5870,7 @@
                     this.match(0x42);
                     if (base.inputState.guessing == 0)
                     {
-                        expression = OmittedExpression.Default;
+                        begin = OmittedExpression.Default;
                     }
                     num = this.LA(1);
                     switch (num)
@@ -5905,16 +5899,16 @@
                         case 0x6b:
                         case 0x6c:
                         case 0x6d:
-                            expression2 = this.expression();
+                            end = this.expression();
                             goto Label_03F1;
 
                         case 0x42:
                             this.match(0x42);
                             if (base.inputState.guessing == 0)
                             {
-                                expression2 = OmittedExpression.Default;
+                                end = OmittedExpression.Default;
                             }
-                            expression3 = this.expression();
+                            step = this.expression();
                             goto Label_03F1;
 
                         case 0x43:
@@ -5927,7 +5921,7 @@
                 {
                     throw new NoViableAltException(this.LT(1), this.getFilename());
                 }
-                expression = this.expression();
+                begin = this.expression();
                 num = this.LA(1);
                 if (num == 0x42)
                 {
@@ -5959,7 +5953,7 @@
                         case 0x6b:
                         case 0x6c:
                         case 0x6d:
-                            expression2 = this.expression();
+                            end = this.expression();
                             break;
 
                         default:
@@ -5969,7 +5963,7 @@
                             }
                             if (base.inputState.guessing == 0)
                             {
-                                expression2 = OmittedExpression.Default;
+                                end = OmittedExpression.Default;
                             }
                             break;
                     }
@@ -5978,7 +5972,7 @@
                     {
                         case 0x42:
                             this.match(0x42);
-                            expression3 = this.expression();
+                            step = this.expression();
                             goto Label_03F1;
 
                         case 0x43:
@@ -6001,7 +5995,7 @@
             Label_03F1:
                 if (base.inputState.guessing == 0)
                 {
-                    se.get_Indices().Add(new Slice(expression, expression2, expression3));
+                    se.Indices.Add(new Slice(begin, end, step));
                 }
             }
             catch (RecognitionException exception)
@@ -6034,8 +6028,9 @@
                         this.match(0x44);
                         if (base.inputState.guessing == 0)
                         {
-                            se = new SlicingExpression(ToLexicalInfo(token));
-                            se.set_Target(target);
+                            se = new SlicingExpression(ToLexicalInfo(token)) {
+                                Target = target
+                            };
                             target = se;
                         }
                         this.slice(se);
@@ -6061,10 +6056,11 @@
                         this.match(0x3f);
                         if (base.inputState.guessing == 0)
                         {
-                            expression3 = new MethodInvocationExpression(ToLexicalInfo(token2));
-                            expression3.set_Target(target);
+                            expression3 = new MethodInvocationExpression(ToLexicalInfo(token2)) {
+                                Target = target
+                            };
                             target = expression3;
-                            ec = expression3.get_Arguments();
+                            ec = expression3.Arguments;
                         }
                         this.expression_list(ec);
                         this.match(0x40);
@@ -6087,9 +6083,9 @@
         public void start(CompileUnit cu)
         {
             IToken token = null;
-            Module container = CodeFactory.NewModule(this.getFilename());
-            cu.get_Modules().Add(container);
-            Block b = container.get_Globals();
+            Module item = UnityScript.Parser.CodeFactory.NewModule(this.getFilename());
+            cu.Modules.Add(item);
+            Block globals = item.Globals;
             try
             {
                 bool flag2;
@@ -6097,12 +6093,12 @@
                 switch (this.LA(1))
                 {
                     case 0x16:
-                        this.import_directive(container);
+                        this.import_directive(item);
                         goto Label_0026;
 
                     case 0x39:
                     case 0x3a:
-                        this.pragma_directive(container);
+                        this.pragma_directive(item);
                         goto Label_0026;
 
                     default:
@@ -6110,7 +6106,7 @@
                         bool flag = false;
                         if ((this.LA(1) == 0x63) && (this.LA(2) == 0x3b))
                         {
-                            int num2 = this.mark();
+                            int pos = this.mark();
                             flag = true;
                             base.inputState.guessing++;
                             try
@@ -6123,12 +6119,12 @@
                             {
                                 flag = false;
                             }
-                            this.rewind(num2);
+                            this.rewind(pos);
                             base.inputState.guessing--;
                         }
                         if (flag)
                         {
-                            this.script_or_assembly_attribute(container);
+                            this.script_or_assembly_attribute(item);
                             goto Label_0026;
                         }
                         break;
@@ -6156,30 +6152,30 @@
                 }
                 if (flag2)
                 {
-                    this.script_or_assembly_attribute(container);
+                    this.script_or_assembly_attribute(item);
                     goto Label_0109;
                 }
                 if ((this.LA(1) == 0x63) && (this.LA(2) == 0x3b))
                 {
                     this.attributes();
-                    this.module_member(container);
+                    this.module_member(item);
                     goto Label_0109;
                 }
                 if (tokenSet_0_.member(this.LA(1)) && tokenSet_1_.member(this.LA(2)))
                 {
-                    this.module_member(container);
+                    this.module_member(item);
                     goto Label_0109;
                 }
                 if (tokenSet_2_.member(this.LA(1)) && tokenSet_3_.member(this.LA(2)))
                 {
-                    this.compound_or_single_stmt(b);
+                    this.compound_or_single_stmt(globals);
                     goto Label_0109;
                 }
                 token = this.LT(1);
                 this.match(1);
                 if (base.inputState.guessing == 0)
                 {
-                    SetEndSourceLocation(container, token);
+                    SetEndSourceLocation(item, token);
                 }
             }
             catch (RecognitionException exception3)
@@ -6200,7 +6196,7 @@
                 bool flag = false;
                 if (tokenSet_42_.member(this.LA(1)) && tokenSet_16_.member(this.LA(2)))
                 {
-                    int num = this.mark();
+                    int pos = this.mark();
                     flag = true;
                     base.inputState.guessing++;
                     try
@@ -6211,7 +6207,7 @@
                     {
                         flag = false;
                     }
-                    this.rewind(num);
+                    this.rewind(pos);
                     base.inputState.guessing--;
                 }
                 if (flag)
@@ -6312,7 +6308,7 @@
             Expression expression = null;
             IToken token = null;
             IToken token2 = null;
-            BinaryOperatorType type = 0;
+            BinaryOperatorType none = BinaryOperatorType.None;
             try
             {
                 expression = this.term();
@@ -6335,7 +6331,7 @@
                             if (base.inputState.guessing == 0)
                             {
                                 token3 = token;
-                                type = 1;
+                                none = BinaryOperatorType.Addition;
                             }
                             break;
 
@@ -6345,7 +6341,7 @@
                             if (base.inputState.guessing == 0)
                             {
                                 token3 = token2;
-                                type = 2;
+                                none = BinaryOperatorType.Subtraction;
                             }
                             break;
 
@@ -6355,10 +6351,11 @@
                     Expression expression2 = this.term();
                     if (base.inputState.guessing == 0)
                     {
-                        BinaryExpression expression3 = new BinaryExpression(ToLexicalInfo(token3));
-                        expression3.set_Operator(type);
-                        expression3.set_Left(expression);
-                        expression3.set_Right(expression2);
+                        BinaryExpression expression3 = new BinaryExpression(ToLexicalInfo(token3)) {
+                            Operator = none,
+                            Left = expression,
+                            Right = expression2
+                        };
                         expression = expression3;
                     }
                 }
@@ -6410,21 +6407,21 @@
             IToken token4 = null;
             try
             {
-                Block block;
+                Block body;
                 MacroStatement statement4;
                 Block block2;
                 token = this.LT(1);
                 this.match(0x31);
-                Expression expression = this.paren_expression();
+                Expression item = this.paren_expression();
                 if (base.inputState.guessing == 0)
                 {
                     MacroStatement statement;
                     MacroStatement statement1 = statement = new MacroStatement(ToLexicalInfo(token));
-                    statement.set_Name(this.MacroName(token.getText()));
-                    MacroStatement statement2 = statement;
-                    statement2.get_Arguments().Add(expression);
-                    block = statement2.get_Body();
-                    container.Add(statement2);
+                    string text1 = statement.Name = this.MacroName(token.getText());
+                    MacroStatement stmt = statement;
+                    stmt.Arguments.Add(item);
+                    body = stmt.Body;
+                    container.Add(stmt);
                 }
                 this.match(0x3d);
             Label_0088:
@@ -6432,27 +6429,27 @@
                 {
                     token2 = this.LT(1);
                     this.match(50);
-                    expression = this.expression();
+                    item = this.expression();
                     this.match(0x42);
                     if (base.inputState.guessing == 0)
                     {
                         MacroStatement statement3;
                         MacroStatement statement6 = statement3 = new MacroStatement(ToLexicalInfo(token2));
-                        statement3.set_Name(token2.getText());
+                        string text2 = statement3.Name = token2.getText();
                         statement4 = statement3;
-                        statement4.get_Arguments().Add(expression);
-                        block2 = statement4.get_Body();
-                        block.Add(statement4);
+                        statement4.Arguments.Add(item);
+                        block2 = statement4.Body;
+                        body.Add(statement4);
                     }
                     while (this.LA(1) == 50)
                     {
                         token3 = this.LT(1);
                         this.match(50);
-                        expression = this.expression();
+                        item = this.expression();
                         this.match(0x42);
                         if (base.inputState.guessing == 0)
                         {
-                            statement4.get_Arguments().Add(expression);
+                            statement4.Arguments.Add(item);
                         }
                     }
                     int num = 0;
@@ -6483,10 +6480,10 @@
                     {
                         MacroStatement statement5;
                         MacroStatement statement7 = statement5 = new MacroStatement(ToLexicalInfo(token4));
-                        statement5.set_Name(token4.getText());
+                        string text3 = statement5.Name = token4.getText();
                         statement4 = statement5;
-                        block2 = statement4.get_Body();
-                        block.Add(statement4);
+                        block2 = statement4.Body;
+                        body.Add(statement4);
                     }
                     int num3 = 0;
                     while (true)
@@ -6536,10 +6533,10 @@
             {
                 Boo.Lang.Compiler.CompilerContext context3;
                 Boo.Lang.Compiler.CompilerContext context1 = context3 = context2;
-                if ((1 != 0) && (context3.get_Parameters() is UnityScriptCompilerParameters))
+                if ((1 != 0) && (context3.Parameters is UnityScriptCompilerParameters))
                 {
                     UnityScriptCompilerParameters parameters;
-                    UnityScriptCompilerParameters parameters1 = parameters = context3.get_Parameters();
+                    UnityScriptCompilerParameters parameters1 = parameters = (UnityScriptCompilerParameters) context3.Parameters;
                     if (1 != 0)
                     {
                         int num1 = num = parameters.TabSize;
@@ -6555,7 +6552,7 @@
             IToken token = null;
             IToken token2 = null;
             IToken token3 = null;
-            BinaryOperatorType type = 0;
+            BinaryOperatorType none = BinaryOperatorType.None;
             try
             {
                 expression = this.unary_expression();
@@ -6577,7 +6574,7 @@
                             this.match(0x54);
                             if (base.inputState.guessing == 0)
                             {
-                                type = 3;
+                                none = BinaryOperatorType.Multiply;
                                 token4 = token;
                             }
                             break;
@@ -6587,7 +6584,7 @@
                             this.match(0x68);
                             if (base.inputState.guessing == 0)
                             {
-                                type = 4;
+                                none = BinaryOperatorType.Division;
                                 token4 = token2;
                             }
                             break;
@@ -6597,7 +6594,7 @@
                             this.match(0x53);
                             if (base.inputState.guessing == 0)
                             {
-                                type = 5;
+                                none = BinaryOperatorType.Modulus;
                                 token4 = token3;
                             }
                             break;
@@ -6608,10 +6605,11 @@
                     Expression expression2 = this.unary_expression();
                     if (base.inputState.guessing == 0)
                     {
-                        BinaryExpression expression3 = new BinaryExpression(ToLexicalInfo(token4));
-                        expression3.set_Operator(type);
-                        expression3.set_Left(expression);
-                        expression3.set_Right(expression2);
+                        BinaryExpression expression3 = new BinaryExpression(ToLexicalInfo(token4)) {
+                            Operator = none,
+                            Left = expression,
+                            Right = expression2
+                        };
                         expression = expression3;
                     }
                 }
@@ -6649,7 +6647,7 @@
                 {
                     RaiseStatement statement;
                     RaiseStatement statement1 = statement = new RaiseStatement(ToLexicalInfo(token));
-                    statement.set_Exception(expression);
+                    Expression expression1 = statement.Exception = expression;
                     b.Add(statement);
                 }
             }
@@ -6682,16 +6680,16 @@
             try
             {
                 TryStatement statement;
-                Block block;
+                Block protectedBlock;
                 token = this.LT(1);
                 this.match(0x2b);
                 if (base.inputState.guessing == 0)
                 {
                     statement = new TryStatement(ToLexicalInfo(token));
-                    block = statement.get_ProtectedBlock();
+                    protectedBlock = statement.ProtectedBlock;
                     container.Add(statement);
                 }
-                this.compound_or_single_stmt(block);
+                this.compound_or_single_stmt(protectedBlock);
                 while (true)
                 {
                     TypeReference reference;
@@ -6728,15 +6726,15 @@
                         }
                         ExceptionHandler handler1 = handler = new ExceptionHandler(ToLexicalInfo(token2));
                         Declaration declaration1 = declaration = new Declaration(ToLexicalInfo(token3));
-                        declaration.set_Name(token3.getText());
-                        declaration.set_Type(reference);
-                        handler.set_Declaration(declaration);
-                        ExceptionHandler handler2 = handler;
-                        statement.get_ExceptionHandlers().Add(handler2);
-                        block = handler2.get_Block();
+                        string text1 = declaration.Name = token3.getText();
+                        TypeReference reference1 = declaration.Type = reference;
+                        Declaration declaration3 = handler.Declaration = declaration;
+                        ExceptionHandler item = handler;
+                        statement.ExceptionHandlers.Add(item);
+                        protectedBlock = item.Block;
                         reference = null;
                     }
-                    this.compound_or_single_stmt(block);
+                    this.compound_or_single_stmt(protectedBlock);
                 }
                 if ((this.LA(1) != 0x11) || !tokenSet_2_.member(this.LA(2)))
                 {
@@ -6763,7 +6761,7 @@
 
         public TypeReference type_reference()
         {
-            TypeReference reference = null;
+            TypeReference elementType = null;
             IToken token = null;
             int num = 1;
             try
@@ -6771,11 +6769,11 @@
                 switch (this.LA(1))
                 {
                     case 0x3b:
-                        reference = this.simple_type_reference();
+                        elementType = this.simple_type_reference();
                         break;
 
                     case 0x13:
-                        reference = this.anonymous_function_type();
+                        elementType = this.anonymous_function_type();
                         break;
 
                     default:
@@ -6796,15 +6794,15 @@
                     this.match(0x45);
                     if (base.inputState.guessing == 0)
                     {
-                        reference = new ArrayTypeReference(reference.get_LexicalInfo(), reference, new IntegerLiteralExpression(ToLexicalInfo(token), (long) num));
+                        elementType = new ArrayTypeReference(elementType.LexicalInfo, elementType, new IntegerLiteralExpression(ToLexicalInfo(token), (long) num));
                     }
-                    return reference;
+                    return elementType;
                 }
                 if (!tokenSet_35_.member(this.LA(1)) || !tokenSet_25_.member(this.LA(2)))
                 {
                     throw new NoViableAltException(this.LT(1), this.getFilename());
                 }
-                return reference;
+                return elementType;
             }
             catch (RecognitionException exception)
             {
@@ -6814,27 +6812,27 @@
                 }
                 this.reportError(exception);
                 this.recover(exception, tokenSet_35_);
-                return reference;
+                return elementType;
             }
-            return reference;
+            return elementType;
         }
 
         public void type_reference_list(TypeReferenceCollection typeReferences)
         {
             try
             {
-                TypeReference reference = this.type_reference();
+                TypeReference item = this.type_reference();
                 if (base.inputState.guessing == 0)
                 {
-                    typeReferences.Add(reference);
+                    typeReferences.Add(item);
                 }
                 while (this.LA(1) == 0x43)
                 {
                     this.match(0x43);
-                    reference = this.type_reference();
+                    item = this.type_reference();
                     if (base.inputState.guessing == 0)
                     {
-                        typeReferences.Add(reference);
+                        typeReferences.Add(item);
                     }
                 }
             }
@@ -6857,7 +6855,7 @@
                 bool flag = false;
                 if ((this.LA(1) == 0x2c) && tokenSet_16_.member(this.LA(2)))
                 {
-                    int num = this.mark();
+                    int pos = this.mark();
                     flag = true;
                     base.inputState.guessing++;
                     try
@@ -6871,7 +6869,7 @@
                     {
                         flag = false;
                     }
-                    this.rewind(num);
+                    this.rewind(pos);
                     base.inputState.guessing--;
                 }
                 if (flag)
@@ -6905,7 +6903,7 @@
                 bool flag = false;
                 if ((this.LA(1) == 0x2c) && (this.LA(2) == 0x3f))
                 {
-                    int num = this.mark();
+                    int pos = this.mark();
                     flag = true;
                     base.inputState.guessing++;
                     try
@@ -6919,7 +6917,7 @@
                     {
                         flag = false;
                     }
-                    this.rewind(num);
+                    this.rewind(pos);
                     base.inputState.guessing--;
                 }
                 if (flag)
@@ -6973,9 +6971,9 @@
                     ReferenceExpression expression4;
                     MethodInvocationExpression expression3 = new MethodInvocationExpression(ToLexicalInfo(token));
                     ReferenceExpression expression1 = expression4 = new ReferenceExpression(ToLexicalInfo(token));
-                    expression4.set_Name(token.getText());
-                    expression3.set_Target(expression4);
-                    expression3.get_Arguments().Add(expression2);
+                    string text1 = expression4.Name = token.getText();
+                    expression3.Target = expression4;
+                    expression3.Arguments.Add(expression2);
                     expression = expression3;
                 }
             }
@@ -7001,11 +6999,11 @@
                 token = this.LT(1);
                 this.match(0x2c);
                 this.match(0x3f);
-                TypeReference reference = this.type_reference();
+                TypeReference typeReference = this.type_reference();
                 this.match(0x40);
                 if (base.inputState.guessing == 0)
                 {
-                    expression = new TypeofExpression(ToLexicalInfo(token), reference);
+                    expression = new TypeofExpression(ToLexicalInfo(token), typeReference);
                 }
             }
             catch (RecognitionException exception)
@@ -7057,8 +7055,8 @@
                     {
                         TryCastExpression expression2;
                         TryCastExpression expression1 = expression2 = new TryCastExpression(ToLexicalInfo(token));
-                        expression2.set_Target(expression);
-                        expression2.set_Type(reference);
+                        Expression expression6 = expression2.Target = expression;
+                        TypeReference reference1 = expression2.Type = reference;
                         expression = expression2;
                     }
                     return expression;
@@ -7071,9 +7069,9 @@
                     if (base.inputState.guessing == 0)
                     {
                         CastExpression expression3;
-                        CastExpression expression6 = expression3 = new CastExpression(ToLexicalInfo(token2));
-                        expression3.set_Target(expression);
-                        expression3.set_Type(reference);
+                        CastExpression expression7 = expression3 = new CastExpression(ToLexicalInfo(token2));
+                        Expression expression8 = expression3.Target = expression;
+                        TypeReference reference4 = expression3.Type = reference;
                         expression = expression3;
                     }
                     return expression;
@@ -7113,7 +7111,7 @@
 
         protected void VirtualKeywordHasNoEffect(IToken token)
         {
-            this._context.get_Warnings().Add(UnityScriptWarnings.VirtualKeywordHasNoEffect(ToLexicalInfo(token)));
+            this._context.Warnings.Add(UnityScriptWarnings.VirtualKeywordHasNoEffect(ToLexicalInfo(token)));
         }
 
         public void while_statement(Block container)
@@ -7130,9 +7128,9 @@
                 {
                     WhileStatement statement;
                     WhileStatement statement1 = statement = new WhileStatement(ToLexicalInfo(token));
-                    statement.set_Condition(expression);
+                    Expression expression1 = statement.Condition = expression;
                     statement2 = statement;
-                    block = statement2.get_Block();
+                    block = statement2.Block;
                     container.Add(statement2);
                     this.EnterLoop(statement2);
                 }
@@ -7173,7 +7171,7 @@
                 {
                     YieldStatement statement;
                     YieldStatement statement1 = statement = new YieldStatement(ToLexicalInfo(token));
-                    statement.set_Expression(expression);
+                    Expression expression1 = statement.Expression = expression;
                     b.Add(statement);
                 }
             }
@@ -7199,7 +7197,7 @@
         }
 
         public UnityScriptCompilerParameters UnityScriptParameters =>
-            ((UnityScriptCompilerParameters) this._context.get_Parameters());
+            ((UnityScriptCompilerParameters) this._context.Parameters);
     }
 }
 

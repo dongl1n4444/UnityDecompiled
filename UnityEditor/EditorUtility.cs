@@ -15,7 +15,7 @@
     public sealed class EditorUtility
     {
         [Obsolete("Use BuildPipeline.BuildAssetBundle instead")]
-        public static bool BuildResourceFile(Object[] selection, string pathName) => 
+        public static bool BuildResourceFile(UnityEngine.Object[] selection, string pathName) => 
             BuildPipeline.BuildAssetBundle(null, selection, pathName, BuildAssetBundleOptions.CompleteAssets);
 
         /// <summary>
@@ -31,13 +31,13 @@
         /// <para>Array of objects heirarchically attached to the search array.</para>
         /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern Object[] CollectDeepHierarchy(Object[] roots);
+        public static extern UnityEngine.Object[] CollectDeepHierarchy(UnityEngine.Object[] roots);
         /// <summary>
         /// <para>Calculates and returns a list of all assets the assets listed in roots depend on.</para>
         /// </summary>
         /// <param name="roots"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern Object[] CollectDependencies(Object[] roots);
+        public static extern UnityEngine.Object[] CollectDependencies(UnityEngine.Object[] roots);
         public static string[] CompileCSharp(string[] sources, string[] references, string[] defines, string outputFile) => 
             MonoCSharpCompiler.Compile(sources, references, defines, outputFile);
 
@@ -71,13 +71,13 @@
         /// <param name="source"></param>
         /// <param name="dest"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern void CopySerialized(Object source, Object dest);
+        public static extern void CopySerialized(UnityEngine.Object source, UnityEngine.Object dest);
         /// <summary>
         /// <para>Copy all settings of a Unity Object to a second Object if they differ.</para>
         /// </summary>
         /// <param name="source"></param>
         /// <param name="dest"></param>
-        public static void CopySerializedIfDifferent(Object source, Object dest)
+        public static void CopySerializedIfDifferent(UnityEngine.Object source, UnityEngine.Object dest)
         {
             if (source == null)
             {
@@ -91,7 +91,7 @@
         }
 
         [Obsolete("Use PrefabUtility.CreateEmptyPrefab")]
-        public static Object CreateEmptyPrefab(string path) => 
+        public static UnityEngine.Object CreateEmptyPrefab(string path) => 
             PrefabUtility.CreateEmptyPrefab(path);
 
         /// <summary>
@@ -100,11 +100,11 @@
         /// <param name="name"></param>
         /// <param name="flags"></param>
         /// <param name="components"></param>
-        public static GameObject CreateGameObjectWithHideFlags(string name, HideFlags flags, params Type[] components)
+        public static GameObject CreateGameObjectWithHideFlags(string name, HideFlags flags, params System.Type[] components)
         {
             GameObject obj2 = Internal_CreateGameObjectWithHideFlags(name, flags);
             obj2.AddComponent(typeof(Transform));
-            foreach (Type type in components)
+            foreach (System.Type type in components)
             {
                 obj2.AddComponent(type);
             }
@@ -225,20 +225,23 @@
         /// <summary>
         /// <para>Displays a modal dialog with three buttons.</para>
         /// </summary>
-        /// <param name="title"></param>
-        /// <param name="message"></param>
-        /// <param name="ok"></param>
-        /// <param name="cancel"></param>
-        /// <param name="alt"></param>
+        /// <param name="title">Title for dialog.</param>
+        /// <param name="message">Purpose for the dialog.</param>
+        /// <param name="ok">Dialog function chosen.</param>
+        /// <param name="alt">Choose alternative dialog purpose.</param>
+        /// <param name="cancel">Close dialog with no operation.</param>
+        /// <returns>
+        /// <para>The id of the chosen button.</para>
+        /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int DisplayDialogComplex(string title, string message, string ok, string cancel, string alt);
-        internal static void DisplayObjectContextMenu(Rect position, Object context, int contextUserData)
+        internal static void DisplayObjectContextMenu(Rect position, UnityEngine.Object context, int contextUserData)
         {
-            Object[] objArray1 = new Object[] { context };
+            UnityEngine.Object[] objArray1 = new UnityEngine.Object[] { context };
             DisplayObjectContextMenu(position, objArray1, contextUserData);
         }
 
-        internal static void DisplayObjectContextMenu(Rect position, Object[] context, int contextUserData)
+        internal static void DisplayObjectContextMenu(Rect position, UnityEngine.Object[] context, int contextUserData)
         {
             Vector2 vector = GUIUtility.GUIToScreenPoint(new Vector2(position.x, position.y));
             position.x = vector.x;
@@ -287,15 +290,19 @@
         /// <param name="progress"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void DisplayProgressBar(string title, string info, float progress);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern bool EventHasDragCopyModifierPressed(Event evt);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern bool EventHasDragMoveModifierPressed(Event evt);
         /// <summary>
         /// <para>Saves an AudioClip or MovieTexture to a file.</para>
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="path"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern bool ExtractOggFile(Object obj, string path);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("use AssetDatabase.LoadAssetAtPath")]
-        public static extern Object FindAsset(string path, Type type);
+        public static extern bool ExtractOggFile(UnityEngine.Object obj, string path);
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("use AssetDatabase.LoadAssetAtPath"), GeneratedByOldBindingsGenerator]
+        public static extern UnityEngine.Object FindAsset(string path, System.Type type);
         [Obsolete("Use PrefabUtility.FindPrefabRoot")]
         public static GameObject FindPrefabRoot(GameObject source) => 
             PrefabUtility.FindPrefabRoot(source);
@@ -321,7 +328,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern string GetActiveNativePlatformSupportModuleName();
         [Obsolete("Use AssetDatabase.GetAssetPath")]
-        public static string GetAssetPath(Object asset) => 
+        public static string GetAssetPath(UnityEngine.Object asset) => 
             AssetDatabase.GetAssetPath(asset);
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -333,13 +340,13 @@
         /// </summary>
         /// <param name="target"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern int GetObjectEnabled(Object target);
+        public static extern int GetObjectEnabled(UnityEngine.Object target);
         [Obsolete("Use PrefabUtility.GetPrefabParent")]
-        public static Object GetPrefabParent(Object source) => 
+        public static UnityEngine.Object GetPrefabParent(UnityEngine.Object source) => 
             PrefabUtility.GetPrefabParent(source);
 
         [Obsolete("Use PrefabUtility.GetPrefabType")]
-        public static PrefabType GetPrefabType(Object target) => 
+        public static PrefabType GetPrefabType(UnityEngine.Object target) => 
             PrefabUtility.GetPrefabType(target);
 
         internal static void InitInstantiatedPreviewRecursive(GameObject go)
@@ -370,8 +377,8 @@
         /// </summary>
         /// <param name="instanceID"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern Object InstanceIDToObject(int instanceID);
-        internal static GameObject InstantiateForAnimatorPreview(Object original)
+        public static extern UnityEngine.Object InstanceIDToObject(int instanceID);
+        internal static GameObject InstantiateForAnimatorPreview(UnityEngine.Object original)
         {
             if (original == null)
             {
@@ -402,10 +409,10 @@
         }
 
         [Obsolete("Use PrefabUtility.InstantiatePrefab")]
-        public static Object InstantiatePrefab(Object target) => 
+        public static UnityEngine.Object InstantiatePrefab(UnityEngine.Object target) => 
             PrefabUtility.InstantiatePrefab(target);
 
-        internal static Object InstantiateRemoveAllNonAnimationComponents(Object original, Vector3 position, Quaternion rotation)
+        internal static UnityEngine.Object InstantiateRemoveAllNonAnimationComponents(UnityEngine.Object original, Vector3 position, Quaternion rotation)
         {
             if (original == null)
             {
@@ -415,13 +422,13 @@
         }
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private static extern void INTERNAL_CALL_Internal_DisplayObjectContextMenu(ref Rect position, Object[] context, int contextUserData);
+        private static extern void INTERNAL_CALL_Internal_DisplayObjectContextMenu(ref Rect position, UnityEngine.Object[] context, int contextUserData);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private static extern Object INTERNAL_CALL_Internal_InstantiateRemoveAllNonAnimationComponentsSingle(Object data, ref Vector3 pos, ref Quaternion rot);
+        private static extern UnityEngine.Object INTERNAL_CALL_Internal_InstantiateRemoveAllNonAnimationComponentsSingle(UnityEngine.Object data, ref Vector3 pos, ref Quaternion rot);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Private_DisplayCustomMenu(ref Rect screenPosition, string[] options, int[] enabled, int[] separator, int[] selected, SelectMenuItemFunction callback, object userData, bool showHotkey);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private static extern void INTERNAL_CALL_Private_DisplayPopupMenu(ref Rect position, string menuItemPath, Object context, int contextUserData);
+        private static extern void INTERNAL_CALL_Private_DisplayPopupMenu(ref Rect position, string menuItemPath, UnityEngine.Object context, int contextUserData);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern GameObject Internal_CreateGameObjectWithHideFlags(string name, HideFlags flags);
         private static void Internal_DisplayCustomMenu(Rect screenPosition, string[] options, int[] enabled, int[] separator, int[] selected, SelectMenuItemFunction callback, object userData, bool showHotkey)
@@ -429,17 +436,17 @@
             Private_DisplayCustomMenu(screenPosition, options, enabled, separator, selected, callback, userData, showHotkey);
         }
 
-        internal static void Internal_DisplayObjectContextMenu(Rect position, Object[] context, int contextUserData)
+        internal static void Internal_DisplayObjectContextMenu(Rect position, UnityEngine.Object[] context, int contextUserData)
         {
             INTERNAL_CALL_Internal_DisplayObjectContextMenu(ref position, context, contextUserData);
         }
 
-        internal static void Internal_DisplayPopupMenu(Rect position, string menuItemPath, Object context, int contextUserData)
+        internal static void Internal_DisplayPopupMenu(Rect position, string menuItemPath, UnityEngine.Object context, int contextUserData)
         {
             Private_DisplayPopupMenu(position, menuItemPath, context, contextUserData);
         }
 
-        private static Object Internal_InstantiateRemoveAllNonAnimationComponentsSingle(Object data, Vector3 pos, Quaternion rot) => 
+        private static UnityEngine.Object Internal_InstantiateRemoveAllNonAnimationComponentsSingle(UnityEngine.Object data, Vector3 pos, Quaternion rot) => 
             INTERNAL_CALL_Internal_InstantiateRemoveAllNonAnimationComponentsSingle(data, ref pos, ref rot);
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -449,7 +456,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void Internal_UpdateMenuTitleForLanguage(SystemLanguage newloc);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private static extern void InternalCopySerializedIfDifferent(Object source, Object dest);
+        private static extern void InternalCopySerializedIfDifferent(UnityEngine.Object source, UnityEngine.Object dest);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string InvokeDiffTool(string leftTitle, string leftFile, string rightTitle, string rightFile, string ancestorTitle, string ancestorFile);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -459,7 +466,7 @@
         /// </summary>
         /// <param name="target"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern bool IsPersistent(Object target);
+        public static extern bool IsPersistent(UnityEngine.Object target);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool IsWindows10OrGreater();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -480,7 +487,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int NaturalCompare(string a, string b);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        internal static extern int NaturalCompareObjectNames(Object a, Object b);
+        internal static extern int NaturalCompareObjectNames(UnityEngine.Object a, UnityEngine.Object b);
         /// <summary>
         /// <para>Displays the "open file" dialog and returns the selected path name.</para>
         /// </summary>
@@ -512,7 +519,7 @@
             INTERNAL_CALL_Private_DisplayCustomMenu(ref screenPosition, options, enabled, separator, selected, callback, userData, showHotkey);
         }
 
-        private static void Private_DisplayPopupMenu(Rect position, string menuItemPath, Object context, int contextUserData)
+        private static void Private_DisplayPopupMenu(Rect position, string menuItemPath, UnityEngine.Object context, int contextUserData)
         {
             INTERNAL_CALL_Private_DisplayPopupMenu(ref position, menuItemPath, context, contextUserData);
         }
@@ -522,11 +529,11 @@
             PrefabUtility.ReconnectToLastPrefab(go);
 
         [Obsolete("Use PrefabUtility.ReplacePrefab")]
-        public static GameObject ReplacePrefab(GameObject go, Object targetPrefab) => 
+        public static GameObject ReplacePrefab(GameObject go, UnityEngine.Object targetPrefab) => 
             PrefabUtility.ReplacePrefab(go, targetPrefab, ReplacePrefabOptions.Default);
 
         [Obsolete("Use PrefabUtility.ReplacePrefab")]
-        public static GameObject ReplacePrefab(GameObject go, Object targetPrefab, ReplacePrefabOptions options) => 
+        public static GameObject ReplacePrefab(GameObject go, UnityEngine.Object targetPrefab, ReplacePrefabOptions options) => 
             PrefabUtility.ReplacePrefab(go, targetPrefab, options);
 
         internal static void ResetMouseDown()
@@ -536,7 +543,7 @@
         }
 
         [Obsolete("Use PrefabUtility.ResetToPrefabState")]
-        public static bool ResetToPrefabState(Object source) => 
+        public static bool ResetToPrefabState(UnityEngine.Object source) => 
             PrefabUtility.ResetToPrefabState(source);
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -580,14 +587,14 @@
         /// </summary>
         /// <param name="target">The object to mark as dirty.</param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern void SetDirty(Object target);
+        public static extern void SetDirty(UnityEngine.Object target);
         /// <summary>
         /// <para>Set the enabled state of the object.</para>
         /// </summary>
         /// <param name="target"></param>
         /// <param name="enabled"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern void SetObjectEnabled(Object target, bool enabled);
+        public static extern void SetObjectEnabled(UnityEngine.Object target, bool enabled);
         /// <summary>
         /// <para>Set the Scene View selected display mode for this Renderer.</para>
         /// </summary>
@@ -596,7 +603,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetSelectedRenderState(Renderer renderer, EditorSelectedRenderState renderState);
         /// <summary>
-        /// <para>Set whether the Renderer's wireframe will be hidden when the renderer's GameObject is selected.</para>
+        /// <para>Sets whether the selected Renderer's wireframe will be hidden when the GameObject it is attached to is selected.</para>
         /// </summary>
         /// <param name="renderer"></param>
         /// <param name="enabled"></param>
@@ -606,7 +613,7 @@
             SetSelectedRenderState(renderer, !enabled ? (EditorSelectedRenderState.Highlight | EditorSelectedRenderState.Wireframe) : EditorSelectedRenderState.Hidden);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("Use EditorUtility.UnloadUnusedAssetsImmediate instead")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use EditorUtility.UnloadUnusedAssetsImmediate instead"), GeneratedByOldBindingsGenerator]
         public static extern void UnloadUnusedAssets();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("Use EditorUtility.UnloadUnusedAssetsImmediate instead")]
         public static extern void UnloadUnusedAssetsIgnoreManagedReferences();
@@ -627,13 +634,18 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void UnloadUnusedAssetsImmediateInternal(bool includeMonoReferencesAsRoots);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern bool WarnPrefab(Object target, string title, string warning, string okButton);
+        public static extern bool WarnPrefab(UnityEngine.Object target, string title, string warning, string okButton);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool WSACreateTestCertificate(string path, string publisher, string password, bool overwrite);
 
         public static bool audioMasterMute { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         internal static bool audioProfilingEnabled { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        /// <summary>
+        /// <para>True if there are any compilation error messages in the log.</para>
+        /// </summary>
+        public static bool scriptCompilationFailed { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         public delegate void SelectMenuItemFunction(object userData, string[] options, int selected);
     }

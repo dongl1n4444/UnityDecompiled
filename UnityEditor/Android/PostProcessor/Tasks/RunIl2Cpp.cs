@@ -1,7 +1,9 @@
 ﻿namespace UnityEditor.Android.PostProcessor.Tasks
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEditor;
     using UnityEditor.Android;
@@ -12,6 +14,7 @@
 
     internal class RunIl2Cpp : IPostProcessorTask
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ProgressHandler OnProgress;
 
         private void CopySymbolMap(string stagingArea, string assetsDataData, AndroidTargetDeviceType targetDeviceType)

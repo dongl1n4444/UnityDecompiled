@@ -11,7 +11,7 @@
         private bool m_BoolArgument;
         [FormerlySerializedAs("floatArgument"), SerializeField]
         private float m_FloatArgument;
-        [SerializeField, FormerlySerializedAs("intArgument")]
+        [FormerlySerializedAs("intArgument"), SerializeField]
         private int m_IntArgument;
         [FormerlySerializedAs("objectArgument"), SerializeField]
         private UnityEngine.Object m_ObjectArgument;

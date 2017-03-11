@@ -1,30 +1,25 @@
 ﻿namespace UnityEngine.TestTools.TestRunner.Callbacks
 {
+    using NUnit.Framework.Interfaces;
+    using NUnit.Framework.Internal;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using UnityEngine;
-    using UnityEngine.TestTools.TestRunner.GUI;
 
     internal class TestResultRenderer
     {
         [CompilerGenerated]
-        private static Func<TestRunnerResult, string> <>f__am$cache0;
-        private readonly List<TestRunnerResult> m_FailedTestCollection = new List<TestRunnerResult>();
-        private int m_FailureCount;
+        private static Func<ITestResult, string> <>f__am$cache0;
+        private const int k_MaxStringLength = 0x3a98;
+        private readonly List<ITestResult> m_FailedTestCollection = new List<ITestResult>();
         private Vector2 m_ScrollPosition;
         private bool m_ShowResults;
-        private readonly List<TestRunnerResult> m_TestCollection = new List<TestRunnerResult>();
 
-        internal void AddResults(TestRunnerResult result)
+        public TestResultRenderer(ITestResult testResults)
         {
-            this.m_TestCollection.Add(result);
-            if (result.resultType != TestRunnerResult.ResultType.Success)
-            {
-                this.m_FailureCount++;
-                this.m_FailedTestCollection.Add(result);
-            }
+            this.GetFailedTests(testResults);
         }
 
         public void Draw()
@@ -41,12 +36,17 @@
                     GUILayout.Label(this.m_FailedTestCollection.Count + " tests failed!", Styles.FailedLabelStyle, new GUILayoutOption[0]);
                     GUILayoutOption[] optionArray2 = new GUILayoutOption[] { GUILayout.ExpandWidth(true) };
                     this.m_ScrollPosition = GUILayout.BeginScrollView(this.m_ScrollPosition, optionArray2);
-                    string str = "";
+                    string text = "";
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = result => string.Concat(new object[] { result.name, " ", result.resultType, "\n", result.messages });
+                        <>f__am$cache0 = result => string.Concat(new object[] { result.Name, " ", result.ResultState, "\n", result.Message });
                     }
-                    GUILayout.TextArea(str + "<b><size=18>Code-based tests</size></b>\n" + string.Join("\n", Enumerable.Select<TestRunnerResult, string>(this.m_FailedTestCollection, <>f__am$cache0).ToArray<string>()), Styles.FailedMessagesStyle, new GUILayoutOption[0]);
+                    text = text + "<b><size=18>Code-based tests</size></b>\n" + string.Join("\n", Enumerable.Select<ITestResult, string>(this.m_FailedTestCollection, <>f__am$cache0).ToArray<string>());
+                    if (text.Length > 0x3a98)
+                    {
+                        text = text.Substring(0, 0x3a98);
+                    }
+                    GUILayout.TextArea(text, Styles.FailedMessagesStyle, new GUILayoutOption[0]);
                     GUILayout.EndScrollView();
                 }
                 if (GUILayout.Button("Close", new GUILayoutOption[0]))
@@ -56,8 +56,23 @@
             }
         }
 
-        public int FailureCount() => 
-            this.m_FailureCount;
+        private void GetFailedTests(ITestResult testResults)
+        {
+            if (testResults is TestCaseResult)
+            {
+                if (testResults.ResultState.Status == TestStatus.Failed)
+                {
+                    this.m_FailedTestCollection.Add(testResults);
+                }
+            }
+            else if (testResults.HasChildren)
+            {
+                foreach (ITestResult result in testResults.Children)
+                {
+                    this.GetFailedTests(result);
+                }
+            }
+        }
 
         public void ShowResults()
         {

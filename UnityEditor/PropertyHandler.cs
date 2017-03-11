@@ -22,7 +22,7 @@
             };
             if (this.contextMenuItems != null)
             {
-                Type type = storey.property.serializedObject.targetObject.GetType();
+                System.Type type = storey.property.serializedObject.targetObject.GetType();
                 foreach (ContextMenuItemAttribute attribute in this.contextMenuItems)
                 {
                     <AddMenuItems>c__AnonStorey1 storey2 = new <AddMenuItems>c__AnonStorey1 {
@@ -79,7 +79,7 @@
             return num;
         }
 
-        public void HandleAttribute(PropertyAttribute attribute, FieldInfo field, Type propertyType)
+        public void HandleAttribute(PropertyAttribute attribute, System.Reflection.FieldInfo field, System.Type propertyType)
         {
             if (attribute is TooltipAttribute)
             {
@@ -102,9 +102,9 @@
             }
         }
 
-        public void HandleDrawnType(Type drawnType, Type propertyType, FieldInfo field, PropertyAttribute attribute)
+        public void HandleDrawnType(System.Type drawnType, System.Type propertyType, System.Reflection.FieldInfo field, PropertyAttribute attribute)
         {
-            Type drawerTypeForType = ScriptAttributeUtility.GetDrawerTypeForType(drawnType);
+            System.Type drawerTypeForType = ScriptAttributeUtility.GetDrawerTypeForType(drawnType);
             if (drawerTypeForType != null)
             {
                 if (typeof(PropertyDrawer).IsAssignableFrom(drawerTypeForType))

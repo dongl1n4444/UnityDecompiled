@@ -95,7 +95,7 @@
         public bool useSpring { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
-        /// <para>The angular velocity of the joint in degrees per second.</para>
+        /// <para>The angular velocity of the joint in degrees per second. (Read Only)</para>
         /// </summary>
         public float velocity { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }

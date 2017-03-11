@@ -68,9 +68,9 @@
                 menu.AddDisabledItem(EditorGUIUtility.TextContent("Close Tab"));
             }
             menu.AddSeparator("");
-            Type[] paneTypes = base.GetPaneTypes();
+            System.Type[] paneTypes = base.GetPaneTypes();
             GUIContent content = EditorGUIUtility.TextContent("Add Tab");
-            foreach (Type type in paneTypes)
+            foreach (System.Type type in paneTypes)
             {
                 if (type != null)
                 {
@@ -104,7 +104,7 @@
 
         private void AddTabToHere(object userData)
         {
-            EditorWindow pane = (EditorWindow) ScriptableObject.CreateInstance((Type) userData);
+            EditorWindow pane = (EditorWindow) ScriptableObject.CreateInstance((System.Type) userData);
             this.AddTab(pane);
         }
 
@@ -139,7 +139,7 @@
             if ((s_DragMode == 1) && (PaneDragTab.get.m_Window == null))
             {
                 s_OriginalDragSource.RemoveTab(s_DragPane);
-                Object.DestroyImmediate(s_DragPane);
+                UnityEngine.Object.DestroyImmediate(s_DragPane);
                 PaneDragTab.get.Close();
                 GUIUtility.hotControl = 0;
                 ResetDragVars();
@@ -471,7 +471,7 @@
                     parent.RemoveChildNice(this);
                     if (!this.m_IsBeingDestroyed)
                     {
-                        Object.DestroyImmediate(this, true);
+                        UnityEngine.Object.DestroyImmediate(this, true);
                     }
                     if (cleanuppable != null)
                     {
@@ -500,7 +500,7 @@
             base.actualView = null;
             foreach (EditorWindow window in this.m_Panes)
             {
-                Object.DestroyImmediate(window, true);
+                UnityEngine.Object.DestroyImmediate(window, true);
             }
             base.OnDestroy();
         }
@@ -710,6 +710,12 @@
             s_PlaceholderPos = -1;
             s_DragMode = 0;
             s_OriginalDragSource = null;
+        }
+
+        protected override void SetActualViewPosition(Rect newPos)
+        {
+            Rect rect = base.borderSize.Remove(newPos);
+            base.SetActualViewPosition(rect);
         }
 
         public int selected

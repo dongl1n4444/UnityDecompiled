@@ -1,18 +1,20 @@
 ﻿namespace UnityEditor.BuildReporting
 {
     using System;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEditor;
     using UnityEngine;
     using UnityEngine.Scripting;
 
-    internal sealed class BuildReport : Object
+    internal sealed class BuildReport : UnityEngine.Object
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event Action<BuildReport> Changed;
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public extern void AddAppendix(Object obj);
+        public extern void AddAppendix(UnityEngine.Object obj);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void AddFile(string path, string role);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -28,11 +30,11 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void DeleteFilesRecursive(string rootDir);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        internal extern Object[] GetAllAppendices();
+        internal extern UnityEngine.Object[] GetAllAppendices();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public extern Object[] GetAppendices(Type type);
+        public extern UnityEngine.Object[] GetAppendices(System.Type type);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        internal extern Object[] GetAppendicesByClassID(int classID);
+        internal extern UnityEngine.Object[] GetAppendicesByClassID(int classID);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern BuildReport GetLatestReport();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -47,6 +49,8 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern string SummarizeErrors();
+
+        public string buildGUID { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         public BuildOptions buildOptions { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 

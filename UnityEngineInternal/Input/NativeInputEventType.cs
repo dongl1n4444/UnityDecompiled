@@ -14,7 +14,8 @@
         PointerMove,
         PointerUp,
         PointerCancelled,
-        Text
+        Text,
+        Tracking
     }
 }
 

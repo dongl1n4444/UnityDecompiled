@@ -5,11 +5,11 @@
     [Obsolete("LightmappingMode has been deprecated. Use LightmapBakeType instead (UnityUpgradable) -> LightmapBakeType", true)]
     public enum LightmappingMode
     {
-        [Obsolete("LightmappingMode.Baked has been deprecated. Use LightmapBakeType.Static instead (UnityUpgradable) -> LightmapBakeType.Static", true)]
+        [Obsolete("LightmappingMode.Baked has been deprecated. Use LightmapBakeType.Baked instead (UnityUpgradable) -> LightmapBakeType.Baked", true)]
         Baked = 2,
-        [Obsolete("LightmappingMode.Mixed has been deprecated. Use LightmapBakeType.Stationary instead (UnityUpgradable) -> LightmapBakeType.Stationary", true)]
+        [Obsolete("LightmappingMode.Mixed has been deprecated. Use LightmapBakeType.Mixed instead (UnityUpgradable) -> LightmapBakeType.Mixed", true)]
         Mixed = 1,
-        [Obsolete("LightmappingMode.Realtime has been deprecated. Use LightmapBakeType.Dynamic instead (UnityUpgradable) -> LightmapBakeType.Dynamic", true)]
+        [Obsolete("LightmappingMode.Realtime has been deprecated. Use LightmapBakeType.Realtime instead (UnityUpgradable) -> LightmapBakeType.Realtime", true)]
         Realtime = 4
     }
 }

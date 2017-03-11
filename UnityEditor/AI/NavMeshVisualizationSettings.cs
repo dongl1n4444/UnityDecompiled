@@ -5,6 +5,9 @@
     using UnityEngine.Scripting;
     using UnityEngine.Scripting.APIUpdating;
 
+    /// <summary>
+    /// <para>Represents the visualization state of the navigation debug graphics.</para>
+    /// </summary>
     [MovedFrom("UnityEditor")]
     public sealed class NavMeshVisualizationSettings
     {
@@ -26,6 +29,9 @@
 
         internal static bool showHeightMeshBVTree { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
+        /// <summary>
+        /// <para>A count of how many users requesting navigation debug graphics to be enabled.</para>
+        /// </summary>
         public static int showNavigation { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         internal static bool showNavMesh { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }

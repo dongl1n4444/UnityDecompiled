@@ -136,6 +136,24 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Perspective(float fov, float aspect, float zNear, float zFar, out Matrix4x4 value);
+        /// <summary>
+        /// <para>Given a source point, a target point, and an up vector, computes a transformation matrix that corresponds to a camera viewing the target from the source, such that the right-hand vector is perpendicular to the up vector.</para>
+        /// </summary>
+        /// <param name="from">The source point.</param>
+        /// <param name="to">The target point.</param>
+        /// <param name="up">The vector describing the up direction (typically Vector3.up).</param>
+        /// <returns>
+        /// <para>The resulting transformation matrix.</para>
+        /// </returns>
+        public static Matrix4x4 LookAt(Vector3 from, Vector3 to, Vector3 up)
+        {
+            Matrix4x4 matrixx;
+            INTERNAL_CALL_LookAt(ref from, ref to, ref up, out matrixx);
+            return matrixx;
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_LookAt(ref Vector3 from, ref Vector3 to, ref Vector3 up, out Matrix4x4 value);
         public float this[int row, int column]
         {
             get => 

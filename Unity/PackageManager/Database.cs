@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Threading;
@@ -36,8 +37,10 @@
         private IEnumerable<IvyModule> packagesNewOrUpdated = Enumerable.Empty<IvyModule>();
         private ILookup<string, IvyModule> remotePackagesByName;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event Action<IvyModule[]> OnUpdateAvailable;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event Action<IvyModule[]> OnUpdateLocal;
 
         public IEnumerable<IvyModule> AllVersionsOfPackage(string packageName)

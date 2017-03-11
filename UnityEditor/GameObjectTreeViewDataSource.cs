@@ -20,6 +20,7 @@
         private readonly int kGameObjectClassID;
         private int m_DelayedFetches;
         private double m_LastFetchTime;
+        private List<TreeViewItem> m_ListOfRows;
         private bool m_NeedsChildParentReferenceSetup;
         private int m_RootInstanceID;
         private int m_RowCount;
@@ -60,7 +61,8 @@
             if (base.m_Rows == null)
             {
                 int capacity = (this.m_RowCount <= 0x3e8) ? 0x3e8 : this.m_RowCount;
-                base.m_Rows = new List<TreeViewItem>(capacity);
+                this.m_ListOfRows = new List<TreeViewItem>(capacity);
+                base.m_Rows = this.m_ListOfRows;
             }
         }
 
@@ -345,12 +347,14 @@
         {
             int currentSceneHandle = -1;
             int row = 0;
+            List<int> list = new List<int>();
             while (property.NextWithDepthCheck(null, minAllowedDepth))
             {
                 GameObjectTreeViewItem item = this.EnsureCreatedItem(row);
                 if (this.AddSceneHeaderToSearchIfNeeded(item, property, ref currentSceneHandle))
                 {
                     row++;
+                    list.Add(row);
                     if (this.IsSceneHeader(property))
                     {
                         continue;
@@ -360,7 +364,19 @@
                 this.InitTreeViewItem(item, property, false, 0);
                 row++;
             }
-            return row;
+            int num3 = row;
+            if (list.Count > 0)
+            {
+                int index = list[0];
+                for (int i = 1; i < list.Count; i++)
+                {
+                    int count = (list[i] - index) - 1;
+                    this.m_ListOfRows.Sort(index, count, new TreeViewItemAlphaNumericSort());
+                    index = list[i];
+                }
+                this.m_ListOfRows.Sort(index, num3 - index, new TreeViewItemAlphaNumericSort());
+            }
+            return num3;
         }
 
         private void InitTreeViewItem(GameObjectTreeViewItem item, HierarchyProperty property, bool itemHasChildren, int itemDepth)
@@ -368,7 +384,7 @@
             this.InitTreeViewItem(item, property.instanceID, property.GetScene(), this.IsSceneHeader(property), property.colorCode, property.pptrValue, itemHasChildren, itemDepth);
         }
 
-        private void InitTreeViewItem(GameObjectTreeViewItem item, int itemID, Scene scene, bool isSceneHeader, int colorCode, Object pptrObject, bool hasChildren, int depth)
+        private void InitTreeViewItem(GameObjectTreeViewItem item, int itemID, Scene scene, bool isSceneHeader, int colorCode, UnityEngine.Object pptrObject, bool hasChildren, int depth)
         {
             item.children = null;
             item.id = itemID;
@@ -419,9 +435,9 @@
         {
             base.OnInitialize();
             GameObjectTreeViewGUI gui = (GameObjectTreeViewGUI) base.m_TreeView.gui;
-            gui.scrollHeightChanged += new Action(this.EnsureFullyInitialized);
-            gui.scrollPositionChanged += new Action(this.EnsureFullyInitialized);
-            gui.mouseAndKeyboardInput += new Action(this.EnsureFullyInitialized);
+            gui.scrollHeightChanged += new System.Action(this.EnsureFullyInitialized);
+            gui.scrollPositionChanged += new System.Action(this.EnsureFullyInitialized);
+            gui.mouseAndKeyboardInput += new System.Action(this.EnsureFullyInitialized);
         }
 
         private static void Resize(List<TreeViewItem> list, int count)
@@ -444,9 +460,9 @@
         private void ResizeItemList(int count)
         {
             this.AllocateBackingArrayIfNeeded();
-            if (base.m_Rows.Count != count)
+            if (this.m_ListOfRows.Count != count)
             {
-                Resize(base.m_Rows as List<TreeViewItem>, count);
+                Resize(this.m_ListOfRows, count);
             }
         }
 

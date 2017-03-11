@@ -26,7 +26,7 @@
         /// </summary>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void UpdateEnvironment();
-        [Obsolete("DynamicGI.UpdateMaterials(Terrain) is depracated; instead, use extension method from TerrainExtensions: 'terrain.UpdateGIMaterials()' (UnityUpgradable).", true)]
+        [Obsolete("DynamicGI.UpdateMaterials(Terrain) is deprecated; instead, use extension method from TerrainExtensions: 'terrain.UpdateGIMaterials()' (UnityUpgradable).", true)]
         public static void UpdateMaterials(UnityEngine.Object renderer)
         {
         }
@@ -36,12 +36,12 @@
         /// </summary>
         /// <param name="renderer">The Renderer to use when searching for a system to update.</param>
         /// <param name="terrain">The Terrain to use when searching for systems to update.</param>
-        [Obsolete("DynamicGI.UpdateMaterials(Renderer) is depracated; instead, use extension method from RendererExtensions: 'renderer.UpdateGIMaterials()' (UnityUpgradable).", true)]
+        [Obsolete("DynamicGI.UpdateMaterials(Renderer) is deprecated; instead, use extension method from RendererExtensions: 'renderer.UpdateGIMaterials()' (UnityUpgradable).", true)]
         public static void UpdateMaterials(Renderer renderer)
         {
         }
 
-        [Obsolete("DynamicGI.UpdateMaterials(Terrain, int, int, int, int) is depracated; instead, use extension method from TerrainExtensions: 'terrain.UpdateGIMaterials(x, y, width, height)' (UnityUpgradable).", true)]
+        [Obsolete("DynamicGI.UpdateMaterials(Terrain, int, int, int, int) is deprecated; instead, use extension method from TerrainExtensions: 'terrain.UpdateGIMaterials(x, y, width, height)' (UnityUpgradable).", true)]
         public static void UpdateMaterials(UnityEngine.Object renderer, int x, int y, int width, int height)
         {
         }

@@ -21,11 +21,12 @@
     using Unity.IL2CPP.Metadata.Fields;
     using Unity.IL2CPP.Portability;
 
-    public class MetadataCollector : IMetadataCollection
+    public class MetadataCollector : IMetadataCollection, IMethodVerifier
     {
         private readonly Dictionary<AssemblyDefinition, int> _assemblies = new Dictionary<AssemblyDefinition, int>();
         private readonly List<byte> _defaultValueData = new List<byte>();
         private readonly Dictionary<EventDefinition, int> _events = new Dictionary<EventDefinition, int>();
+        private readonly HashSet<MethodReference> _existingMethods = new HashSet<MethodReference>(new MethodReferenceComparer());
         private readonly Dictionary<FieldDefaultValue, int> _fieldDefaultValues = new Dictionary<FieldDefaultValue, int>();
         private readonly List<FieldMarshaledSize> _fieldMarshaledSizes = new List<FieldMarshaledSize>();
         private readonly Dictionary<FieldDefinition, int> _fields = new Dictionary<FieldDefinition, int>();
@@ -158,7 +159,7 @@
             this.AddString(Formatter.Stringify(assemblyDefinition.Name.Hash));
             this.AddString(Formatter.Stringify(assemblyDefinition.Name.PublicKey));
             AddUnique<ModuleDefinition>(this._modules, assemblyDefinition.MainModule, delegate (ModuleDefinition module) {
-                if (module.FullyQualifiedName == null)
+                if (module.FileName == null)
                 {
                 }
                 this.AddString(Path.GetFileName(module.Name));
@@ -216,6 +217,7 @@
         public void AddMethods(IEnumerable<MethodDefinition> methods)
         {
             AddUnique<MethodDefinition>(this._methods, methods, delegate (MethodDefinition method) {
+                this._existingMethods.Add(method);
                 ErrorInformation.CurrentlyProcessing.Method = method;
                 this.AddParameters(method.Parameters);
                 Il2CppTypeCollector.Add(method.ReturnType, 0);
@@ -390,7 +392,7 @@
                 {
                     this.AddVTables(definition.NestedTypes);
                 }
-                if (!definition.IsInterface || definition.IsComOrWindowsRuntimeType())
+                if ((!definition.IsInterface || definition.IsComOrWindowsRuntimeType()) || (WindowsRuntimeProjections.GetNativeToManagedAdapterClassFor(definition) != null))
                 {
                     VTable table = new VTableBuilder().VTableFor(definition, null);
                     this._vtableMethodsStart.Add(definition, this._vtableMethods.Count);
@@ -741,6 +743,9 @@
                 typeCollector = typeCollector,
                 $PC = -2
             };
+
+        public bool MethodExists(MethodReference method) => 
+            this._existingMethods.Contains(method);
 
         [CompilerGenerated]
         private sealed class <DefaultValueFromFields>c__Iterator0 : IEnumerable, IEnumerable<FieldDefaultValue>, IEnumerator, IDisposable, IEnumerator<FieldDefaultValue>

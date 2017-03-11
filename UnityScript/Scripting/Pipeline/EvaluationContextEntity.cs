@@ -17,16 +17,16 @@
             this._delegate;
 
         public override Boo.Lang.Compiler.TypeSystem.EntityType EntityType =>
-            this._delegate.get_EntityType();
+            this._delegate.EntityType;
 
         public override string FullName =>
-            this._delegate.get_FullName();
+            this._delegate.FullName;
 
         public override string Name =>
-            this._delegate.get_Name();
+            this._delegate.Name;
 
         public override IType Type =>
-            this._delegate.get_Type();
+            this._delegate.Type;
     }
 }
 

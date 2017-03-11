@@ -14,7 +14,7 @@
         private const string kLocalEulerAnglesHint = "m_LocalEulerAnglesHint";
         private const string kLocalRotation = "m_LocalRotation";
 
-        private static void AddKey(IAnimationRecordingState state, EditorCurveBinding binding, Type type, PropertyModification modification)
+        private static void AddKey(IAnimationRecordingState state, EditorCurveBinding binding, System.Type type, PropertyModification modification)
         {
             GameObject activeRootGameObject = state.activeRootGameObject;
             AnimationClip activeAnimationClip = state.activeAnimationClip;
@@ -39,7 +39,7 @@
             }
         }
 
-        private static void AddRotationKey(IAnimationRecordingState state, EditorCurveBinding binding, Type type, Vector3 previousEulerAngles, Vector3 currentEulerAngles)
+        private static void AddRotationKey(IAnimationRecordingState state, EditorCurveBinding binding, System.Type type, Vector3 previousEulerAngles, Vector3 currentEulerAngles)
         {
             AnimationClip activeAnimationClip = state.activeAnimationClip;
             if ((activeAnimationClip.hideFlags & HideFlags.NotEditable) == HideFlags.None)
@@ -64,7 +64,7 @@
             {
                 EditorCurveBinding binding = baseBinding;
                 binding.propertyName = modification.previousValue.propertyPath;
-                AnimationMode.AddPropertyModification(binding, modification.previousValue, modification.keepPrefabOverride);
+                UnityEditor.AnimationMode.AddPropertyModification(binding, modification.previousValue, modification.keepPrefabOverride);
             }
         }
 
@@ -181,7 +181,7 @@
             {
                 EditorCurveBinding binding = new EditorCurveBinding();
                 PropertyModification previousValue = modifications[i].previousValue;
-                Type type = AnimationUtility.PropertyModificationToEditorCurveBinding(previousValue, activeRootGameObject, out binding);
+                System.Type type = AnimationUtility.PropertyModificationToEditorCurveBinding(previousValue, activeRootGameObject, out binding);
                 if (type != null)
                 {
                     if (((component != null) && component.isHuman) && ((binding.type == typeof(Transform)) && component.IsBoneTransform(previousValue.target as Transform)))
@@ -190,7 +190,7 @@
                     }
                     else
                     {
-                        AnimationMode.AddPropertyModification(binding, previousValue, modifications[i].keepPrefabOverride);
+                        UnityEditor.AnimationMode.AddPropertyModification(binding, previousValue, modifications[i].keepPrefabOverride);
                         EditorCurveBinding[] bindingArray = RotationCurveInterpolation.RemapAnimationBindingForAddKey(binding, activeAnimationClip);
                         if (bindingArray != null)
                         {
@@ -224,7 +224,7 @@
                 if (key != null)
                 {
                     EditorCurveBinding binding = new EditorCurveBinding();
-                    Type type = AnimationUtility.PropertyModificationToEditorCurveBinding(modification.lastQuatModification.currentValue, state.activeRootGameObject, out binding);
+                    System.Type type = AnimationUtility.PropertyModificationToEditorCurveBinding(modification.lastQuatModification.currentValue, state.activeRootGameObject, out binding);
                     if (type != null)
                     {
                         object obj2;

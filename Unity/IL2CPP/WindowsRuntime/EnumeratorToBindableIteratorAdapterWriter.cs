@@ -15,7 +15,6 @@
     internal sealed class EnumeratorToBindableIteratorAdapterWriter : CCWWriterBase
     {
         private readonly string _hresult;
-        private readonly TypeDefinition _iBindableIteratorType;
         private readonly TypeDefinition _iEnumeratorType;
         private readonly string _returnValue;
         private string _typeName;
@@ -32,20 +31,18 @@
 
         private EnumeratorToBindableIteratorAdapterWriter() : base(CCWWriterBase.TypeProvider.IBindableIteratorTypeReference)
         {
-            this._iBindableIteratorType = CCWWriterBase.TypeProvider.IBindableIteratorTypeReference?.Resolve();
             this._iEnumeratorType = CCWWriterBase.TypeProvider.Corlib.MainModule.GetType("System.Collections", "IEnumerator");
             this._returnValue = CCWWriterBase.Naming.ForComInterfaceReturnParameterName();
             this._hresult = CCWWriterBase.Naming.ForInteropHResultVariable();
-        }
-
-        private bool Initialize()
-        {
-            if ((this._iBindableIteratorType == null) || (this._iEnumeratorType == null))
+            if (base._type == null)
             {
-                return false;
+                throw new InvalidOperationException("It is not valid to use EnumeratorToBindableIteratorAdapterWriter without IBindableIterator type available.");
             }
-            this._typeName = CCWWriterBase.Naming.ForWindowsRuntimeAdapterClass(this._iBindableIteratorType);
-            return true;
+            if (this._iEnumeratorType == null)
+            {
+                throw new InvalidOperationException("It is not valid to use EnumeratorToBindableIteratorAdapterWriter without IEnumerator type available.");
+            }
+            this._typeName = CCWWriterBase.Naming.ForWindowsRuntimeAdapterClass(this.IBindableIteratorType);
         }
 
         private void WriteConstructor(CppCodeWriter writer)
@@ -53,16 +50,11 @@
             writer.WriteLine($"inline {this._typeName}(Il2CppObject* obj) : il2cpp::vm::NonCachedCCWBase<{this._typeName}>(obj), {"_initialized"}(false), {"_hasCurrent"}(false) {{}}");
         }
 
-        public static bool WriteDefinitions(CppCodeWriter writer)
+        public static void WriteDefinitions(CppCodeWriter writer)
         {
             EnumeratorToBindableIteratorAdapterWriter writer2 = new EnumeratorToBindableIteratorAdapterWriter();
-            if (!writer2.Initialize())
-            {
-                return false;
-            }
             writer2.WriteTypeDefinition(writer);
             writer2.WriteMethodDefinitions(writer);
-            return true;
         }
 
         private void WriteInitializationCode(CppCodeWriter writer)
@@ -78,8 +70,8 @@
 
         private void WriteMethodDefinitions(CppCodeWriter writer)
         {
-            Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(this._iBindableIteratorType);
-            using (Collection<MethodDefinition>.Enumerator enumerator = this._iBindableIteratorType.Methods.GetEnumerator())
+            Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(this.IBindableIteratorType);
+            using (Collection<MethodDefinition>.Enumerator enumerator = this.IBindableIteratorType.Resolve().Methods.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -139,8 +131,8 @@
                 {
                     <>f__am$cache2 = m => m.Name == "MoveNext";
                 }
-                MethodDefinition interfaceMethod = this._iBindableIteratorType.Methods.First<MethodDefinition>(<>f__am$cache2);
-                IRuntimeMetadataAccess metadataAccess = MethodWriter.GetDefaultRuntimeMetadataAccess(method, metadataUsage, methodUsage);
+                MethodDefinition interfaceMethod = this.IBindableIteratorType.Resolve().Methods.First<MethodDefinition>(<>f__am$cache2);
+                IRuntimeMetadataAccess metadataAccess = MethodWriter.GetDefaultRuntimeMetadataAccess(method, metadataUsage, methodUsage, null);
                 new ComCallableWrapperMethodBodyWriter(method, interfaceMethod, MarshalType.WindowsRuntime).WriteMethodBody(bodyWriter, metadataAccess);
             }, this._typeName + '_' + "MoveNext");
         }
@@ -158,14 +150,14 @@
             writer.AddCodeGenIncludes();
             writer.AddInclude("vm/NonCachedCCWBase.h");
             base.AddIncludes(writer);
-            writer.WriteCommentedLine(this._iBindableIteratorType.FullName + " adapter");
-            writer.WriteLine($"struct {this._typeName} IL2CPP_FINAL : il2cpp::vm::NonCachedCCWBase<{this._typeName}>, {CCWWriterBase.Naming.ForTypeNameOnly(this._iBindableIteratorType)}");
+            writer.WriteCommentedLine(this.IBindableIteratorType.FullName + " adapter");
+            writer.WriteLine($"struct {this._typeName} IL2CPP_FINAL : il2cpp::vm::NonCachedCCWBase<{this._typeName}>, {CCWWriterBase.Naming.ForTypeNameOnly(this.IBindableIteratorType)}");
             using (new BlockWriter(writer, true))
             {
                 this.WriteConstructor(writer);
                 base.WriteCommonInterfaceMethods(writer);
-                Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(this._iBindableIteratorType);
-                foreach (MethodDefinition definition in this._iBindableIteratorType.Methods)
+                Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(this.IBindableIteratorType);
+                foreach (MethodDefinition definition in this.IBindableIteratorType.Resolve().Methods)
                 {
                     writer.WriteLine(ComInterfaceWriter.GetSignature(definition, definition, typeResolver, null, true) + ';');
                 }
@@ -183,6 +175,9 @@
         protected override IEnumerable<TypeReference> AllImplementedInterfaces =>
             new TypeReference[] { base._type };
 
+        private TypeReference IBindableIteratorType =>
+            base._type;
+
         protected override bool ImplementsAnyIInspectableInterfaces =>
             true;
 
@@ -194,7 +189,7 @@
 
             internal void <>m__0(CppCodeWriter bodyWriter, MetadataUsage metadataUsage, MethodUsage methodUsage)
             {
-                DefaultRuntimeMetadataAccess metadataAccess = new DefaultRuntimeMetadataAccess(this.method, metadataUsage, methodUsage);
+                DefaultRuntimeMetadataAccess metadataAccess = new DefaultRuntimeMetadataAccess(this.method, metadataUsage, methodUsage, null);
                 switch (this.method.Name)
                 {
                     case "get_Current":
@@ -209,7 +204,7 @@
                         this.$this.WriteMethodMoveNext(this.method, bodyWriter, metadataAccess);
                         return;
                 }
-                throw new NotSupportedException($"Interface '{this.$this._iBindableIteratorType.FullName}' contains unsupported method '{this.method.Name}'.");
+                throw new NotSupportedException($"Interface '{this.$this.IBindableIteratorType.FullName}' contains unsupported method '{this.method.Name}'.");
             }
         }
 

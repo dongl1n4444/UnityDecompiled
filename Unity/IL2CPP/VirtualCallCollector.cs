@@ -189,8 +189,8 @@
             internal bool $disposing;
             internal IEnumerator<TypeReference> $locvar0;
             internal int $PC;
-            internal int <i>__1;
-            internal TypeReference <type>__2;
+            internal int <i>__0;
+            internal TypeReference <type>__1;
             internal IEnumerable<TypeReference> inputParams;
 
             [DebuggerHidden]
@@ -232,7 +232,7 @@
                         goto Label_013D;
 
                     case 1:
-                        this.<i>__1 = 1;
+                        this.<i>__0 = 1;
                         this.$locvar0 = this.inputParams.GetEnumerator();
                         num = 0xfffffffd;
                         break;
@@ -251,8 +251,8 @@
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<type>__2 = this.$locvar0.Current;
-                        this.$current = VirtualCallCollector.FormatParameterName(this.<type>__2, VirtualCallCollector.Naming.ForParameterName(this.<type>__2, this.<i>__1++));
+                        this.<type>__1 = this.$locvar0.Current;
+                        this.$current = VirtualCallCollector.FormatParameterName(this.<type>__1, VirtualCallCollector.Naming.ForParameterName(this.<type>__1, this.<i>__0++));
                         if (!this.$disposing)
                         {
                             this.$PC = 2;

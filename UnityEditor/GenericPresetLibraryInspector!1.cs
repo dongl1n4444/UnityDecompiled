@@ -8,15 +8,15 @@
 
     internal class GenericPresetLibraryInspector<T> where T: ScriptableObject
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private PresetLibraryEditorState.ItemViewMode <itemViewMode>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private float <lineSpacing>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private RectOffset <marginsForGrid>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private RectOffset <marginsForList>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private int <maxShowNumPresets>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private Vector2 <presetSize>k__BackingField;
@@ -27,10 +27,10 @@
         private readonly string m_Header;
         private float m_LastRepaintedWidth;
         private readonly ScriptableObjectSaveLoadHelper<T> m_SaveLoadHelper;
-        private readonly Object m_Target;
+        private readonly UnityEngine.Object m_Target;
         private static GUIStyle s_EditButtonStyle;
 
-        public GenericPresetLibraryInspector(Object target, string header, Action<string> editButtonClicked)
+        public GenericPresetLibraryInspector(UnityEngine.Object target, string header, Action<string> editButtonClicked)
         {
             this.m_LastRepaintedWidth = -1f;
             this.m_Target = target;
@@ -69,7 +69,7 @@
                 PresetLibrary library = ScriptableSingleton<PresetLibraryManager>.instance.GetLibrary<T>(this.m_SaveLoadHelper, libraryPath) as PresetLibrary;
                 if (library == null)
                 {
-                    Debug.Log("Could not load preset library '" + libraryPath + "'");
+                    UnityEngine.Debug.Log("Could not load preset library '" + libraryPath + "'");
                 }
                 else
                 {

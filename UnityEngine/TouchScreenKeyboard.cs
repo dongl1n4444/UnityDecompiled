@@ -34,6 +34,8 @@
         }
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern void GetSelectionInternal(out int start, out int length);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_get_area(out Rect value);
         /// <summary>
         /// <para>Opens the native keyboard provided by OS on the screen.</para>
@@ -187,6 +189,11 @@
         }
 
         /// <summary>
+        /// <para>Specifies whether the TouchScreenKeyboard supports the selection property. (Read Only)</para>
+        /// </summary>
+        public bool canGetSelection { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        /// <summary>
         /// <para>Specifies if input process was finished. (Read Only)</para>
         /// </summary>
         public bool done { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
@@ -225,6 +232,19 @@
                         break;
                 }
                 return true;
+            }
+        }
+
+        /// <summary>
+        /// <para>Returns the character range of the selected text within the string currently being edited. (Read Only)</para>
+        /// </summary>
+        public RangeInt selection
+        {
+            get
+            {
+                RangeInt num;
+                this.GetSelectionInternal(out num.start, out num.length);
+                return num;
             }
         }
 

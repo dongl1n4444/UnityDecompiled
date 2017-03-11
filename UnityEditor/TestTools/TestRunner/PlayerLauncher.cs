@@ -22,6 +22,11 @@
         private bool BuildAndRunPlayer(Scene scene, PlayerLauncherBuildOptions buildOptions)
         {
             Debug.Log("Building player with following options:\n" + buildOptions);
+            if (buildOptions.BuildPlayerOptions.target == BuildTarget.WebGL)
+            {
+                Debug.LogError("Test runner is currently not supported on WebGL platform");
+                return false;
+            }
             string str = BuildPipeline.BuildPlayer(buildOptions.BuildPlayerOptions);
             if (!string.IsNullOrEmpty(str))
             {
@@ -36,6 +41,10 @@
             options.scenes = new string[] { scene.path };
             options.options |= BuildOptions.AutoRunPlayer | BuildOptions.Development;
             options.target = this.m_TargetPlatform;
+            if (PlayerSettings.GetScriptingBackend(EditorUserBuildSettings.activeBuildTargetGroup) == ScriptingImplementation.IL2CPP)
+            {
+                options.options |= BuildOptions.Il2CPP;
+            }
             BuildTargetGroup activeBuildTargetGroup = EditorUserBuildSettings.activeBuildTargetGroup;
             this.m_TempBuildLocation = Path.GetFullPath(FileUtil.GetUniqueTempPathInProject());
             string str = "PlayerWithTests." + PostprocessBuildPlayer.GetExtensionForBuildTarget(activeBuildTargetGroup, options.target, options.options);
@@ -49,17 +58,18 @@
 
         public Scene PrepareScene(string sceneName) => 
             base.CreateBootstrapScene(sceneName, delegate (PlaymodeTestsController runner) {
-                runner.AddEventHandlerMonoBehaviour<ResultsRenderer>();
+                runner.AddEventHandlerMonoBehaviour<PlayModeRunnerCallback>();
                 runner.settings = this.m_Settings;
             });
 
         public override void Run()
         {
-            using (new PlayerLauncherContextSettings())
+            using (PlayerLauncherContextSettings settings = new PlayerLauncherContextSettings())
             {
                 string sceneName = base.CreateSceneName();
                 Scene scene = this.PrepareScene(sceneName);
                 PlayerLauncherBuildOptions buildOptions = this.GetBuildOptions(scene);
+                base.LoadTestsAndExecutePreBuildSetupMethods(this.m_Settings.filter.BuildNUnitFilter());
                 bool flag = this.BuildAndRunPlayer(scene, buildOptions);
                 AssetDatabase.DeleteAsset(sceneName);
                 if (flag)
@@ -71,6 +81,7 @@
                 }
                 else if (this.m_Settings.isBatchModeRun)
                 {
+                    settings.Dispose();
                     EditorApplication.Exit(3);
                 }
             }

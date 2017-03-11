@@ -37,10 +37,10 @@
             this._genericContext = genericContext;
         }
 
-        private static void AddArrayIfNeeded(GenericInstanceType type, InflatedCollectionCollector generics, GenericInstanceMethod contextMethod, TypeDefinition ienumerableDefinition, TypeDefinition icollectionDefinition, TypeDefinition ilistDefinition)
+        private static void AddArrayIfNeeded(GenericInstanceType type, InflatedCollectionCollector generics, GenericInstanceMethod contextMethod, TypeDefinition ienumerableDefinition, TypeDefinition icollectionDefinition, TypeDefinition ilistDefinition, TypeDefinition ireadOnlyListDefinition, TypeDefinition ireadOnlyCollectionDefinition)
         {
             TypeDefinition definition = type.Resolve();
-            if (((definition == ienumerableDefinition) || (definition == icollectionDefinition)) || (definition == ilistDefinition))
+            if ((((definition == ienumerableDefinition) || (definition == icollectionDefinition)) || ((definition == ilistDefinition) || (definition == ireadOnlyListDefinition))) || (definition == ireadOnlyCollectionDefinition))
             {
                 ProcessArray(new ArrayType(type.GenericArguments[0]), generics, new GenericContext(type, contextMethod));
             }
@@ -163,6 +163,7 @@
                 {
                     ProcessGenericType(type, generics, currentContext.Method);
                 }
+                ProcessInterfacesImplementedOnComCallableWrapper(inflatedType, generics, currentContext.Method);
             }
         }
 
@@ -212,7 +213,7 @@
             if (GenericSharingAnalysis.CanShareType(type) && !Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual((TypeReference) sharedType, (TypeReference) type, TypeComparisonMode.Exact))
             {
                 ProcessHardcodedDependencies(type, generics, contextMethod);
-                ProcessWindowsRuntimeTypesFull(type, generics, contextMethod);
+                ProcessWindowsRuntimeTypes(type, generics, contextMethod);
                 ProcessGenericType(sharedType, generics, contextMethod);
                 GenericContext genericContext = new GenericContext(type, contextMethod);
                 type.ElementType.Resolve().Accept(new GenericContextAwareDeclarationOnlyVisitor(generics, genericContext, CollectionMode.MethodsAndTypes));
@@ -229,7 +230,7 @@
         private static void ProcessHardcodedDependencies(GenericInstanceType type, InflatedCollectionCollector generics, GenericInstanceMethod contextMethod)
         {
             ModuleDefinition mainModule = TypeProvider.Corlib.MainModule;
-            AddArrayIfNeeded(type, generics, contextMethod, mainModule.GetType("System.Collections.Generic", "IEnumerable`1"), mainModule.GetType("System.Collections.Generic", "ICollection`1"), mainModule.GetType("System.Collections.Generic", "IList`1"));
+            AddArrayIfNeeded(type, generics, contextMethod, mainModule.GetType("System.Collections.Generic", "IEnumerable`1"), mainModule.GetType("System.Collections.Generic", "ICollection`1"), mainModule.GetType("System.Collections.Generic", "IList`1"), mainModule.GetType("System.Collections.Generic", "IReadOnlyList`1"), mainModule.GetType("System.Collections.Generic", "IReadOnlyCollection`1"));
             if (type.GenericArguments.Count > 0)
             {
                 TypeDefinition definition2 = type.Resolve();
@@ -259,41 +260,56 @@
             }
         }
 
-        private static void ProcessWindowsRuntimeTypes(GenericInstanceType type, InflatedCollectionCollector generics, GenericInstanceMethod contextMethod)
+        public static void ProcessInterfacesImplementedOnComCallableWrapper(TypeReference type, InflatedCollectionCollector generics, GenericInstanceMethod contextMethod)
         {
-            TypeDefinition definition = type.Resolve();
-            if (definition.IsWindowsRuntime)
+            if (type.NeedsComCallableWrapper())
             {
-                if ((WindowsRuntimeProjections.ProjectToCLR(definition) != definition) && type.IsValidForWindowsRuntimeType())
+                foreach (TypeReference reference in type.GetInterfacesImplementedByComCallableWrapper())
                 {
-                    generics.WindowsRuntimeCCWs.Add(type);
-                }
-            }
-            else
-            {
-                foreach (GenericInstanceType type2 in type.GetAllAssignableWindowsRuntimeTypes())
-                {
-                    ProcessGenericType(type2, generics, contextMethod);
+                    if (reference.IsGenericInstance && (reference != WindowsRuntimeProjections.ProjectToCLR(reference)))
+                    {
+                        ProcessGenericType((GenericInstanceType) reference, generics, contextMethod);
+                    }
                 }
             }
         }
 
-        private static void ProcessWindowsRuntimeTypesFull(TypeReference type, InflatedCollectionCollector generics, GenericInstanceMethod contextMethod)
+        private void ProcessInteropType(TypeReference type)
         {
-            if (type.MetadataType == MetadataType.GenericInstance)
+            GenericInstanceType type2 = type as GenericInstanceType;
+            if (type2 != null)
             {
-                ProcessWindowsRuntimeTypes((GenericInstanceType) type, generics, contextMethod);
+                ProcessWindowsRuntimeTypes(type2, this._generics, this._genericContext.Method);
             }
-            TypeDefinition definition = type.Resolve();
-            Unity.IL2CPP.ILPreProcessor.TypeResolver resolver = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(type);
-            if (definition.BaseType != null)
+        }
+
+        private static void ProcessProjectedWindowsRuntimeInterface(GenericInstanceType type, InflatedCollectionCollector generics, GenericInstanceMethod contextMethod)
+        {
+            TypeDefinition interfaceType = type.Resolve();
+            if ((TypeProvider.ConstantSplittableMapType != null) && ((type.IsComOrWindowsRuntimeInterface() && (interfaceType.Namespace == "Windows.Foundation.Collections")) && (interfaceType.Name == "IMap`2")))
             {
-                ProcessWindowsRuntimeTypesFull(resolver.Resolve(definition.BaseType), generics, contextMethod);
+                GenericInstanceType type2 = (GenericInstanceType) Unity.IL2CPP.ILPreProcessor.TypeResolver.For(type).Resolve(TypeProvider.ConstantSplittableMapType);
+                ProcessGenericType(type2, generics, contextMethod);
             }
-            foreach (InterfaceImplementation implementation in definition.Interfaces)
+            if (interfaceType.IsInterface && !interfaceType.IsWindowsRuntime)
             {
-                ProcessWindowsRuntimeTypesFull(resolver.Resolve(implementation.InterfaceType), generics, contextMethod);
+                TypeReference reference = WindowsRuntimeProjections.ProjectToWindowsRuntime(type);
+                if (reference != type)
+                {
+                    ProcessGenericType((GenericInstanceType) reference, generics, contextMethod);
+                }
+                TypeDefinition nativeToManagedAdapterClassFor = WindowsRuntimeProjections.GetNativeToManagedAdapterClassFor(interfaceType);
+                if (nativeToManagedAdapterClassFor != null)
+                {
+                    ProcessGenericType((GenericInstanceType) Unity.IL2CPP.ILPreProcessor.TypeResolver.For(type).Resolve(nativeToManagedAdapterClassFor), generics, contextMethod);
+                }
             }
+        }
+
+        private static void ProcessWindowsRuntimeTypes(GenericInstanceType type, InflatedCollectionCollector generics, GenericInstanceMethod contextMethod)
+        {
+            ProcessProjectedWindowsRuntimeInterface(type, generics, contextMethod);
+            ProcessInterfacesImplementedOnComCallableWrapper(type, generics, contextMethod);
         }
 
         protected override void Visit(ArrayType arrayType, Unity.Cecil.Visitor.Context context)
@@ -350,7 +366,7 @@
         {
             if (!methodDefinition.HasGenericParameters || ((this._genericContext.Method != null) && (this._genericContext.Method.Resolve() == methodDefinition)))
             {
-                if (GenericsUtilities.CheckForMaximumRecursion(this._genericContext.Type))
+                if (GenericsUtilities.CheckForMaximumRecursion(this._genericContext.Type) || GenericsUtilities.CheckForMaximumRecursion(this._genericContext.Method))
                 {
                     this.AddEmptyTypeIfNecessary(methodDefinition.ReturnType);
                     foreach (ParameterDefinition definition in methodDefinition.Parameters)
@@ -382,6 +398,34 @@
             {
                 base.Visit(methodReference, context);
             }
+        }
+
+        protected override void Visit(MethodReturnType methodReturnType, Unity.Cecil.Visitor.Context context)
+        {
+            MethodReference data = context.Data as MethodReference;
+            if (data != null)
+            {
+                MethodDefinition definition = data.Resolve();
+                if ((definition != null) && !definition.HasBody)
+                {
+                    this.ProcessInteropType(Inflater.InflateType(this._genericContext, methodReturnType.ReturnType));
+                }
+            }
+            base.Visit(methodReturnType, context);
+        }
+
+        protected override void Visit(ParameterDefinition parameterDefinition, Unity.Cecil.Visitor.Context context)
+        {
+            MethodReference data = context.Data as MethodReference;
+            if (data != null)
+            {
+                MethodDefinition definition = data.Resolve();
+                if ((definition != null) && !definition.HasBody)
+                {
+                    this.ProcessInteropType(Inflater.InflateType(this._genericContext, parameterDefinition.ParameterType));
+                }
+            }
+            base.Visit(parameterDefinition, context);
         }
 
         protected override void Visit(PropertyDefinition propertyDefinition, Unity.Cecil.Visitor.Context context)
@@ -440,13 +484,17 @@
             internal bool $disposing;
             internal IEnumerator<TypeReference> $locvar0;
             internal int $PC;
-            internal TypeDefinition <iCollectionType>__1;
-            internal GenericInstanceType <iCollectionTypeGenericInstanceType>__3;
-            internal TypeDefinition <iEnumerableType>__1;
-            internal GenericInstanceType <iEnumerableTypeTypeGenericInstanceType>__3;
-            internal TypeDefinition <iListType>__1;
-            internal GenericInstanceType <iListTypeGenericInstanceType>__3;
-            internal TypeReference <type>__2;
+            internal TypeDefinition <iCollectionType>__0;
+            internal GenericInstanceType <iCollectionTypeGenericInstanceType>__2;
+            internal TypeDefinition <iEnumerableType>__0;
+            internal GenericInstanceType <iEnumerableTypeTypeGenericInstanceType>__2;
+            internal TypeDefinition <iListType>__0;
+            internal GenericInstanceType <iListTypeGenericInstanceType>__2;
+            internal TypeDefinition <iReadOnlyCollectionType>__0;
+            internal GenericInstanceType <iReadOnlyCollectionTypeGenericInstanceType>__3;
+            internal TypeDefinition <iReadOnlyListType>__0;
+            internal GenericInstanceType <iReadOnlyListTypeGenericInstanceType>__3;
+            internal TypeReference <type>__1;
             internal IEnumerable<TypeReference> types;
 
             [DebuggerHidden]
@@ -460,6 +508,8 @@
                     case 1:
                     case 2:
                     case 3:
+                    case 4:
+                    case 5:
                         try
                         {
                         }
@@ -482,9 +532,11 @@
                 switch (num)
                 {
                     case 0:
-                        this.<iListType>__1 = GenericContextAwareVisitor.TypeProvider.Corlib.MainModule.GetType("System.Collections.Generic.IList`1");
-                        this.<iCollectionType>__1 = GenericContextAwareVisitor.TypeProvider.Corlib.MainModule.GetType("System.Collections.Generic.ICollection`1");
-                        this.<iEnumerableType>__1 = GenericContextAwareVisitor.TypeProvider.Corlib.MainModule.GetType("System.Collections.Generic.IEnumerable`1");
+                        this.<iListType>__0 = GenericContextAwareVisitor.TypeProvider.Corlib.MainModule.GetType("System.Collections.Generic.IList`1");
+                        this.<iCollectionType>__0 = GenericContextAwareVisitor.TypeProvider.Corlib.MainModule.GetType("System.Collections.Generic.ICollection`1");
+                        this.<iEnumerableType>__0 = GenericContextAwareVisitor.TypeProvider.Corlib.MainModule.GetType("System.Collections.Generic.IEnumerable`1");
+                        this.<iReadOnlyListType>__0 = GenericContextAwareVisitor.TypeProvider.Corlib.MainModule.GetType("System.Collections.Generic.IReadOnlyList`1");
+                        this.<iReadOnlyCollectionType>__0 = GenericContextAwareVisitor.TypeProvider.Corlib.MainModule.GetType("System.Collections.Generic.IReadOnlyCollection`1");
                         this.$locvar0 = this.types.GetEnumerator();
                         num = 0xfffffffd;
                         break;
@@ -492,53 +544,89 @@
                     case 1:
                     case 2:
                     case 3:
+                    case 4:
+                    case 5:
                         break;
 
                     default:
-                        goto Label_01DC;
+                        goto Label_02C9;
                 }
                 try
                 {
                     switch (num)
                     {
                         case 1:
-                            goto Label_0112;
+                            goto Label_0160;
 
                         case 2:
-                            goto Label_015B;
+                            goto Label_01A9;
+
+                        case 3:
+                            goto Label_01F2;
+
+                        case 4:
+                            goto Label_0247;
+
+                        case 5:
+                            goto Label_0291;
                     }
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<type>__2 = this.$locvar0.Current;
-                        this.<iListTypeGenericInstanceType>__3 = new GenericInstanceType(this.<iListType>__1);
-                        this.<iListTypeGenericInstanceType>__3.GenericArguments.Add(this.<type>__2);
-                        this.$current = this.<iListTypeGenericInstanceType>__3;
+                        this.<type>__1 = this.$locvar0.Current;
+                        this.<iListTypeGenericInstanceType>__2 = new GenericInstanceType(this.<iListType>__0);
+                        this.<iListTypeGenericInstanceType>__2.GenericArguments.Add(this.<type>__1);
+                        this.$current = this.<iListTypeGenericInstanceType>__2;
                         if (!this.$disposing)
                         {
                             this.$PC = 1;
                         }
                         flag = true;
-                        goto Label_01DE;
-                    Label_0112:
-                        this.<iCollectionTypeGenericInstanceType>__3 = new GenericInstanceType(this.<iCollectionType>__1);
-                        this.<iCollectionTypeGenericInstanceType>__3.GenericArguments.Add(this.<type>__2);
-                        this.$current = this.<iCollectionTypeGenericInstanceType>__3;
+                        goto Label_02CB;
+                    Label_0160:
+                        this.<iCollectionTypeGenericInstanceType>__2 = new GenericInstanceType(this.<iCollectionType>__0);
+                        this.<iCollectionTypeGenericInstanceType>__2.GenericArguments.Add(this.<type>__1);
+                        this.$current = this.<iCollectionTypeGenericInstanceType>__2;
                         if (!this.$disposing)
                         {
                             this.$PC = 2;
                         }
                         flag = true;
-                        goto Label_01DE;
-                    Label_015B:
-                        this.<iEnumerableTypeTypeGenericInstanceType>__3 = new GenericInstanceType(this.<iEnumerableType>__1);
-                        this.<iEnumerableTypeTypeGenericInstanceType>__3.GenericArguments.Add(this.<type>__2);
-                        this.$current = this.<iEnumerableTypeTypeGenericInstanceType>__3;
+                        goto Label_02CB;
+                    Label_01A9:
+                        this.<iEnumerableTypeTypeGenericInstanceType>__2 = new GenericInstanceType(this.<iEnumerableType>__0);
+                        this.<iEnumerableTypeTypeGenericInstanceType>__2.GenericArguments.Add(this.<type>__1);
+                        this.$current = this.<iEnumerableTypeTypeGenericInstanceType>__2;
                         if (!this.$disposing)
                         {
                             this.$PC = 3;
                         }
                         flag = true;
-                        goto Label_01DE;
+                        goto Label_02CB;
+                    Label_01F2:
+                        if (CodeGenOptions.Dotnetprofile != DotNetProfile.Net45)
+                        {
+                            continue;
+                        }
+                        this.<iReadOnlyListTypeGenericInstanceType>__3 = new GenericInstanceType(this.<iReadOnlyListType>__0);
+                        this.<iReadOnlyListTypeGenericInstanceType>__3.GenericArguments.Add(this.<type>__1);
+                        this.$current = this.<iReadOnlyListTypeGenericInstanceType>__3;
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 4;
+                        }
+                        flag = true;
+                        goto Label_02CB;
+                    Label_0247:
+                        this.<iReadOnlyCollectionTypeGenericInstanceType>__3 = new GenericInstanceType(this.<iReadOnlyCollectionType>__0);
+                        this.<iReadOnlyCollectionTypeGenericInstanceType>__3.GenericArguments.Add(this.<type>__1);
+                        this.$current = this.<iReadOnlyCollectionTypeGenericInstanceType>__3;
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 5;
+                        }
+                        flag = true;
+                        goto Label_02CB;
+                    Label_0291:;
                     }
                 }
                 finally
@@ -552,9 +640,9 @@
                     }
                 }
                 this.$PC = -1;
-            Label_01DC:
+            Label_02C9:
                 return false;
-            Label_01DE:
+            Label_02CB:
                 return true;
             }
 

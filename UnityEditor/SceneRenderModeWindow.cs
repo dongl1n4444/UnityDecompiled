@@ -8,16 +8,17 @@
         private const float kFrameWidth = 1f;
         private const float kHeaderHorizontalPadding = 5f;
         private const float kHeaderVerticalPadding = 1f;
-        private const int kMenuHeaderCount = 5;
+        private const int kMenuHeaderCount = 7;
         private const float kSeparatorHeight = 3f;
         private const float kShowLightmapResolutionHeight = 22f;
         private const float kTogglePadding = 7f;
         private SerializedProperty m_EnableBakedGI;
         private SerializedProperty m_EnableRealtimeGI;
+        private bool m_PathTracerBackend = false;
         private readonly SceneView m_SceneView;
-        private readonly float m_WindowHeight = (((sMenuRowCount * 16f) + 9f) + 22f);
+        private readonly float m_WindowHeight = (((sMenuRowCount * 16f) + 15f) + 22f);
         private const float m_WindowWidth = 205f;
-        private static readonly int sMenuRowCount = (sRenderModeCount + 5);
+        private static readonly int sMenuRowCount = (sRenderModeCount + 7);
         private static readonly int sRenderModeCount = Styles.sRenderModeOptions.Length;
 
         public SceneRenderModeWindow(SceneView sceneView)
@@ -64,46 +65,56 @@
             this.DrawHeader(ref rect, Styles.sShadedHeader);
             for (int i = 0; i < sRenderModeCount; i++)
             {
-                DrawCameraMode mode = (DrawCameraMode) i;
-                if (mode != DrawCameraMode.ShadowCascades)
+                DrawCameraMode mode = Styles.sRenderModeUIOrder[i];
+                switch (mode)
                 {
-                    if (mode == DrawCameraMode.DeferredDiffuse)
-                    {
-                        goto Label_006C;
-                    }
-                    if (mode == DrawCameraMode.Charting)
-                    {
-                        goto Label_0086;
-                    }
-                    if (mode == DrawCameraMode.ValidateAlbedo)
-                    {
-                        goto Label_00A0;
-                    }
+                    case DrawCameraMode.Systems:
+                        this.DrawSeparator(ref rect);
+                        this.DrawHeader(ref rect, Styles.sGlobalIlluminationHeader);
+                        goto Label_010D;
+
+                    case DrawCameraMode.RealtimeIndirect:
+                        this.DrawSeparator(ref rect);
+                        this.DrawHeader(ref rect, Styles.sRealtimeGIHeader);
+                        goto Label_010D;
+
+                    case DrawCameraMode.BakedLightmap:
+                        this.DrawSeparator(ref rect);
+                        this.DrawHeader(ref rect, Styles.sBakedGIHeader);
+                        goto Label_010D;
+
+                    default:
+                        if (mode != DrawCameraMode.ShadowCascades)
+                        {
+                            if (mode == DrawCameraMode.DeferredDiffuse)
+                            {
+                                break;
+                            }
+                            if (mode == DrawCameraMode.ValidateAlbedo)
+                            {
+                                goto Label_00F3;
+                            }
+                        }
+                        else
+                        {
+                            this.DrawSeparator(ref rect);
+                            this.DrawHeader(ref rect, Styles.sMiscellaneous);
+                        }
+                        goto Label_010D;
                 }
-                else
-                {
-                    this.DrawSeparator(ref rect);
-                    this.DrawHeader(ref rect, Styles.sMiscellaneous);
-                }
-                goto Label_00BA;
-            Label_006C:
                 this.DrawSeparator(ref rect);
                 this.DrawHeader(ref rect, Styles.sDeferredHeader);
-                goto Label_00BA;
-            Label_0086:
-                this.DrawSeparator(ref rect);
-                this.DrawHeader(ref rect, Styles.sGlobalIlluminationHeader);
-                goto Label_00BA;
-            Label_00A0:
+                goto Label_010D;
+            Label_00F3:
                 this.DrawSeparator(ref rect);
                 this.DrawHeader(ref rect, Styles.sMaterialValidationHeader);
-            Label_00BA:
+            Label_010D:
                 using (new EditorGUI.DisabledScope(this.IsModeDisabled(mode)))
                 {
                     this.DoOneMode(caller, ref rect, mode);
                 }
             }
-            bool disabled = (this.m_SceneView.renderMode < DrawCameraMode.Charting) || this.IsModeDisabled(this.m_SceneView.renderMode);
+            bool disabled = (this.m_SceneView.renderMode < DrawCameraMode.RealtimeCharting) || this.IsModeDisabled(this.m_SceneView.renderMode);
             this.DoResolutionToggle(rect, disabled);
         }
 
@@ -136,7 +147,7 @@
             new Vector2(205f, this.m_WindowHeight);
 
         private bool IsModeDisabled(DrawCameraMode mode) => 
-            ((!this.m_EnableBakedGI.boolValue && (mode == DrawCameraMode.Baked)) || (((!this.m_EnableRealtimeGI.boolValue && !this.m_EnableBakedGI.boolValue) && (mode >= DrawCameraMode.Charting)) && (mode <= DrawCameraMode.LitClustering)));
+            (((((mode == DrawCameraMode.BakedLightmap) && !this.m_EnableBakedGI.boolValue) || ((mode == DrawCameraMode.BakedAlbedo) && (!this.m_EnableBakedGI.boolValue || !this.m_PathTracerBackend))) || ((mode == DrawCameraMode.BakedTexelValidity) && (!this.m_EnableBakedGI.boolValue || !this.m_PathTracerBackend))) || ((((mode >= DrawCameraMode.RealtimeCharting) && (mode < DrawCameraMode.BakedLightmap)) && !this.m_EnableRealtimeGI.boolValue) && (!this.m_EnableBakedGI.boolValue || (this.m_EnableBakedGI.boolValue && this.m_PathTracerBackend))));
 
         public override void OnGUI(Rect rect)
         {
@@ -160,19 +171,23 @@
             SerializedObject obj2 = new SerializedObject(LightmapEditorSettings.GetLightmapSettings());
             this.m_EnableRealtimeGI = obj2.FindProperty("m_GISettings.m_EnableRealtimeLightmaps");
             this.m_EnableBakedGI = obj2.FindProperty("m_GISettings.m_EnableBakedLightmaps");
+            this.m_PathTracerBackend = LightmapEditorSettings.giBakeBackend == LightmapEditorSettings.GIBakeBackend.PathTracer;
         }
 
         private class Styles
         {
+            public static readonly GUIContent sBakedGIHeader = EditorGUIUtility.TextContent("Baked GI");
             public static readonly GUIContent sDeferredHeader = EditorGUIUtility.TextContent("Deferred");
             public static readonly GUIContent sGlobalIlluminationHeader = EditorGUIUtility.TextContent("Global Illumination");
             public static readonly GUIContent sMaterialValidationHeader = EditorGUIUtility.TextContent("Material Validation");
             public static readonly GUIStyle sMenuItem = "MenuItem";
             public static readonly GUIContent sMiscellaneous = EditorGUIUtility.TextContent("Miscellaneous");
+            public static readonly GUIContent sRealtimeGIHeader = EditorGUIUtility.TextContent("Realtime GI");
             public static readonly GUIContent[] sRenderModeOptions = new GUIContent[] { 
                 EditorGUIUtility.TextContent("Shaded"), EditorGUIUtility.TextContent("Wireframe"), EditorGUIUtility.TextContent("Shaded Wireframe"), EditorGUIUtility.TextContent("Shadow Cascades"), EditorGUIUtility.TextContent("Render Paths"), EditorGUIUtility.TextContent("Alpha Channel"), EditorGUIUtility.TextContent("Overdraw"), EditorGUIUtility.TextContent("Mipmaps"), EditorGUIUtility.TextContent("Albedo"), EditorGUIUtility.TextContent("Specular"), EditorGUIUtility.TextContent("Smoothness"), EditorGUIUtility.TextContent("Normal"), EditorGUIUtility.TextContent("UV Charts"), EditorGUIUtility.TextContent("Systems"), EditorGUIUtility.TextContent("Albedo"), EditorGUIUtility.TextContent("Emissive"),
-                EditorGUIUtility.TextContent("Irradiance"), EditorGUIUtility.TextContent("Directionality"), EditorGUIUtility.TextContent("Baked"), EditorGUIUtility.TextContent("Clustering"), EditorGUIUtility.TextContent("Lit Clustering"), EditorGUIUtility.TextContent("Validate Albedo"), EditorGUIUtility.TextContent("Validate Metal Specular"), EditorGUIUtility.TextContent("Shadowmask"), EditorGUIUtility.TextContent("Shadowmask Overlap")
+                EditorGUIUtility.TextContent("Indirect"), EditorGUIUtility.TextContent("Directionality"), EditorGUIUtility.TextContent("Baked Lightmap"), EditorGUIUtility.TextContent("Clustering"), EditorGUIUtility.TextContent("Lit Clustering"), EditorGUIUtility.TextContent("Validate Albedo"), EditorGUIUtility.TextContent("Validate Metal Specular"), EditorGUIUtility.TextContent("Shadowmask"), EditorGUIUtility.TextContent("Light Overlap"), EditorGUIUtility.TextContent("Albedo"), EditorGUIUtility.TextContent("Emissive"), EditorGUIUtility.TextContent("Directionality"), EditorGUIUtility.TextContent("Texel Validity"), EditorGUIUtility.TextContent("Lightmap Indices"), EditorGUIUtility.TextContent("UV Charts")
             };
+            public static DrawCameraMode[] sRenderModeUIOrder = new DrawCameraMode[] { DrawCameraMode.Textured };
             public static readonly GUIContent sResolutionToggle = EditorGUIUtility.TextContent("Show Lightmap Resolution");
             public static readonly GUIStyle sSeparator = "sv_iconselector_sep";
             public static readonly GUIContent sShadedHeader = EditorGUIUtility.TextContent("Shading Mode");

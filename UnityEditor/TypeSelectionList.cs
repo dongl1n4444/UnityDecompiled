@@ -8,20 +8,20 @@
     {
         private List<TypeSelection> m_TypeSelections;
 
-        public TypeSelectionList(Object[] objects)
+        public TypeSelectionList(UnityEngine.Object[] objects)
         {
-            Dictionary<string, List<Object>> dictionary = new Dictionary<string, List<Object>>();
-            foreach (Object obj2 in objects)
+            Dictionary<string, List<UnityEngine.Object>> dictionary = new Dictionary<string, List<UnityEngine.Object>>();
+            foreach (UnityEngine.Object obj2 in objects)
             {
                 string typeName = ObjectNames.GetTypeName(obj2);
                 if (!dictionary.ContainsKey(typeName))
                 {
-                    dictionary[typeName] = new List<Object>();
+                    dictionary[typeName] = new List<UnityEngine.Object>();
                 }
                 dictionary[typeName].Add(obj2);
             }
             this.m_TypeSelections = new List<TypeSelection>();
-            foreach (KeyValuePair<string, List<Object>> pair in dictionary)
+            foreach (KeyValuePair<string, List<UnityEngine.Object>> pair in dictionary)
             {
                 this.m_TypeSelections.Add(new TypeSelection(pair.Key, pair.Value.ToArray()));
             }

@@ -21,7 +21,7 @@
 
         private void OnDisable()
         {
-            Object.DestroyImmediate(this.m_TierSettingsEditor);
+            UnityEngine.Object.DestroyImmediate(this.m_TierSettingsEditor);
             this.m_TierSettingsEditor = null;
             if (s_Instance == this)
             {
@@ -39,7 +39,7 @@
             this.tierSettingsEditor.OnInspectorGUI();
         }
 
-        private Object graphicsSettings =>
+        private UnityEngine.Object graphicsSettings =>
             GraphicsSettings.GetGraphicsSettings();
 
         private Editor tierSettingsEditor

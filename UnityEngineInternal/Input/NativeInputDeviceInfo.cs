@@ -7,8 +7,7 @@
     public struct NativeInputDeviceInfo
     {
         public int deviceId;
-        public string name;
-        public string descriptor;
+        public string deviceDescriptor;
     }
 }
 

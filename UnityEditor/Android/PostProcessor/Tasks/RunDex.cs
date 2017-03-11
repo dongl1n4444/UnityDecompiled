@@ -1,7 +1,9 @@
 ﻿namespace UnityEditor.Android.PostProcessor.Tasks
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEditor;
     using UnityEditor.Android;
@@ -13,6 +15,7 @@
         private AndroidLibraries _androidLibraries;
         private string _stagingArea;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ProgressHandler OnProgress;
 
         private void BuildDex(PostProcessorContext context)

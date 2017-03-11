@@ -1,6 +1,7 @@
 ﻿namespace UnityEngine.VR.WSA
 {
     using System;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Threading;
@@ -13,6 +14,7 @@
     [RequireComponent(typeof(Transform))]
     public sealed class WorldAnchor : Component
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event OnTrackingChangedDelegate OnTrackingChanged;
 
         private WorldAnchor()

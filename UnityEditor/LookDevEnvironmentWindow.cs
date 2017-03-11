@@ -194,7 +194,7 @@
                 case EventType.DragUpdated:
                 {
                     bool flag = false;
-                    foreach (Object obj3 in DragAndDrop.objectReferences)
+                    foreach (UnityEngine.Object obj3 in DragAndDrop.objectReferences)
                     {
                         Cubemap cubemap2 = obj3 as Cubemap;
                         if (cubemap2 != null)
@@ -213,7 +213,7 @@
                 case EventType.DragPerform:
                 {
                     int num3 = this.IsPositionInInsertionArea(pos);
-                    foreach (Object obj2 in DragAndDrop.objectReferences)
+                    foreach (UnityEngine.Object obj2 in DragAndDrop.objectReferences)
                     {
                         Cubemap cubemap = obj2 as Cubemap;
                         if (cubemap != null)

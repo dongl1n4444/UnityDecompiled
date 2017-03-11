@@ -22,6 +22,7 @@
         protected const string kFormatString = "g7";
         protected const int kPlusAddRemoveButtonSpacing = 5;
         protected const int kPlusAddRemoveButtonWidth = 12;
+        protected const float kReorderableListElementHeight = 16f;
         protected static readonly Rect kSignedRange = new Rect(0f, -1f, 1f, 2f);
         protected const int kSingleLineHeight = 13;
         protected const int kSpacingSubLabel = 4;
@@ -35,7 +36,7 @@
         public ParticleSystemUI m_ParticleSystemUI;
         protected string m_ToolTip;
         private VisibilityState m_VisibilityState;
-        private static readonly GUIStyle s_ControlRectStyle;
+        public static readonly GUIStyle s_ControlRectStyle;
 
         static ModuleUI()
         {
@@ -101,7 +102,7 @@
             Color color = GUI.color;
             if (floatProp.isAnimated)
             {
-                GUI.color = AnimationMode.animatedPropertyColor;
+                GUI.color = UnityEditor.AnimationMode.animatedPropertyColor;
             }
             EditorGUI.BeginChangeCheck();
             float num = FloatDraggable(rect, floatProp.floatValue, remap, dragWidth, formatString);
@@ -126,7 +127,7 @@
         public ParticleSystemCurveEditor GetParticleSystemCurveEditor() => 
             this.m_ParticleSystemUI.m_ParticleEffectUI.GetParticleSystemCurveEditor();
 
-        private static Rect GetPopupRect(Rect position)
+        protected static Rect GetPopupRect(Rect position)
         {
             position.xMin = position.xMax - 13f;
             return position;
@@ -147,6 +148,14 @@
             }
             EditorGUI.showMixedValue = false;
             return (num > 0);
+        }
+
+        public static void GUIButtonGroup(UnityEditorInternal.EditMode.SceneViewEditMode[] modes, GUIContent[] guiContents, Bounds bounds, Editor caller)
+        {
+            GUILayout.BeginHorizontal(new GUILayoutOption[0]);
+            GUILayout.Space(EditorGUIUtility.labelWidth);
+            UnityEditorInternal.EditMode.DoInspectorToolbar(modes, guiContents, bounds, caller);
+            GUILayout.EndHorizontal();
         }
 
         private static void GUIColor(Rect rect, SerializedProperty colorProp)
@@ -221,6 +230,11 @@
         public static int GUIInt(GUIContent guiContent, SerializedProperty intProp, params GUILayoutOption[] layoutOptions)
         {
             EditorGUI.showMixedValue = intProp.hasMultipleDifferentValues;
+            Color color = GUI.color;
+            if (intProp.isAnimated)
+            {
+                GUI.color = UnityEditor.AnimationMode.animatedPropertyColor;
+            }
             Rect totalPosition = GUILayoutUtility.GetRect((float) 0f, (float) 13f, layoutOptions);
             PrefixLabel(totalPosition, guiContent);
             EditorGUI.BeginChangeCheck();
@@ -229,6 +243,7 @@
             {
                 intProp.intValue = num;
             }
+            GUI.color = color;
             EditorGUI.showMixedValue = false;
             return intProp.intValue;
         }
@@ -461,7 +476,7 @@
 
         public static void GUIMMColorPopUp(Rect rect, SerializedProperty boolProp)
         {
-            if (EditorGUI.ButtonMouseDown(rect, GUIContent.none, FocusType.Passive, ParticleSystemStyles.Get().minMaxCurveStateDropDown))
+            if (EditorGUI.DropdownButton(rect, GUIContent.none, FocusType.Passive, ParticleSystemStyles.Get().minMaxCurveStateDropDown))
             {
                 GenericMenu menu = new GenericMenu();
                 GUIContent[] contentArray = new GUIContent[] { new GUIContent("Constant Color"), new GUIContent("Random Between Two Colors") };
@@ -489,7 +504,7 @@
 
         public static void GUIMMCurveStateList(Rect rect, SerializedMinMaxCurve[] minMaxCurves)
         {
-            if (EditorGUI.ButtonMouseDown(rect, GUIContent.none, FocusType.Passive, ParticleSystemStyles.Get().minMaxCurveStateDropDown) && (minMaxCurves.Length != 0))
+            if (EditorGUI.DropdownButton(rect, GUIContent.none, FocusType.Passive, ParticleSystemStyles.Get().minMaxCurveStateDropDown) && (minMaxCurves.Length != 0))
             {
                 GUIContent[] contentArray = new GUIContent[] { new GUIContent("Constant"), new GUIContent("Curve"), new GUIContent("Random Between Two Constants"), new GUIContent("Random Between Two Curves") };
                 MinMaxCurveState[] stateArray = new MinMaxCurveState[] { MinMaxCurveState.k_Scalar };
@@ -514,7 +529,7 @@
 
         public static void GUIMMGradientPopUp(Rect rect, SerializedMinMaxGradient gradientProp)
         {
-            if (EditorGUI.ButtonMouseDown(rect, GUIContent.none, FocusType.Passive, ParticleSystemStyles.Get().minMaxCurveStateDropDown))
+            if (EditorGUI.DropdownButton(rect, GUIContent.none, FocusType.Passive, ParticleSystemStyles.Get().minMaxCurveStateDropDown))
             {
                 GUIContent[] contentArray = new GUIContent[] { new GUIContent("Color"), new GUIContent("Gradient"), new GUIContent("Random Between Two Colors"), new GUIContent("Random Between Two Gradients"), new GUIContent("Random Color") };
                 MinMaxGradientState[] stateArray = new MinMaxGradientState[] { MinMaxGradientState.k_Color };
@@ -789,12 +804,18 @@
         public static int IntDraggable(Rect rect, GUIContent label, SerializedProperty intProp, float dragWidth)
         {
             EditorGUI.showMixedValue = intProp.hasMultipleDifferentValues;
+            Color color = GUI.color;
+            if (intProp.isAnimated)
+            {
+                GUI.color = UnityEditor.AnimationMode.animatedPropertyColor;
+            }
             EditorGUI.BeginChangeCheck();
             int num = IntDraggable(rect, label, intProp.intValue, dragWidth);
             if (EditorGUI.EndChangeCheck())
             {
                 intProp.intValue = num;
             }
+            GUI.color = color;
             EditorGUI.showMixedValue = false;
             return intProp.intValue;
         }
@@ -825,13 +846,13 @@
             this.Init();
         }
 
-        public virtual void OnSceneGUI()
+        public virtual void OnSceneViewGUI()
         {
         }
 
-        internal Object ParticleSystemValidator(Object[] references, Type objType, SerializedProperty property)
+        internal UnityEngine.Object ParticleSystemValidator(UnityEngine.Object[] references, System.Type objType, SerializedProperty property)
         {
-            foreach (Object obj2 in references)
+            foreach (UnityEngine.Object obj2 in references)
             {
                 if (obj2 != null)
                 {
@@ -852,7 +873,7 @@
         protected static bool PlusButton(Rect position) => 
             GUI.Button(new Rect(position.x - 2f, position.y - 2f, 12f, 13f), GUIContent.none, "OL Plus");
 
-        private static Rect PrefixLabel(Rect totalPosition, GUIContent label)
+        protected static Rect PrefixLabel(Rect totalPosition, GUIContent label)
         {
             if (!EditorGUI.LabelHasContent(label))
             {
@@ -898,7 +919,7 @@
                 this.m_Enabled = base.GetProperty("enabled");
             }
             this.m_VisibilityState = VisibilityState.NotVisible;
-            foreach (Object obj2 in o.targetObjects)
+            foreach (UnityEngine.Object obj2 in o.targetObjects)
             {
                 VisibilityState @int = (VisibilityState) SessionState.GetInt(base.GetUniqueModuleName(obj2), (int) defaultVisibilityState);
                 this.m_VisibilityState = (VisibilityState) Mathf.Max((int) @int, (int) this.m_VisibilityState);
@@ -938,7 +959,7 @@
                     editor2.Refresh();
                 }
                 this.m_VisibilityState = newState;
-                foreach (Object obj2 in base.serializedObject.targetObjects)
+                foreach (UnityEngine.Object obj2 in base.serializedObject.targetObjects)
                 {
                     SessionState.SetInt(base.GetUniqueModuleName(obj2), (int) this.m_VisibilityState);
                 }
@@ -949,7 +970,7 @@
             }
         }
 
-        private static Rect SubtractPopupWidth(Rect position)
+        protected static Rect SubtractPopupWidth(Rect position)
         {
             position.width -= 14f;
             return position;
@@ -962,7 +983,7 @@
             Color color = GUI.color;
             if (boolProp.isAnimated)
             {
-                GUI.color = AnimationMode.animatedPropertyColor;
+                GUI.color = UnityEditor.AnimationMode.animatedPropertyColor;
             }
             EditorGUI.BeginChangeCheck();
             bool flag = EditorGUI.Toggle(rect, boolProp.boolValue, ParticleSystemStyles.Get().toggle);
@@ -974,6 +995,10 @@
             EditorGUI.showMixedValue = false;
             EditorGUIInternal.mixedToggleStyle = EditorStyles.toggleMixed;
             return flag;
+        }
+
+        public virtual void UndoRedoPerformed()
+        {
         }
 
         public virtual void UpdateCullingSupportedString(ref string text)

@@ -350,7 +350,7 @@
         }
 
         /// <summary>
-        /// <para>Remove all listeners from the event.</para>
+        /// <para>Remove all non-persisent (ie created from script) listeners  from the event.</para>
         /// </summary>
         public void RemoveAllListeners()
         {

@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Threading;
@@ -13,8 +14,10 @@
     /// </summary>
     public sealed class Font : UnityEngine.Object
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         private event FontTextureRebuildCallback m_FontTextureRebuildCallback;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event Action<Font> textureRebuilt;
 
         /// <summary>
@@ -179,7 +182,7 @@
         /// </summary>
         public Material material { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        [Obsolete("Font.textureRebuildCallback has been deprecated. Use Font.textureRebuilt instead."), EditorBrowsable(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Font.textureRebuildCallback has been deprecated. Use Font.textureRebuilt instead.")]
         public FontTextureRebuildCallback textureRebuildCallback
         {
             get => 

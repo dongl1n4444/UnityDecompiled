@@ -30,6 +30,10 @@
         BuildScriptsOnly = 0x8000,
         [Obsolete("Texture Compression is now always enabled")]
         CompressTextures = 0,
+        /// <summary>
+        /// <para>Use chunk-based Lz4 compression when building the Player.</para>
+        /// </summary>
+        CompressWithLz4 = 0x40000,
         ComputeCRC = 0x100000,
         /// <summary>
         /// <para>Sets the Player to connect to the Editor.</para>

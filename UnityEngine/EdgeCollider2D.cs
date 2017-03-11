@@ -21,6 +21,11 @@
         public int edgeCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
+        /// <para>Controls the radius of all edges created by the collider.</para>
+        /// </summary>
+        public float edgeRadius { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
         /// <para>Gets the number of points.</para>
         /// </summary>
         public int pointCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }

@@ -20,7 +20,7 @@
         /// <returns>
         /// <para>An instance of the object.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern object FromJson(string json, System.Type type);
         /// <summary>
         /// <para>Overwrite data in an object by reading from its JSON representation.</para>

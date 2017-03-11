@@ -21,7 +21,7 @@
         /// <para>Displays the recorded profiledata in the profiler.</para>
         /// </summary>
         /// <param name="file"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Conditional("UNITY_EDITOR")]
+        [MethodImpl(MethodImplOptions.InternalCall), Conditional("UNITY_EDITOR"), GeneratedByOldBindingsGenerator]
         public static extern void AddFramesFromFile(string file);
         /// <summary>
         /// <para>Begin profiling a piece of code with a custom label.</para>
@@ -46,24 +46,55 @@
         /// <summary>
         /// <para>End profiling a piece of code with a custom label.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Conditional("ENABLE_PROFILER")]
+        [MethodImpl(MethodImplOptions.InternalCall), Conditional("ENABLE_PROFILER"), GeneratedByOldBindingsGenerator]
         public static extern void EndSample();
         /// <summary>
         /// <para>Returns the size of the mono heap.</para>
         /// </summary>
+        [Obsolete("GetMonoHeapSize has been deprecated since it is limited to 4GB. Please use GetMonoHeapSizeLong() instead.")]
+        public static uint GetMonoHeapSize() => 
+            ((uint) GetMonoHeapSizeLong());
+
+        /// <summary>
+        /// <para>Returns the size of the reserved space for managed-memory.</para>
+        /// </summary>
+        /// <returns>
+        /// <para>The size of the managed heap. This returns 0 if the Profiler is not available.</para>
+        /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern long GetMonoHeapSize();
+        public static extern long GetMonoHeapSizeLong();
         /// <summary>
         /// <para>Returns the used size from mono.</para>
         /// </summary>
+        [Obsolete("GetMonoUsedSize has been deprecated since it is limited to 4GB. Please use GetMonoUsedSizeLong() instead.")]
+        public static uint GetMonoUsedSize() => 
+            ((uint) GetMonoUsedSizeLong());
+
+        /// <summary>
+        /// <para>The allocated managed-memory for live objects and non-collected objects.</para>
+        /// </summary>
+        /// <returns>
+        /// <para>A long integer value of the memory in use. This returns 0 if the Profiler is not available.</para>
+        /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern long GetMonoUsedSize();
+        public static extern long GetMonoUsedSizeLong();
         /// <summary>
         /// <para>Returns the runtime memory usage of the resource.</para>
         /// </summary>
         /// <param name="o"></param>
+        [Obsolete("GetRuntimeMemorySize has been deprecated since it is limited to 2GB. Please use GetRuntimeMemorySizeLong() instead.")]
+        public static int GetRuntimeMemorySize(UnityEngine.Object o) => 
+            ((int) GetRuntimeMemorySizeLong(o));
+
+        /// <summary>
+        /// <para>Gathers the native-memory used by a Unity object.</para>
+        /// </summary>
+        /// <param name="o">The target Unity object.</param>
+        /// <returns>
+        /// <para>The amount of native-memory used by a Unity object. This returns 0 if the Profiler is not available.</para>
+        /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern long GetRuntimeMemorySize(UnityEngine.Object o);
+        public static extern long GetRuntimeMemorySizeLong(UnityEngine.Object o);
         /// <summary>
         /// <para>Returns the size of the temp allocator.</para>
         /// </summary>
@@ -71,22 +102,52 @@
         /// <para>Size in bytes.</para>
         /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern long GetTempAllocatorSize();
+        public static extern uint GetTempAllocatorSize();
         /// <summary>
         /// <para>Returns the amount of allocated and used system memory.</para>
         /// </summary>
+        [Obsolete("GetTotalAllocatedMemory has been deprecated since it is limited to 4GB. Please use GetTotalAllocatedMemoryLong() instead.")]
+        public static uint GetTotalAllocatedMemory() => 
+            ((uint) GetTotalAllocatedMemoryLong());
+
+        /// <summary>
+        /// <para>The total memory allocated by the internal allocators in Unity. Unity reserves large pools of memory from the system. This function returns the amount of used memory in those pools.</para>
+        /// </summary>
+        /// <returns>
+        /// <para>The amount of memory allocated by Unity. This returns 0 if the Profiler is not available.</para>
+        /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern long GetTotalAllocatedMemory();
+        public static extern long GetTotalAllocatedMemoryLong();
         /// <summary>
         /// <para>Returns the amount of reserved system memory.</para>
         /// </summary>
+        [Obsolete("GetTotalReservedMemory has been deprecated since it is limited to 4GB. Please use GetTotalReservedMemoryLong() instead.")]
+        public static uint GetTotalReservedMemory() => 
+            ((uint) GetTotalReservedMemoryLong());
+
+        /// <summary>
+        /// <para>The total memory Unity has reserved.</para>
+        /// </summary>
+        /// <returns>
+        /// <para>Memory reserved by Unity in bytes. This returns 0 if the Profiler is not available.</para>
+        /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern long GetTotalReservedMemory();
+        public static extern long GetTotalReservedMemoryLong();
         /// <summary>
         /// <para>Returns the amount of reserved but not used system memory.</para>
         /// </summary>
+        [Obsolete("GetTotalUnusedReservedMemory has been deprecated since it is limited to 4GB. Please use GetTotalUnusedReservedMemoryLong() instead.")]
+        public static uint GetTotalUnusedReservedMemory() => 
+            ((uint) GetTotalUnusedReservedMemoryLong());
+
+        /// <summary>
+        /// <para>Unity allocates memory in pools for usage when unity needs to allocate memory. This function returns the amount of unused memory in these pools.</para>
+        /// </summary>
+        /// <returns>
+        /// <para>The amount of unused memory in the reserved pools. This returns 0 if the Profiler is not available.</para>
+        /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern long GetTotalUnusedReservedMemory();
+        public static extern long GetTotalUnusedReservedMemoryLong();
         /// <summary>
         /// <para>Sets the size of the temp allocator.</para>
         /// </summary>
@@ -126,7 +187,16 @@
         /// <returns>
         /// <para>Size of the used heap in bytes, (or 0 if the profiler is disabled).</para>
         /// </returns>
+        [Obsolete("usedHeapSize has been deprecated since it is limited to 4GB. Please use usedHeapSizeLong instead.")]
         public static uint usedHeapSize { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        /// <summary>
+        /// <para>Returns the number of bytes that Unity has allocated. This does not include bytes allocated by external libraries or drivers.</para>
+        /// </summary>
+        /// <returns>
+        /// <para>Size of the memory allocated by Unity (or 0 if the profiler is disabled).</para>
+        /// </returns>
+        public static long usedHeapSizeLong { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

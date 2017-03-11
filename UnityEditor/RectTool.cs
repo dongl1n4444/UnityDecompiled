@@ -156,7 +156,7 @@
                         HandleUtility.ignoreRaySnapObjects = null;
                         current.Use();
                     }
-                    goto Label_0620;
+                    goto Label_0621;
 
                 case EventType.MouseDrag:
                     if (GUIUtility.hotControl == controlID)
@@ -231,13 +231,13 @@
                         }
                         current.Use();
                     }
-                    goto Label_0620;
+                    goto Label_0621;
 
                 case EventType.Repaint:
                     if (!Tools.vertexDragging)
                     {
                         Handles.color = Handles.secondaryColor * new Color(1f, 1f, 1f, 1.5f * num3);
-                        Handles.CircleCap(controlID, pivot, rotation, radius);
+                        Handles.CircleHandleCap(controlID, pivot, rotation, radius, EventType.Repaint);
                         Handles.color = Handles.secondaryColor * new Color(1f, 1f, 1f, 0.3f * num3);
                         Handles.DrawSolidDisc(pivot, (Vector3) (rotation * Vector3.forward), radius);
                     }
@@ -245,10 +245,10 @@
                     {
                         RectHandles.RectScalingHandleCap(controlID, pivot, rotation, 1f, EventType.Repaint);
                     }
-                    goto Label_0620;
+                    goto Label_0621;
 
                 default:
-                    goto Label_0620;
+                    goto Label_0621;
             }
             if (flag2)
             {
@@ -272,7 +272,7 @@
                     RectTransformSnapping.CalculatePositionSnapValues(parentSpace, activeTransform, parentRect, component);
                 }
             }
-        Label_0620:
+        Label_0621:
             ManipulationToolUtility.DetectDraggingBasedOnMouseDownUp("ChangingPosX", typeForControl);
             ManipulationToolUtility.DetectDraggingBasedOnMouseDownUp("ChangingLeft", typeForControl);
             ManipulationToolUtility.DetectDraggingBasedOnMouseDownUp("ChangingRight", typeForControl);

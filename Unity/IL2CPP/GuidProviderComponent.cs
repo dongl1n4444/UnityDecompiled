@@ -10,6 +10,7 @@
     using System.Text;
     using Unity.IL2CPP.IoC;
     using Unity.IL2CPP.IoCServices;
+    using Unity.IL2CPP.Portability;
 
     internal class GuidProviderComponent : IGuidProvider
     {
@@ -185,9 +186,9 @@
             List<byte> list = new List<byte>();
             list.AddRange(kParameterizedNamespaceGuid);
             list.AddRange(Encoding.UTF8.GetBytes(typeIdentifier));
-            using (SHA1Managed managed = new SHA1Managed())
+            using (SHA1 sha = CryptographyPortability.CreateSHA1())
             {
-                buffer = managed.ComputeHash(list.ToArray());
+                buffer = sha.ComputeHash(list.ToArray());
             }
             int a = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(buffer, 0));
             short b = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(buffer, 4));

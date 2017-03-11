@@ -65,7 +65,7 @@
             {
                 rect.width = this.m_WidthOfPopup;
             }
-            if (EditorGUI.ButtonMouseDown(rect, this.m_PopupButtonData.m_GUIContent, FocusType.Passive, this.m_PopupButtonData.m_Style))
+            if (EditorGUI.DropdownButton(rect, this.m_PopupButtonData.m_GUIContent, FocusType.Passive, this.m_PopupButtonData.m_Style))
             {
                 PopUpMenu.Show(rect, this.m_Items, this);
             }

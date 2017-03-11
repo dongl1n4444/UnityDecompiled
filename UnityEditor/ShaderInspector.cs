@@ -70,7 +70,7 @@
             }
         }
 
-        internal static void ShaderErrorListUI(Object shader, ShaderError[] errors, ref Vector2 scrollPosition)
+        internal static void ShaderErrorListUI(UnityEngine.Object shader, ShaderError[] errors, ref Vector2 scrollPosition)
         {
             <ShaderErrorListUI>c__AnonStorey0 storey = new <ShaderErrorListUI>c__AnonStorey0 {
                 errors = errors
@@ -99,7 +99,7 @@
                     if (current.clickCount == 2)
                     {
                         string file = storey.errors[i].file;
-                        Object obj2 = !string.IsNullOrEmpty(file) ? AssetDatabase.LoadMainAssetAtPath(file) : null;
+                        UnityEngine.Object obj2 = !string.IsNullOrEmpty(file) ? AssetDatabase.LoadMainAssetAtPath(file) : null;
                         if ((obj2 == null) && Path.IsPathRooted(file))
                         {
                             ShaderUtil.OpenSystemShaderIncludeError(file, line);
@@ -183,7 +183,7 @@
                 GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.ExpandWidth(false) };
                 Rect position = GUILayoutUtility.GetRect(showCurrent, EditorStyles.miniButton, options);
                 Rect rect2 = new Rect(position.xMax - 16f, position.y, 16f, position.height);
-                if (EditorGUI.ButtonMouseDown(rect2, GUIContent.none, FocusType.Passive, GUIStyle.none))
+                if (EditorGUI.DropdownButton(rect2, GUIContent.none, FocusType.Passive, GUIStyle.none))
                 {
                     PopupWindow.Show(GUILayoutUtility.topLevel.GetLast(), new ShaderInspectorPlatformsPopup(s));
                     GUIUtility.ExitGUI();

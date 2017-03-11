@@ -14,8 +14,8 @@
     [StructLayout(LayoutKind.Sequential), RequiredByNativeCode]
     public class Editor : ScriptableObject, IPreviewable
     {
-        private Object[] m_Targets;
-        private Object m_Context;
+        private UnityEngine.Object[] m_Targets;
+        private UnityEngine.Object m_Context;
         private int m_IsDirty;
         private int m_ReferenceTargetIndex = 0;
         private PropertyHandlerCache m_PropertyHandlerCache = new PropertyHandlerCache();
@@ -37,39 +37,39 @@
         /// <param name="context"></param>
         /// <param name="editorType"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        public static extern Editor CreateEditorWithContext(Object[] targetObjects, Object context, [DefaultValue("null")] Type editorType);
+        public static extern Editor CreateEditorWithContext(UnityEngine.Object[] targetObjects, UnityEngine.Object context, [DefaultValue("null")] System.Type editorType);
         [ExcludeFromDocs]
-        public static Editor CreateEditorWithContext(Object[] targetObjects, Object context)
+        public static Editor CreateEditorWithContext(UnityEngine.Object[] targetObjects, UnityEngine.Object context)
         {
-            Type editorType = null;
+            System.Type editorType = null;
             return CreateEditorWithContext(targetObjects, context, editorType);
         }
 
-        public static void CreateCachedEditorWithContext(Object targetObject, Object context, Type editorType, ref Editor previousEditor)
+        public static void CreateCachedEditorWithContext(UnityEngine.Object targetObject, UnityEngine.Object context, System.Type editorType, ref Editor previousEditor)
         {
-            Object[] targetObjects = new Object[] { targetObject };
+            UnityEngine.Object[] targetObjects = new UnityEngine.Object[] { targetObject };
             CreateCachedEditorWithContext(targetObjects, context, editorType, ref previousEditor);
         }
 
-        public static void CreateCachedEditorWithContext(Object[] targetObjects, Object context, Type editorType, ref Editor previousEditor)
+        public static void CreateCachedEditorWithContext(UnityEngine.Object[] targetObjects, UnityEngine.Object context, System.Type editorType, ref Editor previousEditor)
         {
-            if (((previousEditor == null) || !ArrayUtility.ArrayEquals<Object>(previousEditor.m_Targets, targetObjects)) || (previousEditor.m_Context != context))
+            if (((previousEditor == null) || !ArrayUtility.ArrayEquals<UnityEngine.Object>(previousEditor.m_Targets, targetObjects)) || (previousEditor.m_Context != context))
             {
                 if (previousEditor != null)
                 {
-                    Object.DestroyImmediate(previousEditor);
+                    UnityEngine.Object.DestroyImmediate(previousEditor);
                 }
                 previousEditor = CreateEditorWithContext(targetObjects, context, editorType);
             }
         }
 
-        public static void CreateCachedEditor(Object targetObject, Type editorType, ref Editor previousEditor)
+        public static void CreateCachedEditor(UnityEngine.Object targetObject, System.Type editorType, ref Editor previousEditor)
         {
-            Object[] targetObjects = new Object[] { targetObject };
+            UnityEngine.Object[] targetObjects = new UnityEngine.Object[] { targetObject };
             CreateCachedEditorWithContext(targetObjects, null, editorType, ref previousEditor);
         }
 
-        public static void CreateCachedEditor(Object[] targetObjects, Type editorType, ref Editor previousEditor)
+        public static void CreateCachedEditor(UnityEngine.Object[] targetObjects, System.Type editorType, ref Editor previousEditor)
         {
             CreateCachedEditorWithContext(targetObjects, null, editorType, ref previousEditor);
         }
@@ -82,9 +82,9 @@
         /// <param name="editorType"></param>
         /// <param name="targetObjects"></param>
         [ExcludeFromDocs]
-        public static Editor CreateEditor(Object targetObject)
+        public static Editor CreateEditor(UnityEngine.Object targetObject)
         {
-            Type editorType = null;
+            System.Type editorType = null;
             return CreateEditor(targetObject, editorType);
         }
 
@@ -95,9 +95,9 @@
         /// <param name="targetObject"></param>
         /// <param name="editorType"></param>
         /// <param name="targetObjects"></param>
-        public static Editor CreateEditor(Object targetObject, [DefaultValue("null")] Type editorType)
+        public static Editor CreateEditor(UnityEngine.Object targetObject, [DefaultValue("null")] System.Type editorType)
         {
-            Object[] targetObjects = new Object[] { targetObject };
+            UnityEngine.Object[] targetObjects = new UnityEngine.Object[] { targetObject };
             return CreateEditorWithContext(targetObjects, null, editorType);
         }
 
@@ -109,9 +109,9 @@
         /// <param name="editorType"></param>
         /// <param name="targetObjects"></param>
         [ExcludeFromDocs]
-        public static Editor CreateEditor(Object[] targetObjects)
+        public static Editor CreateEditor(UnityEngine.Object[] targetObjects)
         {
-            Type editorType = null;
+            System.Type editorType = null;
             return CreateEditor(targetObjects, editorType);
         }
 
@@ -122,13 +122,13 @@
         /// <param name="targetObject"></param>
         /// <param name="editorType"></param>
         /// <param name="targetObjects"></param>
-        public static Editor CreateEditor(Object[] targetObjects, [DefaultValue("null")] Type editorType) => 
+        public static Editor CreateEditor(UnityEngine.Object[] targetObjects, [DefaultValue("null")] System.Type editorType) => 
             CreateEditorWithContext(targetObjects, null, editorType);
 
         /// <summary>
         /// <para>The object being inspected.</para>
         /// </summary>
-        public Object target
+        public UnityEngine.Object target
         {
             get => 
                 this.m_Targets[this.referenceTargetIndex];
@@ -140,7 +140,7 @@
         /// <summary>
         /// <para>An array of all the object being inspected.</para>
         /// </summary>
-        public Object[] targets
+        public UnityEngine.Object[] targets
         {
             get
             {
@@ -312,7 +312,7 @@
         public virtual bool RequiresConstantRepaint() => 
             false;
 
-        internal void InternalSetTargets(Object[] t)
+        internal void InternalSetTargets(UnityEngine.Object[] t)
         {
             this.m_Targets = t;
         }
@@ -322,7 +322,7 @@
             this.hideInspector = hidden;
         }
 
-        internal void InternalSetContextObject(Object context)
+        internal void InternalSetContextObject(UnityEngine.Object context)
         {
             this.m_Context = context;
         }
@@ -379,7 +379,7 @@
         /// <param name="subAssets"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public virtual Texture2D RenderStaticPreview(string assetPath, Object[] subAssets, int width, int height) => 
+        public virtual Texture2D RenderStaticPreview(string assetPath, UnityEngine.Object[] subAssets, int width, int height) => 
             null;
 
         /// <summary>
@@ -548,11 +548,11 @@
 
         internal virtual void DrawHeaderHelpAndSettingsGUI(Rect r)
         {
-            Object target = this.target;
+            UnityEngine.Object target = this.target;
             Vector2 vector = EditorStyles.iconButton.CalcSize(EditorGUI.GUIContents.titleSettingsIcon);
             float x = vector.x;
             Rect position = new Rect(r.xMax - x, r.y + 5f, vector.x, vector.y);
-            if (EditorGUI.ButtonMouseDown(position, EditorGUI.GUIContents.titleSettingsIcon, FocusType.Passive, EditorStyles.iconButton))
+            if (EditorGUI.DropdownButton(position, EditorGUI.GUIContents.titleSettingsIcon, FocusType.Passive, EditorStyles.iconButton))
             {
                 EditorUtility.DisplayObjectContextMenu(position, this.targets, 0);
             }
@@ -606,7 +606,7 @@
             }
             else
             {
-                GUI.Label(iconRect, AssetPreview.GetMiniTypeThumbnail(typeof(Object)), s_Styles.centerStyle);
+                GUI.Label(iconRect, AssetPreview.GetMiniTypeThumbnail(typeof(UnityEngine.Object)), s_Styles.centerStyle);
             }
             Rect titleRect = new Rect(r.x + 44f, r.y + 6f, ((r.width - 44f) - 38f) - 4f, 16f);
             if (editor != null)
@@ -662,23 +662,23 @@
             return false;
         }
 
-        internal static bool IsAppropriateFileOpenForEdit(Object assetObject)
+        internal static bool IsAppropriateFileOpenForEdit(UnityEngine.Object assetObject)
         {
             string str;
             return IsAppropriateFileOpenForEdit(assetObject, out str);
         }
 
-        internal static bool IsAppropriateFileOpenForEdit(Object assetObject, out string message)
+        internal static bool IsAppropriateFileOpenForEdit(UnityEngine.Object assetObject, out string message)
         {
             message = string.Empty;
             if (AssetDatabase.IsNativeAsset(assetObject))
             {
-                if (!AssetDatabase.IsOpenForEdit(assetObject, out message))
+                if (!AssetDatabase.IsOpenForEdit(assetObject, out message, StatusQueryOptions.UseCachedIfPossible))
                 {
                     return false;
                 }
             }
-            else if (AssetDatabase.IsForeignAsset(assetObject) && !AssetDatabase.IsMetaFileOpenForEdit(assetObject, out message))
+            else if (AssetDatabase.IsForeignAsset(assetObject) && !AssetDatabase.IsMetaFileOpenForEdit(assetObject, out message, StatusQueryOptions.UseCachedIfPossible))
             {
                 return false;
             }
@@ -687,7 +687,7 @@
 
         internal virtual bool IsEnabled()
         {
-            foreach (Object obj2 in this.targets)
+            foreach (UnityEngine.Object obj2 in this.targets)
             {
                 if ((obj2.hideFlags & HideFlags.NotEditable) != HideFlags.None)
                 {
@@ -710,7 +710,7 @@
         internal bool IsOpenForEdit(out string message)
         {
             message = "";
-            foreach (Object obj2 in this.targets)
+            foreach (UnityEngine.Object obj2 in this.targets)
             {
                 if (EditorUtility.IsPersistent(obj2) && !IsAppropriateFileOpenForEdit(obj2))
                 {
@@ -726,7 +726,7 @@
         public virtual bool UseDefaultMargins() => 
             true;
 
-        public void Initialize(Object[] targets)
+        public void Initialize(UnityEngine.Object[] targets)
         {
             throw new InvalidOperationException("You shouldn't call Initialize for Editors");
         }

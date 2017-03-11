@@ -57,6 +57,19 @@
             EmscriptenEnvironmentVariables = dictionary;
         }
 
+        private static string NodeExecutableNameForCurrentPlatform()
+        {
+            if (PlatformUtils.IsWindows())
+            {
+                return "node.exe";
+            }
+            if (!PlatformUtils.IsOSX() && !PlatformUtils.IsLinux())
+            {
+                throw new NotSupportedException("Don't know how to get node executable on current platform!");
+            }
+            return "node";
+        }
+
         public static void ShowWindowsEnvironmentSettings()
         {
             foreach (KeyValuePair<string, string> pair in EmscriptenEnvironmentVariables)
@@ -201,28 +214,27 @@
         {
             get
             {
+                NPath path = BaseLocation.ParentContaining("UnityExtensions");
+                if (path != null)
+                {
+                    string[] textArray1 = new string[] { "Tools", "nodejs", "bin", NodeExecutableNameForCurrentPlatform() };
+                    return path.Combine(textArray1);
+                }
                 if (!UnitySourceCode.Available)
                 {
-                    throw new NotSupportedException("Need Unity source to use node");
+                    throw new NotSupportedException("Need Unity to use node");
                 }
-                string[] append = new string[] { "External", "nodejs", "builds" };
-                NPath path = UnitySourceCode.Paths.UnityRoot.Combine(append);
                 if (PlatformUtils.IsWindows())
                 {
-                    string[] textArray2 = new string[] { "win64", "node.exe" };
-                    return path.Combine(textArray2);
+                    string[] textArray2 = new string[] { "node/node.exe" };
+                    return WindowsEmscriptenSdkRoot.Combine(textArray2);
                 }
-                if (PlatformUtils.IsOSX())
-                {
-                    string[] textArray3 = new string[] { "osx", "bin", "node" };
-                    return path.Combine(textArray3);
-                }
-                if (!PlatformUtils.IsLinux())
+                if (!PlatformUtils.IsOSX())
                 {
                     throw new NotSupportedException("Don't know how to get node path on current platform!");
                 }
-                string[] textArray4 = new string[] { "linux64", "bin", "node" };
-                return path.Combine(textArray4);
+                string[] append = new string[] { "node/0.10.18_64bit/bin/node" };
+                return MacEmscriptenSdkRoot.Combine(append);
             }
         }
 

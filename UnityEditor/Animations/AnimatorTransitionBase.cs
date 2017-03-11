@@ -9,7 +9,7 @@
     /// <summary>
     /// <para>Base class for animator transitions. Transitions define when and how the state machine switches from one state to another.</para>
     /// </summary>
-    public class AnimatorTransitionBase : Object
+    public class AnimatorTransitionBase : UnityEngine.Object
     {
         private PushUndoIfNeeded undoHandler = new PushUndoIfNeeded(true);
 
@@ -34,7 +34,7 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern string BuildTransitionName(string source, string destination);
-        public string GetDisplayName(Object source) => 
+        public string GetDisplayName(UnityEngine.Object source) => 
             (!(source is AnimatorState) ? this.GetDisplayNameStateMachineSource(source as AnimatorStateMachine) : this.GetDisplayNameStateSource(source as AnimatorState));
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]

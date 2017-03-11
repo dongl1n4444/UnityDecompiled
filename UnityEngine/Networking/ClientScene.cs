@@ -76,7 +76,7 @@
         private static Dictionary<NetworkSceneId, NetworkIdentity> s_SpawnableObjects;
 
         /// <summary>
-        /// <para>This adds a player object for this client. This causes an AddPlayer message to be sent to the server, and NetworkManager.OnServerAddPlayer will be called. If an extra message was passed to AddPlayer, then OnServerAddPlayer will be called with a NetworkReader that contains the contents of the message.</para>
+        /// <para>This adds a player GameObject for this client. This causes an AddPlayer message to be sent to the server, and NetworkManager.OnServerAddPlayer is called. If an extra message was passed to AddPlayer, then OnServerAddPlayer will be called with a NetworkReader that contains the contents of the message.</para>
         /// </summary>
         /// <param name="readyConn">The connection to become ready for this client.</param>
         /// <param name="playerControllerId">The local player ID number.</param>
@@ -88,7 +88,7 @@
             AddPlayer(null, playerControllerId);
 
         /// <summary>
-        /// <para>This adds a player object for this client. This causes an AddPlayer message to be sent to the server, and NetworkManager.OnServerAddPlayer will be called. If an extra message was passed to AddPlayer, then OnServerAddPlayer will be called with a NetworkReader that contains the contents of the message.</para>
+        /// <para>This adds a player GameObject for this client. This causes an AddPlayer message to be sent to the server, and NetworkManager.OnServerAddPlayer is called. If an extra message was passed to AddPlayer, then OnServerAddPlayer will be called with a NetworkReader that contains the contents of the message.</para>
         /// </summary>
         /// <param name="readyConn">The connection to become ready for this client.</param>
         /// <param name="playerControllerId">The local player ID number.</param>
@@ -100,7 +100,7 @@
             AddPlayer(readyConn, playerControllerId, null);
 
         /// <summary>
-        /// <para>This adds a player object for this client. This causes an AddPlayer message to be sent to the server, and NetworkManager.OnServerAddPlayer will be called. If an extra message was passed to AddPlayer, then OnServerAddPlayer will be called with a NetworkReader that contains the contents of the message.</para>
+        /// <para>This adds a player GameObject for this client. This causes an AddPlayer message to be sent to the server, and NetworkManager.OnServerAddPlayer is called. If an extra message was passed to AddPlayer, then OnServerAddPlayer will be called with a NetworkReader that contains the contents of the message.</para>
         /// </summary>
         /// <param name="readyConn">The connection to become ready for this client.</param>
         /// <param name="playerControllerId">The local player ID number.</param>
@@ -641,7 +641,9 @@
             }
             else if (LogFilter.logWarn)
             {
-                Debug.LogWarning("Did not find target for RPC message for " + netId);
+                string cmdHashHandlerName = NetworkBehaviour.GetCmdHashHandlerName(cmdHash);
+                object[] args = new object[] { netId, cmdHashHandlerName };
+                Debug.LogWarningFormat("Could not find target object with netId:{0} for RPC call {1}", args);
             }
         }
 
@@ -798,7 +800,7 @@
         }
 
         /// <summary>
-        /// <para>This is an advanced spawning funciotn that registers a custom assetId with the UNET spawning system.</para>
+        /// <para>This is an advanced spawning function that registers a custom assetId with the UNET spawning system.</para>
         /// </summary>
         /// <param name="assetId">Custom assetId string.</param>
         /// <param name="spawnHandler">A method to use as a custom spawnhandler on clients.</param>
@@ -914,7 +916,7 @@
         }
 
         /// <summary>
-        /// <para>Remove the specified player ID from the game.</para>
+        /// <para>Removes the specified player ID from the game.</para>
         /// </summary>
         /// <param name="playerControllerId">The local playerControllerId number to be removed.</param>
         /// <returns>

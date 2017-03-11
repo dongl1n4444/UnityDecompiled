@@ -12,7 +12,7 @@
         public static InflatedCollectionCollector Collect(IInteropDataCollector interopDataCollector, TypeDefinition type)
         {
             InflatedCollectionCollector generics = new InflatedCollectionCollector();
-            GenericContextFreeVisitor visitor = new GenericContextFreeVisitor(generics, interopDataCollector);
+            GenericContextFreeVisitor visitor = new GenericContextFreeVisitor(generics);
             type.Accept(visitor);
             return generics;
         }
@@ -27,14 +27,14 @@
 
         public static void Collect(InflatedCollectionCollector generics, IInteropDataCollector interopDataCollector, GenericInstanceType type)
         {
-            GenericContextFreeVisitor visitor = new GenericContextFreeVisitor(generics, interopDataCollector);
+            GenericContextFreeVisitor visitor = new GenericContextFreeVisitor(generics);
             type.Accept(visitor);
         }
 
         private static InflatedCollectionCollector CollectPerAssembly(IInteropDataCollector interopDataCollector, AssemblyDefinition assembly)
         {
             InflatedCollectionCollector generics = new InflatedCollectionCollector();
-            GenericContextFreeVisitor visitor = new GenericContextFreeVisitor(generics, interopDataCollector);
+            GenericContextFreeVisitor visitor = new GenericContextFreeVisitor(generics);
             assembly.Accept(visitor);
             return generics;
         }
@@ -67,10 +67,6 @@
                 foreach (GenericInstanceType type5 in collector2.Types.Items)
                 {
                     collector.Types.Add(type5);
-                }
-                foreach (GenericInstanceType type6 in collector2.WindowsRuntimeCCWs.Items)
-                {
-                    collector.WindowsRuntimeCCWs.Add(type6);
                 }
             }
             return collector;

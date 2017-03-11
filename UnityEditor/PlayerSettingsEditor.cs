@@ -22,10 +22,7 @@
         private static ApiCompatibilityLevel[] allProfiles;
         private const int kIconSpacing = 6;
         private const int kMaxPreviewSize = 0x60;
-        private static BuildTargetGroup[] kSinglePassStereoRenderingTargetGroups;
         private const int kSlotSize = 0x40;
-        private static BuildTargetGroup[] kStereoInstancingRenderingTargetGroups;
-        private static int[] kStereoRenderingMethodValues;
         private SerializedProperty m_AccelerometerFrequency;
         private SerializedProperty m_ActionOnDotNetUnhandledException;
         private SerializedProperty m_ActiveColorSpace;
@@ -37,7 +34,6 @@
         private SerializedProperty m_AndroidProfiler;
         private SerializedProperty m_androidShowActivityIndicatorOnLoading;
         private SerializedProperty m_AotOptions;
-        private SerializedProperty m_ApplicationBundleIdentifier;
         private SerializedProperty m_ApplicationBundleVersion;
         private SerializedProperty m_BakeCollisionMeshes;
         private SerializedProperty m_CameraUsageDescription;
@@ -57,12 +53,13 @@
         private SerializedProperty m_EnableCrashReportAPI;
         private SerializedProperty m_EnableInternalProfiler;
         private SerializedProperty m_ForceSingleInstance;
+        private static GUIContent[] m_GfxJobModeNames;
+        private static GraphicsJobMode[] m_GfxJobModeValues;
         private SerializedProperty m_GraphicsJobs;
         private SerializedProperty m_IOSAllowHTTPDownload;
         private SerializedProperty m_iosShowActivityIndicatorOnLoading;
         private SerializedProperty m_IOSURLSchemes;
         private SerializedProperty m_IPhoneApplicationDisplayName;
-        private SerializedProperty m_IPhoneBuildNumber;
         private SerializedProperty m_IPhoneScriptCallOptimization;
         private SerializedProperty m_IPhoneSdkVersion;
         private SerializedProperty m_IPhoneStrippingLevel;
@@ -117,15 +114,6 @@
         private SerializedProperty m_VideoMemoryForVertexBuffers;
         private SerializedProperty m_VisibleInBackground;
         public PlayerSettingsEditorVR m_VRSettings;
-        private SerializedProperty m_XboxDeployHeadOrientation;
-        private SerializedProperty m_XboxDeployKinectHeadPosition;
-        private SerializedProperty m_XboxDeployKinectResources;
-        private SerializedProperty m_XboxEnableFitness;
-        private SerializedProperty m_XboxEnableHeadOrientation;
-        private SerializedProperty m_XboxEnableKinect;
-        private SerializedProperty m_XboxEnableKinectAutoTracking;
-        private SerializedProperty m_XboxEnableSpeech;
-        private SerializedProperty m_XboxSpeechDB;
         private static ApiCompatibilityLevel[] only_2_0_profiles;
         private static Dictionary<BuildTarget, ReorderableList> s_GraphicsDeviceLists;
         private static Texture2D s_WarningIcon;
@@ -135,12 +123,10 @@
 
         static PlayerSettingsEditor()
         {
-            int[] numArray1 = new int[3];
-            numArray1[1] = 1;
-            numArray1[2] = 2;
-            kStereoRenderingMethodValues = numArray1;
-            kSinglePassStereoRenderingTargetGroups = new BuildTargetGroup[] { BuildTargetGroup.Standalone };
-            kStereoInstancingRenderingTargetGroups = new BuildTargetGroup[] { BuildTargetGroup.WSA };
+            GraphicsJobMode[] modeArray1 = new GraphicsJobMode[2];
+            modeArray1[1] = GraphicsJobMode.Legacy;
+            m_GfxJobModeValues = modeArray1;
+            m_GfxJobModeNames = new GUIContent[] { new GUIContent("Native"), new GUIContent("Legacy") };
             s_GraphicsDeviceLists = new Dictionary<BuildTarget, ReorderableList>();
             only_2_0_profiles = new ApiCompatibilityLevel[] { ApiCompatibilityLevel.NET_2_0, ApiCompatibilityLevel.NET_2_0_Subset };
             allProfiles = new ApiCompatibilityLevel[] { ApiCompatibilityLevel.NET_2_0 };
@@ -304,7 +290,7 @@
         {
             T intValue = (T) prop.intValue;
             T local2 = BuildEnumPopup<T>(uiString, intValue, options, optionNames);
-            if (local2.Equals(intValue))
+            if (!local2.Equals(intValue))
             {
                 prop.intValue = (int) local2;
                 prop.serializedObject.ApplyModifiedProperties();
@@ -331,7 +317,7 @@
             BuildFileBoxButton(prop, uiString, directory, ext, null);
         }
 
-        internal static void BuildFileBoxButton(SerializedProperty prop, string uiString, string directory, string ext, Action onSelect)
+        internal static void BuildFileBoxButton(SerializedProperty prop, string uiString, string directory, string ext, System.Action onSelect)
         {
             float minHeight = 16f;
             float minWidth = (80f + EditorGUIUtility.fieldWidth) + 5f;
@@ -419,15 +405,13 @@
         private void DrawGraphicsDeviceElement(BuildTarget target, Rect rect, int index, bool selected, bool focused)
         {
             string text = s_GraphicsDeviceLists[target].list[index].ToString();
-            switch (text)
+            if (text == "Direct3D12")
             {
-                case "Direct3D12":
-                    text = "Direct3D12 (Experimental)";
-                    break;
-
-                case "Vulkan":
-                    text = "Vulkan (Experimental)";
-                    break;
+                text = "Direct3D12 (Experimental)";
+            }
+            if ((text == "Vulkan") && (target != BuildTarget.Android))
+            {
+                text = "Vulkan (Experimental)";
             }
             if (target == BuildTarget.WebGL)
             {
@@ -657,17 +641,30 @@
                         {
                             int num2 = Mathf.Min(0x60, iconWidthsForPlatform[i]);
                             int b = (int) ((iconHeightsForPlatform[i] * num2) / ((float) iconWidthsForPlatform[i]));
-                            Rect rect = GUILayoutUtility.GetRect(64f, (float) (Mathf.Max(0x40, b) + 6));
-                            float num4 = Mathf.Min(rect.width, (((EditorGUIUtility.labelWidth + 4f) + 64f) + 6f) + 96f);
+                            if (targetGroup == BuildTargetGroup.iPhone)
+                            {
+                                if (((i + 1) < iconWidthsForPlatform.Length) && (iconWidthsForPlatform[i + 1] == 80))
+                                {
+                                    Rect rect = GUILayoutUtility.GetRect(EditorGUIUtility.labelWidth, 20f);
+                                    GUI.Label(new Rect(rect.x, rect.y, EditorGUIUtility.labelWidth, 20f), "Spotlight icons", EditorStyles.boldLabel);
+                                }
+                                if (iconWidthsForPlatform[i] == 0x57)
+                                {
+                                    Rect rect2 = GUILayoutUtility.GetRect(EditorGUIUtility.labelWidth, 20f);
+                                    GUI.Label(new Rect(rect2.x, rect2.y, EditorGUIUtility.labelWidth, 20f), "Settings icons", EditorStyles.boldLabel);
+                                }
+                            }
+                            Rect rect3 = GUILayoutUtility.GetRect(64f, (float) (Mathf.Max(0x40, b) + 6));
+                            float num4 = Mathf.Min(rect3.width, (((EditorGUIUtility.labelWidth + 4f) + 64f) + 6f) + 96f);
                             string text = iconWidthsForPlatform[i] + "x" + iconHeightsForPlatform[i];
-                            GUI.Label(new Rect(rect.x, rect.y, ((num4 - 96f) - 64f) - 12f, 20f), text);
+                            GUI.Label(new Rect(rect3.x, rect3.y, ((num4 - 96f) - 64f) - 12f, 20f), text);
                             if (flag4)
                             {
                                 int num5 = 0x40;
                                 int num6 = (int) ((((float) iconHeightsForPlatform[i]) / ((float) iconWidthsForPlatform[i])) * 64f);
-                                iconsForPlatform[i] = (Texture2D) EditorGUI.ObjectField(new Rect((((rect.x + num4) - 96f) - 64f) - 6f, rect.y, (float) num5, (float) num6), iconsForPlatform[i], typeof(Texture2D), false);
+                                iconsForPlatform[i] = (Texture2D) EditorGUI.ObjectField(new Rect((((rect3.x + num4) - 96f) - 64f) - 6f, rect3.y, (float) num5, (float) num6), iconsForPlatform[i], typeof(Texture2D), false);
                             }
-                            Rect position = new Rect((rect.x + num4) - 96f, rect.y, (float) num2, (float) b);
+                            Rect position = new Rect((rect3.x + num4) - 96f, rect3.y, (float) num2, (float) b);
                             Texture2D image = PlayerSettings.GetIconForPlatformAtSize(name, iconWidthsForPlatform[i], iconHeightsForPlatform[i]);
                             if (image != null)
                             {
@@ -702,68 +699,12 @@
         private bool IsMobileTarget(BuildTargetGroup targetGroup) => 
             ((((targetGroup == BuildTargetGroup.iPhone) || (targetGroup == BuildTargetGroup.tvOS)) || ((targetGroup == BuildTargetGroup.Android) || (targetGroup == BuildTargetGroup.Tizen))) || (targetGroup == BuildTargetGroup.SamsungTV));
 
-        private void KinectGUI()
-        {
-            GUILayout.Label(Styles.kinectTitle, EditorStyles.boldLabel, new GUILayoutOption[0]);
-            this.m_XboxEnableKinect.boolValue = EditorGUILayout.Toggle(Styles.xboxEnableKinect, this.m_XboxEnableKinect.boolValue, new GUILayoutOption[0]);
-            if (this.m_XboxEnableKinect.boolValue)
-            {
-                GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-                GUILayout.Space(10f);
-                this.m_XboxEnableHeadOrientation.boolValue = GUILayout.Toggle(this.m_XboxEnableHeadOrientation.boolValue, new GUIContent("Head Orientation", "Head orientation support"), new GUILayoutOption[0]);
-                this.m_XboxEnableKinectAutoTracking.boolValue = GUILayout.Toggle(this.m_XboxEnableKinectAutoTracking.boolValue, new GUIContent("Auto Tracking", "Automatic player tracking"), new GUILayoutOption[0]);
-                this.m_XboxEnableFitness.boolValue = GUILayout.Toggle(this.m_XboxEnableFitness.boolValue, new GUIContent("Fitness", "Fitness support"), new GUILayoutOption[0]);
-                GUILayout.EndHorizontal();
-                GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-                GUILayout.Space(10f);
-                this.m_XboxEnableSpeech.boolValue = GUILayout.Toggle(this.m_XboxEnableSpeech.boolValue, new GUIContent("Speech", "Speech Recognition Support"), new GUILayoutOption[0]);
-                GUILayout.EndHorizontal();
-                this.m_XboxDeployKinectResources.boolValue = true;
-                if (this.m_XboxEnableHeadOrientation.boolValue)
-                {
-                    this.m_XboxDeployHeadOrientation.boolValue = true;
-                }
-            }
-            GUILayout.Label(Styles.deployKinectResourcesTitle, EditorStyles.boldLabel, new GUILayoutOption[0]);
-            GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-            GUILayout.Space(10f);
-            GUI.enabled = !this.m_XboxEnableKinect.boolValue;
-            this.m_XboxDeployKinectResources.boolValue = GUILayout.Toggle(this.m_XboxDeployKinectResources.boolValue, new GUIContent("Base", "Identity and Skeleton Database files"), new GUILayoutOption[0]);
-            GUI.enabled = !(this.m_XboxEnableHeadOrientation.boolValue && this.m_XboxEnableKinect.boolValue);
-            this.m_XboxDeployHeadOrientation.boolValue = GUILayout.Toggle(this.m_XboxDeployHeadOrientation.boolValue, new GUIContent("Head Orientation", "Head orientation database"), new GUILayoutOption[0]);
-            GUI.enabled = true;
-            this.m_XboxDeployKinectHeadPosition.boolValue = GUILayout.Toggle(this.m_XboxDeployKinectHeadPosition.boolValue, new GUIContent("Head Position", "Head position database"), new GUILayoutOption[0]);
-            GUILayout.EndHorizontal();
-            GUILayout.Label(EditorGUIUtility.TextContent("Speech"), new GUILayoutOption[0]);
-            GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-            GUILayout.Space(10f);
-            this.m_XboxSpeechDB.intValue ^= (GUILayout.Toggle((this.m_XboxSpeechDB.intValue & 1) != 0, new GUIContent("en-US", "Speech database: English - US, Canada"), new GUILayoutOption[0]) == ((this.m_XboxSpeechDB.intValue & 1) != 0)) ? 0 : 1;
-            this.m_XboxSpeechDB.intValue ^= (GUILayout.Toggle((this.m_XboxSpeechDB.intValue & 2) != 0, new GUIContent("fr-CA", "Speech database: French - Canada"), new GUILayoutOption[0]) == ((this.m_XboxSpeechDB.intValue & 2) != 0)) ? 0 : 2;
-            this.m_XboxSpeechDB.intValue ^= (GUILayout.Toggle((this.m_XboxSpeechDB.intValue & 4) != 0, new GUIContent("en-GB", "Speech database: English - United Kingdom, Ireland"), new GUILayoutOption[0]) == ((this.m_XboxSpeechDB.intValue & 4) != 0)) ? 0 : 4;
-            this.m_XboxSpeechDB.intValue ^= (GUILayout.Toggle((this.m_XboxSpeechDB.intValue & 8) != 0, new GUIContent("es-MX", "Speech database: Spanish - Mexico"), new GUILayoutOption[0]) == ((this.m_XboxSpeechDB.intValue & 8) != 0)) ? 0 : 8;
-            this.m_XboxSpeechDB.intValue ^= (GUILayout.Toggle((this.m_XboxSpeechDB.intValue & 0x10) != 0, new GUIContent("ja-JP", "Speech database: Japanese - Japan"), new GUILayoutOption[0]) == ((this.m_XboxSpeechDB.intValue & 0x10) != 0)) ? 0 : 0x10;
-            GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-            GUILayout.Space(10f);
-            this.m_XboxSpeechDB.intValue ^= (GUILayout.Toggle((this.m_XboxSpeechDB.intValue & 0x20) != 0, new GUIContent("fr-FR", "Speech database: French - France, Switzerland"), new GUILayoutOption[0]) == ((this.m_XboxSpeechDB.intValue & 0x20) != 0)) ? 0 : 0x20;
-            this.m_XboxSpeechDB.intValue ^= (GUILayout.Toggle((this.m_XboxSpeechDB.intValue & 0x40) != 0, new GUIContent("es-ES", "Speech database: Spanish - Spain"), new GUILayoutOption[0]) == ((this.m_XboxSpeechDB.intValue & 0x40) != 0)) ? 0 : 0x40;
-            this.m_XboxSpeechDB.intValue ^= (GUILayout.Toggle((this.m_XboxSpeechDB.intValue & 0x80) != 0, new GUIContent("de-DE", "Speech database: German - Germany, Austria, Switzerland"), new GUILayoutOption[0]) == ((this.m_XboxSpeechDB.intValue & 0x80) != 0)) ? 0 : 0x80;
-            this.m_XboxSpeechDB.intValue ^= (GUILayout.Toggle((this.m_XboxSpeechDB.intValue & 0x100) != 0, new GUIContent("it-IT", "Speech database: Italian - Italy"), new GUILayoutOption[0]) == ((this.m_XboxSpeechDB.intValue & 0x100) != 0)) ? 0 : 0x100;
-            this.m_XboxSpeechDB.intValue ^= (GUILayout.Toggle((this.m_XboxSpeechDB.intValue & 0x200) != 0, new GUIContent("en-AU", "Speech database: English - Australia, New Zealand"), new GUILayoutOption[0]) == ((this.m_XboxSpeechDB.intValue & 0x200) != 0)) ? 0 : 0x200;
-            GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-            GUILayout.Space(10f);
-            this.m_XboxSpeechDB.intValue ^= (GUILayout.Toggle((this.m_XboxSpeechDB.intValue & 0x400) != 0, new GUIContent("pt-BR", "Speech database: Portuguese - Brazil"), new GUILayoutOption[0]) == ((this.m_XboxSpeechDB.intValue & 0x400) != 0)) ? 0 : 0x400;
-            GUILayout.EndHorizontal();
-        }
-
         private void OnEnable()
         {
             this.validPlatforms = BuildPlayerWindow.GetValidPlatforms(true).ToArray();
             this.m_IPhoneSdkVersion = this.FindPropertyAssert("iPhoneSdkVersion");
             this.m_IPhoneTargetOSVersion = this.FindPropertyAssert("iOSTargetOSVersionString");
             this.m_IPhoneStrippingLevel = this.FindPropertyAssert("iPhoneStrippingLevel");
-            this.m_IPhoneBuildNumber = this.FindPropertyAssert("iPhoneBuildNumber");
             this.m_StripEngineCode = this.FindPropertyAssert("stripEngineCode");
             this.m_tvOSSdkVersion = this.FindPropertyAssert("tvOSSdkVersion");
             this.m_tvOSTargetOSVersion = this.FindPropertyAssert("tvOSTargetOSVersionString");
@@ -786,11 +727,6 @@
             this.m_MetalForceHardShadows = this.FindPropertyAssert("iOSMetalForceHardShadows");
             this.m_MetalEditorSupport = this.FindPropertyAssert("metalEditorSupport");
             this.m_MetalAPIValidation = this.FindPropertyAssert("metalAPIValidation");
-            this.m_ApplicationBundleIdentifier = base.serializedObject.FindProperty("bundleIdentifier");
-            if (this.m_ApplicationBundleIdentifier == null)
-            {
-                this.m_ApplicationBundleIdentifier = this.FindPropertyAssert("iPhoneBundleIdentifier");
-            }
             this.m_ApplicationBundleVersion = base.serializedObject.FindProperty("bundleVersion");
             if (this.m_ApplicationBundleVersion == null)
             {
@@ -848,15 +784,6 @@
             this.m_ForceSingleInstance = this.FindPropertyAssert("forceSingleInstance");
             this.m_RequireES31 = this.FindPropertyAssert("openGLRequireES31");
             this.m_RequireES31AEP = this.FindPropertyAssert("openGLRequireES31AEP");
-            this.m_XboxDeployKinectResources = this.FindPropertyAssert("XboxDeployKinectResources");
-            this.m_XboxEnableKinect = this.FindPropertyAssert("xboxEnableKinect");
-            this.m_XboxEnableKinectAutoTracking = this.FindPropertyAssert("xboxEnableKinectAutoTracking");
-            this.m_XboxEnableSpeech = this.FindPropertyAssert("xboxEnableSpeech");
-            this.m_XboxSpeechDB = this.FindPropertyAssert("xboxSpeechDB");
-            this.m_XboxEnableFitness = this.FindPropertyAssert("xboxEnableFitness");
-            this.m_XboxEnableHeadOrientation = this.FindPropertyAssert("xboxEnableHeadOrientation");
-            this.m_XboxDeployHeadOrientation = this.FindPropertyAssert("xboxDeployKinectHeadOrientation");
-            this.m_XboxDeployKinectHeadPosition = this.FindPropertyAssert("xboxDeployKinectHeadPosition");
             this.m_VideoMemoryForVertexBuffers = this.FindPropertyAssert("videoMemoryForVertexBuffers");
             this.m_SettingsExtensions = new ISettingEditorExtension[this.validPlatforms.Length];
             for (int i = 0; i < this.validPlatforms.Length; i++)
@@ -1064,16 +991,16 @@
             if ((settingsExtension != null) && settingsExtension.HasIdentificationGUI())
             {
                 GUILayout.Label(Styles.identificationTitle, EditorStyles.boldLabel, new GUILayoutOption[0]);
-                if (settingsExtension.HasBundleIdentifier())
-                {
-                    EditorGUILayout.PropertyField(this.m_ApplicationBundleIdentifier, Styles.applicationBundleIdentifier, new GUILayoutOption[0]);
-                }
-                EditorGUILayout.PropertyField(this.m_ApplicationBundleVersion, Styles.applicationBundleVersion, new GUILayoutOption[0]);
-                if ((targetGroup == BuildTargetGroup.iPhone) || (targetGroup == BuildTargetGroup.tvOS))
-                {
-                    EditorGUILayout.PropertyField(this.m_IPhoneBuildNumber, Styles.iPhoneBuildNumber, new GUILayoutOption[0]);
-                }
                 settingsExtension.IdentificationSectionGUI();
+                EditorGUILayout.Space();
+            }
+            else if (targetGroup == BuildTargetGroup.Standalone)
+            {
+                GUILayout.Label(Styles.macAppStoreTitle, EditorStyles.boldLabel, new GUILayoutOption[0]);
+                ShowApplicationIdentifierUI(base.serializedObject, BuildTargetGroup.Standalone, "Bundle Identifier", Styles.undoChangedBundleIdentifierString);
+                EditorGUILayout.PropertyField(this.m_ApplicationBundleVersion, EditorGUIUtility.TextContent("Version*"), new GUILayoutOption[0]);
+                ShowBuildNumberUI(base.serializedObject, BuildTargetGroup.Standalone, "Build", Styles.undoChangedBuildNumberString);
+                EditorGUILayout.PropertyField(this.m_UseMacAppStoreValidation, Styles.useMacAppStoreValidation, new GUILayoutOption[0]);
                 EditorGUILayout.Space();
             }
         }
@@ -1264,7 +1191,7 @@
             {
                 this.m_MetalForceHardShadows.boolValue = EditorGUILayout.Toggle(Styles.metalForceHardShadows, this.m_MetalForceHardShadows.boolValue, new GUILayoutOption[0]);
             }
-            if (((targetGroup == BuildTargetGroup.Standalone) || (targetGroup == BuildTargetGroup.iPhone)) || (targetGroup == BuildTargetGroup.tvOS))
+            if ((Application.platform == RuntimePlatform.OSXEditor) && (((targetGroup == BuildTargetGroup.Standalone) || (targetGroup == BuildTargetGroup.iPhone)) || (targetGroup == BuildTargetGroup.tvOS)))
             {
                 bool boolValue = this.m_MetalEditorSupport.boolValue;
                 if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Metal)
@@ -1365,41 +1292,24 @@
                 }
             }
             EditorGUILayout.PropertyField(this.m_GraphicsJobs, Styles.graphicsJobs, new GUILayoutOption[0]);
+            if (this.PlatformSupportsGfxJobModes(targetGroup))
+            {
+                using (new EditorGUI.DisabledScope(!this.m_GraphicsJobs.boolValue))
+                {
+                    GraphicsJobMode graphicsJobMode = PlayerSettings.graphicsJobMode;
+                    GraphicsJobMode mode2 = BuildEnumPopup<GraphicsJobMode>(Styles.graphicsJobsMode, graphicsJobMode, m_GfxJobModeValues, m_GfxJobModeNames);
+                    if (mode2 != graphicsJobMode)
+                    {
+                        PlayerSettings.graphicsJobMode = mode2;
+                    }
+                }
+            }
             if (this.m_VRSettings.TargetGroupSupportsVirtualReality(targetGroup))
             {
                 this.m_VRSettings.DevicesGUI(targetGroup);
                 using (new EditorGUI.DisabledScope(EditorApplication.isPlaying))
                 {
-                    bool flag10 = TargetSupportsSinglePassStereoRendering(targetGroup);
-                    bool flag11 = TargetSupportsStereoInstancingRendering(targetGroup);
-                    if (PlayerSettings.virtualRealitySupported)
-                    {
-                        int num3 = (1 + (!flag10 ? 0 : 1)) + (!flag11 ? 0 : 1);
-                        GUIContent[] displayedOptions = new GUIContent[num3];
-                        int[] optionValues = new int[num3];
-                        int index = 0;
-                        displayedOptions[index] = Styles.kStereoRenderingMethodsAll[0];
-                        optionValues[index++] = kStereoRenderingMethodValues[0];
-                        if (flag10)
-                        {
-                            displayedOptions[index] = Styles.kStereoRenderingMethodsAll[1];
-                            optionValues[index++] = kStereoRenderingMethodValues[1];
-                        }
-                        if (flag11)
-                        {
-                            displayedOptions[index] = Styles.kStereoRenderingMethodsAll[2];
-                            optionValues[index++] = kStereoRenderingMethodValues[2];
-                        }
-                        if (!flag11 && (this.m_StereoRenderingPath.intValue == 2))
-                        {
-                            this.m_StereoRenderingPath.intValue = 1;
-                        }
-                        if (!flag10 && (this.m_StereoRenderingPath.intValue == 1))
-                        {
-                            this.m_StereoRenderingPath.intValue = 0;
-                        }
-                        EditorGUILayout.IntPopup(this.m_StereoRenderingPath, displayedOptions, optionValues, EditorGUIUtility.TextContent("Stereo Rendering Method*"), new GUILayoutOption[0]);
-                    }
+                    this.m_VRSettings.SinglePassStereoGUI(targetGroup, this.m_StereoRenderingPath);
                 }
             }
             if (TargetSupportsProtectedGraphicsMem(targetGroup))
@@ -1428,6 +1338,9 @@
                 return new Version();
             }
         }
+
+        private bool PlatformSupportsGfxJobModes(BuildTargetGroup targetGroup) => 
+            (targetGroup == BuildTargetGroup.PS4);
 
         public void PublishSectionGUI(BuildTargetGroup targetGroup, ISettingEditorExtension settingsExtension)
         {
@@ -1578,7 +1491,6 @@
                     EditorGUILayout.PropertyField(this.m_DisplayResolutionDialog, new GUILayoutOption[0]);
                     EditorGUILayout.PropertyField(this.m_UsePlayerLog, new GUILayoutOption[0]);
                     EditorGUILayout.PropertyField(this.m_ResizableWindow, new GUILayoutOption[0]);
-                    EditorGUILayout.PropertyField(this.m_UseMacAppStoreValidation, Styles.useMacAppStoreValidation, new GUILayoutOption[0]);
                     EditorGUILayout.PropertyField(this.m_MacFullscreenMode, new GUILayoutOption[0]);
                     EditorGUILayout.PropertyField(this.m_D3D9FullscreenMode, Styles.D3D9FullscreenMode, new GUILayoutOption[0]);
                     EditorGUILayout.PropertyField(this.m_D3D11FullscreenMode, Styles.D3D11FullscreenMode, new GUILayoutOption[0]);
@@ -1628,6 +1540,28 @@
             this.EndSettingsBox();
         }
 
+        internal static void ShowApplicationIdentifierUI(SerializedObject serializedObject, BuildTargetGroup targetGroup, string label, string undoText)
+        {
+            EditorGUI.BeginChangeCheck();
+            string identifier = EditorGUILayout.DelayedTextField(EditorGUIUtility.TextContent(label), PlayerSettings.GetApplicationIdentifier(targetGroup), new GUILayoutOption[0]);
+            if (EditorGUI.EndChangeCheck())
+            {
+                Undo.RecordObject(serializedObject.targetObject, undoText);
+                PlayerSettings.SetApplicationIdentifier(targetGroup, identifier);
+            }
+        }
+
+        internal static void ShowBuildNumberUI(SerializedObject serializedObject, BuildTargetGroup targetGroup, string label, string undoText)
+        {
+            EditorGUI.BeginChangeCheck();
+            string buildNumber = EditorGUILayout.DelayedTextField(EditorGUIUtility.TextContent(label), PlayerSettings.GetBuildNumber(targetGroup), new GUILayoutOption[0]);
+            if (EditorGUI.EndChangeCheck())
+            {
+                Undo.RecordObject(serializedObject.targetObject, undoText);
+                PlayerSettings.SetBuildNumber(targetGroup, buildNumber);
+            }
+        }
+
         private void ShowNoSettings()
         {
             GUILayout.Label(Styles.notApplicableInfo, EditorStyles.miniLabel, new GUILayoutOption[0]);
@@ -1673,12 +1607,6 @@
 
         private static bool TargetSupportsProtectedGraphicsMem(BuildTargetGroup targetGroup) => 
             (targetGroup == BuildTargetGroup.Android);
-
-        private static bool TargetSupportsSinglePassStereoRendering(BuildTargetGroup targetGroup) => 
-            kSinglePassStereoRenderingTargetGroups.Contains<BuildTargetGroup>(targetGroup);
-
-        private static bool TargetSupportsStereoInstancingRendering(BuildTargetGroup targetGroup) => 
-            kStereoInstancingRenderingTargetGroups.Contains<BuildTargetGroup>(targetGroup);
 
         public override bool UseDefaultMargins() => 
             false;
@@ -1756,8 +1684,7 @@
             public static readonly GUIContent apiCompatibilityLevel_NET_4_6 = EditorGUIUtility.TextContent(".NET 4.6");
             public static readonly GUIContent apiCompatibilityLevel_WiiUSubset = EditorGUIUtility.TextContent("WiiU Subset");
             public static readonly GUIContent appleDeveloperTeamID = EditorGUIUtility.TextContent("iOS Developer Team ID|Developers can retrieve their Team ID by visiting the Apple Developer site under Account > Membership.");
-            public static readonly GUIContent applicationBundleIdentifier = EditorGUIUtility.TextContent("Bundle Identifier");
-            public static readonly GUIContent applicationBundleVersion = EditorGUIUtility.TextContent("Version*");
+            public static readonly GUIContent applicationBuildNumber = EditorGUIUtility.TextContent("Build");
             public static readonly GUIContent bakeCollisionMeshes = EditorGUIUtility.TextContent("Prebake Collision Meshes*|Bake collision data into the meshes on build time");
             public static readonly GUIContent cameraUsageDescription = EditorGUIUtility.TextContent("Camera Usage Description*");
             public static readonly GUIStyle categoryBox = new GUIStyle(EditorStyles.helpBox);
@@ -1778,29 +1705,27 @@
             public static readonly GUIContent defaultScreenHeight = EditorGUIUtility.TextContent("Default Screen Height");
             public static readonly GUIContent defaultScreenOrientation = EditorGUIUtility.TextContent("Default Orientation*");
             public static readonly GUIContent defaultScreenWidth = EditorGUIUtility.TextContent("Default Screen Width");
-            public static readonly GUIContent deployKinectResourcesTitle = EditorGUIUtility.TextContent("Deploy Kinect resources");
             public static readonly GUIContent disableDepthAndStencilBuffers = EditorGUIUtility.TextContent("Disable Depth and Stencil*");
             public static readonly GUIContent disableStatistics = EditorGUIUtility.TextContent("Disable HW Statistics*|Disables HW Statistics (Pro Only)");
             public static readonly GUIContent dynamicBatching = EditorGUIUtility.TextContent("Dynamic Batching");
             public static readonly GUIContent enableCrashReportAPI = EditorGUIUtility.TextContent("Enable CrashReport API*");
             public static readonly GUIContent enableInternalProfiler = EditorGUIUtility.TextContent("Enable Internal Profiler*");
             public static readonly GUIContent graphicsJobs = EditorGUIUtility.TextContent("Graphics Jobs (Experimental)*");
+            public static readonly GUIContent graphicsJobsMode = EditorGUIUtility.TextContent("Graphics Jobs Mode*");
             public static readonly GUIContent iconTitle = EditorGUIUtility.TextContent("Icon");
             public static readonly GUIContent identificationTitle = EditorGUIUtility.TextContent("Identification");
             public static readonly GUIContent IL2CPPAndroidExperimentalInfo = EditorGUIUtility.TextContent("IL2CPP on Android is experimental and unsupported");
             public static readonly GUIContent iOSAllowHTTPDownload = EditorGUIUtility.TextContent("Allow downloads over HTTP (nonsecure)*");
             public static readonly GUIContent iosShowActivityIndicatorOnLoading = EditorGUIUtility.TextContent("Show Loading Indicator");
             public static readonly GUIContent iOSURLSchemes = EditorGUIUtility.TextContent("Supported URL schemes*");
-            public static readonly GUIContent iPhoneBuildNumber = EditorGUIUtility.TextContent("Build");
             public static readonly GUIContent iPhoneScriptCallOptimization = EditorGUIUtility.TextContent("Script Call Optimization*");
             public static readonly GUIContent iPhoneStrippingLevel = EditorGUIUtility.TextContent("Stripping Level*");
             public static readonly GUIContent iPhoneTargetOSVersion = EditorGUIUtility.TextContent("Target minimum iOS Version");
             public static readonly GUIContent keepLoadedShadersAlive = EditorGUIUtility.TextContent("Keep Loaded Shaders Alive*|Prevents shaders from being unloaded");
-            public static readonly GUIContent kinectTitle = EditorGUIUtility.TextContent("Kinect");
-            public static readonly GUIContent[] kStereoRenderingMethodsAll = new GUIContent[] { new GUIContent("Multi Pass"), new GUIContent("Single Pass"), new GUIContent("Single Pass Instanced") };
             public static readonly GUIContent locationUsageDescription = EditorGUIUtility.TextContent("Location Usage Description*");
             public static readonly GUIContent loggingTitle = EditorGUIUtility.TextContent("Logging*");
             public static readonly GUIContent logObjCUncaughtExceptions = EditorGUIUtility.TextContent("Log Obj-C Uncaught Exceptions*");
+            public static readonly GUIContent macAppStoreTitle = EditorGUIUtility.TextContent("Mac App Store Options");
             public static readonly GUIContent metalAPIValidation = EditorGUIUtility.TextContent("Metal API Validation*");
             public static readonly GUIContent metalEditorSupport = EditorGUIUtility.TextContent("Metal Editor Support* (Experimental)");
             public static readonly GUIContent metalForceHardShadows = EditorGUIUtility.TextContent("Force hard shadows on Metal*");
@@ -1830,7 +1755,6 @@
             public static readonly GUIContent scriptingMono2x = EditorGUIUtility.TextContent("Mono2x");
             public static readonly GUIContent scriptingWinRTDotNET = EditorGUIUtility.TextContent(".NET");
             public static readonly GUIContent sharedBetweenPlatformsInfo = EditorGUIUtility.TextContent("* Shared setting between multiple platforms.");
-            public static readonly GUIContent singlePassStereoRendering = EditorGUIUtility.TextContent("Single-Pass Stereo Rendering");
             public static readonly GUIContent skinOnGPU = EditorGUIUtility.TextContent("GPU Skinning*|Use DX11/ES3 GPU Skinning");
             public static readonly GUIContent skinOnGPUPS4 = EditorGUIUtility.TextContent("Compute Skinning*|Use Compute pipeline for Skinning");
             public static readonly GUIContent standalonePlayerOptionsTitle = EditorGUIUtility.TextContent("Standalone Player Options");
@@ -1853,7 +1777,6 @@
             public static readonly GUIContent videoMemoryForVertexBuffers = EditorGUIUtility.TextContent("Mesh Video Mem*|How many megabytes of video memory to use for mesh data before we use main memory");
             public static readonly GUIContent visibleInBackground = EditorGUIUtility.TextContent("Visible In Background");
             public static readonly GUIContent VRSupportOverridenInfo = EditorGUIUtility.TextContent("This setting is overridden by Virtual Reality Support.");
-            public static readonly GUIContent xboxEnableKinect = EditorGUIUtility.TextContent("Enable Kinect");
 
             static Styles()
             {
@@ -1862,6 +1785,12 @@
 
             public static string undoChangedBatchingString =>
                 LocalizationDatabase.GetLocalizedString("Changed Batching Settings");
+
+            public static string undoChangedBuildNumberString =>
+                LocalizationDatabase.GetLocalizedString("Changed macOS build number");
+
+            public static string undoChangedBundleIdentifierString =>
+                LocalizationDatabase.GetLocalizedString("Changed macOS bundleIdentifier");
 
             public static string undoChangedGraphicsAPIString =>
                 LocalizationDatabase.GetLocalizedString("Changed Graphics API Settings");

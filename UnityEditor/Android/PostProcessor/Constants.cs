@@ -10,12 +10,9 @@
         public const string AndroidPluginsPath = "AndroidPluginsPath";
         public const string AutoRunPlayer = "AutoRunPlayer";
         public const string BuildTarget = "BuildTarget";
-        public const string CardboardMinSdkVersion = "CardboardMinSdkVersion";
-        public const string DaydreamMinSdkVersion = "DaydreamMinSdkVersion";
         public const string DevelopmentPlayer = "DevelopmentPlayer";
         public const string ExportAndroidProject = "ExportAndroidProject";
         public const string FastzipExe = "FastzipExe";
-        public const string GearVRMinSdkVersion = "GearVRMinSdkVersion";
         public const string HasJarPlugins = "HasJarPlugins";
         public const string InstallPath = "InstallPath";
         public const string ManifestName = "ManifestName";

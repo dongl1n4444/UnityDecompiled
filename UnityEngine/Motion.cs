@@ -12,7 +12,7 @@
     {
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_averageSpeed(out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("ValidateIfRetargetable is not supported anymore. Use isHumanMotion instead.", true)]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("ValidateIfRetargetable is not supported anymore. Use isHumanMotion instead.", true), GeneratedByOldBindingsGenerator]
         public extern bool ValidateIfRetargetable(bool val);
 
         public float apparentSpeed { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }

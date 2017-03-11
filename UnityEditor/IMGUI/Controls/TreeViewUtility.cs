@@ -135,6 +135,10 @@
                 }
                 root.children = list;
             }
+            else
+            {
+                root.children = new List<TreeViewItem>();
+            }
         }
 
         private static void SetChildParentReferences(int parentIndex, IList<TreeViewItem> visibleItems)

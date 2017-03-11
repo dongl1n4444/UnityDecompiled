@@ -7,10 +7,10 @@
 
     internal class RectSelection
     {
-        private Object[] m_CurrentSelection = null;
+        private UnityEngine.Object[] m_CurrentSelection = null;
         private Dictionary<GameObject, bool> m_LastSelection;
         private bool m_RectSelecting;
-        private Object[] m_SelectionStart;
+        private UnityEngine.Object[] m_SelectionStart;
         private Vector2 m_SelectMousePoint;
         private Vector2 m_SelectStartPoint;
         private EditorWindow m_Window;
@@ -69,7 +69,7 @@
                         {
                             EditorApplication.modifierKeysChanged = (EditorApplication.CallbackFunction) Delegate.Remove(EditorApplication.modifierKeysChanged, new EditorApplication.CallbackFunction(this.SendCommandsOnModifierKeys));
                             this.m_RectSelecting = false;
-                            this.m_SelectionStart = new Object[0];
+                            this.m_SelectionStart = new UnityEngine.Object[0];
                             current.Use();
                         }
                     }
@@ -189,23 +189,23 @@
             this.m_Window.SendEvent(EditorGUIUtility.CommandEvent("ModifierKeysChanged"));
         }
 
-        private static void UpdateSelection(Object[] existingSelection, Object newObject, SelectionType type, bool isRectSelection)
+        private static void UpdateSelection(UnityEngine.Object[] existingSelection, UnityEngine.Object newObject, SelectionType type, bool isRectSelection)
         {
-            Object[] objArray;
+            UnityEngine.Object[] objArray;
             if (newObject == null)
             {
-                objArray = new Object[0];
+                objArray = new UnityEngine.Object[0];
             }
             else
             {
-                objArray = new Object[] { newObject };
+                objArray = new UnityEngine.Object[] { newObject };
             }
             UpdateSelection(existingSelection, objArray, type, isRectSelection);
         }
 
-        private static void UpdateSelection(Object[] existingSelection, Object[] newObjects, SelectionType type, bool isRectSelection)
+        private static void UpdateSelection(UnityEngine.Object[] existingSelection, UnityEngine.Object[] newObjects, SelectionType type, bool isRectSelection)
         {
-            Object[] objArray;
+            UnityEngine.Object[] objArray;
             switch (type)
             {
                 case SelectionType.Additive:
@@ -214,7 +214,7 @@
                         Selection.objects = existingSelection;
                         return;
                     }
-                    objArray = new Object[existingSelection.Length + newObjects.Length];
+                    objArray = new UnityEngine.Object[existingSelection.Length + newObjects.Length];
                     Array.Copy(existingSelection, objArray, existingSelection.Length);
                     for (int i = 0; i < newObjects.Length; i++)
                     {
@@ -233,19 +233,19 @@
 
                 case SelectionType.Subtractive:
                 {
-                    Dictionary<Object, bool> dictionary = new Dictionary<Object, bool>(existingSelection.Length);
-                    foreach (Object obj2 in existingSelection)
+                    Dictionary<UnityEngine.Object, bool> dictionary = new Dictionary<UnityEngine.Object, bool>(existingSelection.Length);
+                    foreach (UnityEngine.Object obj2 in existingSelection)
                     {
                         dictionary.Add(obj2, false);
                     }
-                    foreach (Object obj3 in newObjects)
+                    foreach (UnityEngine.Object obj3 in newObjects)
                     {
                         if (dictionary.ContainsKey(obj3))
                         {
                             dictionary.Remove(obj3);
                         }
                     }
-                    objArray = new Object[dictionary.Keys.Count];
+                    objArray = new UnityEngine.Object[dictionary.Keys.Count];
                     dictionary.Keys.CopyTo(objArray, 0);
                     Selection.objects = objArray;
                     return;

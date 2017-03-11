@@ -158,16 +158,16 @@
         /// <summary>
         /// <para>Value of an object reference property.</para>
         /// </summary>
-        public Object objectReferenceValue { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+        public UnityEngine.Object objectReferenceValue { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
         public int objectReferenceInstanceIDValue { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
         internal string objectReferenceStringValue { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        internal extern bool ValidateObjectReferenceValue(Object obj);
+        internal extern bool ValidateObjectReferenceValue(UnityEngine.Object obj);
         internal string objectReferenceTypeString { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
         /// <summary>
         /// <para>A reference to another Object in the Scene. This reference is resolved in the context of the SerializedObject containing the SerializedProperty.</para>
         /// </summary>
-        public Object exposedReferenceValue
+        public UnityEngine.Object exposedReferenceValue
         {
             get
             {
@@ -180,14 +180,14 @@
                 {
                     return null;
                 }
-                Object objectReferenceValue = property.objectReferenceValue;
+                UnityEngine.Object objectReferenceValue = property.objectReferenceValue;
                 IExposedPropertyTable context = this.serializedObject.context as IExposedPropertyTable;
                 if (context != null)
                 {
                     SerializedProperty property2 = this.FindPropertyRelative("exposedName");
                     PropertyName id = new PropertyName(property2.stringValue);
                     bool idValid = false;
-                    Object referenceValue = context.GetReferenceValue(id, out idValid);
+                    UnityEngine.Object referenceValue = context.GetReferenceValue(id, out idValid);
                     if (idValid)
                     {
                         objectReferenceValue = referenceValue;
@@ -223,7 +223,7 @@
             }
         }
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        internal extern void AppendFoldoutPPtrValue(Object obj);
+        internal extern void AppendFoldoutPPtrValue(UnityEngine.Object obj);
         internal string layerMaskStringValue { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
         /// <summary>
         /// <para>Enum index of an enum property.</para>
@@ -508,12 +508,12 @@
         /// <param name="dstIndex"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool MoveArrayElement(int srcIndex, int dstIndex);
-        internal void SetToValueOfTarget(Object target)
+        internal void SetToValueOfTarget(UnityEngine.Object target)
         {
             SerializedProperty property = new SerializedObject(target).FindProperty(this.propertyPath);
             if (property == null)
             {
-                Debug.LogError(target.name + " does not have the property " + this.propertyPath);
+                UnityEngine.Debug.LogError(target.name + " does not have the property " + this.propertyPath);
             }
             else
             {

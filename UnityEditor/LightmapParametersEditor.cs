@@ -43,6 +43,12 @@
             this.m_Pushoff = base.serializedObject.FindProperty("pushoff");
         }
 
+        internal override void OnHeaderControlsGUI()
+        {
+            GUILayoutUtility.GetRect(10f, 10f, 16f, 16f, EditorStyles.layerMaskField);
+            GUILayout.FlexibleSpace();
+        }
+
         public override void OnInspectorGUI()
         {
             base.serializedObject.Update();
@@ -56,16 +62,26 @@
             EditorGUILayout.PropertyField(this.m_IsTransparent, Styles.isTransparent, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(this.m_SystemTag, Styles.systemTagContent, new GUILayoutOption[0]);
             EditorGUILayout.Space();
+            bool disabled = LightmapEditorSettings.giBakeBackend == LightmapEditorSettings.GIBakeBackend.PathTracer;
             GUILayout.Label(Styles.bakedGIContent, EditorStyles.boldLabel, new GUILayoutOption[0]);
-            EditorGUILayout.PropertyField(this.m_BlurRadius, Styles.blurRadiusContent, new GUILayoutOption[0]);
+            using (new EditorGUI.DisabledScope(disabled))
+            {
+                EditorGUILayout.PropertyField(this.m_BlurRadius, Styles.blurRadiusContent, new GUILayoutOption[0]);
+            }
             EditorGUILayout.PropertyField(this.m_AntiAliasingSamples, Styles.antiAliasingSamplesContent, new GUILayoutOption[0]);
-            EditorGUILayout.PropertyField(this.m_DirectLightQuality, Styles.directLightQualityContent, new GUILayoutOption[0]);
+            using (new EditorGUI.DisabledScope(disabled))
+            {
+                EditorGUILayout.PropertyField(this.m_DirectLightQuality, Styles.directLightQualityContent, new GUILayoutOption[0]);
+            }
             EditorGUILayout.PropertyField(this.m_BakedLightmapTag, Styles.bakedLightmapTagContent, new GUILayoutOption[0]);
             EditorGUILayout.Slider(this.m_Pushoff, 0f, 1f, Styles.pushoffContent, new GUILayoutOption[0]);
             EditorGUILayout.Space();
-            GUILayout.Label(Styles.bakedAOContent, EditorStyles.boldLabel, new GUILayoutOption[0]);
-            EditorGUILayout.PropertyField(this.m_AOQuality, Styles.aoQualityContent, new GUILayoutOption[0]);
-            EditorGUILayout.PropertyField(this.m_AOAntiAliasingSamples, Styles.aoAntiAliasingSamplesContent, new GUILayoutOption[0]);
+            using (new EditorGUI.DisabledScope(disabled))
+            {
+                GUILayout.Label(Styles.bakedAOContent, EditorStyles.boldLabel, new GUILayoutOption[0]);
+                EditorGUILayout.PropertyField(this.m_AOQuality, Styles.aoQualityContent, new GUILayoutOption[0]);
+                EditorGUILayout.PropertyField(this.m_AOAntiAliasingSamples, Styles.aoAntiAliasingSamplesContent, new GUILayoutOption[0]);
+            }
             GUILayout.Label(Styles.generalGIContent, EditorStyles.boldLabel, new GUILayoutOption[0]);
             EditorGUILayout.Slider(this.m_BackFaceTolerance, 0f, 1f, Styles.backFaceToleranceContent, new GUILayoutOption[0]);
             base.serializedObject.ApplyModifiedProperties();
@@ -73,7 +89,7 @@
 
         private class Styles
         {
-            public static readonly GUIContent antiAliasingSamplesContent = EditorGUIUtility.TextContent("Anti-aliasing Samples|The maximum number of times to supersample a texel to reduce aliasing.");
+            public static readonly GUIContent antiAliasingSamplesContent = EditorGUIUtility.TextContent("Anti-aliasing Samples|The maximum number of times to supersample a texel to reduce aliasing. Progressive lightmapper supersamples the positions and normals buffers (part of the G-buffer) and hence the sample count is a multiplier on the amount of memory used for those buffers. Progressive lightmapper clamps the value to the [1;16] range.");
             public static readonly GUIContent aoAntiAliasingSamplesContent = EditorGUIUtility.TextContent("Anti-aliasing Samples|The maximum number of times to supersample a texel to reduce aliasing in ambient occlusion.");
             public static readonly GUIContent aoQualityContent = EditorGUIUtility.TextContent("Quality|The number of rays to cast for computing ambient occlusion.");
             public static readonly GUIContent backFaceToleranceContent = EditorGUIUtility.TextContent("Backface Tolerance|The percentage of rays shot from an output texel that must hit front faces to be considered usable. Allows a texel to be invalidated if too many of the rays cast from it hit back faces (the texel is inside some geometry). In that case artefacts are avoided by cloning valid values from surrounding texels. For example, if backface tolerance is 0.0, the texel is rejected only if it sees nothing but backfaces. If it is 1.0, the ray origin is rejected if it has even one ray that hits a backface.");

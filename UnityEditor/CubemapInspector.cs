@@ -24,7 +24,7 @@
                 {
                     if ((this.m_Images[i] != null) && !EditorUtility.IsPersistent(this.m_Images[i]))
                     {
-                        Object.DestroyImmediate(this.m_Images[i]);
+                        UnityEngine.Object.DestroyImmediate(this.m_Images[i]);
                     }
                     if (TextureUtil.GetSourceTexture(target, (CubemapFace) i) != null)
                     {
@@ -40,13 +40,13 @@
             }
         }
 
-        public static Object ObjectField(string label, Object obj, Type objType, bool allowSceneObjects, params GUILayoutOption[] options)
+        public static UnityEngine.Object ObjectField(string label, UnityEngine.Object obj, System.Type objType, bool allowSceneObjects, params GUILayoutOption[] options)
         {
             GUILayout.BeginHorizontal(new GUILayoutOption[0]);
             GUILayoutOption[] optionArray1 = new GUILayoutOption[] { GUILayout.ExpandWidth(false) };
             GUI.Label(GUILayoutUtility.GetRect(EditorGUIUtility.labelWidth, 32f, EditorStyles.label, optionArray1), label, EditorStyles.label);
             GUILayoutOption[] optionArray2 = new GUILayoutOption[] { GUILayout.Width(64f) };
-            Object obj2 = EditorGUI.ObjectField(GUILayoutUtility.GetAspectRect(1f, EditorStyles.objectField, optionArray2), obj, objType, allowSceneObjects);
+            UnityEngine.Object obj2 = EditorGUI.ObjectField(GUILayoutUtility.GetAspectRect(1f, EditorStyles.objectField, optionArray2), obj, objType, allowSceneObjects);
             GUILayout.EndHorizontal();
             return obj2;
         }
@@ -65,7 +65,7 @@
                 {
                     if ((this.m_Images[i] != null) && !EditorUtility.IsPersistent(this.m_Images[i]))
                     {
-                        Object.DestroyImmediate(this.m_Images[i]);
+                        UnityEngine.Object.DestroyImmediate(this.m_Images[i]);
                     }
                 }
             }

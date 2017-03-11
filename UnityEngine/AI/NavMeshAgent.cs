@@ -63,7 +63,7 @@
         /// <returns>
         /// <para>Current cost of specified layer.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("Use GetAreaCost instead.")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use GetAreaCost instead."), GeneratedByOldBindingsGenerator]
         public extern float GetLayerCost(int layer);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern OffMeshLinkData GetNextOffMeshLinkDataInternal();
@@ -117,7 +117,7 @@
         /// <summary>
         /// <para>Resumes the movement along the current path after a pause.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("Set isStopped to false instead")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Set isStopped to false instead"), GeneratedByOldBindingsGenerator]
         public extern void Resume();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool SamplePathPosition(int areaMask, float maxDistance, out NavMeshHit hit);
@@ -163,7 +163,7 @@
             this.StopInternal();
         }
 
-        [Obsolete("Use Stop() instead")]
+        [Obsolete("Set isStopped to true instead")]
         public void Stop(bool stopUpdates)
         {
             this.StopInternal();
@@ -287,6 +287,9 @@
         /// </summary>
         public bool isStopped { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
+        /// <summary>
+        /// <para>Returns the owning object of the NavMesh the agent is currently placed on (Read Only).</para>
+        /// </summary>
         public UnityEngine.Object navMeshOwner =>
             this.GetOwnerInternal();
 
@@ -402,6 +405,9 @@
         /// </summary>
         public bool updateRotation { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
+        /// <summary>
+        /// <para>Allows you to specify whether the agent should be aligned to the up-axis of the NavMesh or link that it is placed on.</para>
+        /// </summary>
         public bool updateUpAxis { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>

@@ -1927,7 +1927,7 @@
         /// </summary>
         public class ScrollViewScope : GUI.Scope
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private bool <handleScrollWheel>k__BackingField;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private Vector2 <scrollPosition>k__BackingField;

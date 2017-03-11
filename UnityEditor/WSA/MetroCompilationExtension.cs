@@ -13,11 +13,11 @@
     using UnityEditor;
     using UnityEditor.Modules;
     using UnityEditor.Scripting.Compilers;
+    using UnityEditor.Utils;
     using UnityEditorInternal;
 
     internal class MetroCompilationExtension : DefaultCompilationExtension
     {
-        private static string[] _uwpReferences;
         [CompilerGenerated]
         private static Func<CustomAttribute, bool> <>f__am$cache0;
         private static List<string> userScriptAssemblies;
@@ -30,35 +30,41 @@
 
         public override IEnumerable<string> GetAdditionalAssemblyReferences()
         {
-            string str;
+            string str2;
             if (PlayerSettings.GetScriptingBackend(BuildTargetGroup.WSA) != ScriptingImplementation.WinRTDotNET)
             {
-                return new string[0];
+                if (PlayerSettings.GetApiCompatibilityLevel(BuildTargetGroup.WSA) != ApiCompatibilityLevel.NET_4_6)
+                {
+                    return new string[0];
+                }
+                string[] components = new string[] { IL2CPPUtils.editorIl2cppFolder, "BCLExtensions" };
+                string str = Paths.Combine(components);
+                return new string[] { Path.Combine(str, "System.Runtime.WindowsRuntime.dll"), Path.Combine(str, "System.Runtime.WindowsRuntime.UI.Xaml.dll") };
             }
             WSASDK wsaSDK = EditorUserBuildSettings.wsaSDK;
             switch (wsaSDK)
             {
                 case WSASDK.SDK80:
-                    str = @"Managed\WinRTLegacy.dll";
+                    str2 = @"Managed\WinRTLegacy.dll";
                     break;
 
                 case WSASDK.SDK81:
-                    str = @"Managed\WinRTLegacy.dll";
+                    str2 = @"Managed\WinRTLegacy.dll";
                     break;
 
                 case WSASDK.PhoneSDK81:
-                    str = @"Managed\Phone\WinRTLegacy.dll";
+                    str2 = @"Managed\Phone\WinRTLegacy.dll";
                     break;
 
                 case WSASDK.UWP:
-                    str = @"Managed\UAP\WinRTLegacy.dll";
+                    str2 = @"Managed\UAP\WinRTLegacy.dll";
                     break;
 
                 default:
                     throw new Exception("Unknown Windows SDK: " + wsaSDK.ToString());
             }
-            str = Path.Combine(BuildPipeline.GetPlaybackEngineDirectory(BuildTarget.WSAPlayer, BuildOptions.CompressTextures), str);
-            return new string[] { str.Replace('/', '\\') };
+            str2 = Path.Combine(BuildPipeline.GetPlaybackEngineDirectory(BuildTarget.WSAPlayer, BuildOptions.CompressTextures), str2);
+            return new string[] { str2.Replace('/', '\\') };
         }
 
         [DebuggerHidden]
@@ -259,11 +265,7 @@
             List<string> list = new List<string>();
             if (EditorUserBuildSettings.wsaSDK == WSASDK.UWP)
             {
-                if (_uwpReferences == null)
-                {
-                    _uwpReferences = UWPReferences.GetReferences();
-                }
-                list.AddRange(_uwpReferences);
+                list.AddRange(UWPReferences.GetReferences(Utility.GetDesiredUWPSDK()));
             }
             list.Add(GetWindowsWinmdPath(EditorUserBuildSettings.wsaSDK));
             return list;
@@ -276,7 +278,12 @@
             string windowsKitDirectory = GetWindowsKitDirectory(wsaSDK);
             if (wsaSDK == WSASDK.UWP)
             {
-                str2 = Path.Combine(windowsKitDirectory, @"UnionMetadata\Facade\Windows.winmd");
+                string[] components = new string[] { windowsKitDirectory, "UnionMetadata", Utility.GetDesiredUWPSDKString(), "Facade", "Windows.winmd" };
+                str2 = Paths.Combine(components);
+                if (!File.Exists(str2))
+                {
+                    str2 = Path.Combine(windowsKitDirectory, @"UnionMetadata\Facade\Windows.winmd");
+                }
             }
             else
             {
@@ -325,8 +332,8 @@
             internal string $current;
             internal bool $disposing;
             internal int $PC;
-            internal bool <isDotNetScriptingBackend>__1;
-            internal bool <isTargeting46Profile>__1;
+            internal bool <isDotNetScriptingBackend>__0;
+            internal bool <isTargeting46Profile>__0;
 
             [DebuggerHidden]
             public void Dispose()
@@ -342,9 +349,9 @@
                 switch (num)
                 {
                     case 0:
-                        this.<isDotNetScriptingBackend>__1 = PlayerSettings.GetScriptingBackend(BuildTargetGroup.WSA) == ScriptingImplementation.WinRTDotNET;
-                        this.<isTargeting46Profile>__1 = PlayerSettings.GetApiCompatibilityLevel(BuildTargetGroup.WSA) == ApiCompatibilityLevel.NET_4_6;
-                        if (!this.<isDotNetScriptingBackend>__1)
+                        this.<isDotNetScriptingBackend>__0 = PlayerSettings.GetScriptingBackend(BuildTargetGroup.WSA) == ScriptingImplementation.WinRTDotNET;
+                        this.<isTargeting46Profile>__0 = PlayerSettings.GetApiCompatibilityLevel(BuildTargetGroup.WSA) == ApiCompatibilityLevel.NET_4_6;
+                        if (!this.<isDotNetScriptingBackend>__0)
                         {
                             break;
                         }
@@ -376,7 +383,7 @@
                     default:
                         goto Label_00DC;
                 }
-                if (this.<isDotNetScriptingBackend>__1 || this.<isTargeting46Profile>__1)
+                if (this.<isDotNetScriptingBackend>__0 || this.<isTargeting46Profile>__0)
                 {
                     this.$current = "ENABLE_WINMD_SUPPORT";
                     if (!this.$disposing)

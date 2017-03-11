@@ -16,7 +16,7 @@
         /// <para>The number of culling planes.</para>
         /// </summary>
         public int cullingPlaneCount;
-        private <_cullingPlanes>__FixedBuffer0 _cullingPlanes;
+        private <_cullingPlanes>__FixedBuffer2 _cullingPlanes;
         /// <summary>
         /// <para>The culling sphere.  The first three components of the vector describe the sphere center, and the last component specifies the radius.</para>
         /// </summary>
@@ -59,8 +59,8 @@
                 numRef[((index * 4) + 3) * 4] = plane.distance;
             }
         }
-        [StructLayout(LayoutKind.Sequential, Size=160), CompilerGenerated, UnsafeValueType]
-        public struct <_cullingPlanes>__FixedBuffer0
+        [StructLayout(LayoutKind.Sequential, Size=160), UnsafeValueType, CompilerGenerated]
+        public struct <_cullingPlanes>__FixedBuffer2
         {
             public float FixedElementField;
         }

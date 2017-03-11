@@ -9,9 +9,9 @@
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private string <icon>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-        private string <title>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private string <title>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <useTypeNameAsIconName>k__BackingField;
 
         public string icon { get; set; }

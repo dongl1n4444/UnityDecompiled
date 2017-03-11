@@ -5,7 +5,7 @@
 
     internal class Event : IEvent
     {
-        private Event m_Event = Event.current;
+        private UnityEngine.Event m_Event = UnityEngine.Event.current;
 
         public EventType GetTypeForControl(int id) => 
             this.m_Event.GetTypeForControl(id);

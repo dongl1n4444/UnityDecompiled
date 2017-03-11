@@ -1,7 +1,9 @@
 ﻿namespace UnityEditor.Android.PostProcessor.Tasks
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEditor;
     using UnityEditor.Android;
@@ -16,6 +18,7 @@
         private string _pluginsFolder;
         private string _stagingArea;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ProgressHandler OnProgress;
 
         public void Execute(PostProcessorContext context)
@@ -58,26 +61,31 @@
             if ((device == AndroidTargetDevice.FAT) || device.ToString().Equals(pluginTargetCPU))
             {
                 str = "";
-                if (pluginTargetCPU != null)
+                if (pluginTargetCPU == null)
                 {
-                    if (pluginTargetCPU != "ARMv7")
-                    {
-                        if (pluginTargetCPU == "x86")
-                        {
-                            str = "x86";
-                            goto Label_0088;
-                        }
-                    }
-                    else
-                    {
-                        str = "armeabi-v7a";
-                        goto Label_0088;
-                    }
+                    goto Label_00A9;
                 }
-                Debug.LogWarning($"Unknown cpu architecture for .so library ({assetPath})");
+                if (pluginTargetCPU != "ARMv7")
+                {
+                    if (pluginTargetCPU == "x86")
+                    {
+                        str = "x86";
+                        goto Label_00BE;
+                    }
+                    goto Label_00A9;
+                }
+                str = "armeabi-v7a";
+                if (context.Get<bool>("DevelopmentPlayer") || !assetPath.Equals("Assets/Plugins/Android/libMGD.so"))
+                {
+                    goto Label_00BE;
+                }
+                UnityEngine.Debug.LogWarning($"Mali Graphic Debugger library {assetPath} has been excluded from non-Development Build");
             }
             return;
-        Label_0088:
+        Label_00A9:
+            UnityEngine.Debug.LogWarning($"Unknown cpu architecture for .so library ({assetPath})");
+            return;
+        Label_00BE:
             textArray1 = new string[] { this._stagingArea, "libs", str };
             string path = Paths.Combine(textArray1);
             Directory.CreateDirectory(path);

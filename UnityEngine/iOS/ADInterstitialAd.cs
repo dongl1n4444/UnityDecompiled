@@ -77,7 +77,7 @@
         public delegate void InterstitialWasLoadedDelegate();
 
         /// <summary>
-        /// <para>Will be called when user did view ad contents: i.e. he went past initial screen. Please note that it is impossible to determine if he clicked on any links on ad sequence that follows initial screen.</para>
+        /// <para>Will be called when user viewed ad contents: i.e. they went past the initial screen. Please note that it is impossible to determine if they clicked on any links in ad sequences that follows the initial screen.</para>
         /// </summary>
         public delegate void InterstitialWasViewedDelegate();
     }

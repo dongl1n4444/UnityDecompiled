@@ -15,7 +15,7 @@
     internal class AttributeHelper
     {
         [DebuggerHidden]
-        internal static IEnumerable<T> CallMethodsWithAttribute<T>(Type attributeType, params object[] arguments) => 
+        internal static IEnumerable<T> CallMethodsWithAttribute<T>(System.Type attributeType, params object[] arguments) => 
             new <CallMethodsWithAttribute>c__Iterator0<T> { 
                 attributeType = attributeType,
                 arguments = arguments,
@@ -26,8 +26,8 @@
         private static MonoCreateAssetItem[] ExtractCreateAssetMenuItems(Assembly assembly)
         {
             List<MonoCreateAssetItem> list = new List<MonoCreateAssetItem>();
-            Type[] typesFromAssembly = AssemblyHelper.GetTypesFromAssembly(assembly);
-            foreach (Type type in typesFromAssembly)
+            System.Type[] typesFromAssembly = AssemblyHelper.GetTypesFromAssembly(assembly);
+            foreach (System.Type type in typesFromAssembly)
             {
                 CreateAssetMenuAttribute customAttribute = (CreateAssetMenuAttribute) Attribute.GetCustomAttribute(type, typeof(CreateAssetMenuAttribute));
                 if (customAttribute != null)
@@ -35,7 +35,7 @@
                     if (!type.IsSubclassOf(typeof(ScriptableObject)))
                     {
                         object[] args = new object[] { type.FullName };
-                        Debug.LogWarningFormat("CreateAssetMenu attribute on {0} will be ignored as {0} is not derived from ScriptableObject.", args);
+                        UnityEngine.Debug.LogWarningFormat("CreateAssetMenu attribute on {0} will be ignored as {0} is not derived from ScriptableObject.", args);
                     }
                     else
                     {
@@ -62,8 +62,8 @@
         private static MonoGizmoMethod[] ExtractGizmos(Assembly assembly)
         {
             List<MonoGizmoMethod> list = new List<MonoGizmoMethod>();
-            Type[] typesFromAssembly = AssemblyHelper.GetTypesFromAssembly(assembly);
-            foreach (Type type in typesFromAssembly)
+            System.Type[] typesFromAssembly = AssemblyHelper.GetTypesFromAssembly(assembly);
+            foreach (System.Type type in typesFromAssembly)
             {
                 MethodInfo[] methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
                 for (int i = 0; i < methods.GetLength(0); i++)
@@ -72,10 +72,14 @@
                     object[] customAttributes = info.GetCustomAttributes(typeof(DrawGizmo), false);
                     foreach (DrawGizmo gizmo in customAttributes)
                     {
-                        ParameterInfo[] parameters = info.GetParameters();
+                        System.Reflection.ParameterInfo[] parameters = info.GetParameters();
                         if (parameters.Length != 2)
                         {
-                            Debug.LogWarning($"Method {info.DeclaringType.FullName}.{info.Name} is marked with the DrawGizmo attribute but does not take parameters (ComponentType, GizmoType) so will be ignored.");
+                            UnityEngine.Debug.LogWarning($"Method {info.DeclaringType.FullName}.{info.Name} is marked with the DrawGizmo attribute but does not take parameters (ComponentType, GizmoType) so will be ignored.");
+                        }
+                        else if ((info.DeclaringType != null) && info.DeclaringType.IsGenericTypeDefinition)
+                        {
+                            UnityEngine.Debug.LogWarning($"Method {info.DeclaringType.FullName}.{info.Name} is marked with the DrawGizmo attribute but is defined on a generic type definition, so will be ignored.");
                         }
                         else
                         {
@@ -90,12 +94,12 @@
                             }
                             else
                             {
-                                Debug.LogWarning($"Method {info.DeclaringType.FullName}.{info.Name} is marked with the DrawGizmo attribute but the component type it applies to could not be determined.");
-                                goto Label_0198;
+                                UnityEngine.Debug.LogWarning($"Method {info.DeclaringType.FullName}.{info.Name} is marked with the DrawGizmo attribute but the component type it applies to could not be determined.");
+                                goto Label_01DD;
                             }
                             if ((parameters[1].ParameterType != typeof(GizmoType)) && (parameters[1].ParameterType != typeof(int)))
                             {
-                                Debug.LogWarning($"Method {info.DeclaringType.FullName}.{info.Name} is marked with the DrawGizmo attribute but does not take a second parameter of type GizmoType so will be ignored.");
+                                UnityEngine.Debug.LogWarning($"Method {info.DeclaringType.FullName}.{info.Name} is marked with the DrawGizmo attribute but does not take a second parameter of type GizmoType so will be ignored.");
                             }
                             else
                             {
@@ -103,7 +107,7 @@
                                 item.options = (int) gizmo.drawOptions;
                                 list.Add(item);
                             }
-                        Label_0198:;
+                        Label_01DD:;
                         }
                     }
                 }
@@ -111,7 +115,7 @@
             return list.ToArray();
         }
 
-        internal static bool GameObjectContainsAttribute(GameObject go, Type attributeType)
+        internal static bool GameObjectContainsAttribute(GameObject go, System.Type attributeType)
         {
             foreach (Component component in go.GetComponents(typeof(Component)))
             {
@@ -124,7 +128,7 @@
         }
 
         [RequiredByNativeCode]
-        private static string GetComponentMenuName(Type type)
+        private static string GetComponentMenuName(System.Type type)
         {
             object[] customAttributes = type.GetCustomAttributes(typeof(AddComponentMenu), false);
             if (customAttributes.Length > 0)
@@ -136,7 +140,7 @@
         }
 
         [RequiredByNativeCode]
-        private static int GetComponentMenuOrdering(Type type)
+        private static int GetComponentMenuOrdering(System.Type type)
         {
             object[] customAttributes = type.GetCustomAttributes(typeof(AddComponentMenu), false);
             if (customAttributes.Length > 0)
@@ -164,16 +168,16 @@
             internal bool $disposing;
             internal Assembly[] $locvar0;
             internal int $locvar1;
-            internal Type[] $locvar2;
+            internal System.Type[] $locvar2;
             internal int $locvar3;
             internal MethodInfo[] $locvar4;
             internal int $locvar5;
             internal int $PC;
             internal Assembly <assembly>__1;
             internal MethodInfo <method>__3;
-            internal Type <type>__2;
+            internal System.Type <type>__2;
             internal object[] arguments;
-            internal Type attributeType;
+            internal System.Type attributeType;
 
             [DebuggerHidden]
             public void Dispose()
@@ -194,7 +198,7 @@
                         while (this.$locvar1 < this.$locvar0.Length)
                         {
                             this.<assembly>__1 = this.$locvar0[this.$locvar1];
-                            this.$locvar2 = this.<assembly>__1.GetTypes();
+                            this.$locvar2 = AssemblyHelper.GetTypesFromAssembly(this.<assembly>__1);
                             this.$locvar3 = 0;
                             while (this.$locvar3 < this.$locvar2.Length)
                             {
@@ -265,14 +269,14 @@
             public string menuItem;
             public string fileName;
             public int order;
-            public Type type;
+            public System.Type type;
         }
 
         [StructLayout(LayoutKind.Sequential)]
         private struct MonoGizmoMethod
         {
             public MethodInfo drawGizmo;
-            public Type drawnType;
+            public System.Type drawnType;
             public int options;
         }
     }

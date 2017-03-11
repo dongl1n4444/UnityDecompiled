@@ -39,7 +39,7 @@
         public static T GetBuiltinResource<T>(string path) where T: UnityEngine.Object => 
             ((T) GetBuiltinResource(typeof(T), path));
 
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, TypeInferenceRule(TypeInferenceRules.TypeReferencedByFirstArgument)]
+        [MethodImpl(MethodImplOptions.InternalCall), TypeInferenceRule(TypeInferenceRules.TypeReferencedByFirstArgument), GeneratedByOldBindingsGenerator]
         public static extern UnityEngine.Object GetBuiltinResource(System.Type type, string path);
         /// <summary>
         /// <para>Loads an asset stored at path in a Resources folder.</para>
@@ -57,7 +57,7 @@
         /// </summary>
         /// <param name="path">Pathname of the target folder. When using the empty string (i.e., ""), the function will load the entire contents of the Resources folder.</param>
         /// <param name="systemTypeInstance">Type filter for objects returned.</param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, TypeInferenceRule(TypeInferenceRules.TypeReferencedBySecondArgument)]
+        [MethodImpl(MethodImplOptions.InternalCall), TypeInferenceRule(TypeInferenceRules.TypeReferencedBySecondArgument), GeneratedByOldBindingsGenerator]
         public static extern UnityEngine.Object Load(string path, System.Type systemTypeInstance);
         /// <summary>
         /// <para>Loads all assets in a folder or file at path in a Resources folder.</para>

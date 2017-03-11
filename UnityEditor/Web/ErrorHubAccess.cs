@@ -9,9 +9,9 @@
     [InitializeOnLoad]
     internal class ErrorHubAccess : CloudServiceAccess
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private string <errorMessage>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private static ErrorHubAccess <instance>k__BackingField;
         public const string kServiceName = "ErrorHub";
         private static string kServiceUrl = ("file://" + EditorApplication.userJavascriptPackagesPath + "unityeditor-cloud-hub/dist/index.html?failure=unity_connect");

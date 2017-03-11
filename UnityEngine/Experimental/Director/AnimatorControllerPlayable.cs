@@ -828,7 +828,7 @@
             INTERNAL_CALL_SetTriggerString(ref handle, name);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern int StringToHash(string name);
 
         /// <summary>

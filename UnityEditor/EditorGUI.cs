@@ -82,7 +82,6 @@
         internal static readonly string s_AllowedCharactersForFloat = "inftynaeINFTYNAE0123456789.,-*/+%^()";
         internal static readonly string s_AllowedCharactersForInt = "0123456789-*/+%^()";
         private static int s_ArraySizeFieldHash = "ArraySizeField".GetHashCode();
-        private static int s_ButtonMouseDownHash = "ButtonMouseDown".GetHashCode();
         private static Stack<bool> s_ChangedStack = new Stack<bool>();
         internal static readonly GUIContent s_ClipingPlanesLabel = EditorGUIUtility.TextContent("Clipping Planes");
         internal static bool s_CollectingToolTips;
@@ -100,6 +99,7 @@
         private static double s_DragStartValue = 0.0;
         internal static bool s_DragToPosition = true;
         private static int s_DragUpdatedOverID = 0;
+        private static int s_DropdownButtonHash = "DropdownButton".GetHashCode();
         private static Stack<bool> s_EnabledStack = new Stack<bool>();
         private static int s_FloatFieldHash = "EditorTextField".GetHashCode();
         private static double s_FoldoutDestTime;
@@ -263,7 +263,7 @@
             showMixedValue = property.hasMultipleDifferentValues;
             if (property.isAnimated)
             {
-                Color animatedPropertyColor = AnimationMode.animatedPropertyColor;
+                Color animatedPropertyColor = UnityEditor.AnimationMode.animatedPropertyColor;
                 animatedPropertyColor.a *= GUI.color.a;
                 GUI.color = animatedPropertyColor;
             }
@@ -357,46 +357,6 @@
             return GUI.Button(position, content, style);
         }
 
-        internal static bool ButtonMouseDown(int id, Rect position, GUIContent content, GUIStyle style)
-        {
-            Event current = Event.current;
-            switch (current.type)
-            {
-                case EventType.Repaint:
-                    if (showMixedValue)
-                    {
-                        BeginHandleMixedValueContentColor();
-                        style.Draw(position, s_MixedValueContent, id, false);
-                        EndHandleMixedValueContentColor();
-                    }
-                    else
-                    {
-                        style.Draw(position, content, id, false);
-                    }
-                    break;
-
-                case EventType.MouseDown:
-                    if (position.Contains(current.mousePosition) && (current.button == 0))
-                    {
-                        Event.current.Use();
-                        return true;
-                    }
-                    break;
-
-                case EventType.KeyDown:
-                    if ((GUIUtility.keyboardControl == id) && (current.character == ' '))
-                    {
-                        Event.current.Use();
-                        return true;
-                    }
-                    break;
-            }
-            return false;
-        }
-
-        internal static bool ButtonMouseDown(Rect position, GUIContent content, FocusType focusType, GUIStyle style) => 
-            ButtonMouseDown(GUIUtility.GetControlID(s_ButtonMouseDownHash, focusType, position), position, content, style);
-
         internal static bool ButtonWithDropdownList(string buttonName, string[] buttonNames, GenericMenu.MenuFunction2 callback, params GUILayoutOption[] options) => 
             ButtonWithDropdownList(EditorGUIUtility.TempContent(buttonName), buttonNames, callback, options);
 
@@ -424,7 +384,7 @@
             bool flag;
             if (mouseDownButton)
             {
-                flag = ButtonMouseDown(rect, GUIContent.Temp(guiContent.text, guiContent.tooltip), FocusType.Passive, style);
+                flag = DropdownButton(rect, GUIContent.Temp(guiContent.text, guiContent.tooltip), FocusType.Passive, style);
             }
             else
             {
@@ -463,7 +423,7 @@
         private static long CalculateIntDragSensitivity(long value) => 
             ((long) Math.Max((double) 1.0, (double) (Math.Pow(Math.Abs((double) value), 0.5) * 0.029999999329447746)));
 
-        internal static bool CheckForCrossSceneReferencing(Object obj1, Object obj2)
+        internal static bool CheckForCrossSceneReferencing(UnityEngine.Object obj1, UnityEngine.Object obj2)
         {
             GameObject gameObjectFromObject = GetGameObjectFromObject(obj1);
             if (gameObjectFromObject == null)
@@ -835,13 +795,13 @@
                     case EventType.DragPerform:
                         if (position.Contains(event2.mousePosition) && GUI.enabled)
                         {
-                            Object[] objectReferences = DragAndDrop.objectReferences;
-                            Object[] references = new Object[1];
+                            UnityEngine.Object[] objectReferences = DragAndDrop.objectReferences;
+                            UnityEngine.Object[] references = new UnityEngine.Object[1];
                             bool flag6 = false;
-                            foreach (Object obj2 in objectReferences)
+                            foreach (UnityEngine.Object obj2 in objectReferences)
                             {
                                 references[0] = obj2;
-                                Object obj3 = ValidateObjectFieldAssignment(references, null, property);
+                                UnityEngine.Object obj3 = ValidateObjectFieldAssignment(references, null, property);
                                 if (obj3 != null)
                                 {
                                     DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
@@ -1814,7 +1774,7 @@
                         property.animationCurveValue = CurveEditorWindow.curve;
                         if (property.hasMultipleDifferentValues)
                         {
-                            Debug.LogError("AnimationCurve SerializedProperty hasMultipleDifferentValues is true after writing.");
+                            UnityEngine.Debug.LogError("AnimationCurve SerializedProperty hasMultipleDifferentValues is true after writing.");
                         }
                     }
                     return CurveEditorWindow.curve;
@@ -1833,7 +1793,7 @@
             return value;
         }
 
-        internal static Object DoDropField(Rect position, int id, Type objType, ObjectFieldValidator validator, bool allowSceneObjects, GUIStyle style)
+        internal static UnityEngine.Object DoDropField(Rect position, int id, System.Type objType, ObjectFieldValidator validator, bool allowSceneObjects, GUIStyle style)
         {
             if (validator == null)
             {
@@ -1858,8 +1818,8 @@
                 case EventType.DragPerform:
                     if (position.Contains(Event.current.mousePosition) && GUI.enabled)
                     {
-                        Object[] objectReferences = DragAndDrop.objectReferences;
-                        Object target = validator(objectReferences, objType, null);
+                        UnityEngine.Object[] objectReferences = DragAndDrop.objectReferences;
+                        UnityEngine.Object target = validator(objectReferences, objType, null);
                         if ((target != null) && (!allowSceneObjects && !EditorUtility.IsPersistent(target)))
                         {
                             target = null;
@@ -1902,7 +1862,7 @@
 
         private static Enum DoEnumMaskField(Rect position, GUIContent label, Enum enumValue, GUIStyle style, out int changedFlags, out bool changedToValue)
         {
-            Type type = enumValue.GetType();
+            System.Type type = enumValue.GetType();
             if (!type.IsEnum)
             {
                 throw new Exception("parameter _enum must be of type System.Enum");
@@ -2044,7 +2004,7 @@
             return color;
         }
 
-        internal static void DoInspectorTitlebar(Rect position, int id, bool foldout, Object[] targetObjs, GUIStyle baseStyle)
+        internal static void DoInspectorTitlebar(Rect position, int id, bool foldout, UnityEngine.Object[] targetObjs, GUIStyle baseStyle)
         {
             GUIStyle inspectorTitlebarText = EditorStyles.inspectorTitlebarText;
             GUIStyle iconButton = EditorStyles.iconButton;
@@ -2055,7 +2015,7 @@
                 xMax = rect2.xMin - 2f
             };
             int num = -1;
-            foreach (Object obj2 in targetObjs)
+            foreach (UnityEngine.Object obj2 in targetObjs)
             {
                 int objectEnabled = EditorUtility.GetObjectEnabled(obj2);
                 if (num == -1)
@@ -2069,7 +2029,7 @@
             }
             if (num != -1)
             {
-                bool flag = AnimationMode.IsPropertyAnimated(targetObjs[0], "m_Enabled");
+                bool flag = UnityEditor.AnimationMode.IsPropertyAnimated(targetObjs[0], "m_Enabled");
                 bool flag2 = num != 0;
                 showMixedValue = num == -2;
                 Rect rect4 = rect;
@@ -2078,7 +2038,7 @@
                 Color color = GUI.color;
                 if (flag)
                 {
-                    GUI.color = AnimationMode.animatedPropertyColor;
+                    GUI.color = UnityEditor.AnimationMode.animatedPropertyColor;
                 }
                 int num4 = GUIUtility.GetControlID(s_TitlebarHash, FocusType.Keyboard, position);
                 flag2 = EditorGUIInternal.DoToggleForward(rect4, num4, flag2, GUIContent.none, EditorStyles.toggle);
@@ -2089,7 +2049,7 @@
                 if (EndChangeCheck())
                 {
                     Undo.RecordObjects(targetObjs, (!flag2 ? "Disable" : "Enable") + " Component" + ((targetObjs.Length <= 1) ? "" : "s"));
-                    foreach (Object obj3 in targetObjs)
+                    foreach (UnityEngine.Object obj3 in targetObjs)
                     {
                         EditorUtility.SetObjectEnabled(obj3, flag2);
                     }
@@ -2108,7 +2068,7 @@
             {
                 i = AssetPreview.GetMiniThumbnail(targetObjs[0]);
             }
-            if ((ButtonMouseDown(rect, EditorGUIUtility.TempContent(i), FocusType.Passive, GUIStyle.none) && (targetObjs[0] is MonoScript)) && IconSelector.ShowAtPosition(targetObjs[0], rect, true))
+            if ((DropdownButton(rect, EditorGUIUtility.TempContent(i), FocusType.Passive, GUIStyle.none) && (targetObjs[0] is MonoScript)) && IconSelector.ShowAtPosition(targetObjs[0], rect, true))
             {
                 GUIUtility.ExitGUI();
             }
@@ -2326,10 +2286,10 @@
             }
         }
 
-        internal static Object DoObjectField(Rect position, Rect dropRect, int id, Object obj, Type objType, SerializedProperty property, ObjectFieldValidator validator, bool allowSceneObjects) => 
+        internal static UnityEngine.Object DoObjectField(Rect position, Rect dropRect, int id, UnityEngine.Object obj, System.Type objType, SerializedProperty property, ObjectFieldValidator validator, bool allowSceneObjects) => 
             DoObjectField(position, dropRect, id, obj, objType, property, validator, allowSceneObjects, EditorStyles.objectField);
 
-        internal static Object DoObjectField(Rect position, Rect dropRect, int id, Object obj, Type objType, SerializedProperty property, ObjectFieldValidator validator, bool allowSceneObjects, GUIStyle style)
+        internal static UnityEngine.Object DoObjectField(Rect position, Rect dropRect, int id, UnityEngine.Object obj, System.Type objType, SerializedProperty property, ObjectFieldValidator validator, bool allowSceneObjects, GUIStyle style)
         {
             Rect rect;
             if (validator == null)
@@ -2405,7 +2365,7 @@
                             obj = property.objectReferenceValue;
                             if (obj != null)
                             {
-                                Object[] references = new Object[] { obj };
+                                UnityEngine.Object[] references = new UnityEngine.Object[] { obj };
                                 if (EditorSceneManager.preventCrossSceneReferences && CheckForCrossSceneReferencing(obj, property.serializedObject.targetObject))
                                 {
                                     if (!EditorApplication.isPlaying)
@@ -2457,8 +2417,8 @@
                 case EventType.DragPerform:
                     if (dropRect.Contains(Event.current.mousePosition) && GUI.enabled)
                     {
-                        Object[] objectReferences = DragAndDrop.objectReferences;
-                        Object target = validator(objectReferences, objType, property);
+                        UnityEngine.Object[] objectReferences = DragAndDrop.objectReferences;
+                        UnityEngine.Object target = validator(objectReferences, objType, property);
                         if ((target != null) && (!allowSceneObjects && !EditorUtility.IsPersistent(target)))
                         {
                             target = null;
@@ -2496,8 +2456,8 @@
                     {
                         break;
                     }
-                    Object[] objArray2 = new Object[] { ObjectSelector.GetCurrentObject() };
-                    Object obj4 = validator(objArray2, objType, property);
+                    UnityEngine.Object[] objArray2 = new UnityEngine.Object[] { ObjectSelector.GetCurrentObject() };
+                    UnityEngine.Object obj4 = validator(objArray2, objType, property);
                     if (property != null)
                     {
                         property.objectReferenceValue = obj4;
@@ -2550,7 +2510,7 @@
             }
             else
             {
-                Object targetObject = (property == null) ? obj : property.objectReferenceValue;
+                UnityEngine.Object targetObject = (property == null) ? obj : property.objectReferenceValue;
                 Component component = targetObject as Component;
                 if (component != null)
                 {
@@ -2581,14 +2541,14 @@
             return obj;
         }
 
-        internal static bool DoObjectFoldout(bool foldout, Rect interactionRect, Rect renderRect, Object[] targetObjs, int id)
+        internal static bool DoObjectFoldout(bool foldout, Rect interactionRect, Rect renderRect, UnityEngine.Object[] targetObjs, int id)
         {
             foldout = DoObjectMouseInteraction(foldout, interactionRect, targetObjs, id);
             DoObjectFoldoutInternal(foldout, interactionRect, renderRect, targetObjs, id);
             return foldout;
         }
 
-        private static void DoObjectFoldoutInternal(bool foldout, Rect interactionRect, Rect renderRect, Object[] targetObjs, int id)
+        private static void DoObjectFoldoutInternal(bool foldout, Rect interactionRect, Rect renderRect, UnityEngine.Object[] targetObjs, int id)
         {
             bool enabled = GUI.enabled;
             GUI.enabled = true;
@@ -2600,7 +2560,7 @@
             GUI.enabled = enabled;
         }
 
-        internal static bool DoObjectMouseInteraction(bool foldout, Rect interactionRect, Object[] targetObjs, int id)
+        internal static bool DoObjectMouseInteraction(bool foldout, Rect interactionRect, UnityEngine.Object[] targetObjs, int id)
         {
             bool enabled = GUI.enabled;
             GUI.enabled = true;
@@ -2852,7 +2812,7 @@
                 }
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = e => Debug.Log(((SerializedProperty) e).propertyPath);
+                    <>f__am$cache0 = e => UnityEngine.Debug.Log(((SerializedProperty) e).propertyPath);
                 }
                 menu.AddItem(EditorGUIUtility.TextContent("Print Property Path"), false, <>f__am$cache0, property2);
             }
@@ -3664,7 +3624,7 @@
             GUI.backgroundColor = backgroundColor;
         }
 
-        private static void DrawObjectFieldLargeThumb(Rect position, int id, Object obj, GUIContent content)
+        private static void DrawObjectFieldLargeThumb(Rect position, int id, UnityEngine.Object obj, GUIContent content)
         {
             GUIStyle objectFieldThumb = EditorStyles.objectFieldThumb;
             objectFieldThumb.Draw(position, GUIContent.none, id, DragAndDrop.activeControlID == id);
@@ -3718,7 +3678,7 @@
             (objectFieldThumb.name + "Overlay2").Draw(position, EditorGUIUtility.TempContent("Select"), id);
         }
 
-        private static void DrawObjectFieldMiniThumb(Rect position, int id, Object obj, GUIContent content)
+        private static void DrawObjectFieldMiniThumb(Rect position, int id, UnityEngine.Object obj, GUIContent content)
         {
             GUIStyle objectFieldMiniThumb = EditorStyles.objectFieldMiniThumb;
             position.width = 32f;
@@ -3953,7 +3913,7 @@
         {
             if ((imageAspect == 0f) && (image == null))
             {
-                Debug.LogError("Please specify an image or a imageAspect");
+                UnityEngine.Debug.LogError("Please specify an image or a imageAspect");
             }
             else
             {
@@ -3976,6 +3936,69 @@
             GUI.CalculateScaledTextureRects(position, scaleMode, imageAspect, ref outScreenRect, ref outSourceRect);
             GUI.DrawTextureWithTexCoords(outScreenRect, transparentCheckerTexture, new Rect((outScreenRect.width * -0.5f) / ((float) transparentCheckerTexture.width), (outScreenRect.height * -0.5f) / ((float) transparentCheckerTexture.height), outScreenRect.width / ((float) transparentCheckerTexture.width), outScreenRect.height / ((float) transparentCheckerTexture.height)), false);
         }
+
+        /// <summary>
+        /// <para>Make a button that reacts to mouse down, for displaying your own dropdown content.</para>
+        /// </summary>
+        /// <param name="position">Rectangle on the screen to use for the button.</param>
+        /// <param name="content">Text, image and tooltip for this button.</param>
+        /// <param name="focusType">Whether the button should be selectable by keyboard or not.</param>
+        /// <param name="style">Optional style to use.</param>
+        /// <returns>
+        /// <para>true when the user clicks the button.</para>
+        /// </returns>
+        public static bool DropdownButton(Rect position, GUIContent content, FocusType focusType) => 
+            DropdownButton(position, content, focusType, "MiniPullDown");
+
+        internal static bool DropdownButton(int id, Rect position, GUIContent content, GUIStyle style)
+        {
+            Event current = Event.current;
+            switch (current.type)
+            {
+                case EventType.Repaint:
+                    if (showMixedValue)
+                    {
+                        BeginHandleMixedValueContentColor();
+                        style.Draw(position, s_MixedValueContent, id, false);
+                        EndHandleMixedValueContentColor();
+                    }
+                    else
+                    {
+                        style.Draw(position, content, id, false);
+                    }
+                    break;
+
+                case EventType.MouseDown:
+                    if (position.Contains(current.mousePosition) && (current.button == 0))
+                    {
+                        Event.current.Use();
+                        return true;
+                    }
+                    break;
+
+                case EventType.KeyDown:
+                    if ((GUIUtility.keyboardControl == id) && (current.character == ' '))
+                    {
+                        Event.current.Use();
+                        return true;
+                    }
+                    break;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// <para>Make a button that reacts to mouse down, for displaying your own dropdown content.</para>
+        /// </summary>
+        /// <param name="position">Rectangle on the screen to use for the button.</param>
+        /// <param name="content">Text, image and tooltip for this button.</param>
+        /// <param name="focusType">Whether the button should be selectable by keyboard or not.</param>
+        /// <param name="style">Optional style to use.</param>
+        /// <returns>
+        /// <para>true when the user clicks the button.</para>
+        /// </returns>
+        public static bool DropdownButton(Rect position, GUIContent content, FocusType focusType, GUIStyle style) => 
+            DropdownButton(GUIUtility.GetControlID(s_DropdownButtonHash, focusType, position), position, content, style);
 
         /// <summary>
         /// <para>Draws a label with a drop shadow.</para>
@@ -4108,7 +4131,7 @@
             }
         }
 
-        private static Enum EnumFlagsToInt(Type type, int value) => 
+        private static Enum EnumFlagsToInt(System.Type type, int value) => 
             (Enum.Parse(type, value.ToString()) as Enum);
 
         /// <summary>
@@ -4209,7 +4232,7 @@
 
         internal static Enum EnumMaskFieldInternal(Rect position, Enum enumValue, GUIStyle style)
         {
-            Type type = enumValue.GetType();
+            System.Type type = enumValue.GetType();
             if (!type.IsEnum)
             {
                 throw new Exception("parameter _enum must be of type System.Enum");
@@ -4225,7 +4248,7 @@
 
         internal static Enum EnumMaskFieldInternal(Rect position, GUIContent label, Enum enumValue, GUIStyle style)
         {
-            Type type = enumValue.GetType();
+            System.Type type = enumValue.GetType();
             if (!type.IsEnum)
             {
                 throw new Exception("parameter _enum must be of type System.Enum");
@@ -4405,7 +4428,7 @@
 
         private static Enum EnumPopupInternal(Rect position, GUIContent label, Enum selected, GUIStyle style)
         {
-            Type enumType = selected.GetType();
+            System.Type enumType = selected.GetType();
             if (!enumType.IsEnum)
             {
                 throw new Exception("parameter _enum must be of type System.Enum");
@@ -4779,7 +4802,7 @@
             {
                 t = group.GetGameViewSize(selectedIndex).displayText;
             }
-            if (ButtonMouseDown(buttonRect, GUIContent.Temp(t), FocusType.Passive, guiStyle))
+            if (DropdownButton(buttonRect, GUIContent.Temp(t), FocusType.Passive, guiStyle))
             {
                 GameViewSizesMenuItemProvider itemProvider = new GameViewSizesMenuItemProvider(groupType);
                 GameViewSizeMenu windowContent = new GameViewSizeMenu(itemProvider, selectedIndex, new GameViewSizesMenuModifyItemUI(), gameView);
@@ -4787,7 +4810,7 @@
             }
         }
 
-        internal static GameObject GetGameObjectFromObject(Object obj)
+        internal static GameObject GetGameObjectFromObject(UnityEngine.Object obj)
         {
             GameObject gameObject = obj as GameObject;
             if ((gameObject == null) && (obj is Component))
@@ -5020,9 +5043,9 @@
             }
         }
 
-        private static Object HandleTextureToSprite(Texture2D tex)
+        private static UnityEngine.Object HandleTextureToSprite(Texture2D tex)
         {
-            Object[] objArray = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(tex));
+            UnityEngine.Object[] objArray = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(tex));
             for (int i = 0; i < objArray.Length; i++)
             {
                 if (objArray[i].GetType() == typeof(Sprite))
@@ -5069,7 +5092,7 @@
             GUI.Label(position, EditorGUIUtility.TempContent(message, EditorGUIUtility.GetHelpIcon(type)), EditorStyles.helpBox);
         }
 
-        internal static bool HelpIconButton(Rect position, Object obj)
+        internal static bool HelpIconButton(Rect position, UnityEngine.Object obj)
         {
             bool flag = Unsupported.IsDeveloperBuild();
             bool defaultToMonoBehaviour = !flag || obj.GetType().Assembly.ToString().StartsWith("Assembly-");
@@ -5156,7 +5179,7 @@ This warning only shows up in development builds.";
             return new Rect(source.x + indent, source.y, source.width - indent, source.height);
         }
 
-        public static void InspectorTitlebar(Rect position, Object[] targetObjs)
+        public static void InspectorTitlebar(Rect position, UnityEngine.Object[] targetObjs)
         {
             GUIStyle none = GUIStyle.none;
             int id = GUIUtility.GetControlID(s_TitlebarHash, FocusType.Keyboard, position);
@@ -5174,9 +5197,9 @@ This warning only shows up in development builds.";
         /// <returns>
         /// <para>The foldout state selected by the user.</para>
         /// </returns>
-        public static bool InspectorTitlebar(Rect position, bool foldout, Object targetObj, bool expandable)
+        public static bool InspectorTitlebar(Rect position, bool foldout, UnityEngine.Object targetObj, bool expandable)
         {
-            Object[] targetObjs = new Object[] { targetObj };
+            UnityEngine.Object[] targetObjs = new UnityEngine.Object[] { targetObj };
             return InspectorTitlebar(position, foldout, targetObjs, expandable);
         }
 
@@ -5191,7 +5214,7 @@ This warning only shows up in development builds.";
         /// <returns>
         /// <para>The foldout state selected by the user.</para>
         /// </returns>
-        public static bool InspectorTitlebar(Rect position, bool foldout, Object[] targetObjs, bool expandable)
+        public static bool InspectorTitlebar(Rect position, bool foldout, UnityEngine.Object[] targetObjs, bool expandable)
         {
             GUIStyle inspectorTitlebar = EditorStyles.inspectorTitlebar;
             int id = GUIUtility.GetControlID(s_TitlebarHash, FocusType.Keyboard, position);
@@ -5608,7 +5631,7 @@ This warning only shows up in development builds.";
         internal static bool IsEditingTextField() => 
             RecycledTextEditor.s_ActuallyEditing;
 
-        private static bool IsValidForContextMenu(Object target)
+        private static bool IsValidForContextMenu(UnityEngine.Object target)
         {
             if (target == null)
             {
@@ -5930,7 +5953,7 @@ This warning only shows up in development builds.";
         }
 
         /// <summary>
-        /// <para>Make a text field for entering integers.</para>
+        /// <para>Make a text field for entering long integers.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the long field.</param>
         /// <param name="label">Optional label to display in front of the long field.</param>
@@ -5950,7 +5973,7 @@ This warning only shows up in development builds.";
             LongFieldInternal(position, value, style);
 
         /// <summary>
-        /// <para>Make a text field for entering integers.</para>
+        /// <para>Make a text field for entering long integers.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the long field.</param>
         /// <param name="label">Optional label to display in front of the long field.</param>
@@ -5967,7 +5990,7 @@ This warning only shows up in development builds.";
         }
 
         /// <summary>
-        /// <para>Make a text field for entering integers.</para>
+        /// <para>Make a text field for entering long integers.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the long field.</param>
         /// <param name="label">Optional label to display in front of the long field.</param>
@@ -5984,7 +6007,7 @@ This warning only shows up in development builds.";
         }
 
         /// <summary>
-        /// <para>Make a text field for entering integers.</para>
+        /// <para>Make a text field for entering long integers.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the long field.</param>
         /// <param name="label">Optional label to display in front of the long field.</param>
@@ -5997,7 +6020,7 @@ This warning only shows up in development builds.";
             LongField(position, EditorGUIUtility.TempContent(label), value, style);
 
         /// <summary>
-        /// <para>Make a text field for entering integers.</para>
+        /// <para>Make a text field for entering long integers.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the long field.</param>
         /// <param name="label">Optional label to display in front of the long field.</param>
@@ -6145,7 +6168,7 @@ This warning only shows up in development builds.";
             return MaskFieldGUI.DoMaskField(position, id, mask, displayedOptions, optionValues, style);
         }
 
-        internal static Object MiniThumbnailObjectField(Rect position, GUIContent label, Object obj, Type objType, ObjectFieldValidator validator)
+        internal static UnityEngine.Object MiniThumbnailObjectField(Rect position, GUIContent label, UnityEngine.Object obj, System.Type objType, ObjectFieldValidator validator)
         {
             Rect rect;
             Rect rect2;
@@ -6369,7 +6392,7 @@ This warning only shows up in development builds.";
         /// <param name="property">The object reference property the field shows.</param>
         /// <param name="objType">The type of the objects that can be assigned.</param>
         /// <param name="label">Optional label to display in front of the field. Pass GUIContent.none to hide the label.</param>
-        public static void ObjectField(Rect position, SerializedProperty property, Type objType)
+        public static void ObjectField(Rect position, SerializedProperty property, System.Type objType)
         {
             ObjectField(position, property, objType, null, EditorStyles.objectField);
         }
@@ -6398,7 +6421,7 @@ This warning only shows up in development builds.";
         /// <para>The object that has been set by the user.</para>
         /// </returns>
         [Obsolete("Check the docs for the usage of the new parameter 'allowSceneObjects'.")]
-        public static Object ObjectField(Rect position, Object obj, Type objType)
+        public static UnityEngine.Object ObjectField(Rect position, UnityEngine.Object obj, System.Type objType)
         {
             int id = GUIUtility.GetControlID(s_ObjectFieldHash, FocusType.Keyboard, position);
             return DoObjectField(position, position, id, obj, objType, null, null, true);
@@ -6416,7 +6439,7 @@ This warning only shows up in development builds.";
         /// <para>The object that has been set by the user.</para>
         /// </returns>
         [Obsolete("Check the docs for the usage of the new parameter 'allowSceneObjects'.")]
-        public static Object ObjectField(Rect position, string label, Object obj, Type objType) => 
+        public static UnityEngine.Object ObjectField(Rect position, string label, UnityEngine.Object obj, System.Type objType) => 
             ObjectField(position, EditorGUIUtility.TempContent(label), obj, objType, true);
 
         /// <summary>
@@ -6426,7 +6449,7 @@ This warning only shows up in development builds.";
         /// <param name="property">The object reference property the field shows.</param>
         /// <param name="objType">The type of the objects that can be assigned.</param>
         /// <param name="label">Optional label to display in front of the field. Pass GUIContent.none to hide the label.</param>
-        public static void ObjectField(Rect position, SerializedProperty property, Type objType, GUIContent label)
+        public static void ObjectField(Rect position, SerializedProperty property, System.Type objType, GUIContent label)
         {
             ObjectField(position, property, objType, label, EditorStyles.objectField);
         }
@@ -6443,7 +6466,7 @@ This warning only shows up in development builds.";
         /// <para>The object that has been set by the user.</para>
         /// </returns>
         [Obsolete("Check the docs for the usage of the new parameter 'allowSceneObjects'.")]
-        public static Object ObjectField(Rect position, GUIContent label, Object obj, Type objType) => 
+        public static UnityEngine.Object ObjectField(Rect position, GUIContent label, UnityEngine.Object obj, System.Type objType) => 
             ObjectField(position, label, obj, objType, true);
 
         /// <summary>
@@ -6457,7 +6480,7 @@ This warning only shows up in development builds.";
         /// <returns>
         /// <para>The object that has been set by the user.</para>
         /// </returns>
-        public static Object ObjectField(Rect position, Object obj, Type objType, bool allowSceneObjects)
+        public static UnityEngine.Object ObjectField(Rect position, UnityEngine.Object obj, System.Type objType, bool allowSceneObjects)
         {
             int id = GUIUtility.GetControlID(s_ObjectFieldHash, FocusType.Keyboard, position);
             return DoObjectField(IndentedRect(position), IndentedRect(position), id, obj, objType, null, null, allowSceneObjects);
@@ -6474,10 +6497,10 @@ This warning only shows up in development builds.";
         /// <returns>
         /// <para>The object that has been set by the user.</para>
         /// </returns>
-        public static Object ObjectField(Rect position, string label, Object obj, Type objType, bool allowSceneObjects) => 
+        public static UnityEngine.Object ObjectField(Rect position, string label, UnityEngine.Object obj, System.Type objType, bool allowSceneObjects) => 
             ObjectField(position, EditorGUIUtility.TempContent(label), obj, objType, allowSceneObjects);
 
-        internal static void ObjectField(Rect position, SerializedProperty property, Type objType, GUIContent label, GUIStyle style)
+        internal static void ObjectField(Rect position, SerializedProperty property, System.Type objType, GUIContent label, GUIStyle style)
         {
             label = BeginProperty(position, label, property);
             ObjectFieldInternal(position, property, objType, label, style);
@@ -6495,7 +6518,7 @@ This warning only shows up in development builds.";
         /// <returns>
         /// <para>The object that has been set by the user.</para>
         /// </returns>
-        public static Object ObjectField(Rect position, GUIContent label, Object obj, Type objType, bool allowSceneObjects)
+        public static UnityEngine.Object ObjectField(Rect position, GUIContent label, UnityEngine.Object obj, System.Type objType, bool allowSceneObjects)
         {
             int id = GUIUtility.GetControlID(s_ObjectFieldHash, FocusType.Keyboard, position);
             position = PrefixLabel(position, id, label);
@@ -6508,14 +6531,14 @@ This warning only shows up in development builds.";
             return DoObjectField(position, position, id, obj, objType, null, null, allowSceneObjects);
         }
 
-        private static void ObjectFieldInternal(Rect position, SerializedProperty property, Type objType, GUIContent label, GUIStyle style)
+        private static void ObjectFieldInternal(Rect position, SerializedProperty property, System.Type objType, GUIContent label, GUIStyle style)
         {
             int id = GUIUtility.GetControlID(s_PPtrHash, FocusType.Keyboard, position);
             position = PrefixLabel(position, id, label);
             bool allowSceneObjects = false;
             if (property != null)
             {
-                Object targetObject = property.serializedObject.targetObject;
+                UnityEngine.Object targetObject = property.serializedObject.targetObject;
                 if ((targetObject != null) && !EditorUtility.IsPersistent(targetObject))
                 {
                     allowSceneObjects = true;
@@ -6524,7 +6547,7 @@ This warning only shows up in development builds.";
             DoObjectField(position, position, id, null, null, property, null, allowSceneObjects, style);
         }
 
-        internal static void ObjectIconDropDown(Rect position, Object[] targets, bool showLabelIcons, Texture2D nullIcon, SerializedProperty iconProperty)
+        internal static void ObjectIconDropDown(Rect position, UnityEngine.Object[] targets, bool showLabelIcons, Texture2D nullIcon, SerializedProperty iconProperty)
         {
             if (s_IconTextureInactive == null)
             {
@@ -6571,7 +6594,7 @@ This warning only shows up in development builds.";
                     GUIStyle.none.Draw(new Rect(x, rect.yMax - (rect.height * 0.2f), 13f, 8f), s_IconDropDown, false, false, false, false);
                 }
             }
-            if ((ButtonMouseDown(position, GUIContent.none, FocusType.Passive, GUIStyle.none) && ValidTargetForIconSelection(targets)) && IconSelector.ShowAtPosition(targets[0], position, showLabelIcons))
+            if ((DropdownButton(position, GUIContent.none, FocusType.Passive, GUIStyle.none) && ValidTargetForIconSelection(targets)) && IconSelector.ShowAtPosition(targets[0], position, showLabelIcons))
             {
                 GUIUtility.ExitGUI();
             }
@@ -6684,7 +6707,7 @@ This warning only shows up in development builds.";
             return DoTextField(s_RecycledEditor, id, PrefixLabel(position, id, label), password, style, null, out flag, false, false, true);
         }
 
-        internal static void PingObjectOrShowPreviewOnClick(Object targetObject, Rect position)
+        internal static void PingObjectOrShowPreviewOnClick(UnityEngine.Object targetObject, Rect position)
         {
             if (targetObject != null)
             {
@@ -7297,7 +7320,7 @@ This warning only shows up in development builds.";
             if (Unsupported.IsDeveloperBuild())
             {
                 Color backgroundColor = GUI.backgroundColor;
-                GUI.backgroundColor = new Color(Random.value, Random.value, Random.value, 1f);
+                GUI.backgroundColor = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1f);
                 Texture2D background = EditorStyles.radioButton.normal.background;
                 Vector2 position = new Vector2((float) background.width, (float) background.height);
                 GUI.Label(new Rect(Vector2.zero, EditorGUIUtility.PixelsToPoints(position)), string.Empty, EditorStyles.radioButton);
@@ -7845,6 +7868,13 @@ This warning only shows up in development builds.";
             return text;
         }
 
+        internal static string TextFieldInternal(int id, Rect position, string text, GUIStyle style)
+        {
+            bool flag;
+            text = DoTextField(s_RecycledEditor, id, IndentedRect(position), text, style, null, out flag, false, false, false);
+            return text;
+        }
+
         internal static string TextFieldInternal(Rect position, GUIContent label, string text, GUIStyle style)
         {
             bool flag;
@@ -8083,7 +8113,7 @@ This warning only shows up in development builds.";
             return text;
         }
 
-        internal static Object ValidateObjectFieldAssignment(Object[] references, Type objType, SerializedProperty property)
+        internal static UnityEngine.Object ValidateObjectFieldAssignment(UnityEngine.Object[] references, System.Type objType, SerializedProperty property)
         {
             if (references.Length > 0)
             {
@@ -8119,7 +8149,7 @@ This warning only shows up in development builds.";
                     {
                         references = ((GameObject) references[0]).GetComponents(typeof(Component));
                     }
-                    foreach (Object obj4 in references)
+                    foreach (UnityEngine.Object obj4 in references)
                     {
                         if ((obj4 != null) && objType.IsAssignableFrom(obj4.GetType()))
                         {
@@ -8131,7 +8161,7 @@ This warning only shows up in development builds.";
             return null;
         }
 
-        private static bool ValidTargetForIconSelection(Object[] targets) => 
+        private static bool ValidTargetForIconSelection(UnityEngine.Object[] targets) => 
             (((targets[0] is MonoScript) || (targets[0] is GameObject)) && (targets.Length == 1));
 
         private static Vector2 Vector2Field(Rect position, Vector2 value)
@@ -8563,9 +8593,9 @@ This warning only shows up in development builds.";
 
         internal sealed class GUIContents
         {
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            private static GUIContent <helpIcon>k__BackingField;
             [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            private static GUIContent <helpIcon>k__BackingField;
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private static GUIContent <titleSettingsIcon>k__BackingField;
 
             static GUIContents()
@@ -8804,7 +8834,7 @@ This warning only shows up in development builds.";
                     knobMaterial.name = "Knob Material";
                     if (knobMaterial.mainTexture == null)
                     {
-                        Debug.Log("Did not find 'KnobCShape'");
+                        UnityEngine.Debug.Log("Did not find 'KnobCShape'");
                     }
                 }
             }
@@ -8909,7 +8939,7 @@ This warning only shows up in development builds.";
             }
         }
 
-        internal delegate Object ObjectFieldValidator(Object[] references, Type objType, SerializedProperty property);
+        internal delegate UnityEngine.Object ObjectFieldValidator(UnityEngine.Object[] references, System.Type objType, SerializedProperty property);
 
         internal enum ObjectFieldVisualType
         {
@@ -8939,7 +8969,7 @@ This warning only shows up in development builds.";
                 {
                     if (instance == null)
                     {
-                        Debug.LogError("Popup menu has no instance");
+                        UnityEngine.Debug.LogError("Popup menu has no instance");
                         return selected;
                     }
                     if (instance.m_ControlID == controlID)
@@ -8982,7 +9012,7 @@ This warning only shows up in development builds.";
                 }
                 else
                 {
-                    Debug.LogError("BUG: We don't have a receiver set up, please report");
+                    UnityEngine.Debug.LogError("BUG: We don't have a receiver set up, please report");
                 }
             }
         }
@@ -8992,7 +9022,7 @@ This warning only shows up in development builds.";
         /// </summary>
         public class PropertyScope : GUI.Scope
         {
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private GUIContent <content>k__BackingField;
 
             /// <summary>

@@ -1,6 +1,7 @@
 ﻿namespace UnityEditor.TestTools.TestRunner
 {
     using System;
+    using UnityEditor;
     using UnityEngine;
 
     internal class EditModeLauncherContextSettings : IDisposable
@@ -15,6 +16,7 @@
         private void CleanupProjectParameters()
         {
             Application.runInBackground = this.m_RunInBackground;
+            EditorApplication.UnlockReloadAssemblies();
         }
 
         public void Dispose()
@@ -24,6 +26,7 @@
 
         private void SetupProjectParameters()
         {
+            EditorApplication.LockReloadAssemblies();
             this.m_RunInBackground = Application.runInBackground;
             Application.runInBackground = true;
         }

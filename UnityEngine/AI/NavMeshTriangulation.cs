@@ -9,7 +9,7 @@
     /// <summary>
     /// <para>Contains data describing a triangulation of a navmesh.</para>
     /// </summary>
-    [StructLayout(LayoutKind.Sequential), MovedFrom("UnityEngine"), UsedByNativeCode]
+    [StructLayout(LayoutKind.Sequential), UsedByNativeCode, MovedFrom("UnityEngine")]
     public struct NavMeshTriangulation
     {
         /// <summary>

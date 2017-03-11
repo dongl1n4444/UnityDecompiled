@@ -104,7 +104,7 @@
         {
             if ((this.m_SelectedSprite != null) && (base.m_Texture != null))
             {
-                Vector2[] spriteUVs = SpriteUtility.GetSpriteUVs(this.m_SelectedSprite, true);
+                Vector2[] spriteUVs = UnityEditor.Sprites.SpriteUtility.GetSpriteUVs(this.m_SelectedSprite, true);
                 ushort[] triangles = this.m_SelectedSprite.triangles;
                 Edge[] edgeArray = this.FindUniqueEdges(triangles);
                 SpriteEditorUtility.BeginLines(new Color(0.3921f, 0.5843f, 0.9294f, 0.75f));

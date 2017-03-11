@@ -25,6 +25,7 @@
             this.m_TestMethod = testMethod;
             this.m_Context = contex;
             this.m_Signal.WaitOne();
+            this.SetCurrentTestContext();
             this.m_TestMethod = null;
             if (this.m_Exception != null)
             {
@@ -40,8 +41,11 @@
         public TestExecutionContext GetCurrentTestContext() => 
             this.m_Context;
 
-        public IEnumerator GetTestEnumerator() => 
-            new TestEnumeratorWrapper(this.m_TestMethod).GetEnumerator(this.m_Context);
+        public IEnumerator GetTestEnumerator()
+        {
+            this.SetCurrentTestContext();
+            return new TestEnumeratorWrapper(this.m_TestMethod).GetEnumerator(this.m_Context);
+        }
 
         public bool HasTest() => 
             (this.m_TestMethod != null);
@@ -58,6 +62,11 @@
             this.m_Result = null;
             this.m_Exception = exception;
             this.m_Signal.Set();
+        }
+
+        private void SetCurrentTestContext()
+        {
+            typeof(TestExecutionContext).GetProperty("CurrentContext").SetValue(null, this.GetCurrentTestContext(), null);
         }
     }
 }

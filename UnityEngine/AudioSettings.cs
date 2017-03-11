@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Threading;
@@ -12,6 +13,7 @@
     /// </summary>
     public sealed class AudioSettings
     {
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event AudioConfigurationChangeHandler OnAudioConfigurationChanged;
 
         /// <summary>
@@ -60,7 +62,7 @@
         /// </summary>
         public static AudioSpeakerMode driverCapabilities { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        [Obsolete("AudioSettings.driverCaps is obsolete. Use driverCapabilities instead (UnityUpgradable) -> driverCapabilities", true), EditorBrowsable(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("AudioSettings.driverCaps is obsolete. Use driverCapabilities instead (UnityUpgradable) -> driverCapabilities", true)]
         public static AudioSpeakerMode driverCaps =>
             driverCapabilities;
 

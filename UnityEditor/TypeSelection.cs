@@ -6,9 +6,9 @@
     internal class TypeSelection : IComparable
     {
         public GUIContent label;
-        public Object[] objects;
+        public UnityEngine.Object[] objects;
 
-        public TypeSelection(string typeName, Object[] objects)
+        public TypeSelection(string typeName, UnityEngine.Object[] objects)
         {
             this.objects = objects;
             object[] objArray1 = new object[] { objects.Length, " ", ObjectNames.NicifyVariableName(typeName), (objects.Length <= 1) ? "" : "s" };

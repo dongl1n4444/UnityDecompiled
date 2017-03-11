@@ -341,11 +341,15 @@
             }
             if (EditorGUI.EndChangeCheck())
             {
-                foreach (Object obj2 in this.blendMode.targets)
+                foreach (UnityEngine.Object obj2 in this.blendMode.targets)
                 {
                     MaterialChanged((Material) obj2, this.m_WorkflowMode);
                 }
             }
+            EditorGUILayout.Space();
+            GUILayout.Label(Styles.advancedText, EditorStyles.boldLabel, new GUILayoutOption[0]);
+            this.m_MaterialEditor.RenderQueueField();
+            this.m_MaterialEditor.EnableInstancingField();
         }
 
         public enum BlendMode
@@ -364,6 +368,7 @@
 
         private static class Styles
         {
+            public static string advancedText = "Advanced Options";
             public static GUIContent albedoText = new GUIContent("Albedo", "Albedo (RGB) and Transparency (A)");
             public static GUIContent alphaCutoffText = new GUIContent("Alpha Cutoff", "Threshold for alpha cutoff");
             public static readonly string[] blendNames = Enum.GetNames(typeof(StandardShaderGUI.BlendMode));

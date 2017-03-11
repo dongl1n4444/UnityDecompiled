@@ -1,6 +1,7 @@
 ﻿namespace UnityEngine
 {
     using System;
+    using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Threading;
@@ -19,6 +20,7 @@
         public static Display[] displays = new Display[] { new Display() };
         internal IntPtr nativeDisplay;
 
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event DisplaysUpdatedDelegate onDisplaysUpdated;
 
         internal Display()

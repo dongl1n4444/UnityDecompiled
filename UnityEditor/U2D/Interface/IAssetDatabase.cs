@@ -6,7 +6,7 @@
     internal interface IAssetDatabase
     {
         ITextureImporter GetAssetImporterFromPath(string path);
-        string GetAssetPath(Object o);
+        string GetAssetPath(UnityEngine.Object o);
     }
 }
 

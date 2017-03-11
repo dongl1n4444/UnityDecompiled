@@ -1139,7 +1139,7 @@
         }
 
         /// <summary>
-        /// <para>How the Image is draw.</para>
+        /// <para>How to display the image.</para>
         /// </summary>
         public Type type
         {

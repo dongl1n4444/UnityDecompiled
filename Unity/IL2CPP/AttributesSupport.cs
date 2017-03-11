@@ -51,7 +51,7 @@
 
         private static string CustomAttributeConstructorFormattedArgumentsFor(CustomAttribute attribute, DefaultRuntimeMetadataAccess metadataAccess)
         {
-            <CustomAttributeConstructorFormattedArgumentsFor>c__AnonStorey5 storey = new <CustomAttributeConstructorFormattedArgumentsFor>c__AnonStorey5 {
+            <CustomAttributeConstructorFormattedArgumentsFor>c__AnonStorey4 storey = new <CustomAttributeConstructorFormattedArgumentsFor>c__AnonStorey4 {
                 attribute = attribute,
                 metadataAccess = metadataAccess
             };
@@ -458,7 +458,7 @@
 
         private void WriteCustomAttributesCacheGeneratorFor(string name, ICustomAttributeProvider customAttributeProvider)
         {
-            <WriteCustomAttributesCacheGeneratorFor>c__AnonStorey2 storey = new <WriteCustomAttributesCacheGeneratorFor>c__AnonStorey2 {
+            <WriteCustomAttributesCacheGeneratorFor>c__AnonStorey1 storey = new <WriteCustomAttributesCacheGeneratorFor>c__AnonStorey1 {
                 constructibleCustomAttributes = customAttributeProvider.GetConstructibleCustomAttributes().ToArray<CustomAttribute>()
             };
             if (storey.constructibleCustomAttributes.Length != 0)
@@ -467,7 +467,6 @@
                 foreach (CustomAttribute attribute in storey.constructibleCustomAttributes)
                 {
                     this._writer.AddIncludeForTypeDefinition(attribute.AttributeType);
-                    this._writer.AddIncludeForMethodDeclarations(attribute.AttributeType);
                     foreach (TypeReference reference in ExtractTypeReferencesFromCustomAttributeArguments(attribute.ConstructorArguments))
                     {
                         if (reference != null)
@@ -495,18 +494,6 @@
                         if (reference3 != null)
                         {
                             this._writer.AddIncludeForTypeDefinition(reference3);
-                        }
-                    }
-                    List<PropertyDefinition> source = GatherPropertiesFromTypeAndBaseTypes(attribute.AttributeType.Resolve());
-                    using (Collection<CustomAttributeNamedArgument>.Enumerator enumerator4 = attribute.Properties.GetEnumerator())
-                    {
-                        while (enumerator4.MoveNext())
-                        {
-                            <WriteCustomAttributesCacheGeneratorFor>c__AnonStorey1 storey2 = new <WriteCustomAttributesCacheGeneratorFor>c__AnonStorey1 {
-                                property = enumerator4.Current
-                            };
-                            MethodDefinition setMethod = source.First<PropertyDefinition>(new Func<PropertyDefinition, bool>(storey2.<>m__0)).SetMethod;
-                            this._writer.AddIncludeForMethodDeclarations(setMethod.DeclaringType);
                         }
                     }
                 }
@@ -582,14 +569,14 @@
                 TypeDefinition variableType = attribute.AttributeType.Resolve();
                 object[] args = new object[] { Naming.ForVariable(variableType), num };
                 writer.WriteLine("{0} tmp = ({0})cache->attributes[{1}];", args);
-                object[] objArray2 = new object[] { Naming.ForMethodNameOnly(attribute.Constructor), CustomAttributeConstructorFormattedArgumentsFor(attribute, metadataAccess), metadataAccess.HiddenMethodInfo(attribute.Constructor) };
+                object[] objArray2 = new object[] { metadataAccess.Method(attribute.Constructor), CustomAttributeConstructorFormattedArgumentsFor(attribute, metadataAccess), metadataAccess.HiddenMethodInfo(attribute.Constructor) };
                 writer.WriteLine("{0}({1}, {2});", objArray2);
                 List<FieldDefinition> source = GatherFieldsFromTypeAndBaseTypes(variableType);
                 using (Collection<CustomAttributeNamedArgument>.Enumerator enumerator2 = attribute.Fields.GetEnumerator())
                 {
                     while (enumerator2.MoveNext())
                     {
-                        <WriteMethodBody>c__AnonStorey3 storey = new <WriteMethodBody>c__AnonStorey3 {
+                        <WriteMethodBody>c__AnonStorey2 storey = new <WriteMethodBody>c__AnonStorey2 {
                             fieldArgument = enumerator2.Current
                         };
                         object[] objArray3 = new object[] { Naming.ForFieldSetter(source.First<FieldDefinition>(new Func<FieldDefinition, bool>(storey.<>m__0))), FormatAttributeValue(storey.fieldArgument.Argument, TempName(storey.fieldArgument), metadataAccess) };
@@ -601,11 +588,11 @@
                 {
                     while (enumerator3.MoveNext())
                     {
-                        <WriteMethodBody>c__AnonStorey4 storey2 = new <WriteMethodBody>c__AnonStorey4 {
+                        <WriteMethodBody>c__AnonStorey3 storey2 = new <WriteMethodBody>c__AnonStorey3 {
                             propertyArgument = enumerator3.Current
                         };
                         MethodDefinition setMethod = list2.First<PropertyDefinition>(new Func<PropertyDefinition, bool>(storey2.<>m__0)).SetMethod;
-                        object[] objArray4 = new object[] { Naming.ForMethodNameOnly(setMethod), FormatAttributeValue(storey2.propertyArgument.Argument, TempName(storey2.propertyArgument), metadataAccess), metadataAccess.HiddenMethodInfo(setMethod) };
+                        object[] objArray4 = new object[] { metadataAccess.Method(setMethod), FormatAttributeValue(storey2.propertyArgument.Argument, TempName(storey2.propertyArgument), metadataAccess), metadataAccess.HiddenMethodInfo(setMethod) };
                         writer.WriteLine("{0}(tmp, {1}, {2});", objArray4);
                     }
                 }
@@ -650,7 +637,7 @@
         }
 
         [CompilerGenerated]
-        private sealed class <CustomAttributeConstructorFormattedArgumentsFor>c__AnonStorey5
+        private sealed class <CustomAttributeConstructorFormattedArgumentsFor>c__AnonStorey4
         {
             internal CustomAttribute attribute;
             internal DefaultRuntimeMetadataAccess metadataAccess;
@@ -889,25 +876,16 @@
         [CompilerGenerated]
         private sealed class <WriteCustomAttributesCacheGeneratorFor>c__AnonStorey1
         {
-            internal CustomAttributeNamedArgument property;
-
-            internal bool <>m__0(PropertyDefinition p) => 
-                (p.Name == this.property.Name);
-        }
-
-        [CompilerGenerated]
-        private sealed class <WriteCustomAttributesCacheGeneratorFor>c__AnonStorey2
-        {
             internal CustomAttribute[] constructibleCustomAttributes;
 
             internal void <>m__0(CppCodeWriter bodyWriter, MetadataUsage metadataUsage, MethodUsage methodUsage)
             {
-                AttributesSupport.WriteMethodBody(bodyWriter, this.constructibleCustomAttributes, new DefaultRuntimeMetadataAccess(null, metadataUsage, methodUsage));
+                AttributesSupport.WriteMethodBody(bodyWriter, this.constructibleCustomAttributes, new DefaultRuntimeMetadataAccess(null, metadataUsage, methodUsage, null));
             }
         }
 
         [CompilerGenerated]
-        private sealed class <WriteMethodBody>c__AnonStorey3
+        private sealed class <WriteMethodBody>c__AnonStorey2
         {
             internal CustomAttributeNamedArgument fieldArgument;
 
@@ -916,7 +894,7 @@
         }
 
         [CompilerGenerated]
-        private sealed class <WriteMethodBody>c__AnonStorey4
+        private sealed class <WriteMethodBody>c__AnonStorey3
         {
             internal CustomAttributeNamedArgument propertyArgument;
 

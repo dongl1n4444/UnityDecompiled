@@ -69,8 +69,11 @@
         private static string EditorVersionFilenameFor(string editorVersion) => 
             $"il2cpp_cache {editorVersion}";
 
+        private static string EscapeEmbeddedQuotes(string value) => 
+            value.Replace("\"", "\\\"");
+
         private static string FormatArgument(string name, string value) => 
-            $"--{name}="{value}"";
+            $"--{name}="{EscapeEmbeddedQuotes(value)}"";
 
         public static string ObjectFilePathInCacheDirectoryFor(string builderCacheDirectory) => 
             CacheDirectoryPathFor(builderCacheDirectory);

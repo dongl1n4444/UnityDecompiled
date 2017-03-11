@@ -4,7 +4,7 @@
     using UnityEditor.IMGUI.Controls;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(SphereCollider))]
+    [CustomEditor(typeof(SphereCollider)), CanEditMultipleObjects]
     internal class SphereColliderEditor : PrimitiveCollider3DEditor
     {
         private readonly SphereBoundsHandle m_BoundsHandle = new SphereBoundsHandle(s_HandleControlIDHint);
@@ -23,7 +23,8 @@
         {
             SphereCollider target = (SphereCollider) base.target;
             target.center = base.TransformHandleCenterToColliderSpace(target.transform, this.m_BoundsHandle.center);
-            target.radius = this.m_BoundsHandle.radius / this.GetRadiusScaleFactor();
+            float radiusScaleFactor = this.GetRadiusScaleFactor();
+            target.radius = !Mathf.Approximately(radiusScaleFactor, 0f) ? (this.m_BoundsHandle.radius / this.GetRadiusScaleFactor()) : 0f;
         }
 
         private float GetRadiusScaleFactor()

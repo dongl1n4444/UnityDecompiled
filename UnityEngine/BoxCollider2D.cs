@@ -34,6 +34,11 @@
         }
 
         /// <summary>
+        /// <para>Controls the radius of all edges created by the collider.</para>
+        /// </summary>
+        public float edgeRadius { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
         /// <para>The width and height of the rectangle.</para>
         /// </summary>
         public Vector2 size

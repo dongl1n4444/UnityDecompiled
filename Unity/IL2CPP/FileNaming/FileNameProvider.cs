@@ -22,7 +22,7 @@
 
         public string ForModule(ModuleDefinition module)
         {
-            if (module.FullyQualifiedName == null)
+            if (module.FileName == null)
             {
             }
             return Path.GetFileNameWithoutExtension(module.Name);

@@ -11,7 +11,7 @@
 
         public byte[] GeneratePreview(string assetPath, int width, int height)
         {
-            Object targetObject = AssetDatabase.LoadMainAssetAtPath(assetPath);
+            UnityEngine.Object targetObject = AssetDatabase.LoadMainAssetAtPath(assetPath);
             if (targetObject == null)
             {
                 return null;
@@ -24,12 +24,12 @@
             Texture2D textured = editor.RenderStaticPreview(assetPath, null, width, height);
             if (textured == null)
             {
-                Object.DestroyImmediate(editor);
+                UnityEngine.Object.DestroyImmediate(editor);
                 return null;
             }
             byte[] buffer2 = textured.EncodeToPNG();
-            Object.DestroyImmediate(textured);
-            Object.DestroyImmediate(editor);
+            UnityEngine.Object.DestroyImmediate(textured);
+            UnityEngine.Object.DestroyImmediate(editor);
             return buffer2;
         }
 

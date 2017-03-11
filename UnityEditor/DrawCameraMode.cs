@@ -8,23 +8,54 @@
     public enum DrawCameraMode
     {
         /// <summary>
-        /// <para>Draw objects with the albedo component only.</para>
+        /// <para>Draw objects with the albedo component only. This value has been deprecated. Please use DrawCameraMode.RealtimeAlbedo.</para>
         /// </summary>
-        Albedo = 14,
+        [Obsolete("Renamed to better distinguish this mode from new Progressive baked modes. Please use RealtimeAlbedo instead. (UnityUpgradable) -> RealtimeAlbedo", true)]
+        Albedo = -14,
         /// <summary>
         /// <para>The camera is set to display the alpha channel of the rendering.</para>
         /// </summary>
         AlphaChannel = 5,
         /// <summary>
-        /// <para>Draw objects with baked GI only.</para>
+        /// <para>Draw objects with baked GI only. This value has been deprecated. Please use DrawCameraMode.BakedLightmap.</para>
         /// </summary>
-        Baked = 0x12,
+        [Obsolete("Renamed to better distinguish this mode from new Progressive baked modes. Please use BakedLightmap instead. (UnityUpgradable) -> BakedLightmap", true)]
+        Baked = -18,
         /// <summary>
-        /// <para>Draw objects with different color for each chart (UV island).</para>
+        /// <para>Draw objects with the baked albedo component only.</para>
         /// </summary>
-        Charting = 12,
+        BakedAlbedo = 0x19,
         /// <summary>
-        /// <para>Draw with different color for each cluster.</para>
+        /// <para>Draw objects with different colors for each baked chart (UV island).</para>
+        /// </summary>
+        BakedCharting = 30,
+        /// <summary>
+        /// <para>Draw objects with the baked directionality component only.</para>
+        /// </summary>
+        BakedDirectionality = 0x1b,
+        /// <summary>
+        /// <para>Draw objects with the baked emission component only.</para>
+        /// </summary>
+        BakedEmissive = 0x1a,
+        /// <summary>
+        /// <para>Draw objects with baked indices only.</para>
+        /// </summary>
+        BakedIndices = 0x1d,
+        /// <summary>
+        /// <para>Draw objects with the baked lightmap only.</para>
+        /// </summary>
+        BakedLightmap = 0x12,
+        /// <summary>
+        /// <para>Draw objects with baked texel validity only.</para>
+        /// </summary>
+        BakedTexelValidity = 0x1c,
+        /// <summary>
+        /// <para>Draw objects with different colors for each real-time chart (UV island).</para>
+        /// </summary>
+        [Obsolete("Renamed to better distinguish this mode from new Progressive baked modes. Please use RealtimeCharting instead. (UnityUpgradable) -> RealtimeCharting", true)]
+        Charting = -12,
+        /// <summary>
+        /// <para>Draw with different colors for each cluster.</para>
         /// </summary>
         Clustering = 0x13,
         /// <summary>
@@ -44,17 +75,20 @@
         /// </summary>
         DeferredSpecular = 9,
         /// <summary>
-        /// <para>Draw objects with directionality for real-time GI.</para>
+        /// <para>Draw objects with directionality for real-time GI. This value has been deprecated. Please use DrawCameraMode.RealtimeDirectionality.</para>
         /// </summary>
-        Directionality = 0x11,
+        [Obsolete("Renamed to better distinguish this mode from new Progressive baked modes. Please use RealtimeDirectionality instead. (UnityUpgradable) -> RealtimeDirectionality", true)]
+        Directionality = -17,
         /// <summary>
-        /// <para>Draw objects with the emission component only.</para>
+        /// <para>Draw objects with the emission component only. This value has been deprecated. Please use DrawCameraMode.RealtimeEmissive.</para>
         /// </summary>
-        Emissive = 15,
+        [Obsolete("Renamed to better distinguish this mode from new Progressive baked modes. Please use RealtimeEmissive instead. (UnityUpgradable) -> RealtimeEmissive", true)]
+        Emissive = -15,
         /// <summary>
-        /// <para>Draw objects with real-time GI only.</para>
+        /// <para>Draw objects with real-time GI only. This value has been deprecated. Please use DrawCameraMode.RealtimeIndirect.</para>
         /// </summary>
-        Irradiance = 0x10,
+        [Obsolete("Renamed to better distinguish this mode from new Progressive baked modes. Please use RealtimeIndirect instead. (UnityUpgradable) -> RealtimeIndirect", true)]
+        Irradiance = -16,
         /// <summary>
         /// <para>The camera is set to show in red static lights that fall back to 'static' because more than four light volumes are overlapping.</para>
         /// </summary>
@@ -75,6 +109,26 @@
         /// <para>The camera is set to display Scene overdraw, with brighter colors indicating more overdraw.</para>
         /// </summary>
         Overdraw = 6,
+        /// <summary>
+        /// <para>Draw objects with the real-time GI albedo component only.</para>
+        /// </summary>
+        RealtimeAlbedo = 14,
+        /// <summary>
+        /// <para>Draw objects with different colors for each real-time chart (UV island).</para>
+        /// </summary>
+        RealtimeCharting = 12,
+        /// <summary>
+        /// <para>Draw objects with the real-time GI directionality component only.</para>
+        /// </summary>
+        RealtimeDirectionality = 0x11,
+        /// <summary>
+        /// <para>Draw objects with the real-time GI emission component only.</para>
+        /// </summary>
+        RealtimeEmissive = 15,
+        /// <summary>
+        /// <para>Draw objects with the real-time GI indirect light only.</para>
+        /// </summary>
+        RealtimeIndirect = 0x10,
         /// <summary>
         /// <para>The camera is set to draw color coded render paths.</para>
         /// </summary>

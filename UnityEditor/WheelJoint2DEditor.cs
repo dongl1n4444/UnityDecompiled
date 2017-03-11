@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(WheelJoint2D))]
+    [CustomEditor(typeof(WheelJoint2D)), CanEditMultipleObjects]
     internal class WheelJoint2DEditor : AnchoredJoint2DEditor
     {
         public void OnSceneGUI()

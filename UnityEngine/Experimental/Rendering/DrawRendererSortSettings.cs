@@ -21,7 +21,7 @@
         /// <summary>
         /// <para>What kind of sorting to do while rendering.</para>
         /// </summary>
-        public SortOptions sortOptions;
+        public SortFlags flags;
         private int _sortOrthographic;
         /// <summary>
         /// <para>Should orthographic sorting be used?</para>
