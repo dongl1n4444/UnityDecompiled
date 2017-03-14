@@ -19,25 +19,25 @@
         internal static UnityAction<Scene, NewSceneMode> sceneWasCreated;
         internal static UnityAction<Scene, OpenSceneMode> sceneWasOpened;
 
-        [field: DebuggerBrowsable(0), CompilerGenerated]
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event NewSceneCreatedCallback newSceneCreated;
 
-        [field: CompilerGenerated, DebuggerBrowsable(0)]
+        [field: DebuggerBrowsable(0), CompilerGenerated]
         public static  event SceneClosedCallback sceneClosed;
 
         [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event SceneClosingCallback sceneClosing;
 
-        [field: CompilerGenerated, DebuggerBrowsable(0)]
+        [field: DebuggerBrowsable(0), CompilerGenerated]
         public static  event SceneOpenedCallback sceneOpened;
 
         [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event SceneOpeningCallback sceneOpening;
 
-        [field: CompilerGenerated, DebuggerBrowsable(0)]
+        [field: DebuggerBrowsable(0), CompilerGenerated]
         public static  event SceneSavedCallback sceneSaved;
 
-        [field: DebuggerBrowsable(0), CompilerGenerated]
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event SceneSavingCallback sceneSaving;
 
         /// <summary>

@@ -10,7 +10,7 @@
     /// </summary>
     public sealed class EditorUserBuildSettings
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private static string <xboxOneAdditionalDebugPorts>k__BackingField;
         /// <summary>
         /// <para>Triggered in response to SwitchActiveBuildTarget.</para>

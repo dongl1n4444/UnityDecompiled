@@ -28,7 +28,7 @@
         /// <summary>
         /// <para>Does textures source image have RGB channels.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("DoesSourceTextureHaveColor always returns true in Unity.")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("DoesSourceTextureHaveColor always returns true in Unity."), GeneratedByOldBindingsGenerator]
         public extern bool DoesSourceTextureHaveColor();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern TextureImporterFormat FormatFromTextureParameters(TextureImporterSettings settings, TextureImporterPlatformSettings platformSettings, bool doesTextureContainAlpha, bool sourceWasHDR, BuildTarget destinationPlatform);
@@ -141,7 +141,7 @@
         /// <param name="platformSettings">Structure containing the platform settings.</param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetPlatformTextureSettings(TextureImporterPlatformSettings platformSettings);
-        [ExcludeFromDocs, Obsolete("Use UnityEditor.TextureImporter.SetPlatformTextureSettings(TextureImporterPlatformSettings) instead.")]
+        [Obsolete("Use UnityEditor.TextureImporter.SetPlatformTextureSettings(TextureImporterPlatformSettings) instead."), ExcludeFromDocs]
         public void SetPlatformTextureSettings(string platform, int maxTextureSize, TextureImporterFormat textureFormat)
         {
             bool allowsAlphaSplit = false;

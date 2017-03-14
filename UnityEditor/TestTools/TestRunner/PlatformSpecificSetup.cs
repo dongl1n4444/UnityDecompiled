@@ -3,18 +3,30 @@
     using System;
     using System.Collections.Generic;
     using UnityEditor;
+    using UnityEngine;
 
     [Serializable]
     internal class PlatformSpecificSetup
     {
         private IDictionary<BuildTarget, IPlatformSetup> m_SetupTypes;
+        [SerializeField]
+        private BuildTarget m_Target;
 
-        public void CleanUp(BuildTarget target)
+        public PlatformSpecificSetup()
+        {
+        }
+
+        public PlatformSpecificSetup(BuildTarget target)
+        {
+            this.m_Target = target;
+        }
+
+        public void CleanUp()
         {
             IDictionary<BuildTarget, IPlatformSetup> setup = this.GetSetup();
-            if (setup.ContainsKey(target))
+            if (setup.ContainsKey(this.m_Target))
             {
-                setup[target].CleanUp();
+                setup[this.m_Target].CleanUp();
             }
         }
 
@@ -41,12 +53,12 @@
             return this.m_SetupTypes;
         }
 
-        public void Setup(BuildTarget target)
+        public void Setup()
         {
             IDictionary<BuildTarget, IPlatformSetup> setup = this.GetSetup();
-            if (setup.ContainsKey(target))
+            if (setup.ContainsKey(this.m_Target))
             {
-                setup[target].Setup();
+                setup[this.m_Target].Setup();
             }
         }
     }

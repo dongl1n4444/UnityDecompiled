@@ -4,6 +4,7 @@
     using Mono.Cecil.Cil;
     using System;
     using System.Collections.Generic;
+    using Unity.IL2CPP;
     using Unity.IL2CPP.IoC;
 
     public class StringLiteralCollector
@@ -29,7 +30,9 @@
                     {
                         if (instruction.OpCode == OpCodes.Ldstr)
                         {
-                            StringLiteralProvider.Add((string) instruction.Operand);
+                            MetadataToken token;
+                            definition.Body.GetInstructionToken(instruction, out token);
+                            StringLiteralProvider.Add(new StringMetadataToken((string) instruction.Operand, definition.Module.Assembly, token));
                         }
                     }
                 }

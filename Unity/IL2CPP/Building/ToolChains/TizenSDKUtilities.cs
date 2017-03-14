@@ -4,7 +4,7 @@
     using System;
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
-    using Unity.IL2CPP.Building;
+    using Unity.IL2CPP.Common;
 
     public class TizenSDKUtilities
     {
@@ -17,7 +17,7 @@
         private const string Platform = "tizen-2.4";
         private string Rootstrap = "";
 
-        public TizenSDKUtilities(NPath sdkRootPath, Architecture architecture)
+        public TizenSDKUtilities(NPath sdkRootPath, Unity.IL2CPP.Common.Architecture architecture)
         {
             if (!sdkRootPath.Exists(""))
             {

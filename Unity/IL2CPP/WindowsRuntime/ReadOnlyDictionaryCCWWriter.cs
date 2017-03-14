@@ -132,7 +132,7 @@
                 {
                     string str2 = InteropMethodInfo.Naming.ForVariable(typeReference);
                     writer.WriteLine($"{str2} e = {Emit.NewObj(typeReference, metadataAccess)};");
-                    string[] textArray2 = new string[] { metadataAccess.StringLiteral("The given key was not present in the dictionary.") };
+                    string[] textArray2 = new string[] { metadataAccess.StringLiteral("The given key was not present in the dictionary.", new MetadataToken(), InteropMethodBodyWriter.TypeProvider.Corlib) };
                     writer.WriteStatement(base.GetMethodCallExpression(metadataAccess, "e", method, MethodCallType.Normal, textArray2));
                     string[] textArray3 = new string[] { -2147483637.ToString() };
                     writer.WriteLine($"{base.GetMethodCallExpression(metadataAccess, "e", definition3.SetMethod, MethodCallType.Normal, textArray3)}; // E_BOUNDS");

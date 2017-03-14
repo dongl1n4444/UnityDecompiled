@@ -1,6 +1,9 @@
 ﻿namespace UnityEditorInternal
 {
     using System;
+    using System.Collections.Generic;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
     using UnityEditor;
     using UnityEngine;
 
@@ -77,13 +80,46 @@
             return modificationArray;
         }
 
-        public static bool IsAnimated(MaterialProperty materialProp, Renderer target)
+        public static bool OverridePropertyColor(MaterialProperty materialProp, Renderer target, out Color color)
         {
+            <OverridePropertyColor>c__AnonStorey0 storey = new <OverridePropertyColor>c__AnonStorey0 {
+                target = target
+            };
+            List<string> list = new List<string>();
+            string item = "material." + materialProp.name;
             if (materialProp.type == MaterialProperty.PropType.Texture)
             {
-                return UnityEditor.AnimationMode.IsPropertyAnimated(target, "material." + materialProp.name + "_ST");
+                list.Add(item + "_ST.x");
+                list.Add(item + "_ST.y");
+                list.Add(item + "_ST.z");
+                list.Add(item + "_ST.w");
             }
-            return UnityEditor.AnimationMode.IsPropertyAnimated(target, "material." + materialProp.name);
+            else if (materialProp.type == MaterialProperty.PropType.Color)
+            {
+                list.Add(item + ".r");
+                list.Add(item + ".g");
+                list.Add(item + ".b");
+                list.Add(item + ".a");
+            }
+            else
+            {
+                list.Add(item);
+            }
+            if (list.Exists(new Predicate<string>(storey.<>m__0)))
+            {
+                color = UnityEditor.AnimationMode.animatedPropertyColor;
+                if (UnityEditor.AnimationMode.InAnimationRecording())
+                {
+                    color = UnityEditor.AnimationMode.recordedPropertyColor;
+                }
+                else if (list.Exists(new Predicate<string>(storey.<>m__1)))
+                {
+                    color = UnityEditor.AnimationMode.candidatePropertyColor;
+                }
+                return true;
+            }
+            color = Color.white;
+            return false;
         }
 
         public static void SetupMaterialPropertyBlock(MaterialProperty materialProp, int changedMask, Renderer target)
@@ -98,6 +134,18 @@
         {
             prop.previousValue.propertyPath = "material." + name;
             prop.previousValue.value = value.ToString();
+        }
+
+        [CompilerGenerated]
+        private sealed class <OverridePropertyColor>c__AnonStorey0
+        {
+            internal Renderer target;
+
+            internal bool <>m__0(string path) => 
+                UnityEditor.AnimationMode.IsPropertyAnimated(this.target, path);
+
+            internal bool <>m__1(string path) => 
+                UnityEditor.AnimationMode.IsPropertyCandidate(this.target, path);
         }
     }
 }

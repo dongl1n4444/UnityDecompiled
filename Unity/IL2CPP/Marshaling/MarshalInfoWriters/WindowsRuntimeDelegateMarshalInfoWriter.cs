@@ -56,7 +56,7 @@
             this._nativeInvokerName = DefaultMarshalInfoWriter.Naming.ForWindowsRuntimeDelegateNativeInvokerMethod(this._invokeMethod);
             this._marshaledTypes = new MarshaledType[] { new MarshaledType(this._comCallableWrapperInterfaceName + '*', this._comCallableWrapperInterfaceName + '*') };
             string returnType = DefaultMarshalInfoWriter.Naming.ForVariable(this._typeResolver.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveReturnTypeIfNeeded(this._invokeMethod)));
-            string parameters = $"{DefaultMarshalInfoWriter.Naming.ForVariable(DefaultMarshalInfoWriter.TypeProvider.Il2CppComObjectTypeReference)} {DefaultMarshalInfoWriter.Naming.ThisParameterName}, {MethodSignatureWriter.FormatParameters(this._invokeMethod, ParameterFormat.WithTypeAndNameNoThis, false, true)}";
+            string parameters = $"{DefaultMarshalInfoWriter.Naming.ForVariable(DefaultMarshalInfoWriter.TypeProvider.Il2CppComObjectTypeReference)} {DefaultMarshalInfoWriter.Naming.ThisParameterName}, {MethodSignatureWriter.FormatParameters(this._invokeMethod, ParameterFormat.WithTypeAndNameNoThis, false, true, false)}";
             this._nativeInvokerSignature = MethodSignatureWriter.GetMethodSignature(this._nativeInvokerName, returnType, parameters, "extern \"C\"", string.Empty);
         }
 

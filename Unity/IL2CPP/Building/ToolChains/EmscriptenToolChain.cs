@@ -26,7 +26,7 @@
         private static Func<string, NPath> <>f__am$cache1;
         public static bool DeepDebugging = false;
 
-        public EmscriptenToolChain(Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool setEnvironmentVariables = false) : base(architecture, buildConfiguration)
+        public EmscriptenToolChain(Unity.IL2CPP.Common.Architecture architecture, BuildConfiguration buildConfiguration, bool setEnvironmentVariables = false) : base(architecture, buildConfiguration)
         {
             this._setEnvironmentVariables = setEnvironmentVariables;
         }

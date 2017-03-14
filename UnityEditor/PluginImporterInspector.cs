@@ -10,7 +10,7 @@
     using UnityEditorInternal;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(PluginImporter))]
+    [CustomEditor(typeof(PluginImporter)), CanEditMultipleObjects]
     internal class PluginImporterInspector : AssetImporterInspector
     {
         [CompilerGenerated]

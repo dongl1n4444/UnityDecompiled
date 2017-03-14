@@ -11,15 +11,16 @@
     using Unity.IL2CPP;
     using Unity.IL2CPP.Building.BuildDescriptions;
     using Unity.IL2CPP.Building.ToolChains;
+    using Unity.IL2CPP.Common;
 
     public abstract class CppToolChain
     {
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Unity.IL2CPP.Building.Architecture <Architecture>k__BackingField;
+        private Unity.IL2CPP.Common.Architecture <Architecture>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Unity.IL2CPP.Building.BuildConfiguration <BuildConfiguration>k__BackingField;
 
-        protected CppToolChain(Unity.IL2CPP.Building.Architecture architecture, Unity.IL2CPP.Building.BuildConfiguration buildConfiguration)
+        protected CppToolChain(Unity.IL2CPP.Common.Architecture architecture, Unity.IL2CPP.Building.BuildConfiguration buildConfiguration)
         {
             this.Architecture = architecture;
             this.BuildConfiguration = buildConfiguration;
@@ -49,6 +50,9 @@
 
         protected virtual string GetInterestingOutputFromLinkerShellResult(Shell.ExecuteResult shellResult) => 
             shellResult.StdOut;
+
+        public virtual NPath GetLibraryFileName(NPath library) => 
+            library;
 
         public abstract CppProgramBuilder.LinkerInvocation MakeLinkerInvocation(IEnumerable<NPath> objectFiles, NPath outputFile, IEnumerable<NPath> staticLibraries, IEnumerable<NPath> dynamicLibraries, IEnumerable<string> specifiedLinkerFlags, CppToolChainContext toolChainContext);
         public abstract string ObjectExtension();
@@ -92,7 +96,7 @@
         public virtual IEnumerable<string> ToolChainStaticLibraries() => 
             new <ToolChainStaticLibraries>c__Iterator1 { $PC = -2 };
 
-        public Unity.IL2CPP.Building.Architecture Architecture { get; private set; }
+        public Unity.IL2CPP.Common.Architecture Architecture { get; private set; }
 
         public Unity.IL2CPP.Building.BuildConfiguration BuildConfiguration { get; private set; }
 

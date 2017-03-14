@@ -236,12 +236,6 @@
             }
         }
 
-        public void UpdateResult(ITestResult testResult)
-        {
-            TestRunnerResult result = new TestRunnerResult(testResult);
-            this.UpdateResult(result);
-        }
-
         public void UpdateResult(TestRunnerResult result)
         {
             <UpdateResult>c__AnonStorey0 storey = new <UpdateResult>c__AnonStorey0 {

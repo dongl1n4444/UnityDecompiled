@@ -74,7 +74,7 @@
         public bool alreadyLightmapped { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
-        /// <para>The size of the area light. Editor only.</para>
+        /// <para>The size of the area light.</para>
         /// </summary>
         public Vector2 areaSize
         {

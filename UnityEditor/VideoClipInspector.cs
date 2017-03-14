@@ -4,7 +4,7 @@
     using UnityEngine;
     using UnityEngine.Video;
 
-    [CustomEditor(typeof(VideoClip)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(VideoClip))]
     internal class VideoClipInspector : Editor
     {
         private static readonly GUID kEmptyGUID;

@@ -99,7 +99,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void ClearRandomWriteTargets();
         /// <summary>
-        /// <para>This function provides an efficient way to convert between textures of different formats and dimensions.  
+        /// <para>This function provides an efficient way to convert between textures of different formats and dimensions.
         /// The destination texture format should be uncompressed and correspond to a supported RenderTextureFormat.</para>
         /// </summary>
         /// <param name="src">Source texture.</param>
@@ -110,7 +110,7 @@
             ConvertTexture_Full(src, dst);
 
         /// <summary>
-        /// <para>This function provides an efficient way to convert between textures of different formats and dimensions.  
+        /// <para>This function provides an efficient way to convert between textures of different formats and dimensions.
         /// The destination texture format should be uncompressed and correspond to a supported RenderTextureFormat.</para>
         /// </summary>
         /// <param name="src">Source texture.</param>

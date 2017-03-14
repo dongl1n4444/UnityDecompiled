@@ -82,7 +82,7 @@
                 }
                 baseType = baseType.BaseType as TypeDefinition;
             }
-            if (definition3 != null)
+            if ((definition3 != null) && definition3.HasBody)
             {
                 if (<>f__am$cache1 == null)
                 {

@@ -762,13 +762,13 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_Draw2(IntPtr style, ref Rect position, GUIContent content, int controlID, bool on);
-        internal void SetMouseTooltip(string tooltip, Rect screenRect)
+        internal static void SetMouseTooltip(string tooltip, Rect screenRect)
         {
-            INTERNAL_CALL_SetMouseTooltip(this, tooltip, ref screenRect);
+            INTERNAL_CALL_SetMouseTooltip(tooltip, ref screenRect);
         }
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private static extern void INTERNAL_CALL_SetMouseTooltip(GUIStyle self, string tooltip, ref Rect screenRect);
+        private static extern void INTERNAL_CALL_SetMouseTooltip(string tooltip, ref Rect screenRect);
         private static void Internal_DrawPrefixLabel(IntPtr style, Rect position, GUIContent content, int controlID, bool on)
         {
             INTERNAL_CALL_Internal_DrawPrefixLabel(style, ref position, content, controlID, on);

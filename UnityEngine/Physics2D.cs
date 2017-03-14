@@ -609,15 +609,12 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern Collider2D GetColliderFromInstanceID(int instanceID);
         /// <summary>
-        /// <para>Retrieves all contacts for the Collider or Rigidbody.</para>
+        /// <para>Retrieves all colliders in contact with the collider.</para>
         /// </summary>
         /// <param name="collider">The collider to retrieve contacts for.</param>
-        /// <param name="rigidbody">The rigidbody to retrieve contacts for.  All colliders attached to this rigidbody will be checked.</param>
-        /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
         /// <param name="colliders">An array of Collider2D used to receive the results.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
         /// <returns>
-        /// <para>Returns the number of contacts placed in the contacts array.</para>
+        /// <para>Returns the number of colliders placed in the colliders array.</para>
         /// </returns>
         public static int GetContacts(Collider2D collider, Collider2D[] colliders)
         {
@@ -626,13 +623,10 @@
         }
 
         /// <summary>
-        /// <para>Retrieves all contacts for the Collider or Rigidbody.</para>
+        /// <para>Retrieves all contact points in contact with the collider.</para>
         /// </summary>
         /// <param name="collider">The collider to retrieve contacts for.</param>
-        /// <param name="rigidbody">The rigidbody to retrieve contacts for.  All colliders attached to this rigidbody will be checked.</param>
         /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
-        /// <param name="colliders">An array of Collider2D used to receive the results.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
         /// <returns>
         /// <para>Returns the number of contacts placed in the contacts array.</para>
         /// </returns>
@@ -643,15 +637,12 @@
         }
 
         /// <summary>
-        /// <para>Retrieves all contacts for the Collider or Rigidbody.</para>
+        /// <para>Retrieves all colliders in contact with any of the collider(s) attached to this rigidbody.</para>
         /// </summary>
-        /// <param name="collider">The collider to retrieve contacts for.</param>
         /// <param name="rigidbody">The rigidbody to retrieve contacts for.  All colliders attached to this rigidbody will be checked.</param>
-        /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
         /// <param name="colliders">An array of Collider2D used to receive the results.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
         /// <returns>
-        /// <para>Returns the number of contacts placed in the contacts array.</para>
+        /// <para>Returns the number of colliders placed in the colliders array.</para>
         /// </returns>
         public static int GetContacts(Rigidbody2D rigidbody, Collider2D[] colliders)
         {
@@ -660,13 +651,10 @@
         }
 
         /// <summary>
-        /// <para>Retrieves all contacts for the Collider or Rigidbody.</para>
+        /// <para>Retrieves all contact points in contact with any of the collider(s) attached to this rigidbody.</para>
         /// </summary>
-        /// <param name="collider">The collider to retrieve contacts for.</param>
         /// <param name="rigidbody">The rigidbody to retrieve contacts for.  All colliders attached to this rigidbody will be checked.</param>
         /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
-        /// <param name="colliders">An array of Collider2D used to receive the results.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
         /// <returns>
         /// <para>Returns the number of contacts placed in the contacts array.</para>
         /// </returns>
@@ -677,27 +665,23 @@
         }
 
         /// <summary>
-        /// <para>Retrieves all contacts for the Collider or Rigidbody.</para>
+        /// <para>Retrieves all colliders in contact with the collider, with the results filtered by the ContactFilter2D.</para>
         /// </summary>
         /// <param name="collider">The collider to retrieve contacts for.</param>
-        /// <param name="rigidbody">The rigidbody to retrieve contacts for.  All colliders attached to this rigidbody will be checked.</param>
-        /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
-        /// <param name="colliders">An array of Collider2D used to receive the results.</param>
         /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
+        /// <param name="colliders">An array of Collider2D used to receive the results.</param>
         /// <returns>
-        /// <para>Returns the number of contacts placed in the contacts array.</para>
+        /// <para>Returns the number of colliders placed in the colliders array.</para>
         /// </returns>
         public static int GetContacts(Collider2D collider, ContactFilter2D contactFilter, Collider2D[] colliders) => 
             GetColliderContactsCollidersOnly(collider, contactFilter, colliders);
 
         /// <summary>
-        /// <para>Retrieves all contacts for the Collider or Rigidbody.</para>
+        /// <para>Retrieves all contact points in contact with the collider, with the results filtered by the ContactFilter2D.</para>
         /// </summary>
         /// <param name="collider">The collider to retrieve contacts for.</param>
-        /// <param name="rigidbody">The rigidbody to retrieve contacts for.  All colliders attached to this rigidbody will be checked.</param>
-        /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
-        /// <param name="colliders">An array of Collider2D used to receive the results.</param>
         /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
+        /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
         /// <returns>
         /// <para>Returns the number of contacts placed in the contacts array.</para>
         /// </returns>
@@ -705,27 +689,23 @@
             GetColliderContacts(collider, contactFilter, contacts);
 
         /// <summary>
-        /// <para>Retrieves all contacts for the Collider or Rigidbody.</para>
+        /// <para>Retrieves all colliders in contact with any of the collider(s) attached to this rigidbody, with the results filtered by the ContactFilter2D.</para>
         /// </summary>
-        /// <param name="collider">The collider to retrieve contacts for.</param>
         /// <param name="rigidbody">The rigidbody to retrieve contacts for.  All colliders attached to this rigidbody will be checked.</param>
-        /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
-        /// <param name="colliders">An array of Collider2D used to receive the results.</param>
         /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
+        /// <param name="colliders">An array of Collider2D used to receive the results.</param>
         /// <returns>
-        /// <para>Returns the number of contacts placed in the contacts array.</para>
+        /// <para>Returns the number of colliders placed in the colliders array.</para>
         /// </returns>
         public static int GetContacts(Rigidbody2D rigidbody, ContactFilter2D contactFilter, Collider2D[] colliders) => 
             GetRigidbodyContactsCollidersOnly(rigidbody, contactFilter, colliders);
 
         /// <summary>
-        /// <para>Retrieves all contacts for the Collider or Rigidbody.</para>
+        /// <para>Retrieves all contact points in contact with any of the collider(s) attached to this rigidbody, with the results filtered by the ContactFilter2D.</para>
         /// </summary>
-        /// <param name="collider">The collider to retrieve contacts for.</param>
         /// <param name="rigidbody">The rigidbody to retrieve contacts for.  All colliders attached to this rigidbody will be checked.</param>
-        /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
-        /// <param name="colliders">An array of Collider2D used to receive the results.</param>
         /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
+        /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
         /// <returns>
         /// <para>Returns the number of contacts placed in the contacts array.</para>
         /// </returns>
@@ -737,13 +717,19 @@
         /// </summary>
         /// <param name="collider1">The first collider to compare to collider2.</param>
         /// <param name="collider2">The second collider to compare to collider1.</param>
+        /// <returns>
+        /// <para>Whether the collision detection system will ignore all collisionstriggers between collider1 and collider2/ or not.</para>
+        /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool GetIgnoreCollision(Collider2D collider1, Collider2D collider2);
         /// <summary>
-        /// <para>Should collisions between the specified layers be ignored?</para>
+        /// <para>Checks whether collisions between the specified layers be ignored or not.</para>
         /// </summary>
         /// <param name="layer1">ID of first layer.</param>
         /// <param name="layer2">ID of second layer.</param>
+        /// <returns>
+        /// <para>Whether collisions between the specified layers be ignored or not.</para>
+        /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool GetIgnoreLayerCollision(int layer1, int layer2);
         /// <summary>
@@ -1089,36 +1075,31 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_set_gravity(ref Vector2 value);
         /// <summary>
-        /// <para>Checks whether the passed colliders are in contact.</para>
+        /// <para>Checks whether the passed colliders are in contact or not.</para>
         /// </summary>
         /// <param name="collider1">The collider to check if it is touching collider2.</param>
         /// <param name="collider2">The collider to check if it is touching collider1.</param>
-        /// <param name="collider">Checks if collider is touching any other collider, filtered by contactFilter.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
         /// <returns>
         /// <para>Whether collider1 is touching collider2 or not.</para>
         /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool IsTouching(Collider2D collider1, Collider2D collider2);
         /// <summary>
-        /// <para>Checks whether the passed colliders are in contact.</para>
+        /// <para>Checks whether the passed colliders are in contact or not.</para>
         /// </summary>
-        /// <param name="collider1">The collider to check if it is touching collider2.</param>
-        /// <param name="collider2">The collider to check if it is touching collider1.</param>
-        /// <param name="collider">Checks if collider is touching any other collider, filtered by contactFilter.</param>
+        /// <param name="collider">The collider to check if it is touching any other collider filtered by the contactFilter.</param>
         /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
         /// <returns>
-        /// <para>Whether collider1 is touching collider2 or not.</para>
+        /// <para>Whether the collider is touching any other collider filtered by the contactFilter or not.</para>
         /// </returns>
         public static bool IsTouching(Collider2D collider, ContactFilter2D contactFilter) => 
             INTERNAL_CALL_IsTouching(collider, ref contactFilter);
 
         /// <summary>
-        /// <para>Checks whether the passed colliders are in contact.</para>
+        /// <para>Checks whether the passed colliders are in contact or not.</para>
         /// </summary>
         /// <param name="collider1">The collider to check if it is touching collider2.</param>
         /// <param name="collider2">The collider to check if it is touching collider1.</param>
-        /// <param name="collider">Checks if collider is touching any other collider, filtered by contactFilter.</param>
         /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
         /// <returns>
         /// <para>Whether collider1 is touching collider2 or not.</para>

@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    public class JsonElementArray : JsonElement
+    internal class JsonElementArray : JsonElement
     {
         public List<JsonElement> values = new List<JsonElement>();
 

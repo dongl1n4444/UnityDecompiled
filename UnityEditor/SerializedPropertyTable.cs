@@ -13,6 +13,7 @@
         private SerializedPropertyDataStore m_DataStore;
         private bool m_DragHandleEnabled = false;
         private readonly float m_DragHeight = 20f;
+        private readonly float m_DragWidth = 32f;
         private readonly float m_FilterHeight = 20f;
         private SerializedPropertyDataStore.GatherDelegate m_GatherDelegate;
         private HeaderDelegate m_HeaderDelegate;
@@ -34,8 +35,9 @@
 
         private float GetMinHeight()
         {
-            float num = ((this.m_FilterHeight + this.m_ColumnHeaderHeight) + 16f) + this.m_DragHeight;
-            return (num + 48f);
+            float singleLineHeight = EditorGUIUtility.singleLineHeight;
+            float num2 = ((this.m_FilterHeight + this.m_ColumnHeaderHeight) + singleLineHeight) + this.m_DragHeight;
+            return (num2 + (singleLineHeight * 3f));
         }
 
         private void InitIfNeeded()
@@ -91,12 +93,11 @@
             if (Event.current.type != EventType.Layout)
             {
                 float width = rect.width;
-                float num2 = 32f;
-                float num3 = (rect.height - this.m_FilterHeight) - (!this.dragHandleEnabled ? 0f : this.m_DragHeight);
+                float num2 = (rect.height - this.m_FilterHeight) - (!this.dragHandleEnabled ? 0f : this.m_DragHeight);
                 float height = rect.height;
                 rect.height = this.m_FilterHeight;
                 Rect r = rect;
-                rect.height = num3;
+                rect.height = num2;
                 rect.y += this.m_FilterHeight;
                 Rect rect3 = rect;
                 Profiler.BeginSample("TreeView.OnGUI");
@@ -104,13 +105,13 @@
                 Profiler.EndSample();
                 if (this.dragHandleEnabled)
                 {
-                    rect.y += num3 + 1f;
+                    rect.y += num2 + 1f;
                     rect.height = 1f;
                     Rect position = rect;
                     rect.height = 10f;
                     rect.y += 10f;
-                    rect.x += (rect.width - num2) * 0.5f;
-                    rect.width = num2;
+                    rect.x += (rect.width - this.m_DragWidth) * 0.5f;
+                    rect.width = this.m_DragWidth;
                     this.m_TableHeight = EditorGUI.HeightResizer(rect, this.m_TableHeight, this.GetMinHeight(), float.MaxValue);
                     if (this.m_MultiColumnHeaderState.widthOfAllVisibleColumns <= width)
                     {

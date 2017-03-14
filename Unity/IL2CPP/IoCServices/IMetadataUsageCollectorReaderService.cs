@@ -8,7 +8,7 @@
         IEnumerable<FieldReference> GetFieldInfos();
         IEnumerable<TypeReference> GetIl2CppTypes();
         IEnumerable<MethodReference> GetInflatedMethods();
-        IEnumerable<string> GetStringLiterals();
+        IEnumerable<StringMetadataToken> GetStringLiterals();
         IEnumerable<TypeReference> GetTypeInfos();
         IEnumerable<KeyValuePair<string, MetadataUsage>> GetUsages();
 

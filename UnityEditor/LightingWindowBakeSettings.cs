@@ -446,11 +446,14 @@
                 numArray2[2] = 2;
                 ConcurrentJobsTypeValues = numArray2;
                 ConcurrentJobsTypeStrings = new GUIContent[] { new GUIContent("Min"), new GUIContent("Low"), new GUIContent("High") };
-                MixedModeValues = new int[] { 0, 1, 2, 3 };
-                MixedModeStrings = new GUIContent[] { EditorGUIUtility.TextContent("Baked Indirect"), EditorGUIUtility.TextContent("Distance Shadowmask"), EditorGUIUtility.TextContent("Shadowmask"), EditorGUIUtility.TextContent("Subtractive") };
+                int[] numArray3 = new int[3];
+                numArray3[1] = 2;
+                numArray3[2] = 1;
+                MixedModeValues = numArray3;
+                MixedModeStrings = new GUIContent[] { EditorGUIUtility.TextContent("Baked Indirect"), EditorGUIUtility.TextContent("Shadowmask"), EditorGUIUtility.TextContent("Subtractive") };
                 BouncesValues = new int[] { 0, 1, 2, 3, 4 };
                 BouncesStrings = new GUIContent[] { EditorGUIUtility.TextContent("None"), EditorGUIUtility.TextContent("1"), EditorGUIUtility.TextContent("2"), EditorGUIUtility.TextContent("3"), EditorGUIUtility.TextContent("4") };
-                HelpStringsMixed = new GUIContent[] { EditorGUIUtility.TextContent("Mixed lights provide realtime direct lighting while indirect light is baked into lightmaps and light probes."), EditorGUIUtility.TextContent("Mixed lights provide realtime direct lighting while indirect light is baked into lightmaps and light probes. Shadows are handled with realtime shadow maps up to the shadow distance quality setting."), EditorGUIUtility.TextContent("Mixed lights provide realtime direct lighting while indirect light is baked into lightmaps and light probes. Shadowmasks are used for static objects while dynamic objects are realtime up to the shadow distance quality setting."), EditorGUIUtility.TextContent("Mixed lights provide baked direct and indirect lighting for static objects. Dynamic objects receive realtime direct lighting and cast shadows on static objects using the main directional light in the scene.") };
+                HelpStringsMixed = new GUIContent[] { EditorGUIUtility.TextContent("Mixed lights provide realtime direct lighting while indirect light is baked into lightmaps and light probes."), EditorGUIUtility.TextContent("Mixed lights provide baked direct and indirect lighting for static objects. Dynamic objects receive realtime direct lighting and cast shadows on static objects using the main directional light in the scene."), EditorGUIUtility.TextContent("Mixed lights provide realtime direct lighting. Indirect lighting gets baked into lightmaps and light probes. Shadowmasks and light probes occlusion get generated for baked shadows. The Shadowmask Mode used at run time can be set in the Quality Settings panel.") };
                 BounceScale = EditorGUIUtility.TextContent("Bounce Scale|Multiplier for indirect lighting. Use with care.");
                 UpdateThreshold = EditorGUIUtility.TextContent("Update Threshold|Threshold for updating realtime GI. A lower value causes more frequent updates (default 1.0).");
                 AlbedoBoost = EditorGUIUtility.TextContent("Albedo Boost|Controls the amount of light bounced between surfaces by intensifying the albedo of materials in the scene. Increasing this draws the albedo value towards white for indirect light computation. The default value is physically accurate.");
@@ -461,7 +464,7 @@
                 MixedLightsLabel = EditorGUIUtility.TextContent("Mixed Lighting|Bake Global Illumination for mixed lights and static objects. May bake both direct and/or indirect lighting based on settings. Only static objects are blocking and bouncing light, dynamic objects receive baked lighting via light probes.");
                 GeneralLightmapLabel = EditorGUIUtility.TextContent("Lightmapping Settings|Settings that apply to both Global Illumination modes (Precomputed Realtime and Baked).");
                 NoDirectionalInSM2AndGLES2 = EditorGUIUtility.TextContent("Directional lightmaps cannot be decoded on SM2.0 hardware nor when using GLES2.0. They will fallback to Non-Directional lightmaps.");
-                NoTransparencyAndLODInProgressive = EditorGUIUtility.TextContent("Experimental: Transparency and baked LOD is not yet available when baking with the Progressive lightmapping backend. This will be added soon.");
+                NoTransparencyAndLODInProgressive = EditorGUIUtility.TextContent("Baked LODs are not yet available when baking with the Progressive lightmapping backend. This will be added soon.");
                 NoShadowMaskInProgressive = EditorGUIUtility.TextContent("Experimental: Shadow mask and probe occlusion are not yet available when baking with the Progressive lightmapping backend. This will be added soon.");
                 ConcurrentJobs = EditorGUIUtility.TextContent("Concurrent Jobs|The amount of simultaneously scheduled jobs.");
                 ForceWhiteAlbedo = EditorGUIUtility.TextContent("Force White Albedo|Force white albedo during lighting calculations.");

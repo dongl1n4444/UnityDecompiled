@@ -16,13 +16,13 @@
         private static Func<string, string> <>f__am$cache0;
         [CompilerGenerated]
         private static Func<JSONValue, string> <>f__am$cache1;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-        private static string <Name>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-        private static List<string> <OpenDocuments>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private static int <ProcessId>k__BackingField;
+        private static string <Name>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private static List<string> <OpenDocuments>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private static int <ProcessId>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static string <ServerURL>k__BackingField;
 
         static ScriptEditorSettings()

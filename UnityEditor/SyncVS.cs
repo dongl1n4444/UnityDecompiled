@@ -20,7 +20,7 @@
         private static Func<KeyValuePair<VisualStudioVersion, VisualStudioPath[]>, VisualStudioVersion> <>f__am$cache0;
         [CompilerGenerated]
         private static Func<KeyValuePair<VisualStudioVersion, VisualStudioPath[]>, VisualStudioPath[]> <>f__am$cache1;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static Dictionary<VisualStudioVersion, VisualStudioPath[]> <InstalledVisualStudios>k__BackingField;
         private static bool s_AlreadySyncedThisDomainReload;
         private static readonly SolutionSynchronizer Synchronizer = new SolutionSynchronizer(Directory.GetParent(Application.dataPath).FullName, new SolutionSynchronizationSettings());

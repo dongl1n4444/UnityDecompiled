@@ -53,9 +53,9 @@
             return TryFor(runtimePlatform, out support);
         }
 
-        public static NPath ChooseExtension(RuntimePlatform runtimePlatform, NPath outputPath)
+        public static NPath ChooseExtension(RuntimePlatform runtimePlatform, Unity.IL2CPP.Common.Architecture architecture, NPath outputPath)
         {
-            CppToolChain chain = For(runtimePlatform).MakeCppToolChain(Unity.IL2CPP.Building.Architecture.OfCurrentProcess, BuildConfiguration.Debug, true);
+            CppToolChain chain = For(runtimePlatform).MakeCppToolChain(architecture, BuildConfiguration.Debug, true);
             return outputPath.ChangeExtension(chain.ExecutableExtension());
         }
 
@@ -69,10 +69,13 @@
             return support;
         }
 
+        public virtual Unity.IL2CPP.Common.Architecture GetSupportedArchitectureOfSameBitness(Unity.IL2CPP.Common.Architecture architecture) => 
+            architecture;
+
         public virtual CppToolChain MakeCppToolChain(BuildingOptions buildingOptions) => 
             this.MakeCppToolChain(buildingOptions.Architecture, buildingOptions.Configuration, buildingOptions.TreatWarningsAsErrors);
 
-        public abstract CppToolChain MakeCppToolChain(Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors);
+        public abstract CppToolChain MakeCppToolChain(Unity.IL2CPP.Common.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors);
         public virtual ProgramBuildDescription PostProcessProgramBuildDescription(ProgramBuildDescription programBuildDescription) => 
             programBuildDescription;
 

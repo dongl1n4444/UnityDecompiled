@@ -19,30 +19,35 @@
         public static INamingService Naming;
         [Inject]
         public static IRuntimeInvokerCollectorAdderService RuntimeInvokerCollectorAdder;
+        private HashSet<MethodReference> usedMethodReferences;
 
         internal static MethodTables CollectMethodTables(IEnumerable<MethodReference> genericMethods)
         {
-            Dictionary<string, int> dictionary = new Dictionary<string, int> {
-                { 
-                    Naming.Null,
-                    0
-                }
-            };
+            Dictionary<string, int> dictionary = new Dictionary<string, int>();
+            HashSet<MethodReference> set = new HashSet<MethodReference>();
+            dictionary.Add(Naming.Null, 0);
             if (<>f__am$cache0 == null)
             {
                 <>f__am$cache0 = m => (!m.HasGenericParameters && !m.DeclaringType.HasGenericParameters) && !m.ContainsGenericParameters();
             }
-            foreach (MethodReference reference in genericMethods.Where<MethodReference>(<>f__am$cache0))
+            foreach (MethodReference reference in genericMethods.Where<MethodReference>(<>f__am$cache0).ToArray<MethodReference>())
             {
                 string key = MethodPointerFor(reference);
                 if (!dictionary.ContainsKey(key))
                 {
                     dictionary.Add(key, dictionary.Count);
+                    set.Add(reference);
                 }
                 RuntimeInvokerCollectorAdder.Add(reference);
             }
-            return new MethodTables { MethodPointers = dictionary };
+            return new MethodTables { 
+                MethodPointers = dictionary,
+                usedMethodReferences = set
+            };
         }
+
+        internal bool IsMethodReferenceUsed(MethodReference method) => 
+            this.usedMethodReferences.Contains(method);
 
         internal static string MethodPointerFor(MethodReference method)
         {

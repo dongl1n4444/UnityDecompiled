@@ -4,7 +4,7 @@
     using System.IO;
     using System.Text;
 
-    public class JsonDocument
+    internal class JsonDocument
     {
         public string indentString = "  ";
         public JsonElementDict root = new JsonElementDict();

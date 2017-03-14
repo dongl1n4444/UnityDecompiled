@@ -8,7 +8,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Threading;
-    using Unity.IL2CPP.Building;
+    using Unity.IL2CPP.Common;
 
     internal class Msvc10Installation : MsvcInstallation
     {
@@ -18,14 +18,14 @@
         }
 
         [DebuggerHidden]
-        public override IEnumerable<NPath> GetIncludeDirectories(Architecture architecture) => 
+        public override IEnumerable<NPath> GetIncludeDirectories(Unity.IL2CPP.Common.Architecture architecture) => 
             new <GetIncludeDirectories>c__Iterator0 { 
                 $this = this,
                 $PC = -2
             };
 
         [DebuggerHidden]
-        public override IEnumerable<NPath> GetLibDirectories(Architecture architecture, string sdkSubset = null) => 
+        public override IEnumerable<NPath> GetLibDirectories(Unity.IL2CPP.Common.Architecture architecture, string sdkSubset = null) => 
             new <GetLibDirectories>c__Iterator1 { 
                 architecture = architecture,
                 $this = this,
@@ -119,7 +119,7 @@
             internal bool $disposing;
             internal int $PC;
             internal Msvc10Installation $this;
-            internal Architecture architecture;
+            internal Unity.IL2CPP.Common.Architecture architecture;
 
             [DebuggerHidden]
             public void Dispose()

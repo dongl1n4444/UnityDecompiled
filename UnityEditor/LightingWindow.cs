@@ -142,7 +142,7 @@
         {
             float width = base.position.width - (this.toolbarPadding * 2f);
             GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(width) };
-            this.m_Mode = (Mode) GUILayout.Toolbar((int) this.m_Mode, Styles.ModeToggles, "LargeButton", options);
+            this.m_Mode = (Mode) GUILayout.Toolbar((int) this.m_Mode, Styles.ModeToggles, Styles.ButtonStyle, options);
         }
 
         private void OnBecameInvisible()
@@ -237,9 +237,9 @@
         private void PreviewSection()
         {
             GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Height(17f) };
-            EditorGUILayout.BeginHorizontal(GUIContent.none, "preToolbar", options);
+            EditorGUILayout.BeginHorizontal(GUIContent.none, Styles.ToolbarStyle, options);
             GUILayout.FlexibleSpace();
-            GUI.Label(GUILayoutUtility.GetLastRect(), (this.m_Mode != Mode.LightingSettings) ? "Preview" : "Statistics", "preToolbar2");
+            GUI.Label(GUILayoutUtility.GetLastRect(), (this.m_Mode != Mode.LightingSettings) ? "Preview" : "Statistics", Styles.ToolbarTitleStyle);
             EditorGUILayout.EndHorizontal();
             switch (this.m_Mode)
             {
@@ -359,17 +359,17 @@
             builder.Append(" ");
             GUILayout.BeginHorizontal(new GUILayoutOption[0]);
             GUILayout.BeginVertical(new GUILayoutOption[0]);
-            GUILayout.Label(builder.ToString(), Styles.labelStyle, new GUILayoutOption[0]);
+            GUILayout.Label(builder.ToString(), Styles.LabelStyle, new GUILayoutOption[0]);
             GUILayout.EndVertical();
             GUILayout.BeginVertical(new GUILayoutOption[0]);
-            GUILayout.Label(EditorUtility.FormatBytes(bytes), Styles.labelStyle, new GUILayoutOption[0]);
-            GUILayout.Label((num2 != 0) ? "" : "No Lightmaps", Styles.labelStyle, new GUILayoutOption[0]);
+            GUILayout.Label(EditorUtility.FormatBytes(bytes), Styles.LabelStyle, new GUILayoutOption[0]);
+            GUILayout.Label((num2 != 0) ? "" : "No Lightmaps", Styles.LabelStyle, new GUILayoutOption[0]);
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
             if (LightmapEditorSettings.giBakeBackend == LightmapEditorSettings.GIBakeBackend.PathTracer)
             {
                 GUILayout.BeginVertical(new GUILayoutOption[0]);
-                GUILayout.Label("Occupied texels: " + InternalEditorUtility.CountToString(Lightmapping.occupiedTexelCount), Styles.labelStyle, new GUILayoutOption[0]);
+                GUILayout.Label("Occupied texels: " + InternalEditorUtility.CountToString(Lightmapping.occupiedTexelCount), Styles.LabelStyle, new GUILayoutOption[0]);
                 if (Lightmapping.isRunning)
                 {
                     int num4 = 0;
@@ -412,22 +412,22 @@
                             }
                         }
                     }
-                    EditorGUILayout.LabelField("Lightmaps in view: " + num4, Styles.labelStyle, new GUILayoutOption[0]);
+                    EditorGUILayout.LabelField("Lightmaps in view: " + num4, Styles.LabelStyle, new GUILayoutOption[0]);
                     EditorGUI.indentLevel++;
-                    EditorGUILayout.LabelField("converged: " + num5, Styles.labelStyle, new GUILayoutOption[0]);
-                    EditorGUILayout.LabelField("not converged: " + num6, Styles.labelStyle, new GUILayoutOption[0]);
+                    EditorGUILayout.LabelField("converged: " + num5, Styles.LabelStyle, new GUILayoutOption[0]);
+                    EditorGUILayout.LabelField("not converged: " + num6, Styles.LabelStyle, new GUILayoutOption[0]);
                     EditorGUI.indentLevel--;
-                    EditorGUILayout.LabelField("Lightmaps out of view: " + num7, Styles.labelStyle, new GUILayoutOption[0]);
+                    EditorGUILayout.LabelField("Lightmaps out of view: " + num7, Styles.LabelStyle, new GUILayoutOption[0]);
                     EditorGUI.indentLevel++;
-                    EditorGUILayout.LabelField("converged: " + num8, Styles.labelStyle, new GUILayoutOption[0]);
-                    EditorGUILayout.LabelField("not converged: " + num9, Styles.labelStyle, new GUILayoutOption[0]);
+                    EditorGUILayout.LabelField("converged: " + num8, Styles.LabelStyle, new GUILayoutOption[0]);
+                    EditorGUILayout.LabelField("not converged: " + num9, Styles.LabelStyle, new GUILayoutOption[0]);
                     EditorGUI.indentLevel--;
                 }
                 float lightmapBakeTimeTotal = Lightmapping.GetLightmapBakeTimeTotal();
                 float lightmapBakePerformanceTotal = Lightmapping.GetLightmapBakePerformanceTotal();
                 if (lightmapBakePerformanceTotal >= 0.0)
                 {
-                    GUILayout.Label("Bake performance: " + lightmapBakePerformanceTotal.ToString("0.00") + " mrays/sec", Styles.labelStyle, new GUILayoutOption[0]);
+                    GUILayout.Label("Bake performance: " + lightmapBakePerformanceTotal.ToString("0.00") + " mrays/sec", Styles.LabelStyle, new GUILayoutOption[0]);
                 }
                 if (!Lightmapping.isRunning)
                 {
@@ -452,10 +452,10 @@
                         int num26 = num24 / 60;
                         num24 -= 60 * num26;
                         int num27 = num24;
-                        GUILayout.Label("Total bake time: " + num17.ToString("0") + ":" + num18.ToString("00") + ":" + num19.ToString("00"), Styles.labelStyle, new GUILayoutOption[0]);
+                        GUILayout.Label("Total bake time: " + num17.ToString("0") + ":" + num18.ToString("00") + ":" + num19.ToString("00"), Styles.LabelStyle, new GUILayoutOption[0]);
                         if (Unsupported.IsDeveloperBuild())
                         {
-                            GUILayout.Label("(Raw bake time: " + num21.ToString("0") + ":" + num22.ToString("00") + ":" + num23.ToString("00") + ", overhead:" + num25.ToString("0") + ":" + num26.ToString("00") + ":" + num27.ToString("00") + ")", Styles.labelStyle, new GUILayoutOption[0]);
+                            GUILayout.Label("(Raw bake time: " + num21.ToString("0") + ":" + num22.ToString("00") + ":" + num23.ToString("00") + ", overhead:" + num25.ToString("0") + ":" + num26.ToString("00") + ":" + num27.ToString("00") + ")", Styles.LabelStyle, new GUILayoutOption[0]);
                         }
                     }
                 }
@@ -493,9 +493,12 @@
         private static class Styles
         {
             public static readonly GUIContent BuildLabel = EditorGUIUtility.TextContent("Generate Lighting|Generates the lightmap data for the current master scene.  This lightmap data (for realtime and baked global illumination) is stored in the GI Cache. For GI Cache settings see the Preferences panel.");
+            public static readonly GUIStyle ButtonStyle = "LargeButton";
             public static readonly GUIContent ContinuousBakeLabel = EditorGUIUtility.TextContent("Auto Generate|Automatically generates lighting data in the Scene when any changes are made to the lighting systems.");
-            public static readonly GUIStyle labelStyle = EditorStyles.wordWrappedMiniLabel;
+            public static readonly GUIStyle LabelStyle = EditorStyles.wordWrappedMiniLabel;
             public static readonly GUIContent[] ModeToggles = new GUIContent[] { EditorGUIUtility.TextContent("Scene"), EditorGUIUtility.TextContent("Global maps"), EditorGUIUtility.TextContent("Object maps") };
+            public static readonly GUIStyle ToolbarStyle = "preToolbar";
+            public static readonly GUIStyle ToolbarTitleStyle = "preToolbar";
         }
     }
 }

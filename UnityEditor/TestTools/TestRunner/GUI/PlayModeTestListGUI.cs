@@ -50,7 +50,7 @@
             EditorGUILayout.HelpBox("No tests to show", MessageType.Info);
             if (GUILayout.Button("Create Playmode test with methods", new GUILayoutOption[0]))
             {
-                EditorApplication.ExecuteMenuItem("Assets/Create/Testing/PlayMode Test With Methods C# Script (internal)");
+                EditorApplication.ExecuteMenuItem("Assets/Create/Testing/PlayMode Test C# Script");
             }
         }
 

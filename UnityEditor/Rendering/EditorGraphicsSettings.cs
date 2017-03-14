@@ -42,11 +42,16 @@
             };
         }
 
+        /// <summary>
+        /// <para>Will return TierSettings for given platform and shader hardware tier.</para>
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="tier"></param>
         public static TierSettings GetTierSettings(BuildTargetGroup target, GraphicsTier tier) => 
             GetTierSettingsImpl(target, tier);
 
         /// <summary>
-        /// <para>Will return TierSettings for given platform and shader hardware tier.</para>
+        /// <para>TODO.</para>
         /// </summary>
         /// <param name="target"></param>
         /// <param name="tier"></param>
@@ -90,6 +95,12 @@
             SetTierSettings(target, (GraphicsTier) tier, tierSettings);
         }
 
+        /// <summary>
+        /// <para>Allows you to set the PlatformShaderSettings for the specified platform and shader hardware tier.</para>
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="tier"></param>
+        /// <param name="settings"></param>
         public static void SetTierSettings(BuildTargetGroup target, GraphicsTier tier, TierSettings settings)
         {
             if (settings.renderingPath == RenderingPath.UsePlayerSettings)
@@ -102,7 +113,7 @@
         }
 
         /// <summary>
-        /// <para>Allows you to set the PlatformShaderSettings for the specified platform and shader hardware tier.</para>
+        /// <para>TODO.</para>
         /// </summary>
         /// <param name="target"></param>
         /// <param name="tier"></param>

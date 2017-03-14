@@ -15,8 +15,9 @@
         string Newobj(MethodReference ctor);
         string SizeOf(TypeReference type);
         string StaticData(TypeReference type);
-        string StringLiteral(string literal);
+        string StringLiteral(string literal, MetadataToken token, AssemblyDefinition assemblyDefinition);
         string TypeInfoFor(TypeReference type);
+        string UnresolvedTypeInfoFor(TypeReference type);
     }
 }
 

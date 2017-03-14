@@ -28,6 +28,12 @@
         [Inject]
         public static IWindowsRuntimeProjections WindowsRuntimeProjections;
 
+        private static string SerializeIl2CppType(TypeReference type) => 
+            $"&{Naming.ForIl2CppType(type, 0)}";
+
+        private static string SerializeMonoType(TypeReference type) => 
+            MetadataTokenUtils.FormatMonoMetadataTokenFor(type);
+
         public static void WriteCodeRegistration(NPath outputDir, IMethodCollectorResults methodCollector, IInteropDataCollectorResults interopDataCollector, MethodTables methodPointerTables, TableInfo attributeGeneratorTable, UnresolvedVirtualsTablesInfo virtualCallTables)
         {
             TableInfo methodPointersTable = WriteMethodPointerTable(outputDir, methodCollector);
@@ -77,15 +83,18 @@
                     writer.WriteLine("{0} {1}[];", objArray4);
                 }
                 string[] values = new string[] { methodPointersTable.Count.ToString(CultureInfo.InvariantCulture), (methodPointersTable.Count <= 0) ? Naming.Null : methodPointersTable.Name, reversePInvokeWrappersTable.Count.ToString(CultureInfo.InvariantCulture), (reversePInvokeWrappersTable.Count <= 0) ? Naming.Null : reversePInvokeWrappersTable.Name, genericMethodPointerTable.Count.ToString(CultureInfo.InvariantCulture), (genericMethodPointerTable.Count <= 0) ? Naming.Null : genericMethodPointerTable.Name, invokerTable.Count.ToString(CultureInfo.InvariantCulture), (invokerTable.Count <= 0) ? Naming.Null : invokerTable.Name, attributeGeneratorTable.Count.ToString(CultureInfo.InvariantCulture), (attributeGeneratorTable.Count <= 0) ? Naming.Null : attributeGeneratorTable.Name, virtualCallTables.MethodPointersInfo.Count.ToString(CultureInfo.InvariantCulture), (virtualCallTables.MethodPointersInfo.Count <= 0) ? Naming.Null : virtualCallTables.MethodPointersInfo.Name, interopDataTable.Count.ToString(CultureInfo.InvariantCulture), (interopDataTable.Count <= 0) ? Naming.Null : interopDataTable.Name };
-                writer.WriteStructInitializer("const Il2CppCodeRegistration", "g_CodeRegistration", values);
+                writer.WriteStructInitializer("extern const Il2CppCodeRegistration", "g_CodeRegistration", values);
                 writer.WriteLine("extern const Il2CppMetadataRegistration g_MetadataRegistration;");
+                string str = !CodeGenOptions.MonoRuntime ? "static" : "extern";
                 string[] textArray3 = new string[] { !CodeGenOptions.EnablePrimitiveValueTypeGenericSharing ? "false" : "true" };
-                writer.WriteStructInitializer("static const Il2CppCodeGenOptions", "s_Il2CppCodeGenOptions", textArray3);
+                writer.WriteStructInitializer($"{str} const Il2CppCodeGenOptions", "s_Il2CppCodeGenOptions", textArray3);
                 writer.WriteLine("static void s_Il2CppCodegenRegistration()");
                 writer.BeginBlock();
                 writer.WriteLine("il2cpp_codegen_register (&g_CodeRegistration, &g_MetadataRegistration, &s_Il2CppCodeGenOptions);");
                 writer.EndBlock(false);
+                writer.WriteLine("#if RUNTIME_IL2CPP");
                 writer.WriteLine("static il2cpp::utils::RegisterRuntimeInitializeAndCleanup s_Il2CppCodegenRegistrationVariable (&s_Il2CppCodegenRegistration, NULL);");
+                writer.WriteLine("#endif");
             }
         }
 
@@ -115,6 +124,10 @@
                     try
                     {
                         storey.writer.AddCodeGenIncludes();
+                        if (CodeGenOptions.MonoRuntime)
+                        {
+                            storey.writer.WriteLine($"extern const int g_Il2CppInteropDataCount = {interopData.Count};");
+                        }
                         storey.writer.WriteArrayInitializer("extern Il2CppInteropData", "g_Il2CppInteropData", interopData.Select<InteropData, string>(new Func<InteropData, string>(storey.<>m__0)), true);
                         empty = new TableInfo(interopData.Count, "extern Il2CppInteropData", "g_Il2CppInteropData");
                     }
@@ -203,13 +216,13 @@
 
             internal string <>m__0(InteropData data)
             {
+                string str7;
                 string @null = CodeRegistrationWriter.Naming.Null;
                 string marshalToNativeFunctionName = CodeRegistrationWriter.Naming.Null;
                 string marshalFromNativeFunctionName = CodeRegistrationWriter.Naming.Null;
                 string marshalCleanupFunctionName = CodeRegistrationWriter.Naming.Null;
                 string str5 = CodeRegistrationWriter.Naming.Null;
                 string str6 = CodeRegistrationWriter.Naming.Null;
-                string str7 = CodeRegistrationWriter.Naming.ForIl2CppType(data.Type, 0);
                 if (data.HasDelegatePInvokeWrapperMethod)
                 {
                     @null = CodeRegistrationWriter.Naming.ForDelegatePInvokeWrapper(data.Type);
@@ -259,8 +272,16 @@
                     }
                     this.writer.AddIncludeForTypeDefinition(data.Type);
                 }
-                this.writer.WriteLine($"extern const Il2CppType {str7};");
-                return $"{{ {@null}, {marshalToNativeFunctionName}, {marshalFromNativeFunctionName}, {marshalCleanupFunctionName}, {str5}, {str6}, &{str7} }} /* {data.Type.FullName} */";
+                if (!CodeGenOptions.MonoRuntime)
+                {
+                    this.writer.WriteLine($"extern const Il2CppType {CodeRegistrationWriter.Naming.ForIl2CppType(data.Type, 0)};");
+                    str7 = CodeRegistrationWriter.SerializeIl2CppType(data.Type);
+                }
+                else
+                {
+                    str7 = CodeRegistrationWriter.SerializeMonoType(data.Type);
+                }
+                return $"{{ {@null}, {marshalToNativeFunctionName}, {marshalFromNativeFunctionName}, {marshalCleanupFunctionName}, {str5}, {str6}, {str7} }} /* {data.Type.FullName} */";
             }
         }
     }

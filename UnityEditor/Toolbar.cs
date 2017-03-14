@@ -114,10 +114,6 @@
             bool isPlaying = EditorApplication.isPlaying;
             GUI.changed = false;
             int index = !isPlaying ? 0 : 4;
-            if (UnityEditor.AnimationMode.InAnimationMode())
-            {
-                index = 8;
-            }
             Color color = GUI.color + new Color(0.01f, 0.01f, 0.01f, 0.01f);
             GUI.contentColor = new Color(1f / color.r, 1f / color.g, 1f / color.g, 1f / color.a);
             GUILayout.Toggle(isOrWillEnterPlaymode, s_PlayIcons[index], "CommandLeft", new GUILayoutOption[0]);

@@ -1,5 +1,6 @@
 ﻿namespace UnityEditor.TestTools.TestRunner
 {
+    using NUnit.Framework;
     using NUnit.Framework.Interfaces;
     using System;
     using UnityEditor;
@@ -12,6 +13,14 @@
         private EditModeLauncherContextSettings m_Settings;
         public SceneSetup[] previousSceneSetup;
         public int undoGroup;
+
+        private void LogRecieved(string message, string stacktrace, LogType type)
+        {
+            if (TestContext.Out != null)
+            {
+                TestContext.Out.WriteLine(message);
+            }
+        }
 
         private static void PerformUndo(int undoGroup)
         {
@@ -43,10 +52,12 @@
             PerformUndo(this.undoGroup);
             EditorUtility.ClearProgressBar();
             this.m_Settings.Dispose();
+            Application.logMessageReceivedThreaded -= new Application.LogCallback(this.LogRecieved);
         }
 
         public void RunStarted(ITest testsToRun)
         {
+            Application.logMessageReceivedThreaded += new Application.LogCallback(this.LogRecieved);
             this.m_Settings = new EditModeLauncherContextSettings();
         }
 

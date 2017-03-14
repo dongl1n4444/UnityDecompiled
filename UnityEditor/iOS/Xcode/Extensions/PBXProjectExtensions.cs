@@ -2,8 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Runtime.CompilerServices;
     using UnityEditor.iOS.Xcode;
+    using UnityEditor.iOS.Xcode.PBX;
 
     public static class PBXProjectExtensions
     {
@@ -17,72 +19,16 @@
         static PBXProjectExtensions()
         {
             FlagList list = new FlagList();
-            list.Add("ALWAYS_SEARCH_USER_PATHS", "NO");
-            list.Add("CLANG_CXX_LANGUAGE_STANDARD", "gnu++0x");
-            list.Add("CLANG_CXX_LIBRARY", "libc++");
-            list.Add("CLANG_ENABLE_MODULES", "YES");
-            list.Add("CLANG_ENABLE_OBJC_ARC", "YES");
-            list.Add("CLANG_WARN_BOOL_CONVERSION", "YES");
-            list.Add("CLANG_WARN_CONSTANT_CONVERSION", "YES");
-            list.Add("CLANG_WARN_DIRECT_OBJC_ISA_USAGE", "YES_ERROR");
-            list.Add("CLANG_WARN_EMPTY_BODY", "YES");
-            list.Add("CLANG_WARN_ENUM_CONVERSION", "YES");
-            list.Add("CLANG_WARN_INT_CONVERSION", "YES");
-            list.Add("CLANG_WARN_OBJC_ROOT_CLASS", "YES_ERROR");
-            list.Add("CLANG_WARN_UNREACHABLE_CODE", "YES");
-            list.Add("CLANG_WARN__DUPLICATE_METHOD_MATCH", "YES");
-            list.Add("COPY_PHASE_STRIP", "YES");
-            list.Add("ENABLE_NS_ASSERTIONS", "NO");
-            list.Add("ENABLE_STRICT_OBJC_MSGSEND", "YES");
-            list.Add("GCC_C_LANGUAGE_STANDARD", "gnu99");
-            list.Add("GCC_WARN_64_TO_32_BIT_CONVERSION", "YES");
-            list.Add("GCC_WARN_ABOUT_RETURN_TYPE", "YES_ERROR");
-            list.Add("GCC_WARN_UNDECLARED_SELECTOR", "YES");
-            list.Add("GCC_WARN_UNINITIALIZED_AUTOS", "YES_AGGRESSIVE");
-            list.Add("GCC_WARN_UNUSED_FUNCTION", "YES");
-            list.Add("IPHONEOS_DEPLOYMENT_TARGET", "8.0");
             list.Add("LD_RUNPATH_SEARCH_PATHS", "$(inherited)");
             list.Add("LD_RUNPATH_SEARCH_PATHS", "@executable_path/Frameworks");
             list.Add("LD_RUNPATH_SEARCH_PATHS", "@executable_path/../../Frameworks");
-            list.Add("MTL_ENABLE_DEBUG_INFO", "NO");
             list.Add("PRODUCT_NAME", "$(TARGET_NAME)");
             list.Add("SKIP_INSTALL", "YES");
-            list.Add("VALIDATE_PRODUCT", "YES");
             appExtensionReleaseBuildFlags = list;
             list = new FlagList();
-            list.Add("ALWAYS_SEARCH_USER_PATHS", "NO");
-            list.Add("CLANG_CXX_LANGUAGE_STANDARD", "gnu++0x");
-            list.Add("CLANG_CXX_LIBRARY", "libc++");
-            list.Add("CLANG_ENABLE_MODULES", "YES");
-            list.Add("CLANG_ENABLE_OBJC_ARC", "YES");
-            list.Add("CLANG_WARN_BOOL_CONVERSION", "YES");
-            list.Add("CLANG_WARN_CONSTANT_CONVERSION", "YES");
-            list.Add("CLANG_WARN_DIRECT_OBJC_ISA_USAGE", "YES_ERROR");
-            list.Add("CLANG_WARN_EMPTY_BODY", "YES");
-            list.Add("CLANG_WARN_ENUM_CONVERSION", "YES");
-            list.Add("CLANG_WARN_INT_CONVERSION", "YES");
-            list.Add("CLANG_WARN_OBJC_ROOT_CLASS", "YES_ERROR");
-            list.Add("CLANG_WARN_UNREACHABLE_CODE", "YES");
-            list.Add("CLANG_WARN__DUPLICATE_METHOD_MATCH", "YES");
-            list.Add("COPY_PHASE_STRIP", "NO");
-            list.Add("ENABLE_STRICT_OBJC_MSGSEND", "YES");
-            list.Add("GCC_C_LANGUAGE_STANDARD", "gnu99");
-            list.Add("GCC_DYNAMIC_NO_PIC", "NO");
-            list.Add("GCC_OPTIMIZATION_LEVEL", "0");
-            list.Add("GCC_PREPROCESSOR_DEFINITIONS", "DEBUG=1");
-            list.Add("GCC_PREPROCESSOR_DEFINITIONS", "$(inherited)");
-            list.Add("GCC_SYMBOLS_PRIVATE_EXTERN", "NO");
-            list.Add("GCC_WARN_64_TO_32_BIT_CONVERSION", "YES");
-            list.Add("GCC_WARN_ABOUT_RETURN_TYPE", "YES_ERROR");
-            list.Add("GCC_WARN_UNDECLARED_SELECTOR", "YES");
-            list.Add("GCC_WARN_UNINITIALIZED_AUTOS", "YES_AGGRESSIVE");
-            list.Add("GCC_WARN_UNUSED_FUNCTION", "YES");
-            list.Add("IPHONEOS_DEPLOYMENT_TARGET", "8.0");
             list.Add("LD_RUNPATH_SEARCH_PATHS", "$(inherited)");
             list.Add("LD_RUNPATH_SEARCH_PATHS", "@executable_path/Frameworks");
             list.Add("LD_RUNPATH_SEARCH_PATHS", "@executable_path/../../Frameworks");
-            list.Add("MTL_ENABLE_DEBUG_INFO", "YES");
-            list.Add("ONLY_ACTIVE_ARCH", "YES");
             list.Add("PRODUCT_NAME", "$(TARGET_NAME)");
             list.Add("SKIP_INSTALL", "YES");
             appExtensionDebugBuildFlags = list;
@@ -164,37 +110,108 @@
             watchAppDebugBuildFlags = list;
         }
 
-        internal static string AddAppExtension(this PBXProject proj, string mainTarget, string name, string infoPlistPath)
+        public static string AddAppExtension(this PBXProject proj, string mainTargetGuid, string name, string bundleId, string infoPlistPath)
         {
             string ext = ".appex";
             string targetGuid = proj.AddTarget(name, ext, "com.apple.product-type.app-extension");
-            string configGuid = proj.AddBuildConfigForTarget(targetGuid, "Debug");
-            string str4 = proj.AddBuildConfigForTarget(targetGuid, "Release");
-            proj.SetDefaultAppExtensionDebugBuildFlags(configGuid);
-            proj.SetDefaultAppExtensionReleaseBuildFlags(str4);
-            string[] configGuids = new string[] { configGuid, str4 };
-            proj.SetBuildPropertyForConfig(configGuids, "INFOPLIST_FILE", infoPlistPath);
+            foreach (string str3 in proj.BuildConfigNames())
+            {
+                string configGuid = proj.BuildConfigByName(targetGuid, str3);
+                if (str3.Contains("Debug"))
+                {
+                    proj.SetDefaultAppExtensionDebugBuildFlags(configGuid);
+                }
+                else
+                {
+                    proj.SetDefaultAppExtensionReleaseBuildFlags(configGuid);
+                }
+                proj.SetBuildPropertyForConfig(configGuid, "INFOPLIST_FILE", infoPlistPath);
+                proj.SetBuildPropertyForConfig(configGuid, "PRODUCT_BUNDLE_IDENTIFIER", bundleId);
+            }
             proj.AddSourcesBuildPhase(targetGuid);
             proj.AddResourcesBuildPhase(targetGuid);
             proj.AddFrameworksBuildPhase(targetGuid);
-            string sectionGuid = proj.AddCopyFilesBuildPhase(mainTarget, "Embed App Extensions", "", "13");
-            proj.AddFileToBuildSection(mainTarget, sectionGuid, proj.GetTargetProductFileRef(targetGuid));
-            proj.AddTargetDependency(mainTarget, targetGuid);
+            string sectionGuid = proj.AddCopyFilesBuildPhase(mainTargetGuid, "Embed App Extensions", "", "13");
+            proj.AddFileToBuildSection(mainTargetGuid, sectionGuid, proj.GetTargetProductFileRef(targetGuid));
+            proj.AddTargetDependency(mainTargetGuid, targetGuid);
             return targetGuid;
+        }
+
+        internal static void AddExternalLibraryDependency(this PBXProject proj, string targetGuid, string filename, string remoteFileGuid, string projectPath, string remoteInfo)
+        {
+            PBXNativeTargetData target = proj.nativeTargets[targetGuid];
+            filename = PBXPath.FixSlashes(filename);
+            projectPath = PBXPath.FixSlashes(projectPath);
+            string containerRef = proj.FindFileGuidByRealPath(projectPath);
+            if (containerRef == null)
+            {
+                throw new Exception("No such project");
+            }
+            string guid = null;
+            foreach (ProjectReference reference in proj.project.project.projectReferences)
+            {
+                if (reference.projectRef == containerRef)
+                {
+                    guid = reference.group;
+                    break;
+                }
+            }
+            if (guid == null)
+            {
+                throw new Exception("Malformed project: no project in project references");
+            }
+            PBXGroupData data2 = proj.GroupsGet(guid);
+            string extension = Path.GetExtension(filename);
+            if (!FileTypeUtils.IsBuildableFile(extension))
+            {
+                throw new Exception("Wrong file extension");
+            }
+            PBXContainerItemProxyData data3 = PBXContainerItemProxyData.Create(containerRef, "2", remoteFileGuid, remoteInfo);
+            proj.containerItems.AddEntry(data3);
+            string typeName = FileTypeUtils.GetTypeName(extension);
+            PBXReferenceProxyData data4 = PBXReferenceProxyData.Create(filename, typeName, data3.guid, "BUILT_PRODUCTS_DIR");
+            proj.references.AddEntry(data4);
+            PBXBuildFileData buildFile = PBXBuildFileData.CreateFromFile(data4.guid, false, null);
+            proj.BuildFilesAdd(targetGuid, buildFile);
+            proj.BuildSectionAny(target, extension, false).files.AddGUID(buildFile.guid);
+            data2.children.AddGUID(data4.guid);
+        }
+
+        internal static void AddExternalProjectDependency(this PBXProject proj, string path, string projectPath, PBXSourceTree sourceTree)
+        {
+            if (sourceTree == PBXSourceTree.Group)
+            {
+                throw new Exception("sourceTree must not be PBXSourceTree.Group");
+            }
+            path = PBXPath.FixSlashes(path);
+            projectPath = PBXPath.FixSlashes(projectPath);
+            PBXGroupData gr = PBXGroupData.CreateRelative("Products");
+            proj.GroupsAddDuplicate(gr);
+            PBXFileReferenceData fileRef = PBXFileReferenceData.CreateFromFile(path, Path.GetFileName(projectPath), sourceTree);
+            proj.FileRefsAdd(path, projectPath, null, fileRef);
+            proj.CreateSourceGroup(PBXPath.GetDirectory(projectPath)).children.AddGUID(fileRef.guid);
+            proj.project.project.AddReference(gr.guid, fileRef.guid);
         }
 
         public static string AddWatchApp(this PBXProject proj, string mainTargetGuid, string watchExtensionTargetGuid, string name, string bundleId, string infoPlistPath)
         {
             string targetGuid = proj.AddTarget(name, ".app", "com.apple.product-type.application.watchapp2");
-            string configGuid = proj.AddBuildConfigForTarget(targetGuid, "Debug");
-            string str3 = proj.AddBuildConfigForTarget(targetGuid, "Release");
-            proj.SetDefaultWatchAppDebugBuildFlags(configGuid);
-            proj.SetDefaultWatchAppReleaseBuildFlags(str3);
-            string str4 = proj.nativeTargets[watchExtensionTargetGuid].name.Replace(" ", "_");
-            string[] configGuids = new string[] { configGuid, str3 };
-            proj.SetBuildPropertyForConfig(configGuids, "PRODUCT_BUNDLE_IDENTIFIER", bundleId);
-            proj.SetBuildPropertyForConfig(configGuids, "INFOPLIST_FILE", infoPlistPath);
-            proj.SetBuildPropertyForConfig(configGuids, "IBSC_MODULE", str4);
+            string str2 = proj.nativeTargets[watchExtensionTargetGuid].name.Replace(" ", "_");
+            foreach (string str3 in proj.BuildConfigNames())
+            {
+                string configGuid = proj.BuildConfigByName(targetGuid, str3);
+                if (str3.Contains("Debug"))
+                {
+                    proj.SetDefaultWatchAppDebugBuildFlags(configGuid);
+                }
+                else
+                {
+                    proj.SetDefaultWatchAppReleaseBuildFlags(configGuid);
+                }
+                proj.SetBuildPropertyForConfig(configGuid, "PRODUCT_BUNDLE_IDENTIFIER", bundleId);
+                proj.SetBuildPropertyForConfig(configGuid, "INFOPLIST_FILE", infoPlistPath);
+                proj.SetBuildPropertyForConfig(configGuid, "IBSC_MODULE", str2);
+            }
             proj.AddResourcesBuildPhase(targetGuid);
             string sectionGuid = proj.AddCopyFilesBuildPhase(targetGuid, "Embed App Extensions", "", "13");
             proj.AddFileToBuildSection(targetGuid, sectionGuid, proj.GetTargetProductFileRef(watchExtensionTargetGuid));
@@ -208,13 +225,20 @@
         public static string AddWatchExtension(this PBXProject proj, string mainTarget, string name, string bundleId, string infoPlistPath)
         {
             string targetGuid = proj.AddTarget(name, ".appex", "com.apple.product-type.watchkit2-extension");
-            string configGuid = proj.AddBuildConfigForTarget(targetGuid, "Debug");
-            string str3 = proj.AddBuildConfigForTarget(targetGuid, "Release");
-            proj.SetDefaultWatchExtensionDebugBuildFlags(configGuid);
-            proj.SetDefaultWatchExtensionReleaseBuildFlags(str3);
-            string[] configGuids = new string[] { configGuid, str3 };
-            proj.SetBuildPropertyForConfig(configGuids, "PRODUCT_BUNDLE_IDENTIFIER", bundleId);
-            proj.SetBuildPropertyForConfig(configGuids, "INFOPLIST_FILE", infoPlistPath);
+            foreach (string str2 in proj.BuildConfigNames())
+            {
+                string configGuid = proj.BuildConfigByName(targetGuid, str2);
+                if (str2.Contains("Debug"))
+                {
+                    proj.SetDefaultWatchExtensionDebugBuildFlags(configGuid);
+                }
+                else
+                {
+                    proj.SetDefaultWatchExtensionReleaseBuildFlags(configGuid);
+                }
+                proj.SetBuildPropertyForConfig(configGuid, "PRODUCT_BUNDLE_IDENTIFIER", bundleId);
+                proj.SetBuildPropertyForConfig(configGuid, "INFOPLIST_FILE", infoPlistPath);
+            }
             proj.AddSourcesBuildPhase(targetGuid);
             proj.AddResourcesBuildPhase(targetGuid);
             proj.AddFrameworksBuildPhase(targetGuid);

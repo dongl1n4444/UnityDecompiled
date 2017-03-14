@@ -187,7 +187,7 @@
             return null;
         }
 
-        [ExcludeFromDocs, Obsolete("BuildAssetBundles signature has changed. Please specify the targetPlatform parameter", true)]
+        [Obsolete("BuildAssetBundles signature has changed. Please specify the targetPlatform parameter", true), ExcludeFromDocs]
         public static AssetBundleManifest BuildAssetBundles(string outputPath, AssetBundleBuild[] builds)
         {
             BuildAssetBundleOptions none = BuildAssetBundleOptions.None;
@@ -420,13 +420,13 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern string GetBuildTargetGroupName(BuildTargetGroup buildTargetGroup);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         internal static extern string GetBuildTargetName(BuildTarget targetPlatform);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern string GetBuildToolsDirectory(BuildTarget target);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool GetCRCForAssetBundle(string targetPath, out uint crc);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         internal static extern string GetEditorTargetName();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool GetHashForAssetBundle(string targetPath, out Hash128 hash);
@@ -439,7 +439,7 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         internal static extern string GetPlaybackEngineDirectory(BuildTargetGroup buildTargetGroup, BuildTarget target, BuildOptions options);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         internal static extern string GetPlaybackEngineExtensionDirectory(BuildTargetGroup buildTargetGroup, BuildTarget target, BuildOptions options);
         private static string[] InvokeCalculateBuildTags(BuildTarget target, BuildTargetGroup group) => 
             new string[0];
@@ -463,12 +463,12 @@
         /// <summary>
         /// <para>Lets you manage cross-references and dependencies between different asset bundles and player builds.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("PopAssetDependencies has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details."), GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("PopAssetDependencies has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details.")]
         public static extern void PopAssetDependencies();
         /// <summary>
         /// <para>Lets you manage cross-references and dependencies between different asset bundles and player builds.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("PushAssetDependencies has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details.")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("PushAssetDependencies has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details."), GeneratedByOldBindingsGenerator]
         public static extern void PushAssetDependencies();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void SetPlaybackEngineDirectory(BuildTarget target, BuildOptions options, string playbackEngineDirectory);

@@ -124,16 +124,7 @@
             GUI.Box(position, GUIContent.none, s_Styles.timeScrubber);
             this.playing = GUI.Toggle(position, this.playing, !this.playing ? s_Styles.playIcon : s_Styles.pauseIcon, s_Styles.playButton);
             float x = Mathf.Lerp(rect3.x, rect3.xMax, this.normalizedTime);
-            if (GUIUtility.keyboardControl == controlID)
-            {
-                Handles.color = new Color(1f, 0f, 0f, 1f);
-            }
-            else
-            {
-                Handles.color = new Color(1f, 0f, 0f, 0.5f);
-            }
-            Handles.DrawLine((Vector3) new Vector2(x, rect3.yMin), (Vector3) new Vector2(x, rect3.yMax));
-            Handles.DrawLine((Vector3) new Vector2(x + 1f, rect3.yMin), (Vector3) new Vector2(x + 1f, rect3.yMax));
+            TimeArea.DrawPlayhead(x, rect3.yMin, rect3.yMax, 2f, (GUIUtility.keyboardControl != controlID) ? 0.5f : 1f);
         }
 
         public void OnDisable()

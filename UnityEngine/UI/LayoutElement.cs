@@ -17,6 +17,8 @@
         [SerializeField]
         private bool m_IgnoreLayout = false;
         [SerializeField]
+        private int m_LayoutPriority = 1;
+        [SerializeField]
         private float m_MinHeight = -1f;
         [SerializeField]
         private float m_MinWidth = -1f;
@@ -140,8 +142,18 @@
         /// <summary>
         /// <para>Called by the layout system.</para>
         /// </summary>
-        public virtual int layoutPriority =>
-            1;
+        public virtual int layoutPriority
+        {
+            get => 
+                this.m_LayoutPriority;
+            set
+            {
+                if (SetPropertyUtility.SetStruct<int>(ref this.m_LayoutPriority, value))
+                {
+                    this.SetDirty();
+                }
+            }
+        }
 
         /// <summary>
         /// <para>The minimum height this layout element may be allocated.</para>

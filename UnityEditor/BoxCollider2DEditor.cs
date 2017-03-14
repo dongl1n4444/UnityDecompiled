@@ -7,7 +7,7 @@
     using UnityEngine;
     using UnityEngine.Events;
 
-    [CustomEditor(typeof(BoxCollider2D)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(BoxCollider2D))]
     internal class BoxCollider2DEditor : Collider2DEditorBase
     {
         private readonly BoxBoundsHandle m_BoundsHandle = new BoxBoundsHandle(s_HandleControlIDHint);

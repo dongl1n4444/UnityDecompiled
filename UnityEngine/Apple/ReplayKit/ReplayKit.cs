@@ -81,7 +81,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool StartRecording([DefaultValue("false")] bool enableMicrophone, [DefaultValue("false")] bool enableCamera);
         /// <summary>
-        /// <para>Stops current broadcast. 
+        /// <para>Stops current broadcast.
         /// Will terminate currently on-going broadcast. If no broadcast is in progress, does nothing.</para>
         /// </summary>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]

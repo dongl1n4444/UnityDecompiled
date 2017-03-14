@@ -39,6 +39,8 @@
             container.BindMultiSingleton(typeArray9, typeof(StringLiteralCollection));
             Type[] typeArray10 = new Type[] { typeof(IWindowsRuntimeProjectionsInitializer), typeof(IWindowsRuntimeProjections) };
             container.BindMultiSingleton(typeArray10, typeof(WindowsRuntimeProjectionsComponent));
+            Type[] typeArray11 = new Type[] { typeof(IRuntimeImplementedMethodAdder), typeof(IRuntimeImplementedMethodWriter) };
+            container.BindMultiSingleton(typeArray11, typeof(RuntimeImplementedMethodWriterComponent));
         }
     }
 }

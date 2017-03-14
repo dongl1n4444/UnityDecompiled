@@ -8,7 +8,16 @@
 
     internal class EmscriptenPlatformSupport : PlatformSupport
     {
-        public override CppToolChain MakeCppToolChain(Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors) => 
+        public override Unity.IL2CPP.Common.Architecture GetSupportedArchitectureOfSameBitness(Unity.IL2CPP.Common.Architecture architecture)
+        {
+            if (architecture.Bits != 0x20)
+            {
+                throw new NotSupportedException($"Emscripten doesn't support {architecture.Bits}-bit architecture.");
+            }
+            return new EmscriptenJavaScriptArchitecture();
+        }
+
+        public override CppToolChain MakeCppToolChain(Unity.IL2CPP.Common.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors) => 
             new EmscriptenToolChain(architecture, buildConfiguration, false);
 
         public override ProgramBuildDescription PostProcessProgramBuildDescription(ProgramBuildDescription programBuildDescription)

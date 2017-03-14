@@ -22,9 +22,7 @@
         Default = 0,
         [Obsolete("Enum member DrawIndirect has been deprecated. Use IndirectArguments instead (UnityUpgradable) -> IndirectArguments", false)]
         DrawIndirect = 0x100,
-        /// <summary>
-        /// <para>ComputeBuffer is attempted to be located in GPU memory.</para>
-        /// </summary>
+        [Obsolete("Enum member GPUMemory has been deprecated. All compute buffers now follow the behavior previously defined by this member.", false)]
         GPUMemory = 0x200,
         /// <summary>
         /// <para>ComputeBuffer used for Graphics.DrawProceduralIndirect, ComputeShader.DispatchIndirect or Graphics.DrawMeshInstancedIndirect arguments.</para>

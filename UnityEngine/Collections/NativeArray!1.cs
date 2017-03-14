@@ -8,7 +8,7 @@
     using System.Runtime.InteropServices;
     using UnityEngine;
 
-    [StructLayout(LayoutKind.Sequential), NativeContainer, NativeContainerSupportsMinMaxWriteRestriction, DebuggerDisplay("Length = {Length}"), DebuggerTypeProxy(typeof(NativeArrayDebugView<>))]
+    [StructLayout(LayoutKind.Sequential), NativeContainer, DebuggerDisplay("Length = {Length}"), NativeContainerSupportsMinMaxWriteRestriction, DebuggerTypeProxy(typeof(NativeArrayDebugView<>))]
     public struct NativeArray<T> : IDisposable, IEnumerable<T>, IEnumerable where T: struct
     {
         private IntPtr m_Buffer;

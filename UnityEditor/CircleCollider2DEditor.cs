@@ -4,7 +4,7 @@
     using UnityEditor.IMGUI.Controls;
     using UnityEngine;
 
-    [CustomEditor(typeof(CircleCollider2D)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(CircleCollider2D))]
     internal class CircleCollider2DEditor : PrimitiveCollider2DEditor
     {
         private readonly SphereBoundsHandle m_BoundsHandle = new SphereBoundsHandle(s_HandleControlIDHint);

@@ -115,10 +115,11 @@
         {
             if (this.m_RendererForAnimationMode != null)
             {
-                this.m_PreviousGUIColor = GUI.color;
-                if (MaterialAnimationUtility.IsAnimated(prop, this.m_RendererForAnimationMode))
+                Color color;
+                this.m_PreviousGUIColor = GUI.backgroundColor;
+                if (MaterialAnimationUtility.OverridePropertyColor(prop, this.m_RendererForAnimationMode, out color))
                 {
-                    GUI.color = UnityEditor.AnimationMode.animatedPropertyColor;
+                    GUI.backgroundColor = color;
                 }
             }
         }
@@ -328,7 +329,7 @@
         private void DetectShaderEditorNeedsUpdate()
         {
             Material target = base.target as Material;
-            if (target.shader != this.m_Shader)
+            if ((target != null) && (target.shader != this.m_Shader))
             {
                 this.CreateCustomShaderEditorIfNeeded(target.shader, (this.m_Shader == null) ? string.Empty : this.m_Shader.customEditor);
                 this.m_Shader = target.shader;
@@ -472,7 +473,7 @@
             }
             EditorGUI.BeginChangeCheck();
             EditorGUI.showMixedValue = flag2;
-            flag = EditorGUILayout.Toggle(GUIContent.Temp("Emission"), flag, new GUILayoutOption[0]);
+            flag = EditorGUILayout.Toggle(Styles.emissionLabel, flag, new GUILayoutOption[0]);
             EditorGUI.showMixedValue = false;
             if (EditorGUI.EndChangeCheck())
             {
@@ -513,7 +514,7 @@
         {
             if (this.m_RendererForAnimationMode != null)
             {
-                GUI.color = this.m_PreviousGUIColor;
+                GUI.backgroundColor = this.m_PreviousGUIColor;
             }
         }
 
@@ -1233,7 +1234,7 @@
             EditorGUI.indentLevel += indent;
             int[] optionValues = new int[] { Styles.lightmapEmissiveValues[0], Styles.lightmapEmissiveValues[1] };
             GUIContent[] displayedOptions = new GUIContent[] { Styles.lightmapEmissiveStrings[0], Styles.lightmapEmissiveStrings[1] };
-            flags2 = (MaterialGlobalIlluminationFlags) EditorGUILayout.IntPopup(GUIContent.Temp(Styles.lightmapEmissiveLabel, "Controls if the emission is baked or realtime.\n\nBaked only has effect in scenes where baked global illumination is enabled.\n\nRealtime uses realtime global illumination if enabled in the scene. Otherwise the emission won't light up other objects."), (int) flags2, displayedOptions, optionValues, new GUILayoutOption[0]);
+            flags2 = (MaterialGlobalIlluminationFlags) EditorGUILayout.IntPopup(Styles.lightmapEmissiveLabel, (int) flags2, displayedOptions, optionValues, new GUILayoutOption[0]);
             EditorGUI.indentLevel -= indent;
             EditorGUI.showMixedValue = false;
             bool flag2 = EditorGUI.EndChangeCheck();
@@ -1277,7 +1278,7 @@
             }
             EditorGUI.BeginChangeCheck();
             EditorGUI.showMixedValue = flag;
-            globalIlluminationFlags = (MaterialGlobalIlluminationFlags) EditorGUI.IntPopup(position, GUIContent.Temp(Styles.lightmapEmissiveLabel), (int) globalIlluminationFlags, Styles.lightmapEmissiveStrings, Styles.lightmapEmissiveValues);
+            globalIlluminationFlags = (MaterialGlobalIlluminationFlags) EditorGUI.IntPopup(position, Styles.lightmapEmissiveLabel, (int) globalIlluminationFlags, Styles.lightmapEmissiveStrings, Styles.lightmapEmissiveValues);
             EditorGUI.showMixedValue = false;
             if (EditorGUI.EndChangeCheck())
             {
@@ -2480,11 +2481,12 @@
         {
             public static GUIContent[] customQueueNames;
             public static int[] customQueueValues;
+            public static readonly GUIContent emissionLabel;
             public static readonly GUIContent enableInstancingLabel;
             public const int kCustomQueueIndex = 4;
             public const int kNewShaderQueueValue = -1;
             public static readonly GUIStyle kReflectionProbePickerStyle = "PaneOptions";
-            public static string lightmapEmissiveLabel;
+            public static readonly GUIContent lightmapEmissiveLabel = EditorGUIUtility.TextContent("Global Illumination|Controls if the emission is baked or realtime.\n\nBaked only has effect in scenes where baked global illumination is enabled.\n\nRealtime uses realtime global illumination if enabled in the scene. Otherwise the emission won't light up other objects.");
             public static GUIContent[] lightmapEmissiveStrings = new GUIContent[] { EditorGUIUtility.TextContent("Realtime"), EditorGUIUtility.TextContent("Baked"), EditorGUIUtility.TextContent("None") };
             public static int[] lightmapEmissiveValues;
             public static string propBlockWarning;
@@ -2498,7 +2500,6 @@
                 numArray1[0] = 1;
                 numArray1[1] = 2;
                 lightmapEmissiveValues = numArray1;
-                lightmapEmissiveLabel = "Global Illumination";
                 propBlockWarning = EditorGUIUtility.TextContent("MaterialPropertyBlock is used to modify these values").text;
                 queueLabel = EditorGUIUtility.TextContent("Render Queue");
                 queueNames = new GUIContent[] { EditorGUIUtility.TextContent("From Shader"), EditorGUIUtility.TextContent("Geometry|Queue 2000"), EditorGUIUtility.TextContent("AlphaTest|Queue 2450"), EditorGUIUtility.TextContent("Transparent|Queue 3000") };
@@ -2511,6 +2512,7 @@
                 numArray2[3] = queueValues[3];
                 customQueueValues = numArray2;
                 enableInstancingLabel = EditorGUIUtility.TextContent("Enable Instancing");
+                emissionLabel = EditorGUIUtility.TextContent("Emission");
             }
         }
     }

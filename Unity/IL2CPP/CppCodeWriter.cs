@@ -601,8 +601,22 @@
             base.WriteLine("static {0}_ftn _il2cpp_icall_func;", objArray2);
             object[] objArray3 = new object[] { Naming.ForMethodNameOnly(method) };
             base.WriteLine("if (!_il2cpp_icall_func)", objArray3);
-            object[] objArray4 = new object[] { Naming.ForMethodNameOnly(method), str };
-            base.WriteLine("_il2cpp_icall_func = ({0}_ftn)il2cpp_codegen_resolve_icall (\"{1}\");", objArray4);
+            if (CodeGenOptions.MonoRuntime)
+            {
+                object[] objArray4 = new object[] { Naming.ForMethodNameOnly(method), Emit.MonoMethodMetadataGet(method) };
+                base.WriteLine("_il2cpp_icall_func = ({0}_ftn)il2cpp_codegen_resolve_icall ({1});", objArray4);
+                if (MethodSignatureWriter.UsesMonoCodegenICallHandle(method))
+                {
+                    base.WriteLine("MONO_TYPED_HANDLE_PAYLOAD_NAME(MonoObject) handle;");
+                    base.WriteLine("MONO_TYPED_HANDLE_SET_INNER_OBJECT(handle, (MonoObject*)__this);");
+                    base.WriteLine("MonoError unused;");
+                }
+            }
+            else
+            {
+                object[] objArray5 = new object[] { Naming.ForMethodNameOnly(method), str };
+                base.WriteLine("_il2cpp_icall_func = ({0}_ftn)il2cpp_codegen_resolve_icall (\"{1}\");", objArray5);
+            }
         }
 
         public void WriteInternalPInvokeDeclaration(string methodName, string internalPInvokeDeclaration)

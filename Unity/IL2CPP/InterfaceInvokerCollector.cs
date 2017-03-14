@@ -55,12 +55,20 @@
 
         private static string InvokeParametersFor(InvokerData data, bool isGeneric)
         {
-            string[] first = !isGeneric ? new string[] { "Il2CppMethodSlot slot", "Il2CppClass* declaringInterface", "Il2CppObject* obj" } : new string[] { "const MethodInfo* method", "Il2CppObject* obj" };
+            string[] strArray;
+            if (CodeGenOptions.MonoRuntime)
+            {
+                strArray = !isGeneric ? new string[] { "MonoMethod* slot", $"{"RuntimeClass"}* declaringInterface", "void* obj" } : new string[] { "MonoMethod* method", "void* obj" };
+            }
+            else
+            {
+                strArray = !isGeneric ? new string[] { "Il2CppMethodSlot slot", $"{"RuntimeClass"}* declaringInterface", "Il2CppObject* obj" } : new string[] { "const MethodInfo* method", "Il2CppObject* obj" };
+            }
             if (<>f__am$cache4 == null)
             {
                 <>f__am$cache4 = (m, i) => string.Format("T{0} p{0}", i + 1);
             }
-            return first.Concat<string>(Enumerable.Range(1, data.ParameterCount).Select<int, string>(<>f__am$cache4)).AggregateWithComma();
+            return strArray.Concat<string>(Enumerable.Range(1, data.ParameterCount).Select<int, string>(<>f__am$cache4)).AggregateWithComma();
         }
 
         public void Process(AssemblyDefinition assembly)

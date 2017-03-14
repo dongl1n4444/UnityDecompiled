@@ -9,6 +9,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEditor.SceneManagement;
+    using UnityEditor.Scripting.ScriptCompilation;
     using UnityEditorInternal;
     using UnityEngine;
     using UnityEngine.Internal;
@@ -56,6 +57,7 @@
         private static float kDragDeadzone = 16f;
         private const float kDragSensitivity = 0.03f;
         private const string kEmptyDropDownElement = "--empty--";
+        private static string kEnabledPropertyName = "m_Enabled";
         internal static string kFloatFieldFormatString = "g7";
         private const double kFoldoutExpandTimeout = 0.7;
         private const float kIndentPerLevel = 15f;
@@ -259,13 +261,21 @@
             {
                 EditorGUIUtility.SetBoldDefaultFont(property.prefabOverride);
             }
-            s_PropertyStack.Push(new PropertyGUIData(property, totalPosition, boldDefaultFont, GUI.enabled, GUI.color));
+            s_PropertyStack.Push(new PropertyGUIData(property, totalPosition, boldDefaultFont, GUI.enabled, GUI.backgroundColor));
             showMixedValue = property.hasMultipleDifferentValues;
             if (property.isAnimated)
             {
                 Color animatedPropertyColor = UnityEditor.AnimationMode.animatedPropertyColor;
-                animatedPropertyColor.a *= GUI.color.a;
-                GUI.color = animatedPropertyColor;
+                if (UnityEditor.AnimationMode.InAnimationRecording())
+                {
+                    animatedPropertyColor = UnityEditor.AnimationMode.recordedPropertyColor;
+                }
+                else if (property.isCandidate)
+                {
+                    animatedPropertyColor = UnityEditor.AnimationMode.candidatePropertyColor;
+                }
+                animatedPropertyColor.a *= GUI.backgroundColor.a;
+                GUI.backgroundColor = animatedPropertyColor;
             }
             GUI.enabled &= property.editable;
             return s_PropertyFieldTempContent;
@@ -2014,6 +2024,7 @@
             Rect rect3 = new Rect(((rect.xMax + 2f) + 2f) + 16f, rect.y, 100f, rect.height) {
                 xMax = rect2.xMin - 2f
             };
+            Event current = Event.current;
             int num = -1;
             foreach (UnityEngine.Object obj2 in targetObjs)
             {
@@ -2029,32 +2040,48 @@
             }
             if (num != -1)
             {
-                bool flag = UnityEditor.AnimationMode.IsPropertyAnimated(targetObjs[0], "m_Enabled");
-                bool flag2 = num != 0;
+                bool flag = num != 0;
                 showMixedValue = num == -2;
                 Rect rect4 = rect;
                 rect4.x = rect.xMax + 2f;
                 BeginChangeCheck();
-                Color color = GUI.color;
-                if (flag)
+                Color backgroundColor = GUI.backgroundColor;
+                bool flag2 = UnityEditor.AnimationMode.IsPropertyAnimated(targetObjs[0], kEnabledPropertyName);
+                if (flag2)
                 {
-                    GUI.color = UnityEditor.AnimationMode.animatedPropertyColor;
+                    Color animatedPropertyColor = UnityEditor.AnimationMode.animatedPropertyColor;
+                    if (UnityEditor.AnimationMode.InAnimationRecording())
+                    {
+                        animatedPropertyColor = UnityEditor.AnimationMode.recordedPropertyColor;
+                    }
+                    else if (UnityEditor.AnimationMode.IsPropertyCandidate(targetObjs[0], kEnabledPropertyName))
+                    {
+                        animatedPropertyColor = UnityEditor.AnimationMode.candidatePropertyColor;
+                    }
+                    animatedPropertyColor.a *= GUI.color.a;
+                    GUI.backgroundColor = animatedPropertyColor;
                 }
                 int num4 = GUIUtility.GetControlID(s_TitlebarHash, FocusType.Keyboard, position);
-                flag2 = EditorGUIInternal.DoToggleForward(rect4, num4, flag2, GUIContent.none, EditorStyles.toggle);
-                if (flag)
+                flag = EditorGUIInternal.DoToggleForward(rect4, num4, flag, GUIContent.none, EditorStyles.toggle);
+                if (flag2)
                 {
-                    GUI.color = color;
+                    GUI.backgroundColor = backgroundColor;
                 }
                 if (EndChangeCheck())
                 {
-                    Undo.RecordObjects(targetObjs, (!flag2 ? "Disable" : "Enable") + " Component" + ((targetObjs.Length <= 1) ? "" : "s"));
+                    Undo.RecordObjects(targetObjs, (!flag ? "Disable" : "Enable") + " Component" + ((targetObjs.Length <= 1) ? "" : "s"));
                     foreach (UnityEngine.Object obj3 in targetObjs)
                     {
-                        EditorUtility.SetObjectEnabled(obj3, flag2);
+                        EditorUtility.SetObjectEnabled(obj3, flag);
                     }
                 }
                 showMixedValue = false;
+                if (rect4.Contains(Event.current.mousePosition) && (((current.type == EventType.MouseDown) && (current.button == 1)) || (current.type == EventType.ContextClick)))
+                {
+                    SerializedObject obj4 = new SerializedObject(targetObjs[0]);
+                    DoPropertyContextMenu(obj4.FindProperty(kEnabledPropertyName));
+                    current.Use();
+                }
             }
             Rect rect5 = rect2;
             rect5.x -= 18f;
@@ -2062,7 +2089,6 @@
             {
                 rect3.xMax = rect5.xMin - 2f;
             }
-            Event current = Event.current;
             if (current.type == EventType.Repaint)
             {
                 Texture2D miniThumbnail = AssetPreview.GetMiniThumbnail(targetObjs[0]);
@@ -4102,7 +4128,7 @@
             }
             EditorGUIUtility.SetBoldDefaultFont(data.wasBoldDefaultFont);
             GUI.enabled = data.wasEnabled;
-            GUI.color = data.color;
+            GUI.backgroundColor = data.color;
             if (s_PendingPropertyKeyboardHandling != null)
             {
                 DoPropertyFieldKeyboardHandling(s_PendingPropertyKeyboardHandling);
@@ -5085,7 +5111,20 @@
         internal static bool HelpIconButton(Rect position, UnityEngine.Object obj)
         {
             bool flag = Unsupported.IsDeveloperBuild();
-            bool defaultToMonoBehaviour = !flag || obj.GetType().Assembly.ToString().StartsWith("Assembly-");
+            bool defaultToMonoBehaviour = !flag;
+            if (!defaultToMonoBehaviour)
+            {
+                EditorCompilation.TargetAssemblyInfo[] targetAssemblies = EditorCompilationInterface.GetTargetAssemblies();
+                string str = obj.GetType().Assembly.ToString();
+                for (int i = 0; i < targetAssemblies.Length; i++)
+                {
+                    if (str == targetAssemblies[i].Name)
+                    {
+                        defaultToMonoBehaviour = true;
+                        break;
+                    }
+                }
+            }
             bool flag3 = Help.HasHelpForObject(obj, defaultToMonoBehaviour);
             if (flag3 || flag)
             {
@@ -5095,8 +5134,8 @@
                 if (flag && !flag3)
                 {
                     GUI.color = Color.yellow;
-                    string str2 = (!(obj is MonoBehaviour) ? "sealed partial class-" : "script-") + niceHelpNameForObject;
-                    content.tooltip = $"Could not find Reference page for {niceHelpNameForObject} ({str2}).
+                    string str3 = (!(obj is MonoBehaviour) ? "sealed partial class-" : "script-") + niceHelpNameForObject;
+                    content.tooltip = $"Could not find Reference page for {niceHelpNameForObject} ({str3}).
 Docs for this object is missing or all docs are missing.
 This warning only shows up in development builds.";
                 }
@@ -5366,7 +5405,7 @@ This warning only shows up in development builds.";
         /// <param name="position">Rectangle on the screen to use for the field.</param>
         /// <param name="property">The SerializedProperty to use for the control.</param>
         /// <param name="displayedOptions">An array with the displayed options the user can choose from.</param>
-        /// <param name="optionValues">An array with the values for each option. If optionValues a direct	mapping of selectedValue to displayedOptions is assumed.</param>
+        /// <param name="optionValues">An array with the values for each option. If optionValues a direct   mapping of selectedValue to displayedOptions is assumed.</param>
         /// <param name="label">Optional label in front of the field.</param>
         [ExcludeFromDocs]
         public static void IntPopup(Rect position, SerializedProperty property, GUIContent[] displayedOptions, int[] optionValues)
@@ -5430,7 +5469,7 @@ This warning only shows up in development builds.";
         /// <param name="position">Rectangle on the screen to use for the field.</param>
         /// <param name="property">The SerializedProperty to use for the control.</param>
         /// <param name="displayedOptions">An array with the displayed options the user can choose from.</param>
-        /// <param name="optionValues">An array with the values for each option. If optionValues a direct	mapping of selectedValue to displayedOptions is assumed.</param>
+        /// <param name="optionValues">An array with the values for each option. If optionValues a direct   mapping of selectedValue to displayedOptions is assumed.</param>
         /// <param name="label">Optional label in front of the field.</param>
         public static void IntPopup(Rect position, SerializedProperty property, GUIContent[] displayedOptions, int[] optionValues, [DefaultValue("null")] GUIContent label)
         {
@@ -8585,7 +8624,7 @@ This warning only shows up in development builds.";
         {
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private static GUIContent <helpIcon>k__BackingField;
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private static GUIContent <titleSettingsIcon>k__BackingField;
 
             static GUIContents()
@@ -9012,7 +9051,7 @@ This warning only shows up in development builds.";
         /// </summary>
         public class PropertyScope : GUI.Scope
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private GUIContent <content>k__BackingField;
 
             /// <summary>

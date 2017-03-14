@@ -7,7 +7,6 @@
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Text;
-    using Unity.IL2CPP.Building;
     using Unity.IL2CPP.Common;
 
     public static class WinRTManifest
@@ -57,7 +56,7 @@
             }
         }
 
-        private static string ArchitectureToNameInManifest(Unity.IL2CPP.Building.Architecture architecture)
+        private static string ArchitectureToNameInManifest(Unity.IL2CPP.Common.Architecture architecture)
         {
             if (architecture is x86Architecture)
             {
@@ -96,7 +95,7 @@
             return builder.ToString();
         }
 
-        public static void Write(NPath outputDirectory, string executableName, Unity.IL2CPP.Building.Architecture architecture)
+        public static void Write(NPath outputDirectory, string executableName, Unity.IL2CPP.Common.Architecture architecture)
         {
             string newValue = ArchitectureToNameInManifest(architecture);
             string[] append = new string[] { @"Unity.IL2CPP.WinRT\AppxManifest.xml" };

@@ -15,6 +15,7 @@
         private readonly Dictionary<MethodDefinition, GenericSharingData> _genericMethodData = new Dictionary<MethodDefinition, GenericSharingData>();
         private readonly Dictionary<TypeDefinition, GenericSharingData> _genericTypeData = new Dictionary<TypeDefinition, GenericSharingData>();
         private readonly Dictionary<MethodDefinition, List<RuntimeGenericData>> _methodData = new Dictionary<MethodDefinition, List<RuntimeGenericData>>();
+        private readonly Dictionary<MethodReference, List<MethodReference>> _methodsSharedFrom = new Dictionary<MethodReference, List<MethodReference>>(new Unity.IL2CPP.Common.MethodReferenceComparer());
         private readonly Dictionary<TypeDefinition, List<RuntimeGenericData>> _typeData = new Dictionary<TypeDefinition, List<RuntimeGenericData>>();
         [CompilerGenerated]
         private static Func<GenericParameter, bool> <>f__am$cache0;
@@ -22,6 +23,15 @@
         public void AddMethod(MethodDefinition methodDefinition, List<RuntimeGenericData> runtimeGenericDataList)
         {
             this._methodData.Add(methodDefinition, runtimeGenericDataList);
+        }
+
+        public void AddSharedMethod(MethodReference sharedMethod, MethodReference actualMethod)
+        {
+            if (!this._methodsSharedFrom.ContainsKey(sharedMethod))
+            {
+                this._methodsSharedFrom[sharedMethod] = new List<MethodReference>();
+            }
+            this._methodsSharedFrom[sharedMethod].Add(actualMethod);
         }
 
         public void AddType(TypeDefinition typeDefinition, List<RuntimeGenericData> runtimeGenericDataList)
@@ -179,6 +189,15 @@
                 throw new InvalidOperationException($"Attempting to share generic parameter '{genericParameter.FullName}' which has a value type constraint.");
             }
             return genericParameter.Module.TypeSystem.Object;
+        }
+
+        public IEnumerable<MethodReference> GetMethodsSharedFrom(MethodReference sharedMethod)
+        {
+            if (this._methodsSharedFrom.ContainsKey(sharedMethod))
+            {
+                return this._methodsSharedFrom[sharedMethod];
+            }
+            return Enumerable.Empty<MethodReference>();
         }
 
         public MethodReference GetSharedMethod(MethodReference method)

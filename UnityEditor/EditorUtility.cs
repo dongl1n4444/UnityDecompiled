@@ -298,7 +298,7 @@
         /// <param name="path"></param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool ExtractOggFile(UnityEngine.Object obj, string path);
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("use AssetDatabase.LoadAssetAtPath"), GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("use AssetDatabase.LoadAssetAtPath")]
         public static extern UnityEngine.Object FindAsset(string path, System.Type type);
         [Obsolete("Use PrefabUtility.FindPrefabRoot")]
         public static GameObject FindPrefabRoot(GameObject source) => 

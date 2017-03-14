@@ -13,7 +13,7 @@
         private bool <alwaysAddFirstItemToSearchResult>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <rootIsCollapsable>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <showRootItem>k__BackingField;
         protected TreeViewItem m_FakeItem;
         protected bool m_NeedRefreshRows = true;

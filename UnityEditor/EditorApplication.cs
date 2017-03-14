@@ -368,8 +368,6 @@
         }
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        internal static extern void ReportUNetWeaver(string filename, string msg, bool isError);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void RequestRepaintAllViews();
         /// <summary>
         /// <para>Saves all serializable assets that have not yet been written to disk (eg. Materials).</para>

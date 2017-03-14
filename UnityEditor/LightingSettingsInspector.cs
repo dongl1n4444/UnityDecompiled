@@ -201,10 +201,11 @@
         {
             EditorGUI.indentLevel++;
             bool flag = !this.m_PreserveUVs.boolValue;
-            bool flag2 = EditorGUILayout.Toggle(s_Styles.OptimizeRealtimeUVs, flag, new GUILayoutOption[0]);
-            if (flag2 != flag)
+            EditorGUI.BeginChangeCheck();
+            flag = EditorGUILayout.Toggle(s_Styles.OptimizeRealtimeUVs, flag, new GUILayoutOption[0]);
+            if (EditorGUI.EndChangeCheck())
             {
-                this.m_PreserveUVs.boolValue = !flag2;
+                this.m_PreserveUVs.boolValue = !flag;
             }
             EditorGUI.indentLevel++;
             bool boolValue = this.m_PreserveUVs.boolValue;
@@ -373,16 +374,16 @@
             int num;
             EditorGUI.indentLevel++;
             LightmapEditorSettings.GetPVRInstanceHash(instanceID, out hash);
-            EditorGUILayout.LabelField(s_Styles.PVRInstanceHash, new GUIContent(hash.ToString()), new GUILayoutOption[0]);
+            EditorGUILayout.LabelField(s_Styles.PVRInstanceHash, GUIContent.Temp(hash.ToString()), new GUILayoutOption[0]);
             LightmapEditorSettings.GetPVRAtlasHash(instanceID, out hash2);
-            EditorGUILayout.LabelField(s_Styles.PVRAtlasHash, new GUIContent(hash2.ToString()), new GUILayoutOption[0]);
+            EditorGUILayout.LabelField(s_Styles.PVRAtlasHash, GUIContent.Temp(hash2.ToString()), new GUILayoutOption[0]);
             LightmapEditorSettings.GetPVRAtlasInstanceOffset(instanceID, out num);
-            EditorGUILayout.LabelField(s_Styles.PVRAtlasInstanceOffset, new GUIContent(num.ToString()), new GUILayoutOption[0]);
-            EditorGUILayout.LabelField(s_Styles.AtlasIndex, new GUIContent(this.m_LightmapIndex.intValue.ToString()), new GUILayoutOption[0]);
-            EditorGUILayout.LabelField(s_Styles.AtlasTilingX, new GUIContent(this.m_LightmapTilingOffsetX.floatValue.ToString()), new GUILayoutOption[0]);
-            EditorGUILayout.LabelField(s_Styles.AtlasTilingY, new GUIContent(this.m_LightmapTilingOffsetY.floatValue.ToString()), new GUILayoutOption[0]);
-            EditorGUILayout.LabelField(s_Styles.AtlasOffsetX, new GUIContent(this.m_LightmapTilingOffsetZ.floatValue.ToString()), new GUILayoutOption[0]);
-            EditorGUILayout.LabelField(s_Styles.AtlasOffsetY, new GUIContent(this.m_LightmapTilingOffsetW.floatValue.ToString()), new GUILayoutOption[0]);
+            EditorGUILayout.LabelField(s_Styles.PVRAtlasInstanceOffset, GUIContent.Temp(num.ToString()), new GUILayoutOption[0]);
+            EditorGUILayout.LabelField(s_Styles.AtlasIndex, GUIContent.Temp(this.m_LightmapIndex.intValue.ToString()), new GUILayoutOption[0]);
+            EditorGUILayout.LabelField(s_Styles.AtlasTilingX, GUIContent.Temp(this.m_LightmapTilingOffsetX.floatValue.ToString()), new GUILayoutOption[0]);
+            EditorGUILayout.LabelField(s_Styles.AtlasTilingY, GUIContent.Temp(this.m_LightmapTilingOffsetY.floatValue.ToString()), new GUILayoutOption[0]);
+            EditorGUILayout.LabelField(s_Styles.AtlasOffsetX, GUIContent.Temp(this.m_LightmapTilingOffsetZ.floatValue.ToString()), new GUILayoutOption[0]);
+            EditorGUILayout.LabelField(s_Styles.AtlasOffsetY, GUIContent.Temp(this.m_LightmapTilingOffsetW.floatValue.ToString()), new GUILayoutOption[0]);
             EditorGUI.indentLevel--;
         }
 
@@ -440,23 +441,23 @@
             EditorGUI.indentLevel++;
             if (LightmapEditorSettings.GetInstanceHash(renderer, out hash))
             {
-                EditorGUILayout.LabelField(s_Styles.RealtimeLMInstanceHash, new GUIContent(hash.ToString()), new GUILayoutOption[0]);
+                EditorGUILayout.LabelField(s_Styles.RealtimeLMInstanceHash, GUIContent.Temp(hash.ToString()), new GUILayoutOption[0]);
             }
             if (LightmapEditorSettings.GetGeometryHash(renderer, out hash2))
             {
-                EditorGUILayout.LabelField(s_Styles.RealtimeLMGeometryHash, new GUIContent(hash2.ToString()), new GUILayoutOption[0]);
+                EditorGUILayout.LabelField(s_Styles.RealtimeLMGeometryHash, GUIContent.Temp(hash2.ToString()), new GUILayoutOption[0]);
             }
             if (LightmapEditorSettings.GetInstanceResolution(renderer, out num, out num2))
             {
-                EditorGUILayout.LabelField(s_Styles.RealtimeLMInstanceResolution, new GUIContent(num.ToString() + "x" + num2.ToString()), new GUILayoutOption[0]);
+                EditorGUILayout.LabelField(s_Styles.RealtimeLMInstanceResolution, GUIContent.Temp(num.ToString() + "x" + num2.ToString()), new GUILayoutOption[0]);
             }
             if (LightmapEditorSettings.GetInputSystemHash(renderer, out hash3))
             {
-                EditorGUILayout.LabelField(s_Styles.RealtimeLMInputSystemHash, new GUIContent(hash3.ToString()), new GUILayoutOption[0]);
+                EditorGUILayout.LabelField(s_Styles.RealtimeLMInputSystemHash, GUIContent.Temp(hash3.ToString()), new GUILayoutOption[0]);
             }
             if (LightmapEditorSettings.GetSystemResolution(renderer, out num3, out num4))
             {
-                EditorGUILayout.LabelField(s_Styles.RealtimeLMResolution, new GUIContent(num3.ToString() + "x" + num4.ToString()), new GUILayoutOption[0]);
+                EditorGUILayout.LabelField(s_Styles.RealtimeLMResolution, GUIContent.Temp(num3.ToString() + "x" + num4.ToString()), new GUILayoutOption[0]);
             }
             EditorGUI.indentLevel--;
         }
@@ -470,12 +471,12 @@
             EditorGUI.indentLevel++;
             if (LightmapEditorSettings.GetTerrainSystemResolution(terrain, out num, out num2, out num3, out num4))
             {
-                string text = num.ToString() + "x" + num2.ToString();
+                string t = num.ToString() + "x" + num2.ToString();
                 if ((num3 > 1) || (num4 > 1))
                 {
-                    text = text + $" ({num3}x{num4} chunks)";
+                    t = t + $" ({num3}x{num4} chunks)";
                 }
-                EditorGUILayout.LabelField(s_Styles.RealtimeLMResolution, new GUIContent(text), new GUILayoutOption[0]);
+                EditorGUILayout.LabelField(s_Styles.RealtimeLMResolution, GUIContent.Temp(t), new GUILayoutOption[0]);
             }
             EditorGUI.indentLevel--;
         }

@@ -5,13 +5,23 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using System.Runtime.CompilerServices;
+    using Unity.IL2CPP.ILPreProcessor;
     using Unity.IL2CPP.IoC;
     using Unity.IL2CPP.IoCServices;
 
     public class Emit
     {
+        public const string ClassMetadataType = "RuntimeClass";
+        public const string FieldMetadataType = "RuntimeField";
+        public const string MethodMetadataType = "RuntimeMethod";
         [Inject]
         public static INamingService Naming;
+        public const string TypeMetadataType = "RuntimeType";
+        [Inject]
+        public static ITypeProviderService TypeProvider;
+        [Inject]
+        public static IVirtualCallCollectorService VirtualCallCollector;
 
         public static string ArrayBoundsCheck(string array, string index) => 
             MultiDimensionalArrayBoundsCheck($"(uint32_t)({array})->max_length", index);
@@ -98,6 +108,17 @@
         public static string MemoryBarrier() => 
             "il2cpp_codegen_memory_barrier()";
 
+        public static string MonoMethodMetadataGet(MethodReference method)
+        {
+            AssemblyDefinition definition = MetadataTokenUtils.AssemblyDefinitionFor(method);
+            string str = MetadataTokenUtils.FormattedMetadataTokenFor(method);
+            if (definition == TypeProvider.Corlib)
+            {
+                return $"il2cpp_codegen_mono_method(il2cpp_codegen_mono_corlib(), {str})";
+            }
+            return $"il2cpp_codegen_mono_method("{definition.Name.Name}", {str})";
+        }
+
         public static string MultiDimensionalArrayBoundsCheck(string length, string index) => 
             $"IL2CPP_ARRAY_BOUNDS_CHECK({index}, {length});";
 
@@ -143,6 +164,42 @@
 
         public static string StoreArrayElement(string array, string index, string value, bool useArrayBoundsCheck) => 
             $"({array})->{Naming.ForArrayItemSetter(useArrayBoundsCheck)}(static_cast<{Naming.ForArrayIndexType()}>({index}), {value})";
+
+        public static string VirtualCallInvokeMethod(MethodReference method, Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver)
+        {
+            <VirtualCallInvokeMethod>c__AnonStorey0 storey = new <VirtualCallInvokeMethod>c__AnonStorey0 {
+                typeResolver = typeResolver,
+                method = method
+            };
+            bool flag = storey.method.ReturnType.MetadataType != MetadataType.Void;
+            List<TypeReference> source = new List<TypeReference>();
+            if (flag)
+            {
+                source.Add(storey.typeResolver.ResolveReturnType(storey.method));
+            }
+            source.AddRange(storey.method.Parameters.Select<ParameterDefinition, TypeReference>(new Func<ParameterDefinition, TypeReference>(storey.<>m__0)));
+            string str = string.Empty;
+            if (source.Count > 0)
+            {
+                str = "< " + source.Select<TypeReference, string>(new Func<TypeReference, string>(Naming.ForVariable)).AggregateWithComma() + " >";
+            }
+            string str2 = !storey.method.DeclaringType.Resolve().IsInterface ? "Virt" : "Interface";
+            if (!storey.method.IsGenericInstance)
+            {
+                VirtualCallCollector.AddMethod(storey.method);
+            }
+            return $"{(!storey.method.IsGenericInstance ? string.Empty : "Generic")}{str2}{(!flag ? "Action" : "Func")}Invoker{storey.method.Parameters.Count}{str}::Invoke";
+        }
+
+        [CompilerGenerated]
+        private sealed class <VirtualCallInvokeMethod>c__AnonStorey0
+        {
+            internal MethodReference method;
+            internal Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver;
+
+            internal TypeReference <>m__0(ParameterDefinition p) => 
+                this.typeResolver.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveParameterTypeIfNeeded(this.method, p));
+        }
     }
 }
 

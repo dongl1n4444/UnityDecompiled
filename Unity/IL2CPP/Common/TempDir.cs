@@ -39,10 +39,7 @@
         {
             try
             {
-                if (directory.Exists(""))
-                {
-                    directory.Delete(DeleteMode.Normal);
-                }
+                directory.DeleteContents();
                 return true;
             }
             catch (Exception)

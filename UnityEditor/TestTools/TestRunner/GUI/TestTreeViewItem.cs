@@ -57,6 +57,11 @@
                 builder.Append("\n---\n");
                 builder.Append(this.result.stacktrace.Trim());
             }
+            if (!string.IsNullOrEmpty(this.result.output))
+            {
+                builder.Append("\n---\n");
+                builder.Append(this.result.output.Trim());
+            }
             if (builder.Length > 0x3a98)
             {
                 builder.Length = 0x3a98;

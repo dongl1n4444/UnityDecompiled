@@ -1,8 +1,9 @@
-﻿namespace Unity.IL2CPP.Building
+﻿namespace Unity.IL2CPP.Common
 {
     using System;
+    using System.Runtime.CompilerServices;
 
-    public class x86Architecture : Architecture
+    public class x86Architecture : Unity.IL2CPP.Common.Architecture
     {
         public override int Bits =>
             0x20;

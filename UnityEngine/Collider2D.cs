@@ -28,17 +28,6 @@
             return this.Cast(direction, contactFilter, results, positiveInfinity, ignoreSiblingColliders);
         }
 
-        /// <summary>
-        /// <para>Casts the collider shape into the scene starting at the collider position ignoring the collider itself.</para>
-        /// </summary>
-        /// <param name="direction">Vector representing the direction to cast the shape.</param>
-        /// <param name="results">Array to receive results.</param>
-        /// <param name="distance">Maximum distance over which to cast the shape.</param>
-        /// <param name="ignoreSiblingColliders">Should colliders attached to the same Rigidbody2D (known as sibling colliders) be ignored?</param>
-        /// <param name="contactFilter">Filter results defined by the contact filter.</param>
-        /// <returns>
-        /// <para>The number of results returned.</para>
-        /// </returns>
         [ExcludeFromDocs]
         public int Cast(Vector2 direction, RaycastHit2D[] results, float distance)
         {
@@ -53,7 +42,6 @@
         /// <param name="results">Array to receive results.</param>
         /// <param name="distance">Maximum distance over which to cast the shape.</param>
         /// <param name="ignoreSiblingColliders">Should colliders attached to the same Rigidbody2D (known as sibling colliders) be ignored?</param>
-        /// <param name="contactFilter">Filter results defined by the contact filter.</param>
         /// <returns>
         /// <para>The number of results returned.</para>
         /// </returns>
@@ -77,10 +65,10 @@
         /// <para>Casts the collider shape into the scene starting at the collider position ignoring the collider itself.</para>
         /// </summary>
         /// <param name="direction">Vector representing the direction to cast the shape.</param>
+        /// <param name="contactFilter">Filter results defined by the contact filter.</param>
         /// <param name="results">Array to receive results.</param>
         /// <param name="distance">Maximum distance over which to cast the shape.</param>
         /// <param name="ignoreSiblingColliders">Should colliders attached to the same Rigidbody2D (known as sibling colliders) be ignored?</param>
-        /// <param name="contactFilter">Filter results defined by the contact filter.</param>
         /// <returns>
         /// <para>The number of results returned.</para>
         /// </returns>
@@ -98,13 +86,11 @@
             Physics2D.Distance(this, collider);
 
         /// <summary>
-        /// <para>Retrieves contacts for the collider based on the parameters passed.</para>
+        /// <para>Retrieves all colliders in contact with this collider.</para>
         /// </summary>
-        /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
         /// <param name="colliders">An array of Collider2D used to receive the results.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
         /// <returns>
-        /// <para>Returns the number of contacts placed in the contacts array.</para>
+        /// <para>Returns the number of contacts placed in the colliders array.</para>
         /// </returns>
         public int GetContacts(Collider2D[] colliders)
         {
@@ -113,11 +99,9 @@
         }
 
         /// <summary>
-        /// <para>Retrieves contacts for the collider based on the parameters passed.</para>
+        /// <para>Retrieves all contact points for this collider.</para>
         /// </summary>
         /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
-        /// <param name="colliders">An array of Collider2D used to receive the results.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
         /// <returns>
         /// <para>Returns the number of contacts placed in the contacts array.</para>
         /// </returns>
@@ -128,23 +112,21 @@
         }
 
         /// <summary>
-        /// <para>Retrieves contacts for the collider based on the parameters passed.</para>
+        /// <para>Retrieves all colliders in contact with this collider, with the results filtered by the ContactFilter2D.</para>
         /// </summary>
-        /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
-        /// <param name="colliders">An array of Collider2D used to receive the results.</param>
         /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
+        /// <param name="colliders">An array of Collider2D used to receive the results.</param>
         /// <returns>
-        /// <para>Returns the number of contacts placed in the contacts array.</para>
+        /// <para>Returns the number of collidersplaced in the colliders array.</para>
         /// </returns>
         public int GetContacts(ContactFilter2D contactFilter, Collider2D[] colliders) => 
             Physics2D.GetContacts(this, contactFilter, colliders);
 
         /// <summary>
-        /// <para>Retrieves contacts for the collider based on the parameters passed.</para>
+        /// <para>Retrieves all contact points for this collider, with the results filtered by the ContactFilter2D.</para>
         /// </summary>
-        /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
-        /// <param name="colliders">An array of Collider2D used to receive the results.</param>
         /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
+        /// <param name="contacts">An array of ContactPoint2D used to receive the results.</param>
         /// <returns>
         /// <para>Returns the number of contacts placed in the contacts array.</para>
         /// </returns>
@@ -177,33 +159,31 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_offset(ref Vector2 value);
         /// <summary>
-        /// <para>Checks whether the collider is touching other colliders.</para>
+        /// <para>Check whether this collider is touching the collider or not.</para>
         /// </summary>
         /// <param name="collider">The collider to check if it is touching this collider.</param>
-        /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
         /// <returns>
-        /// <para>Whether the collider is touching this collider or not.</para>
+        /// <para>Whether this collider is touching the collider or not.</para>
         /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool IsTouching(Collider2D collider);
         /// <summary>
-        /// <para>Checks whether the collider is touching other colliders.</para>
+        /// <para>Check whether this collider is touching other colliders or not with the results filtered by the ContactFilter2D.</para>
         /// </summary>
-        /// <param name="collider">The collider to check if it is touching this collider.</param>
         /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
         /// <returns>
-        /// <para>Whether the collider is touching this collider or not.</para>
+        /// <para>Whether this collider is touching the collider or not.</para>
         /// </returns>
         public bool IsTouching(ContactFilter2D contactFilter) => 
             INTERNAL_CALL_IsTouching(this, ref contactFilter);
 
         /// <summary>
-        /// <para>Checks whether the collider is touching other colliders.</para>
+        /// <para>Check whether this collider is touching the collider or not with the results filtered by the ContactFilter2D.</para>
         /// </summary>
         /// <param name="collider">The collider to check if it is touching this collider.</param>
         /// <param name="contactFilter">The contact filter used to filter the results differently, such as by layer mask, Z depth, or normal angle.</param>
         /// <returns>
-        /// <para>Whether the collider is touching this collider or not.</para>
+        /// <para>Whether this collider is touching the collider or not.</para>
         /// </returns>
         public bool IsTouching(Collider2D collider, ContactFilter2D contactFilter) => 
             this.Internal_IsTouching(collider, contactFilter);

@@ -65,7 +65,8 @@
 
         private static void CreateScriptAsset(string templatePath, string destName)
         {
-            if (Path.GetFileName(templatePath).ToLower().Contains("editortest"))
+            string fileName = Path.GetFileName(templatePath);
+            if (fileName.ToLower().Contains("editortest") || fileName.ToLower().Contains("editmode"))
             {
                 string uniquePathNameAtSelectedPath = AssetDatabase.GetUniquePathNameAtSelectedPath(destName);
                 if (!uniquePathNameAtSelectedPath.ToLower().Contains("/editor/"))

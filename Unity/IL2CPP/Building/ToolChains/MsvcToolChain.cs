@@ -31,7 +31,7 @@
         private static Func<string, string, string> <>f__am$cache3;
         protected Func<string, IEnumerable<string>> AdditionalCompilerOptionsForSourceFile;
 
-        protected MsvcToolChain(Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration) : base(architecture, buildConfiguration)
+        protected MsvcToolChain(Unity.IL2CPP.Common.Architecture architecture, BuildConfiguration buildConfiguration) : base(architecture, buildConfiguration)
         {
             string[] fileExtensions = new string[] { ".idl" };
             this._idlHashProvider = new FileHashProvider(fileExtensions);

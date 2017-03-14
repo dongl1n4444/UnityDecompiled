@@ -61,18 +61,19 @@
 
         public Scene PrepareScene(string sceneName) => 
             base.CreateBootstrapScene(sceneName, delegate (PlaymodeTestsController runner) {
-                runner.AddEventHandlerMonoBehaviour<ResultsRenderer>();
+                runner.AddEventHandlerMonoBehaviour<PlayModeRunnerCallback>();
                 runner.settings = this.m_Settings;
                 runner.AddEventHandlerMonoBehaviour<RemoteTestResultSender>().isBatchModeRun = runner.settings.isBatchModeRun;
             });
 
         public override void Run()
         {
-            RemotePlayerTestController instance = ScriptableSingleton<RemotePlayerTestController>.instance;
+            RemotePlayerTestController instance = null;
+            instance = ScriptableSingleton<RemotePlayerTestController>.instance;
             instance.hideFlags = HideFlags.HideAndDontSave;
-            instance.Init(this, this.m_Settings.isBatchModeRun);
-            this.m_PlatformSpecificSetup = new PlatformSpecificSetup();
-            this.m_PlatformSpecificSetup.Setup(this.m_TargetPlatform);
+            instance.Init(this.m_Settings, this.m_PlatformSpecificSetup);
+            this.m_PlatformSpecificSetup = new PlatformSpecificSetup(this.m_TargetPlatform);
+            this.m_PlatformSpecificSetup.Setup();
             using (PlayerLauncherContextSettings settings = new PlayerLauncherContextSettings())
             {
                 string sceneName = base.CreateSceneName();
@@ -83,7 +84,10 @@
                 AssetDatabase.DeleteAsset(sceneName);
                 if (flag)
                 {
-                    instance.StartTimeoutHandler();
+                    if (instance != null)
+                    {
+                        instance.StartTimeoutHandler();
+                    }
                     if (string.IsNullOrEmpty(this.m_Settings.resultFilePath))
                     {
                         this.m_Settings.resultFilePath = Path.Combine(buildOptions.PlayerDirectory, "TestResults.xml");
@@ -92,29 +96,9 @@
                 else if (this.m_Settings.isBatchModeRun)
                 {
                     settings.Dispose();
-                    this.m_PlatformSpecificSetup.CleanUp(this.m_TargetPlatform);
+                    this.m_PlatformSpecificSetup.CleanUp();
                     EditorApplication.Exit(3);
                 }
-            }
-        }
-
-        public void WritePlayerResult(byte[] xmlResult, bool allTestsSuccess)
-        {
-            this.m_PlatformSpecificSetup.CleanUp(this.m_TargetPlatform);
-            Debug.Log(this.m_Settings.resultFilePath);
-            using (FileStream stream = File.Create(this.m_Settings.resultFilePath))
-            {
-                stream.Write(xmlResult, 0, xmlResult.Length);
-            }
-            UnityEngine.Object.DestroyImmediate(ScriptableSingleton<RemotePlayerTestController>.instance);
-            if (this.m_Settings.isBatchModeRun)
-            {
-                int returnValue = 0;
-                if (!allTestsSuccess)
-                {
-                    returnValue = 2;
-                }
-                EditorApplication.Exit(returnValue);
             }
         }
     }

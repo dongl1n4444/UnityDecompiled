@@ -44,7 +44,7 @@
         }
         /// <summary>
         /// <para>
-        /// Set to true if the node is presently being tracked by the underlying VRAR system, 
+        /// Set to true if the node is presently being tracked by the underlying VRAR system,
         /// and false if the node is not presently being tracked by the underlying VRAR system.</para>
         /// </summary>
         public bool tracked

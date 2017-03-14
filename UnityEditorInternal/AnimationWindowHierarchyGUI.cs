@@ -151,7 +151,7 @@
                     GUI.color = k_KeyColorForNonCurves;
                 }
                 bool flag = false;
-                if (UnityEditor.AnimationMode.InAnimationMode())
+                if (this.state.previewing)
                 {
                     foreach (AnimationWindowCurve curve in node.curves)
                     {
@@ -230,7 +230,7 @@
                 {
                     TreeViewGUI.Styles.selectionStyle.Draw(rect, false, false, true, focused);
                 }
-                if (UnityEditor.AnimationMode.InAnimationMode())
+                if (node is AnimationWindowHierarchyPropertyNode)
                 {
                     rect.width -= 77f;
                 }
@@ -461,7 +461,7 @@
             }
             if (flag)
             {
-                this.state.StartRecording();
+                this.state.ResampleAnimation();
             }
         }
 
@@ -509,7 +509,7 @@
                 menu.AddItem(new GUIContent("Interpolation/Euler Angles (Quaternion)"), rotationInterpolationMode == RotationCurveInterpolation.Mode.Baked, !enabled ? function : new GenericMenu.MenuFunction2(this.ChangeRotationInterpolation), RotationCurveInterpolation.Mode.Baked);
                 menu.AddItem(new GUIContent("Interpolation/Quaternion"), rotationInterpolationMode == RotationCurveInterpolation.Mode.NonBaked, !enabled ? function : new GenericMenu.MenuFunction2(this.ChangeRotationInterpolation), RotationCurveInterpolation.Mode.NonBaked);
             }
-            if (UnityEditor.AnimationMode.InAnimationMode())
+            if (this.state.previewing)
             {
                 menu.AddSeparator("");
                 bool flag3 = true;

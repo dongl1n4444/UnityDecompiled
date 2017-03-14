@@ -8,14 +8,14 @@
 
     internal class AddCurvesPopup : EditorWindow
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static AnimationWindowSelection <selection>k__BackingField;
         private const float k_WindowPadding = 3f;
         private static OnNewCurveAdded NewCurveAddedCallback;
         private static AddCurvesPopup s_AddCurvesPopup;
         private static AddCurvesPopupHierarchy s_Hierarchy;
         private static long s_LastClosedTime;
-        internal static IAnimationRecordingState s_State;
+        internal static AnimationWindowState s_State;
         private static Vector2 windowSize = new Vector2(240f, 250f);
 
         internal static void AddNewCurve(AddCurvesPopupPropertyNode node)
@@ -55,7 +55,7 @@
             }
         }
 
-        internal static bool ShowAtPosition(Rect buttonRect, IAnimationRecordingState state, OnNewCurveAdded newCurveCallback)
+        internal static bool ShowAtPosition(Rect buttonRect, AnimationWindowState state, OnNewCurveAdded newCurveCallback)
         {
             long num = DateTime.Now.Ticks / 0x2710L;
             if (num >= (s_LastClosedTime + 50L))

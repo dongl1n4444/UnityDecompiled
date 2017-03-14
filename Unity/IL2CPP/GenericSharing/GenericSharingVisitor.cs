@@ -19,6 +19,8 @@
         public static IGenericSharingAnalysisService GenericSharingAnalysis;
         [Inject]
         public static INamingService Naming;
+        [Inject]
+        public static IRuntimeImplementedMethodWriter RuntimeImplementedMethodWriter;
 
         public void AddArrayUsage(TypeReference genericType)
         {
@@ -175,7 +177,7 @@
             switch (code)
             {
                 case Code.Callvirt:
-                    goto Label_0292;
+                    goto Label_02A4;
 
                 case Code.Ldobj:
                 case Code.Ldfld:
@@ -212,6 +214,10 @@
                     FieldReference reference3 = (FieldReference) instruction.Operand;
                     TypeReference declaringType = reference3.DeclaringType;
                     this.AddStaticUsage(declaringType);
+                    if (CodeGenOptions.MonoRuntime)
+                    {
+                        this.AddClassUsage(declaringType);
+                    }
                     return;
                 }
                 case Code.Newarr:
@@ -271,7 +277,7 @@
                             return;
                         }
                         case Code.Call:
-                            goto Label_0292;
+                            goto Label_02A4;
 
                         case Code.Sizeof:
                         {
@@ -291,14 +297,14 @@
             TypeReference operand = (TypeReference) instruction.Operand;
             this.AddClassUsage(operand);
             return;
-        Label_0292:
+        Label_02A4:
             reference12 = (MethodReference) instruction.Operand;
             if (!Naming.IsSpecialArrayMethod(reference12) && (!reference12.DeclaringType.IsSystemArray() || ((reference12.Name != "GetGenericValueImpl") && (reference12.Name != "SetGenericValueImpl"))))
             {
                 if (((instruction.OpCode.Code == Code.Callvirt) && reference12.DeclaringType.IsInterface()) && !reference12.IsGenericInstance)
                 {
                     this.AddClassUsage(reference12.DeclaringType);
-                    if ((instruction.Previous != null) && (instruction.Previous.OpCode.Code == Code.Constrained))
+                    if (CodeGenOptions.MonoRuntime || ((instruction.Previous != null) && (instruction.Previous.OpCode.Code == Code.Constrained)))
                     {
                         this.AddMethodUsage(reference12);
                     }
@@ -319,7 +325,17 @@
             this._typeList = new List<RuntimeGenericData>();
             foreach (MethodDefinition definition in type.Methods)
             {
-                if (definition.HasBody)
+                if (!definition.HasBody)
+                {
+                    if (RuntimeImplementedMethodWriter.IsRuntimeImplementedMethod(definition))
+                    {
+                        foreach (RuntimeGenericTypeData data in RuntimeImplementedMethodWriter.GetGenericSharingDataFor(definition))
+                        {
+                            this.AddData(data);
+                        }
+                    }
+                }
+                else
                 {
                     this._methodList = new List<RuntimeGenericData>();
                     foreach (ExceptionHandler handler in definition.Body.ExceptionHandlers)

@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(MeshCollider))]
+    [CustomEditor(typeof(MeshCollider)), CanEditMultipleObjects]
     internal class MeshColliderEditor : Collider3DEditorBase
     {
         private SerializedProperty m_Convex;

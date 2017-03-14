@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(ParticleRenderer))]
+    [CustomEditor(typeof(ParticleRenderer)), CanEditMultipleObjects]
     internal class ParticleRendererEditor : RendererEditorBase
     {
         public override void OnEnable()

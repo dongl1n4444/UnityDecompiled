@@ -7,10 +7,11 @@
 
     public class TypeResolver
     {
+        private static Unity.IL2CPP.ILPreProcessor.TypeResolver _empty;
         private readonly IGenericInstance _methodDefinitionContext;
         private readonly IGenericInstance _typeDefinitionContext;
 
-        public TypeResolver()
+        private TypeResolver()
         {
         }
 
@@ -31,7 +32,7 @@
         }
 
         public static Unity.IL2CPP.ILPreProcessor.TypeResolver For(TypeReference typeReference) => 
-            (!typeReference.IsGenericInstance ? new Unity.IL2CPP.ILPreProcessor.TypeResolver() : new Unity.IL2CPP.ILPreProcessor.TypeResolver((GenericInstanceType) typeReference));
+            (!typeReference.IsGenericInstance ? Empty : new Unity.IL2CPP.ILPreProcessor.TypeResolver((GenericInstanceType) typeReference));
 
         public static Unity.IL2CPP.ILPreProcessor.TypeResolver For(TypeReference typeReference, MethodReference methodReference) => 
             new Unity.IL2CPP.ILPreProcessor.TypeResolver(typeReference as GenericInstanceType, methodReference as GenericInstanceMethod);
@@ -97,6 +98,7 @@
                     owner.Parameters.Add(new ParameterDefinition(definition2.Name, definition2.Attributes, definition2.ParameterType));
                 }
                 owner.HasThis = method.HasThis;
+                owner.MetadataToken = method.MetadataToken;
             }
             return owner;
         }
@@ -157,6 +159,7 @@
                     {
                         type6.GenericArguments.Add(this.Resolve(reference2));
                     }
+                    type6.MetadataToken = type5.MetadataToken;
                     return type6;
                 }
                 RequiredModifierType type7 = typeReference as RequiredModifierType;
@@ -209,6 +212,18 @@
 
         public TypeReference ResolveVariableType(MethodReference method, VariableReference variable) => 
             this.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveVariableTypeIfNeeded(method, variable));
+
+        public static Unity.IL2CPP.ILPreProcessor.TypeResolver Empty
+        {
+            get
+            {
+                if (_empty == null)
+                {
+                    _empty = new Unity.IL2CPP.ILPreProcessor.TypeResolver();
+                }
+                return _empty;
+            }
+        }
     }
 }
 

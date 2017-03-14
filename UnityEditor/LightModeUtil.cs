@@ -13,8 +13,8 @@
         private SerializedProperty m_environmentMode = null;
         private SerializedProperty m_mixedBakeMode = null;
         private int[] m_modeVals = new int[3];
-        private SerializedProperty m_shadowMaskMode = null;
         private SerializedObject m_so = null;
+        private SerializedProperty m_useShadowmask = null;
         private SerializedProperty m_workflowMode = null;
         public static readonly GUIContent s_enableBaked = EditorGUIUtility.TextContent("Baked Global Illumination|Controls whether Mixed and Baked lights will use baked Global Illumination. If enabled, Mixed lights are baked using the specified Lighting Mode and Baked lights will be completely baked and not adjustable at runtime.");
         private static readonly GUIContent[] s_modes = new GUIContent[] { new GUIContent(s_typenames[0]), new GUIContent(s_typenames[1]), new GUIContent(s_typenames[2]) };
@@ -49,7 +49,7 @@
             this.m_so = new SerializedObject(lightmapSettings);
             this.m_enableRealtimeGI = this.m_so.FindProperty("m_GISettings.m_EnableRealtimeLightmaps");
             this.m_mixedBakeMode = this.m_so.FindProperty("m_LightmapEditorSettings.m_MixedBakeMode");
-            this.m_shadowMaskMode = this.m_so.FindProperty("m_ShadowMaskMode");
+            this.m_useShadowmask = this.m_so.FindProperty("m_UseShadowmask");
             this.m_enabledBakedGI = this.m_so.FindProperty("m_GISettings.m_EnableBakedLightmaps");
             this.m_workflowMode = this.m_so.FindProperty("m_GIWorkflowMode");
             this.m_environmentMode = this.m_so.FindProperty("m_GISettings.m_EnvironmentLightingMode");
@@ -121,12 +121,12 @@
             mixedMode = this.m_modeVals[1];
         }
 
-        public void GetProps(out SerializedProperty o_enableRealtimeGI, out SerializedProperty o_enableBakedGI, out SerializedProperty o_mixedBakeMode, out SerializedProperty o_shadowMaskMode)
+        public void GetProps(out SerializedProperty o_enableRealtimeGI, out SerializedProperty o_enableBakedGI, out SerializedProperty o_mixedBakeMode, out SerializedProperty o_useShadowMask)
         {
             o_enableRealtimeGI = this.m_enableRealtimeGI;
             o_enableBakedGI = this.m_enabledBakedGI;
             o_mixedBakeMode = this.m_mixedBakeMode;
-            o_shadowMaskMode = this.m_shadowMaskMode;
+            o_useShadowMask = this.m_useShadowmask;
         }
 
         public bool IsAnyGIEnabled() => 
@@ -136,7 +136,7 @@
             ((this.m_enableRealtimeGI != null) && this.m_enableRealtimeGI.boolValue);
 
         public bool IsSubtractiveModeEnabled() => 
-            (this.m_modeVals[1] == 3);
+            (this.m_modeVals[1] == 1);
 
         public bool IsWorkflowAuto() => 
             (this.m_workflowMode.intValue == 0);
@@ -148,30 +148,9 @@
                 return false;
             }
             int realtimeMode = !this.m_enableRealtimeGI.boolValue ? 1 : 0;
-            int mixedMode = (int) this.MapMixedSettingsToRowIndex((LightmapMixedBakeMode) this.m_mixedBakeMode.intValue, (ShadowMaskMode) this.m_shadowMaskMode.intValue);
-            this.Update(realtimeMode, mixedMode);
+            int intValue = this.m_mixedBakeMode.intValue;
+            this.Update(realtimeMode, intValue);
             return true;
-        }
-
-        public MixedLightModeRowIndex MapMixedSettingsToRowIndex(LightmapMixedBakeMode bakeMode, ShadowMaskMode maskMode)
-        {
-            if (bakeMode != LightmapMixedBakeMode.IndirectOnly)
-            {
-                if (bakeMode == LightmapMixedBakeMode.ShadowMaskAndIndirect)
-                {
-                    return ((maskMode != ShadowMaskMode.PastShadowDistance) ? MixedLightModeRowIndex.ShadowMaskAllTheWay : MixedLightModeRowIndex.ShadowMaskPastShadowDistance);
-                }
-                if (bakeMode == LightmapMixedBakeMode.LightmapsWithSubtractiveShadows)
-                {
-                    return MixedLightModeRowIndex.Subtractive;
-                }
-            }
-            else
-            {
-                return MixedLightModeRowIndex.IndirectOnly;
-            }
-            Debug.LogError("Unkown Mixed bake mode in LightModeUtil.MapSettings()");
-            return MixedLightModeRowIndex.IndirectOnly;
         }
 
         public void SetWorkflow(bool bAutoEnabled)
@@ -185,13 +164,8 @@
             if (this.CheckCachedObject())
             {
                 this.m_enableRealtimeGI.boolValue = this.m_modeVals[0] == 0;
-                LightmapMixedBakeMode[] modeArray = new LightmapMixedBakeMode[] { LightmapMixedBakeMode.IndirectOnly };
-                this.m_mixedBakeMode.intValue = (int) modeArray[this.m_modeVals[1]];
-                ShadowMaskMode[] modeArray1 = new ShadowMaskMode[4];
-                modeArray1[1] = ShadowMaskMode.PastShadowDistance;
-                modeArray1[2] = ShadowMaskMode.Full;
-                ShadowMaskMode[] modeArray2 = modeArray1;
-                this.m_shadowMaskMode.intValue = (int) modeArray2[this.m_modeVals[1]];
+                this.m_mixedBakeMode.intValue = this.m_modeVals[1];
+                this.m_useShadowmask.boolValue = this.m_modeVals[1] == 2;
             }
         }
 
@@ -206,23 +180,7 @@
         {
             IndirectOnly,
             LightmapsWithSubtractiveShadows,
-            DirectAndIndirect,
-            ShadowMaskAndIndirect
-        }
-
-        internal enum MixedLightModeRowIndex
-        {
-            IndirectOnly,
-            ShadowMaskPastShadowDistance,
-            ShadowMaskAllTheWay,
-            Subtractive
-        }
-
-        internal enum ShadowMaskMode
-        {
-            None,
-            Full,
-            PastShadowDistance
+            ShadowmaskAndIndirect
         }
     }
 }

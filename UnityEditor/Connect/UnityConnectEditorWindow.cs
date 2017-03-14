@@ -14,7 +14,7 @@
     {
         [CompilerGenerated]
         private static Func<UnityConnectEditorWindow, bool> <>f__am$cache0;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <ErrorUrl>k__BackingField;
         private bool m_ClearInitialOpenURL = true;
         private List<string> m_ServiceUrls = new List<string>();

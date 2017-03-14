@@ -11,7 +11,7 @@
     using UnityEditor.Build;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(AudioImporter))]
+    [CustomEditor(typeof(AudioImporter)), CanEditMultipleObjects]
     internal class AudioImporterInspector : AssetImporterInspector
     {
         [CompilerGenerated]

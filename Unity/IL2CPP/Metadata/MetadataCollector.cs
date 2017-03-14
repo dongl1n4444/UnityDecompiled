@@ -48,7 +48,7 @@
         private readonly Dictionary<ParameterDefinition, int> _parameters = new Dictionary<ParameterDefinition, int>();
         private readonly Dictionary<PropertyDefinition, int> _properties = new Dictionary<PropertyDefinition, int>();
         private readonly List<int> _referencedAssemblyTable = new List<int>();
-        private readonly List<KeyValuePair<int, uint>> _rgctxEntries = new List<KeyValuePair<int, uint>>();
+        private readonly List<RGCTXEntry> _rgctxEntries = new List<RGCTXEntry>();
         private readonly Dictionary<IGenericParameterProvider, int> _rgctxEntriesCount = new Dictionary<IGenericParameterProvider, int>();
         private readonly Dictionary<IGenericParameterProvider, int> _rgctxEntriesStart = new Dictionary<IGenericParameterProvider, int>();
         private readonly List<byte> _stringData = new List<byte>();
@@ -113,9 +113,9 @@
         [CompilerGenerated]
         private static Func<KeyValuePair<EventDefinition, int>, int> <>f__am$cacheF;
         [CompilerGenerated]
-        private static Func<RuntimeGenericData, KeyValuePair<int, uint>> <>f__mg$cache0;
+        private static Func<RuntimeGenericData, RGCTXEntry> <>f__mg$cache0;
         [CompilerGenerated]
-        private static Func<RuntimeGenericData, KeyValuePair<int, uint>> <>f__mg$cache1;
+        private static Func<RuntimeGenericData, RGCTXEntry> <>f__mg$cache1;
         [Inject]
         public static IAssemblyDependencies AssemblyDependencies;
         [Inject]
@@ -233,9 +233,9 @@
                         this._rgctxEntriesStart.Add(method, this._rgctxEntries.Count);
                         if (<>f__mg$cache1 == null)
                         {
-                            <>f__mg$cache1 = new Func<RuntimeGenericData, KeyValuePair<int, uint>>(MetadataCollector.CreateRGCTXEntry);
+                            <>f__mg$cache1 = new Func<RuntimeGenericData, RGCTXEntry>(MetadataCollector.CreateRGCTXEntry);
                         }
-                        this._rgctxEntries.AddRange(source.Select<RuntimeGenericData, KeyValuePair<int, uint>>(<>f__mg$cache1));
+                        this._rgctxEntries.AddRange(source.Select<RuntimeGenericData, RGCTXEntry>(<>f__mg$cache1));
                     }
                 }
                 if (!method.DeclaringType.HasGenericParameters && !method.HasGenericParameters)
@@ -335,9 +335,9 @@
                         this._rgctxEntriesStart.Add(type, this._rgctxEntries.Count);
                         if (<>f__mg$cache0 == null)
                         {
-                            <>f__mg$cache0 = new Func<RuntimeGenericData, KeyValuePair<int, uint>>(MetadataCollector.CreateRGCTXEntry);
+                            <>f__mg$cache0 = new Func<RuntimeGenericData, RGCTXEntry>(MetadataCollector.CreateRGCTXEntry);
                         }
-                        this._rgctxEntries.AddRange(source.Select<RuntimeGenericData, KeyValuePair<int, uint>>(<>f__mg$cache0));
+                        this._rgctxEntries.AddRange(source.Select<RuntimeGenericData, RGCTXEntry>(<>f__mg$cache0));
                     }
                 }
                 this.AddWindowsRuntimeTypeWithName(type);
@@ -416,7 +416,7 @@
             }
         }
 
-        private static KeyValuePair<int, uint> CreateRGCTXEntry(RuntimeGenericData data)
+        private static RGCTXEntry CreateRGCTXEntry(RuntimeGenericData data)
         {
             RuntimeGenericInflatedTypeData data2 = data as RuntimeGenericInflatedTypeData;
             RuntimeGenericMethodData data3 = data as RuntimeGenericMethodData;
@@ -424,21 +424,19 @@
             {
                 case RuntimeGenericContextInfo.Class:
                 case RuntimeGenericContextInfo.Static:
-                    return new KeyValuePair<int, uint>(2, (uint) Il2CppTypeCollector.GetOrCreateIndex(data2.Data, 0));
+                    return RGCTXClassEntryFor(data2.Data);
 
                 case RuntimeGenericContextInfo.Type:
-                    return new KeyValuePair<int, uint>(1, (uint) Il2CppTypeCollector.GetOrCreateIndex(data2.Data, 0));
+                    return RGCTXTypeEntryFor(data2.Data);
 
                 case RuntimeGenericContextInfo.Array:
-                {
-                    ArrayType type = new ArrayType(data2.Data, 1);
-                    return new KeyValuePair<int, uint>(2, (uint) Il2CppTypeCollector.GetOrCreateIndex(type, 0));
-                }
+                    return RGCTXArrayEntryFor(data2.Data);
+
                 case RuntimeGenericContextInfo.Method:
                     Il2CppGenericMethodCollectorWriter.Add(data3.Data);
-                    return new KeyValuePair<int, uint>(3, Il2CppGenericMethodCollectorReader.GetIndex(data3.Data));
+                    return RGCTXMethodEntryFor(data3.Data);
             }
-            throw new ArgumentOutOfRangeException();
+            throw new ArgumentOutOfRangeException("Invalid type of runtime generic data found - this should not happen.");
         }
 
         [DebuggerHidden]
@@ -676,8 +674,8 @@
         public ReadOnlyCollection<int> GetReferencedAssemblyIndiciesIntoAssemblyTable() => 
             this._referencedAssemblyTable.AsReadOnly();
 
-        public ReadOnlyCollection<KeyValuePair<int, uint>> GetRGCTXEntries() => 
-            this._rgctxEntries.ToArray().AsReadOnlyPortable<KeyValuePair<int, uint>>();
+        public ReadOnlyCollection<RGCTXEntry> GetRGCTXEntries() => 
+            this._rgctxEntries.ToArray().AsReadOnlyPortable<RGCTXEntry>();
 
         public int GetRGCTXEntriesCount(IGenericParameterProvider provider)
         {
@@ -746,6 +744,43 @@
 
         public bool MethodExists(MethodReference method) => 
             this._existingMethods.Contains(method);
+
+        private static RGCTXEntry RGCTXArrayEntryFor(TypeReference type)
+        {
+            if (CodeGenOptions.MonoRuntime)
+            {
+                return new RGCTXEntry(Il2CppRGCTXDataType.Array, MetadataTokenUtils.MetadataTokenFor(type), type.Module.Assembly.Name.Name, !type.IsGenericParameter ? -1 : (type as GenericParameter).Position, type.FullName);
+            }
+            ArrayType type2 = new ArrayType(type, 1);
+            return RGCTXClassEntryFor(type2);
+        }
+
+        private static RGCTXEntry RGCTXClassEntryFor(TypeReference type)
+        {
+            if (CodeGenOptions.MonoRuntime)
+            {
+                return new RGCTXEntry(Il2CppRGCTXDataType.Class, MetadataTokenUtils.MetadataTokenFor(type), type.Module.Assembly.Name.Name, !type.IsGenericParameter ? -1 : (type as GenericParameter).Position, type.FullName);
+            }
+            return new RGCTXEntry(Il2CppRGCTXDataType.Class, (uint) Il2CppTypeCollector.GetOrCreateIndex(type, 0), null);
+        }
+
+        private static RGCTXEntry RGCTXMethodEntryFor(MethodReference method)
+        {
+            if (CodeGenOptions.MonoRuntime)
+            {
+                return new RGCTXEntry(Il2CppRGCTXDataType.Method, MetadataTokenUtils.MetadataTokenFor(method), MetadataTokenUtils.AssemblyDefinitionFor(method).Name.Name, -1, method.FullName);
+            }
+            return new RGCTXEntry(Il2CppRGCTXDataType.Method, Il2CppGenericMethodCollectorReader.GetIndex(method), null);
+        }
+
+        private static RGCTXEntry RGCTXTypeEntryFor(TypeReference type)
+        {
+            if (CodeGenOptions.MonoRuntime)
+            {
+                return new RGCTXEntry(Il2CppRGCTXDataType.Type, MetadataTokenUtils.MetadataTokenFor(type), type.Module.Assembly.Name.Name, !type.IsGenericParameter ? -1 : (type as GenericParameter).Position, type.FullName);
+            }
+            return new RGCTXEntry(Il2CppRGCTXDataType.Type, (uint) Il2CppTypeCollector.GetOrCreateIndex(type, 0), null);
+        }
 
         [CompilerGenerated]
         private sealed class <DefaultValueFromFields>c__Iterator0 : IEnumerable, IEnumerable<FieldDefaultValue>, IEnumerator, IDisposable, IEnumerator<FieldDefaultValue>

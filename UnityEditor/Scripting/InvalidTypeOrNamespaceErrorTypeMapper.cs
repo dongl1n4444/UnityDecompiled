@@ -10,7 +10,7 @@
     {
         private readonly int _column;
         private readonly int _line;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <Found>k__BackingField;
 
         private InvalidTypeOrNamespaceErrorTypeMapper(int line, int column)

@@ -58,8 +58,12 @@
             return ConstructGenericMethod(context, declaringType, methodDefinition, (IEnumerable<TypeReference>) methodDefinition.GenericParameters);
         }
 
-        public static GenericInstanceType InflateType(GenericContext context, GenericInstanceType genericInstanceType) => 
-            ConstructGenericType(context, genericInstanceType.Resolve(), genericInstanceType.GenericArguments);
+        public static GenericInstanceType InflateType(GenericContext context, GenericInstanceType genericInstanceType)
+        {
+            GenericInstanceType type = ConstructGenericType(context, genericInstanceType.Resolve(), genericInstanceType.GenericArguments);
+            type.MetadataToken = genericInstanceType.MetadataToken;
+            return type;
+        }
 
         public static GenericInstanceType InflateType(GenericContext context, TypeDefinition typeDefinition) => 
             ConstructGenericType(context, typeDefinition, (IEnumerable<TypeReference>) typeDefinition.GenericParameters);

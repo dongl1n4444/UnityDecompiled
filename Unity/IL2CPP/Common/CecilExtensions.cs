@@ -8,6 +8,7 @@
     using System.Diagnostics;
     using System.Linq;
     using System.Runtime.CompilerServices;
+    using System.Text;
     using System.Threading;
 
     public static class CecilExtensions
@@ -37,6 +38,32 @@
                 typeDefinition = typeDefinition,
                 $PC = -2
             };
+
+        public static string GetFullName(this MethodReference method)
+        {
+            if (!method.HasGenericParameters)
+            {
+                return method.FullName;
+            }
+            StringBuilder builder = new StringBuilder();
+            builder.Append($"{method.ReturnType} {method.DeclaringType}::{method.Name}");
+            builder.Append('<');
+            for (int i = 0; i < (method.GenericParameters.Count - 1); i++)
+            {
+                builder.Append($"{method.GenericParameters[i]},");
+            }
+            builder.Append($"{method.GenericParameters[method.GenericParameters.Count - 1]}>(");
+            if (method.HasParameters)
+            {
+                for (int j = 0; j < (method.Parameters.Count - 1); j++)
+                {
+                    builder.Append($"{method.Parameters[j].ParameterType},");
+                }
+                builder.Append(method.Parameters[method.Parameters.Count - 1].ParameterType);
+            }
+            builder.Append(")");
+            return builder.ToString();
+        }
 
         [CompilerGenerated]
         private sealed class <AllDefinedTypes>c__Iterator0 : IEnumerable, IEnumerable<TypeDefinition>, IEnumerator, IDisposable, IEnumerator<TypeDefinition>

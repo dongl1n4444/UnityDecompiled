@@ -771,7 +771,7 @@
             }
         }
 
-        [StructLayout(LayoutKind.Sequential, Size=1), Obsolete("ParticleSystem.CollisionEvent has been deprecated. Use ParticleCollisionEvent instead (UnityUpgradable) -> ParticleCollisionEvent", true)]
+        [StructLayout(LayoutKind.Sequential, Size=1), Obsolete("ParticleSystem.CollisionEvent has been deprecated. Use ParticleCollisionEvent instead (UnityUpgradable)", true)]
         public struct CollisionEvent
         {
             public Vector3 intersection =>

@@ -84,22 +84,26 @@
                     }
                     if ((this.canvas.renderMode != RenderMode.ScreenSpaceOverlay) && (this.blockingObjects != BlockingObjects.None))
                     {
-                        RaycastHit hit;
                         float f = 100f;
                         if (this.eventCamera != null)
                         {
-                            f = this.eventCamera.farClipPlane - this.eventCamera.nearClipPlane;
+                            float b = r.direction.z;
+                            f = !Mathf.Approximately(0f, b) ? Mathf.Abs((float) ((this.eventCamera.farClipPlane - this.eventCamera.nearClipPlane) / b)) : float.PositiveInfinity;
                         }
-                        if ((((this.blockingObjects == BlockingObjects.ThreeD) || (this.blockingObjects == BlockingObjects.All)) && (ReflectionMethodsCache.Singleton.raycast3D != null)) && ReflectionMethodsCache.Singleton.raycast3D(r, out hit, f, (int) this.m_BlockingMask))
+                        if (((this.blockingObjects == BlockingObjects.ThreeD) || (this.blockingObjects == BlockingObjects.All)) && (ReflectionMethodsCache.Singleton.raycast3D != null))
                         {
-                            maxValue = hit.distance;
+                            RaycastHit[] hitArray = ReflectionMethodsCache.Singleton.raycast3DAll(r, f, (int) this.m_BlockingMask);
+                            if (hitArray.Length > 0)
+                            {
+                                maxValue = hitArray[0].distance;
+                            }
                         }
                         if (((this.blockingObjects == BlockingObjects.TwoD) || (this.blockingObjects == BlockingObjects.All)) && (ReflectionMethodsCache.Singleton.raycast2D != null))
                         {
-                            RaycastHit2D hitd = ReflectionMethodsCache.Singleton.raycast2D(r.origin, r.direction, f, (int) this.m_BlockingMask);
-                            if (hitd.collider != null)
+                            RaycastHit2D[] hitdArray = ReflectionMethodsCache.Singleton.getRayIntersectionAll(r, f, (int) this.m_BlockingMask);
+                            if (hitdArray.Length > 0)
                             {
-                                maxValue = hitd.fraction * f;
+                                maxValue = hitdArray[0].distance;
                             }
                         }
                     }
@@ -119,33 +123,33 @@
                             else
                             {
                                 Vector3 lhs = (Vector3) (this.eventCamera.transform.rotation * Vector3.forward);
-                                Vector3 vector5 = (Vector3) (gameObject.transform.rotation * Vector3.forward);
-                                flag = Vector3.Dot(lhs, vector5) > 0f;
+                                Vector3 vector6 = (Vector3) (gameObject.transform.rotation * Vector3.forward);
+                                flag = Vector3.Dot(lhs, vector6) > 0f;
                             }
                         }
                         if (flag)
                         {
-                            float num8 = 0f;
+                            float num9 = 0f;
                             if ((this.eventCamera == null) || (this.canvas.renderMode == RenderMode.ScreenSpaceOverlay))
                             {
-                                num8 = 0f;
+                                num9 = 0f;
                             }
                             else
                             {
                                 Transform transform = gameObject.transform;
                                 Vector3 forward = transform.forward;
-                                num8 = Vector3.Dot(forward, transform.position - r.origin) / Vector3.Dot(forward, r.direction);
-                                if (num8 < 0f)
+                                num9 = Vector3.Dot(forward, transform.position - r.origin) / Vector3.Dot(forward, r.direction);
+                                if (num9 < 0f)
                                 {
                                     continue;
                                 }
                             }
-                            if (num8 < maxValue)
+                            if (num9 < maxValue)
                             {
                                 RaycastResult item = new RaycastResult {
                                     gameObject = gameObject,
                                     module = this,
-                                    distance = num8,
+                                    distance = num9,
                                     screenPosition = position,
                                     index = resultAppendList.Count,
                                     depth = this.m_RaycastResults[i].depth,

@@ -98,20 +98,14 @@
 
         public static float FloatDraggable(Rect rect, SerializedProperty floatProp, float remap, float dragWidth, string formatString)
         {
-            EditorGUI.showMixedValue = floatProp.hasMultipleDifferentValues;
-            Color color = GUI.color;
-            if (floatProp.isAnimated)
-            {
-                GUI.color = UnityEditor.AnimationMode.animatedPropertyColor;
-            }
+            EditorGUI.BeginProperty(rect, GUIContent.none, floatProp);
             EditorGUI.BeginChangeCheck();
             float num = FloatDraggable(rect, floatProp.floatValue, remap, dragWidth, formatString);
             if (EditorGUI.EndChangeCheck())
             {
                 floatProp.floatValue = num;
             }
-            GUI.color = color;
-            EditorGUI.showMixedValue = false;
+            EditorGUI.EndProperty();
             return num;
         }
 
@@ -229,13 +223,8 @@
 
         public static int GUIInt(GUIContent guiContent, SerializedProperty intProp, params GUILayoutOption[] layoutOptions)
         {
-            EditorGUI.showMixedValue = intProp.hasMultipleDifferentValues;
-            Color color = GUI.color;
-            if (intProp.isAnimated)
-            {
-                GUI.color = UnityEditor.AnimationMode.animatedPropertyColor;
-            }
             Rect totalPosition = GUILayoutUtility.GetRect((float) 0f, (float) 13f, layoutOptions);
+            EditorGUI.BeginProperty(totalPosition, GUIContent.none, intProp);
             PrefixLabel(totalPosition, guiContent);
             EditorGUI.BeginChangeCheck();
             int num = IntDraggable(totalPosition, null, intProp.intValue, EditorGUIUtility.labelWidth);
@@ -243,8 +232,7 @@
             {
                 intProp.intValue = num;
             }
-            GUI.color = color;
-            EditorGUI.showMixedValue = false;
+            EditorGUI.EndProperty();
             return intProp.intValue;
         }
 
@@ -803,20 +791,14 @@
 
         public static int IntDraggable(Rect rect, GUIContent label, SerializedProperty intProp, float dragWidth)
         {
-            EditorGUI.showMixedValue = intProp.hasMultipleDifferentValues;
-            Color color = GUI.color;
-            if (intProp.isAnimated)
-            {
-                GUI.color = UnityEditor.AnimationMode.animatedPropertyColor;
-            }
+            EditorGUI.BeginProperty(rect, GUIContent.none, intProp);
             EditorGUI.BeginChangeCheck();
             int num = IntDraggable(rect, label, intProp.intValue, dragWidth);
             if (EditorGUI.EndChangeCheck())
             {
                 intProp.intValue = num;
             }
-            GUI.color = color;
-            EditorGUI.showMixedValue = false;
+            EditorGUI.EndProperty();
             return intProp.intValue;
         }
 
@@ -980,21 +962,15 @@
 
         private static bool Toggle(Rect rect, SerializedProperty boolProp)
         {
-            EditorGUI.showMixedValue = boolProp.hasMultipleDifferentValues;
             EditorGUIInternal.mixedToggleStyle = ParticleSystemStyles.Get().toggleMixed;
-            Color color = GUI.color;
-            if (boolProp.isAnimated)
-            {
-                GUI.color = UnityEditor.AnimationMode.animatedPropertyColor;
-            }
+            EditorGUI.BeginProperty(rect, GUIContent.none, boolProp);
             EditorGUI.BeginChangeCheck();
             bool flag = EditorGUI.Toggle(rect, boolProp.boolValue, ParticleSystemStyles.Get().toggle);
             if (EditorGUI.EndChangeCheck())
             {
                 boolProp.boolValue = flag;
             }
-            GUI.color = color;
-            EditorGUI.showMixedValue = false;
+            EditorGUI.EndProperty();
             EditorGUIInternal.mixedToggleStyle = EditorStyles.toggleMixed;
             return flag;
         }

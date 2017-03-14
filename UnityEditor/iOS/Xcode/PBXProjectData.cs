@@ -27,9 +27,9 @@
         private static Func<PBXVariantGroupData, bool> <>f__am$cache7;
         [CompilerGenerated]
         private static Func<XCConfigurationListData, bool> <>f__am$cache8;
+        public KnownSectionBase<XCConfigurationListData> buildConfigLists = null;
         public KnownSectionBase<XCBuildConfigurationData> buildConfigs = null;
         private KnownSectionBase<PBXBuildFileData> buildFiles = null;
-        public KnownSectionBase<XCConfigurationListData> configs = null;
         public KnownSectionBase<PBXContainerItemProxyData> containerItems = null;
         public KnownSectionBase<PBXCopyFilesBuildPhaseData> copyFiles = null;
         private KnownSectionBase<PBXFileReferenceData> fileRefs = null;
@@ -281,7 +281,7 @@
             this.targetDependencies = new KnownSectionBase<PBXTargetDependencyData>("PBXTargetDependency");
             this.variantGroups = new KnownSectionBase<PBXVariantGroupData>("PBXVariantGroup");
             this.buildConfigs = new KnownSectionBase<XCBuildConfigurationData>("XCBuildConfiguration");
-            this.configs = new KnownSectionBase<XCConfigurationListData>("XCConfigurationList");
+            this.buildConfigLists = new KnownSectionBase<XCConfigurationListData>("XCConfigurationList");
             this.project = new PBXProjectSection();
             this.m_UnknownSections = new Dictionary<string, KnownSectionBase<PBXObjectData>>();
             Dictionary<string, SectionBase> dictionary = new Dictionary<string, SectionBase> {
@@ -343,7 +343,7 @@
                 },
                 { 
                     "XCConfigurationList",
-                    this.configs
+                    this.buildConfigLists
                 },
                 { 
                     "PBXProject",
@@ -777,8 +777,8 @@
             {
                 <>f__am$cache8 = o => o.buildConfigs == null;
             }
-            flag |= RemoveObjectsFromSection<XCConfigurationListData>(this.configs, storey.allGuids, <>f__am$cache8);
-            foreach (XCConfigurationListData data9 in this.configs.GetObjects())
+            flag |= RemoveObjectsFromSection<XCConfigurationListData>(this.buildConfigLists, storey.allGuids, <>f__am$cache8);
+            foreach (XCConfigurationListData data9 in this.buildConfigLists.GetObjects())
             {
                 RemoveMissingGuidsFromGuidList(data9.buildConfigs, storey.allGuids);
             }

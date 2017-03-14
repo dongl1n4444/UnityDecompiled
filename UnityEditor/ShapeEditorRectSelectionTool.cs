@@ -23,7 +23,7 @@
         [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event Action ClearSelection;
 
-        [field: DebuggerBrowsable(0), CompilerGenerated]
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event Action<Rect, ShapeEditor.SelectionType> RectSelect;
 
         public ShapeEditorRectSelectionTool(IGUIUtility gu)

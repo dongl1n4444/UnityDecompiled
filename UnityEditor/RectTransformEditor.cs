@@ -1240,7 +1240,7 @@
                 {
                     <>f__am$cache1B = rectTransform => rectTransform.anchorMin.y;
                 }
-                this.Vector2Field(position, <>f__am$cache1A, (rectTransform, val) => SetAnchorSmart(rectTransform, val, 0, false, !this.m_RawEditMode, true), <>f__am$cache1B, (rectTransform, val) => SetAnchorSmart(rectTransform, val, 1, false, !this.m_RawEditMode, true), DrivenTransformProperties.AnchorMinX, DrivenTransformProperties.AnchorMinY, this.m_AnchorMin.FindPropertyRelative("x"), this.m_AnchorMin.FindPropertyRelative("y"), styles.anchorMinContent);
+                this.Vector2Field(position, <>f__am$cache1A, (rectTransform, val) => SetAnchorSmart(rectTransform, val, 0, false, !this.m_RawEditMode, true), <>f__am$cache1B, (rectTransform, val) => SetAnchorSmart(rectTransform, val, 1, false, !this.m_RawEditMode, true), DrivenTransformProperties.AnchorMinX, DrivenTransformProperties.AnchorMinY, this.m_AnchorMin, styles.anchorMinContent);
                 position.y += EditorGUIUtility.singleLineHeight;
                 if (<>f__am$cache1C == null)
                 {
@@ -1250,7 +1250,7 @@
                 {
                     <>f__am$cache1D = rectTransform => rectTransform.anchorMax.y;
                 }
-                this.Vector2Field(position, <>f__am$cache1C, (rectTransform, val) => SetAnchorSmart(rectTransform, val, 0, true, !this.m_RawEditMode, true), <>f__am$cache1D, (rectTransform, val) => SetAnchorSmart(rectTransform, val, 1, true, !this.m_RawEditMode, true), DrivenTransformProperties.AnchorMaxX, DrivenTransformProperties.AnchorMaxY, this.m_AnchorMax.FindPropertyRelative("x"), this.m_AnchorMax.FindPropertyRelative("y"), styles.anchorMaxContent);
+                this.Vector2Field(position, <>f__am$cache1C, (rectTransform, val) => SetAnchorSmart(rectTransform, val, 0, true, !this.m_RawEditMode, true), <>f__am$cache1D, (rectTransform, val) => SetAnchorSmart(rectTransform, val, 1, true, !this.m_RawEditMode, true), DrivenTransformProperties.AnchorMaxX, DrivenTransformProperties.AnchorMaxY, this.m_AnchorMax, styles.anchorMaxContent);
                 EditorGUI.indentLevel--;
             }
         }
@@ -1265,7 +1265,7 @@
             {
                 <>f__am$cache1F = rectTransform => rectTransform.pivot.y;
             }
-            this.Vector2Field(EditorGUILayout.GetControlRect(new GUILayoutOption[0]), <>f__am$cache1E, (rectTransform, val) => SetPivotSmart(rectTransform, val, 0, !this.m_RawEditMode, false), <>f__am$cache1F, (rectTransform, val) => SetPivotSmart(rectTransform, val, 1, !this.m_RawEditMode, false), DrivenTransformProperties.PivotX, DrivenTransformProperties.PivotY, this.m_Pivot.FindPropertyRelative("x"), this.m_Pivot.FindPropertyRelative("y"), styles.pivotContent);
+            this.Vector2Field(EditorGUILayout.GetControlRect(new GUILayoutOption[0]), <>f__am$cache1E, (rectTransform, val) => SetPivotSmart(rectTransform, val, 0, !this.m_RawEditMode, false), <>f__am$cache1F, (rectTransform, val) => SetPivotSmart(rectTransform, val, 1, !this.m_RawEditMode, false), DrivenTransformProperties.PivotX, DrivenTransformProperties.PivotY, this.m_Pivot, styles.pivotContent);
         }
 
         private void SmartPositionAndSizeFields(bool anyWithoutParent, bool anyDrivenX, bool anyDrivenY)
@@ -1483,8 +1483,11 @@
             }
         }
 
-        private void Vector2Field(Rect position, FloatGetter xGetter, FloatSetter xSetter, FloatGetter yGetter, FloatSetter ySetter, DrivenTransformProperties xDriven, DrivenTransformProperties yDriven, SerializedProperty xProperty, SerializedProperty yProperty, GUIContent label)
+        private void Vector2Field(Rect position, FloatGetter xGetter, FloatSetter xSetter, FloatGetter yGetter, FloatSetter ySetter, DrivenTransformProperties xDriven, DrivenTransformProperties yDriven, SerializedProperty vec2Property, GUIContent label)
         {
+            EditorGUI.BeginProperty(position, label, vec2Property);
+            SerializedProperty property = vec2Property.FindPropertyRelative("x");
+            SerializedProperty property2 = vec2Property.FindPropertyRelative("y");
             EditorGUI.PrefixLabel(position, -1, label);
             float labelWidth = EditorGUIUtility.labelWidth;
             int indentLevel = EditorGUI.indentLevel;
@@ -1492,24 +1495,27 @@
             Rect rect2 = this.GetColumnRect(position, 1);
             EditorGUIUtility.labelWidth = 13f;
             EditorGUI.indentLevel = 0;
-            EditorGUI.BeginProperty(columnRect, s_XYLabels[0], xProperty);
+            EditorGUI.BeginProperty(columnRect, s_XYLabels[0], property);
             this.FloatField(columnRect, xGetter, xSetter, xDriven, s_XYLabels[0]);
             EditorGUI.EndProperty();
-            EditorGUI.BeginProperty(columnRect, s_XYLabels[1], yProperty);
+            EditorGUI.BeginProperty(columnRect, s_XYLabels[1], property2);
             this.FloatField(rect2, yGetter, ySetter, yDriven, s_XYLabels[1]);
             EditorGUI.EndProperty();
             EditorGUIUtility.labelWidth = labelWidth;
             EditorGUI.indentLevel = indentLevel;
+            EditorGUI.EndProperty();
         }
 
         private static void Vector3FieldWithDisabledMash(Rect position, SerializedProperty property, GUIContent label, bool[] disabledMask)
         {
+            EditorGUI.BeginProperty(position, label, property);
             int id = GUIUtility.GetControlID(s_FoldoutHash, FocusType.Keyboard, position);
             position = EditorGUI.MultiFieldPrefixLabel(position, id, label, 3);
             position.height = EditorGUIUtility.singleLineHeight;
             SerializedProperty valuesIterator = property.Copy();
             valuesIterator.NextVisible(true);
             EditorGUI.MultiPropertyField(position, s_XYZLabels, valuesIterator, 13f, disabledMask);
+            EditorGUI.EndProperty();
         }
 
         private static Styles styles

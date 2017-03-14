@@ -274,10 +274,10 @@
             }
         }
 
-        public static CppToolChain CppToolChainFor(RuntimePlatform platform, Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors) => 
+        public static CppToolChain CppToolChainFor(RuntimePlatform platform, Unity.IL2CPP.Common.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors) => 
             PlatformSupport.For(platform).MakeCppToolChain(architecture, buildConfiguration, treatWarningsAsErrors);
 
-        public static CppProgramBuilder Create(RuntimePlatform platform, ProgramBuildDescription programBuildDescription, bool verbose, Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool forceRebuild, bool treatWarningsAsErrors)
+        public static CppProgramBuilder Create(RuntimePlatform platform, ProgramBuildDescription programBuildDescription, bool verbose, Unity.IL2CPP.Common.Architecture architecture, BuildConfiguration buildConfiguration, bool forceRebuild, bool treatWarningsAsErrors)
         {
             PlatformSupport support = PlatformSupport.For(platform);
             return new CppProgramBuilder(CppToolChainFor(platform, architecture, buildConfiguration, treatWarningsAsErrors), support.PostProcessProgramBuildDescription(programBuildDescription), verbose, forceRebuild);
@@ -287,7 +287,8 @@
         {
             NPath path;
             <FindStaticLibrary>c__AnonStorey5 storey = new <FindStaticLibrary>c__AnonStorey5 {
-                staticLib = staticLib
+                staticLib = staticLib,
+                $this = this
             };
             try
             {
@@ -385,6 +386,7 @@
                     LinkerResult result2 = this._cppToolChain.ShellResultToLinkerResult(result);
                     if (!result2.Success)
                     {
+                        path.DeleteIfExists(DeleteMode.Normal);
                         throw this.BuilderFailedExceptionForFailedLinkerExecution(result2, invocation2.ExecuteArgs);
                     }
                     path.Files(false).Copy(this._programBuildDescription.OutputFile.Parent);
@@ -460,11 +462,12 @@
         [CompilerGenerated]
         private sealed class <FindStaticLibrary>c__AnonStorey5
         {
+            internal CppProgramBuilder $this;
             internal NPath staticLib;
 
             internal NPath <>m__0(NPath p)
             {
-                NPath[] append = new NPath[] { this.staticLib };
+                NPath[] append = new NPath[] { this.$this._cppToolChain.GetLibraryFileName(this.staticLib) };
                 return p.Combine(append);
             }
         }

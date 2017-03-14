@@ -83,6 +83,8 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_lightmapScaleOffset(out Vector4 value);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern void INTERNAL_get_patchBoundsMultiplier(out Vector3 value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_realtimeLightmapScaleOffset(out Vector4 value);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Internal_GetSplatMaterialPropertyBlock(MaterialPropertyBlock dest);
@@ -90,6 +92,8 @@
         private extern void INTERNAL_set_legacySpecular(ref Color value);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_lightmapScaleOffset(ref Vector4 value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern void INTERNAL_set_patchBoundsMultiplier(ref Vector3 value);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_realtimeLightmapScaleOffset(ref Vector4 value);
         internal void RemoveTrees(Vector2 position, float radius, int prototypeIndex)
@@ -238,6 +242,23 @@
         /// <para>The type of the material used to render the terrain. Could be one of the built-in types or custom. See Terrain.MaterialType.</para>
         /// </summary>
         public MaterialType materialType { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
+        /// <para>Set the terrain bounding box scale.</para>
+        /// </summary>
+        public Vector3 patchBoundsMultiplier
+        {
+            get
+            {
+                Vector3 vector;
+                this.INTERNAL_get_patchBoundsMultiplier(out vector);
+                return vector;
+            }
+            set
+            {
+                this.INTERNAL_set_patchBoundsMultiplier(ref value);
+            }
+        }
 
         /// <summary>
         /// <para>The index of the realtime lightmap applied to this terrain.</para>

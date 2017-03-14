@@ -74,27 +74,29 @@
                 switch (num)
                 {
                     case 0:
-                        this.<assemblyList>__0 = this.$this.DefaultUserAssemblies.ToList<string>();
                         if (this.includeEditorAssemblies)
                         {
-                            this.<assemblyList>__0.AddRange(this.$this.DefaultUserEditorAssemblies);
+                            this.<assemblyList>__0 = this.$this.DefaultUserEditorAssemblies.ToList<string>();
+                            break;
                         }
-                        this.$locvar0 = this.<assemblyList>__0.GetEnumerator();
-                        num = 0xfffffffd;
+                        this.<assemblyList>__0 = this.$this.DefaultUserAssemblies.ToList<string>();
                         break;
 
                     case 1:
-                        break;
+                        goto Label_0075;
 
                     default:
-                        goto Label_0112;
+                        goto Label_0117;
                 }
+                this.$locvar0 = this.<assemblyList>__0.GetEnumerator();
+                num = 0xfffffffd;
+            Label_0075:
                 try
                 {
                     switch (num)
                     {
                         case 1:
-                            goto Label_00DF;
+                            goto Label_00E4;
                     }
                     while (this.$locvar0.MoveNext())
                     {
@@ -117,7 +119,7 @@
                             flag = true;
                             return true;
                         }
-                    Label_00DF:;
+                    Label_00E4:;
                     }
                 }
                 finally
@@ -128,7 +130,7 @@
                     this.$locvar0.Dispose();
                 }
                 this.$PC = -1;
-            Label_0112:
+            Label_0117:
                 return false;
             }
 

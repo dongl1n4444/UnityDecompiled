@@ -140,7 +140,7 @@
             return type;
         }
 
-        private static string LoadParameter(TypeReference type, string param)
+        private static string LoadParameter(TypeReference type, string param, int index)
         {
             if (type.IsByReference)
             {
@@ -165,7 +165,11 @@
             }
             if (type.IsEnum())
             {
-                return LoadParameter(type.GetUnderlyingEnumType(), param);
+                return LoadParameter(type.GetUnderlyingEnumType(), param, index);
+            }
+            if (CodeGenOptions.MonoRuntime && type.IsNullable())
+            {
+                return $"il2cpp_mono_cast_nullable_method_param<{Naming.ForVariable(type)}>(methodMetadata, {index}, {param})";
             }
             string[] textArray2 = new string[] { "*((", Naming.ForVariable(new PointerType(type)), ")", param, ")" };
             return string.Concat(textArray2);
@@ -204,8 +208,7 @@
                     {
                         writer.AddIncludeOrExternForTypeDefinition(key[i]);
                     }
-                    object[] args = new object[] { NameForInvoker(key) };
-                    writer.WriteLine("void* {0} (const MethodInfo* method, void* obj, void** args)", args);
+                    writer.WriteLine($"void* {NameForInvoker(key)} (Il2CppMethodPointer methodPointer, const {"RuntimeMethod"}* methodMetadata, void* obj, void** args)");
                     writer.BeginBlock();
                     WriteInvokerBody(writer, key, type);
                     writer.EndBlock(false);
@@ -231,19 +234,19 @@
                 writer.Write(" p");
                 writer.Write(i.ToString());
             }
-            writer.WriteLine(", const MethodInfo* method);");
+            writer.WriteLine($", const {"RuntimeMethod"}* method);");
             if (returnType.MetadataType != MetadataType.Void)
             {
                 writer.Write(Naming.ForVariable(returnType));
                 writer.Write(" ret = ");
             }
-            writer.Write("((Func)method->methodPointer)(obj");
+            writer.Write("((Func)methodPointer)(obj");
             for (int j = 1; j < data.Length; j++)
             {
-                object[] args = new object[] { LoadParameter(data[j], "args[" + (j - 1) + "]") };
+                object[] args = new object[] { LoadParameter(data[j], "args[" + (j - 1) + "]", j - 1) };
                 writer.Write(", {0}", args);
             }
-            writer.WriteLine(", method);");
+            writer.WriteLine(", methodMetadata);");
             writer.Write("return ");
             if (returnType.MetadataType == MetadataType.Void)
             {
@@ -251,7 +254,7 @@
             }
             else
             {
-                writer.Write(!returnType.IsValueType() ? "ret" : "Box(il2cpp_codegen_class_from_type (method->return_type), &ret)");
+                writer.Write(!returnType.IsValueType() ? "ret" : "Box(il2cpp_codegen_class_from_type (il2cpp_codegen_method_return_type(methodMetadata)), &ret)");
             }
             writer.WriteLine(";");
         }

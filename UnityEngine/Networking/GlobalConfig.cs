@@ -9,6 +9,7 @@
     [Serializable]
     public class GlobalConfig
     {
+        private const ushort g_MaxHosts = 0x80;
         private const uint g_MaxNetSimulatorTimeout = 0x2ee0;
         private const uint g_MaxTimerTimeout = 0x2ee0;
         [SerializeField]
@@ -35,7 +36,7 @@
         private byte m_ThreadPoolSize = 1;
 
         /// <summary>
-        /// <para>Defines how many hosts you can use. Default Value = 16.</para>
+        /// <para>Defines how many hosts you can use. Default Value = 16. Max value = 128.</para>
         /// </summary>
         public ushort MaxHosts
         {
@@ -43,6 +44,15 @@
                 this.m_MaxHosts;
             set
             {
+                if (value == 0)
+                {
+                    throw new ArgumentOutOfRangeException("MaxHosts", "Maximum hosts number should be > 0");
+                }
+                if (value > 0x80)
+                {
+                    ushort num = 0x80;
+                    throw new ArgumentOutOfRangeException("MaxHosts", "Maximum hosts number should be <= " + num.ToString());
+                }
                 this.m_MaxHosts = value;
             }
         }

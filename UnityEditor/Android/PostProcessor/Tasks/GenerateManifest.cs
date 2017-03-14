@@ -47,6 +47,7 @@
             }
             if (checker.isDaydreamEnabled)
             {
+                manifestXML.AddUsesFeature("android.software.vr.mode", !checker.isCardboardEnabled);
                 manifestXML.AddUsesFeature("android.hardware.vr.high_performance", checker.isDaydreamOnly);
                 manifestXML.AddIntentFilterCategory("com.google.intent.category.DAYDREAM");
                 manifestXML.AddResourceToLaunchActivity("com.google.android.vr.icon", "@drawable/vr_icon_front");

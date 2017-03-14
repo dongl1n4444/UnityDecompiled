@@ -2540,9 +2540,21 @@
                 this.m_TextComponent;
             set
             {
+                if (this.m_TextComponent != null)
+                {
+                    this.m_TextComponent.UnregisterDirtyVerticesCallback(new UnityAction(this.MarkGeometryAsDirty));
+                    this.m_TextComponent.UnregisterDirtyVerticesCallback(new UnityAction(this.UpdateLabel));
+                    this.m_TextComponent.UnregisterDirtyMaterialCallback(new UnityAction(this.UpdateCaretMaterial));
+                }
                 if (SetPropertyUtility.SetClass<Text>(ref this.m_TextComponent, value))
                 {
                     this.EnforceTextHOverflow();
+                    if (this.m_TextComponent != null)
+                    {
+                        this.m_TextComponent.RegisterDirtyVerticesCallback(new UnityAction(this.MarkGeometryAsDirty));
+                        this.m_TextComponent.RegisterDirtyVerticesCallback(new UnityAction(this.UpdateLabel));
+                        this.m_TextComponent.RegisterDirtyMaterialCallback(new UnityAction(this.UpdateCaretMaterial));
+                    }
                 }
             }
         }

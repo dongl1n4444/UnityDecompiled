@@ -280,7 +280,7 @@
         /// <summary>
         /// <para>Set the angular tolerance threshold (in degrees) for projection.
         /// 
-        /// If the joint deviates by more than this angle around its locked angular degrees of freedom, 
+        /// If the joint deviates by more than this angle around its locked angular degrees of freedom,
         /// the solver will move the bodies to close the angle.
         /// 
         /// Setting a very small tolerance may result in simulation jitter or other artifacts.
@@ -292,7 +292,7 @@
         /// <summary>
         /// <para>Set the linear tolerance threshold for projection.
         /// 
-        /// If the joint separates by more than this distance along its locked degrees of freedom, the solver 
+        /// If the joint separates by more than this distance along its locked degrees of freedom, the solver
         /// will move the bodies to close the distance.
         /// 
         /// Setting a very small tolerance may result in simulation jitter or other artifacts.

@@ -508,7 +508,7 @@
             string location = assembly.Location;
             if (package != null)
             {
-                InternalEditorUtility.SetupCustomDll(Path.GetFileName(location), location);
+                InternalEditorUtility.RegisterPrecompiledAssembly(Path.GetFileName(location), location);
             }
             else
             {
@@ -542,7 +542,7 @@
                         }
                         else
                         {
-                            InternalEditorUtility.SetupCustomDll(Path.GetFileName(location), location);
+                            InternalEditorUtility.RegisterPrecompiledAssembly(Path.GetFileName(location), location);
                         }
                     }
                     BuildPipeline.SetPlaybackEngineDirectory(target, BuildOptions.CompressTextures, info2.basePath);
@@ -571,7 +571,7 @@
                     }
                     foreach (string str2 in module.AssemblyReferencesForUserScripts)
                     {
-                        InternalEditorUtility.SetupCustomDll(Path.GetFileName(str2), str2);
+                        InternalEditorUtility.RegisterPrecompiledAssembly(Path.GetFileName(str2), str2);
                     }
                     EditorUtility.LoadPlatformSupportModuleNativeDllInternal(module.TargetName);
                     module.OnLoad();
@@ -627,7 +627,7 @@
                         }
                         else
                         {
-                            InternalEditorUtility.SetupCustomDll(Path.GetFileName(path), path);
+                            InternalEditorUtility.RegisterPrecompiledAssembly(Path.GetFileName(path), path);
                         }
                     }
                 }

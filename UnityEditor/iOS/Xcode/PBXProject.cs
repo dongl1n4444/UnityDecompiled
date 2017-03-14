@@ -35,7 +35,15 @@
             }
         }
 
-        internal string AddBuildConfigForTarget(string targetGuid, string name)
+        public void AddBuildConfig(string name)
+        {
+            foreach (string str in this.GetAllTargetGuids())
+            {
+                this.AddBuildConfigForTarget(str, name);
+            }
+        }
+
+        private string AddBuildConfigForTarget(string targetGuid, string name)
         {
             if (this.BuildConfigByName(targetGuid, name) != null)
             {
@@ -43,7 +51,7 @@
             }
             XCBuildConfigurationData data = XCBuildConfigurationData.Create(name);
             this.buildConfigs.AddEntry(data);
-            this.configs[this.GetConfigListForTarget(targetGuid)].buildConfigs.AddGUID(data.guid);
+            this.buildConfigLists[this.GetConfigListForTarget(targetGuid)].buildConfigs.AddGUID(data.guid);
             return data.guid;
         }
 
@@ -70,7 +78,7 @@
 
         public void AddBuildProperty(string targetGuid, string name, string value)
         {
-            foreach (string str in (IEnumerable<string>) this.configs[this.GetConfigListForTarget(targetGuid)].buildConfigs)
+            foreach (string str in (IEnumerable<string>) this.buildConfigLists[this.GetConfigListForTarget(targetGuid)].buildConfigs)
             {
                 this.AddBuildPropertyForConfig(str, name, value);
             }
@@ -128,62 +136,6 @@
             this.copyFiles.AddEntry(data);
             this.nativeTargets[targetGuid].phases.AddGUID(data.guid);
             return data.guid;
-        }
-
-        internal void AddExternalLibraryDependency(string targetGuid, string filename, string remoteFileGuid, string projectPath, string remoteInfo)
-        {
-            PBXNativeTargetData target = this.nativeTargets[targetGuid];
-            filename = PBXPath.FixSlashes(filename);
-            projectPath = PBXPath.FixSlashes(projectPath);
-            string containerRef = this.FindFileGuidByRealPath(projectPath);
-            if (containerRef == null)
-            {
-                throw new Exception("No such project");
-            }
-            string guid = null;
-            foreach (ProjectReference reference in this.project.project.projectReferences)
-            {
-                if (reference.projectRef == containerRef)
-                {
-                    guid = reference.group;
-                    break;
-                }
-            }
-            if (guid == null)
-            {
-                throw new Exception("Malformed project: no project in project references");
-            }
-            PBXGroupData data2 = this.GroupsGet(guid);
-            string extension = Path.GetExtension(filename);
-            if (!FileTypeUtils.IsBuildableFile(extension))
-            {
-                throw new Exception("Wrong file extension");
-            }
-            PBXContainerItemProxyData data3 = PBXContainerItemProxyData.Create(containerRef, "2", remoteFileGuid, remoteInfo);
-            this.containerItems.AddEntry(data3);
-            string typeName = FileTypeUtils.GetTypeName(extension);
-            PBXReferenceProxyData data4 = PBXReferenceProxyData.Create(filename, typeName, data3.guid, "BUILT_PRODUCTS_DIR");
-            this.references.AddEntry(data4);
-            PBXBuildFileData buildFile = PBXBuildFileData.CreateFromFile(data4.guid, false, null);
-            this.BuildFilesAdd(targetGuid, buildFile);
-            this.BuildSectionAny(target, extension, false).files.AddGUID(buildFile.guid);
-            data2.children.AddGUID(data4.guid);
-        }
-
-        internal void AddExternalProjectDependency(string path, string projectPath, PBXSourceTree sourceTree)
-        {
-            if (sourceTree == PBXSourceTree.Group)
-            {
-                throw new Exception("sourceTree must not be PBXSourceTree.Group");
-            }
-            path = PBXPath.FixSlashes(path);
-            projectPath = PBXPath.FixSlashes(projectPath);
-            PBXGroupData gr = PBXGroupData.CreateRelative("Products");
-            this.GroupsAddDuplicate(gr);
-            PBXFileReferenceData fileRef = PBXFileReferenceData.CreateFromFile(path, Path.GetFileName(projectPath), sourceTree);
-            this.FileRefsAdd(path, projectPath, null, fileRef);
-            this.CreateSourceGroup(PBXPath.GetDirectory(projectPath)).children.AddGUID(fileRef.guid);
-            this.project.project.AddReference(gr.guid, fileRef.guid);
         }
 
         public string AddFile(string path, string projectPath, PBXSourceTree sourceTree = 1)
@@ -286,12 +238,16 @@
         public string AddTarget(string name, string ext, string type)
         {
             XCConfigurationListData data = XCConfigurationListData.Create();
-            this.configs.AddEntry(data);
-            string path = name + ext;
+            this.buildConfigLists.AddEntry(data);
+            string path = name + "." + FileTypeUtils.TrimExtension(ext);
             string productRef = this.AddFile(path, "Products/" + path, PBXSourceTree.Build);
             PBXNativeTargetData data2 = PBXNativeTargetData.Create(name, productRef, type, data.guid);
             this.nativeTargets.AddEntry(data2);
             this.project.project.targets.Add(data2.guid);
+            foreach (string str3 in this.BuildConfigNames())
+            {
+                this.AddBuildConfigForTarget(data2.guid, str3);
+            }
             return data2.guid;
         }
 
@@ -324,7 +280,7 @@
 
         public string BuildConfigByName(string targetGuid, string name)
         {
-            foreach (string str in (IEnumerable<string>) this.configs[this.GetConfigListForTarget(targetGuid)].buildConfigs)
+            foreach (string str in (IEnumerable<string>) this.buildConfigLists[this.GetConfigListForTarget(targetGuid)].buildConfigs)
             {
                 XCBuildConfigurationData data = this.buildConfigs[str];
                 if ((data != null) && (data.name == name))
@@ -333,6 +289,16 @@
                 }
             }
             return null;
+        }
+
+        public IEnumerable<string> BuildConfigNames()
+        {
+            List<string> list = new List<string>();
+            foreach (string str in (IEnumerable<string>) this.buildConfigLists[this.project.project.buildConfigList].buildConfigs)
+            {
+                list.Add(this.buildConfigs[str].name);
+            }
+            return list;
         }
 
         internal void BuildFilesAdd(string targetGuid, PBXBuildFileData buildFile)
@@ -375,7 +341,17 @@
             return (this.FindFileGuidByRealPath(path, sourceTree) != null);
         }
 
-        private PBXGroupData CreateSourceGroup(string sourceGroup)
+        public bool ContainsFramework(string targetGuid, string framework)
+        {
+            string fileGuid = this.FindFileGuidByRealPath("System/Library/Frameworks/" + framework, PBXSourceTree.Sdk);
+            if (fileGuid == null)
+            {
+                return false;
+            }
+            return (this.BuildFilesGetForSourceFile(targetGuid, fileGuid) != null);
+        }
+
+        internal PBXGroupData CreateSourceGroup(string sourceGroup)
         {
             sourceGroup = PBXPath.FixSlashes(sourceGroup);
             if ((sourceGroup == null) || (sourceGroup == ""))
@@ -474,6 +450,15 @@
             return null;
         }
 
+        private IEnumerable<string> GetAllTargetGuids()
+        {
+            List<string> list = new List<string> {
+                this.project.project.guid
+            };
+            list.AddRange(this.nativeTargets.GetGuids());
+            return list;
+        }
+
         public List<string> GetCompileFlagsForFile(string targetGuid, string fileGuid)
         {
             PBXBuildFileData data = this.BuildFilesGetForSourceFile(targetGuid, fileGuid);
@@ -485,7 +470,8 @@
             {
                 return new List<string>();
             }
-            return new List<string> { data.compileFlags };
+            char[] separator = new char[] { ' ' };
+            return new List<string>(data.compileFlags.Split(separator, StringSplitOptions.RemoveEmptyEntries));
         }
 
         internal string GetConfigListForTarget(string targetGuid)
@@ -607,16 +593,13 @@
             this.m_Data.GroupsRemove(guid);
         }
 
-        public bool HasFramework(string framework) => 
-            this.ContainsFileByRealPath("System/Library/Frameworks/" + framework);
-
         public static bool IsBuildable(string ext) => 
             FileTypeUtils.IsBuildableFile(ext);
 
         public static bool IsKnownExtension(string ext) => 
             FileTypeUtils.IsKnownExtension(ext);
 
-        internal string ProjectGuid() => 
+        public string ProjectGuid() => 
             this.project.project.guid;
 
         public void ReadFromFile(string path)
@@ -671,6 +654,24 @@
             this.UpdateBuildProperty(targetGuid, "ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS", null, removeValues);
         }
 
+        public void RemoveBuildConfig(string name)
+        {
+            foreach (string str in this.GetAllTargetGuids())
+            {
+                this.RemoveBuildConfigForTarget(str, name);
+            }
+        }
+
+        private void RemoveBuildConfigForTarget(string targetGuid, string name)
+        {
+            string guid = this.BuildConfigByName(targetGuid, name);
+            if (guid != null)
+            {
+                this.buildConfigs.RemoveEntry(guid);
+                this.buildConfigLists[this.GetConfigListForTarget(targetGuid)].buildConfigs.RemoveGUID(guid);
+            }
+        }
+
         internal void RemoveBuildProperty(IEnumerable<string> targetGuids, string name)
         {
             foreach (string str in targetGuids)
@@ -681,7 +682,7 @@
 
         internal void RemoveBuildProperty(string targetGuid, string name)
         {
-            foreach (string str in (IEnumerable<string>) this.configs[this.GetConfigListForTarget(targetGuid)].buildConfigs)
+            foreach (string str in (IEnumerable<string>) this.buildConfigLists[this.GetConfigListForTarget(targetGuid)].buildConfigs)
             {
                 this.RemoveBuildPropertyForConfig(str, name);
             }
@@ -710,7 +711,7 @@
 
         internal void RemoveBuildPropertyValueList(string targetGuid, string name, IEnumerable<string> valueList)
         {
-            foreach (string str in (IEnumerable<string>) this.configs[this.GetConfigListForTarget(targetGuid)].buildConfigs)
+            foreach (string str in (IEnumerable<string>) this.buildConfigLists[this.GetConfigListForTarget(targetGuid)].buildConfigs)
             {
                 this.RemoveBuildPropertyValueListForConfig(str, name, valueList);
             }
@@ -789,10 +790,10 @@
 
         public void RemoveFrameworkFromProject(string targetGuid, string framework)
         {
-            string fileGuid = this.FindFileGuidByRealPath("System/Library/Frameworks/" + framework);
+            string fileGuid = this.FindFileGuidByRealPath("System/Library/Frameworks/" + framework, PBXSourceTree.Sdk);
             if (fileGuid != null)
             {
-                this.RemoveFile(fileGuid);
+                this.BuildFilesRemove(targetGuid, fileGuid);
             }
         }
 
@@ -848,7 +849,7 @@
 
         public void SetBuildProperty(string targetGuid, string name, string value)
         {
-            foreach (string str in (IEnumerable<string>) this.configs[this.GetConfigListForTarget(targetGuid)].buildConfigs)
+            foreach (string str in (IEnumerable<string>) this.buildConfigLists[this.GetConfigListForTarget(targetGuid)].buildConfigs)
             {
                 this.SetBuildPropertyForConfig(str, name, value);
             }
@@ -961,7 +962,7 @@
 
         public void UpdateBuildProperty(string targetGuid, string name, IEnumerable<string> addValues, IEnumerable<string> removeValues)
         {
-            foreach (string str in (IEnumerable<string>) this.configs[this.GetConfigListForTarget(targetGuid)].buildConfigs)
+            foreach (string str in (IEnumerable<string>) this.buildConfigLists[this.GetConfigListForTarget(targetGuid)].buildConfigs)
             {
                 this.UpdateBuildPropertyForConfig(str, name, addValues, removeValues);
             }
@@ -1010,11 +1011,11 @@
         public string WriteToString() => 
             this.m_Data.WriteToString();
 
+        internal KnownSectionBase<XCConfigurationListData> buildConfigLists =>
+            this.m_Data.buildConfigLists;
+
         internal KnownSectionBase<XCBuildConfigurationData> buildConfigs =>
             this.m_Data.buildConfigs;
-
-        internal KnownSectionBase<XCConfigurationListData> configs =>
-            this.m_Data.configs;
 
         internal KnownSectionBase<PBXContainerItemProxyData> containerItems =>
             this.m_Data.containerItems;

@@ -104,20 +104,20 @@
                         {
                             this.$PC = 1;
                         }
-                        goto Label_030C;
+                        goto Label_0337;
 
                     case 1:
                         break;
 
                     case 2:
-                        goto Label_02CD;
+                        goto Label_02F8;
 
                     case 3:
                     case 4:
                         goto Label_01AA;
 
                     default:
-                        goto Label_030A;
+                        goto Label_0335;
                 }
                 this.<testListUtil>__0 = new TestAssemblyProvider();
                 this.<runner>__0 = new UnityTestAssemblyRunner(UnityTestAssemblyBuilder.GetNUnitTestBuilder(TestPlatform.PlayMode));
@@ -129,7 +129,7 @@
                 this.<runner>__0.Load(this.<testListUtil>__0.GetUserAssemblies(false).ToArray<Assembly>(), UnityTestAssemblyBuilder.GetNUnitTestBuilderSettings(TestPlatform.PlayMode));
                 this.$this.runStartedEvent.Invoke(this.<runner>__0.LoadedTest);
                 this.<runner>__0.RunAsync(new TestListenerWrapper(this.$this.testStartedEvent, this.$this.testFinishedEvent, this.<enableUnityTest>__0), this.$this.settings.filter.BuildNUnitFilter());
-            Label_02CD:
+            Label_02F8:
                 while (this.<enableUnityTest>__0 && !this.<runner>__0.IsTestComplete)
                 {
                     if (ActionDelegator.instance.HasAction())
@@ -143,11 +143,11 @@
                         {
                             this.$PC = 2;
                         }
-                        goto Label_030C;
+                        goto Label_0337;
                     }
                     if (!TestDelegator.instance.HasTest())
                     {
-                        goto Label_02CC;
+                        goto Label_02F7;
                     }
                     this.<logCollector>__1 = new LogScope();
                     num = 0xfffffffd;
@@ -157,30 +157,40 @@
                         switch (num)
                         {
                             case 3:
-                            {
-                                if (!this.<logCollector>__1.AnyFailingLogs())
-                                {
-                                    break;
-                                }
-                                LogEvent log = this.<logCollector>__1.FailingLogs.First<LogEvent>();
-                                TestDelegator.instance.RegisterResultException(new UnhandledLogMessageException(log));
-                                goto Label_029D;
-                            }
+                                break;
+
                             case 4:
-                                goto Label_02CC;
+                                goto Label_02F7;
 
                             default:
-                                this.<testEnum>__2 = TestDelegator.instance.GetTestEnumerator();
-                                this.<cr>__2 = new CoroutineRunner(this.$this, this.<logCollector>__1);
-                                this.$current = this.<cr>__2.HandleEnumerableTest(this.<testEnum>__2, TestDelegator.instance.GetCurrentTestContext().TestCaseTimeout);
-                                if (!this.$disposing)
+                                this.<testEnum>__2 = null;
+                                try
                                 {
-                                    this.$PC = 3;
+                                    this.<testEnum>__2 = TestDelegator.instance.GetTestEnumerator();
                                 }
-                                flag = true;
-                                goto Label_030C;
+                                catch (Exception exception)
+                                {
+                                    UnityEngine.Debug.LogException(exception);
+                                }
+                                this.<cr>__2 = new CoroutineRunner(this.$this, this.<logCollector>__1);
+                                if (this.<testEnum>__2 != null)
+                                {
+                                    this.$current = this.<cr>__2.HandleEnumerableTest(this.<testEnum>__2, TestDelegator.instance.GetCurrentTestContext().TestCaseTimeout);
+                                    if (!this.$disposing)
+                                    {
+                                        this.$PC = 3;
+                                    }
+                                    flag = true;
+                                    goto Label_0337;
+                                }
+                                break;
                         }
-                        if (this.<logCollector>__1.ExpectedLogs.Any<LogMatch>())
+                        if (this.<logCollector>__1.AnyFailingLogs())
+                        {
+                            LogEvent log = this.<logCollector>__1.FailingLogs.First<LogEvent>();
+                            TestDelegator.instance.RegisterResultException(new UnhandledLogMessageException(log));
+                        }
+                        else if (this.<logCollector>__1.ExpectedLogs.Any<LogMatch>())
                         {
                             TestDelegator.instance.RegisterResultException(new UnexpectedLogMessageException(LogScope.Current.ExpectedLogs.Peek()));
                         }
@@ -188,14 +198,13 @@
                         {
                             TestDelegator.instance.RegisterResult(null);
                         }
-                    Label_029D:
                         this.$current = null;
                         if (!this.$disposing)
                         {
                             this.$PC = 4;
                         }
                         flag = true;
-                        goto Label_030C;
+                        goto Label_0337;
                     }
                     finally
                     {
@@ -204,13 +213,13 @@
                         }
                         this.<>__Finally0();
                     }
-                Label_02CC:;
+                Label_02F7:;
                 }
                 this.$this.runFinishedEvent.Invoke(this.<runner>__0.Result);
                 this.$PC = -1;
-            Label_030A:
+            Label_0335:
                 return false;
-            Label_030C:
+            Label_0337:
                 return true;
             }
 

@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(IHVImageFormatImporter))]
+    [CustomEditor(typeof(IHVImageFormatImporter)), CanEditMultipleObjects]
     internal class IHVImageFormatImporterInspector : AssetImporterInspector
     {
         private SerializedProperty m_FilterMode;

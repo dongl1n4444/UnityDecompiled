@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Reflection;
 
-    public class JsonElementDict : JsonElement
+    internal class JsonElementDict : JsonElement
     {
         private SortedDictionary<string, JsonElement> m_PrivateValue = new SortedDictionary<string, JsonElement>();
 

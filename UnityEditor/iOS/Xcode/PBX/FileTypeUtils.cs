@@ -14,131 +14,131 @@
         {
             Dictionary<string, FileTypeDesc> dictionary = new Dictionary<string, FileTypeDesc> {
                 { 
-                    ".a",
+                    "a",
                     new FileTypeDesc("archive.ar", PBXFileType.Framework)
                 },
                 { 
-                    ".app",
+                    "app",
                     new FileTypeDesc("wrapper.application", PBXFileType.NotBuildable, true)
                 },
                 { 
-                    ".appex",
+                    "appex",
                     new FileTypeDesc("wrapper.app-extension", PBXFileType.CopyFile)
                 },
                 { 
-                    ".bin",
+                    "bin",
                     new FileTypeDesc("archive.macbinary", PBXFileType.Resource)
                 },
                 { 
-                    ".s",
+                    "s",
                     new FileTypeDesc("sourcecode.asm", PBXFileType.Source)
                 },
                 { 
-                    ".c",
+                    "c",
                     new FileTypeDesc("sourcecode.c.c", PBXFileType.Source)
                 },
                 { 
-                    ".cc",
+                    "cc",
                     new FileTypeDesc("sourcecode.cpp.cpp", PBXFileType.Source)
                 },
                 { 
-                    ".cpp",
+                    "cpp",
                     new FileTypeDesc("sourcecode.cpp.cpp", PBXFileType.Source)
                 },
                 { 
-                    ".swift",
+                    "swift",
                     new FileTypeDesc("sourcecode.swift", PBXFileType.Source)
                 },
                 { 
-                    ".dll",
+                    "dll",
                     new FileTypeDesc("file", PBXFileType.NotBuildable)
                 },
                 { 
-                    ".framework",
+                    "framework",
                     new FileTypeDesc("wrapper.framework", PBXFileType.Framework)
                 },
                 { 
-                    ".h",
+                    "h",
                     new FileTypeDesc("sourcecode.c.h", PBXFileType.NotBuildable)
                 },
                 { 
-                    ".pch",
+                    "pch",
                     new FileTypeDesc("sourcecode.c.h", PBXFileType.NotBuildable)
                 },
                 { 
-                    ".icns",
+                    "icns",
                     new FileTypeDesc("image.icns", PBXFileType.Resource)
                 },
                 { 
-                    ".xcassets",
+                    "xcassets",
                     new FileTypeDesc("folder.assetcatalog", PBXFileType.Resource)
                 },
                 { 
-                    ".inc",
+                    "inc",
                     new FileTypeDesc("sourcecode.inc", PBXFileType.NotBuildable)
                 },
                 { 
-                    ".m",
+                    "m",
                     new FileTypeDesc("sourcecode.c.objc", PBXFileType.Source)
                 },
                 { 
-                    ".mm",
+                    "mm",
                     new FileTypeDesc("sourcecode.cpp.objcpp", PBXFileType.Source)
                 },
                 { 
-                    ".nib",
+                    "nib",
                     new FileTypeDesc("wrapper.nib", PBXFileType.Resource)
                 },
                 { 
-                    ".plist",
+                    "plist",
                     new FileTypeDesc("text.plist.xml", PBXFileType.Resource)
                 },
                 { 
-                    ".png",
+                    "png",
                     new FileTypeDesc("image.png", PBXFileType.Resource)
                 },
                 { 
-                    ".rtf",
+                    "rtf",
                     new FileTypeDesc("text.rtf", PBXFileType.Resource)
                 },
                 { 
-                    ".tiff",
+                    "tiff",
                     new FileTypeDesc("image.tiff", PBXFileType.Resource)
                 },
                 { 
-                    ".txt",
+                    "txt",
                     new FileTypeDesc("text", PBXFileType.Resource)
                 },
                 { 
-                    ".json",
+                    "json",
                     new FileTypeDesc("text.json", PBXFileType.Resource)
                 },
                 { 
-                    ".xcodeproj",
+                    "xcodeproj",
                     new FileTypeDesc("wrapper.pb-project", PBXFileType.NotBuildable)
                 },
                 { 
-                    ".xib",
+                    "xib",
                     new FileTypeDesc("file.xib", PBXFileType.Resource)
                 },
                 { 
-                    ".strings",
+                    "strings",
                     new FileTypeDesc("text.plist.strings", PBXFileType.Resource)
                 },
                 { 
-                    ".storyboard",
+                    "storyboard",
                     new FileTypeDesc("file.storyboard", PBXFileType.Resource)
                 },
                 { 
-                    ".bundle",
+                    "bundle",
                     new FileTypeDesc("wrapper.plug-in", PBXFileType.Resource)
                 },
                 { 
-                    ".dylib",
+                    "dylib",
                     new FileTypeDesc("compiled.mach-o.dylib", PBXFileType.Framework)
                 },
                 { 
-                    ".tbd",
+                    "tbd",
                     new FileTypeDesc("sourcecode.text-based-dylib-definition", PBXFileType.Framework)
                 }
             };
@@ -210,6 +210,7 @@
 
         public static PBXFileType GetFileType(string ext, bool isFolderRef)
         {
+            ext = TrimExtension(ext);
             if (isFolderRef)
             {
                 return PBXFileType.Resource;
@@ -223,6 +224,7 @@
 
         public static string GetTypeName(string ext)
         {
+            ext = TrimExtension(ext);
             if (types.ContainsKey(ext))
             {
                 return types[ext].name;
@@ -230,17 +232,29 @@
             return "file";
         }
 
-        public static bool IsBuildable(string ext, bool isFolderReference) => 
-            (isFolderReference || IsBuildableFile(ext));
+        public static bool IsBuildable(string ext, bool isFolderReference)
+        {
+            ext = TrimExtension(ext);
+            return (isFolderReference || IsBuildableFile(ext));
+        }
 
-        public static bool IsBuildableFile(string ext) => 
-            (!types.ContainsKey(ext) || (types[ext].type != PBXFileType.NotBuildable));
+        public static bool IsBuildableFile(string ext)
+        {
+            ext = TrimExtension(ext);
+            return (!types.ContainsKey(ext) || (types[ext].type != PBXFileType.NotBuildable));
+        }
 
-        internal static bool IsFileTypeExplicit(string ext) => 
-            (types.ContainsKey(ext) && types[ext].isExplicit);
+        internal static bool IsFileTypeExplicit(string ext)
+        {
+            ext = TrimExtension(ext);
+            return (types.ContainsKey(ext) && types[ext].isExplicit);
+        }
 
-        public static bool IsKnownExtension(string ext) => 
-            types.ContainsKey(ext);
+        public static bool IsKnownExtension(string ext)
+        {
+            ext = TrimExtension(ext);
+            return types.ContainsKey(ext);
+        }
 
         internal static PBXSourceTree ParseSourceTree(string tree)
         {
@@ -253,6 +267,12 @@
 
         internal static string SourceTreeDesc(PBXSourceTree tree) => 
             sourceTree[tree];
+
+        public static string TrimExtension(string ext)
+        {
+            char[] trimChars = new char[] { '.' };
+            return ext.TrimStart(trimChars);
+        }
 
         internal class FileTypeDesc
         {

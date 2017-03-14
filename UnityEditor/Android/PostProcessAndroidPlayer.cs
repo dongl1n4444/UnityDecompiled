@@ -81,6 +81,7 @@
                 runner.AddNextTask(new RunDex());
             }
             runner.AddNextTask(new RunIl2Cpp());
+            runner.AddNextTask(new ZipIl2cppSymbols());
             runner.AddNextTask(new StreamingAssets());
             runner.AddNextTask(new FastZip());
             runner.AddNextTask(new AAPTPackage());

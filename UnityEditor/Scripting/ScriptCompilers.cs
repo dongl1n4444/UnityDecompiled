@@ -10,9 +10,10 @@
 
     internal static class ScriptCompilers
     {
-        private static List<SupportedLanguage> _supportedLanguages = new List<SupportedLanguage>();
         [CompilerGenerated]
         private static Func<SupportedLanguage, SupportedLanguageStruct> <>f__am$cache0;
+        internal static readonly SupportedLanguage CSharpSupportedLanguage;
+        internal static readonly List<SupportedLanguage> SupportedLanguages = new List<SupportedLanguage>();
 
         static ScriptCompilers()
         {
@@ -23,9 +24,14 @@
             };
             foreach (System.Type type in list)
             {
-                _supportedLanguages.Add((SupportedLanguage) Activator.CreateInstance(type));
+                SupportedLanguages.Add((SupportedLanguage) Activator.CreateInstance(type));
             }
+            CSharpSupportedLanguage = Enumerable.Single<SupportedLanguage>(SupportedLanguages, new Func<SupportedLanguage, bool>(ScriptCompilers.<ScriptCompilers>m__0));
         }
+
+        [CompilerGenerated]
+        private static bool <ScriptCompilers>m__0(SupportedLanguage l) => 
+            (l.GetType() == typeof(CSharpLanguage));
 
         internal static ScriptCompilerBase CreateCompilerInstance(MonoIsland island, bool buildingForEditor, BuildTarget targetPlatform, bool runUpdater)
         {
@@ -33,7 +39,7 @@
             {
                 throw new ArgumentException("Cannot compile MonoIsland with no files");
             }
-            foreach (SupportedLanguage language in _supportedLanguages)
+            foreach (SupportedLanguage language in SupportedLanguages)
             {
                 if (language.GetExtensionICanCompile() == island.GetExtensionOfSourceFiles())
                 {
@@ -46,6 +52,18 @@
         public static string GetExtensionOfSourceFile(string file) => 
             Path.GetExtension(file).ToLower().Substring(1);
 
+        internal static SupportedLanguage GetLanguageFromName(string name)
+        {
+            foreach (SupportedLanguage language in SupportedLanguages)
+            {
+                if (string.Equals(name, language.GetLanguageName(), StringComparison.OrdinalIgnoreCase))
+                {
+                    return language;
+                }
+            }
+            throw new ApplicationException($"Script language '{name}' is not supported");
+        }
+
         internal static string GetNamespace(string file, string definedSymbols)
         {
             if (string.IsNullOrEmpty(file))
@@ -53,7 +71,7 @@
                 throw new ArgumentException("Invalid file");
             }
             string extensionOfSourceFile = GetExtensionOfSourceFile(file);
-            foreach (SupportedLanguage language in _supportedLanguages)
+            foreach (SupportedLanguage language in SupportedLanguages)
             {
                 if (language.GetExtensionICanCompile() == extensionOfSourceFile)
                 {
@@ -72,7 +90,7 @@
                     languageName = lang.GetLanguageName()
                 };
             }
-            return Enumerable.Select<SupportedLanguage, SupportedLanguageStruct>(_supportedLanguages, <>f__am$cache0).ToArray<SupportedLanguageStruct>();
+            return Enumerable.Select<SupportedLanguage, SupportedLanguageStruct>(SupportedLanguages, <>f__am$cache0).ToArray<SupportedLanguageStruct>();
         }
     }
 }

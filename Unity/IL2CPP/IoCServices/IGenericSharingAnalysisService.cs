@@ -9,6 +9,7 @@
     public interface IGenericSharingAnalysisService
     {
         void AddMethod(MethodDefinition methodDefinition, List<RuntimeGenericData> runtimeGenericDataList);
+        void AddSharedMethod(MethodReference sharedMethod, MethodReference actualMethod);
         void AddType(TypeDefinition typeDefinition, List<RuntimeGenericData> runtimeGenericDataList);
         bool AreFullySharableGenericParameters(IEnumerable<GenericParameter> genericParameters);
         bool CanShareMethod(MethodReference method);
@@ -18,6 +19,7 @@
         MethodReference GetFullySharedMethod(MethodDefinition method);
         GenericInstanceType GetFullySharedType(TypeDefinition typeDefinition);
         TypeReference GetFullySharedTypeForGenericParameter(GenericParameter genericParameter);
+        IEnumerable<MethodReference> GetMethodsSharedFrom(MethodReference sharedMethod);
         MethodReference GetSharedMethod(MethodReference method);
         GenericInstanceType GetSharedType(TypeReference type);
         TypeReference GetSharedTypeForGenericParameter(Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver, GenericParameter genericParameter);

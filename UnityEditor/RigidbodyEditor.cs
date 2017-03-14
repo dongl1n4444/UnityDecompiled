@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CustomEditor(typeof(Rigidbody)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(Rigidbody))]
     internal class RigidbodyEditor : Editor
     {
         private SerializedProperty m_Constraints;

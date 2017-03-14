@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class JsonElementString : JsonElement
+    internal class JsonElementString : JsonElement
     {
         public string value;
 

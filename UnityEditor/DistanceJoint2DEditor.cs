@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CustomEditor(typeof(DistanceJoint2D)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(DistanceJoint2D))]
     internal class DistanceJoint2DEditor : AnchoredJoint2DEditor
     {
         public void OnSceneGUI()

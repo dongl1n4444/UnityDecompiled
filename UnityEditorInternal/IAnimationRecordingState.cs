@@ -1,11 +1,15 @@
 ﻿namespace UnityEditorInternal
 {
     using System;
+    using UnityEditor;
     using UnityEngine;
 
     internal interface IAnimationRecordingState
     {
+        void AddPropertyModification(EditorCurveBinding binding, PropertyModification propertyModification, bool keepPrefabOverride);
         void SaveCurve(AnimationWindowCurve curve);
+
+        EditorCurveBinding[] acceptedBindings { get; }
 
         AnimationClip activeAnimationClip { get; }
 

@@ -14,7 +14,7 @@
 
     public class GccToolChain : CppToolChain
     {
-        public GccToolChain(Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration) : base(architecture, buildConfiguration)
+        public GccToolChain(Unity.IL2CPP.Common.Architecture architecture, BuildConfiguration buildConfiguration) : base(architecture, buildConfiguration)
         {
         }
 

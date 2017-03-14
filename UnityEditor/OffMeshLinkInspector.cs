@@ -3,7 +3,7 @@
     using System;
     using UnityEngine.AI;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(OffMeshLink))]
+    [CustomEditor(typeof(OffMeshLink)), CanEditMultipleObjects]
     internal class OffMeshLinkInspector : Editor
     {
         private SerializedProperty m_Activated;

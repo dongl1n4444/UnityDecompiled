@@ -14,7 +14,7 @@
     {
         [CompilerGenerated]
         private static Func<int, int> <>f__am$cache0;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <drawTetrahedra>k__BackingField;
         private static readonly Color kCloudColor = new Color(0.7843137f, 0.7843137f, 0.07843138f, 0.85f);
         private static readonly Color kSelectedCloudColor = new Color(0.3f, 0.6f, 1f, 1f);

@@ -328,7 +328,7 @@
                 if (local1 == null)
                 {
                 }
-                new DriverWriter(source.First<AssemblyDefinition>()).Write(this._outputDir);
+                new DriverWriter(source.First<AssemblyDefinition>()).Write(this._outputDir, new NPath(source.First<AssemblyDefinition>().MainModule.FileName).Parent);
             }
             using (TinyProfiler.Section("PatchEnumsNestedInGenericTypes", ""))
             {

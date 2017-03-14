@@ -15,7 +15,7 @@
     {
         private const double kWarningFadeoutTime = 1.0;
         private const double kWarningFadeoutWait = 4.0;
-        [SerializeField, HideInInspector]
+        [HideInInspector, SerializeField]
         private bool m_AutoRepaintOnSceneChange;
         [HideInInspector, SerializeField]
         private int m_DepthBufferBits = 0;
@@ -24,7 +24,7 @@
         private Rect m_GameViewClippedRect;
         private Rect m_GameViewRect;
         private Vector2 m_GameViewTargetSize;
-        [HideInInspector, SerializeField]
+        [SerializeField, HideInInspector]
         private Vector2 m_MaxSize = new Vector2(4000f, 4000f);
         [SerializeField, HideInInspector]
         private Vector2 m_MinSize = new Vector2(100f, 100f);
@@ -32,9 +32,9 @@
         private Vector2 m_NotificationSize;
         [NonSerialized]
         internal HostView m_Parent;
-        [SerializeField, HideInInspector]
-        internal Rect m_Pos = new Rect(0f, 0f, 320f, 240f);
         [HideInInspector, SerializeField]
+        internal Rect m_Pos = new Rect(0f, 0f, 320f, 240f);
+        [SerializeField, HideInInspector]
         internal GUIContent m_TitleContent;
         private bool m_WantsMouseEnterLeaveWindow;
         private bool m_WantsMouseMove;

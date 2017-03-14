@@ -19,10 +19,6 @@
         private static EntryGenerator <>f__mg$cache0;
         [CompilerGenerated]
         private static EntryGenerator <>f__mg$cache1;
-        [CompilerGenerated]
-        private static EntryGenerator <>f__mg$cache2;
-        [CompilerGenerated]
-        private static EntryGenerator <>f__mg$cache3;
         private SerializedProperty m_AspectRatio;
         private SerializedProperty m_AudioOutputMode;
         private ushort m_AudioTrackCountCached = 0;
@@ -35,26 +31,23 @@
         private SerializedProperty m_DirectAudioVolumes;
         private SerializedProperty m_EnabledAudioTracks;
         private SerializedProperty m_Looping;
-        private GUIContent[] m_MaterialNamePopupContent;
-        private int m_MaterialNamePopupInvalidSelections;
-        private int m_MaterialNamePopupSelection;
-        private int m_MaterialPopupsContentHash;
         private GUIContent[] m_MaterialPropertyPopupContent;
+        private int m_MaterialPropertyPopupContentHash;
         private int m_MaterialPropertyPopupInvalidSelections;
         private int m_MaterialPropertyPopupSelection;
+        private string m_MultiMaterialInfo = null;
         private SerializedProperty m_PlaybackSpeed;
         private SerializedProperty m_PlayOnAwake;
         private SerializedProperty m_RenderMode;
         private readonly AnimBool m_ShowAspectRatio = new AnimBool();
         private readonly AnimBool m_ShowAudioControls = new AnimBool();
-        private readonly AnimBool m_ShowMaterial = new AnimBool();
         private readonly AnimBool m_ShowMaterialProperty = new AnimBool();
+        private readonly AnimBool m_ShowRenderer = new AnimBool();
         private readonly AnimBool m_ShowRenderTexture = new AnimBool();
         private readonly AnimBool m_ShowTargetCamera = new AnimBool();
         private SerializedProperty m_TargetAudioSources;
         private SerializedProperty m_TargetCamera;
         private SerializedProperty m_TargetCameraAlpha;
-        private SerializedProperty m_TargetMaterialName;
         private SerializedProperty m_TargetMaterialProperty;
         private SerializedProperty m_TargetMaterialRenderer;
         private SerializedProperty m_TargetTexture;
@@ -93,6 +86,67 @@
                 <>f__am$cache0 = x => new GUIContent(x);
             }
             return Enumerable.Select<string, GUIContent>(first, <>f__am$cache0).ToArray<GUIContent>();
+        }
+
+        private void DisplayMultiMaterialInformation(bool refreshInfo)
+        {
+            if (refreshInfo || (this.m_MultiMaterialInfo == null))
+            {
+                this.m_MultiMaterialInfo = this.GenerateMultiMaterialinformation();
+            }
+            if (!string.IsNullOrEmpty(this.m_MultiMaterialInfo))
+            {
+                GUILayout.BeginHorizontal(new GUILayoutOption[0]);
+                GUILayout.Space(EditorGUIUtility.labelWidth);
+                EditorGUILayout.HelpBox(this.m_MultiMaterialInfo, MessageType.Info);
+                GUILayout.EndHorizontal();
+            }
+        }
+
+        private string GenerateMultiMaterialinformation()
+        {
+            if (base.targets.Count<UnityEngine.Object>() > 1)
+            {
+                return "";
+            }
+            VideoPlayer target = base.target as VideoPlayer;
+            if (target == null)
+            {
+                return "";
+            }
+            Renderer targetRenderer = GetTargetRenderer(target);
+            if (targetRenderer == null)
+            {
+                return "";
+            }
+            Material[] sharedMaterials = targetRenderer.sharedMaterials;
+            if ((sharedMaterials == null) || (sharedMaterials.Count<Material>() <= 1))
+            {
+                return "";
+            }
+            List<string> source = new List<string>();
+            foreach (Material material in sharedMaterials)
+            {
+                if (material != null)
+                {
+                    int propertyIdx = 0;
+                    int propertyCount = ShaderUtil.GetPropertyCount(material.shader);
+                    while (propertyIdx < propertyCount)
+                    {
+                        if ((ShaderUtil.GetPropertyType(material.shader, propertyIdx) == ShaderUtil.ShaderPropertyType.TexEnv) && (ShaderUtil.GetPropertyName(material.shader, propertyIdx) == this.m_TargetMaterialProperty.stringValue))
+                        {
+                            source.Add(material.name);
+                            break;
+                        }
+                        propertyIdx++;
+                    }
+                }
+            }
+            if (source.Count<string>() == sharedMaterials.Count<Material>())
+            {
+                return s_Styles.texPropInAllMaterialsHelp;
+            }
+            return (string.Format(s_Styles.texPropInSomeMaterialsHelp, source.Count<string>(), sharedMaterials.Count<Material>()) + ": " + string.Join(", ", source.ToArray()));
         }
 
         private GUIContent GetAudioTrackEnabledContent(ushort trackIdx)
@@ -134,58 +188,66 @@
             return info.content;
         }
 
-        private static List<string> GetMaterialNames(UnityEngine.Object obj, bool multiSelect, out int selection, out bool invalidSelection)
+        private static List<string> GetMaterialPropertyNames(UnityEngine.Object obj, bool multiSelect, out int selection, out bool invalidSelection)
         {
             selection = -1;
             invalidSelection = true;
             List<string> source = new List<string>();
-            VideoPlayer player = obj as VideoPlayer;
-            if (player != null)
+            VideoPlayer vp = obj as VideoPlayer;
+            if (vp != null)
             {
-                Renderer targetMaterialRenderer = player.targetMaterialRenderer;
-                if (targetMaterialRenderer == null)
+                Renderer targetRenderer = GetTargetRenderer(vp);
+                if (targetRenderer == null)
                 {
                     return source;
                 }
-                foreach (Material material in targetMaterialRenderer.sharedMaterials)
+                foreach (Material material in targetRenderer.sharedMaterials)
                 {
                     if (material != null)
                     {
-                        if (source.Count<string>() == 0)
+                        int propertyIdx = 0;
+                        int propertyCount = ShaderUtil.GetPropertyCount(material.shader);
+                        while (propertyIdx < propertyCount)
                         {
-                            source.Add(!multiSelect ? ("Auto (" + material.name + ")") : "Auto");
+                            if (ShaderUtil.GetPropertyType(material.shader, propertyIdx) == ShaderUtil.ShaderPropertyType.TexEnv)
+                            {
+                                string propertyName = ShaderUtil.GetPropertyName(material.shader, propertyIdx);
+                                if (!source.Contains(propertyName))
+                                {
+                                    source.Add(propertyName);
+                                }
+                            }
+                            propertyIdx++;
                         }
-                        source.Add(material.name);
+                        selection = source.IndexOf(vp.targetMaterialProperty);
+                        invalidSelection = (selection < 0) && (source.Count<string>() > 0);
+                        if (invalidSelection && !multiSelect)
+                        {
+                            selection = source.Count<string>();
+                            source.Add(vp.targetMaterialProperty);
+                        }
                     }
-                }
-                selection = (source.Count<string>() != 0) ? ((player.targetMaterialName.Length != 0) ? source.IndexOf(player.targetMaterialName) : 0) : -1;
-                invalidSelection = (selection < 0) && (source.Count<string>() > 0);
-                if (invalidSelection && !multiSelect)
-                {
-                    selection = source.Count<string>();
-                    source.Add(player.targetMaterialName);
                 }
             }
             return source;
         }
 
-        private static int GetMaterialPopupPropertyHash(UnityEngine.Object[] objects)
+        private static int GetMaterialPropertyPopupHash(UnityEngine.Object[] objects)
         {
             int num = 0;
             foreach (VideoPlayer player in objects)
             {
-                Renderer targetMaterialRenderer = player.targetMaterialRenderer;
-                if (targetMaterialRenderer != null)
+                if (player != null)
                 {
-                    num ^= player.targetMaterialName.GetHashCode();
-                    num ^= player.targetMaterialProperty.GetHashCode();
-                    foreach (Material material in targetMaterialRenderer.sharedMaterials)
+                    Renderer targetRenderer = GetTargetRenderer(player);
+                    if (targetRenderer != null)
                     {
-                        if (material != null)
+                        num ^= player.targetMaterialProperty.GetHashCode();
+                        foreach (Material material in targetRenderer.sharedMaterials)
                         {
-                            num ^= material.name.GetHashCode();
-                            if ((player.targetMaterialName.Length == 0) || (material.name == player.targetMaterialName))
+                            if (material != null)
                             {
+                                num ^= material.name.GetHashCode();
                                 int propertyIdx = 0;
                                 int propertyCount = ShaderUtil.GetPropertyCount(material.shader);
                                 while (propertyIdx < propertyCount)
@@ -204,50 +266,14 @@
             return num;
         }
 
-        private static List<string> GetMaterialPropertyNames(UnityEngine.Object obj, bool multiSelect, out int selection, out bool invalidSelection)
+        private static Renderer GetTargetRenderer(VideoPlayer vp)
         {
-            selection = -1;
-            invalidSelection = true;
-            List<string> source = new List<string>();
-            VideoPlayer player = obj as VideoPlayer;
-            if (player != null)
+            Renderer targetMaterialRenderer = vp.targetMaterialRenderer;
+            if (targetMaterialRenderer != null)
             {
-                Renderer targetMaterialRenderer = player.targetMaterialRenderer;
-                if (targetMaterialRenderer == null)
-                {
-                    return source;
-                }
-                foreach (Material material in targetMaterialRenderer.sharedMaterials)
-                {
-                    if ((material != null) && ((player.targetMaterialName.Length == 0) || (material.name == player.targetMaterialName)))
-                    {
-                        int propertyIdx = 0;
-                        int propertyCount = ShaderUtil.GetPropertyCount(material.shader);
-                        while (propertyIdx < propertyCount)
-                        {
-                            if (ShaderUtil.GetPropertyType(material.shader, propertyIdx) == ShaderUtil.ShaderPropertyType.TexEnv)
-                            {
-                                string propertyName = ShaderUtil.GetPropertyName(material.shader, propertyIdx);
-                                if (source.Count<string>() == 0)
-                                {
-                                    source.Add(!multiSelect ? ("Auto (" + propertyName + ")") : "Auto");
-                                }
-                                source.Add(propertyName);
-                            }
-                            propertyIdx++;
-                        }
-                        selection = (source.Count<string>() != 0) ? ((player.targetMaterialProperty.Length != 0) ? source.IndexOf(player.targetMaterialProperty) : 0) : -1;
-                        invalidSelection = (selection < 0) && (source.Count<string>() > 0);
-                        if (invalidSelection && !multiSelect)
-                        {
-                            selection = source.Count<string>();
-                            source.Add(player.targetMaterialProperty);
-                        }
-                        return source;
-                    }
-                }
+                return targetMaterialRenderer;
             }
-            return source;
+            return vp.gameObject.GetComponent<Renderer>();
         }
 
         private void HandleAudio()
@@ -365,7 +391,7 @@
             EditorGUI.EndDisabledGroup();
             if (EditorGUI.EndChangeCheck())
             {
-                property.stringValue = (selection != 0) ? entries[selection].text : "";
+                property.stringValue = entries[selection].text;
             }
             EditorGUI.EndProperty();
         }
@@ -385,79 +411,52 @@
                 EditorGUILayout.Slider(this.m_TargetCameraAlpha, 0f, 1f, s_Styles.alphaContent, new GUILayoutOption[0]);
             }
             EditorGUILayout.EndFadeGroup();
-            this.m_ShowMaterial.target = currentRenderMode == VideoRenderMode.MaterialOverride;
-            if (EditorGUILayout.BeginFadeGroup(this.m_ShowMaterial.faded))
+            this.m_ShowRenderer.target = currentRenderMode == VideoRenderMode.MaterialOverride;
+            if (EditorGUILayout.BeginFadeGroup(this.m_ShowRenderer.faded))
             {
-                EditorGUILayout.PropertyField(this.m_TargetMaterialRenderer, s_Styles.materialRendererContent, new GUILayoutOption[0]);
-                int materialPopupPropertyHash = GetMaterialPopupPropertyHash(base.targets);
-                if (this.m_MaterialPopupsContentHash != materialPopupPropertyHash)
+                bool flag = base.targets.Count<UnityEngine.Object>() > 1;
+                if (flag)
                 {
-                    if (<>f__mg$cache2 == null)
-                    {
-                        <>f__mg$cache2 = new EntryGenerator(VideoPlayerEditor.GetMaterialNames);
-                    }
-                    this.m_MaterialNamePopupContent = BuildPopupEntries(base.targets, <>f__mg$cache2, out this.m_MaterialNamePopupSelection, out this.m_MaterialNamePopupInvalidSelections);
+                    EditorGUILayout.PropertyField(this.m_TargetMaterialRenderer, s_Styles.materialRendererContent, new GUILayoutOption[0]);
                 }
-                HandlePopup(s_Styles.materialNameContent, this.m_TargetMaterialName, this.m_MaterialNamePopupContent, this.m_MaterialNamePopupSelection);
-                if ((this.m_MaterialNamePopupInvalidSelections > 0) || (this.m_MaterialNamePopupContent.Length == 0))
+                else
                 {
-                    GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-                    GUILayout.Space(EditorGUIUtility.labelWidth);
-                    if (this.m_MaterialNamePopupContent.Length == 0)
+                    Rect totalPosition = EditorGUILayout.GetControlRect(true, 16f, new GUILayoutOption[0]);
+                    GUIContent label = EditorGUI.BeginProperty(totalPosition, s_Styles.materialRendererContent, this.m_TargetMaterialRenderer);
+                    EditorGUI.BeginChangeCheck();
+                    UnityEngine.Object obj2 = EditorGUI.ObjectField(totalPosition, label, GetTargetRenderer((VideoPlayer) base.target), typeof(Renderer), true);
+                    if (EditorGUI.EndChangeCheck())
                     {
-                        if (base.targets.Count<UnityEngine.Object>() == 1)
-                        {
-                            EditorGUILayout.HelpBox(s_Styles.rendererHasNoMaterialsHelp, MessageType.Warning);
-                        }
-                        else
-                        {
-                            EditorGUILayout.HelpBox(s_Styles.someRenderersHaveNoMaterialsHelp, MessageType.Warning);
-                        }
+                        this.m_TargetMaterialRenderer.objectReferenceValue = obj2;
                     }
-                    else if (base.targets.Count<UnityEngine.Object>() == 1)
-                    {
-                        EditorGUILayout.HelpBox(s_Styles.invalidMaterialSelectionHelp, MessageType.Warning);
-                    }
-                    else if (this.m_MaterialNamePopupInvalidSelections == 1)
-                    {
-                        EditorGUILayout.HelpBox(s_Styles.oneInvalidMaterialSelectionHelp, MessageType.Warning);
-                    }
-                    else
-                    {
-                        EditorGUILayout.HelpBox(this.m_MaterialNamePopupInvalidSelections + s_Styles.someInvalidMaterialSelectionsHelp, MessageType.Warning);
-                    }
-                    GUILayout.EndHorizontal();
+                    EditorGUI.EndProperty();
                 }
-                if (this.m_MaterialPopupsContentHash != materialPopupPropertyHash)
+                int materialPropertyPopupHash = GetMaterialPropertyPopupHash(base.targets);
+                if (this.m_MaterialPropertyPopupContentHash != materialPropertyPopupHash)
                 {
-                    if (<>f__mg$cache3 == null)
+                    if (<>f__mg$cache1 == null)
                     {
-                        <>f__mg$cache3 = new EntryGenerator(VideoPlayerEditor.GetMaterialPropertyNames);
+                        <>f__mg$cache1 = new EntryGenerator(VideoPlayerEditor.GetMaterialPropertyNames);
                     }
-                    this.m_MaterialPropertyPopupContent = BuildPopupEntries(base.targets, <>f__mg$cache3, out this.m_MaterialPropertyPopupSelection, out this.m_MaterialPropertyPopupInvalidSelections);
+                    this.m_MaterialPropertyPopupContent = BuildPopupEntries(base.targets, <>f__mg$cache1, out this.m_MaterialPropertyPopupSelection, out this.m_MaterialPropertyPopupInvalidSelections);
                 }
-                this.m_ShowMaterialProperty.target = (base.targets.Count<UnityEngine.Object>() > 1) || ((this.m_MaterialNamePopupSelection >= 0) && (this.m_MaterialPropertyPopupContent.Length > 0));
-                if (EditorGUILayout.BeginFadeGroup(this.m_ShowMaterialProperty.faded))
-                {
-                    HandlePopup(s_Styles.materialPropertyContent, this.m_TargetMaterialProperty, this.m_MaterialPropertyPopupContent, this.m_MaterialPropertyPopupSelection);
-                }
-                EditorGUILayout.EndFadeGroup();
-                if (this.m_ShowMaterialProperty.target && ((this.m_MaterialPropertyPopupInvalidSelections > 0) || (this.m_MaterialPropertyPopupContent.Length == 0)))
+                HandlePopup(s_Styles.materialPropertyContent, this.m_TargetMaterialProperty, this.m_MaterialPropertyPopupContent, this.m_MaterialPropertyPopupSelection);
+                if ((this.m_MaterialPropertyPopupInvalidSelections > 0) || (this.m_MaterialPropertyPopupContent.Length == 0))
                 {
                     GUILayout.BeginHorizontal(new GUILayoutOption[0]);
                     GUILayout.Space(EditorGUIUtility.labelWidth);
                     if (this.m_MaterialPropertyPopupContent.Length == 0)
                     {
-                        if (base.targets.Count<UnityEngine.Object>() == 1)
+                        if (!flag)
                         {
-                            EditorGUILayout.HelpBox(s_Styles.materialHasNoTexPropsHelp, MessageType.Warning);
+                            EditorGUILayout.HelpBox(s_Styles.rendererMaterialsHaveNoTexPropsHelp, MessageType.Warning);
                         }
                         else
                         {
-                            EditorGUILayout.HelpBox(s_Styles.someMaterialsHaveNoTexPropsHelp, MessageType.Warning);
+                            EditorGUILayout.HelpBox(s_Styles.someRendererMaterialsHaveNoTexPropsHelp, MessageType.Warning);
                         }
                     }
-                    else if (base.targets.Count<UnityEngine.Object>() == 1)
+                    else if (!flag)
                     {
                         EditorGUILayout.HelpBox(s_Styles.invalidTexPropSelectionHelp, MessageType.Warning);
                     }
@@ -467,11 +466,15 @@
                     }
                     else
                     {
-                        EditorGUILayout.HelpBox(this.m_MaterialPropertyPopupInvalidSelections + s_Styles.someInvalidTexPropSelectionsHelp, MessageType.Warning);
+                        EditorGUILayout.HelpBox(string.Format(s_Styles.someInvalidTexPropSelectionsHelp, this.m_MaterialPropertyPopupInvalidSelections), MessageType.Warning);
                     }
                     GUILayout.EndHorizontal();
                 }
-                this.m_MaterialPopupsContentHash = materialPopupPropertyHash;
+                else
+                {
+                    this.DisplayMultiMaterialInformation(this.m_MaterialPropertyPopupContentHash != materialPropertyPopupHash);
+                }
+                this.m_MaterialPropertyPopupContentHash = materialPropertyPopupHash;
             }
             EditorGUILayout.EndFadeGroup();
             this.m_ShowAspectRatio.target = (currentRenderMode != VideoRenderMode.MaterialOverride) && (currentRenderMode != VideoRenderMode.APIOnly);
@@ -486,7 +489,7 @@
         {
             this.m_ShowRenderTexture.valueChanged.RemoveListener(new UnityAction(this.Repaint));
             this.m_ShowTargetCamera.valueChanged.RemoveListener(new UnityAction(this.Repaint));
-            this.m_ShowMaterial.valueChanged.RemoveListener(new UnityAction(this.Repaint));
+            this.m_ShowRenderer.valueChanged.RemoveListener(new UnityAction(this.Repaint));
             this.m_ShowMaterialProperty.valueChanged.RemoveListener(new UnityAction(this.Repaint));
             this.m_DataSourceIsClip.valueChanged.RemoveListener(new UnityAction(this.Repaint));
             this.m_ShowAspectRatio.valueChanged.RemoveListener(new UnityAction(this.Repaint));
@@ -497,7 +500,7 @@
         {
             this.m_ShowRenderTexture.valueChanged.AddListener(new UnityAction(this.Repaint));
             this.m_ShowTargetCamera.valueChanged.AddListener(new UnityAction(this.Repaint));
-            this.m_ShowMaterial.valueChanged.AddListener(new UnityAction(this.Repaint));
+            this.m_ShowRenderer.valueChanged.AddListener(new UnityAction(this.Repaint));
             this.m_ShowMaterialProperty.valueChanged.AddListener(new UnityAction(this.Repaint));
             this.m_DataSourceIsClip.valueChanged.AddListener(new UnityAction(this.Repaint));
             this.m_ShowAspectRatio.valueChanged.AddListener(new UnityAction(this.Repaint));
@@ -513,7 +516,6 @@
             this.m_TargetTexture = base.serializedObject.FindProperty("m_TargetTexture");
             this.m_TargetCamera = base.serializedObject.FindProperty("m_TargetCamera");
             this.m_TargetMaterialRenderer = base.serializedObject.FindProperty("m_TargetMaterialRenderer");
-            this.m_TargetMaterialName = base.serializedObject.FindProperty("m_TargetMaterialName");
             this.m_TargetMaterialProperty = base.serializedObject.FindProperty("m_TargetMaterialProperty");
             this.m_AspectRatio = base.serializedObject.FindProperty("m_AspectRatio");
             this.m_TargetCameraAlpha = base.serializedObject.FindProperty("m_TargetCameraAlpha");
@@ -525,19 +527,14 @@
             this.m_DirectAudioMutes = base.serializedObject.FindProperty("m_DirectAudioMutes");
             this.m_ShowRenderTexture.value = this.m_RenderMode.intValue == 2;
             this.m_ShowTargetCamera.value = (this.m_RenderMode.intValue == 0) || (this.m_RenderMode.intValue == 1);
-            this.m_ShowMaterial.value = this.m_RenderMode.intValue == 3;
+            this.m_ShowRenderer.value = this.m_RenderMode.intValue == 3;
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new EntryGenerator(VideoPlayerEditor.GetMaterialNames);
+                <>f__mg$cache0 = new EntryGenerator(VideoPlayerEditor.GetMaterialPropertyNames);
             }
-            this.m_MaterialNamePopupContent = BuildPopupEntries(base.targets, <>f__mg$cache0, out this.m_MaterialNamePopupSelection, out this.m_MaterialNamePopupInvalidSelections);
-            if (<>f__mg$cache1 == null)
-            {
-                <>f__mg$cache1 = new EntryGenerator(VideoPlayerEditor.GetMaterialPropertyNames);
-            }
-            this.m_MaterialPropertyPopupContent = BuildPopupEntries(base.targets, <>f__mg$cache1, out this.m_MaterialPropertyPopupSelection, out this.m_MaterialPropertyPopupInvalidSelections);
-            this.m_MaterialPopupsContentHash = GetMaterialPopupPropertyHash(base.targets);
-            this.m_ShowMaterialProperty.value = (base.targets.Count<UnityEngine.Object>() > 1) || ((this.m_MaterialNamePopupSelection >= 0) && (this.m_MaterialNamePopupContent.Length > 0));
+            this.m_MaterialPropertyPopupContent = BuildPopupEntries(base.targets, <>f__mg$cache0, out this.m_MaterialPropertyPopupSelection, out this.m_MaterialPropertyPopupInvalidSelections);
+            this.m_MaterialPropertyPopupContentHash = GetMaterialPropertyPopupHash(base.targets);
+            this.m_ShowMaterialProperty.value = (base.targets.Count<UnityEngine.Object>() > 1) || ((this.m_MaterialPropertyPopupSelection >= 0) && (this.m_MaterialPropertyPopupContent.Length > 0));
             this.m_DataSourceIsClip.value = this.m_DataSource.intValue == 0;
             this.m_ShowAspectRatio.value = (this.m_RenderMode.intValue != 3) && (this.m_RenderMode.intValue != 4);
             this.m_ShowAudioControls.value = this.m_AudioOutputMode.intValue != 0;
@@ -600,29 +597,25 @@
             public GUIContent controlledAudioTrackCountContent = EditorGUIUtility.TextContent("Controlled Tracks|How many audio tracks will the player control.  The actual number of tracks is only known during playback when the source is a URL.");
             public GUIContent dataSourceContent = EditorGUIUtility.TextContent("Source|Type of source the movie will be read from.");
             public string enableDecodingTooltip = "Enable decoding for this track.  Only effective when not playing.  When playing from a URL, track details are shown only while playing back.";
-            public string invalidMaterialSelectionHelp = "Invalid material selection";
-            public string invalidTexPropSelectionHelp = "Invalid texture property selection";
+            public string invalidTexPropSelectionHelp = "Invalid texture property selection.";
             public GUIContent loopContent = EditorGUIUtility.TextContent("Loop|Start playback at the beginning when end is reached.");
-            public string materialHasNoTexPropsHelp = "Material has no texture properties";
-            public GUIContent materialNameContent = EditorGUIUtility.TextContent("Material|Material property of the current renderer that will receive the images.");
             public GUIContent materialPropertyContent = EditorGUIUtility.TextContent("Material Property|Texture property of the current Material that will receive the images.");
-            public GUIContent materialRendererContent = EditorGUIUtility.TextContent("Renderer|Renderer that will receive the images.");
+            public GUIContent materialRendererContent = EditorGUIUtility.TextContent("Renderer|Renderer that will receive the images. Defaults to the first renderer on the game object.");
             public GUIContent muteLabel = EditorGUIUtility.TextContent("Mute");
-            public string oneInvalidMaterialSelectionHelp = "1 selected object has an invalid material selection";
-            public string oneInvalidTexPropSelectionHelp = "1 selected object has an invalid texture property selection";
+            public string oneInvalidTexPropSelectionHelp = "1 selected object has an invalid texture property selection.";
             public GUIContent playbackSpeedContent = EditorGUIUtility.TextContent("Playback Speed|Increase or decrease the playback speed. 1.0 is the normal speed.");
             public GUIContent playOnAwakeContent = EditorGUIUtility.TextContent("Play On Awake|Start playback as soon as the game is started.");
-            public string rendererHasNoMaterialsHelp = "Renderer has no materials";
+            public string rendererMaterialsHaveNoTexPropsHelp = "Renderer materials have no texture properties.";
             public GUIContent renderModeContent = EditorGUIUtility.TextContent("Render Mode|Type of object on which the played images will be drawn.");
-            public string selectMovieFile = "Select movie file";
+            public string selectMovieFile = "Select movie file.";
             public string selectUniformAudioOutputModeHelp = "Select a uniform audio target before audio settings can be edited.";
             public string selectUniformAudioTracksHelp = "Only sources with the same number of audio tracks can be edited during multi-selection.";
             public string selectUniformVideoRenderModeHelp = "Select a uniform video render mode type before a target camera, render texture or material parameter can be selected.";
             public string selectUniformVideoSourceHelp = "Select a uniform video source type before a video clip or URL can be selected.";
-            public string someInvalidMaterialSelectionsHelp = " selected objects have invalid material selections";
-            public string someInvalidTexPropSelectionsHelp = " selected objects have invalid texture property selections";
-            public string someMaterialsHaveNoTexPropsHelp = "Some selected objects have materials with no texture properties";
-            public string someRenderersHaveNoMaterialsHelp = "Some selected objects have renderers with no materials";
+            public string someInvalidTexPropSelectionsHelp = "{0} selected objects have invalid texture property selections.";
+            public string someRendererMaterialsHaveNoTexPropsHelp = "Some selected renderers have materials with no texture properties.";
+            public string texPropInAllMaterialsHelp = "Texture property appears in all renderer materials.";
+            public string texPropInSomeMaterialsHelp = "Texture property appears in {0} out of {1} renderer materials.";
             public GUIContent textureContent = EditorGUIUtility.TextContent("Target Texture|RenderTexture where the images will be drawn.  RenderTextures can be created under the Assets folder and the used on other objects.");
             public GUIContent urlContent = EditorGUIUtility.TextContent("URL|URLs can be http:// or file://. File URLs can be relative [file://] or absolute [file:///].  For file URLs, the prefix is optional.");
             public GUIContent videoClipContent = EditorGUIUtility.TextContent("Video Clip|VideoClips can be imported using the asset pipeline.");

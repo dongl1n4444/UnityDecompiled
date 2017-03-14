@@ -8,7 +8,7 @@
 
     internal abstract class VRCustomOptions
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <IsExpanded>k__BackingField;
         private SerializedProperty editorSettings;
         private SerializedProperty playerSettings;

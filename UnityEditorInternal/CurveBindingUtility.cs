@@ -10,7 +10,7 @@
 
         public static object GetCurrentValue(AnimationWindowState state, AnimationWindowCurve curve)
         {
-            if (UnityEditor.AnimationMode.InAnimationMode() && (curve.rootGameObject != null))
+            if (state.previewing && (curve.rootGameObject != null))
             {
                 return AnimationWindowUtility.GetCurrentValue(curve.rootGameObject, curve.binding);
             }

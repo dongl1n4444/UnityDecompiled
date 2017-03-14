@@ -171,16 +171,24 @@
                 object[] objArray3 = new object[] { InteropMethodInfo.Naming.ForPInvokeFunctionPointerVariable() };
                 writer.WriteLine("if ({0} == NULL)", objArray3);
                 writer.BeginBlock();
-                string str = "parameterSize";
-                object[] objArray4 = new object[] { str, this.CalculateParameterSize() };
-                writer.WriteLine("int {0} = {1};", objArray4);
-                string name = this._pinvokeInfo.Module.Name;
-                string entryPoint = this._pinvokeInfo.EntryPoint;
-                object[] objArray5 = new object[] { InteropMethodInfo.Naming.ForPInvokeFunctionPointerVariable(), InteropMethodInfo.Naming.ForPInvokeFunctionPointerTypedef(), name, entryPoint, this.GetIl2CppCallConvention(), !this.UseUnicodeCharSetForPInvokeInWindowsCallResolution() ? "CHARSET_ANSI" : "CHARSET_UNICODE", str, !this._pinvokeInfo.IsNoMangle ? "false" : "true" };
-                writer.WriteLine("{0} = il2cpp_codegen_resolve_pinvoke<{1}>(IL2CPP_NATIVE_STRING(\"{2}\"), \"{3}\", {4}, {5}, {6}, {7});", objArray5);
+                if (CodeGenOptions.MonoRuntime)
+                {
+                    object[] objArray4 = new object[] { InteropMethodInfo.Naming.ForPInvokeFunctionPointerVariable(), InteropMethodInfo.Naming.ForPInvokeFunctionPointerTypedef(), Emit.MonoMethodMetadataGet(this._methodDefinition) };
+                    writer.WriteLine("{0} = il2cpp_codegen_resolve_pinvoke<{1}>({2});", objArray4);
+                }
+                else
+                {
+                    string str = "parameterSize";
+                    object[] objArray5 = new object[] { str, this.CalculateParameterSize() };
+                    writer.WriteLine("int {0} = {1};", objArray5);
+                    string name = this._pinvokeInfo.Module.Name;
+                    string entryPoint = this._pinvokeInfo.EntryPoint;
+                    object[] objArray6 = new object[] { InteropMethodInfo.Naming.ForPInvokeFunctionPointerVariable(), InteropMethodInfo.Naming.ForPInvokeFunctionPointerTypedef(), name, entryPoint, this.GetIl2CppCallConvention(), !this.UseUnicodeCharSetForPInvokeInWindowsCallResolution() ? "CHARSET_ANSI" : "CHARSET_UNICODE", str, !this._pinvokeInfo.IsNoMangle ? "false" : "true" };
+                    writer.WriteLine("{0} = il2cpp_codegen_resolve_pinvoke<{1}>(IL2CPP_NATIVE_STRING(\"{2}\"), \"{3}\", {4}, {5}, {6}, {7});", objArray6);
+                }
                 writer.WriteLine();
-                object[] objArray6 = new object[] { InteropMethodInfo.Naming.ForPInvokeFunctionPointerVariable() };
-                writer.WriteLine("if ({0} == NULL)", objArray6);
+                object[] objArray7 = new object[] { InteropMethodInfo.Naming.ForPInvokeFunctionPointerVariable() };
+                writer.WriteLine("if ({0} == NULL)", objArray7);
                 writer.BeginBlock();
                 writer.WriteStatement(Emit.RaiseManagedException($"il2cpp_codegen_get_not_supported_exception("Unable to find method for p/invoke: '{base.GetMethodName()}'")"));
                 writer.EndBlock(false);

@@ -16,15 +16,15 @@
         private static Handles.CapFunction <>f__mg$cache0;
         [CompilerGenerated]
         private static Handles.SizeFunction <>f__mg$cache1;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Axes <axes>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Color <handleColor>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Handles.CapFunction <midpointHandleDrawFunction>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Handles.SizeFunction <midpointHandleSizeFunction>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Color <wireframeColor>k__BackingField;
         private Bounds m_Bounds;
         private Bounds m_BoundsOnClick;

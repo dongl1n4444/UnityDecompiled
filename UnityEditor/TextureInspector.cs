@@ -4,7 +4,7 @@
     using UnityEngine;
     using UnityEngine.Rendering;
 
-    [CustomEditor(typeof(Texture2D)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(Texture2D))]
     internal class TextureInspector : Editor
     {
         protected SerializedProperty m_Aniso;

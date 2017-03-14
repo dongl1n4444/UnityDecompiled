@@ -22,6 +22,8 @@
         [CompilerGenerated]
         private static Func<MonoIsland, bool> <>f__am$cache1;
         [CompilerGenerated]
+        private static Func<MonoIsland, bool> <>f__am$cache2;
+        [CompilerGenerated]
         private static Action<string> <>f__mg$cache0;
         [CompilerGenerated]
         private static Action<string> <>f__mg$cache1;
@@ -100,14 +102,18 @@
 
         public static bool WeaveInto(string unityUNet, string destPath, string unityEngine, string assemblyPath, string[] extraAssemblyPaths, IAssemblyResolver assemblyResolver)
         {
-            if (<>f__am$cache1 == null)
+            if (<>f__am$cache2 == null)
             {
-                <>f__am$cache1 = i => 0 < i._files.Length;
+                <>f__am$cache2 = i => 0 < i._files.Length;
             }
-            IEnumerable<MonoIsland> enumerable = Enumerable.Where<MonoIsland>(InternalEditorUtility.GetMonoIslands(), <>f__am$cache1);
+            return WeaveInto(Enumerable.Where<MonoIsland>(InternalEditorUtility.GetMonoIslands(), <>f__am$cache2), unityUNet, destPath, unityEngine, assemblyPath, extraAssemblyPaths, assemblyResolver);
+        }
+
+        public static bool WeaveInto(IEnumerable<MonoIsland> islands, string unityUNet, string destPath, string unityEngine, string assemblyPath, string[] extraAssemblyPaths, IAssemblyResolver assemblyResolver)
+        {
             string fullName = Directory.GetParent(Application.dataPath).FullName;
             string[] references = null;
-            foreach (MonoIsland island in enumerable)
+            foreach (MonoIsland island in islands)
             {
                 if (destPath.Equals(island._output))
                 {
@@ -155,11 +161,20 @@
 
         public static bool WeaveUnetFromEditor(string assemblyPath, string destPath, string unityEngine, string unityUNet, bool buildingForEditor)
         {
+            if (<>f__am$cache1 == null)
+            {
+                <>f__am$cache1 = i => 0 < i._files.Length;
+            }
+            return WeaveUnetFromEditor(Enumerable.Where<MonoIsland>(InternalEditorUtility.GetMonoIslands(), <>f__am$cache1), assemblyPath, destPath, unityEngine, unityUNet, buildingForEditor);
+        }
+
+        public static bool WeaveUnetFromEditor(IEnumerable<MonoIsland> islands, string assemblyPath, string destPath, string unityEngine, string unityUNet, bool buildingForEditor)
+        {
             IAssemblyResolver resolver;
             string[] strArray;
             Console.WriteLine("WeaveUnetFromEditor " + assemblyPath);
             QueryAssemblyPathsAndResolver(GetCompilationExtension(), assemblyPath, buildingForEditor, out strArray, out resolver);
-            return WeaveInto(unityUNet, destPath, unityEngine, assemblyPath, strArray, resolver);
+            return WeaveInto(islands, unityUNet, destPath, unityEngine, assemblyPath, strArray, resolver);
         }
     }
 }

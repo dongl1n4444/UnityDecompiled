@@ -14,7 +14,7 @@
     using UnityEngine.Rendering;
     using UnityEngine.SceneManagement;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(UnityEngine.ReflectionProbe))]
+    [CustomEditor(typeof(UnityEngine.ReflectionProbe)), CanEditMultipleObjects]
     internal class ReflectionProbeEditor : Editor
     {
         internal static Color kGizmoHandleReflectionProbe = new Color(1f, 0.8980392f, 0.6666667f, 1f);

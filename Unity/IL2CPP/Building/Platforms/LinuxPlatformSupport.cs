@@ -7,7 +7,7 @@
 
     internal class LinuxPlatformSupport : PlatformSupport
     {
-        public override CppToolChain MakeCppToolChain(Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors) => 
+        public override CppToolChain MakeCppToolChain(Unity.IL2CPP.Common.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors) => 
             new GccLinuxToolChain(architecture, buildConfiguration);
 
         public override bool Supports(RuntimePlatform platform) => 

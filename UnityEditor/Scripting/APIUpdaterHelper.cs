@@ -133,6 +133,7 @@
 
         private static System.Type FindTypeMatchingMovedTypeBasedOnNamespaceFromError(IEnumerable<string> lines)
         {
+            System.Type type;
             string valueFromNormalizedMessage = GetValueFromNormalizedMessage(lines, "Line=");
             int line = (valueFromNormalizedMessage == null) ? -1 : int.Parse(valueFromNormalizedMessage);
             valueFromNormalizedMessage = GetValueFromNormalizedMessage(lines, "Column=");
@@ -142,18 +143,26 @@
             {
                 return null;
             }
-            using (FileStream stream = File.Open(path, System.IO.FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            try
             {
-                IParser parser = ParserFactory.CreateParser(ICSharpCode.NRefactory.SupportedLanguage.CSharp, new StreamReader(stream));
-                parser.Lexer.EvaluateConditionalCompilation = false;
-                parser.Parse();
-                string simpleOrQualifiedName = InvalidTypeOrNamespaceErrorTypeMapper.IsTypeMovedToNamespaceError(parser.CompilationUnit, line, column);
-                if (simpleOrQualifiedName == null)
+                using (FileStream stream = File.Open(path, System.IO.FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    return null;
+                    IParser parser = ParserFactory.CreateParser(ICSharpCode.NRefactory.SupportedLanguage.CSharp, new StreamReader(stream));
+                    parser.Lexer.EvaluateConditionalCompilation = false;
+                    parser.Parse();
+                    string simpleOrQualifiedName = InvalidTypeOrNamespaceErrorTypeMapper.IsTypeMovedToNamespaceError(parser.CompilationUnit, line, column);
+                    if (simpleOrQualifiedName == null)
+                    {
+                        return null;
+                    }
+                    type = FindExactTypeMatchingMovedType(simpleOrQualifiedName);
                 }
-                return FindExactTypeMatchingMovedType(simpleOrQualifiedName);
             }
+            catch (FileNotFoundException)
+            {
+                type = null;
+            }
+            return type;
         }
 
         private static string GetUnityEditorManagedPath() => 

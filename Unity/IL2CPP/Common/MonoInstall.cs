@@ -53,6 +53,21 @@
             return UnitySourceCode.Paths.UnityRoot.Combine(textArray2);
         }
 
+        public static NPath MonoBleedingEdgeEmbedRuntimesDirectoryFor(PlatformUtils.Architecture arch)
+        {
+            if (PlatformUtils.IsWindows())
+            {
+                string[] textArray1 = new string[] { "embedruntimes", (arch != PlatformUtils.Architecture.x64) ? "win32" : "win64" };
+                return BleedingEdge.Root.Parent.Combine(textArray1);
+            }
+            if (!PlatformUtils.IsOSX())
+            {
+                throw new NotImplementedException("We need to implement the location of the Mono dynamic library on Linux.");
+            }
+            string[] append = new string[] { "embedruntimes", "osx" };
+            return BleedingEdge.Root.Parent.Combine(append);
+        }
+
         public static NPath MonoBleedingEdgeExecutableForArch(bool use64BitMono)
         {
             if (PlatformUtils.IsWindows() && use64BitMono)
@@ -135,6 +150,33 @@
 
         public NPath Mcs =>
             this._MonoExecutable("bin/mcs");
+
+        public static NPath MonoBleedingEdgeEtcDirectory
+        {
+            get
+            {
+                string[] append = new string[] { "etc" };
+                return BleedingEdge.Root.Combine(append);
+            }
+        }
+
+        public static NPath MonoBleedingEdgeIncludeDirectory
+        {
+            get
+            {
+                string[] append = new string[] { "include" };
+                return BleedingEdge.Root.Parent.Combine(append);
+            }
+        }
+
+        public static NPath MonoBleedingEdgeLibDirectory
+        {
+            get
+            {
+                string[] append = new string[] { "lib" };
+                return BleedingEdge.Root.Combine(append);
+            }
+        }
 
         public NPath Root =>
             this._installRoot;

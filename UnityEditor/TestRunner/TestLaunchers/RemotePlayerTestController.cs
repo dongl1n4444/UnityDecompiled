@@ -1,6 +1,7 @@
 ﻿namespace UnityEditor.TestRunner.TestLaunchers
 {
     using System;
+    using System.IO;
     using System.Linq;
     using System.Text;
     using UnityEditor;
@@ -20,7 +21,7 @@
         [SerializeField]
         private bool m_IsBatchModeRun;
         [SerializeField]
-        private PlayerLauncher m_Launcher;
+        private PlatformSpecificSetup m_PlatformSpecificSetup;
         [SerializeField]
         private PlayerResultWindowUpdater m_PlayerResultWindowUpdater;
         [SerializeField]
@@ -29,6 +30,8 @@
         private RunStartedEvent m_RunStartedEvent = new RunStartedEvent();
         [SerializeField]
         protected SerializableDelayedCallback m_SerializableDelayedCallback;
+        [SerializeField]
+        private PlaymodeTestsControllerSettings m_Settings;
         [SerializeField]
         private RunStartedEvent m_TestFinishedEvent = new RunStartedEvent();
         public Guid runFinishedMessageId = new Guid("ffb622fc-34ad-4901-8d7b-47fb04b0bdd4");
@@ -50,10 +53,11 @@
             }
         }
 
-        public void Init(PlayerLauncher playerLauncher, bool isBatchModeRun)
+        public void Init(PlaymodeTestsControllerSettings settings, PlatformSpecificSetup platformSpecificSetup)
         {
-            this.m_IsBatchModeRun = isBatchModeRun;
-            this.m_Launcher = playerLauncher;
+            this.m_Settings = settings;
+            this.m_PlatformSpecificSetup = platformSpecificSetup;
+            this.m_IsBatchModeRun = settings.isBatchModeRun;
             if (!this.m_Init)
             {
                 this.m_Init = true;
@@ -74,7 +78,10 @@
         private void RunFinished(MessageEventArgs messageEventArgs)
         {
             ScriptableSingleton<EditorConnection>.instance.Send(this.runFinishedMessageId, null);
-            this.m_Launcher.WritePlayerResult(messageEventArgs.data, this.m_AllTestsRanSuccessfull);
+            if (this.m_Settings.isBatchModeRun)
+            {
+                this.WritePlayerResult(messageEventArgs.data, this.m_AllTestsRanSuccessfull);
+            }
         }
 
         private void RunStarted(MessageEventArgs messageEventArgs)
@@ -107,6 +114,26 @@
             else
             {
                 this.m_PlayerResultWindowUpdater.Error();
+            }
+        }
+
+        public void WritePlayerResult(byte[] xmlResult, bool allTestsSuccess)
+        {
+            this.m_PlatformSpecificSetup.CleanUp();
+            Debug.Log(this.m_Settings.resultFilePath);
+            using (FileStream stream = File.Create(this.m_Settings.resultFilePath))
+            {
+                stream.Write(xmlResult, 0, xmlResult.Length);
+            }
+            UnityEngine.Object.DestroyImmediate(ScriptableSingleton<RemotePlayerTestController>.instance);
+            if (this.m_Settings.isBatchModeRun)
+            {
+                int returnValue = 0;
+                if (!allTestsSuccess)
+                {
+                    returnValue = 2;
+                }
+                EditorApplication.Exit(returnValue);
             }
         }
 

@@ -13,7 +13,7 @@
     {
         [CompilerGenerated]
         private static Func<Assembly, IEnumerable<System.Type>> <>f__am$cache0;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static Assembly[] <loadedAssemblies>k__BackingField;
         internal static List<RuntimeInitializeClassInfo> m_RuntimeInitializeClassInfoList;
         internal static int m_TotalNumRuntimeInitializeMethods;

@@ -146,7 +146,7 @@
 
         internal class AudioProfilerGroupTreeViewItem : TreeViewItem
         {
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private AudioProfilerGroupInfoWrapper <info>k__BackingField;
 
             public AudioProfilerGroupTreeViewItem(int id, int depth, TreeViewItem parent, string displayName, AudioProfilerGroupInfoWrapper info) : base(id, depth, parent, displayName)
@@ -163,7 +163,7 @@
             private float[] <columnWidths>k__BackingField;
             [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private float <dragWidth>k__BackingField;
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private float <minColumnWidth>k__BackingField;
             private string[] headers = new string[] { 
                 "Object", "Asset", "Volume", "Audibility", "Plays", "3D", "Paused", "Muted", "Virtual", "OneShot", "Looped", "Distance", "MinDist", "MaxDist", "Time", "Duration",

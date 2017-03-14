@@ -215,6 +215,10 @@
                 ProcessHardcodedDependencies(type, generics, contextMethod);
                 ProcessWindowsRuntimeTypes(type, generics, contextMethod);
                 ProcessGenericType(sharedType, generics, contextMethod);
+                if (CodeGenOptions.MonoRuntime)
+                {
+                    generics.Types.Add(type);
+                }
                 GenericContext genericContext = new GenericContext(type, contextMethod);
                 type.ElementType.Resolve().Accept(new GenericContextAwareDeclarationOnlyVisitor(generics, genericContext, CollectionMode.MethodsAndTypes));
             }

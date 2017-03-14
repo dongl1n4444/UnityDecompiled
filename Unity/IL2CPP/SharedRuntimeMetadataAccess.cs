@@ -13,42 +13,60 @@
     public sealed class SharedRuntimeMetadataAccess : IRuntimeMetadataAccess
     {
         private readonly DefaultRuntimeMetadataAccess _default;
-        private readonly MethodReference _methodReference;
+        private readonly MethodReference _enclosingMethod;
         private readonly Unity.IL2CPP.ILPreProcessor.TypeResolver _typeResolver;
         [CompilerGenerated]
-        private static Func<bool> <>f__am$cache0;
+        private static Func<int, string> <>f__am$cache0;
         [CompilerGenerated]
-        private static Func<int, bool> <>f__am$cache1;
+        private static Func<int, string> <>f__am$cache1;
         [CompilerGenerated]
-        private static Func<int, bool> <>f__am$cache2;
+        private static Func<int, string> <>f__am$cache2;
         [CompilerGenerated]
         private static Func<int, string> <>f__am$cache3;
         [CompilerGenerated]
         private static Func<int, string> <>f__am$cache4;
+        [CompilerGenerated]
+        private static Func<int, string> <>f__am$cache5;
+        [CompilerGenerated]
+        private static Func<int, string> <>f__am$cache6;
+        [CompilerGenerated]
+        private static Func<bool> <>f__am$cache7;
+        [CompilerGenerated]
+        private static Func<int, bool> <>f__am$cache8;
+        [CompilerGenerated]
+        private static Func<int, bool> <>f__am$cache9;
+        [CompilerGenerated]
+        private static Func<int, string> <>f__am$cacheA;
+        [CompilerGenerated]
+        private static Func<int, string> <>f__am$cacheB;
         [Inject]
         public static IGenericSharingAnalysisService GenericSharingAnalysis;
         [Inject]
         public static INamingService Naming;
 
-        public SharedRuntimeMetadataAccess(MethodReference methodReference, DefaultRuntimeMetadataAccess defaultRuntimeMetadataAccess)
+        public SharedRuntimeMetadataAccess(MethodReference enclosingMethod, DefaultRuntimeMetadataAccess defaultRuntimeMetadataAccess)
         {
-            this._methodReference = methodReference;
-            this._typeResolver = new Unity.IL2CPP.ILPreProcessor.TypeResolver(methodReference.DeclaringType as GenericInstanceType, methodReference as GenericInstanceMethod);
+            this._enclosingMethod = enclosingMethod;
+            this._typeResolver = new Unity.IL2CPP.ILPreProcessor.TypeResolver(enclosingMethod.DeclaringType as GenericInstanceType, enclosingMethod as GenericInstanceMethod);
             this._default = defaultRuntimeMetadataAccess;
         }
 
         public string ArrayInfo(TypeReference elementType)
         {
-            <ArrayInfo>c__AnonStorey4 storey = new <ArrayInfo>c__AnonStorey4 {
+            <ArrayInfo>c__AnonStorey5 storey = new <ArrayInfo>c__AnonStorey5 {
                 elementType = elementType,
                 $this = this
             };
-            return this.RetreiveType(storey.elementType, new Func<string>(storey.<>m__0), "IL2CPP_RGCTX_DATA", "IL2CPP_RGCTX_DATA", RuntimeGenericContextInfo.Array);
+            if (<>f__am$cache5 == null)
+            {
+                <>f__am$cache5 = index => Emit.Call("IL2CPP_RGCTX_DATA", "method->rgctx_data", index.ToString(CultureInfo.InvariantCulture));
+            }
+            return RetrieveType(storey.elementType, this._enclosingMethod, new Func<string>(storey.<>m__0), new Func<int, string>(storey.<>m__1), <>f__am$cache5, RuntimeGenericContextInfo.Array);
         }
 
         public string FieldInfo(FieldReference field)
         {
-            if (GetRGCTXAccess(field.DeclaringType, this._methodReference) == RuntimeGenericAccess.None)
+            if (GetRGCTXAccess(field.DeclaringType, this._enclosingMethod) == RuntimeGenericAccess.None)
             {
                 return this._default.FieldInfo(field);
             }
@@ -104,7 +122,7 @@
         private string GetTypeRgctxDataExpression()
         {
             string argument = "method->declaring_type";
-            if (!this._methodReference.HasThis || this._methodReference.DeclaringType.IsValueType())
+            if (!this._enclosingMethod.HasThis || this._enclosingMethod.DeclaringType.IsValueType())
             {
                 argument = Naming.ForInitializedTypeInfo(argument);
             }
@@ -113,78 +131,86 @@
 
         public string HiddenMethodInfo(MethodReference method)
         {
-            <HiddenMethodInfo>c__AnonStorey8 storey = new <HiddenMethodInfo>c__AnonStorey8 {
+            <HiddenMethodInfo>c__AnonStorey9 storey = new <HiddenMethodInfo>c__AnonStorey9 {
                 method = method,
                 $this = this
             };
-            if (<>f__am$cache4 == null)
+            if (<>f__am$cacheB == null)
             {
-                <>f__am$cache4 = index => Emit.Call("IL2CPP_RGCTX_METHOD_INFO", "method->rgctx_data", index.ToString(CultureInfo.InvariantCulture));
+                <>f__am$cacheB = index => Emit.Call("IL2CPP_RGCTX_METHOD_INFO", "method->rgctx_data", index.ToString(CultureInfo.InvariantCulture));
             }
-            return this.RetreiveMethod<string>(storey.method, new Func<string>(storey.<>m__0), new Func<int, string>(storey.<>m__1), <>f__am$cache4, RuntimeGenericContextInfo.Method);
+            return RetrieveMethod<string>(storey.method, this._enclosingMethod, new Func<string>(storey.<>m__0), new Func<int, string>(storey.<>m__1), <>f__am$cacheB, RuntimeGenericContextInfo.Method);
         }
 
         public string Il2CppTypeFor(TypeReference type)
         {
-            <Il2CppTypeFor>c__AnonStorey3 storey = new <Il2CppTypeFor>c__AnonStorey3 {
+            <Il2CppTypeFor>c__AnonStorey4 storey = new <Il2CppTypeFor>c__AnonStorey4 {
                 type = type,
                 $this = this
             };
-            return this.RetreiveType(storey.type, new Func<string>(storey.<>m__0), "IL2CPP_RGCTX_TYPE", "IL2CPP_RGCTX_TYPE", RuntimeGenericContextInfo.Type);
+            if (<>f__am$cache4 == null)
+            {
+                <>f__am$cache4 = index => Emit.Call("IL2CPP_RGCTX_TYPE", "method->rgctx_data", index.ToString(CultureInfo.InvariantCulture));
+            }
+            return RetrieveType(storey.type, this._enclosingMethod, new Func<string>(storey.<>m__0), new Func<int, string>(storey.<>m__1), <>f__am$cache4, RuntimeGenericContextInfo.Type);
         }
 
         public string Method(MethodReference method)
         {
-            <Method>c__AnonStorey6 storey = new <Method>c__AnonStorey6 {
+            <Method>c__AnonStorey7 storey = new <Method>c__AnonStorey7 {
                 method = method,
                 $this = this
             };
             storey.methodReference = this._typeResolver.Resolve(storey.method);
-            return this.RetreiveMethod<string>(storey.method, new Func<string>(storey.<>m__0), new Func<int, string>(storey.<>m__1), new Func<int, string>(storey.<>m__2), RuntimeGenericContextInfo.Method);
+            return RetrieveMethod<string>(storey.method, this._enclosingMethod, new Func<string>(storey.<>m__0), new Func<int, string>(storey.<>m__1), new Func<int, string>(storey.<>m__2), RuntimeGenericContextInfo.Method);
         }
 
         public string MethodInfo(MethodReference method)
         {
-            <MethodInfo>c__AnonStorey7 storey = new <MethodInfo>c__AnonStorey7 {
+            <MethodInfo>c__AnonStorey8 storey = new <MethodInfo>c__AnonStorey8 {
                 method = method,
                 $this = this
             };
-            if (<>f__am$cache3 == null)
+            if (<>f__am$cacheA == null)
             {
-                <>f__am$cache3 = index => Emit.Call("IL2CPP_RGCTX_METHOD_INFO", "method->rgctx_data", index.ToString(CultureInfo.InvariantCulture));
+                <>f__am$cacheA = index => Emit.Call("IL2CPP_RGCTX_METHOD_INFO", "method->rgctx_data", index.ToString(CultureInfo.InvariantCulture));
             }
-            return this.RetreiveMethod<string>(storey.method, new Func<string>(storey.<>m__0), new Func<int, string>(storey.<>m__1), <>f__am$cache3, RuntimeGenericContextInfo.Method);
+            return RetrieveMethod<string>(storey.method, this._enclosingMethod, new Func<string>(storey.<>m__0), new Func<int, string>(storey.<>m__1), <>f__am$cacheA, RuntimeGenericContextInfo.Method);
         }
 
         public bool NeedsBoxingForValueTypeThis(MethodReference method)
         {
-            if (<>f__am$cache0 == null)
+            if (<>f__am$cache7 == null)
             {
-                <>f__am$cache0 = () => false;
+                <>f__am$cache7 = () => false;
             }
-            if (<>f__am$cache1 == null)
+            if (<>f__am$cache8 == null)
             {
-                <>f__am$cache1 = index => true;
+                <>f__am$cache8 = index => true;
             }
-            if (<>f__am$cache2 == null)
+            if (<>f__am$cache9 == null)
             {
-                <>f__am$cache2 = index => true;
+                <>f__am$cache9 = index => true;
             }
-            return this.RetreiveMethod<bool>(method, <>f__am$cache0, <>f__am$cache1, <>f__am$cache2, RuntimeGenericContextInfo.Method);
+            return RetrieveMethod<bool>(method, this._enclosingMethod, <>f__am$cache7, <>f__am$cache8, <>f__am$cache9, RuntimeGenericContextInfo.Method);
         }
 
         public string Newobj(MethodReference ctor)
         {
-            <Newobj>c__AnonStorey5 storey = new <Newobj>c__AnonStorey5 {
+            <Newobj>c__AnonStorey6 storey = new <Newobj>c__AnonStorey6 {
                 ctor = ctor,
                 $this = this
             };
-            return this.RetreiveType(storey.ctor.DeclaringType, new Func<string>(storey.<>m__0), "IL2CPP_RGCTX_DATA", "IL2CPP_RGCTX_DATA", RuntimeGenericContextInfo.Class);
+            if (<>f__am$cache6 == null)
+            {
+                <>f__am$cache6 = index => Emit.Call("IL2CPP_RGCTX_DATA", "method->rgctx_data", index.ToString(CultureInfo.InvariantCulture));
+            }
+            return RetrieveType(storey.ctor.DeclaringType, this._enclosingMethod, new Func<string>(storey.<>m__0), new Func<int, string>(storey.<>m__1), <>f__am$cache6, RuntimeGenericContextInfo.Class);
         }
 
-        private T RetreiveMethod<T>(MethodReference method, Func<T> defaultFunc, Func<int, T> retrieveTypeSharedAccess, Func<int, T> retrieveMethodSharedAccess, RuntimeGenericContextInfo info)
+        public static T RetrieveMethod<T>(MethodReference method, MethodReference enclosingMethod, Func<T> defaultFunc, Func<int, T> retrieveTypeSharedAccess, Func<int, T> retrieveMethodSharedAccess, RuntimeGenericContextInfo info)
         {
-            RuntimeGenericAccess rGCTXAccess = GetRGCTXAccess(method, this._methodReference);
+            RuntimeGenericAccess rGCTXAccess = GetRGCTXAccess(method, enclosingMethod);
             switch (rGCTXAccess)
             {
                 case RuntimeGenericAccess.None:
@@ -192,7 +218,7 @@
 
                 case RuntimeGenericAccess.Method:
                 {
-                    GenericSharingData data = GenericSharingAnalysis.RuntimeGenericContextFor(this._methodReference.Resolve());
+                    GenericSharingData data = GenericSharingAnalysis.RuntimeGenericContextFor(enclosingMethod.Resolve());
                     int num = RetrieveMethodIndex(method, info, data);
                     if (num == -1)
                     {
@@ -205,45 +231,13 @@
             {
                 throw new ArgumentOutOfRangeException("method");
             }
-            GenericSharingData rgctx = GenericSharingAnalysis.RuntimeGenericContextFor(this._methodReference.DeclaringType.Resolve());
+            GenericSharingData rgctx = GenericSharingAnalysis.RuntimeGenericContextFor(enclosingMethod.DeclaringType.Resolve());
             int arg = RetrieveMethodIndex(method, info, rgctx);
             if (arg == -1)
             {
                 throw new InvalidOperationException(FormatGenericContextErrorMessage(method.FullName));
             }
             return retrieveTypeSharedAccess(arg);
-        }
-
-        private string RetreiveType(TypeReference type, Func<string> defaultFunc, string typeSharedAccessName, string methodSharedAccessName, RuntimeGenericContextInfo info)
-        {
-            RuntimeGenericAccess rGCTXAccess = GetRGCTXAccess(type, this._methodReference);
-            switch (rGCTXAccess)
-            {
-                case RuntimeGenericAccess.None:
-                    return defaultFunc();
-
-                case RuntimeGenericAccess.Method:
-                {
-                    GenericSharingData data = GenericSharingAnalysis.RuntimeGenericContextFor(this._methodReference.Resolve());
-                    int num = RetrieveTypeIndex(type, info, data);
-                    if (num == -1)
-                    {
-                        throw new InvalidOperationException(FormatGenericContextErrorMessage(type.FullName));
-                    }
-                    return Emit.Call(methodSharedAccessName, "method->rgctx_data", num.ToString(CultureInfo.InvariantCulture));
-                }
-            }
-            if ((rGCTXAccess != RuntimeGenericAccess.This) && (rGCTXAccess != RuntimeGenericAccess.Type))
-            {
-                throw new ArgumentOutOfRangeException("type");
-            }
-            GenericSharingData rgctx = GenericSharingAnalysis.RuntimeGenericContextFor(this._methodReference.DeclaringType.Resolve());
-            int num2 = RetrieveTypeIndex(type, info, rgctx);
-            if (num2 == -1)
-            {
-                throw new InvalidOperationException(FormatGenericContextErrorMessage(type.FullName));
-            }
-            return Emit.Call(typeSharedAccessName, this.GetTypeRgctxDataExpression(), num2.ToString(CultureInfo.InvariantCulture));
         }
 
         public static int RetrieveMethodIndex(MethodReference method, RuntimeGenericContextInfo info, GenericSharingData rgctx)
@@ -261,6 +255,38 @@
                 }
             }
             return -1;
+        }
+
+        public static string RetrieveType(TypeReference type, MethodReference enclosingMethod, Func<string> defaultFunc, Func<int, string> retrieveTypeSharedAccess, Func<int, string> retrieveMethodSharedAccess, RuntimeGenericContextInfo info)
+        {
+            RuntimeGenericAccess rGCTXAccess = GetRGCTXAccess(type, enclosingMethod);
+            switch (rGCTXAccess)
+            {
+                case RuntimeGenericAccess.None:
+                    return defaultFunc();
+
+                case RuntimeGenericAccess.Method:
+                {
+                    GenericSharingData data = GenericSharingAnalysis.RuntimeGenericContextFor(enclosingMethod.Resolve());
+                    int num = RetrieveTypeIndex(type, info, data);
+                    if (num == -1)
+                    {
+                        throw new InvalidOperationException(FormatGenericContextErrorMessage(type.FullName));
+                    }
+                    return retrieveMethodSharedAccess(num);
+                }
+            }
+            if ((rGCTXAccess != RuntimeGenericAccess.This) && (rGCTXAccess != RuntimeGenericAccess.Type))
+            {
+                throw new ArgumentOutOfRangeException("type");
+            }
+            GenericSharingData rgctx = GenericSharingAnalysis.RuntimeGenericContextFor(enclosingMethod.DeclaringType.Resolve());
+            int arg = RetrieveTypeIndex(type, info, rgctx);
+            if (arg == -1)
+            {
+                throw new InvalidOperationException(FormatGenericContextErrorMessage(type.FullName));
+            }
+            return retrieveTypeSharedAccess(arg);
         }
 
         public static int RetrieveTypeIndex(TypeReference type, RuntimeGenericContextInfo info, GenericSharingData rgctx)
@@ -282,11 +308,15 @@
 
         public string SizeOf(TypeReference type)
         {
-            <SizeOf>c__AnonStorey2 storey = new <SizeOf>c__AnonStorey2 {
+            <SizeOf>c__AnonStorey3 storey = new <SizeOf>c__AnonStorey3 {
                 type = type,
                 $this = this
             };
-            return this.RetreiveType(storey.type, new Func<string>(storey.<>m__0), "IL2CPP_RGCTX_SIZEOF", "IL2CPP_RGCTX_SIZEOF", RuntimeGenericContextInfo.Class);
+            if (<>f__am$cache3 == null)
+            {
+                <>f__am$cache3 = index => Emit.Call("IL2CPP_RGCTX_SIZEOF", "method->rgctx_data", index.ToString(CultureInfo.InvariantCulture));
+            }
+            return RetrieveType(storey.type, this._enclosingMethod, new Func<string>(storey.<>m__0), new Func<int, string>(storey.<>m__1), <>f__am$cache3, RuntimeGenericContextInfo.Class);
         }
 
         public string StaticData(TypeReference type)
@@ -295,11 +325,15 @@
                 type = type,
                 $this = this
             };
-            return this.RetreiveType(storey.type, new Func<string>(storey.<>m__0), "IL2CPP_RGCTX_DATA", "IL2CPP_RGCTX_DATA", RuntimeGenericContextInfo.Static);
+            if (<>f__am$cache0 == null)
+            {
+                <>f__am$cache0 = index => Emit.Call("IL2CPP_RGCTX_DATA", "method->rgctx_data", index.ToString(CultureInfo.InvariantCulture));
+            }
+            return RetrieveType(storey.type, this._enclosingMethod, new Func<string>(storey.<>m__0), new Func<int, string>(storey.<>m__1), <>f__am$cache0, RuntimeGenericContextInfo.Static);
         }
 
-        public string StringLiteral(string literal) => 
-            this._default.StringLiteral(literal);
+        public string StringLiteral(string literal, MetadataToken token, AssemblyDefinition assemblyDefinition) => 
+            this._default.StringLiteral(literal, token, assemblyDefinition);
 
         public string TypeInfoFor(TypeReference type)
         {
@@ -307,21 +341,41 @@
                 type = type,
                 $this = this
             };
-            return this.RetreiveType(storey.type, new Func<string>(storey.<>m__0), "IL2CPP_RGCTX_DATA", "IL2CPP_RGCTX_DATA", RuntimeGenericContextInfo.Class);
+            if (<>f__am$cache1 == null)
+            {
+                <>f__am$cache1 = index => Emit.Call("IL2CPP_RGCTX_DATA", "method->rgctx_data", index.ToString(CultureInfo.InvariantCulture));
+            }
+            return RetrieveType(storey.type, this._enclosingMethod, new Func<string>(storey.<>m__0), new Func<int, string>(storey.<>m__1), <>f__am$cache1, RuntimeGenericContextInfo.Class);
+        }
+
+        public string UnresolvedTypeInfoFor(TypeReference type)
+        {
+            <UnresolvedTypeInfoFor>c__AnonStorey2 storey = new <UnresolvedTypeInfoFor>c__AnonStorey2 {
+                type = type,
+                $this = this
+            };
+            if (<>f__am$cache2 == null)
+            {
+                <>f__am$cache2 = index => Emit.Call("IL2CPP_RGCTX_DATA", "method->rgctx_data", index.ToString(CultureInfo.InvariantCulture));
+            }
+            return RetrieveType(storey.type, this._enclosingMethod, new Func<string>(storey.<>m__0), new Func<int, string>(storey.<>m__1), <>f__am$cache2, RuntimeGenericContextInfo.Class);
         }
 
         [CompilerGenerated]
-        private sealed class <ArrayInfo>c__AnonStorey4
+        private sealed class <ArrayInfo>c__AnonStorey5
         {
             internal SharedRuntimeMetadataAccess $this;
             internal TypeReference elementType;
 
             internal string <>m__0() => 
                 this.$this._default.ArrayInfo(this.elementType);
+
+            internal string <>m__1(int index) => 
+                Emit.Call("IL2CPP_RGCTX_DATA", this.$this.GetTypeRgctxDataExpression(), index.ToString(CultureInfo.InvariantCulture));
         }
 
         [CompilerGenerated]
-        private sealed class <HiddenMethodInfo>c__AnonStorey8
+        private sealed class <HiddenMethodInfo>c__AnonStorey9
         {
             internal SharedRuntimeMetadataAccess $this;
             internal MethodReference method;
@@ -334,17 +388,20 @@
         }
 
         [CompilerGenerated]
-        private sealed class <Il2CppTypeFor>c__AnonStorey3
+        private sealed class <Il2CppTypeFor>c__AnonStorey4
         {
             internal SharedRuntimeMetadataAccess $this;
             internal TypeReference type;
 
             internal string <>m__0() => 
                 this.$this._default.Il2CppTypeFor(this.type);
+
+            internal string <>m__1(int index) => 
+                Emit.Call("IL2CPP_RGCTX_TYPE", this.$this.GetTypeRgctxDataExpression(), index.ToString(CultureInfo.InvariantCulture));
         }
 
         [CompilerGenerated]
-        private sealed class <Method>c__AnonStorey6
+        private sealed class <Method>c__AnonStorey7
         {
             internal SharedRuntimeMetadataAccess $this;
             internal MethodReference method;
@@ -361,7 +418,7 @@
         }
 
         [CompilerGenerated]
-        private sealed class <MethodInfo>c__AnonStorey7
+        private sealed class <MethodInfo>c__AnonStorey8
         {
             internal SharedRuntimeMetadataAccess $this;
             internal MethodReference method;
@@ -374,23 +431,29 @@
         }
 
         [CompilerGenerated]
-        private sealed class <Newobj>c__AnonStorey5
+        private sealed class <Newobj>c__AnonStorey6
         {
             internal SharedRuntimeMetadataAccess $this;
             internal MethodReference ctor;
 
             internal string <>m__0() => 
                 this.$this._default.Newobj(this.ctor);
+
+            internal string <>m__1(int index) => 
+                Emit.Call("IL2CPP_RGCTX_DATA", this.$this.GetTypeRgctxDataExpression(), index.ToString(CultureInfo.InvariantCulture));
         }
 
         [CompilerGenerated]
-        private sealed class <SizeOf>c__AnonStorey2
+        private sealed class <SizeOf>c__AnonStorey3
         {
             internal SharedRuntimeMetadataAccess $this;
             internal TypeReference type;
 
             internal string <>m__0() => 
                 this.$this._default.SizeOf(this.type);
+
+            internal string <>m__1(int index) => 
+                Emit.Call("IL2CPP_RGCTX_SIZEOF", this.$this.GetTypeRgctxDataExpression(), index.ToString(CultureInfo.InvariantCulture));
         }
 
         [CompilerGenerated]
@@ -401,6 +464,9 @@
 
             internal string <>m__0() => 
                 this.$this._default.StaticData(this.type);
+
+            internal string <>m__1(int index) => 
+                Emit.Call("IL2CPP_RGCTX_DATA", this.$this.GetTypeRgctxDataExpression(), index.ToString(CultureInfo.InvariantCulture));
         }
 
         [CompilerGenerated]
@@ -411,6 +477,22 @@
 
             internal string <>m__0() => 
                 this.$this._default.TypeInfoFor(this.type);
+
+            internal string <>m__1(int index) => 
+                Emit.Call("IL2CPP_RGCTX_DATA", this.$this.GetTypeRgctxDataExpression(), index.ToString(CultureInfo.InvariantCulture));
+        }
+
+        [CompilerGenerated]
+        private sealed class <UnresolvedTypeInfoFor>c__AnonStorey2
+        {
+            internal SharedRuntimeMetadataAccess $this;
+            internal TypeReference type;
+
+            internal string <>m__0() => 
+                this.$this._default.UnresolvedTypeInfoFor(this.type);
+
+            internal string <>m__1(int index) => 
+                Emit.Call("IL2CPP_RGCTX_DATA", this.$this.GetTypeRgctxDataExpression(), index.ToString(CultureInfo.InvariantCulture));
         }
     }
 }

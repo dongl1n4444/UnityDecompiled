@@ -15,7 +15,7 @@
     {
         [CompilerGenerated]
         private static Func<KeyValuePair<string, string>, string> <>f__am$cache0;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private int <responseCode>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private State <state>k__BackingField;

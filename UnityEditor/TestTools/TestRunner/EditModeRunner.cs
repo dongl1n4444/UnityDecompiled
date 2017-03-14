@@ -24,6 +24,7 @@
         private RunStartedEvent m_RunStartedEvent = new RunStartedEvent();
         private TestFinishedEvent m_TestFinishedEvent = new TestFinishedEvent();
         private TestStartedEvent m_TestStartedEvent = new TestStartedEvent();
+        public static bool RunningTests;
 
         public EditModeRunner(UnityTestAssemblyRunner runner)
         {
@@ -58,6 +59,7 @@
                 }
                 this.m_CallbackObjects.Clear();
             }
+            RunningTests = false;
         }
 
         private void InvokeDelegator()
@@ -65,15 +67,22 @@
             TestDelegator instance = TestDelegator.instance;
             if (instance.HasTest())
             {
-                if (this.m_CurrentTest == null)
-                {
-                    this.m_LogCollector = new LogScope();
-                    this.m_CurrentTest = instance.GetTestEnumerator();
-                }
                 bool flag = false;
                 try
                 {
-                    flag = !this.m_CurrentTest.MoveNext();
+                    if (this.m_CurrentTest == null)
+                    {
+                        this.m_LogCollector = new LogScope();
+                        this.m_CurrentTest = instance.GetTestEnumerator();
+                        if (this.m_CurrentTest == null)
+                        {
+                            flag = true;
+                        }
+                    }
+                    if (this.m_CurrentTest != null)
+                    {
+                        flag = !this.m_CurrentTest.MoveNext();
+                    }
                     if (this.m_LogCollector.AnyFailingLogs())
                     {
                         throw new UnhandledLogMessageException(this.m_LogCollector.FailingLogs.First<LogEvent>());
@@ -99,7 +108,7 @@
                 }
                 else if (this.m_CurrentTest.Current != null)
                 {
-                    Debug.LogWarning("EditMode test can only yield null");
+                    Debug.LogError("EditMode test can only yield null");
                 }
             }
         }
@@ -124,6 +133,11 @@
             this.m_RunStartedEvent.Invoke(this.m_Runner.LoadedTest);
             Reflect.MethodCallWrapper = new Func<Func<object>, object>(ActionDelegator.instance.Delegate);
             EditorApplication.update = (EditorApplication.CallbackFunction) Delegate.Combine(EditorApplication.update, new EditorApplication.CallbackFunction(this.TestConsumer));
+            if (RunningTests)
+            {
+                throw new Exception("Tests are currently running");
+            }
+            RunningTests = true;
             this.m_Runner.RunAsync(new TestListenerWrapper(this.m_TestStartedEvent, this.m_TestFinishedEvent, true), filter);
         }
 

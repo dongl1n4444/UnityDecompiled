@@ -15,6 +15,7 @@
     using UnityEditor.CrashReporting;
     using UnityEditor.iOS.Il2Cpp;
     using UnityEditor.iOS.Xcode;
+    using UnityEditor.iOS.Xcode.Extensions;
     using UnityEditor.Modules;
     using UnityEditor.Utils;
     using UnityEditorInternal;
@@ -526,33 +527,33 @@
         private static void BuildXCodeProject(ProjectPaths paths, BuildSettings bs, UsedFeatures usedFeatures, IncludedFileList includedFiles, List<string> frameworks, List<string> initialInstallTags)
         {
             string path = paths.PBXProjectStaging();
-            PBXProject project = new PBXProject();
-            project.ReadFromFile(path);
-            string targetGuid = project.TargetGuidByName(PBXProject.GetUnityTargetName());
-            string str3 = project.TargetGuidByName(PBXProject.GetUnityTestTargetName());
-            string str4 = project.ProjectGuid();
+            PBXProject proj = new PBXProject();
+            proj.ReadFromFile(path);
+            string targetGuid = proj.TargetGuidByName(PBXProject.GetUnityTargetName());
+            string str3 = proj.TargetGuidByName(PBXProject.GetUnityTestTargetName());
+            string str4 = proj.ProjectGuid();
             if ((targetGuid == null) || (str3 == null))
             {
                 throw new Exception($"Deletion of either of the "{PBXProject.GetUnityTargetName()}" or "{PBXProject.GetUnityTestTargetName()}" targets is not supported");
             }
             string[] targetGuids = new string[] { targetGuid, str3 };
             string[] strArray2 = new string[] { targetGuid, str3, str4 };
-            HashSet<string> groupChildrenFilesRefs = project.GetGroupChildrenFilesRefs("Classes/Native");
+            HashSet<string> groupChildrenFilesRefs = proj.GetGroupChildrenFilesRefs("Classes/Native");
             string[] strArray3 = new string[] { "LaunchScreen-iPad.xib", "LaunchScreen-iPhone.xib", "LaunchScreen-iPhonePortrait.png", "LaunchScreen-iPhoneLandscape.png", "LaunchScreen-iPad.png" };
-            HashSet<string> first = new HashSet<string>(groupChildrenFilesRefs.Union<string>(project.GetFileRefsByProjectPaths(strArray3)));
+            HashSet<string> first = new HashSet<string>(groupChildrenFilesRefs.Union<string>(proj.GetFileRefsByProjectPaths(strArray3)));
             HashSet<string> second = new HashSet<string>(includedFiles.GetProjectFilesInPath("Classes/Native").Union<string>(includedFiles.GetProjectFilesByFullPath(new HashSet<string>(strArray3))));
             HashSet<string> set4 = new HashSet<string>(first.Except<string>(second));
             HashSet<string> set5 = new HashSet<string>(first.Intersect<string>(second));
             foreach (string str6 in set4)
             {
-                project.RemoveFile(project.FindFileGuidByProjectPath(str6));
+                proj.RemoveFile(proj.FindFileGuidByProjectPath(str6));
             }
-            List<string> groupChildrenFiles = project.GetGroupChildrenFiles("Libraries");
+            List<string> groupChildrenFiles = proj.GetGroupChildrenFiles("Libraries");
             foreach (string str7 in groupChildrenFiles)
             {
                 if (str7.EndsWith(".dll.s"))
                 {
-                    project.RemoveFile(project.FindFileGuidByProjectPath("Libraries/" + str7));
+                    proj.RemoveFile(proj.FindFileGuidByProjectPath("Libraries/" + str7));
                 }
             }
             List<string> list = new List<string>();
@@ -600,130 +601,130 @@
                             }
                             break;
                     }
-                    string fileGuid = project.AddFile(destinationPath, GetProjectPath(file), GetSourceTreeForPath(destinationPath));
-                    project.AddFileToBuildWithFlags(targetGuid, fileGuid, file.compileFlags);
+                    string fileGuid = proj.AddFile(destinationPath, GetProjectPath(file), GetSourceTreeForPath(destinationPath));
+                    proj.AddFileToBuildWithFlags(targetGuid, fileGuid, file.compileFlags);
                 }
             }
             foreach (string str11 in frameworks)
             {
-                project.AddFrameworkToProject(targetGuid, str11 + ".framework", false);
+                proj.AddFrameworkToProject(targetGuid, str11 + ".framework", false);
             }
             if (!frameworks.Contains("GameKit"))
             {
                 if (usedFeatures.gameCenter)
                 {
-                    project.AddFrameworkToProject(targetGuid, "GameKit.framework", false);
+                    proj.AddFrameworkToProject(targetGuid, "GameKit.framework", false);
                 }
                 else
                 {
-                    project.RemoveFrameworkFromProject(targetGuid, "GameKit.framework");
+                    proj.RemoveFrameworkFromProject(targetGuid, "GameKit.framework");
                 }
             }
             if (usedFeatures.replayKit)
             {
-                project.AddFrameworkToProject(targetGuid, "ReplayKit.framework", true);
+                proj.AddFrameworkToProject(targetGuid, "ReplayKit.framework", true);
             }
             else
             {
-                project.RemoveFrameworkFromProject(targetGuid, "ReplayKit.framework");
+                proj.RemoveFrameworkFromProject(targetGuid, "ReplayKit.framework");
             }
             if (bs.IsAppleTVEnabled() && !frameworks.Contains("GameController"))
             {
-                project.AddFrameworkToProject(targetGuid, "GameController.framework", false);
+                proj.AddFrameworkToProject(targetGuid, "GameController.framework", false);
             }
             if (!frameworks.Contains("GameController") && usedFeatures.controller)
             {
-                project.AddFrameworkToProject(targetGuid, "GameController.framework", true);
+                proj.AddFrameworkToProject(targetGuid, "GameController.framework", true);
             }
             if (!frameworks.Contains("Metal") && IsMetalUsed(bs))
             {
-                project.AddFrameworkToProject(targetGuid, "Metal.framework", true);
+                proj.AddFrameworkToProject(targetGuid, "Metal.framework", true);
             }
             if (!IsMetalUsed(bs))
             {
-                project.RemoveFrameworkFromProject(targetGuid, "Metal.framework");
+                proj.RemoveFrameworkFromProject(targetGuid, "Metal.framework");
             }
             list.Remove("$(SRCROOT)/Libraries");
             foreach (string str12 in list)
             {
-                project.AddBuildProperty(targetGuids, "LIBRARY_SEARCH_PATHS", str12);
+                proj.AddBuildProperty(targetGuids, "LIBRARY_SEARCH_PATHS", str12);
             }
-            project.SetBuildProperty(targetGuids, "FRAMEWORK_SEARCH_PATHS", "$(inherited)");
+            proj.SetBuildProperty(targetGuids, "FRAMEWORK_SEARCH_PATHS", "$(inherited)");
             foreach (string str13 in list3)
             {
-                project.AddBuildProperty(targetGuids, "FRAMEWORK_SEARCH_PATHS", str13);
+                proj.AddBuildProperty(targetGuids, "FRAMEWORK_SEARCH_PATHS", str13);
             }
-            project.SetBuildProperty(targetGuids, "ARCHS", GetTargetArchitecture(bs));
+            proj.SetBuildProperty(targetGuids, "ARCHS", GetTargetArchitecture(bs));
             if (bs.IsAppleTVEnabled())
             {
-                project.RemoveBuildProperty(targetGuids, "CODE_SIGN_IDENTITY[sdk=iphoneos*]");
-                project.SetBuildProperty(targetGuids, "CODE_SIGN_IDENTITY[sdk=appletvos*]", "iPhone Developer");
-                project.SetBuildProperty(strArray2, "SDKROOT", "appletvos");
-                project.RemoveBuildProperty(strArray2, "SUPPORTED_PLATFORMS");
-                project.AddBuildProperty(strArray2, "SUPPORTED_PLATFORMS", "appletvos");
+                proj.RemoveBuildProperty(targetGuids, "CODE_SIGN_IDENTITY[sdk=iphoneos*]");
+                proj.SetBuildProperty(targetGuids, "CODE_SIGN_IDENTITY[sdk=appletvos*]", "iPhone Developer");
+                proj.SetBuildProperty(strArray2, "SDKROOT", "appletvos");
+                proj.RemoveBuildProperty(strArray2, "SUPPORTED_PLATFORMS");
+                proj.AddBuildProperty(strArray2, "SUPPORTED_PLATFORMS", "appletvos");
                 if (bs.sdkType == SdkType.Simulator)
                 {
-                    project.AddBuildProperty(strArray2, "SUPPORTED_PLATFORMS", "appletvsimulator");
+                    proj.AddBuildProperty(strArray2, "SUPPORTED_PLATFORMS", "appletvsimulator");
                 }
-                project.RemoveBuildProperty(targetGuids, "IPHONEOS_DEPLOYMENT_TARGET");
-                project.SetBuildProperty(targetGuids, "TVOS_DEPLOYMENT_TARGET", bs.targetOsVersion.ToString());
-                project.RemoveFrameworkFromProject(targetGuid, "CoreMotion.framework");
-                project.RemoveFrameworkFromProject(str3, "CoreMotion.framework");
+                proj.RemoveBuildProperty(targetGuids, "IPHONEOS_DEPLOYMENT_TARGET");
+                proj.SetBuildProperty(targetGuids, "TVOS_DEPLOYMENT_TARGET", bs.targetOsVersion.ToString());
+                proj.RemoveFrameworkFromProject(targetGuid, "CoreMotion.framework");
+                proj.RemoveFrameworkFromProject(str3, "CoreMotion.framework");
                 string[] valueList = new string[] { "-weak_framework", "CoreMotion" };
-                project.RemoveBuildPropertyValueList(targetGuids, "OTHER_LDFLAGS", valueList);
+                proj.RemoveBuildPropertyValueList(targetGuids, "OTHER_LDFLAGS", valueList);
             }
             else
             {
-                project.SetBuildProperty(strArray2, "SDKROOT", (bs.sdkType != SdkType.Device) ? "iphonesimulator" : "iphoneos");
-                project.RemoveBuildProperty(strArray2, "SUPPORTED_PLATFORMS");
-                project.AddBuildProperty(strArray2, "SUPPORTED_PLATFORMS", "iphoneos");
+                proj.SetBuildProperty(strArray2, "SDKROOT", (bs.sdkType != SdkType.Device) ? "iphonesimulator" : "iphoneos");
+                proj.RemoveBuildProperty(strArray2, "SUPPORTED_PLATFORMS");
+                proj.AddBuildProperty(strArray2, "SUPPORTED_PLATFORMS", "iphoneos");
                 if (bs.sdkType == SdkType.Simulator)
                 {
-                    project.AddBuildProperty(strArray2, "SUPPORTED_PLATFORMS", "iphonesimulator");
+                    proj.AddBuildProperty(strArray2, "SUPPORTED_PLATFORMS", "iphonesimulator");
                 }
-                project.SetBuildProperty(targetGuids, "IPHONEOS_DEPLOYMENT_TARGET", bs.targetOsVersion.ToString());
+                proj.SetBuildProperty(targetGuids, "IPHONEOS_DEPLOYMENT_TARGET", bs.targetOsVersion.ToString());
             }
-            project.SetBuildProperty(targetGuids, "PRODUCT_NAME", bs.productName);
-            project.SetBuildProperty(targetGuids, "TARGETED_DEVICE_FAMILY", GetTargetDeviceFamily(bs));
-            project.SetBuildProperty(targetGuids, "UNITY_RUNTIME_VERSION", Application.unityVersion);
-            project.SetBuildProperty(targetGuids, "UNITY_SCRIPTING_BACKEND", !bs.UseIl2Cpp() ? "mono2x" : "il2cpp");
+            proj.SetBuildProperty(targetGuids, "PRODUCT_NAME", bs.productName);
+            proj.SetBuildProperty(targetGuids, "TARGETED_DEVICE_FAMILY", GetTargetDeviceFamily(bs));
+            proj.SetBuildProperty(targetGuids, "UNITY_RUNTIME_VERSION", Application.unityVersion);
+            proj.SetBuildProperty(targetGuids, "UNITY_SCRIPTING_BACKEND", !bs.UseIl2Cpp() ? "mono2x" : "il2cpp");
             if (!bs.automaticallySignBuild)
             {
                 if (bs.IsAppleTVEnabled())
                 {
-                    project.SetBuildProperty(targetGuids, "PROVISIONING_PROFILE", bs.tvOSManualProvisioningProfileUUID);
-                    project.SetTargetAttributes("ProvisioningStyle", "Manual");
+                    proj.SetBuildProperty(targetGuids, "PROVISIONING_PROFILE", bs.tvOSManualProvisioningProfileUUID);
+                    proj.SetTargetAttributes("ProvisioningStyle", "Manual");
                 }
                 else
                 {
-                    project.SetBuildProperty(targetGuids, "PROVISIONING_PROFILE", bs.iOSManualProvisioningProfileUUID);
-                    project.SetTargetAttributes("ProvisioningStyle", "Manual");
+                    proj.SetBuildProperty(targetGuids, "PROVISIONING_PROFILE", bs.iOSManualProvisioningProfileUUID);
+                    proj.SetTargetAttributes("ProvisioningStyle", "Manual");
                 }
-                project.SetBuildProperty(targetGuids, "DEVELOPMENT_TEAM", "");
+                proj.SetBuildProperty(targetGuids, "DEVELOPMENT_TEAM", "");
             }
             else
             {
-                project.SetBuildProperty(targetGuids, "DEVELOPMENT_TEAM", bs.appleDeveloperTeamID);
-                project.SetBuildProperty(targetGuids, "PROVISIONING_PROFILE", "Automatic");
-                project.SetTargetAttributes("ProvisioningStyle", "Automatic");
-                project.SetBuildProperty(targetGuids, "PROVISIONING_PROFILE", "");
+                proj.SetBuildProperty(targetGuids, "DEVELOPMENT_TEAM", bs.appleDeveloperTeamID);
+                proj.SetBuildProperty(targetGuids, "PROVISIONING_PROFILE", "Automatic");
+                proj.SetTargetAttributes("ProvisioningStyle", "Automatic");
+                proj.SetBuildProperty(targetGuids, "PROVISIONING_PROFILE", "");
             }
             if (bs.UseIl2Cpp())
             {
-                project.SetBuildProperty(targetGuids, "LD_GENERATE_MAP_FILE", "YES");
+                proj.SetBuildProperty(targetGuids, "LD_GENERATE_MAP_FILE", "YES");
             }
             else
             {
-                project.SetBuildProperty(targetGuids, "ENABLE_BITCODE", "NO");
+                proj.SetBuildProperty(targetGuids, "ENABLE_BITCODE", "NO");
             }
             if (bs.useOnDemandResources)
             {
-                project.SetBuildProperty(targetGuid, "ENABLE_ON_DEMAND_RESOURCES", "YES");
+                proj.SetBuildProperty(targetGuid, "ENABLE_ON_DEMAND_RESOURCES", "YES");
             }
-            project.RemoveBuildProperty(targetGuid, "ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS");
+            proj.RemoveBuildProperty(targetGuid, "ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS");
             foreach (string str14 in initialInstallTags)
             {
-                project.AddBuildProperty(targetGuid, "ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS", str14);
+                proj.AddBuildProperty(targetGuid, "ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS", str14);
             }
             if (bs.installInBuildFolder)
             {
@@ -738,11 +739,11 @@
                 };
                 foreach (string str15 in list4)
                 {
-                    project.AddBuildProperty(targetGuids, "LIBRARY_SEARCH_PATHS", Path.Combine(paths.UnityTree(), str15));
+                    proj.AddBuildProperty(targetGuids, "LIBRARY_SEARCH_PATHS", Path.Combine(paths.UnityTree(), str15));
                 }
                 string str16 = Path.Combine(paths.DevProjectInstallPath(), "UnityDevProject.xcodeproj");
-                project.AddExternalProjectDependency(str16, "UnityDevProject.xcodeproj", PBXSourceTree.Absolute);
-                project.AddExternalLibraryDependency(targetGuid, "libUnityDevProject.a", "AA88A7D019101316001E7AB7", str16, "UnityDevProject");
+                proj.AddExternalProjectDependency(str16, "UnityDevProject.xcodeproj", PBXSourceTree.Absolute);
+                proj.AddExternalLibraryDependency(targetGuid, "libUnityDevProject.a", "AA88A7D019101316001E7AB7", str16, "UnityDevProject");
             }
             List<string> list6 = new List<string>();
             List<string> list7 = new List<string>();
@@ -763,35 +764,36 @@
                 list6.Add("-DINIT_SCRIPTING_BACKEND=1");
                 list6.Add("-fno-strict-overflow");
                 list7.Add("-mno-thumb");
+                list6.Add("-DRUNTIME_IL2CPP=1");
             }
             else
             {
                 list6.Add("-mno-thumb");
                 list7.Add("-DINIT_SCRIPTING_BACKEND=1");
             }
-            project.UpdateBuildProperty(targetGuid, "OTHER_CFLAGS", list6.ToArray(), list7.ToArray());
-            project.UpdateBuildProperty(targetGuid, "OTHER_LDFLAGS", list8.ToArray(), list9.ToArray());
-            SetupFeatureDefines(project, targetGuid, bs);
+            proj.UpdateBuildProperty(targetGuid, "OTHER_CFLAGS", list6.ToArray(), list7.ToArray());
+            proj.UpdateBuildProperty(targetGuid, "OTHER_LDFLAGS", list8.ToArray(), list9.ToArray());
+            SetupFeatureDefines(proj, targetGuid, bs);
             string[] addValues = new string[] { "$(SRCROOT)/Classes/Native", "$(SRCROOT)/Libraries/bdwgc/include", "$(SRCROOT)/Libraries/libil2cpp/include" };
             if (bs.UseIl2Cpp())
             {
-                project.SetBuildProperty(targetGuid, "GCC_ENABLE_CPP_EXCEPTIONS", "YES");
-                project.UpdateBuildProperty(targetGuid, "HEADER_SEARCH_PATHS", addValues, null);
+                proj.SetBuildProperty(targetGuid, "GCC_ENABLE_CPP_EXCEPTIONS", "YES");
+                proj.UpdateBuildProperty(targetGuid, "HEADER_SEARCH_PATHS", addValues, null);
             }
             else
             {
-                project.SetBuildProperty(targetGuid, "GCC_ENABLE_CPP_EXCEPTIONS", "NO");
-                project.UpdateBuildProperty(targetGuid, "HEADER_SEARCH_PATHS", null, addValues);
+                proj.SetBuildProperty(targetGuid, "GCC_ENABLE_CPP_EXCEPTIONS", "NO");
+                proj.UpdateBuildProperty(targetGuid, "HEADER_SEARCH_PATHS", null, addValues);
             }
             if (bs.nativeCrashReportingEnabled && (bs.symbolsServiceBaseUri != null))
             {
-                project.AppendShellScriptBuildPhase(targetGuid, "Process symbols", "/bin/sh", "\"$PROJECT_DIR/process_symbols.sh\"");
-                project.SetBuildProperty(strArray2, "UNITY_CLOUD_PROJECT_ID", bs.cloudProjectId);
-                project.SetBuildProperty(strArray2, "USYM_UPLOAD_URL_SOURCE", new Uri(bs.symbolsServiceBaseUri, "url").ToString());
-                project.SetBuildProperty(strArray2, "DEBUG_INFORMATION_FORMAT", "dwarf-with-dsym");
-                project.SetBuildProperty(strArray2, "USYM_UPLOAD_AUTH_TOKEN", GetUsymUploadAuthToken(bs));
+                proj.AppendShellScriptBuildPhase(targetGuid, "Process symbols", "/bin/sh", "\"$PROJECT_DIR/process_symbols.sh\"");
+                proj.SetBuildProperty(strArray2, "UNITY_CLOUD_PROJECT_ID", bs.cloudProjectId);
+                proj.SetBuildProperty(strArray2, "USYM_UPLOAD_URL_SOURCE", new Uri(bs.symbolsServiceBaseUri, "url").ToString());
+                proj.SetBuildProperty(strArray2, "DEBUG_INFORMATION_FORMAT", "dwarf-with-dsym");
+                proj.SetBuildProperty(strArray2, "USYM_UPLOAD_AUTH_TOKEN", GetUsymUploadAuthToken(bs));
             }
-            project.WriteToFile(path);
+            proj.WriteToFile(path);
         }
 
         private static void BuildXCodeUnityDevProject(ProjectPaths paths, IncludedFileList includedFiles)

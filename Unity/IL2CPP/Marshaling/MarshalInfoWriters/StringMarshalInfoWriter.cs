@@ -214,24 +214,7 @@
             }
             else if (this._canReferenceOriginalManagedString && !isMarshalingReturnValue)
             {
-                if (this._nativeType != Mono.Cecil.NativeType.LPWStr)
-                {
-                    if (this._nativeType != (Mono.Cecil.NativeType.Error | Mono.Cecil.NativeType.Boolean))
-                    {
-                        throw new InvalidOperationException($"StringMarshalInfoWriter doesn't know how to marshal {this._nativeType} while maintaining reference to original managed string.");
-                    }
-                    string niceName = sourceVariable.GetNiceName();
-                    string str4 = niceName + "NativeView";
-                    string str5 = niceName + "HStringReference";
-                    writer.WriteLine();
-                    object[] objArray6 = new object[] { str4, sourceVariable.Load() };
-                    writer.WriteLine("DECLARE_IL2CPP_STRING_AS_STRING_VIEW_OF_NATIVE_CHARS({0}, {1});", objArray6);
-                    object[] objArray7 = new object[] { str5, str4 };
-                    writer.WriteLine("il2cpp::utils::Il2CppHStringReference {0}({1});", objArray7);
-                    object[] objArray8 = new object[] { destinationVariable, str5 };
-                    writer.WriteLine("{0} = {1};", objArray8);
-                }
-                else
+                if (this._nativeType == Mono.Cecil.NativeType.LPWStr)
                 {
                     string str2 = sourceVariable.Load();
                     object[] objArray4 = new object[] { str2, DefaultMarshalInfoWriter.Naming.Null };
@@ -245,6 +228,31 @@
                         FieldDefinition field = DefaultMarshalInfoWriter.TypeProvider.SystemString.Fields.Single<FieldDefinition>(<>f__am$cache0);
                         object[] objArray5 = new object[] { destinationVariable, sourceVariable.Load(), DefaultMarshalInfoWriter.Naming.ForFieldAddressGetter(field) };
                         writer.WriteLine("{0} = {1}->{2}();", objArray5);
+                    }
+                }
+                else
+                {
+                    if (this._nativeType != (Mono.Cecil.NativeType.Error | Mono.Cecil.NativeType.Boolean))
+                    {
+                        throw new InvalidOperationException($"StringMarshalInfoWriter doesn't know how to marshal {this._nativeType} while maintaining reference to original managed string.");
+                    }
+                    if (CodeGenOptions.MonoRuntime)
+                    {
+                        object[] objArray6 = new object[] { base._typeRef.FullName };
+                        writer.WriteLine("il2cpp_codegen_get_marshal_directive_exception(\"Cannot marshal type '{0}'.\");", objArray6);
+                    }
+                    else
+                    {
+                        string niceName = sourceVariable.GetNiceName();
+                        string str4 = niceName + "NativeView";
+                        string str5 = niceName + "HStringReference";
+                        writer.WriteLine();
+                        object[] objArray7 = new object[] { str4, sourceVariable.Load() };
+                        writer.WriteLine("DECLARE_IL2CPP_STRING_AS_STRING_VIEW_OF_NATIVE_CHARS({0}, {1});", objArray7);
+                        object[] objArray8 = new object[] { str5, str4 };
+                        writer.WriteLine("il2cpp::utils::Il2CppHStringReference {0}({1});", objArray8);
+                        object[] objArray9 = new object[] { destinationVariable, str5 };
+                        writer.WriteLine("{0} = {1};", objArray9);
                     }
                 }
             }
@@ -266,8 +274,8 @@
                 {
                     str = !this.IsWideString ? "il2cpp_codegen_marshal_string" : "il2cpp_codegen_marshal_wstring";
                 }
-                object[] objArray9 = new object[] { destinationVariable, str, sourceVariable.Load() };
-                writer.WriteLine("{0} = {1}({2});", objArray9);
+                object[] objArray10 = new object[] { destinationVariable, str, sourceVariable.Load() };
+                writer.WriteLine("{0} = {1}({2});", objArray10);
             }
         }
 

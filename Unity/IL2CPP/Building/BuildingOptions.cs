@@ -4,6 +4,8 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using Unity.IL2CPP.Building.BuildDescriptions;
+    using Unity.IL2CPP.Common;
 
     public class BuildingOptions
     {
@@ -12,15 +14,15 @@
         public IEnumerable<NPath> AdditionalIncludeDirectories = new NPath[0];
         public IEnumerable<string> AdditionalLibraries = new string[0];
         public IEnumerable<NPath> AdditionalLinkDirectories = new NPath[0];
-        public Unity.IL2CPP.Building.Architecture Architecture = Unity.IL2CPP.Building.Architecture.OfCurrentProcess;
+        public Unity.IL2CPP.Common.Architecture Architecture = Unity.IL2CPP.Common.Architecture.OfCurrentProcess;
         public NPath CacheDirectory;
         public string CompilerFlags;
         public BuildConfiguration Configuration = BuildConfiguration.Debug;
         public bool ForceRebuild;
         public NPath LibIL2CPPCacheDirectory;
-        public bool LibIL2CPPDynamic;
         public string LinkerFlags;
         public NPath OutputPath;
+        public RuntimeBuildType Runtime;
         public NPath SourceDirectory;
         public NPath ToolChainPath;
         public bool TreatWarningsAsErrors;

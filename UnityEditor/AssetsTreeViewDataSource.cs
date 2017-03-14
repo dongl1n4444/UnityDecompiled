@@ -12,7 +12,7 @@
 
     internal class AssetsTreeViewDataSource : LazyTreeViewDataSource
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <foldersFirst>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <foldersOnly>k__BackingField;

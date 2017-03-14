@@ -132,6 +132,15 @@
             {
                 MetadataCacheWriter.WriteMetadata(outputDir, dataFolder, null, usedAssemblies, methodPointerTables, metadataCollection, attributeCollection, vTableBuilder, methodCollector, interopDataCollector, virtualCallTables);
             }
+            if (CodeGenOptions.MonoRuntime)
+            {
+                using (TinyProfiler.Section("WriteMonoRuntimeData", ""))
+                {
+                    MonoRuntimeDataWriter.WriteMethodInfoMapping(outputDir, metadataCollection, methodCollector);
+                    MonoRuntimeDataWriter.WriteGenericMethodInfoMapping(outputDir, methodPointerTables);
+                    MonoRuntimeDataWriter.WriteRuntimeGenericContextEntires(outputDir, metadataCollection);
+                }
+            }
         }
 
         public static void WriteComCallableWrappers(NPath outputDirectory, IInteropDataCollectorResults interopDataCollector)

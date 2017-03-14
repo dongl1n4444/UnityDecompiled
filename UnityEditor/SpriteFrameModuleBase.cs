@@ -20,9 +20,9 @@
         private string <moduleName>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ISpriteEditor <spriteEditor>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private SpriteImportMode <spriteImportMode>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private IUndoSystem <undoSystem>k__BackingField;
         private const float kInspectorHeight = 160f;
         private const float kInspectorWidth = 330f;

@@ -153,7 +153,7 @@
                     else
                     {
                         s_UnityVSBridgeToLoad = vstuBridgeAssembly;
-                        InternalEditorUtility.SetupCustomDll(Path.GetFileNameWithoutExtension(vstuBridgeAssembly), vstuBridgeAssembly);
+                        InternalEditorUtility.RegisterPrecompiledAssembly(Path.GetFileNameWithoutExtension(vstuBridgeAssembly), vstuBridgeAssembly);
                     }
                 }
             }

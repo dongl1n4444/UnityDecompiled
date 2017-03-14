@@ -7,7 +7,7 @@
 
     internal class FooTreeViewItem : TreeViewItem
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private BackendData.Foo <foo>k__BackingField;
 
         public FooTreeViewItem(int id, int depth, TreeViewItem parent, string displayName, BackendData.Foo foo) : base(id, depth, parent, displayName)

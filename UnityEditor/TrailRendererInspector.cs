@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using UnityEngine;
 
-    [CustomEditor(typeof(TrailRenderer)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(TrailRenderer))]
     internal class TrailRendererInspector : RendererEditorBase
     {
         private SerializedProperty m_Alignment;

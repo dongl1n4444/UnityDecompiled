@@ -100,7 +100,7 @@
         }
 
         protected virtual Version GetBuildToolsUpdateVersion() => 
-            new Version(0x18, 0, 3);
+            new Version(0x19, 0, 2);
 
         public static AndroidSDKTools GetInstance()
         {

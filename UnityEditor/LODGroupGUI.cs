@@ -229,7 +229,7 @@
         {
             [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private int <LODLevel>k__BackingField;
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private string <LODName>k__BackingField;
             [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private float <RawScreenPercent>k__BackingField;

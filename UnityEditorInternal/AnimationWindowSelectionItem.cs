@@ -176,8 +176,20 @@
         public virtual bool canChangeAnimationClip =>
             (this.rootGameObject != null);
 
-        public virtual bool canRecord =>
+        public virtual bool canPreview =>
             ((this.rootGameObject != null) && !this.objectIsOptimized);
+
+        public virtual bool canRecord
+        {
+            get
+            {
+                if (!this.animationIsEditable)
+                {
+                    return false;
+                }
+                return this.canPreview;
+            }
+        }
 
         public virtual bool canSyncSceneSelection =>
             true;

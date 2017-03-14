@@ -17,7 +17,7 @@
     /// </summary>
     public sealed class AssetDatabase
     {
-        [field: CompilerGenerated, DebuggerBrowsable(0)]
+        [field: DebuggerBrowsable(0), CompilerGenerated]
         public static  event ImportPackageCallback importPackageCancelled;
 
         [field: DebuggerBrowsable(0), CompilerGenerated]
@@ -26,7 +26,7 @@
         [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event ImportPackageFailedCallback importPackageFailed;
 
-        [field: CompilerGenerated, DebuggerBrowsable(0)]
+        [field: DebuggerBrowsable(0), CompilerGenerated]
         public static  event ImportPackageCallback importPackageStarted;
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -700,7 +700,7 @@
         /// <returns>
         /// <para>The asset matching the parameters</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, TypeInferenceRule(TypeInferenceRules.TypeReferencedBySecondArgument)]
+        [MethodImpl(MethodImplOptions.InternalCall), TypeInferenceRule(TypeInferenceRules.TypeReferencedBySecondArgument), GeneratedByOldBindingsGenerator]
         public static extern UnityEngine.Object LoadAssetAtPath(string assetPath, System.Type type);
         /// <summary>
         /// <para>Returns the main asset object at assetPath.</para>

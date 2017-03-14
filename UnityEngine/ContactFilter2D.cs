@@ -66,7 +66,7 @@
         }
 
         /// <summary>
-        /// <para></para>
+        /// <para>Sets the layerMask filter property using the layerMask parameter provided and also enables layer mask filtering by setting useLayerMask to true.</para>
         /// </summary>
         /// <param name="layerMask">The value used to set the layerMask.</param>
         public void SetLayerMask(LayerMask layerMask)
@@ -84,7 +84,7 @@
         }
 
         /// <summary>
-        /// <para>Sets the minDepth and maxDepth filter properties and turns on depth filtering by setting ::ref:useDepth to true.</para>
+        /// <para>Sets the minDepth and maxDepth filter properties and turns on depth filtering by setting useDepth to true.</para>
         /// </summary>
         /// <param name="minDepth">The value used to set minDepth.</param>
         /// <param name="maxDepth">The value used to set maxDepth.</param>
@@ -104,7 +104,7 @@
         }
 
         /// <summary>
-        /// <para>Sets the minNormalAngle and maxNormalAngle filter properties and turns on normal angle filtering by setting ::ref:useNormalAngle to true.</para>
+        /// <para>Sets the minNormalAngle and maxNormalAngle filter properties and turns on normal angle filtering by setting useNormalAngle to true.</para>
         /// </summary>
         /// <param name="minNormalAngle">The value used to set the minNormalAngle.</param>
         /// <param name="maxNormalAngle">The value used to set the maxNormalAngle.</param>

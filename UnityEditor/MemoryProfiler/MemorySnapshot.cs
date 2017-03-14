@@ -11,7 +11,7 @@
     /// </summary>
     public static class MemorySnapshot
     {
-        [field: DebuggerBrowsable(0), CompilerGenerated]
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public static  event Action<PackedMemorySnapshot> OnSnapshotReceived;
 
         private static void DispatchSnapshot(PackedMemorySnapshot snapshot)

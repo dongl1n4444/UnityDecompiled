@@ -186,7 +186,7 @@
             {
                 GUILayout.FlexibleSpace();
                 Color color = GUI.color;
-                GUI.color *= UnityEditor.AnimationMode.animatedPropertyColor;
+                GUI.color *= UnityEditor.AnimationMode.recordedPropertyColor;
                 GUILayout.Label(Styles.frameDebuggerOnContent, EditorStyles.miniLabel, new GUILayoutOption[0]);
                 GUI.color = color;
                 if (Event.current.type == EventType.Repaint)

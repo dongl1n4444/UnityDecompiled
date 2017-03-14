@@ -41,7 +41,7 @@
             base.multiColumnHeader.visibleColumnsChanged += new MultiColumnHeader.HeaderCallback(this.OnVisibleColumnChanged);
             base.showAlternatingRowBackgrounds = true;
             base.showBorder = true;
-            base.rowHeight = 18f;
+            base.rowHeight = EditorGUIUtility.singleLineHeight;
         }
 
         protected override void BeforeRowsGUI()

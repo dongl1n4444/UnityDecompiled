@@ -12,7 +12,7 @@
     {
         [CompilerGenerated]
         private static Func<TreeViewItem, int> <>f__am$cache0;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <drawRowMarkerAbove>k__BackingField;
         private const double k_DropExpandTimeout = 0.7;
         protected DropData m_DropData = new DropData();

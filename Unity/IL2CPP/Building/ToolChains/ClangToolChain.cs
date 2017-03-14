@@ -20,7 +20,7 @@
         private static Func<string, IEnumerable<string>> <>f__mg$cache0;
         private Func<string, IEnumerable<string>> AdditionalCompilerOptionsForSourceFile;
 
-        public ClangToolChain(Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors) : base(architecture, buildConfiguration)
+        public ClangToolChain(Unity.IL2CPP.Common.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors) : base(architecture, buildConfiguration)
         {
             if (treatWarningsAsErrors)
             {
@@ -381,7 +381,7 @@
                 this.$PC = -1;
                 switch (num)
                 {
-                    case 13:
+                    case 14:
                         try
                         {
                         }
@@ -409,7 +409,7 @@
                         {
                             this.$PC = 1;
                         }
-                        goto Label_02EA;
+                        goto Label_0310;
 
                     case 1:
                         this.$current = "-c";
@@ -417,7 +417,7 @@
                         {
                             this.$PC = 2;
                         }
-                        goto Label_02EA;
+                        goto Label_0310;
 
                     case 2:
                         this.$current = "-fvisibility=hidden";
@@ -425,7 +425,7 @@
                         {
                             this.$PC = 3;
                         }
-                        goto Label_02EA;
+                        goto Label_0310;
 
                     case 3:
                         this.$current = "-fno-strict-overflow";
@@ -433,7 +433,7 @@
                         {
                             this.$PC = 4;
                         }
-                        goto Label_02EA;
+                        goto Label_0310;
 
                     case 4:
                         if (this.$this.BuildConfiguration != BuildConfiguration.Debug)
@@ -452,7 +452,7 @@
                                 this.$PC = 5;
                             }
                         }
-                        goto Label_02EA;
+                        goto Label_0310;
 
                     case 5:
                     case 6:
@@ -461,7 +461,7 @@
                         {
                             this.$PC = 7;
                         }
-                        goto Label_02EA;
+                        goto Label_0310;
 
                     case 7:
                         this.$current = "-arch";
@@ -469,7 +469,7 @@
                         {
                             this.$PC = 8;
                         }
-                        goto Label_02EA;
+                        goto Label_0310;
 
                     case 8:
                         this.$current = (this.$this.Architecture.Bits != 0x20) ? "x86_64" : "i386";
@@ -477,7 +477,7 @@
                         {
                             this.$PC = 9;
                         }
-                        goto Label_02EA;
+                        goto Label_0310;
 
                     case 9:
                         this.$current = "-isysroot";
@@ -485,7 +485,7 @@
                         {
                             this.$PC = 10;
                         }
-                        goto Label_02EA;
+                        goto Label_0310;
 
                     case 10:
                         this.$current = ClangToolChain.MacDevSDKPath().ToString();
@@ -493,38 +493,46 @@
                         {
                             this.$PC = 11;
                         }
-                        goto Label_02EA;
+                        goto Label_0310;
 
                     case 11:
                     {
                         string[] extensions = new string[] { ".cpp" };
-                        if (this.cppCompilationInstruction.SourceFile.HasExtension(extensions))
+                        if (!this.cppCompilationInstruction.SourceFile.HasExtension(extensions))
                         {
-                            this.$current = "-stdlib=libc++";
-                            if (!this.$disposing)
-                            {
-                                this.$PC = 12;
-                            }
-                            goto Label_02EA;
+                            break;
                         }
-                        break;
+                        this.$current = "-std=c++11";
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 12;
+                        }
+                        goto Label_0310;
                     }
                     case 12:
-                        break;
+                        this.$current = "-stdlib=libc++";
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 13;
+                        }
+                        goto Label_0310;
 
                     case 13:
-                        goto Label_026A;
+                        break;
+
+                    case 14:
+                        goto Label_0290;
 
                     default:
-                        goto Label_02E8;
+                        goto Label_030E;
                 }
                 if (this.$this.AdditionalCompilerOptionsForSourceFile == null)
                 {
-                    goto Label_02E1;
+                    goto Label_0307;
                 }
                 this.$locvar0 = this.$this.AdditionalCompilerOptionsForSourceFile(this.cppCompilationInstruction.SourceFile.ToString()).GetEnumerator();
                 num = 0xfffffffd;
-            Label_026A:
+            Label_0290:
                 try
                 {
                     while (this.$locvar0.MoveNext())
@@ -533,10 +541,10 @@
                         this.$current = this.<p>__1;
                         if (!this.$disposing)
                         {
-                            this.$PC = 13;
+                            this.$PC = 14;
                         }
                         flag = true;
-                        goto Label_02EA;
+                        goto Label_0310;
                     }
                 }
                 finally
@@ -549,11 +557,11 @@
                         this.$locvar0.Dispose();
                     }
                 }
-            Label_02E1:
+            Label_0307:
                 this.$PC = -1;
-            Label_02E8:
+            Label_030E:
                 return false;
-            Label_02EA:
+            Label_0310:
                 return true;
             }
 

@@ -92,7 +92,7 @@
             }
         }
 
-        public override Shell.ExecuteResult RunAndMakeExecuteResult(string executable)
+        public override Shell.ExecuteResult RunAndMakeExecuteResult(Unity.IL2CPP.Common.Architecture architecture, string executable)
         {
             bool flag;
             Shell.ExecuteResult result;

@@ -22,7 +22,7 @@
             string environmentVariable = Environment.GetEnvironmentVariable((this.m_BuildTarget != BuildTarget.iOS) ? "TVOS_DEVICE_ID" : "IOS_DEVICE_ID");
             if (string.IsNullOrEmpty(environmentVariable))
             {
-                throw new ArgumentException("Need to set IOS_DEVICE_ID or TVOS_DEVICE_ID env variable");
+                throw new ArgumentException("Need to set IOS_DEVICE_ID or TVOS_DEVICE_ID environmental variable");
             }
             return environmentVariable;
         }

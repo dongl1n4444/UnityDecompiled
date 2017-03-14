@@ -10,6 +10,7 @@
     using System.Runtime.InteropServices;
     using UnityEditor;
     using UnityEditor.Scripting;
+    using UnityEditor.Scripting.ScriptCompilation;
     using UnityEditor.Utils;
     using UnityEngine;
     using UnityEngine.Internal;
@@ -138,7 +139,7 @@
         public static extern int DetermineDepthOrder(Transform lhs, Transform rhs);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void DrawSkyboxMaterial(Material mat, Camera cam);
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("use EditorSceneManager.EnsureUntitledSceneHasBeenSaved"), GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("use EditorSceneManager.EnsureUntitledSceneHasBeenSaved")]
         public static extern bool EnsureSceneHasBeenSaved(string operation);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void ExecuteCommandOnKeyWindow(string commandName);
@@ -199,6 +200,8 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int GetClassIDWithoutLoadingObject(int instanceID);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern string[] GetCompilationDefines(EditorScriptCompilationOptions options, BuildTargetGroup targetGroup, BuildTarget target);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetCrashReportFolder();
         private static string GetDefaultStringEditorArgs()
         {
@@ -237,6 +240,10 @@
         public static extern string GetEditorAssemblyPath();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetEditorFolder();
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern string[] GetEditorModuleDllNames();
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern string GetEditorProfile();
         public static string[] GetEditorSettingsList(string prefix, int count)
         {
             ArrayList list = new ArrayList();
@@ -923,8 +930,9 @@
             return new Bounds(Vector3.zero, Vector3.zero);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        internal static extern MonoIsland[] GetMonoIslands();
+        internal static MonoIsland[] GetMonoIslands() => 
+            EditorCompilationInterface.GetAllMonoIslands();
+
         public static List<int> GetNewSelection(int clickedInstanceID, List<int> allInstanceIDs, List<int> selectedInstanceIDs, int lastClickedInstanceID, bool keepMultiSelection, bool useShiftAsActionKey, bool allowMultiSelection)
         {
             List<int> list = new List<int>();
@@ -1108,7 +1116,7 @@
         public static extern bool HasAdvancedLicenseOnBuildTarget(BuildTarget target);
         [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern bool HasEduLicense();
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         public static extern bool HasFreeLicense();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool HasFullscreenCamera();
@@ -1195,6 +1203,12 @@
         internal static extern bool IsSortingLayerDefault(int index);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool IsUnityBeta();
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern bool IsUnityExtensionCompatibleWithEditor(BuildTargetGroup targetGroup, BuildTarget target, string path);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern bool IsUnityExtensionRegistered(string filename);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern bool IsUnityExtensionsInitialized();
         public static bool IsValidFileName(string filename)
         {
             string str = RemoveInvalidCharsFromFileName(filename, false);
@@ -1205,6 +1219,8 @@
             return true;
         }
 
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern bool IsValidUnityExtensionPath(string path);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool LaunchApplication(string path, string[] arguments);
         public static int LayerMaskToConcatenatedLayersMask(LayerMask mask) => 
@@ -1269,6 +1285,8 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void RegisterExtensionDll(string dllLocation, string guid);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern void RegisterPrecompiledAssembly(string dllName, string dllLocation);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void ReloadWindowLayoutMenu();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -1392,8 +1410,6 @@
         internal static extern void SetSortingLayerLocked(int index, bool locked);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void SetSortingLayerName(int index, string name);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        internal static extern void SetupCustomDll(string dllName, string dllLocation);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetupShaderMenu(Material material);
         public static void ShowGameView()

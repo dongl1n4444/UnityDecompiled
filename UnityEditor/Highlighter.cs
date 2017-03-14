@@ -19,7 +19,7 @@
         private static EditorApplication.CallbackFunction <>f__mg$cache1;
         [CompilerGenerated]
         private static EditorApplication.CallbackFunction <>f__mg$cache2;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static bool <active>k__BackingField;
         private const int kExpansionMovementSize = 5;
         private const float kPopupDuration = 0.33f;

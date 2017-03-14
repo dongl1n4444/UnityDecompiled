@@ -4,7 +4,7 @@
     using UnityEditorInternal;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(Cloth))]
+    [CustomEditor(typeof(Cloth)), CanEditMultipleObjects]
     internal class ClothInspector : Editor
     {
         private const float kDisabledValue = float.MaxValue;

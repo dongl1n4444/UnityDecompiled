@@ -10,7 +10,7 @@
     using UnityEngine;
     using UnityEngine.Events;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(SpeedTreeImporter))]
+    [CustomEditor(typeof(SpeedTreeImporter)), CanEditMultipleObjects]
     internal class SpeedTreeImporterInspector : AssetImporterInspector
     {
         [CompilerGenerated]

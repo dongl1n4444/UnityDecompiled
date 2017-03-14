@@ -10,7 +10,7 @@
     {
         [FormerlySerializedAs("arguments"), SerializeField]
         private ArgumentCache m_Arguments = new ArgumentCache();
-        [FormerlySerializedAs("enabled"), FormerlySerializedAs("m_Enabled"), SerializeField]
+        [SerializeField, FormerlySerializedAs("enabled"), FormerlySerializedAs("m_Enabled")]
         private UnityEventCallState m_CallState = UnityEventCallState.RuntimeOnly;
         [FormerlySerializedAs("methodName"), SerializeField]
         private string m_MethodName;

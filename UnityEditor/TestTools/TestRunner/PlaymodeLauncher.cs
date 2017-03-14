@@ -26,7 +26,7 @@
             Application.runInBackground = true;
             string sceneName = base.CreateSceneName();
             this.m_Scene = base.CreateBootstrapScene(sceneName, delegate (PlaymodeTestsController runner) {
-                runner.AddEventHandlerMonoBehaviour<ResultsRenderer>();
+                runner.AddEventHandlerMonoBehaviour<PlayModeRunnerCallback>();
                 runner.AddEventHandlerScriptableObject<WindowResultUpdater>();
                 runner.AddEventHandlerScriptableObject<TestRunnerCallback>();
                 if (this.m_Settings.isBatchModeRun)

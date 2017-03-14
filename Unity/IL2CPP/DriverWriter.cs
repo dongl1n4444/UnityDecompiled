@@ -6,6 +6,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using Unity.IL2CPP.Common;
     using Unity.IL2CPP.ILPreProcessor;
     using Unity.IL2CPP.IoC;
     using Unity.IL2CPP.IoCServices;
@@ -25,6 +26,9 @@
             _executable = executable;
             _entryPoint = _executable.EntryPoint;
         }
+
+        private static string EscapePath(string path) => 
+            path.Replace(@"\", @"\\");
 
         private bool ValidateMainMethod(CppCodeWriter writer)
         {
@@ -82,30 +86,33 @@
             return true;
         }
 
-        public void Write(NPath outputDir)
+        public void Write(NPath outputDir, NPath assemblyDirectory)
         {
             string[] append = new string[] { "driver.cpp" };
             using (SourceCodeWriter writer = new SourceCodeWriter(outputDir.Combine(append)))
             {
                 this.WriteIncludes(writer);
                 this.WriteMainInvoker(writer);
-                this.WriteEntryPoint(writer);
+                this.WriteEntryPoint(writer, assemblyDirectory);
                 this.WritePlatformSpecificEntryPoints(writer);
             }
         }
 
-        private void WriteEntryPoint(CppCodeWriter writer)
+        private void WriteEntryPoint(CppCodeWriter writer, NPath assemblyDirectory)
         {
             writer.WriteLine("int EntryPoint(int argc, const Il2CppNativeChar* const* argv)");
             using (new BlockWriter(writer, false))
             {
                 WriteWindowsMessageBoxHook(writer);
-                this.WriteSetCommandLineArgumentsAndInitIl2Cpp(writer);
+                this.WriteSetCommandLineArgumentsAndInitIl2Cpp(writer, assemblyDirectory);
                 this.WriteSetConfiguration(writer);
                 writer.WriteLine();
                 writer.WriteLine("int exitCode = MainInvoker(argc, argv);");
                 writer.WriteLine();
-                writer.WriteLine("il2cpp_shutdown();");
+                if (!CodeGenOptions.MonoRuntime)
+                {
+                    writer.WriteLine("il2cpp_shutdown();");
+                }
                 writer.WriteLine("return exitCode;");
             }
             writer.WriteLine();
@@ -113,11 +120,17 @@
 
         private void WriteIncludes(CppCodeWriter writer)
         {
+            writer.WriteLine("#include \"il2cpp-api.h\"");
             writer.AddCodeGenIncludes();
             writer.WriteLine("#if IL2CPP_TARGET_WINDOWS_DESKTOP");
             writer.WriteLine("#include \"Windows.h\"");
             writer.WriteLine("#endif");
             writer.WriteLine();
+            if (CodeGenOptions.MonoRuntime)
+            {
+                writer.AddInclude("il2cpp-callbacks.h");
+                writer.WriteLine();
+            }
         }
 
         private void WriteMainInvocation(CppCodeWriter writer, IRuntimeMetadataAccess metadataAccess)
@@ -199,6 +212,7 @@
                 writer.WriteLine("il2cpp_codegen_write_to_stderr(\"Unhandled Exception: \");");
                 writer.WriteLine("il2cpp_codegen_write_to_stderr(il2cpp_codegen_format_exception(e.ex).c_str());");
                 writer.WriteLine("il2cpp_codegen_abort();");
+                writer.WriteLine("il2cpp_codegen_no_return();");
             }
         }
 
@@ -241,31 +255,61 @@
             writer.WriteLine("#endif");
         }
 
-        private void WriteSetCommandLineArgumentsAndInitIl2Cpp(CppCodeWriter writer)
+        private void WriteSetCommandLineArgumentsAndInitIl2Cpp(CppCodeWriter writer, NPath assemblyDirectory)
         {
-            writer.Dedent(1);
-            writer.WriteLine("#if IL2CPP_TARGET_WINDOWS");
-            writer.Indent(1);
-            writer.WriteLine("il2cpp_set_commandline_arguments_utf16(argc, argv, NULL);");
-            writer.WriteLine("il2cpp_init_utf16(argv[0]);");
-            writer.Dedent(1);
-            writer.WriteLine("#else");
-            writer.Indent(1);
-            writer.WriteLine("il2cpp_set_commandline_arguments(argc, argv, NULL);");
-            writer.WriteLine("il2cpp_init(argv[0]);");
-            writer.Dedent(1);
-            writer.WriteLine("#endif");
-            writer.Indent(1);
+            if (CodeGenOptions.MonoRuntime)
+            {
+                string path = (assemblyDirectory != null) ? assemblyDirectory.ToString() : string.Empty;
+                object[] args = new object[] { EscapePath(MonoInstall.MonoBleedingEdgeLibDirectory.ToString()), EscapePath(MonoInstall.MonoBleedingEdgeEtcDirectory.ToString()), EscapePath(path) };
+                writer.WriteLine("mono_set_dirs(\"{0}\", \"{1}\");\nmono_set_assemblies_path(\"{2}\");", args);
+                writer.WriteLine("mono_init(\"IL2CPP Root Domain\");");
+                writer.WriteLine("mono_icall_init();");
+                writer.WriteLine("il2cpp_install_callbacks();");
+                writer.WriteLine("il2cpp_mono_runtime_init();");
+                writer.WriteLine("#if IL2CPP_TARGET_WINDOWS");
+                writer.WriteLine("il2cpp_mono_set_commandline_arguments_utf16(argc, argv);");
+                writer.WriteLine("#else");
+                writer.WriteLine("il2cpp_mono_set_commandline_arguments(argc, argv);");
+                writer.WriteLine("#endif");
+            }
+            else
+            {
+                writer.Dedent(1);
+                writer.WriteLine("#if IL2CPP_TARGET_WINDOWS");
+                writer.Indent(1);
+                writer.WriteLine("il2cpp_set_commandline_arguments_utf16(argc, argv, NULL);");
+                writer.WriteLine("il2cpp_init_utf16(argv[0]);");
+                writer.Dedent(1);
+                writer.WriteLine("#else");
+                writer.Indent(1);
+                writer.WriteLine("il2cpp_set_commandline_arguments(argc, argv, NULL);");
+                writer.WriteLine("il2cpp_init(argv[0]);");
+                writer.Dedent(1);
+                writer.WriteLine("#endif");
+                writer.Indent(1);
+            }
         }
 
         private void WriteSetConfiguration(CppCodeWriter writer)
         {
-            writer.WriteLine();
-            writer.WriteLine("#if IL2CPP_TARGET_WINDOWS");
-            writer.WriteLine("il2cpp_set_config_utf16(argv[0]);");
-            writer.WriteLine("#else");
-            writer.WriteLine("il2cpp_set_config(argv[0]);");
-            writer.WriteLine("#endif");
+            if (!CodeGenOptions.MonoRuntime)
+            {
+                writer.WriteLine();
+                writer.WriteLine("#if IL2CPP_TARGET_WINDOWS");
+                writer.WriteLine("il2cpp_set_config_utf16(argv[0]);");
+                writer.WriteLine("#else");
+                writer.WriteLine("il2cpp_set_config(argv[0]);");
+                writer.WriteLine("#endif");
+            }
+            else
+            {
+                writer.WriteLine();
+                writer.WriteLine("#if IL2CPP_TARGET_WINDOWS");
+                writer.WriteLine("il2cpp_mono_set_config_utf16(argv[0]);");
+                writer.WriteLine("#else");
+                writer.WriteLine("il2cpp_mono_set_config(argv[0]);");
+                writer.WriteLine("#endif");
+            }
         }
 
         private static void WriteWindowsMessageBoxHook(CppCodeWriter writer)

@@ -10,7 +10,7 @@
 
     internal class AudioMixerSelection
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private List<AudioMixerGroupController> <ChannelStripSelection>k__BackingField;
         private AudioMixerController m_Controller;
 

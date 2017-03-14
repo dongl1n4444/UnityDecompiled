@@ -7,7 +7,7 @@
     internal static class SemiUniqueStableTokenGenerator
     {
         internal static uint GenerateFor(MethodReference method) => 
-            ((uint) (method.Module + "_" + method.FullName).GetHashCode());
+            ((uint) (method.Module + "_" + method.GetFullName()).GetHashCode());
 
         internal static uint GenerateFor(TypeReference type) => 
             ((uint) Unity.IL2CPP.Common.TypeReferenceEqualityComparer.GetHashCodeFor(type));

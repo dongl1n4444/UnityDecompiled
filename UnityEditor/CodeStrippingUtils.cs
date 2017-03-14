@@ -11,6 +11,7 @@
     using System.Xml;
     using UnityEditor.Analytics;
     using UnityEditor.BuildReporting;
+    using UnityEditor.Scripting.ScriptCompilation;
     using UnityEditor.Utils;
     using UnityEditorInternal;
     using UnityEditorInternal.VR;
@@ -28,7 +29,7 @@
         private static readonly Dictionary<string, string> s_blackListNativeClassesDependencyNames;
         private static string[] s_blackListNativeClassNames = new string[] { "Behaviour", "PreloadData", "Material", "Cubemap", "Texture3D", "Texture2DArray", "RenderTexture", "Mesh", "Sprite", "LowerResBlitTexture" };
         private static UnityType s_GameManagerTypeInfo = null;
-        private static readonly string[] s_UserAssemblies;
+        private static readonly string[] s_TreatedAsUserAssemblies;
 
         static CodeStrippingUtils()
         {
@@ -39,7 +40,7 @@
                 }
             };
             s_blackListNativeClassesDependencyNames = dictionary;
-            s_UserAssemblies = new string[] { "Assembly-CSharp.dll", "Assembly-CSharp-firstpass.dll", "Assembly-UnityScript.dll", "Assembly-UnityScript-firstpass.dll", "UnityEngine.Analytics.dll" };
+            s_TreatedAsUserAssemblies = new string[] { "UnityEngine.Analytics.dll" };
         }
 
         private static HashSet<string> CollectManagedTypeReferencesFromRoots(string directory, string[] rootAssemblies, StrippingInfo strippingInfo)
@@ -313,14 +314,6 @@
 
         private static IEnumerable<string> GetAssembliesInDirectory(string strippedAssemblyDir, string assemblyName) => 
             Directory.GetFiles(strippedAssemblyDir, assemblyName, SearchOption.TopDirectoryOnly);
-
-        private static string[] GetAssembliesWithSuffix()
-        {
-            <GetAssembliesWithSuffix>c__AnonStorey0 storey = new <GetAssembliesWithSuffix>c__AnonStorey0 {
-                suffix = EditorSettings.Internal_UserGeneratedProjectSuffix
-            };
-            return Enumerable.Select<string, string>(s_UserAssemblies, new Func<string, string>(storey.<>m__0)).ToArray<string>();
-        }
 
         public static List<string> GetDependentModules(string moduleXml)
         {
@@ -614,29 +607,17 @@
         {
             get
             {
-                try
+                EditorCompilation.TargetAssemblyInfo[] targetAssemblies = EditorCompilationInterface.GetTargetAssemblies();
+                string[] strArray = new string[targetAssemblies.Length + s_TreatedAsUserAssemblies.Length];
+                for (int i = 0; i < targetAssemblies.Length; i++)
                 {
-                    return GetAssembliesWithSuffix();
+                    strArray[i] = targetAssemblies[i].Name;
                 }
-                catch
+                for (int j = 0; j < s_TreatedAsUserAssemblies.Length; j++)
                 {
-                    return s_UserAssemblies;
+                    strArray[targetAssemblies.Length + j] = s_TreatedAsUserAssemblies[j];
                 }
-            }
-        }
-
-        [CompilerGenerated]
-        private sealed class <GetAssembliesWithSuffix>c__AnonStorey0
-        {
-            internal string suffix;
-
-            internal string <>m__0(string a)
-            {
-                if (a.StartsWith("Assembly-"))
-                {
-                    return (a.Substring(0, a.Length - ".dll".Length) + this.suffix + ".dll");
-                }
-                return a;
+                return strArray;
             }
         }
     }

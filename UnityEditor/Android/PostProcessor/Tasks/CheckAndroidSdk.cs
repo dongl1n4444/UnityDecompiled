@@ -14,7 +14,7 @@
     internal class CheckAndroidSdk : IPostProcessorTask
     {
         private AndroidSDKTools _sdkTools;
-        public const int kMinAndroidSDKBuildToolsVersion = 0x18;
+        public const int kMinAndroidSDKBuildToolsVersion = 0x19;
         public const int kMinAndroidSDKPlatformToolsVersion = 0x17;
         public const int kMinAndroidSDKPlatformVersion = 0x17;
         public const int kMinAndroidSDKToolsVersion = 0x18;
@@ -79,10 +79,6 @@
             context.Set<AndroidSDKTools>("SDKTools", this._sdkTools);
             this.EnsureSDKComponentVersion(0x18, new SDKToolsDetector(this));
             this.EnsureSDKComponentVersion(0x17, new SDKPlatformToolsDetector(this));
-            if (PlayerSettings.virtualRealitySupported)
-            {
-                VrSupportChecker.CheckVrMinimumSdkVersions();
-            }
             int minSdkVersion = (int) PlayerSettings.Android.minSdkVersion;
             int targetSdkVersion = (int) PlayerSettings.Android.targetSdkVersion;
             int minVersion = Math.Max(0x17, Math.Max(minSdkVersion, targetSdkVersion));
@@ -109,7 +105,12 @@
                 targetSdkVersion = num4;
                 PlayerSettings.Android.targetSdkVersion = AndroidSdkVersions.AndroidApiLevelAuto;
             }
+            context.Set<int>("MinSDKVersion", minSdkVersion);
             context.Set<int>("TargetSDKVersion", targetSdkVersion);
+            if (PlayerSettings.virtualRealitySupported)
+            {
+                VrSupportChecker.CheckVrSdkVersions(context);
+            }
             if (this._sdkTools.IsVisualStudio)
             {
                 ((VisualStudioAndroidSDKTools) this._sdkTools).SetBuildToolsVersion(targetSdkVersion);
@@ -117,7 +118,7 @@
             }
             else
             {
-                this.EnsureSDKComponentVersion(0x18, new SDKBuildToolsDetector(this));
+                this.EnsureSDKComponentVersion(0x19, new SDKBuildToolsDetector(this));
             }
             this._sdkTools.UpdateToolsDirectories();
             this._sdkTools.DumpDiagnostics();

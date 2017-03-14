@@ -72,6 +72,20 @@
             }
         }
 
+        public static string binaryenDisExecutable
+        {
+            get
+            {
+                string[] components = new string[] { binaryen, "bin", "wasm-dis" };
+                string str = Paths.Combine(components);
+                if (IsWindows())
+                {
+                    str = str + ".exe";
+                }
+                return str;
+            }
+        }
+
         public static string binaryenShellExecutable
         {
             get

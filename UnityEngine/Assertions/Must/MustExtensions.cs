@@ -8,7 +8,7 @@
     /// <summary>
     /// <para>An extension class that serves as a wrapper for the Assert class.</para>
     /// </summary>
-    [DebuggerStepThrough, Obsolete("Must extensions are deprecated. Use UnityEngine.Assertions.Assert instead")]
+    [Obsolete("Must extensions are deprecated. Use UnityEngine.Assertions.Assert instead"), DebuggerStepThrough]
     public static class MustExtensions
     {
         /// <summary>
@@ -69,7 +69,7 @@
             UnityEngine.Assertions.Assert.AreEqual<T>(actual, expected);
         }
 
-        [Obsolete("Must extensions are deprecated. Use UnityEngine.Assertions.Assert instead"), Conditional("UNITY_ASSERTIONS")]
+        [Conditional("UNITY_ASSERTIONS"), Obsolete("Must extensions are deprecated. Use UnityEngine.Assertions.Assert instead")]
         public static void MustBeEqual<T>(this T actual, T expected, string message)
         {
             UnityEngine.Assertions.Assert.AreEqual<T>(expected, actual, message);
@@ -80,7 +80,7 @@
         /// </summary>
         /// <param name="value"></param>
         /// <param name="message"></param>
-        [Obsolete("Must extensions are deprecated. Use UnityEngine.Assertions.Assert instead"), Conditional("UNITY_ASSERTIONS")]
+        [Conditional("UNITY_ASSERTIONS"), Obsolete("Must extensions are deprecated. Use UnityEngine.Assertions.Assert instead")]
         public static void MustBeFalse(this bool value)
         {
             UnityEngine.Assertions.Assert.IsFalse(value);
@@ -103,7 +103,7 @@
             UnityEngine.Assertions.Assert.IsNull<T>(expected);
         }
 
-        [Conditional("UNITY_ASSERTIONS"), Obsolete("Must extensions are deprecated. Use UnityEngine.Assertions.Assert instead")]
+        [Obsolete("Must extensions are deprecated. Use UnityEngine.Assertions.Assert instead"), Conditional("UNITY_ASSERTIONS")]
         public static void MustBeNull<T>(this T expected, string message) where T: class
         {
             UnityEngine.Assertions.Assert.IsNull<T>(expected, message);
@@ -114,7 +114,7 @@
         /// </summary>
         /// <param name="value"></param>
         /// <param name="message"></param>
-        [Conditional("UNITY_ASSERTIONS"), Obsolete("Must extensions are deprecated. Use UnityEngine.Assertions.Assert instead")]
+        [Obsolete("Must extensions are deprecated. Use UnityEngine.Assertions.Assert instead"), Conditional("UNITY_ASSERTIONS")]
         public static void MustBeTrue(this bool value)
         {
             UnityEngine.Assertions.Assert.IsTrue(value);
@@ -125,7 +125,7 @@
         /// </summary>
         /// <param name="value"></param>
         /// <param name="message"></param>
-        [Obsolete("Must extensions are deprecated. Use UnityEngine.Assertions.Assert instead"), Conditional("UNITY_ASSERTIONS")]
+        [Conditional("UNITY_ASSERTIONS"), Obsolete("Must extensions are deprecated. Use UnityEngine.Assertions.Assert instead")]
         public static void MustBeTrue(this bool value, string message)
         {
             UnityEngine.Assertions.Assert.IsTrue(value, message);

@@ -36,6 +36,8 @@
         [HideFromHelp]
         public static bool ForceSerialBetaOnly = false;
         [HideFromHelp]
+        public static bool MonoRuntime;
+        [HideFromHelp]
         public static Unity.IL2CPP.ProfilerOptions ProfilerOptions = Unity.IL2CPP.ProfilerOptions.MethodEnterExit;
 
         public static void SetToDefaults()
@@ -55,6 +57,7 @@
             ForceSerial = Unity.IL2CPP.ParallelHelper.ForceSerialByDefault;
             ForceSerialBetaOnly = false;
             EmitSourceMapping = false;
+            MonoRuntime = false;
         }
 
         public static bool EmitComments =>

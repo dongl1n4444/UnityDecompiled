@@ -32,7 +32,7 @@
         public int m_HighlightEffectIndex = -1;
         public static string s_GroupEffectDisplaySeperator = @"\";
 
-        [field: DebuggerBrowsable(0), CompilerGenerated]
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ChangedExposedParameterHandler ChangedExposedParameter;
 
         public AudioMixerController()

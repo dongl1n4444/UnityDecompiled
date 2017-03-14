@@ -121,7 +121,7 @@
             {
                 argumentArray.Add(metadataAccess.HiddenMethodInfo(methodToCall));
             }
-            return MethodBodyWriter.GetMethodCallExpression(base._managedMethod, methodToCall, methodToCall, new Unity.IL2CPP.ILPreProcessor.TypeResolver(), MethodCallType.Normal, metadataAccess, new VTableBuilder(), argumentArray, false, null);
+            return MethodBodyWriter.GetMethodCallExpression(base._managedMethod, methodToCall, methodToCall, Unity.IL2CPP.ILPreProcessor.TypeResolver.Empty, MethodCallType.Normal, metadataAccess, new VTableBuilder(), argumentArray, false, null);
         }
 
         private string GetPointerToValueExpression(IRuntimeMetadataAccess metadataAccess)
@@ -136,8 +136,9 @@
 
         private static string GetStringLiteral(string str, IRuntimeMetadataAccess metadataAccess)
         {
-            StringLiteralProvider.Add(str);
-            return metadataAccess.StringLiteral(str);
+            MetadataToken token = new MetadataToken();
+            StringLiteralProvider.Add(new StringMetadataToken(str, null, token));
+            return metadataAccess.StringLiteral(str, token, null);
         }
 
         private string GetUnboxedValueExpression(IRuntimeMetadataAccess metadataAccess)

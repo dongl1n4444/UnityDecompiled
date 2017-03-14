@@ -7,6 +7,7 @@
     using System.Diagnostics;
     using System.IO;
     using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
     using System.Text;
     using System.Threading;
     using Unity.IL2CPP;
@@ -17,14 +18,15 @@
 
     public class AndroidToolChain : CppToolChain
     {
-        private AndroidNDKUtilities _androidNDK;
         [CompilerGenerated]
         private static Func<string, IEnumerable<string>> <>f__mg$cache0;
-        private Func<string, IEnumerable<string>> AdditionalCompilerOptionsForSourceFile;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly AndroidNDKUtilities <AndroidNDK>k__BackingField;
+        private readonly Func<string, IEnumerable<string>> AdditionalCompilerOptionsForSourceFile;
 
-        public AndroidToolChain(Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors, NPath toolchainPath) : base(architecture, buildConfiguration)
+        public AndroidToolChain(Unity.IL2CPP.Common.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors, NPath toolchainPath = null) : base(architecture, buildConfiguration)
         {
-            this._androidNDK = new AndroidNDKUtilities(toolchainPath, architecture);
+            this.<AndroidNDK>k__BackingField = new AndroidNDKUtilities(toolchainPath, architecture);
             if (treatWarningsAsErrors)
             {
                 if (<>f__mg$cache0 == null)
@@ -41,12 +43,12 @@
         public override NPath CompilerExecutableFor(NPath sourceFile)
         {
             string[] extensions = new string[] { ".c" };
-            return (!sourceFile.HasExtension(extensions) ? this._androidNDK.CppCompilerPath : this._androidNDK.CCompilerPath);
+            return (!sourceFile.HasExtension(extensions) ? this.AndroidNDK.CppCompilerPath : this.AndroidNDK.CCompilerPath);
         }
 
         [DebuggerHidden]
         public override IEnumerable<string> CompilerFlagsFor(CppCompilationInstruction cppCompilationInstruction) => 
-            new <CompilerFlagsFor>c__Iterator2 { 
+            new <CompilerFlagsFor>c__Iterator3 { 
                 cppCompilationInstruction = cppCompilationInstruction,
                 $this = this,
                 $PC = -2
@@ -54,7 +56,7 @@
 
         [DebuggerHidden]
         private IEnumerable<string> DefaultCompilerFlags(CppCompilationInstruction cppCompilationInstruction) => 
-            new <DefaultCompilerFlags>c__Iterator3 { 
+            new <DefaultCompilerFlags>c__Iterator4 { 
                 cppCompilationInstruction = cppCompilationInstruction,
                 $this = this,
                 $PC = -2
@@ -62,18 +64,18 @@
 
         [DebuggerHidden]
         private IEnumerable<string> DefaultLinkerFlags(IEnumerable<NPath> staticLibraries, IEnumerable<NPath> dynamicLibaries, NPath outputFile) => 
-            new <DefaultLinkerFlags>c__Iterator4 { 
+            new <DefaultLinkerFlags>c__Iterator5 { 
                 outputFile = outputFile,
                 $this = this,
                 $PC = -2
             };
 
         public override string ExecutableExtension() => 
-            "";
+            string.Empty;
 
         [DebuggerHidden]
         private static IEnumerable<string> FlagsToMakeWarningsErrorsFor(string sourceFile) => 
-            new <FlagsToMakeWarningsErrorsFor>c__Iterator5 { 
+            new <FlagsToMakeWarningsErrorsFor>c__Iterator6 { 
                 sourceFile = sourceFile,
                 $PC = -2
             };
@@ -83,6 +85,15 @@
 
         protected override string GetInterestingOutputFromLinkerShellResult(Shell.ExecuteResult shellResult) => 
             shellResult.StdErr;
+
+        public override NPath GetLibraryFileName(NPath library)
+        {
+            if (library.Depth != 1)
+            {
+                throw new ArgumentException($"Invalid library '{library}'.", "library");
+            }
+            return new NPath("lib" + library.FileNameWithoutExtension + ".so");
+        }
 
         public override CppProgramBuilder.LinkerInvocation MakeLinkerInvocation(IEnumerable<NPath> objectFiles, NPath outputFile, IEnumerable<NPath> staticLibraries, IEnumerable<NPath> dynamicLibraries, IEnumerable<string> specifiedLinkerFlags, CppToolChainContext toolChainContext)
         {
@@ -104,7 +115,7 @@
             list3.AddRange(dynamicLibraries);
             CppProgramBuilder.LinkerInvocation invocation = new CppProgramBuilder.LinkerInvocation();
             Shell.ExecuteArgs args = new Shell.ExecuteArgs {
-                Executable = this._androidNDK.LinkerPath.ToString(),
+                Executable = this.AndroidNDK.LinkerPath.ToString(),
                 Arguments = inputs.SeparateWithSpaces()
             };
             invocation.ExecuteArgs = args;
@@ -131,11 +142,40 @@
                     outputFile.InQuotes(),
                     (base.BuildConfiguration != BuildConfiguration.Debug) ? "--strip-all" : "--strip-debug"
                 };
-                Shell.ExecuteArgs executeArgs = new Shell.ExecuteArgs {
-                    Executable = this._androidNDK.ObjCopyPath.ToString(),
+                Shell.ExecuteArgs args2 = new Shell.ExecuteArgs {
+                    Executable = this.AndroidNDK.ObjCopyPath.ToString(),
                     Arguments = inputs.SeparateWithSpaces()
                 };
+                Shell.ExecuteArgs executeArgs = args2;
                 using (TinyProfiler.Section("strip", ""))
+                {
+                    Shell.Execute(executeArgs, null);
+                }
+                NPath path2 = new NPath(Path.Combine(Path.GetDirectoryName(path.ToString()), "libil2cpp.dbg.so"));
+                inputs = new List<string> {
+                    path.InQuotes(),
+                    path2.InQuotes(),
+                    "--only-keep-debug"
+                };
+                args2 = new Shell.ExecuteArgs {
+                    Executable = this.AndroidNDK.ObjCopyPath.ToString(),
+                    Arguments = inputs.SeparateWithSpaces()
+                };
+                executeArgs = args2;
+                using (TinyProfiler.Section("strip", "debug"))
+                {
+                    Shell.Execute(executeArgs, null);
+                }
+                inputs = new List<string> {
+                    "--add-gnu-debuglink=" + path2.InQuotes(),
+                    outputFile.InQuotes()
+                };
+                args2 = new Shell.ExecuteArgs {
+                    Executable = this.AndroidNDK.ObjCopyPath.ToString(),
+                    Arguments = inputs.SeparateWithSpaces()
+                };
+                executeArgs = args2;
+                using (TinyProfiler.Section("strip", "debug link"))
                 {
                     Shell.Execute(executeArgs, null);
                 }
@@ -153,6 +193,16 @@
         public override IEnumerable<NPath> ToolChainIncludePaths() => 
             new <ToolChainIncludePaths>c__Iterator1 { $PC = -2 };
 
+        [DebuggerHidden]
+        public override IEnumerable<NPath> ToolChainLibraryPaths() => 
+            new <ToolChainLibraryPaths>c__Iterator2 { 
+                $this = this,
+                $PC = -2
+            };
+
+        public AndroidNDKUtilities AndroidNDK =>
+            this.<AndroidNDK>k__BackingField;
+
         public override string DynamicLibraryExtension =>
             ".so";
 
@@ -163,7 +213,7 @@
             true;
 
         [CompilerGenerated]
-        private sealed class <CompilerFlagsFor>c__Iterator2 : IEnumerable, IEnumerable<string>, IEnumerator, IDisposable, IEnumerator<string>
+        private sealed class <CompilerFlagsFor>c__Iterator3 : IEnumerable, IEnumerable<string>, IEnumerator, IDisposable, IEnumerator<string>
         {
             internal string $current;
             internal bool $disposing;
@@ -323,7 +373,7 @@
                         this.$locvar1.Dispose();
                     }
                 }
-                this.$locvar2 = this.$this._androidNDK.GnuStlIncludePaths.GetEnumerator();
+                this.$locvar2 = this.$this.AndroidNDK.GnuStlIncludePaths.GetEnumerator();
                 num = 0xfffffffd;
             Label_0188:
                 try
@@ -402,7 +452,7 @@
                 {
                     return this;
                 }
-                return new AndroidToolChain.<CompilerFlagsFor>c__Iterator2 { 
+                return new AndroidToolChain.<CompilerFlagsFor>c__Iterator3 { 
                     $this = this.$this,
                     cppCompilationInstruction = this.cppCompilationInstruction
                 };
@@ -420,7 +470,7 @@
         }
 
         [CompilerGenerated]
-        private sealed class <DefaultCompilerFlags>c__Iterator3 : IEnumerable, IEnumerable<string>, IEnumerator, IDisposable, IEnumerator<string>
+        private sealed class <DefaultCompilerFlags>c__Iterator4 : IEnumerable, IEnumerable<string>, IEnumerator, IDisposable, IEnumerator<string>
         {
             internal string $current;
             internal bool $disposing;
@@ -605,7 +655,7 @@
                         goto Label_04EC;
 
                     case 0x10:
-                        this.$current = "--sysroot " + this.$this._androidNDK.SysRoot.InQuotes();
+                        this.$current = "--sysroot " + this.$this.AndroidNDK.SysRoot.InQuotes();
                         if (!this.$disposing)
                         {
                             this.$PC = 0x11;
@@ -613,7 +663,7 @@
                         goto Label_04EC;
 
                     case 0x11:
-                        this.$current = "-gcc-toolchain " + this.$this._androidNDK.GccToolchain.InQuotes();
+                        this.$current = "-gcc-toolchain " + this.$this.AndroidNDK.GccToolchain.InQuotes();
                         if (!this.$disposing)
                         {
                             this.$PC = 0x12;
@@ -621,7 +671,7 @@
                         goto Label_04EC;
 
                     case 0x12:
-                        this.$current = "-target " + this.$this._androidNDK.Platform;
+                        this.$current = "-target " + this.$this.AndroidNDK.Platform;
                         if (!this.$disposing)
                         {
                             this.$PC = 0x13;
@@ -659,7 +709,7 @@
                 }
                 goto Label_04EC;
             Label_0397:
-                this.$locvar0 = this.$this._androidNDK.ArchitectureCompilerFlags.GetEnumerator();
+                this.$locvar0 = this.$this.AndroidNDK.ArchitectureCompilerFlags.GetEnumerator();
                 num = 0xfffffffd;
             Label_03B6:
                 try
@@ -738,7 +788,7 @@
                 {
                     return this;
                 }
-                return new AndroidToolChain.<DefaultCompilerFlags>c__Iterator3 { 
+                return new AndroidToolChain.<DefaultCompilerFlags>c__Iterator4 { 
                     $this = this.$this,
                     cppCompilationInstruction = this.cppCompilationInstruction
                 };
@@ -756,7 +806,7 @@
         }
 
         [CompilerGenerated]
-        private sealed class <DefaultLinkerFlags>c__Iterator4 : IEnumerable, IEnumerable<string>, IEnumerator, IDisposable, IEnumerator<string>
+        private sealed class <DefaultLinkerFlags>c__Iterator5 : IEnumerable, IEnumerable<string>, IEnumerator, IDisposable, IEnumerator<string>
         {
             internal string $current;
             internal bool $disposing;
@@ -797,28 +847,29 @@
                 switch (num)
                 {
                     case 0:
-                        this.$current = "-Wl,-soname," + this.outputFile.FileName;
+                    {
+                        string[] extensions = new string[] { this.$this.DynamicLibraryExtension };
+                        if (!this.outputFile.HasExtension(extensions))
+                        {
+                            break;
+                        }
+                        this.$current = "-shared";
                         if (!this.$disposing)
                         {
                             this.$PC = 1;
                         }
-                        goto Label_031B;
-
+                        goto Label_0341;
+                    }
                     case 1:
-                        this.$current = "-shared";
+                        this.$current = "-Wl,-soname," + this.outputFile.FileName;
                         if (!this.$disposing)
                         {
                             this.$PC = 2;
                         }
-                        goto Label_031B;
+                        goto Label_0341;
 
                     case 2:
-                        this.$current = "-Wl,--no-undefined";
-                        if (!this.$disposing)
-                        {
-                            this.$PC = 3;
-                        }
-                        goto Label_031B;
+                        break;
 
                     case 3:
                         this.$current = "-Wl,-z,noexecstack";
@@ -826,7 +877,7 @@
                         {
                             this.$PC = 4;
                         }
-                        goto Label_031B;
+                        goto Label_0341;
 
                     case 4:
                         this.$current = "-Wl,--gc-sections";
@@ -834,7 +885,7 @@
                         {
                             this.$PC = 5;
                         }
-                        goto Label_031B;
+                        goto Label_0341;
 
                     case 5:
                         this.$current = "-Wl,--build-id";
@@ -842,31 +893,31 @@
                         {
                             this.$PC = 6;
                         }
-                        goto Label_031B;
+                        goto Label_0341;
 
                     case 6:
-                        this.$current = "--sysroot " + this.$this._androidNDK.SysRoot.InQuotes();
+                        this.$current = "--sysroot " + this.$this.AndroidNDK.SysRoot.InQuotes();
                         if (!this.$disposing)
                         {
                             this.$PC = 7;
                         }
-                        goto Label_031B;
+                        goto Label_0341;
 
                     case 7:
-                        this.$current = "-gcc-toolchain " + this.$this._androidNDK.GccToolchain.InQuotes();
+                        this.$current = "-gcc-toolchain " + this.$this.AndroidNDK.GccToolchain.InQuotes();
                         if (!this.$disposing)
                         {
                             this.$PC = 8;
                         }
-                        goto Label_031B;
+                        goto Label_0341;
 
                     case 8:
-                        this.$current = "-target " + this.$this._androidNDK.Platform;
+                        this.$current = "-target " + this.$this.AndroidNDK.Platform;
                         if (!this.$disposing)
                         {
                             this.$PC = 9;
                         }
-                        goto Label_031B;
+                        goto Label_0341;
 
                     case 9:
                         this.$current = "-Wl,--wrap,sigaction";
@@ -874,15 +925,15 @@
                         {
                             this.$PC = 10;
                         }
-                        goto Label_031B;
+                        goto Label_0341;
 
                     case 10:
-                        this.$current = "-L " + this.$this._androidNDK.GnuStlLibrary.InQuotes();
+                        this.$current = "-L " + this.$this.AndroidNDK.GnuStlLibrary.InQuotes();
                         if (!this.$disposing)
                         {
                             this.$PC = 11;
                         }
-                        goto Label_031B;
+                        goto Label_0341;
 
                     case 11:
                         this.$current = "-lgnustl_static";
@@ -890,7 +941,7 @@
                         {
                             this.$PC = 12;
                         }
-                        goto Label_031B;
+                        goto Label_0341;
 
                     case 12:
                         this.$current = "-Xlinker -Map=" + this.outputFile.ChangeExtension("map").InQuotes();
@@ -898,19 +949,26 @@
                         {
                             this.$PC = 13;
                         }
-                        goto Label_031B;
+                        goto Label_0341;
 
                     case 13:
-                        this.$locvar0 = this.$this._androidNDK.ArchitectureLinkerFlags.GetEnumerator();
+                        this.$locvar0 = this.$this.AndroidNDK.ArchitectureLinkerFlags.GetEnumerator();
                         num = 0xfffffffd;
-                        break;
+                        goto Label_02C2;
 
                     case 14:
-                        break;
+                        goto Label_02C2;
 
                     default:
-                        goto Label_0319;
+                        goto Label_033F;
                 }
+                this.$current = "-Wl,--no-undefined";
+                if (!this.$disposing)
+                {
+                    this.$PC = 3;
+                }
+                goto Label_0341;
+            Label_02C2:
                 try
                 {
                     while (this.$locvar0.MoveNext())
@@ -922,7 +980,7 @@
                             this.$PC = 14;
                         }
                         flag = true;
-                        goto Label_031B;
+                        goto Label_0341;
                     }
                 }
                 finally
@@ -936,9 +994,9 @@
                     }
                 }
                 this.$PC = -1;
-            Label_0319:
+            Label_033F:
                 return false;
-            Label_031B:
+            Label_0341:
                 return true;
             }
 
@@ -955,7 +1013,7 @@
                 {
                     return this;
                 }
-                return new AndroidToolChain.<DefaultLinkerFlags>c__Iterator4 { 
+                return new AndroidToolChain.<DefaultLinkerFlags>c__Iterator5 { 
                     $this = this.$this,
                     outputFile = this.outputFile
                 };
@@ -973,7 +1031,7 @@
         }
 
         [CompilerGenerated]
-        private sealed class <FlagsToMakeWarningsErrorsFor>c__Iterator5 : IEnumerable, IEnumerable<string>, IEnumerator, IDisposable, IEnumerator<string>
+        private sealed class <FlagsToMakeWarningsErrorsFor>c__Iterator6 : IEnumerable, IEnumerable<string>, IEnumerator, IDisposable, IEnumerator<string>
         {
             internal string $current;
             internal bool $disposing;
@@ -1003,7 +1061,7 @@
                         {
                             this.$PC = 1;
                         }
-                        goto Label_00DF;
+                        goto Label_0148;
 
                     case 1:
                         this.$current = "-Wno-extern-initializer";
@@ -1011,7 +1069,7 @@
                         {
                             this.$PC = 2;
                         }
-                        goto Label_00DF;
+                        goto Label_0148;
 
                     case 2:
                         this.$current = "-Wno-trigraphs";
@@ -1019,7 +1077,7 @@
                         {
                             this.$PC = 3;
                         }
-                        goto Label_00DF;
+                        goto Label_0148;
 
                     case 3:
                         this.$current = "-Wno-tautological-compare";
@@ -1027,18 +1085,42 @@
                         {
                             this.$PC = 4;
                         }
-                        goto Label_00DF;
+                        goto Label_0148;
 
                     case 4:
+                        this.$current = "-Wno-invalid-offsetof";
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 5;
+                        }
+                        goto Label_0148;
+
+                    case 5:
+                        this.$current = "-Wno-implicitly-unsigned-literal";
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 6;
+                        }
+                        goto Label_0148;
+
+                    case 6:
+                        this.$current = "-Wno-integer-overflow";
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 7;
+                        }
+                        goto Label_0148;
+
+                    case 7:
                         break;
 
                     default:
-                        goto Label_00DD;
+                        goto Label_0146;
                 }
                 this.$PC = -1;
-            Label_00DD:
+            Label_0146:
                 return false;
-            Label_00DF:
+            Label_0148:
                 return true;
             }
 
@@ -1055,7 +1137,7 @@
                 {
                     return this;
                 }
-                return new AndroidToolChain.<FlagsToMakeWarningsErrorsFor>c__Iterator5 { sourceFile = this.sourceFile };
+                return new AndroidToolChain.<FlagsToMakeWarningsErrorsFor>c__Iterator6 { sourceFile = this.sourceFile };
             }
 
             [DebuggerHidden]
@@ -1190,6 +1272,87 @@
                     return this;
                 }
                 return new AndroidToolChain.<ToolChainIncludePaths>c__Iterator1();
+            }
+
+            [DebuggerHidden]
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
+
+            NPath IEnumerator<NPath>.Current =>
+                this.$current;
+
+            object IEnumerator.Current =>
+                this.$current;
+        }
+
+        [CompilerGenerated]
+        private sealed class <ToolChainLibraryPaths>c__Iterator2 : IEnumerable, IEnumerable<NPath>, IEnumerator, IDisposable, IEnumerator<NPath>
+        {
+            internal NPath $current;
+            internal bool $disposing;
+            internal int $PC;
+            internal AndroidToolChain $this;
+            internal string <arch>__0;
+
+            [DebuggerHidden]
+            public void Dispose()
+            {
+                this.$disposing = true;
+                this.$PC = -1;
+            }
+
+            public bool MoveNext()
+            {
+                uint num = (uint) this.$PC;
+                this.$PC = -1;
+                switch (num)
+                {
+                    case 0:
+                        this.<arch>__0 = "arch-";
+                        if (!(this.$this.Architecture is ARMv7Architecture))
+                        {
+                            if (!(this.$this.Architecture is x86Architecture))
+                            {
+                                throw new NotSupportedException($"Architecture {this.$this.Architecture} is not supported by {"AndroidToolChain"}.");
+                            }
+                            this.<arch>__0 = this.<arch>__0 + "x86";
+                            break;
+                        }
+                        this.<arch>__0 = this.<arch>__0 + "arm";
+                        break;
+
+                    case 1:
+                        this.$PC = -1;
+                        goto Label_0112;
+
+                    default:
+                        goto Label_0112;
+                }
+                string[] append = new string[] { "platforms", "android-16", this.<arch>__0, "usr", "lib" };
+                this.$current = this.$this.AndroidNDK.AndroidNdkRootDir.Combine(append);
+                if (!this.$disposing)
+                {
+                    this.$PC = 1;
+                }
+                return true;
+            Label_0112:
+                return false;
+            }
+
+            [DebuggerHidden]
+            public void Reset()
+            {
+                throw new NotSupportedException();
+            }
+
+            [DebuggerHidden]
+            IEnumerator<NPath> IEnumerable<NPath>.GetEnumerator()
+            {
+                if (Interlocked.CompareExchange(ref this.$PC, 0, -2) == -2)
+                {
+                    return this;
+                }
+                return new AndroidToolChain.<ToolChainLibraryPaths>c__Iterator2 { $this = this.$this };
             }
 
             [DebuggerHidden]

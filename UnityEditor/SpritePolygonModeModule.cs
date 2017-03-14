@@ -12,7 +12,7 @@
 
     internal class SpritePolygonModeModule : SpriteFrameModuleBase, ISpriteEditorModule
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private int <polygonSides>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <showChangeShapeWindow>k__BackingField;

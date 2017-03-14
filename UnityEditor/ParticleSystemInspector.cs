@@ -6,7 +6,7 @@
     using System.Runtime.CompilerServices;
     using UnityEngine;
 
-    [CustomEditor(typeof(ParticleSystem)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(ParticleSystem))]
     internal class ParticleSystemInspector : Editor, ParticleEffectUIOwner
     {
         [CompilerGenerated]

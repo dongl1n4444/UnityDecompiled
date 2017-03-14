@@ -10,7 +10,6 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Threading;
-    using Unity.IL2CPP.Building;
     using Unity.IL2CPP.Common;
     using Unity.IL2CPP.Portability;
 
@@ -117,7 +116,7 @@
             }
         }
 
-        public abstract IEnumerable<NPath> GetIncludeDirectories(Unity.IL2CPP.Building.Architecture architecture);
+        public abstract IEnumerable<NPath> GetIncludeDirectories(Unity.IL2CPP.Common.Architecture architecture);
         public static MsvcInstallation GetLatestInstallationAtLeast(System.Version version)
         {
             <GetLatestInstallationAtLeast>c__AnonStorey1 storey = new <GetLatestInstallationAtLeast>c__AnonStorey1 {
@@ -157,8 +156,8 @@
             return _installations[version];
         }
 
-        public abstract IEnumerable<NPath> GetLibDirectories(Unity.IL2CPP.Building.Architecture architecture, string sdkSubset = null);
-        public virtual string GetPathEnvVariable(Unity.IL2CPP.Building.Architecture architecture)
+        public abstract IEnumerable<NPath> GetLibDirectories(Unity.IL2CPP.Common.Architecture architecture, string sdkSubset = null);
+        public virtual string GetPathEnvVariable(Unity.IL2CPP.Common.Architecture architecture)
         {
             List<NPath> source = new List<NPath>();
             if (architecture is x86Architecture)
@@ -269,7 +268,7 @@
         public virtual NPath GetSDKToolPath(string toolName)
         {
             string str;
-            Unity.IL2CPP.Building.Architecture bestThisMachineCanRun = Unity.IL2CPP.Building.Architecture.BestThisMachineCanRun;
+            Unity.IL2CPP.Common.Architecture bestThisMachineCanRun = Unity.IL2CPP.Common.Architecture.BestThisMachineCanRun;
             if (bestThisMachineCanRun is x86Architecture)
             {
                 str = "x86";
@@ -316,7 +315,7 @@
             return null;
         }
 
-        public virtual NPath GetVSToolPath(Unity.IL2CPP.Building.Architecture architecture, string toolName)
+        public virtual NPath GetVSToolPath(Unity.IL2CPP.Common.Architecture architecture, string toolName)
         {
             string[] append = new string[] { "VC", "bin" };
             NPath path = this.VisualStudioDirectory.Combine(append);

@@ -12,9 +12,6 @@
     /// </summary>
     public sealed class AnimationUtility
     {
-        private static int kBrokenMask = 1;
-        private static int kLeftTangentMask = 30;
-        private static int kRightTangentMask = 480;
         /// <summary>
         /// <para>Triggered when an animation curve inside an animation clip has been modified.</para>
         /// </summary>
@@ -31,12 +28,15 @@
         public static extern string CalculateTransformPath(Transform targetTransform, Transform root);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void ConstrainToPolynomialCurve(AnimationCurve curve);
+        internal static PropertyModification EditorCurveBindingToPropertyModification(EditorCurveBinding binding, GameObject gameObject) => 
+            INTERNAL_CALL_EditorCurveBindingToPropertyModification(ref binding, gameObject);
+
         /// <summary>
         /// <para>Retrieves all curves from a specific animation clip.</para>
         /// </summary>
         /// <param name="clip"></param>
         /// <param name="includeCurveData"></param>
-        [ExcludeFromDocs, Obsolete("GetAllCurves is deprecated. Use GetCurveBindings and GetObjectReferenceCurveBindings instead.")]
+        [Obsolete("GetAllCurves is deprecated. Use GetCurveBindings and GetObjectReferenceCurveBindings instead."), ExcludeFromDocs]
         public static AnimationClipCurveData[] GetAllCurves(AnimationClip clip)
         {
             bool includeCurveData = true;
@@ -148,7 +148,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool GetGenerateMotionCurves(AnimationClip clip);
         internal static bool GetKeyBroken(Keyframe key) => 
-            ((key.tangentMode & kBrokenMask) != 0);
+            INTERNAL_CALL_GetKeyBroken(ref key);
 
         /// <summary>
         /// <para>Retrieve the specified keyframe broken tangent flag.</para>
@@ -160,20 +160,14 @@
         /// </returns>
         public static bool GetKeyBroken(AnimationCurve curve, int index)
         {
-            if (curve == null)
-            {
-                throw new ArgumentNullException("curve");
-            }
-            if ((index < 0) || (index >= curve.length))
-            {
-                throw new ArgumentOutOfRangeException("index", $"Index ({index}) must be in the range of 0 to {curve.length - 1}.");
-            }
-            Keyframe key = curve[index];
-            return GetKeyBroken(key);
+            VerifyCurveAndKeyframeIndex(curve, index);
+            return GetKeyBrokenInternal(curve, index);
         }
 
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern bool GetKeyBrokenInternal(AnimationCurve curve, int index);
         internal static TangentMode GetKeyLeftTangentMode(Keyframe key) => 
-            ((TangentMode) ((key.tangentMode & kLeftTangentMask) >> 1));
+            INTERNAL_CALL_GetKeyLeftTangentMode(ref key);
 
         /// <summary>
         /// <para>Retrieve the left tangent mode of the keyframe at specified index.</para>
@@ -185,20 +179,14 @@
         /// </returns>
         public static TangentMode GetKeyLeftTangentMode(AnimationCurve curve, int index)
         {
-            if (curve == null)
-            {
-                throw new ArgumentNullException("curve");
-            }
-            if ((index < 0) || (index >= curve.length))
-            {
-                throw new ArgumentOutOfRangeException("index", $"Index ({index}) must be in the range of 0 to {curve.length - 1}.");
-            }
-            Keyframe key = curve[index];
-            return GetKeyLeftTangentMode(key);
+            VerifyCurveAndKeyframeIndex(curve, index);
+            return GetKeyLeftTangentModeInternal(curve, index);
         }
 
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern TangentMode GetKeyLeftTangentModeInternal(AnimationCurve curve, int index);
         internal static TangentMode GetKeyRightTangentMode(Keyframe key) => 
-            ((TangentMode) ((key.tangentMode & kRightTangentMask) >> 5));
+            INTERNAL_CALL_GetKeyRightTangentMode(ref key);
 
         /// <summary>
         /// <para>Retrieve the right tangent mode of the keyframe at specified index.</para>
@@ -210,18 +198,12 @@
         /// </returns>
         public static TangentMode GetKeyRightTangentMode(AnimationCurve curve, int index)
         {
-            if (curve == null)
-            {
-                throw new ArgumentNullException("curve");
-            }
-            if ((index < 0) || (index >= curve.length))
-            {
-                throw new ArgumentOutOfRangeException("index", $"Index ({index}) must be in the range of 0 to {curve.length - 1}.");
-            }
-            Keyframe key = curve[index];
-            return GetKeyRightTangentMode(key);
+            VerifyCurveAndKeyframeIndex(curve, index);
+            return GetKeyRightTangentModeInternal(curve, index);
         }
 
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern TangentMode GetKeyRightTangentModeInternal(AnimationCurve curve, int index);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern int GetMaxNumPolynomialSegmentsSupported();
         /// <summary>
@@ -259,21 +241,7 @@
             UnityEditor.AnimationMode.InAnimationMode();
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        private static extern void Internal_CalculateAutoTangent(AnimationCurve curve, int index);
-        private static float Internal_CalculateLinearTangent(AnimationCurve curve, int index, int toIndex)
-        {
-            Keyframe keyframe = curve[index];
-            Keyframe keyframe2 = curve[toIndex];
-            float a = keyframe.time - keyframe2.time;
-            if (Mathf.Approximately(a, 0f))
-            {
-                return 0f;
-            }
-            Keyframe keyframe3 = curve[index];
-            Keyframe keyframe4 = curve[toIndex];
-            return ((keyframe3.value - keyframe4.value) / a);
-        }
-
+        private static extern PropertyModification INTERNAL_CALL_EditorCurveBindingToPropertyModification(ref EditorCurveBinding binding, GameObject gameObject);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern UnityEngine.Object INTERNAL_CALL_GetAnimatedObject(GameObject root, ref EditorCurveBinding binding);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -285,6 +253,12 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool INTERNAL_CALL_GetFloatValue(GameObject root, ref EditorCurveBinding binding, out float data);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern bool INTERNAL_CALL_GetKeyBroken(ref Keyframe key);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern TangentMode INTERNAL_CALL_GetKeyLeftTangentMode(ref Keyframe key);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern TangentMode INTERNAL_CALL_GetKeyRightTangentMode(ref Keyframe key);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern ObjectReferenceKeyframe[] INTERNAL_CALL_GetObjectReferenceCurve(AnimationClip clip, ref EditorCurveBinding binding);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool INTERNAL_CALL_GetObjectReferenceValue(GameObject root, ref EditorCurveBinding binding, out UnityEngine.Object targetObject);
@@ -294,6 +268,12 @@
         private static extern void INTERNAL_CALL_Internal_SetEditorCurve(AnimationClip clip, ref EditorCurveBinding binding, AnimationCurve curve, bool syncEditorCurve);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_SetObjectReferenceCurve(AnimationClip clip, ref EditorCurveBinding binding, ObjectReferenceKeyframe[] keyframes);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_SetKeyBroken(ref Keyframe key, bool broken);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_SetKeyLeftTangentMode(ref Keyframe key, TangentMode tangentMode);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_SetKeyRightTangentMode(ref Keyframe key, TangentMode tangentMode);
         [RequiredByNativeCode]
         private static void Internal_CallAnimationClipAwake(AnimationClip clip)
         {
@@ -317,47 +297,6 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_SyncEditorCurves(AnimationClip clip);
-        private static void Internal_UpdateTangents(AnimationCurve curve, int index)
-        {
-            if ((index >= 0) && (index < curve.length))
-            {
-                Keyframe key = curve[index];
-                if ((GetKeyLeftTangentMode(key) == TangentMode.Linear) && (index >= 1))
-                {
-                    key.inTangent = Internal_CalculateLinearTangent(curve, index, index - 1);
-                    curve.MoveKey(index, key);
-                }
-                if ((GetKeyRightTangentMode(key) == TangentMode.Linear) && ((index + 1) < curve.length))
-                {
-                    key.outTangent = Internal_CalculateLinearTangent(curve, index, index + 1);
-                    curve.MoveKey(index, key);
-                }
-                if ((GetKeyLeftTangentMode(key) == TangentMode.ClampedAuto) || (GetKeyRightTangentMode(key) == TangentMode.ClampedAuto))
-                {
-                    Internal_CalculateAutoTangent(curve, index);
-                }
-                if ((GetKeyLeftTangentMode(key) == TangentMode.Auto) || (GetKeyRightTangentMode(key) == TangentMode.Auto))
-                {
-                    curve.SmoothTangents(index, 0f);
-                }
-                if (((GetKeyLeftTangentMode(key) == TangentMode.Free) && (GetKeyRightTangentMode(key) == TangentMode.Free)) && !GetKeyBroken(key))
-                {
-                    key.outTangent = key.inTangent;
-                    curve.MoveKey(index, key);
-                }
-                if (GetKeyLeftTangentMode(key) == TangentMode.Constant)
-                {
-                    key.inTangent = float.PositiveInfinity;
-                    curve.MoveKey(index, key);
-                }
-                if (GetKeyRightTangentMode(key) == TangentMode.Constant)
-                {
-                    key.outTangent = float.PositiveInfinity;
-                    curve.MoveKey(index, key);
-                }
-            }
-        }
-
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool IsValidOptimizedPolynomialCurve(AnimationCurve curve);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
@@ -464,14 +403,7 @@
         internal static extern void SetGenerateMotionCurves(AnimationClip clip, bool value);
         internal static void SetKeyBroken(ref Keyframe key, bool broken)
         {
-            if (broken)
-            {
-                key.tangentMode |= kBrokenMask;
-            }
-            else
-            {
-                key.tangentMode &= ~kBrokenMask;
-            }
+            INTERNAL_CALL_SetKeyBroken(ref key, broken);
         }
 
         /// <summary>
@@ -482,72 +414,38 @@
         /// <param name="broken">Broken flag.</param>
         public static void SetKeyBroken(AnimationCurve curve, int index, bool broken)
         {
-            if (curve == null)
-            {
-                throw new ArgumentNullException("curve");
-            }
-            if ((index < 0) || (index >= curve.length))
-            {
-                throw new ArgumentOutOfRangeException("index", $"Index ({index}) must be in the range of 0 to {curve.length - 1}.");
-            }
-            Keyframe key = curve[index];
-            SetKeyBroken(ref key, broken);
-            curve.MoveKey(index, key);
-            UpdateTangentsFromModeSurrounding(curve, index);
+            VerifyCurveAndKeyframeIndex(curve, index);
+            SetKeyBrokenInternal(curve, index, broken);
         }
 
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void SetKeyBrokenInternal(AnimationCurve curve, int index, bool broken);
         internal static void SetKeyLeftTangentMode(ref Keyframe key, TangentMode tangentMode)
         {
-            key.tangentMode &= ~kLeftTangentMask;
-            key.tangentMode |= ((int) tangentMode) << 1;
+            INTERNAL_CALL_SetKeyLeftTangentMode(ref key, tangentMode);
         }
 
         public static void SetKeyLeftTangentMode(AnimationCurve curve, int index, TangentMode tangentMode)
         {
-            if (curve == null)
-            {
-                throw new ArgumentNullException("curve");
-            }
-            if ((index < 0) || (index >= curve.length))
-            {
-                throw new ArgumentOutOfRangeException("index", $"Index ({index}) must be in the range of 0 to {curve.length - 1}.");
-            }
-            Keyframe key = curve[index];
-            if (tangentMode != TangentMode.Free)
-            {
-                SetKeyBroken(ref key, true);
-            }
-            SetKeyLeftTangentMode(ref key, tangentMode);
-            curve.MoveKey(index, key);
-            UpdateTangentsFromModeSurrounding(curve, index);
+            VerifyCurveAndKeyframeIndex(curve, index);
+            SetKeyLeftTangentModeInternal(curve, index, tangentMode);
         }
 
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void SetKeyLeftTangentModeInternal(AnimationCurve curve, int index, TangentMode tangentMode);
         internal static void SetKeyRightTangentMode(ref Keyframe key, TangentMode tangentMode)
         {
-            key.tangentMode &= ~kRightTangentMask;
-            key.tangentMode |= ((int) tangentMode) << 5;
+            INTERNAL_CALL_SetKeyRightTangentMode(ref key, tangentMode);
         }
 
         public static void SetKeyRightTangentMode(AnimationCurve curve, int index, TangentMode tangentMode)
         {
-            if (curve == null)
-            {
-                throw new ArgumentNullException("curve");
-            }
-            if ((index < 0) || (index >= curve.length))
-            {
-                throw new ArgumentOutOfRangeException("index", $"Index ({index}) must be in the range of 0 to {curve.length - 1}.");
-            }
-            Keyframe key = curve[index];
-            if (tangentMode != TangentMode.Free)
-            {
-                SetKeyBroken(ref key, true);
-            }
-            SetKeyRightTangentMode(ref key, tangentMode);
-            curve.MoveKey(index, key);
-            UpdateTangentsFromModeSurrounding(curve, index);
+            VerifyCurveAndKeyframeIndex(curve, index);
+            SetKeyRightTangentModeInternal(curve, index, tangentMode);
         }
 
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void SetKeyRightTangentModeInternal(AnimationCurve curve, int index, TangentMode tangentMode);
         /// <summary>
         /// <para>Adds, modifies or removes an object reference curve in a given clip.</para>
         /// </summary>
@@ -578,19 +476,36 @@
 
         internal static void UpdateTangentsFromMode(AnimationCurve curve)
         {
-            for (int i = 0; i < curve.length; i++)
+            VerifyCurve(curve);
+            UpdateTangentsFromModeInternal(curve);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void UpdateTangentsFromModeInternal(AnimationCurve curve);
+        internal static void UpdateTangentsFromModeSurrounding(AnimationCurve curve, int index)
+        {
+            VerifyCurveAndKeyframeIndex(curve, index);
+            UpdateTangentsFromModeSurroundingInternal(curve, index);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void UpdateTangentsFromModeSurroundingInternal(AnimationCurve curve, int index);
+        private static void VerifyCurve(AnimationCurve curve)
+        {
+            if (curve == null)
             {
-                Internal_UpdateTangents(curve, i);
+                throw new ArgumentNullException("curve");
             }
         }
 
-        internal static void UpdateTangentsFromModeSurrounding(AnimationCurve curve, int index)
+        private static void VerifyCurveAndKeyframeIndex(AnimationCurve curve, int index)
         {
-            Internal_UpdateTangents(curve, index - 2);
-            Internal_UpdateTangents(curve, index - 1);
-            Internal_UpdateTangents(curve, index);
-            Internal_UpdateTangents(curve, index + 1);
-            Internal_UpdateTangents(curve, index + 2);
+            VerifyCurve(curve);
+            if ((index < 0) || (index >= curve.length))
+            {
+                string message = $"index {index} must be in the range of 0 to {curve.length - 1}.";
+                throw new ArgumentOutOfRangeException("index", message);
+            }
         }
 
         /// <summary>

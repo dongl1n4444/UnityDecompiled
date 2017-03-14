@@ -9,6 +9,7 @@
     using System.Threading;
     using Unity.IL2CPP.Building;
     using Unity.IL2CPP.Building.ToolChains.MsvcVersions;
+    using Unity.IL2CPP.Common;
 
     public class MsvcDesktopToolChain : MsvcToolChain
     {
@@ -16,7 +17,7 @@
         [CompilerGenerated]
         private static Func<string, IEnumerable<string>> <>f__mg$cache0;
 
-        public MsvcDesktopToolChain(Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors) : base(architecture, buildConfiguration)
+        public MsvcDesktopToolChain(Unity.IL2CPP.Common.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors) : base(architecture, buildConfiguration)
         {
             if (treatWarningsAsErrors)
             {

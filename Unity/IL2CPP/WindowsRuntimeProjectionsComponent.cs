@@ -23,6 +23,8 @@
         private readonly Dictionary<TypeDefinition, TypeDefinition> _windowsRuntimeTypeToCLRTypeMap = new Dictionary<TypeDefinition, TypeDefinition>();
         [CompilerGenerated]
         private static Func<InterfaceImplementation, bool> <>f__am$cache0;
+        [CompilerGenerated]
+        private static Func<InterfaceImplementation, bool> <>f__am$cache1;
         [Inject]
         public static ITypeProviderService TypeProvider;
 
@@ -128,6 +130,10 @@
                     this._projectedComCallableWrapperWriterMap.Add(definition2, new EnumerableCCWWriter());
                 }
                 this.AddProjection("System.Runtime", "System.Collections.Generic", "IList`1", "Windows.Foundation.Collections", "IVector`1", out definition, out definition2);
+                TypeDefinition definition9 = null;
+                TypeDefinition type = null;
+                TypeDefinition definition11 = null;
+                TypeDefinition definition12 = null;
                 if (this.AddProjection("System.Runtime", "System.Collections.Generic", "IReadOnlyDictionary`2", "Windows.Foundation.Collections", "IMapView`2", out definition, out definition2))
                 {
                     IReadOnlyDictionaryProjectedMethodBodyWriter writer = new IReadOnlyDictionaryProjectedMethodBodyWriter(definition, definition2);
@@ -137,17 +143,38 @@
                     adapterMethodBodyWriters.Add(this.GetSingleMethod(definition, "ContainsKey"), new InterfaceAdapterMethodBodyWriter(writer.WriteContainsKey));
                     adapterMethodBodyWriters.Add(this.GetSingleMethod(definition, "TryGetValue"), new InterfaceAdapterMethodBodyWriter(writer.WriteTryGetValue));
                     this._projectedComCallableWrapperWriterMap.Add(definition2, new ReadOnlyDictionaryCCWWriter(definition));
+                    definition9 = definition;
+                    type = definition2;
                 }
                 if (this.AddProjection("System.Runtime", "System.Collections.Generic", "IReadOnlyList`1", "Windows.Foundation.Collections", "IVectorView`1", out definition, out definition2))
                 {
-                    if (<>f__am$cache0 == null)
-                    {
-                        <>f__am$cache0 = i => i.InterfaceType.Name == "IReadOnlyCollection`1";
-                    }
-                    TypeDefinition type = definition.Interfaces.Single<InterfaceImplementation>(<>f__am$cache0).InterfaceType.Resolve();
                     adapterMethodBodyWriters.Add(this.GetSingleMethod(definition, "get_Item"), new InterfaceAdapterMethodBodyWriter(new IReadOnlyListGetItemMethodBodyWriter(this.GetSingleMethod(definition2, "GetAt")).WriteGetItem));
-                    adapterMethodBodyWriters.Add(this.GetSingleMethod(type, "get_Count"), new InterfaceAdapterMethodBodyWriter(new IReadOnlyCollectionGetCountMethodBodyWriter(this.GetSingleMethod(definition2, "get_Size")).WriteGetCount));
                     this._projectedComCallableWrapperWriterMap.Add(definition2, new ReadOnlyListCCWWriter(definition));
+                    definition11 = definition;
+                    definition12 = definition2;
+                }
+                if ((definition12 != null) || (type != null))
+                {
+                    if (definition11 == null)
+                    {
+                    }
+                    if (<>f__am$cache1 == null)
+                    {
+                        <>f__am$cache1 = i => i.InterfaceType.Name == "IReadOnlyCollection`1";
+                    }
+                    TypeDefinition iReadOnlyCollectionType = (<>f__am$cache0 != null) ? definition9.Interfaces.Single<InterfaceImplementation>(<>f__am$cache1).InterfaceType.Resolve() : definition11.Interfaces.Single<InterfaceImplementation>(<>f__am$cache0).InterfaceType.Resolve();
+                    MethodDefinition iMapViewGetSizeMethod = null;
+                    MethodDefinition iVectorViewGetSizeMethod = null;
+                    if (type != null)
+                    {
+                        iMapViewGetSizeMethod = this.GetSingleMethod(type, "get_Size");
+                    }
+                    if (definition12 != null)
+                    {
+                        iVectorViewGetSizeMethod = this.GetSingleMethod(definition12, "get_Size");
+                    }
+                    IReadOnlyCollectionGetCountMethodBodyWriter writer2 = new IReadOnlyCollectionGetCountMethodBodyWriter(iReadOnlyCollectionType, iMapViewGetSizeMethod, iVectorViewGetSizeMethod);
+                    adapterMethodBodyWriters.Add(this.GetSingleMethod(iReadOnlyCollectionType, "get_Count"), new InterfaceAdapterMethodBodyWriter(writer2.WriteGetCount));
                 }
                 if (this.AddProjection("System.Runtime", "System.Collections.Generic", "KeyValuePair`2", "Windows.Foundation.Collections", "IKeyValuePair`2", out definition, out definition2))
                 {

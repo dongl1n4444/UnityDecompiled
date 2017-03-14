@@ -30,7 +30,7 @@
         [field: DebuggerBrowsable(0), CompilerGenerated]
         public event HeaderCallback sortingChanged;
 
-        [field: DebuggerBrowsable(0), CompilerGenerated]
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event HeaderCallback visibleColumnsChanged;
 
         /// <summary>

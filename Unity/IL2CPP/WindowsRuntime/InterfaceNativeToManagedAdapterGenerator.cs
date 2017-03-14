@@ -67,7 +67,8 @@
                 reference = type;
             }
             InterfaceUtilities.MakeImplementInterface(item, reference);
-            foreach (MethodDefinition definition2 in item.Methods)
+            MethodDefinition[] definitionArray = item.Methods.ToArray();
+            foreach (MethodDefinition definition2 in definitionArray)
             {
                 MethodDefinition key = definition2.Overrides[0].Resolve();
                 if (key.DeclaringType == clrInterface)

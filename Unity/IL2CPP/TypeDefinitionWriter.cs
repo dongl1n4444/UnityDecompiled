@@ -659,10 +659,6 @@
             {
                 writer.WriteClangWarningDisables();
                 writer.WriteLine();
-                if (type.IsSystemObject())
-                {
-                    writer.WriteLine("struct Il2CppClass;");
-                }
                 writer.WriteCommentedLine(type.FullName);
                 bool flag = NeedsPackingForManaged(typeDefinition) && !typeDefinition.IsExplicitLayout;
                 if (flag)

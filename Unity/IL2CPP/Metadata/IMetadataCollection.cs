@@ -39,7 +39,7 @@
         ReadOnlyCollection<PropertyDefinition> GetProperties();
         int GetPropertyIndex(PropertyDefinition property);
         ReadOnlyCollection<int> GetReferencedAssemblyIndiciesIntoAssemblyTable();
-        ReadOnlyCollection<KeyValuePair<int, uint>> GetRGCTXEntries();
+        ReadOnlyCollection<RGCTXEntry> GetRGCTXEntries();
         int GetRGCTXEntriesCount(IGenericParameterProvider provider);
         int GetRGCTXEntriesStartIndex(IGenericParameterProvider provider);
         ReadOnlyCollection<byte> GetStringData();

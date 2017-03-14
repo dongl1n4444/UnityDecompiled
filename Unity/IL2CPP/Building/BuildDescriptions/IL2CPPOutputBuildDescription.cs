@@ -20,12 +20,13 @@
     {
         private readonly IEnumerable<string> _additionalDefines;
         private readonly IEnumerable<NPath> _additionalIncludeDirectories;
+        private readonly Unity.IL2CPP.Common.Architecture _architecture;
         private readonly NPath _cacheDirectory;
         private readonly CppToolChain _cppToolChain;
         private NPath _dataFolder;
-        private bool _libIL2CPPAsDynamicLibrary;
         private NPath _libil2cppCacheDirectory;
         private NPath _mapFileParser;
+        private readonly RuntimeBuildType _runtimeLibrary;
         private readonly NPath _sourceDirectory;
         private readonly IEnumerable<string> _specifiedCompilerFlags;
         private readonly IEnumerable<string> _specifiedLinkerFlags;
@@ -49,13 +50,13 @@
             this._specifiedCompilerFlags = other._specifiedCompilerFlags;
             this._specifiedLinkerFlags = other._specifiedLinkerFlags;
             this._cppToolChain = other._cppToolChain;
-            this._libIL2CPPAsDynamicLibrary = other._libIL2CPPAsDynamicLibrary;
             this._dataFolder = other._dataFolder;
             this._libil2cppCacheDirectory = other._libil2cppCacheDirectory;
             this._mapFileParser = other._mapFileParser;
+            this._runtimeLibrary = other._runtimeLibrary;
         }
 
-        public IL2CPPOutputBuildDescription(NPath sourceDirectory, NPath cacheDirectory, NPath outputFile, DotNetProfile dotnetProfile, CppToolChain cppToolChain, NPath dataFolder, bool forceRebuildMapFileParser, bool libil2cppAsDynamicLibrary, IEnumerable<string> additionalDefines = null, IEnumerable<NPath> additionalIncludeDirectories = null, IEnumerable<NPath> staticLibraries = null, IEnumerable<string> specifiedCompilerFlags = null, IEnumerable<string> specifiedLinkerFlags = null, NPath libil2cppCacheDirectory = null, NPath mapFileParser = null)
+        public IL2CPPOutputBuildDescription(NPath sourceDirectory, NPath cacheDirectory, NPath outputFile, DotNetProfile dotnetProfile, CppToolChain cppToolChain, NPath dataFolder, bool forceRebuildMapFileParser, RuntimeBuildType runtimeLibrary, Unity.IL2CPP.Common.Architecture architecture, IEnumerable<string> additionalDefines = null, IEnumerable<NPath> additionalIncludeDirectories = null, IEnumerable<NPath> staticLibraries = null, IEnumerable<string> specifiedCompilerFlags = null, IEnumerable<string> specifiedLinkerFlags = null, NPath libil2cppCacheDirectory = null, NPath mapFileParser = null)
         {
             this._sourceDirectory = sourceDirectory;
             this._cacheDirectory = cacheDirectory?.EnsureDirectoryExists("");
@@ -76,7 +77,8 @@
             base._outputFile = outputFile;
             this._specifiedCompilerFlags = specifiedCompilerFlags;
             this._specifiedLinkerFlags = specifiedLinkerFlags;
-            this._libIL2CPPAsDynamicLibrary = libil2cppAsDynamicLibrary;
+            this._runtimeLibrary = runtimeLibrary;
+            this._architecture = architecture;
             this._dataFolder = dataFolder;
             this._mapFileParser = mapFileParser;
             if ((libil2cppCacheDirectory == null) || (libil2cppCacheDirectory == cacheDirectory))
@@ -96,7 +98,7 @@
 
         [DebuggerHidden]
         public override IEnumerable<string> AdditionalDefinesFor(NPath sourceFile) => 
-            new <AdditionalDefinesFor>c__Iterator1 { 
+            new <AdditionalDefinesFor>c__Iterator3 { 
                 sourceFile = sourceFile,
                 $this = this,
                 $PC = -2
@@ -110,21 +112,31 @@
             }
             if (this.IsLibIL2CPPFile(sourceFile))
             {
+                if (this._runtimeLibrary == RuntimeBuildType.LibMono)
+                {
+                    string[] append = new string[] { "mono" };
+                    return this._additionalIncludeDirectories.Concat<NPath>(this.LibIL2CPPIncludeDirs).Concat<NPath>(LibMonoIncludeDirs).Append<NPath>(MonoInstall.MonoBleedingEdgeIncludeDirectory.Combine(append));
+                }
                 return this._additionalIncludeDirectories.Concat<NPath>(this.LibIL2CPPIncludeDirs);
+            }
+            if (this._runtimeLibrary == RuntimeBuildType.LibMono)
+            {
+                string[] textArray2 = new string[] { "mono" };
+                return this._additionalIncludeDirectories.Concat<NPath>(LibMonoIncludeDirs).Concat<NPath>(this.LibIL2CPPIncludeDirs.Append<NPath>(this._sourceDirectory)).Append<NPath>(MonoInstall.MonoBleedingEdgeIncludeDirectory.Combine(textArray2));
             }
             return this._additionalIncludeDirectories.Concat<NPath>(this.LibIL2CPPIncludeDirs.Append<NPath>(this._sourceDirectory));
         }
 
         [DebuggerHidden]
         protected virtual IEnumerable<string> BoehmDefines() => 
-            new <BoehmDefines>c__Iterator3 { $PC = -2 };
+            new <BoehmDefines>c__Iterator7 { $PC = -2 };
 
         private NPath BuildMapFileParser()
         {
             using (TinyProfiler.Section("BuildMapFileParser", ""))
             {
                 NPath cacheDirectory = this._cacheDirectory?.Combine(new string[] { "MapFileParserCache" }).EnsureDirectoryExists("");
-                return CppProgramBuilder.Create(RuntimePlatform.Current, new MapFileParserBuildDescription(cacheDirectory), false, Unity.IL2CPP.Building.Architecture.BestThisMachineCanRun, BuildConfiguration.Release, this.ForceRebuildMapFileParser, false).BuildAndLogStatsForTestRunner();
+                return CppProgramBuilder.Create(RuntimePlatform.Current, new MapFileParserBuildDescription(cacheDirectory), false, Unity.IL2CPP.Common.Architecture.BestThisMachineCanRun, BuildConfiguration.Release, this.ForceRebuildMapFileParser, false).BuildAndLogStatsForTestRunner();
             }
         }
 
@@ -154,6 +166,10 @@
             }
         }
 
+        [DebuggerHidden]
+        private IEnumerable<NPath> GCSourceFiles() => 
+            new <GCSourceFiles>c__Iterator0 { $PC = -2 };
+
         protected virtual bool IsBoehmFile(NPath sourceFile) => 
             sourceFile.IsChildOf(BoehmDir);
 
@@ -163,14 +179,25 @@
         protected virtual IEnumerable<CppCompilationInstruction> LibIL2CPPCompileInstructions()
         {
             NPath[] foldersToGlob = new NPath[] { LibIL2CPPDir };
-            string[] append = new string[] { "extra/gc.c" };
-            string[] textArray2 = new string[] { "extra/krait_signal_handler.c" };
-            return (from sourceFile in SourceFilesIn(foldersToGlob).Append<NPath>(BoehmDir.Combine(append)).Append<NPath>(BoehmDir.Combine(textArray2)) select this.CppCompilationInstructionFor(sourceFile, this._libil2cppCacheDirectory));
+            return (from sourceFile in SourceFilesIn(foldersToGlob).Concat<NPath>(this.GCSourceFiles()) select this.CppCompilationInstructionFor(sourceFile, this._libil2cppCacheDirectory));
+        }
+
+        private IEnumerable<CppCompilationInstruction> LibMonoCompileInstructions()
+        {
+            NPath[] foldersToGlob = new NPath[4];
+            foldersToGlob[0] = LibMonoDir;
+            string[] append = new string[] { "mono-runtime" };
+            foldersToGlob[1] = LibIL2CPPDir.Combine(append);
+            string[] textArray2 = new string[] { "os" };
+            foldersToGlob[2] = LibIL2CPPDir.Combine(textArray2);
+            string[] textArray3 = new string[] { "utils" };
+            foldersToGlob[3] = LibIL2CPPDir.Combine(textArray3);
+            return (from sourceFile in SourceFilesIn(foldersToGlob).Concat<NPath>(this.GCSourceFiles()).Concat<NPath>(this.SpecificLibIL2CPPFiles()) select this.CppCompilationInstructionFor(sourceFile, this._libil2cppCacheDirectory));
         }
 
         public override void OnBeforeLink(NPath workingDirectory, IEnumerable<NPath> objectFiles, CppToolChainContext toolChainContext, bool forceRebuild, bool verbose)
         {
-            if (this._libIL2CPPAsDynamicLibrary)
+            if (this._runtimeLibrary == RuntimeBuildType.LibIL2CPPDynamic)
             {
                 LibIL2CPPDynamicLibProgramDescription programBuildDescription = new LibIL2CPPDynamicLibProgramDescription(this.LibIL2CPPCompileInstructions(), this.LibIL2CppDynamicLibraryLocation, this._libil2cppCacheDirectory);
                 new CppProgramBuilder(this._cppToolChain, programBuildDescription, verbose, forceRebuild).BuildAndLogStatsForTestRunner();
@@ -203,6 +230,10 @@
             return foldersToGlob.SelectMany<NPath, NPath>(<>f__am$cache0).Where<NPath>(<>f__am$cache1);
         }
 
+        [DebuggerHidden]
+        private IEnumerable<NPath> SpecificLibIL2CPPFiles() => 
+            new <SpecificLibIL2CPPFiles>c__Iterator1 { $PC = -2 };
+
         public override IEnumerable<string> AdditionalCompilerFlags
         {
             get
@@ -220,22 +251,11 @@
             }
         }
 
-        public override IEnumerable<string> AdditionalLinkerFlags
-        {
-            get
-            {
-                IEnumerable<string> enumerable;
-                if (this._specifiedLinkerFlags != null)
-                {
-                    enumerable = this._specifiedLinkerFlags;
-                }
-                else
-                {
-                    enumerable = Enumerable.Empty<string>();
-                }
-                return enumerable;
-            }
-        }
+        public override IEnumerable<string> AdditionalLinkerFlags =>
+            new <>c__Iterator6 { 
+                $this=this,
+                $PC=-2
+            };
 
         protected static NPath BoehmDir =>
             CommonPaths.Il2CppRoot?.Combine(new string[] { "external/boehmgc" });
@@ -254,13 +274,13 @@
         }
 
         public override IEnumerable<CppCompilationInstruction> CppCompileInstructions =>
-            new <>c__Iterator0 { 
+            new <>c__Iterator2 { 
                 $this=this,
                 $PC=-2
             };
 
         public override IEnumerable<NPath> DynamicLibraries =>
-            new <>c__Iterator2 { 
+            new <>c__Iterator5 { 
                 $this=this,
                 $PC=-2
             };
@@ -295,20 +315,52 @@
             }
         }
 
-        public override IEnumerable<NPath> StaticLibraries =>
-            this._staticLibraries;
+        private static NPath LibMonoDir =>
+            CommonPaths.Il2CppRoot?.Combine(new string[] { "libmono" });
+
+        private static IEnumerable<NPath> LibMonoIncludeDirs
+        {
+            get
+            {
+                NPath[] pathArray1 = new NPath[2];
+                pathArray1[0] = LibMonoDir;
+                string[] append = new string[] { "mono-runtime" };
+                pathArray1[1] = LibIL2CPPDir.Combine(append);
+                return pathArray1;
+            }
+        }
+
+        private IEnumerable<NPath> LibMonoStaticLibraries =>
+            new <>c__Iterator4 { 
+                $this=this,
+                $PC=-2
+            };
+
+        public override IEnumerable<NPath> StaticLibraries
+        {
+            get
+            {
+                if (this._runtimeLibrary == RuntimeBuildType.LibMono)
+                {
+                    return this._staticLibraries.Concat<NPath>(this.LibMonoStaticLibraries);
+                }
+                return this._staticLibraries;
+            }
+        }
 
         [CompilerGenerated]
-        private sealed class <>c__Iterator0 : IEnumerable, IEnumerable<CppCompilationInstruction>, IEnumerator, IDisposable, IEnumerator<CppCompilationInstruction>
+        private sealed class <>c__Iterator2 : IEnumerable, IEnumerable<CppCompilationInstruction>, IEnumerator, IDisposable, IEnumerator<CppCompilationInstruction>
         {
             internal CppCompilationInstruction $current;
             internal bool $disposing;
             internal IEnumerator<CppCompilationInstruction> $locvar0;
             internal IEnumerator<CppCompilationInstruction> $locvar1;
+            internal IEnumerator<CppCompilationInstruction> $locvar2;
             internal int $PC;
             internal IL2CPPOutputBuildDescription $this;
             internal CppCompilationInstruction <i>__1;
             internal CppCompilationInstruction <i>__2;
+            internal CppCompilationInstruction <i>__3;
 
             internal CppCompilationInstruction <>m__0(NPath sourceFile) => 
                 this.$this.CppCompilationInstructionFor(sourceFile, this.$this._cacheDirectory);
@@ -346,6 +398,19 @@
                             }
                         }
                         break;
+
+                    case 3:
+                        try
+                        {
+                        }
+                        finally
+                        {
+                            if (this.$locvar2 != null)
+                            {
+                                this.$locvar2.Dispose();
+                            }
+                        }
+                        break;
                 }
             }
 
@@ -369,8 +434,11 @@
                     case 2:
                         goto Label_0104;
 
+                    case 3:
+                        goto Label_01AA;
+
                     default:
-                        goto Label_017F;
+                        goto Label_0226;
                 }
                 try
                 {
@@ -383,7 +451,7 @@
                             this.$PC = 1;
                         }
                         flag = true;
-                        goto Label_0181;
+                        goto Label_0228;
                     }
                 }
                 finally
@@ -396,9 +464,15 @@
                         this.$locvar0.Dispose();
                     }
                 }
-                if (this.$this._libIL2CPPAsDynamicLibrary)
+                if (this.$this._runtimeLibrary != RuntimeBuildType.LibIL2CPPStatic)
                 {
-                    goto Label_017F;
+                    if (this.$this._runtimeLibrary != RuntimeBuildType.LibMono)
+                    {
+                        goto Label_021F;
+                    }
+                    this.$locvar2 = this.$this.LibMonoCompileInstructions().GetEnumerator();
+                    num = 0xfffffffd;
+                    goto Label_01AA;
                 }
                 this.$locvar1 = this.$this.LibIL2CPPCompileInstructions().GetEnumerator();
                 num = 0xfffffffd;
@@ -414,7 +488,7 @@
                             this.$PC = 2;
                         }
                         flag = true;
-                        goto Label_0181;
+                        goto Label_0228;
                     }
                 }
                 finally
@@ -427,10 +501,37 @@
                         this.$locvar1.Dispose();
                     }
                 }
+                goto Label_021F;
+            Label_01AA:
+                try
+                {
+                    while (this.$locvar2.MoveNext())
+                    {
+                        this.<i>__3 = this.$locvar2.Current;
+                        this.$current = this.<i>__3;
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 3;
+                        }
+                        flag = true;
+                        goto Label_0228;
+                    }
+                }
+                finally
+                {
+                    if (!flag)
+                    {
+                    }
+                    if (this.$locvar2 != null)
+                    {
+                        this.$locvar2.Dispose();
+                    }
+                }
+            Label_021F:
                 this.$PC = -1;
-            Label_017F:
+            Label_0226:
                 return false;
-            Label_0181:
+            Label_0228:
                 return true;
             }
 
@@ -447,7 +548,7 @@
                 {
                     return this;
                 }
-                return new IL2CPPOutputBuildDescription.<>c__Iterator0 { $this = this.$this };
+                return new IL2CPPOutputBuildDescription.<>c__Iterator2 { $this = this.$this };
             }
 
             [DebuggerHidden]
@@ -462,7 +563,171 @@
         }
 
         [CompilerGenerated]
-        private sealed class <>c__Iterator2 : IEnumerable, IEnumerable<NPath>, IEnumerator, IDisposable, IEnumerator<NPath>
+        private sealed class <>c__Iterator4 : IEnumerable, IEnumerable<NPath>, IEnumerator, IDisposable, IEnumerator<NPath>
+        {
+            internal NPath $current;
+            internal bool $disposing;
+            internal int $PC;
+            internal IL2CPPOutputBuildDescription $this;
+            internal NPath <libMonoDirectory>__1;
+            internal NPath <libMonoDirectory>__2;
+
+            [DebuggerHidden]
+            public void Dispose()
+            {
+                this.$disposing = true;
+                this.$PC = -1;
+            }
+
+            public bool MoveNext()
+            {
+                uint num = (uint) this.$PC;
+                this.$PC = -1;
+                switch (num)
+                {
+                    case 0:
+                    {
+                        if (!PlatformUtils.IsWindows())
+                        {
+                            if (PlatformUtils.IsOSX())
+                            {
+                                this.<libMonoDirectory>__2 = MonoInstall.MonoBleedingEdgeEmbedRuntimesDirectoryFor(PlatformUtils.Architecture.x64);
+                                string[] textArray4 = new string[] { "libmonoruntime-il2cpp.a" };
+                                this.$current = this.<libMonoDirectory>__2.Combine(textArray4);
+                                if (!this.$disposing)
+                                {
+                                    this.$PC = 7;
+                                }
+                                goto Label_027C;
+                            }
+                            break;
+                        }
+                        this.<libMonoDirectory>__1 = MonoInstall.MonoBleedingEdgeEmbedRuntimesDirectoryFor((this.$this._architecture.Name != "x86") ? PlatformUtils.Architecture.x64 : PlatformUtils.Architecture.x86);
+                        string[] append = new string[] { "libmonoruntime-boehm-il2cpp.lib" };
+                        this.$current = this.<libMonoDirectory>__1.Combine(append);
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 1;
+                        }
+                        goto Label_027C;
+                    }
+                    case 1:
+                    {
+                        string[] textArray2 = new string[] { "libmonoutils-il2cpp.lib" };
+                        this.$current = this.<libMonoDirectory>__1.Combine(textArray2);
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 2;
+                        }
+                        goto Label_027C;
+                    }
+                    case 2:
+                    {
+                        string[] textArray3 = new string[] { "eglib.lib" };
+                        this.$current = this.<libMonoDirectory>__1.Combine(textArray3);
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 3;
+                        }
+                        goto Label_027C;
+                    }
+                    case 3:
+                        this.$current = new NPath("Mswsock.lib");
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 4;
+                        }
+                        goto Label_027C;
+
+                    case 4:
+                        this.$current = new NPath("Mincore.lib");
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 5;
+                        }
+                        goto Label_027C;
+
+                    case 5:
+                        this.$current = new NPath("Psapi.lib");
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 6;
+                        }
+                        goto Label_027C;
+
+                    case 6:
+                    case 10:
+                        break;
+
+                    case 7:
+                    {
+                        string[] textArray5 = new string[] { "libwapi.a" };
+                        this.$current = this.<libMonoDirectory>__2.Combine(textArray5);
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 8;
+                        }
+                        goto Label_027C;
+                    }
+                    case 8:
+                    {
+                        string[] textArray6 = new string[] { "libmonoutils-il2cpp.a" };
+                        this.$current = this.<libMonoDirectory>__2.Combine(textArray6);
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 9;
+                        }
+                        goto Label_027C;
+                    }
+                    case 9:
+                    {
+                        string[] textArray7 = new string[] { "libeglib.a" };
+                        this.$current = this.<libMonoDirectory>__2.Combine(textArray7);
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 10;
+                        }
+                        goto Label_027C;
+                    }
+                    default:
+                        goto Label_027A;
+                }
+                this.$PC = -1;
+            Label_027A:
+                return false;
+            Label_027C:
+                return true;
+            }
+
+            [DebuggerHidden]
+            public void Reset()
+            {
+                throw new NotSupportedException();
+            }
+
+            [DebuggerHidden]
+            IEnumerator<NPath> IEnumerable<NPath>.GetEnumerator()
+            {
+                if (Interlocked.CompareExchange(ref this.$PC, 0, -2) == -2)
+                {
+                    return this;
+                }
+                return new IL2CPPOutputBuildDescription.<>c__Iterator4 { $this = this.$this };
+            }
+
+            [DebuggerHidden]
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
+
+            NPath IEnumerator<NPath>.Current =>
+                this.$current;
+
+            object IEnumerator.Current =>
+                this.$current;
+        }
+
+        [CompilerGenerated]
+        private sealed class <>c__Iterator5 : IEnumerable, IEnumerable<NPath>, IEnumerator, IDisposable, IEnumerator<NPath>
         {
             internal NPath $current;
             internal bool $disposing;
@@ -483,7 +748,7 @@
                 switch (num)
                 {
                     case 0:
-                        if (!this.$this._libIL2CPPAsDynamicLibrary)
+                        if (this.$this._runtimeLibrary != RuntimeBuildType.LibIL2CPPDynamic)
                         {
                             break;
                         }
@@ -498,10 +763,10 @@
                         break;
 
                     default:
-                        goto Label_005E;
+                        goto Label_005F;
                 }
                 this.$PC = -1;
-            Label_005E:
+            Label_005F:
                 return false;
             }
 
@@ -518,7 +783,7 @@
                 {
                     return this;
                 }
-                return new IL2CPPOutputBuildDescription.<>c__Iterator2 { $this = this.$this };
+                return new IL2CPPOutputBuildDescription.<>c__Iterator5 { $this = this.$this };
             }
 
             [DebuggerHidden]
@@ -533,7 +798,142 @@
         }
 
         [CompilerGenerated]
-        private sealed class <AdditionalDefinesFor>c__Iterator1 : IEnumerable, IEnumerable<string>, IEnumerator, IDisposable, IEnumerator<string>
+        private sealed class <>c__Iterator6 : IEnumerable, IEnumerable<string>, IEnumerator, IDisposable, IEnumerator<string>
+        {
+            internal string $current;
+            internal bool $disposing;
+            internal IEnumerator<string> $locvar0;
+            internal int $PC;
+            internal IL2CPPOutputBuildDescription $this;
+            internal string <flag>__1;
+
+            [DebuggerHidden]
+            public void Dispose()
+            {
+                uint num = (uint) this.$PC;
+                this.$disposing = true;
+                this.$PC = -1;
+                switch (num)
+                {
+                    case 1:
+                        try
+                        {
+                        }
+                        finally
+                        {
+                            if (this.$locvar0 != null)
+                            {
+                                this.$locvar0.Dispose();
+                            }
+                        }
+                        break;
+                }
+            }
+
+            public bool MoveNext()
+            {
+                uint num = (uint) this.$PC;
+                this.$PC = -1;
+                bool flag = false;
+                switch (num)
+                {
+                    case 0:
+                        if (this.$this._specifiedLinkerFlags == null)
+                        {
+                            goto Label_00CC;
+                        }
+                        this.$locvar0 = this.$this._specifiedLinkerFlags.GetEnumerator();
+                        num = 0xfffffffd;
+                        break;
+
+                    case 1:
+                        break;
+
+                    case 2:
+                        this.$current = "-framework Foundation";
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 3;
+                        }
+                        goto Label_0130;
+
+                    case 3:
+                        goto Label_0127;
+
+                    default:
+                        goto Label_012E;
+                }
+                try
+                {
+                    while (this.$locvar0.MoveNext())
+                    {
+                        this.<flag>__1 = this.$locvar0.Current;
+                        this.$current = this.<flag>__1;
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 1;
+                        }
+                        flag = true;
+                        goto Label_0130;
+                    }
+                }
+                finally
+                {
+                    if (!flag)
+                    {
+                    }
+                    if (this.$locvar0 != null)
+                    {
+                        this.$locvar0.Dispose();
+                    }
+                }
+            Label_00CC:
+                if ((this.$this._runtimeLibrary == RuntimeBuildType.LibMono) && PlatformUtils.IsOSX())
+                {
+                    this.$current = "-liconv";
+                    if (!this.$disposing)
+                    {
+                        this.$PC = 2;
+                    }
+                    goto Label_0130;
+                }
+            Label_0127:
+                this.$PC = -1;
+            Label_012E:
+                return false;
+            Label_0130:
+                return true;
+            }
+
+            [DebuggerHidden]
+            public void Reset()
+            {
+                throw new NotSupportedException();
+            }
+
+            [DebuggerHidden]
+            IEnumerator<string> IEnumerable<string>.GetEnumerator()
+            {
+                if (Interlocked.CompareExchange(ref this.$PC, 0, -2) == -2)
+                {
+                    return this;
+                }
+                return new IL2CPPOutputBuildDescription.<>c__Iterator6 { $this = this.$this };
+            }
+
+            [DebuggerHidden]
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
+
+            string IEnumerator<string>.Current =>
+                this.$current;
+
+            object IEnumerator.Current =>
+                this.$current;
+        }
+
+        [CompilerGenerated]
+        private sealed class <AdditionalDefinesFor>c__Iterator3 : IEnumerable, IEnumerable<string>, IEnumerator, IDisposable, IEnumerator<string>
         {
             internal string $current;
             internal bool $disposing;
@@ -597,13 +997,17 @@
                         break;
 
                     case 2:
-                        goto Label_00EA;
+                        goto Label_00F2;
 
                     case 3:
-                        goto Label_01AD;
+                        goto Label_01B6;
+
+                    case 4:
+                    case 5:
+                        goto Label_022B;
 
                     default:
-                        goto Label_01B4;
+                        goto Label_0232;
                 }
                 try
                 {
@@ -616,7 +1020,7 @@
                             this.$PC = 1;
                         }
                         flag = true;
-                        goto Label_01B6;
+                        goto Label_0234;
                     }
                 }
                 finally
@@ -631,11 +1035,11 @@
                 }
                 if (!this.$this.IsBoehmFile(this.sourceFile))
                 {
-                    goto Label_015E;
+                    goto Label_0166;
                 }
                 this.$locvar1 = this.$this.BoehmDefines().GetEnumerator();
                 num = 0xfffffffd;
-            Label_00EA:
+            Label_00F2:
                 try
                 {
                     while (this.$locvar1.MoveNext())
@@ -647,7 +1051,7 @@
                             this.$PC = 2;
                         }
                         flag = true;
-                        goto Label_01B6;
+                        goto Label_0234;
                     }
                 }
                 finally
@@ -660,21 +1064,40 @@
                         this.$locvar1.Dispose();
                     }
                 }
-            Label_015E:
-                if (this.$this._libIL2CPPAsDynamicLibrary)
+            Label_0166:
+                if (this.$this._runtimeLibrary == RuntimeBuildType.LibIL2CPPDynamic)
                 {
                     this.$current = !this.$this.IsLibIL2CPPFile(this.sourceFile) ? "LIBIL2CPP_IMPORT_CODEGEN_API" : "LIBIL2CPP_EXPORT_CODEGEN_API";
                     if (!this.$disposing)
                     {
                         this.$PC = 3;
                     }
-                    goto Label_01B6;
+                    goto Label_0234;
                 }
-            Label_01AD:
-                this.$PC = -1;
-            Label_01B4:
-                return false;
             Label_01B6:
+                if ((this.$this._runtimeLibrary == RuntimeBuildType.LibIL2CPPStatic) || (this.$this._runtimeLibrary == RuntimeBuildType.LibIL2CPPDynamic))
+                {
+                    this.$current = "RUNTIME_IL2CPP";
+                    if (!this.$disposing)
+                    {
+                        this.$PC = 4;
+                    }
+                    goto Label_0234;
+                }
+                if (this.$this._runtimeLibrary == RuntimeBuildType.LibMono)
+                {
+                    this.$current = "RUNTIME_MONO";
+                    if (!this.$disposing)
+                    {
+                        this.$PC = 5;
+                    }
+                    goto Label_0234;
+                }
+            Label_022B:
+                this.$PC = -1;
+            Label_0232:
+                return false;
+            Label_0234:
                 return true;
             }
 
@@ -691,7 +1114,7 @@
                 {
                     return this;
                 }
-                return new IL2CPPOutputBuildDescription.<AdditionalDefinesFor>c__Iterator1 { 
+                return new IL2CPPOutputBuildDescription.<AdditionalDefinesFor>c__Iterator3 { 
                     $this = this.$this,
                     sourceFile = this.sourceFile
                 };
@@ -709,7 +1132,7 @@
         }
 
         [CompilerGenerated]
-        private sealed class <BoehmDefines>c__Iterator3 : IEnumerable, IEnumerable<string>, IEnumerator, IDisposable, IEnumerator<string>
+        private sealed class <BoehmDefines>c__Iterator7 : IEnumerable, IEnumerable<string>, IEnumerator, IDisposable, IEnumerator<string>
         {
             internal string $current;
             internal bool $disposing;
@@ -854,7 +1277,7 @@
                 {
                     return this;
                 }
-                return new IL2CPPOutputBuildDescription.<BoehmDefines>c__Iterator3();
+                return new IL2CPPOutputBuildDescription.<BoehmDefines>c__Iterator7();
             }
 
             [DebuggerHidden]
@@ -862,6 +1285,146 @@
                 this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
             string IEnumerator<string>.Current =>
+                this.$current;
+
+            object IEnumerator.Current =>
+                this.$current;
+        }
+
+        [CompilerGenerated]
+        private sealed class <GCSourceFiles>c__Iterator0 : IEnumerable, IEnumerable<NPath>, IEnumerator, IDisposable, IEnumerator<NPath>
+        {
+            internal NPath $current;
+            internal bool $disposing;
+            internal int $PC;
+
+            [DebuggerHidden]
+            public void Dispose()
+            {
+                this.$disposing = true;
+                this.$PC = -1;
+            }
+
+            public bool MoveNext()
+            {
+                uint num = (uint) this.$PC;
+                this.$PC = -1;
+                switch (num)
+                {
+                    case 0:
+                    {
+                        string[] append = new string[] { "extra/gc.c" };
+                        this.$current = IL2CPPOutputBuildDescription.BoehmDir.Combine(append);
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 1;
+                        }
+                        goto Label_0093;
+                    }
+                    case 1:
+                    {
+                        string[] textArray2 = new string[] { "extra/krait_signal_handler.c" };
+                        this.$current = IL2CPPOutputBuildDescription.BoehmDir.Combine(textArray2);
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 2;
+                        }
+                        goto Label_0093;
+                    }
+                    case 2:
+                        this.$PC = -1;
+                        break;
+                }
+                return false;
+            Label_0093:
+                return true;
+            }
+
+            [DebuggerHidden]
+            public void Reset()
+            {
+                throw new NotSupportedException();
+            }
+
+            [DebuggerHidden]
+            IEnumerator<NPath> IEnumerable<NPath>.GetEnumerator()
+            {
+                if (Interlocked.CompareExchange(ref this.$PC, 0, -2) == -2)
+                {
+                    return this;
+                }
+                return new IL2CPPOutputBuildDescription.<GCSourceFiles>c__Iterator0();
+            }
+
+            [DebuggerHidden]
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
+
+            NPath IEnumerator<NPath>.Current =>
+                this.$current;
+
+            object IEnumerator.Current =>
+                this.$current;
+        }
+
+        [CompilerGenerated]
+        private sealed class <SpecificLibIL2CPPFiles>c__Iterator1 : IEnumerable, IEnumerable<NPath>, IEnumerator, IDisposable, IEnumerator<NPath>
+        {
+            internal NPath $current;
+            internal bool $disposing;
+            internal int $PC;
+
+            [DebuggerHidden]
+            public void Dispose()
+            {
+                this.$disposing = true;
+                this.$PC = -1;
+            }
+
+            public bool MoveNext()
+            {
+                uint num = (uint) this.$PC;
+                this.$PC = -1;
+                switch (num)
+                {
+                    case 0:
+                    {
+                        string[] append = new string[] { "char-conversions.cpp" };
+                        this.$current = IL2CPPOutputBuildDescription.LibIL2CPPDir.Combine(append);
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 1;
+                        }
+                        return true;
+                    }
+                    case 1:
+                        this.$PC = -1;
+                        break;
+                }
+                return false;
+            }
+
+            [DebuggerHidden]
+            public void Reset()
+            {
+                throw new NotSupportedException();
+            }
+
+            [DebuggerHidden]
+            IEnumerator<NPath> IEnumerable<NPath>.GetEnumerator()
+            {
+                if (Interlocked.CompareExchange(ref this.$PC, 0, -2) == -2)
+                {
+                    return this;
+                }
+                return new IL2CPPOutputBuildDescription.<SpecificLibIL2CPPFiles>c__Iterator1();
+            }
+
+            [DebuggerHidden]
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
+
+            NPath IEnumerator<NPath>.Current =>
                 this.$current;
 
             object IEnumerator.Current =>

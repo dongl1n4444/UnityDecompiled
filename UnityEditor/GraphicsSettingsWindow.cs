@@ -252,7 +252,7 @@
                 public static readonly GUIContent lightmapDynamicDirCombined = EditorGUIUtility.TextContent("Realtime Directional|Include support for realtime directional lightmaps.");
                 public static readonly GUIContent lightmapDynamicPlain = EditorGUIUtility.TextContent("Realtime Non-Directional|Include support for realtime non-directional lightmaps.");
                 public static readonly GUIContent lightmapFromScene = EditorGUIUtility.TextContent("Import From Current Scene|Calculate lightmap modes used by the current scene.");
-                public static readonly GUIContent lightmapKeepShadowMask = EditorGUIUtility.TextContent("Baked Shadow Mask|Include support for baked shadow occlusion.");
+                public static readonly GUIContent lightmapKeepShadowMask = EditorGUIUtility.TextContent("Baked Shadowmask|Include support for baked shadow occlusion.");
                 public static readonly GUIContent lightmapKeepSubtractive = EditorGUIUtility.TextContent("Baked Subtractive|Include support for baked substractive lightmaps.");
                 public static readonly GUIContent lightmapModes = EditorGUIUtility.TextContent("Lightmap Modes");
                 public static readonly GUIContent lightmapPlain = EditorGUIUtility.TextContent("Baked Non-Directional|Include support for baked non-directional lightmaps.");

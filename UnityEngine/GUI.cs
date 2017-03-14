@@ -791,9 +791,9 @@
                         {
                             style2.Draw(buttonRects[selected], contents[selected], ((selected == index) && (enabled || (controlID == GUIUtility.hotControl))) && ((controlID == GUIUtility.hotControl) || (GUIUtility.hotControl == 0)), controlID == GUIUtility.hotControl, true, false);
                         }
-                        if (index >= 0)
+                        if ((index >= 0) && !string.IsNullOrEmpty(contents[index].tooltip))
                         {
-                            tooltip = contents[index].tooltip;
+                            GUIStyle.SetMouseTooltip(contents[index].tooltip, buttonRects[index]);
                         }
                         GUIClip.Pop();
                         return selected;

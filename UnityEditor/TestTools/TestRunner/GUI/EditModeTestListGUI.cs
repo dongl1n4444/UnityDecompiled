@@ -23,22 +23,25 @@
             EditorGUILayout.HelpBox("No tests to show", MessageType.Info);
             if (GUILayout.Button("Create EditMode test", new GUILayoutOption[0]))
             {
-                EditorApplication.ExecuteMenuItem("Assets/Create/Testing/EditMode Test C# Script (internal)");
+                EditorApplication.ExecuteMenuItem("Assets/Create/Testing/EditMode Test C# Script");
             }
         }
 
         protected override void RunTests(TestRunnerFilter filter)
         {
-            foreach (TestRunnerResult result in base.newResultList)
+            if (!EditModeRunner.RunningTests)
             {
-                if (filter.Matches(result))
+                foreach (TestRunnerResult result in base.newResultList)
                 {
-                    result.resultStatus = TestRunnerResult.ResultStatus.NotRun;
+                    if (filter.Matches(result))
+                    {
+                        result.resultStatus = TestRunnerResult.ResultStatus.NotRun;
+                    }
                 }
+                EditModeLauncher launcher = new EditModeLauncher(filter);
+                launcher.AddEventHandler<WindowResultUpdater>();
+                launcher.Run();
             }
-            EditModeLauncher launcher = new EditModeLauncher(filter);
-            launcher.AddEventHandler<WindowResultUpdater>();
-            launcher.Run();
         }
     }
 }

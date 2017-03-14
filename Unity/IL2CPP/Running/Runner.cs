@@ -12,11 +12,12 @@
 
         static Runner()
         {
+            _platformRunners.Add(typeof(AndroidRuntimePlatform), new AndroidRunner());
             _platformRunners.Add(typeof(MacOSXRuntimePlatform), new DesktopRunner(new MacOSXRuntimePlatform()));
             _platformRunners.Add(typeof(WindowsDesktopRuntimePlatform), new DesktopRunner(new WindowsDesktopRuntimePlatform()));
             _platformRunners.Add(typeof(LinuxRuntimePlatform), new DesktopRunner(new LinuxRuntimePlatform()));
-            _platformRunners.Add(typeof(WinRTRuntimePlatform), new WinRTRunner());
             _platformRunners.Add(typeof(TizenRuntimePlatform), new TizenRunner());
+            _platformRunners.Add(typeof(WinRTRuntimePlatform), new WinRTRunner());
         }
 
         protected Runner()
@@ -41,25 +42,37 @@
         public virtual IEnumerable<string> GetAdditionalIncludes() => 
             new string[0];
 
-        public virtual string Run(string executable)
+        public virtual string GetNativeCrashHandler() => 
+            string.Empty;
+
+        public virtual string GetNativeCrashHandlerInitialization() => 
+            string.Empty;
+
+        public virtual string GetTemporaryDirectoryInitializer() => 
+            string.Empty;
+
+        public virtual string Run(Unity.IL2CPP.Common.Architecture architecture, string executable)
         {
-            Shell.ExecuteResult result = this.RunAndMakeExecuteResult(executable);
-            string str = result.StdErr.Trim() + result.StdOut.Trim();
+            Shell.ExecuteResult result = this.RunAndMakeExecuteResult(architecture, executable);
+            string str = result.StdErr.Trim();
+            string str2 = result.StdOut.Trim();
+            string str3 = (string.IsNullOrEmpty(str) || string.IsNullOrEmpty(str2)) ? string.Empty : Environment.NewLine;
+            string str4 = str + str3 + str2;
             if (result.ExitCode != 0)
             {
-                throw new RunnerFailedException(string.Format("Process {0} ended with exitcode {1}{3}{2}{3}", new object[] { executable, result.ExitCode, str, Environment.NewLine }));
+                throw new RunnerFailedException(string.Format("Process {0} ended with exitcode {1}{3}{2}{3}", new object[] { executable, result.ExitCode, str4, Environment.NewLine }));
             }
-            return str;
+            return str4;
         }
 
-        public abstract Shell.ExecuteResult RunAndMakeExecuteResult(string executable);
-        public virtual Shell.ExecuteResult RunAndMakeExecuteResult(string executable, string arguments)
+        public abstract Shell.ExecuteResult RunAndMakeExecuteResult(Unity.IL2CPP.Common.Architecture architecture, string executable);
+        public virtual Shell.ExecuteResult RunAndMakeExecuteResult(Unity.IL2CPP.Common.Architecture architecture, string executable, string arguments)
         {
             if (!string.IsNullOrEmpty(arguments))
             {
                 throw new NotSupportedException("Running with arguments in not supported on this platform!");
             }
-            return this.RunAndMakeExecuteResult(executable);
+            return this.RunAndMakeExecuteResult(architecture, executable);
         }
 
         public static void SetPlatformRunner(Type platform, Runner runner)

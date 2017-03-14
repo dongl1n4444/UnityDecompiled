@@ -1309,17 +1309,21 @@
 
         public static bool NeedsComCallableWrapper(this TypeReference type)
         {
-            if (type.IsArray)
+            if (!CodeGenOptions.MonoRuntime)
             {
-                return type.GetInterfacesImplementedByComCallableWrapper().Any<TypeReference>();
-            }
-            TypeDefinition definition = type.Resolve();
-            if (definition.CanBoxToWindowsRuntime())
-            {
-                return true;
-            }
-            if ((!definition.IsInterface && !definition.IsComOrWindowsRuntimeType()) && !definition.IsAbstract)
-            {
+                if (type.IsArray)
+                {
+                    return type.GetInterfacesImplementedByComCallableWrapper().Any<TypeReference>();
+                }
+                TypeDefinition definition = type.Resolve();
+                if (definition.CanBoxToWindowsRuntime())
+                {
+                    return true;
+                }
+                if ((definition.IsInterface || definition.IsComOrWindowsRuntimeType()) || definition.IsAbstract)
+                {
+                    return false;
+                }
                 if (type.GetInterfacesImplementedByComCallableWrapper().Any<TypeReference>())
                 {
                     return true;

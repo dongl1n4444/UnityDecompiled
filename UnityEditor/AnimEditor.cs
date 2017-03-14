@@ -21,9 +21,9 @@
         internal static PrefKey kAnimationRecordKeyframe = new PrefKey("Animation/Record Keyframe", "k");
         internal static PrefKey kAnimationShowCurvesToggle = new PrefKey("Animation/Show Curves", "c");
         internal const float kDisabledRulerAlpha = 0.12f;
-        internal static PrefColor kEulerXColor = new PrefColor("Testing/EulerX", 1f, 0f, 1f, 1f);
-        internal static PrefColor kEulerYColor = new PrefColor("Testing/EulerY", 1f, 1f, 0f, 1f);
-        internal static PrefColor kEulerZColor = new PrefColor("Testing/EulerZ", 0f, 1f, 1f, 1f);
+        internal static PrefColor kEulerXColor = new PrefColor("Animation/EulerX", 1f, 0f, 1f, 1f);
+        internal static PrefColor kEulerYColor = new PrefColor("Animation/EulerY", 1f, 1f, 0f, 1f);
+        internal static PrefColor kEulerZColor = new PrefColor("Animation/EulerZ", 0f, 1f, 1f, 1f);
         internal const int kHierarchyMinWidth = 300;
         internal const int kIntFieldWidth = 0x23;
         internal const int kLayoutRowHeight = 0x12;
@@ -56,6 +56,12 @@
         [NonSerialized]
         private bool m_TriggerFraming;
         private static List<AnimEditor> s_AnimationWindows = new List<AnimEditor>();
+        private static Color s_InRangeColorDark = ((Color) new Color32(0x4b, 0x4b, 0x4b, 0xff));
+        private static Color s_InRangeColorLight = ((Color) new Color32(0xd3, 0xd3, 0xd3, 0xff));
+        private static Color s_OutOfRangeColorDark = ((Color) new Color32(40, 40, 40, 0x7f));
+        private static Color s_OutOfRangeColorLight = ((Color) new Color32(160, 160, 160, 0x7f));
+        private static Color s_SelectionRangeColorDark = ((Color) new Color32(200, 200, 200, 40));
+        private static Color s_SelectionRangeColorLight = ((Color) new Color32(0xff, 0xff, 0xff, 90));
 
         private void AddEventButtonOnGUI()
         {
@@ -621,6 +627,10 @@
 
         private void PlayControlsOnGUI()
         {
+            using (new EditorGUI.DisabledScope(!this.controlInterface.canPreview))
+            {
+                this.PreviewButtonOnGUI();
+            }
             using (new EditorGUI.DisabledScope(!this.controlInterface.canRecord))
             {
                 this.RecordButtonOnGUI();
@@ -659,9 +669,33 @@
             }
         }
 
+        private void PreviewButtonOnGUI()
+        {
+            EditorGUI.BeginChangeCheck();
+            bool flag = GUILayout.Toggle(this.controlInterface.previewing, AnimationWindowStyles.previewContent, EditorStyles.toolbarButton, new GUILayoutOption[0]);
+            if (EditorGUI.EndChangeCheck())
+            {
+                if (flag)
+                {
+                    this.m_State.StartPreview();
+                }
+                else
+                {
+                    this.m_State.StopPreview();
+                }
+            }
+        }
+
         private void RecordButtonOnGUI()
         {
             EditorGUI.BeginChangeCheck();
+            Color color = GUI.color;
+            if (this.controlInterface.recording)
+            {
+                Color recordedPropertyColor = UnityEditor.AnimationMode.recordedPropertyColor;
+                recordedPropertyColor.a *= GUI.color.a;
+                GUI.color = recordedPropertyColor;
+            }
             bool flag = GUILayout.Toggle(this.controlInterface.recording, AnimationWindowStyles.recordContent, EditorStyles.toolbarButton, new GUILayoutOption[0]);
             if (EditorGUI.EndChangeCheck())
             {
@@ -672,19 +706,49 @@
                 else
                 {
                     this.m_State.StopRecording();
+                    InspectorWindow.RepaintAllInspectors();
                 }
             }
-        }
-
-        private void RenderClipOverlay(Rect rect)
-        {
-            Vector2 timeRange = this.m_State.timeRange;
-            AnimationWindowUtility.DrawRangeOfClip(rect, this.m_State.TimeToPixel(timeRange.x) + rect.xMin, this.m_State.TimeToPixel(timeRange.y) + rect.xMin);
+            GUI.color = color;
         }
 
         private void RenderEventTooltip()
         {
             this.m_Events.DrawInstantTooltip(this.m_Position);
+        }
+
+        private void RenderInRangeOverlay(Rect rect)
+        {
+            Color inRangeColor = AnimEditor.inRangeColor;
+            if (this.controlInterface.recording)
+            {
+                inRangeColor *= UnityEditor.AnimationMode.recordedPropertyColor;
+            }
+            else if (this.controlInterface.previewing)
+            {
+                inRangeColor *= UnityEditor.AnimationMode.animatedPropertyColor;
+            }
+            else
+            {
+                inRangeColor = Color.clear;
+            }
+            Vector2 timeRange = this.m_State.timeRange;
+            AnimationWindowUtility.DrawInRangeOverlay(rect, inRangeColor, this.m_State.TimeToPixel(timeRange.x) + rect.xMin, this.m_State.TimeToPixel(timeRange.y) + rect.xMin);
+        }
+
+        private void RenderOutOfRangeOverlay(Rect rect)
+        {
+            Color outOfRangeColor = AnimEditor.outOfRangeColor;
+            if (this.controlInterface.recording)
+            {
+                outOfRangeColor *= UnityEditor.AnimationMode.recordedPropertyColor;
+            }
+            else if (this.controlInterface.previewing)
+            {
+                outOfRangeColor *= UnityEditor.AnimationMode.animatedPropertyColor;
+            }
+            Vector2 timeRange = this.m_State.timeRange;
+            AnimationWindowUtility.DrawOutOfRangeOverlay(rect, outOfRangeColor, this.m_State.TimeToPixel(timeRange.x) + rect.xMin, this.m_State.TimeToPixel(timeRange.y) + rect.xMin);
         }
 
         private void RenderSelectionOverlay(Rect rect)
@@ -700,7 +764,7 @@
                     startPixel = num3 - 7f;
                     endPixel = num3 + 7f;
                 }
-                AnimationWindowUtility.DrawRangeOfSelection(rect, startPixel, endPixel);
+                AnimationWindowUtility.DrawSelectionOverlay(rect, selectionRangeColor, startPixel, endPixel);
             }
         }
 
@@ -753,7 +817,7 @@
                     EditorCurveBinding[] bindings = pair.Value.bindings.ToArray();
                     AnimationUtility.SetEditorCurves(pair.Key, bindings, pair.Value.curves.ToArray());
                 }
-                this.m_State.StartRecording();
+                this.m_State.ResampleAnimation();
             }
         }
 
@@ -862,16 +926,17 @@
 
         private void TimeRulerOnGUI(Rect timeRulerRect)
         {
-            Rect position = new Rect(timeRulerRect.xMin, timeRulerRect.yMin, timeRulerRect.width - 15f, timeRulerRect.height);
+            Rect rect = new Rect(timeRulerRect.xMin, timeRulerRect.yMin, timeRulerRect.width - 15f, timeRulerRect.height);
             GUI.Box(timeRulerRect, GUIContent.none, EditorStyles.toolbarButton);
-            this.m_State.timeArea.TimeRuler(position, this.m_State.frameRate, true, false, 1f, this.m_State.timeFormat);
             if (!this.m_State.disabled)
             {
-                GUI.BeginGroup(position);
-                Rect rect = new Rect(0f, 0f, position.width, position.height);
-                this.RenderClipOverlay(rect);
+                this.RenderInRangeOverlay(rect);
                 this.RenderSelectionOverlay(rect);
-                GUI.EndGroup();
+            }
+            this.m_State.timeArea.TimeRuler(rect, this.m_State.frameRate, true, false, 1f, this.m_State.timeFormat);
+            if (!this.m_State.disabled)
+            {
+                this.RenderOutOfRangeOverlay(rect);
             }
         }
 
@@ -932,6 +997,12 @@
         private float hierarchyWidth =>
             ((float) this.m_HorizontalSplitter.realSizes[0]);
 
+        private static Color inRangeColor =>
+            (!EditorGUIUtility.isProSkin ? s_InRangeColorLight : s_InRangeColorDark);
+
+        private static Color outOfRangeColor =>
+            (!EditorGUIUtility.isProSkin ? s_OutOfRangeColorLight : s_OutOfRangeColorDark);
+
         public IAnimationWindowControl overrideControlInterface
         {
             get => 
@@ -954,6 +1025,9 @@
 
         public AnimationWindowSelection selection =>
             this.m_State.selection;
+
+        private static Color selectionRangeColor =>
+            (!EditorGUIUtility.isProSkin ? s_SelectionRangeColorLight : s_SelectionRangeColorDark);
 
         public AnimationWindowState state =>
             this.m_State;

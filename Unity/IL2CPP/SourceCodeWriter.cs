@@ -111,7 +111,7 @@
             if ((declaringType != null) && GenericsUtilities.CheckForMaximumRecursion(declaringType))
             {
                 Unity.IL2CPP.ILPreProcessor.TypeResolver resolver = new Unity.IL2CPP.ILPreProcessor.TypeResolver(method.DeclaringType as GenericInstanceType, method as GenericInstanceMethod);
-                writer.WriteLine("{0};", MethodSignatureWriter.GetMethodSignature(CppCodeWriter.Naming.ForMethodNameOnly(method), CppCodeWriter.Naming.ForVariable(resolver.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveReturnTypeIfNeeded(method))), MethodSignatureWriter.FormatParameters(method, ParameterFormat.WithTypeAndName, false, true), "extern \"C\"", string.Empty));
+                writer.WriteLine("{0};", MethodSignatureWriter.GetMethodSignature(CppCodeWriter.Naming.ForMethodNameOnly(method), CppCodeWriter.Naming.ForVariable(resolver.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveReturnTypeIfNeeded(method))), MethodSignatureWriter.FormatParameters(method, ParameterFormat.WithTypeAndName, false, true, false), "extern \"C\"", string.Empty));
             }
             else
             {
@@ -121,7 +121,7 @@
                 }
                 if (CppCodeWriter.GenericSharingAnalysis.CanShareMethod(method))
                 {
-                    object[] arg = new object[] { CppCodeWriter.Naming.ForMethodNameOnly(method), MethodSignatureWriter.FormatParameters(method, ParameterFormat.WithName, false, true), MethodSignatureWriter.GetMethodPointer(method), CppCodeWriter.Naming.ForMethod(CppCodeWriter.GenericSharingAnalysis.GetSharedMethod(method)) + "_gshared", MethodSignatureWriter.FormatParameters(method, ParameterFormat.WithName, false, true) };
+                    object[] arg = new object[] { CppCodeWriter.Naming.ForMethodNameOnly(method), MethodSignatureWriter.FormatParameters(method, ParameterFormat.WithName, false, true, false), MethodSignatureWriter.GetMethodPointer(method), CppCodeWriter.Naming.ForMethod(CppCodeWriter.GenericSharingAnalysis.GetSharedMethod(method)) + "_gshared", MethodSignatureWriter.FormatParameters(method, ParameterFormat.WithName, false, true, false) };
                     writer.WriteLine("#define {0}({1}) (({2}){3})({4})", arg);
                 }
                 else
@@ -137,7 +137,7 @@
             if ((declaringType != null) && GenericsUtilities.CheckForMaximumRecursion(declaringType))
             {
                 Unity.IL2CPP.ILPreProcessor.TypeResolver resolver = new Unity.IL2CPP.ILPreProcessor.TypeResolver(method.DeclaringType as GenericInstanceType, method as GenericInstanceMethod);
-                writer.WriteLine("{0};", MethodSignatureWriter.GetMethodSignature(CppCodeWriter.Naming.ForMethodNameOnly(method), CppCodeWriter.Naming.ForVariable(resolver.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveReturnTypeIfNeeded(method))), MethodSignatureWriter.FormatParameters(method, ParameterFormat.WithTypeAndName, false, true), "extern \"C\"", string.Empty));
+                writer.WriteLine("{0};", MethodSignatureWriter.GetMethodSignature(CppCodeWriter.Naming.ForMethodNameOnly(method), CppCodeWriter.Naming.ForVariable(resolver.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveReturnTypeIfNeeded(method))), MethodSignatureWriter.FormatParameters(method, ParameterFormat.WithTypeAndName, false, true, false), "extern \"C\"", string.Empty));
             }
             else
             {

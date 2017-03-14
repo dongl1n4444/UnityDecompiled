@@ -404,19 +404,20 @@
             SerializedProperty property9 = arrayElementAtIndex.FindPropertyRelative("shadowNearPlaneOffset");
             SerializedProperty shadowCascadeSplit = arrayElementAtIndex.FindPropertyRelative("shadowCascade2Split");
             SerializedProperty property11 = arrayElementAtIndex.FindPropertyRelative("shadowCascade4Split");
-            SerializedProperty property12 = arrayElementAtIndex.FindPropertyRelative("blendWeights");
-            SerializedProperty property13 = arrayElementAtIndex.FindPropertyRelative("textureQuality");
-            SerializedProperty property14 = arrayElementAtIndex.FindPropertyRelative("anisotropicTextures");
-            SerializedProperty property15 = arrayElementAtIndex.FindPropertyRelative("antiAliasing");
-            SerializedProperty property16 = arrayElementAtIndex.FindPropertyRelative("softParticles");
-            SerializedProperty property17 = arrayElementAtIndex.FindPropertyRelative("realtimeReflectionProbes");
-            SerializedProperty property18 = arrayElementAtIndex.FindPropertyRelative("billboardsFaceCameraPosition");
-            SerializedProperty property19 = arrayElementAtIndex.FindPropertyRelative("vSyncCount");
-            SerializedProperty property20 = arrayElementAtIndex.FindPropertyRelative("lodBias");
-            SerializedProperty property21 = arrayElementAtIndex.FindPropertyRelative("maximumLODLevel");
-            SerializedProperty property22 = arrayElementAtIndex.FindPropertyRelative("particleRaycastBudget");
-            SerializedProperty property23 = arrayElementAtIndex.FindPropertyRelative("asyncUploadTimeSlice");
-            SerializedProperty property24 = arrayElementAtIndex.FindPropertyRelative("asyncUploadBufferSize");
+            SerializedProperty property12 = arrayElementAtIndex.FindPropertyRelative("shadowmaskMode");
+            SerializedProperty property13 = arrayElementAtIndex.FindPropertyRelative("blendWeights");
+            SerializedProperty property14 = arrayElementAtIndex.FindPropertyRelative("textureQuality");
+            SerializedProperty property15 = arrayElementAtIndex.FindPropertyRelative("anisotropicTextures");
+            SerializedProperty property16 = arrayElementAtIndex.FindPropertyRelative("antiAliasing");
+            SerializedProperty property17 = arrayElementAtIndex.FindPropertyRelative("softParticles");
+            SerializedProperty property18 = arrayElementAtIndex.FindPropertyRelative("realtimeReflectionProbes");
+            SerializedProperty property19 = arrayElementAtIndex.FindPropertyRelative("billboardsFaceCameraPosition");
+            SerializedProperty property20 = arrayElementAtIndex.FindPropertyRelative("vSyncCount");
+            SerializedProperty property21 = arrayElementAtIndex.FindPropertyRelative("lodBias");
+            SerializedProperty property22 = arrayElementAtIndex.FindPropertyRelative("maximumLODLevel");
+            SerializedProperty property23 = arrayElementAtIndex.FindPropertyRelative("particleRaycastBudget");
+            SerializedProperty property24 = arrayElementAtIndex.FindPropertyRelative("asyncUploadTimeSlice");
+            SerializedProperty property25 = arrayElementAtIndex.FindPropertyRelative("asyncUploadBufferSize");
             if (string.IsNullOrEmpty(property.stringValue))
             {
                 property.stringValue = "Level " + qualityLevel;
@@ -425,22 +426,23 @@
             GUILayout.Space(10f);
             GUILayout.Label(EditorGUIUtility.TempContent("Rendering"), EditorStyles.boldLabel, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(property3, new GUILayoutOption[0]);
-            EditorGUILayout.PropertyField(property13, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(property14, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(property15, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(property16, new GUILayoutOption[0]);
-            if (property16.boolValue)
+            EditorGUILayout.PropertyField(property17, new GUILayoutOption[0]);
+            if (property17.boolValue)
             {
                 this.SoftParticlesHintGUI();
             }
-            EditorGUILayout.PropertyField(property17, new GUILayoutOption[0]);
-            EditorGUILayout.PropertyField(property18, Styles.kBillboardsFaceCameraPos, new GUILayoutOption[0]);
+            EditorGUILayout.PropertyField(property18, new GUILayoutOption[0]);
+            EditorGUILayout.PropertyField(property19, Styles.kBillboardsFaceCameraPos, new GUILayoutOption[0]);
             GUILayout.Space(10f);
             GUILayout.Label(EditorGUIUtility.TempContent("Shadows"), EditorStyles.boldLabel, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(property4, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(property5, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(property6, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(property8, new GUILayoutOption[0]);
+            EditorGUILayout.PropertyField(property12, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(property9, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(property7, new GUILayoutOption[0]);
             if (property7.intValue == 2)
@@ -453,15 +455,15 @@
             }
             GUILayout.Space(10f);
             GUILayout.Label(EditorGUIUtility.TempContent("Other"), EditorStyles.boldLabel, new GUILayoutOption[0]);
-            EditorGUILayout.PropertyField(property12, new GUILayoutOption[0]);
-            EditorGUILayout.PropertyField(property19, new GUILayoutOption[0]);
+            EditorGUILayout.PropertyField(property13, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(property20, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(property21, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(property22, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(property23, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(property24, new GUILayoutOption[0]);
-            property23.intValue = Mathf.Clamp(property23.intValue, 1, 0x21);
-            property24.intValue = Mathf.Clamp(property24.intValue, 2, 0x200);
+            EditorGUILayout.PropertyField(property25, new GUILayoutOption[0]);
+            property24.intValue = Mathf.Clamp(property24.intValue, 1, 0x21);
+            property25.intValue = Mathf.Clamp(property25.intValue, 2, 0x200);
             if ((this.m_Dragging != null) && (this.m_Dragging.m_Position != this.m_Dragging.m_StartPosition))
             {
                 this.m_QualitySettingsProperty.MoveArrayElement(this.m_Dragging.m_StartPosition, this.m_Dragging.m_Position);

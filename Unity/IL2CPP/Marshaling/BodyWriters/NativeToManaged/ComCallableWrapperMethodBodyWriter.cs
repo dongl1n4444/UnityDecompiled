@@ -51,7 +51,7 @@
                     string defaultCppValue = base.MarshalInfoWriterFor(methodReturnType).GetDefaultCppValue(base.MarshaledReturnType);
                     writer.WriteStatement(Emit.Assign('*' + InteropMethodInfo.Naming.ForComInterfaceReturnParameterName(), defaultCppValue));
                 }
-                Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolverForMethodToCall = new Unity.IL2CPP.ILPreProcessor.TypeResolver();
+                Unity.IL2CPP.ILPreProcessor.TypeResolver empty = Unity.IL2CPP.ILPreProcessor.TypeResolver.Empty;
                 writer.AddIncludeForTypeDefinition(InteropMethodBodyWriter.TypeProvider.SystemString);
                 writer.WriteLine($"{InteropMethodInfo.Naming.ForVariable(InteropMethodBodyWriter.TypeProvider.SystemString)} exceptionStr = {InteropMethodInfo.Naming.Null};");
                 writer.WriteLine("try");
@@ -63,7 +63,7 @@
                         <>f__am$cache0 = m => m.Name == "ToString";
                     }
                     MethodDefinition methodToCall = InteropMethodBodyWriter.TypeProvider.SystemObject.Methods.Single<MethodDefinition>(<>f__am$cache0);
-                    string str2 = MethodBodyWriter.GetMethodCallExpression(base._managedMethod, methodToCall, methodToCall, typeResolverForMethodToCall, MethodCallType.Virtual, metadataAccess, new VTableBuilder(), argumentArray, false, null);
+                    string str2 = MethodBodyWriter.GetMethodCallExpression(base._managedMethod, methodToCall, methodToCall, empty, MethodCallType.Virtual, metadataAccess, new VTableBuilder(), argumentArray, false, null);
                     writer.WriteLine($"exceptionStr = {str2};");
                 }
                 writer.WriteLine("catch (const Il2CppExceptionWrapper&)");
@@ -74,7 +74,7 @@
                         <>f__am$cache1 = f => f.Name == "Empty";
                     }
                     FieldDefinition fieldReference = InteropMethodBodyWriter.TypeProvider.SystemString.Fields.Single<FieldDefinition>(<>f__am$cache1);
-                    string str3 = MethodBodyWriter.TypeStaticsExpressionFor(fieldReference, typeResolverForMethodToCall, metadataAccess);
+                    string str3 = MethodBodyWriter.TypeStaticsExpressionFor(fieldReference, empty, metadataAccess);
                     writer.WriteLine($"exceptionStr = {str3}{InteropMethodInfo.Naming.ForFieldGetter(fieldReference)}();");
                 }
                 writer.WriteLine("il2cpp_codegen_store_exception_info(ex.ex, exceptionStr);");

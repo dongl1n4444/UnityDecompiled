@@ -11,7 +11,7 @@
     {
         [CompilerGenerated]
         private static Comparison<FilterResult> <>f__am$cache0;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <foldersFirst>k__BackingField;
         private HierarchyType m_HierarchyType;
         private FilterResult[] m_Results = new FilterResult[0];

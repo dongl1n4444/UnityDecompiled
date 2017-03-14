@@ -370,7 +370,7 @@
         public bool skipOnDrop { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
-        /// <para>The source (Video.VideoClip or URL) that the player uses for playback.</para>
+        /// <para>The source that the player uses for playback.</para>
         /// </summary>
         public VideoSource source { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
@@ -385,12 +385,7 @@
         public float targetCameraAlpha { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
-        /// <para>Material which is targeted in the Renderer when Video.VideoPlayer.renderMode is set to Video.VideoTarget.MaterialOverride. An empty string indicates that the renderer's first material should be used.</para>
-        /// </summary>
-        public string targetMaterialName { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
-
-        /// <summary>
-        /// <para>Material texture property which is targeted when Video.VideoPlayer.renderMode is set to Video.VideoTarget.MaterialOverride. An empty string indicates that the material's first texture property should be used.</para>
+        /// <para>Material texture property which is targeted when Video.VideoPlayer.renderMode is set to Video.VideoTarget.MaterialOverride.</para>
         /// </summary>
         public string targetMaterialProperty { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 

@@ -47,7 +47,7 @@
             object[] args = new object[] { decoratedName, InteropMethodInfo.Naming.ForPInvokeFunctionPointerTypedef(), base.FormatParametersForTypedef() };
             writer.WriteLine("typedef {0} (STDCALL *{1})({2});", args);
             object[] objArray2 = new object[] { InteropMethodInfo.Naming.ForPInvokeFunctionPointerTypedef(), InteropMethodInfo.Naming.ForPInvokeFunctionPointerVariable(), InteropMethodInfo.Naming.ThisParameterName };
-            writer.WriteLine("{0} {1} = reinterpret_cast<{0}>(((Il2CppDelegate*){2})->method->methodPointer);", objArray2);
+            writer.WriteLine("{0} {1} = reinterpret_cast<{0}>(il2cpp_codegen_get_method_pointer(((Il2CppDelegate*){2})->method));", objArray2);
             writer.WriteLine();
         }
     }

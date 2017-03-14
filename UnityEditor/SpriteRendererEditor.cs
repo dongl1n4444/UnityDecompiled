@@ -6,7 +6,7 @@
     using UnityEngine;
     using UnityEngine.Events;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(SpriteRenderer))]
+    [CustomEditor(typeof(SpriteRenderer)), CanEditMultipleObjects]
     internal class SpriteRendererEditor : RendererEditorBase
     {
         private SerializedProperty m_AdaptiveModeThreshold;
@@ -59,10 +59,10 @@
             return sharedMaterial.HasProperty("_MainTex");
         }
 
-        private void FlipToggle(Rect r, string label, SerializedProperty property)
+        private void FlipToggle(Rect r, GUIContent label, SerializedProperty property)
         {
+            EditorGUI.BeginProperty(r, label, property);
             bool boolValue = property.boolValue;
-            EditorGUI.showMixedValue = property.hasMultipleDifferentValues;
             EditorGUI.BeginChangeCheck();
             int indentLevel = EditorGUI.indentLevel;
             EditorGUI.indentLevel = 0;
@@ -73,7 +73,7 @@
                 Undo.RecordObjects(base.targets, "Edit Constraints");
                 property.boolValue = boolValue;
             }
-            EditorGUI.showMixedValue = false;
+            EditorGUI.EndProperty();
         }
 
         private void FlipToggles()
@@ -83,9 +83,9 @@
             int id = GUIUtility.GetControlID(Contents.flipToggleHash, FocusType.Keyboard, position);
             position = EditorGUI.PrefixLabel(position, id, Contents.flipLabel);
             position.width = 30f;
-            this.FlipToggle(position, "X", this.m_FlipX);
+            this.FlipToggle(position, Contents.flipXLabel, this.m_FlipX);
             position.x += 30f;
-            this.FlipToggle(position, "Y", this.m_FlipY);
+            this.FlipToggle(position, Contents.flipYLabel, this.m_FlipY);
             GUILayout.EndHorizontal();
         }
 
@@ -238,6 +238,8 @@
             public static readonly GUIContent drawModeLabel = EditorGUIUtility.TextContent("Draw Mode|Specify the draw mode for the sprite");
             public static readonly GUIContent flipLabel = EditorGUIUtility.TextContent("Flip|Sprite flipping");
             public static readonly int flipToggleHash = "FlipToggleHash".GetHashCode();
+            public static readonly GUIContent flipXLabel = EditorGUIUtility.TextContent("X|Sprite horizontal flipping");
+            public static readonly GUIContent flipYLabel = EditorGUIUtility.TextContent("Y|Sprite vertical flipping");
             public static readonly GUIContent fullTileLabel = EditorGUIUtility.TextContent("Tile Mode|Specify the 9 slice tiling behaviour");
             public static readonly GUIContent fullTileThresholdLabel = EditorGUIUtility.TextContent("Stretch Value|This value defines how much the center portion will stretch before it tiles.");
             public static readonly GUIContent heightLabel = EditorGUIUtility.TextContent("Height|The height dimension value for the sprite");

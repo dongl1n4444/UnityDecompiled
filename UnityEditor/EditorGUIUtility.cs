@@ -138,8 +138,10 @@
             if (Event.current.type == EventType.Repaint)
             {
                 Color color2 = GUI.color;
+                Color backgroundColor = GUI.backgroundColor;
                 float a = !GUI.enabled ? ((float) 2) : ((float) 1);
                 GUI.color = !EditorGUI.showMixedValue ? new Color(color.r, color.g, color.b, a) : (new Color(0.82f, 0.82f, 0.82f, a) * color2);
+                GUI.backgroundColor = Color.white;
                 GUIStyle whiteTextureStyle = EditorGUIUtility.whiteTextureStyle;
                 whiteTextureStyle.Draw(position, false, false, false, false);
                 float maxColorComponent = GUI.color.maxColorComponent;
@@ -148,13 +150,13 @@
                     float width = position.width / 3f;
                     Rect rect = new Rect(position.x, position.y, width, position.height);
                     Rect rect2 = new Rect(position.xMax - width, position.y, width, position.height);
-                    Color color4 = GUI.color.RGBMultiplied((float) (1f / maxColorComponent));
-                    Color color6 = GUI.color;
-                    GUI.color = color4;
+                    Color color5 = GUI.color.RGBMultiplied((float) (1f / maxColorComponent));
+                    Color color7 = GUI.color;
+                    GUI.color = color5;
                     GUIStyle basicTextureStyle = GetBasicTextureStyle(whiteTexture);
                     basicTextureStyle.Draw(rect, false, false, false, false);
                     basicTextureStyle.Draw(rect2, false, false, false, false);
-                    GUI.color = color6;
+                    GUI.color = color7;
                     GetBasicTextureStyle(ColorPicker.GetGradientTextureWithAlpha0To1()).Draw(rect, false, false, false, false);
                     GetBasicTextureStyle(ColorPicker.GetGradientTextureWithAlpha1To0()).Draw(rect2, false, false, false, false);
                 }
@@ -178,6 +180,7 @@
                     EditorGUI.EndHandleMixedValueContentColor();
                 }
                 GUI.color = color2;
+                GUI.backgroundColor = backgroundColor;
                 if (hdr && (maxColorComponent > 1f))
                 {
                     GUI.Label(new Rect(position.x, position.y, position.width - 3f, position.height), "HDR", EditorStyles.centeredGreyMiniLabel);
@@ -727,7 +730,7 @@
             s_ContextWidth = CalcContextWidth();
         }
 
-        [ExcludeFromDocs, Obsolete("LookLikeControls and LookLikeInspector modes are deprecated. Use EditorGUIUtility.labelWidth and EditorGUIUtility.fieldWidth to control label and field widths.")]
+        [Obsolete("LookLikeControls and LookLikeInspector modes are deprecated. Use EditorGUIUtility.labelWidth and EditorGUIUtility.fieldWidth to control label and field widths."), ExcludeFromDocs]
         public static void LookLikeControls()
         {
             float fieldWidth = 0f;
@@ -740,7 +743,7 @@
         /// </summary>
         /// <param name="labelWidth">Width to use for prefixed labels.</param>
         /// <param name="fieldWidth">Width of text entries.</param>
-        [Obsolete("LookLikeControls and LookLikeInspector modes are deprecated. Use EditorGUIUtility.labelWidth and EditorGUIUtility.fieldWidth to control label and field widths."), ExcludeFromDocs]
+        [ExcludeFromDocs, Obsolete("LookLikeControls and LookLikeInspector modes are deprecated. Use EditorGUIUtility.labelWidth and EditorGUIUtility.fieldWidth to control label and field widths.")]
         public static void LookLikeControls(float labelWidth)
         {
             float fieldWidth = 0f;

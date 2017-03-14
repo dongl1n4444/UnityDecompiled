@@ -26,10 +26,8 @@
         public TestFilterSettings filterSettings;
         [SerializeField]
         private EditModeTestListGUI m_EditModeTestListGUI;
-        private readonly GUIContent m_GUIBlockUI = new GUIContent("Block UI when running", "Block UI when running tests");
         private readonly GUIContent m_GUIDisablePlaymodeTestsRunner = new GUIContent("Disable playmode tests runner");
         private readonly GUIContent m_GUIHorizontalSplit = new GUIContent("Horizontal layout");
-        private readonly GUIContent m_GUIPauseOnFailure = new GUIContent("Pause on test failure");
         private readonly GUIContent m_GUIVerticalSplit = new GUIContent("Vertical layout");
         private bool m_IsBuilding;
         [SerializeField]
@@ -58,9 +56,6 @@
 
         public void AddItemsToMenu(GenericMenu menu)
         {
-            menu.AddItem(this.m_GUIBlockUI, this.m_Settings.blockUIWhenRunning, new GenericMenu.MenuFunction(this.m_Settings.ToggleBlockUIWhenRunning));
-            menu.AddItem(this.m_GUIPauseOnFailure, this.m_Settings.pauseOnTestFailure, new GenericMenu.MenuFunction(this.m_Settings.TogglePauseOnTestFailure));
-            menu.AddSeparator(null);
             menu.AddItem(this.m_GUIVerticalSplit, this.m_Settings.verticalSplit, new GenericMenu.MenuFunction(this.m_Settings.ToggleVerticalSplit));
             menu.AddItem(this.m_GUIHorizontalSplit, !this.m_Settings.verticalSplit, new GenericMenu.MenuFunction(this.m_Settings.ToggleVerticalSplit));
             if (IsPlaymodeTestRunnerEnabled())

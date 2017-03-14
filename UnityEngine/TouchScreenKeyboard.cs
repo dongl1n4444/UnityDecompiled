@@ -259,6 +259,11 @@
         public string text { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
+        /// <para>Returns the TouchScreenKeyboardType of the keyboard.</para>
+        /// </summary>
+        public TouchScreenKeyboardType type { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        /// <summary>
         /// <para>Returns true whenever any keyboard is completely visible on the screen.</para>
         /// </summary>
         public static bool visible { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }

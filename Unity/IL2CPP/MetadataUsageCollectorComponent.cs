@@ -9,7 +9,7 @@
     {
         private readonly HashSet<FieldReference> _fieldInfos = new HashSet<FieldReference>(new FieldReferenceComparer());
         private readonly HashSet<MethodReference> _inflatedMethods = new HashSet<MethodReference>(new MethodReferenceComparer());
-        private readonly HashSet<string> _stringLiterals = new HashSet<string>();
+        private readonly HashSet<StringMetadataToken> _stringLiterals = new HashSet<StringMetadataToken>(new StringMetadataTokenComparer());
         private readonly HashSet<TypeReference> _typeInfos = new HashSet<TypeReference>(new TypeReferenceEqualityComparer());
         private readonly HashSet<TypeReference> _types = new HashSet<TypeReference>(new TypeReferenceEqualityComparer());
         private readonly Dictionary<string, MetadataUsage> _usages = new Dictionary<string, MetadataUsage>();
@@ -33,9 +33,9 @@
             {
                 this._fieldInfos.Add(reference4);
             }
-            foreach (string str in usage.GetStringLiterals())
+            foreach (StringMetadataToken token in usage.GetStringLiterals())
             {
-                this._stringLiterals.Add(str);
+                this._stringLiterals.Add(token);
             }
         }
 
@@ -57,7 +57,7 @@
         public IEnumerable<MethodReference> GetInflatedMethods() => 
             this._inflatedMethods;
 
-        public IEnumerable<string> GetStringLiterals() => 
+        public IEnumerable<StringMetadataToken> GetStringLiterals() => 
             this._stringLiterals;
 
         public IEnumerable<TypeReference> GetTypeInfos() => 

@@ -182,11 +182,8 @@
             float num6 = this.m_TimeArea.FrameToPixel(stopFrame, this.m_Clip.frameRate, position);
             GUI.Label(new Rect(x, position.y, num6 - x, position.height), "", EditorStyles.selectionRect);
             this.m_TimeArea.TimeRuler(position, this.m_Clip.frameRate);
-            float num7 = this.m_TimeArea.TimeToPixel(this.m_AvatarPreview.timeControl.currentTime, position) - 0.5f;
-            Handles.color = new Color(1f, 0f, 0f, 0.5f);
-            Handles.DrawLine((Vector3) new Vector2(num7, position.yMin), (Vector3) new Vector2(num7, position.yMax));
-            Handles.DrawLine((Vector3) new Vector2(num7 + 1f, position.yMin), (Vector3) new Vector2(num7 + 1f, position.yMax));
-            Handles.color = Color.white;
+            float introduced17 = this.m_TimeArea.TimeToPixel(this.m_AvatarPreview.timeControl.currentTime, position);
+            TimeArea.DrawPlayhead(introduced17, position.yMin, position.yMax, 2f, 1f);
             using (new EditorGUI.DisabledScope(disabled))
             {
                 float time = startFrame / this.m_Clip.frameRate;
@@ -201,29 +198,29 @@
                     startFrame = MathUtils.RoundBasedOnMinimumDifference(startFrame, (this.m_TimeArea.PixelDeltaToTime(position) * this.m_Clip.frameRate) * 10f);
                     changedStart = true;
                 }
-                float num9 = stopFrame / this.m_Clip.frameRate;
-                TimeArea.TimeRulerDragMode mode2 = this.m_TimeArea.BrowseRuler(position, id, ref num9, 0f, false, "TL OutPoint");
+                float num8 = stopFrame / this.m_Clip.frameRate;
+                TimeArea.TimeRulerDragMode mode2 = this.m_TimeArea.BrowseRuler(position, id, ref num8, 0f, false, "TL OutPoint");
                 if (mode2 == TimeArea.TimeRulerDragMode.Cancel)
                 {
                     stopFrame = this.m_DraggingStopFrame;
                 }
                 else if (mode2 != TimeArea.TimeRulerDragMode.None)
                 {
-                    stopFrame = num9 * this.m_Clip.frameRate;
+                    stopFrame = num8 * this.m_Clip.frameRate;
                     stopFrame = MathUtils.RoundBasedOnMinimumDifference(stopFrame, (this.m_TimeArea.PixelDeltaToTime(position) * this.m_Clip.frameRate) * 10f);
                     changedStop = true;
                 }
                 if (showAdditivePoseFrame)
                 {
-                    float num10 = additivePoseframe / this.m_Clip.frameRate;
-                    TimeArea.TimeRulerDragMode mode3 = this.m_TimeArea.BrowseRuler(position, num3, ref num10, 0f, false, "TL playhead");
+                    float num9 = additivePoseframe / this.m_Clip.frameRate;
+                    TimeArea.TimeRulerDragMode mode3 = this.m_TimeArea.BrowseRuler(position, num3, ref num9, 0f, false, "TL playhead");
                     if (mode3 == TimeArea.TimeRulerDragMode.Cancel)
                     {
                         additivePoseframe = this.m_DraggingAdditivePoseFrame;
                     }
                     else if (mode3 != TimeArea.TimeRulerDragMode.None)
                     {
-                        additivePoseframe = num10 * this.m_Clip.frameRate;
+                        additivePoseframe = num9 * this.m_Clip.frameRate;
                         additivePoseframe = MathUtils.RoundBasedOnMinimumDifference(additivePoseframe, (this.m_TimeArea.PixelDeltaToTime(position) * this.m_Clip.frameRate) * 10f);
                         changedAdditivePoseframe = true;
                     }
@@ -399,8 +396,7 @@
                         EditorGUILayout.CurveField(curveProperty, EditorGUI.kCurveColor, ranges, GUIContent.none, optionArray4);
                         Rect lastRect = GUILayoutUtility.GetLastRect();
                         length = animationCurveValue.length;
-                        Handles.color = Color.red;
-                        Handles.DrawLine(new Vector3(lastRect.x + (normalizedTime * lastRect.width), lastRect.y, 0f), new Vector3(lastRect.x + (normalizedTime * lastRect.width), lastRect.y + lastRect.height, 0f));
+                        TimeArea.DrawPlayhead(lastRect.x + (normalizedTime * lastRect.width), lastRect.yMin, lastRect.yMax, 1f, 1f);
                         for (int k = 0; k < length; k++)
                         {
                             float time = animationCurveValue.keys[k].time;
@@ -483,11 +479,8 @@
                 {
                     this.m_ClipInfo.SetEvents(events);
                 }
-                float x = this.m_EventTimeArea.TimeToPixel(this.m_AvatarPreview.timeControl.normalizedTime, rect) - 0.5f;
-                Handles.color = new Color(1f, 0f, 0f, 0.5f);
-                Handles.DrawLine((Vector3) new Vector2(x, rect.yMin), (Vector3) new Vector2(x, rect.yMax));
-                Handles.DrawLine((Vector3) new Vector2(x + 1f, rect.yMin), (Vector3) new Vector2(x + 1f, rect.yMax));
-                Handles.color = Color.white;
+                float x = this.m_EventTimeArea.TimeToPixel(this.m_AvatarPreview.timeControl.normalizedTime, rect);
+                TimeArea.DrawPlayhead(x, rect.yMin, rect.yMax, 2f, 1f);
                 GUI.EndGroup();
                 GUILayout.EndHorizontal();
                 this.m_EventManipulationHandler.Draw(position);

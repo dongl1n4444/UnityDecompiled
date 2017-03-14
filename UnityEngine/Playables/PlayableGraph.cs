@@ -307,7 +307,7 @@
             InternalScriptOutputCount(ref this);
 
         /// <summary>
-        /// <para>Get a ScriptOutput at the given index.</para>
+        /// <para>Returns the ScriptPlayableOutput at the given index.</para>
         /// </summary>
         /// <param name="index">The index of the ScriptPlayableOutput.</param>
         public ScriptPlayableOutput GetScriptOutput(int index)

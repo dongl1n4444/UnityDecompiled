@@ -30,6 +30,8 @@
         [CompilerGenerated]
         private static Func<MethodDefinition, bool> <>f__am$cache2;
         [Inject]
+        public static ITypeProviderService TypeProvider;
+        [Inject]
         public static IWindowsRuntimeProjections WindowsRuntimeProjections;
 
         public ReadOnlyListCCWWriter(TypeDefinition iReadOnlyList)
@@ -178,7 +180,7 @@
                         writer.AddIncludeForMethodDeclaration(this._argumentOutOfRangeExceptionConstructor);
                         writer.AddIncludeForMethodDeclaration(definition.SetMethod);
                         writer.WriteLine($"{InteropMethodInfo.Naming.ForVariable(this._argumentOutOfRangeException)} {str6} = {Emit.NewObj(this._argumentOutOfRangeException, metadataAccess)};");
-                        string[] args = new string[] { metadataAccess.StringLiteral("index") };
+                        string[] args = new string[] { metadataAccess.StringLiteral("index", new MetadataToken(), InteropMethodBodyWriter.TypeProvider.Corlib) };
                         writer.WriteStatement(base.GetMethodCallExpression(metadataAccess, str6, this._argumentOutOfRangeExceptionConstructor, MethodCallType.Normal, args));
                         string[] textArray2 = new string[] { -2147483637.ToString() };
                         writer.WriteLine($"{base.GetMethodCallExpression(metadataAccess, str6, definition.SetMethod, MethodCallType.Normal, textArray2)}; // E_BOUNDS");

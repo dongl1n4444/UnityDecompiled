@@ -17,7 +17,7 @@
         private TizenSDKUtilities _tizenSDK;
         private Func<string, IEnumerable<string>> AdditionalCompilerOptionsForSourceFile;
 
-        public TizenToolChain(Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors, NPath toolchainPath) : base(architecture, buildConfiguration)
+        public TizenToolChain(Unity.IL2CPP.Common.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors, NPath toolchainPath) : base(architecture, buildConfiguration)
         {
             this._tizenSDK = new TizenSDKUtilities(toolchainPath, architecture);
         }

@@ -30,7 +30,7 @@
             }
             else
             {
-                this._typeResolver = new Unity.IL2CPP.ILPreProcessor.TypeResolver();
+                this._typeResolver = Unity.IL2CPP.ILPreProcessor.TypeResolver.Empty;
             }
         }
 
@@ -119,21 +119,23 @@
             return Naming.ForRuntimeTypeInfo(reference);
         }
 
-        public string StringLiteral(string literal)
+        public string StringLiteral(string literal, MetadataToken token, AssemblyDefinition assemblyDefinition)
         {
             if (literal == null)
             {
                 return Naming.Null;
             }
-            this._metadataUsage.AddStringLiteral(literal);
+            this._metadataUsage.AddStringLiteral(literal, assemblyDefinition, token);
             return Naming.ForStringLiteralIdentifier(literal);
         }
 
-        public string TypeInfoFor(TypeReference type)
+        public string TypeInfoFor(TypeReference type) => 
+            this.UnresolvedTypeInfoFor(this._typeResolver.Resolve(type));
+
+        public string UnresolvedTypeInfoFor(TypeReference type)
         {
-            TypeReference reference = this._typeResolver.Resolve(type);
-            this._metadataUsage.AddTypeInfo(reference);
-            return Naming.ForRuntimeTypeInfo(reference);
+            this._metadataUsage.AddTypeInfo(type);
+            return Naming.ForRuntimeTypeInfo(type);
         }
     }
 }

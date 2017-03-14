@@ -9,8 +9,8 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Threading;
-    using Unity.IL2CPP.Building;
     using Unity.IL2CPP.Building.ToolChains.MsvcVersions.VisualStudioAPI;
+    using Unity.IL2CPP.Common;
 
     internal class Msvc15Installation : MsvcInstallation
     {
@@ -36,7 +36,7 @@
 
         static Msvc15Installation()
         {
-            Architecture bestThisMachineCanRun = Architecture.BestThisMachineCanRun;
+            Unity.IL2CPP.Common.Architecture bestThisMachineCanRun = Unity.IL2CPP.Common.Architecture.BestThisMachineCanRun;
             if (bestThisMachineCanRun is x64Architecture)
             {
                 _hostDirectory = "HostX64";
@@ -78,7 +78,7 @@
             }
         }
 
-        private static void AddVCToolsForArchitecture(Architecture architecture, VCComponent component, string architectureFolder, Dictionary<Type, VCPaths> vcToolsPaths)
+        private static void AddVCToolsForArchitecture(Unity.IL2CPP.Common.Architecture architecture, VCComponent component, string architectureFolder, Dictionary<Type, VCPaths> vcToolsPaths)
         {
             if (component != null)
             {
@@ -104,7 +104,7 @@
         }
 
         [DebuggerHidden]
-        public override IEnumerable<NPath> GetIncludeDirectories(Architecture architecture) => 
+        public override IEnumerable<NPath> GetIncludeDirectories(Unity.IL2CPP.Common.Architecture architecture) => 
             new <GetIncludeDirectories>c__Iterator2 { 
                 architecture = architecture,
                 $this = this,
@@ -112,7 +112,7 @@
             };
 
         [DebuggerHidden]
-        public override IEnumerable<NPath> GetLibDirectories(Architecture architecture, string sdkSubset = null) => 
+        public override IEnumerable<NPath> GetLibDirectories(Unity.IL2CPP.Common.Architecture architecture, string sdkSubset = null) => 
             new <GetLibDirectories>c__Iterator3 { 
                 architecture = architecture,
                 sdkSubset = sdkSubset,
@@ -140,7 +140,7 @@
             return false;
         }
 
-        public override string GetPathEnvVariable(Architecture architecture)
+        public override string GetPathEnvVariable(Unity.IL2CPP.Common.Architecture architecture)
         {
             ThrowIfArchitectureNotInstalled(architecture);
             List<NPath> source = new List<NPath>();
@@ -252,7 +252,7 @@
             }
         }
 
-        public override NPath GetVSToolPath(Architecture architecture, string toolName)
+        public override NPath GetVSToolPath(Unity.IL2CPP.Common.Architecture architecture, string toolName)
         {
             ThrowIfArchitectureNotInstalled(architecture);
             string[] append = new string[] { toolName };
@@ -269,7 +269,7 @@
         public override bool HasMetadataDirectories() => 
             true;
 
-        private static void ThrowIfArchitectureNotInstalled(Architecture architecture)
+        private static void ThrowIfArchitectureNotInstalled(Unity.IL2CPP.Common.Architecture architecture)
         {
             if (!_vcPaths.ContainsKey(architecture.GetType()))
             {
@@ -302,7 +302,7 @@
             internal int $PC;
             internal Msvc15Installation $this;
             internal NPath <includeDirectory>__0;
-            internal Architecture architecture;
+            internal Unity.IL2CPP.Common.Architecture architecture;
 
             [DebuggerHidden]
             public void Dispose()
@@ -417,7 +417,7 @@
             internal Msvc15Installation $this;
             internal NPath <libDirectory>__0;
             internal NPath <vcLibPath>__0;
-            internal Architecture architecture;
+            internal Unity.IL2CPP.Common.Architecture architecture;
             internal string sdkSubset;
 
             [DebuggerHidden]

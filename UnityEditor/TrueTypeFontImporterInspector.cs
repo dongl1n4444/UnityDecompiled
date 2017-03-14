@@ -6,7 +6,7 @@
     using System.Runtime.CompilerServices;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(TrueTypeFontImporter))]
+    [CustomEditor(typeof(TrueTypeFontImporter)), CanEditMultipleObjects]
     internal class TrueTypeFontImporterInspector : AssetImporterInspector
     {
         [CompilerGenerated]

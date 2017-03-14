@@ -11,7 +11,7 @@
 
     internal class SpritePhysicsShapeModule : SpriteOutlineModule
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private ISpriteEditor <spriteEditorWindow>k__BackingField;
         private readonly byte kDefaultPhysicsAlphaTolerance;
         private readonly float kDefaultPhysicsTessellationDetail;

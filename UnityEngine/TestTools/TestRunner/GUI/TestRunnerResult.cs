@@ -20,6 +20,7 @@
         [NonSerialized]
         public bool notOutdated;
         public bool notRunnable;
+        public string output;
         public ResultStatus resultStatus;
         public string stacktrace;
 
@@ -50,13 +51,20 @@
         {
             this.notOutdated = true;
             this.messages = testResult.Message;
+            this.output = testResult.Output;
             this.stacktrace = testResult.StackTrace;
             this.duration = (float) testResult.Duration;
             this.resultStatus = ParseNUnitResultStatus(testResult.ResultState.Status);
         }
 
-        private static string GetFullName(ITest test) => 
-            ((test.Parent == null) ? ("[" + test.Name + "]") : $"{GetFullName(test.Parent)}[{test.Name}]");
+        private static string GetFullName(ITest test)
+        {
+            if (test is TestAssembly)
+            {
+                return ("[" + test.Name + "]");
+            }
+            return ((test.Parent == null) ? ("[" + test.Name + "]") : $"{GetFullName(test.Parent)}[{test.Name}]");
+        }
 
         public static string GetId(ITest test)
         {
@@ -103,6 +111,7 @@
             this.resultStatus = result.resultStatus;
             this.duration = result.duration;
             this.messages = result.messages;
+            this.output = result.output;
             this.stacktrace = result.stacktrace;
             this.ignoredOrSkipped = result.ignoredOrSkipped;
             this.notRunnable = result.notRunnable;

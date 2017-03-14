@@ -117,7 +117,7 @@
 
         private void EmitInvocation(string delegateVariableName, MethodReference method, string methodPtrFieldName, string targetFieldName, List<string> parametersOnlyName, string methodInfoExpression, bool useFirstArgumentAsThis = false, bool forStatic = false, string resultVariableName = null)
         {
-            List<string> strings = MethodSignatureWriter.ParametersFor(method, ParameterFormat.WithTypeAndNameThisObject, false, true, true).ToList<string>();
+            List<string> strings = MethodSignatureWriter.ParametersFor(method, ParameterFormat.WithTypeAndNameThisObject, false, true, true, false).ToList<string>();
             if (useFirstArgumentAsThis)
             {
                 strings.RemoveAt(1);
@@ -300,7 +300,11 @@
                     ParameterDefinition parameter = method.Parameters[i];
                     TypeReference typeReference = resolver.ResolveParameterType(method, parameter);
                     string str = Naming.ForParameterName(parameter);
-                    if (typeReference.IsByReference)
+                    if (CodeGenOptions.MonoRuntime)
+                    {
+                        str = Naming.AddressOf(str);
+                    }
+                    else if (typeReference.IsByReference)
                     {
                         TypeReference elementType = ((ByReferenceType) typeReference).ElementType;
                         str = !elementType.IsValueType() ? Emit.Dereference(str) : Emit.Box(elementType, Emit.Dereference(str), metadataAccess);
@@ -322,7 +326,7 @@
             string str = Naming.ForParameterName(method.Parameters[0]);
             string str2 = Naming.ForParameterName(method.Parameters[1]);
             object[] args = new object[] { ExpressionForFieldOfThis(this._methodPtrSetterName), str2, this._valueGetterName };
-            this.WriteLine("{0}((Il2CppMethodPointer)((MethodInfo*){1}.{2}())->methodPointer);", args);
+            this.WriteLine("{0}(il2cpp_codegen_get_method_pointer((MethodInfo*){1}.{2}()));", args);
             object[] objArray2 = new object[] { ExpressionForFieldOfThis(this._methodSetterName), str2 };
             this.WriteLine("{0}({1});", objArray2);
             object[] objArray3 = new object[] { ExpressionForFieldOfThis(this._targetSetterName), str };
@@ -370,7 +374,7 @@
 
         private void WriteMethodBodyForInvoke(MethodReference method, IRuntimeMetadataAccess metadataAccess)
         {
-            List<string> parametersOnlyName = MethodSignatureWriter.ParametersFor(method, ParameterFormat.WithNameNoThis, false, false, false).ToList<string>();
+            List<string> parametersOnlyName = MethodSignatureWriter.ParametersFor(method, ParameterFormat.WithNameNoThis, false, false, false, false).ToList<string>();
             if (CodeGenOptions.Dotnetprofile == DotNetProfile.Net45)
             {
                 this.WriteInvocationsForDelegate45(method, parametersOnlyName);

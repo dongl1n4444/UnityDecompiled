@@ -8,7 +8,7 @@
 
     internal class GradientPicker : EditorWindow
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <gradientChanged>k__BackingField;
         private const int k_DefaultNumSteps = 0;
         private GUIView m_DelegateView;

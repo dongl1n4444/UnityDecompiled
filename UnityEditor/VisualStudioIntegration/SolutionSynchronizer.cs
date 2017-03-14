@@ -13,6 +13,7 @@
     using UnityEditor;
     using UnityEditor.Modules;
     using UnityEditor.Scripting;
+    using UnityEditor.Scripting.ScriptCompilation;
     using UnityEditorInternal;
 
     internal class SolutionSynchronizer
@@ -92,7 +93,7 @@
             MSBuildNamespaceUri = "http://schemas.microsoft.com/developer/msbuild/2003";
             string[] textArray1 = new string[] { "    GlobalSection(MonoDevelopProperties) = preSolution", "        StartupItem = Assembly-CSharp.csproj", "    EndGlobalSection" };
             DefaultMonoDevelopSolutionProperties = string.Join("\r\n", textArray1).Replace("    ", "\t");
-            scriptReferenceExpression = new Regex("^Library.ScriptAssemblies.(?<project>Assembly-(?<language>[^-]+)(?<editor>-Editor)?(?<firstpass>-firstpass)?).dll$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            scriptReferenceExpression = new Regex(@"^Library.ScriptAssemblies.(?<dllname>(?<project>.*)\.dll$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
         public SolutionSynchronizer(string projectDirectory) : this(projectDirectory, DefaultSynchronizationSettings)
@@ -261,33 +262,40 @@
                 if ((!str5.EndsWith("/UnityEditor.dll") && !str5.EndsWith("/UnityEngine.dll")) && (!str5.EndsWith(@"\UnityEditor.dll") && !str5.EndsWith(@"\UnityEngine.dll")))
                 {
                     Match item = scriptReferenceExpression.Match(str5);
-                    if (item.Success && ((mode == Mode.UnityScriptAsUnityProj) || (((ScriptingLanguage) Enum.Parse(typeof(ScriptingLanguage), item.Groups["language"].Value, true)) == ScriptingLanguage.CSharp)))
+                    if (item.Success)
                     {
-                        list2.Add(item);
-                    }
-                    else
-                    {
-                        string str6 = !Path.IsPathRooted(str5) ? Path.Combine(this._projectDirectory, str5) : str5;
-                        if (AssemblyHelper.IsManagedAssembly(str6))
+                        EditorBuildRules.TargetAssembly targetAssemblyDetails = EditorCompilationInterface.GetTargetAssemblyDetails(item.Groups["dllname"].Value);
+                        ScriptingLanguage none = ScriptingLanguage.None;
+                        if (targetAssemblyDetails != null)
                         {
-                            if (AssemblyHelper.IsInternalAssembly(str6))
-                            {
-                                if (!IsAdditionalInternalAssemblyReference(isBuildingEditorProject, str6))
-                                {
-                                    continue;
-                                }
-                                string fileName = Path.GetFileName(str6);
-                                if (list3.Contains(fileName))
-                                {
-                                    continue;
-                                }
-                                list3.Add(fileName);
-                            }
-                            str6 = str6.Replace(@"\", "/").Replace(@"\\", "/");
-                            builder.AppendFormat(" <Reference Include=\"{0}\">{1}", Path.GetFileNameWithoutExtension(str6), WindowsNewline);
-                            builder.AppendFormat(" <HintPath>{0}</HintPath>{1}", str6, WindowsNewline);
-                            builder.AppendFormat(" </Reference>{0}", WindowsNewline);
+                            none = (ScriptingLanguage) Enum.Parse(typeof(ScriptingLanguage), targetAssemblyDetails.Language.GetLanguageName(), true);
                         }
+                        if ((mode == Mode.UnityScriptAsUnityProj) || (none == ScriptingLanguage.CSharp))
+                        {
+                            list2.Add(item);
+                            continue;
+                        }
+                    }
+                    string str6 = !Path.IsPathRooted(str5) ? Path.Combine(this._projectDirectory, str5) : str5;
+                    if (AssemblyHelper.IsManagedAssembly(str6))
+                    {
+                        if (AssemblyHelper.IsInternalAssembly(str6))
+                        {
+                            if (!IsAdditionalInternalAssemblyReference(isBuildingEditorProject, str6))
+                            {
+                                continue;
+                            }
+                            string fileName = Path.GetFileName(str6);
+                            if (list3.Contains(fileName))
+                            {
+                                continue;
+                            }
+                            list3.Add(fileName);
+                        }
+                        str6 = str6.Replace(@"\", "/").Replace(@"\\", "/");
+                        builder.AppendFormat(" <Reference Include=\"{0}\">{1}", Path.GetFileNameWithoutExtension(str6), WindowsNewline);
+                        builder.AppendFormat(" <HintPath>{0}</HintPath>{1}", str6, WindowsNewline);
+                        builder.AppendFormat(" </Reference>{0}", WindowsNewline);
                     }
                 }
             }
@@ -297,8 +305,14 @@
                 builder.AppendLine("  <ItemGroup>");
                 foreach (Match match2 in list2)
                 {
+                    EditorBuildRules.TargetAssembly assembly2 = EditorCompilationInterface.GetTargetAssemblyDetails(match2.Groups["dllname"].Value);
+                    ScriptingLanguage language = ScriptingLanguage.None;
+                    if (assembly2 != null)
+                    {
+                        language = (ScriptingLanguage) Enum.Parse(typeof(ScriptingLanguage), assembly2.Language.GetLanguageName(), true);
+                    }
                     string str8 = match2.Groups["project"].Value;
-                    builder.AppendFormat("    <ProjectReference Include=\"{0}{1}\">{2}", str8, GetProjectExtension((ScriptingLanguage) Enum.Parse(typeof(ScriptingLanguage), match2.Groups["language"].Value, true)), WindowsNewline);
+                    builder.AppendFormat("    <ProjectReference Include=\"{0}{1}\">{2}", str8, GetProjectExtension(language), WindowsNewline);
                     builder.AppendFormat("      <Project>{{{0}}}</Project>", this.ProjectGuid(Path.Combine("Temp", match2.Groups["project"].Value + ".dll")), WindowsNewline);
                     builder.AppendFormat("      <Name>{0}</Name>", str8, WindowsNewline);
                     builder.AppendLine("    </ProjectReference>");

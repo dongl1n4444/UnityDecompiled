@@ -141,7 +141,7 @@
                 InitStyles();
                 this.SetTickMarkerRanges();
                 this.hTicks.SetTickStrengths(3f, 80f, true);
-                Color textColor = styles.TimelineTick.normal.textColor;
+                Color textColor = styles.timelineTick.normal.textColor;
                 textColor.a = 0.1f;
                 Handles.color = textColor;
                 Rect shownArea = base.shownArea;
@@ -167,10 +167,28 @@
             }
         }
 
+        public static void DrawPlayhead(float x, float yMin, float yMax, float thickness, float alpha)
+        {
+            if (Event.current.type == EventType.Repaint)
+            {
+                float num = thickness * 0.5f;
+                Color color = styles.playhead.normal.textColor.AlphaMultiplied(alpha);
+                if (thickness > 1f)
+                {
+                    EditorGUI.DrawRect(Rect.MinMaxRect(x - num, yMin, x + num, yMax), color);
+                }
+                else
+                {
+                    DrawVerticalLine(x, yMin, yMax, color);
+                }
+            }
+        }
+
         public static void DrawVerticalLine(float x, float minY, float maxY, Color color)
         {
             if (Event.current.type == EventType.Repaint)
             {
+                Color color2 = Handles.color;
                 HandleUtility.ApplyWireMaterial();
                 if (Application.platform == RuntimePlatform.WindowsEditor)
                 {
@@ -182,6 +200,7 @@
                 }
                 DrawVerticalLineFast(x, minY, maxY, color);
                 GL.End();
+                Handles.color = color2;
             }
         }
 
@@ -332,7 +351,7 @@
             Color backgroundColor = GUI.backgroundColor;
             this.SetTickMarkerRanges();
             this.hTicks.SetTickStrengths(3f, 80f, true);
-            Color textColor = styles.TimelineTick.normal.textColor;
+            Color textColor = styles.timelineTick.normal.textColor;
             textColor.a = 0.75f * alpha;
             if (Event.current.type == EventType.Repaint)
             {
@@ -372,7 +391,7 @@
                         int num9 = Mathf.RoundToInt(numArray2[k] * frameRate);
                         float num10 = Mathf.Floor(this.FrameToPixel((float) num9, frameRate, position));
                         string text = this.FormatTime(numArray2[k], frameRate, timeFormat);
-                        GUI.Label(new Rect(num10 + 3f, -3f, 40f, 20f), text, styles.TimelineTick);
+                        GUI.Label(new Rect(num10 + 3f, -3f, 40f, 20f), text, styles.timelineTick);
                     }
                 }
             }
@@ -407,7 +426,8 @@
         private class Styles2
         {
             public GUIStyle labelTickMarks = "CurveEditorLabelTickMarks";
-            public GUIStyle TimelineTick = "AnimationTimelineTick";
+            public GUIStyle playhead = "AnimationPlayHead";
+            public GUIStyle timelineTick = "AnimationTimelineTick";
         }
 
         public enum TimeFormat

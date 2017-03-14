@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Runtime.CompilerServices;
     using UnityEditor;
     using UnityEditor.Animations;
@@ -176,7 +177,7 @@
             {
                 while (enumerator2.MoveNext())
                 {
-                    <BestMatchForPaste>c__AnonStorey0 storey = new <BestMatchForPaste>c__AnonStorey0 {
+                    <BestMatchForPaste>c__AnonStorey1 storey = new <BestMatchForPaste>c__AnonStorey1 {
                         targetCurve = enumerator2.Current
                     };
                     if ((storey.targetCurve.binding.propertyName == binding.propertyName) && !clipboardCurves.Exists(new Predicate<AnimationWindowCurve>(storey.<>m__0)))
@@ -227,7 +228,7 @@
             return curve;
         }
 
-        public static void CreateDefaultCurves(IAnimationRecordingState state, AnimationWindowSelectionItem selectionItem, EditorCurveBinding[] properties)
+        public static void CreateDefaultCurves(AnimationWindowState state, AnimationWindowSelectionItem selectionItem, EditorCurveBinding[] properties)
         {
             properties = RotationCurveInterpolation.ConvertRotationPropertiesToDefaultInterpolation(selectionItem.animationClip, properties);
             foreach (EditorCurveBinding binding in properties)
@@ -299,42 +300,29 @@
             return null;
         }
 
-        public static void DrawPlayHead(float positionX, float minY, float maxY, float alpha)
+        public static void DrawInRangeOverlay(Rect rect, Color color, float startOfClipPixel, float endOfClipPixel)
         {
-            TimeArea.DrawVerticalLine(positionX, minY, maxY, Color.red.AlphaMultiplied(alpha));
+            if ((endOfClipPixel >= rect.xMin) && (color.a > 0f))
+            {
+                DrawRect(Rect.MinMaxRect(Mathf.Max(startOfClipPixel, rect.xMin), rect.yMin, Mathf.Min(endOfClipPixel, rect.xMax), rect.yMax), color);
+            }
         }
 
-        public static void DrawRangeOfClip(Rect rect, float startOfClipPixel, float endOfClipPixel)
+        public static void DrawOutOfRangeOverlay(Rect rect, Color color, float startOfClipPixel, float endOfClipPixel)
         {
-            Color color = !EditorGUIUtility.isProSkin ? Color.gray.AlphaMultiplied(0.32f) : Color.gray.RGBMultiplied((float) 0.3f).AlphaMultiplied(0.5f);
-            Color color5 = Color.white.RGBMultiplied((float) 0.4f);
+            Color color2 = Color.white.RGBMultiplied((float) 0.4f);
             if (startOfClipPixel > rect.xMin)
             {
-                Rect rect2 = new Rect(rect.xMin, rect.yMin, Mathf.Min(startOfClipPixel - rect.xMin, rect.width), rect.height);
-                Vector3[] vectorArray = new Vector3[] { new Vector3(rect2.xMin, rect2.yMin), new Vector3(rect2.xMax, rect2.yMin), new Vector3(rect2.xMax, rect2.yMax), new Vector3(rect2.xMin, rect2.yMax) };
-                DrawRect(vectorArray, color);
-                TimeArea.DrawVerticalLine(vectorArray[1].x, vectorArray[1].y, vectorArray[2].y, color5);
-                Handles.color = color5;
-                Handles.DrawLine(vectorArray[1], vectorArray[2] + new Vector3(0f, -1f, 0f));
+                Rect rect2 = Rect.MinMaxRect(rect.xMin, rect.yMin, Mathf.Min(startOfClipPixel, rect.xMax), rect.yMax);
+                DrawRect(rect2, color);
+                TimeArea.DrawVerticalLine(rect2.xMax, rect2.yMin, rect2.yMax, color2);
             }
-            Rect rect3 = new Rect(Mathf.Max(endOfClipPixel, rect.xMin), rect.yMin, rect.width, rect.height);
-            Vector3[] corners = new Vector3[] { new Vector3(rect3.xMin, rect3.yMin), new Vector3(rect3.xMax, rect3.yMin), new Vector3(rect3.xMax, rect3.yMax), new Vector3(rect3.xMin, rect3.yMax) };
-            DrawRect(corners, color);
-            TimeArea.DrawVerticalLine(corners[0].x, corners[0].y, corners[3].y, color5);
-            Handles.color = color5;
-            Handles.DrawLine(corners[0], corners[3] + new Vector3(0f, -1f, 0f));
+            Rect rect3 = Rect.MinMaxRect(Mathf.Max(endOfClipPixel, rect.xMin), rect.yMin, rect.xMax, rect.yMax);
+            DrawRect(rect3, color);
+            TimeArea.DrawVerticalLine(rect3.xMin, rect3.yMin, rect3.yMax, color2);
         }
 
-        public static void DrawRangeOfSelection(Rect rect, float startPixel, float endPixel)
-        {
-            Color color = !EditorGUIUtility.isProSkin ? Color.gray.AlphaMultiplied(0.25f) : Color.white.AlphaMultiplied(0.1f);
-            startPixel = Mathf.Max(startPixel, rect.xMin);
-            endPixel = Mathf.Max(endPixel, rect.xMin);
-            Vector3[] corners = new Vector3[] { new Vector3(startPixel, rect.yMin), new Vector3(endPixel, rect.yMin), new Vector3(endPixel, rect.yMax), new Vector3(startPixel, rect.yMax) };
-            DrawRect(corners, color);
-        }
-
-        private static void DrawRect(Vector3[] corners, Color color)
+        public static void DrawRect(Rect rect, Color color)
         {
             if (Event.current.type == EventType.Repaint)
             {
@@ -343,13 +331,20 @@
                 GL.MultMatrix(Handles.matrix);
                 GL.Begin(7);
                 GL.Color(color);
-                GL.Vertex(corners[0]);
-                GL.Vertex(corners[1]);
-                GL.Vertex(corners[2]);
-                GL.Vertex(corners[3]);
+                GL.Vertex((Vector3) rect.min);
+                GL.Vertex((Vector3) new Vector2(rect.xMax, rect.yMin));
+                GL.Vertex((Vector3) rect.max);
+                GL.Vertex((Vector3) new Vector2(rect.xMin, rect.yMax));
                 GL.End();
                 GL.PopMatrix();
             }
+        }
+
+        public static void DrawSelectionOverlay(Rect rect, Color color, float startPixel, float endPixel)
+        {
+            startPixel = Mathf.Max(startPixel, rect.xMin);
+            endPixel = Mathf.Max(endPixel, rect.xMin);
+            DrawRect(Rect.MinMaxRect(startPixel, rect.yMin, endPixel, rect.yMax), color);
         }
 
         public static Component EnsureActiveAnimationPlayer(GameObject animatedObject)
@@ -460,27 +455,6 @@
                 rect.height = -rect.height;
             }
             return rect;
-        }
-
-        public static bool GameObjectIsAnimatable(GameObject gameObject, AnimationClip animationClip)
-        {
-            if (gameObject == null)
-            {
-                return false;
-            }
-            if ((gameObject.hideFlags & HideFlags.NotEditable) != HideFlags.None)
-            {
-                return false;
-            }
-            if (EditorUtility.IsPersistent(gameObject))
-            {
-                return false;
-            }
-            if ((animationClip != null) && (((animationClip.hideFlags & HideFlags.NotEditable) != HideFlags.None) || !AssetDatabase.IsOpenForEdit(animationClip, StatusQueryOptions.UseCachedIfPossible)))
-            {
-                return false;
-            }
-            return true;
         }
 
         public static List<EditorCurveBinding> GetAnimatableProperties(ScriptableObject scriptableObject, System.Type valueType)
@@ -857,6 +831,59 @@
             return str;
         }
 
+        public static bool PropertyIsAnimatable(SerializedProperty property, UnityEngine.Object rootObject)
+        {
+            <PropertyIsAnimatable>c__AnonStorey0 storey = new <PropertyIsAnimatable>c__AnonStorey0 {
+                propertyGroupName = GetPropertyGroupName(property.propertyPath)
+            };
+            SerializedObject serializedObject = property.serializedObject;
+            if (serializedObject.targetObject is Component)
+            {
+                GameObject gameObject = ((Component) serializedObject.targetObject).gameObject;
+                return Array.Exists<EditorCurveBinding>(AnimationUtility.GetAnimatableBindings(gameObject, (rootObject != null) ? ((GameObject) rootObject) : gameObject), new Predicate<EditorCurveBinding>(storey.<>m__0));
+            }
+            if (serializedObject.targetObject is GameObject)
+            {
+                GameObject targetObject = (GameObject) serializedObject.targetObject;
+                return Array.Exists<EditorCurveBinding>(AnimationUtility.GetAnimatableBindings(targetObject, (rootObject != null) ? ((GameObject) rootObject) : targetObject), new Predicate<EditorCurveBinding>(storey.<>m__1));
+            }
+            if (serializedObject.targetObject is ScriptableObject)
+            {
+                ScriptableObject scriptableObject = (ScriptableObject) serializedObject.targetObject;
+                return Array.Exists<EditorCurveBinding>(AnimationUtility.GetScriptableObjectAnimatableBindings(scriptableObject), new Predicate<EditorCurveBinding>(storey.<>m__2));
+            }
+            return false;
+        }
+
+        public static EditorCurveBinding[] PropertyModificationsToEditorCurveBindings(PropertyModification[] modifications, GameObject rootGameObject, AnimationClip animationClip)
+        {
+            if (modifications == null)
+            {
+                return new EditorCurveBinding[0];
+            }
+            HashSet<EditorCurveBinding> source = new HashSet<EditorCurveBinding>();
+            for (int i = 0; i < modifications.Length; i++)
+            {
+                EditorCurveBinding binding = new EditorCurveBinding();
+                if (AnimationUtility.PropertyModificationToEditorCurveBinding(modifications[i], rootGameObject, out binding) != null)
+                {
+                    EditorCurveBinding[] bindingArray2 = RotationCurveInterpolation.RemapAnimationBindingForAddKey(binding, animationClip);
+                    if (bindingArray2 != null)
+                    {
+                        for (int j = 0; j < bindingArray2.Length; j++)
+                        {
+                            source.Add(bindingArray2[j]);
+                        }
+                    }
+                    else
+                    {
+                        source.Add(binding);
+                    }
+                }
+            }
+            return source.ToArray<EditorCurveBinding>();
+        }
+
         public static void RemoveKeyframes(AnimationWindowState state, AnimationWindowCurve[] curves, AnimationKeyTime time)
         {
             string undoLabel = "Remove Key";
@@ -884,6 +911,123 @@
                 AnimationUtility.SetEditorCurve(clip, curve.binding, null);
                 AnimationUtility.SetEditorCurve(clip, newBinding, curve.ToAnimationCurve());
             }
+        }
+
+        public static EditorCurveBinding[] SerializedPropertyToEditorCurveBindings(SerializedProperty property, GameObject rootGameObject, AnimationClip animationClip) => 
+            PropertyModificationsToEditorCurveBindings(SerializedPropertyToPropertyModifications(property, rootGameObject), rootGameObject, animationClip);
+
+        public static PropertyModification[] SerializedPropertyToPropertyModifications(SerializedProperty property, UnityEngine.Object rootObject)
+        {
+            if (!PropertyIsAnimatable(property, rootObject))
+            {
+                return null;
+            }
+            List<SerializedProperty> list = new List<SerializedProperty> {
+                property
+            };
+            if (property.hasChildren)
+            {
+                SerializedProperty x = property.Copy();
+                SerializedProperty endProperty = property.GetEndProperty(false);
+                while ((x.Next(true) && !SerializedProperty.EqualContents(x, endProperty)) && x.propertyPath.StartsWith(property.propertyPath))
+                {
+                    list.Add(x.Copy());
+                }
+            }
+            if (property.propertyPath.StartsWith("m_LocalRotation"))
+            {
+                SerializedObject serializedObject = property.serializedObject;
+                if (serializedObject.targetObject is Transform)
+                {
+                    SerializedProperty property4 = serializedObject.FindProperty("m_LocalEulerAnglesHint");
+                    if ((property4 != null) && property4.hasChildren)
+                    {
+                        SerializedProperty property5 = property4.Copy();
+                        SerializedProperty y = property4.GetEndProperty(false);
+                        while ((property5.Next(true) && !SerializedProperty.EqualContents(property5, y)) && property5.propertyPath.StartsWith(property4.propertyPath))
+                        {
+                            list.Add(property5.Copy());
+                        }
+                    }
+                }
+            }
+            List<PropertyModification> list2 = new List<PropertyModification>();
+            for (int i = 0; i < list.Count; i++)
+            {
+                SerializedProperty property7 = list[i];
+                bool flag = property7.propertyType == SerializedPropertyType.ObjectReference;
+                bool flag2 = property7.propertyType == SerializedPropertyType.Float;
+                bool flag3 = property7.propertyType == SerializedPropertyType.Boolean;
+                bool flag4 = property7.propertyType == SerializedPropertyType.Integer;
+                if ((flag || flag2) || (flag3 || flag4))
+                {
+                    UnityEngine.Object[] targetObjects = property7.serializedObject.targetObjects;
+                    if (property7.hasMultipleDifferentValues)
+                    {
+                        for (int j = 0; j < targetObjects.Length; j++)
+                        {
+                            SerializedProperty property8 = new SerializedObject(targetObjects[j]).FindProperty(property7.propertyPath);
+                            string str = string.Empty;
+                            UnityEngine.Object objectReferenceValue = null;
+                            if (flag)
+                            {
+                                objectReferenceValue = property8.objectReferenceValue;
+                            }
+                            else if (flag2)
+                            {
+                                str = property8.floatValue.ToString();
+                            }
+                            else if (flag4)
+                            {
+                                str = property8.intValue.ToString();
+                            }
+                            else
+                            {
+                                str = property8.boolValue.ToString();
+                            }
+                            PropertyModification item = new PropertyModification {
+                                target = targetObjects[j],
+                                propertyPath = property8.propertyPath,
+                                value = str,
+                                objectReference = objectReferenceValue
+                            };
+                            list2.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        string str2 = string.Empty;
+                        UnityEngine.Object obj6 = null;
+                        if (flag)
+                        {
+                            obj6 = property7.objectReferenceValue;
+                        }
+                        else if (flag2)
+                        {
+                            str2 = property7.floatValue.ToString();
+                        }
+                        else if (flag4)
+                        {
+                            str2 = property7.intValue.ToString();
+                        }
+                        else
+                        {
+                            str2 = property7.boolValue.ToString();
+                        }
+                        for (int k = 0; k < targetObjects.Length; k++)
+                        {
+                            PropertyModification modification2 = new PropertyModification {
+                                target = targetObjects[k],
+                                propertyPath = property7.propertyPath,
+                                value = str2,
+                                objectReference = obj6
+                            };
+                            list2.Add(modification2);
+                        }
+                    }
+                }
+            }
+            return list2.ToArray();
         }
 
         private static void SetClipAsLegacy(AnimationClip clip)
@@ -924,12 +1068,27 @@
         }
 
         [CompilerGenerated]
-        private sealed class <BestMatchForPaste>c__AnonStorey0
+        private sealed class <BestMatchForPaste>c__AnonStorey1
         {
             internal AnimationWindowCurve targetCurve;
 
             internal bool <>m__0(AnimationWindowCurve clipboardCurve) => 
                 (clipboardCurve.binding == this.targetCurve.binding);
+        }
+
+        [CompilerGenerated]
+        private sealed class <PropertyIsAnimatable>c__AnonStorey0
+        {
+            internal string propertyGroupName;
+
+            internal bool <>m__0(EditorCurveBinding binding) => 
+                (AnimationWindowUtility.GetPropertyGroupName(binding.propertyName) == this.propertyGroupName);
+
+            internal bool <>m__1(EditorCurveBinding binding) => 
+                (AnimationWindowUtility.GetPropertyGroupName(binding.propertyName) == this.propertyGroupName);
+
+            internal bool <>m__2(EditorCurveBinding binding) => 
+                (AnimationWindowUtility.GetPropertyGroupName(binding.propertyName) == this.propertyGroupName);
         }
     }
 }

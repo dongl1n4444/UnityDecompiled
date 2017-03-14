@@ -89,9 +89,8 @@
         public static IStatsService StatsService;
         [Inject]
         public static ITypeProviderService TypeProvider;
+        private const string VariableNameForTypeInfoInConstrainedCall = "il2cpp_this_typeinfo";
         private const string VariableNameForVirtualInvokeDataInDirectVirtualCall = "il2cpp_virtual_invoke_data_";
-        [Inject]
-        public static IVirtualCallCollectorService VirtualCallCollector;
 
         public MethodBodyWriter(CppCodeWriter writer, MethodReference methodReference, Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver, IRuntimeMetadataAccess metadataAccess, VTableBuilder vTableBuilder) : this(writer, methodReference, typeResolver, metadataAccess, vTableBuilder, new MethodBodyWriterDebugOptions())
         {
@@ -172,7 +171,11 @@
             if (MethodSignatureWriter.NeedsHiddenMethodInfo(reference, callType, false))
             {
                 string str;
-                if (callType == MethodCallType.DirectVirtual)
+                if (CodeGenOptions.MonoRuntime)
+                {
+                    str = (callType != MethodCallType.DirectVirtual) ? this._runtimeMetadataAccess.HiddenMethodInfo(unresolvedMethodToCall) : $"il2cpp_codegen_vtable_slot_method({addUniqueSuffix("il2cpp_this_typeinfo")}, {Emit.MonoMethodMetadataGet(unresolvedMethodToCall)})";
+                }
+                else if (callType == MethodCallType.DirectVirtual)
                 {
                     string str2 = addUniqueSuffix("il2cpp_virtual_invoke_data_");
                     str = $"{str2}.method";
@@ -303,7 +306,7 @@
             return (!negate ? str6 : $"(!{str6})");
         }
 
-        private string ConstrainedCallExpressionFor(MethodReference resolvedMethodToCall, ref MethodReference methodToCall, MethodCallType callType, List<StackInfo> poppedValues, Func<string, string> addUniqueSuffix)
+        private string ConstrainedCallExpressionFor(MethodReference resolvedMethodToCall, ref MethodReference methodToCall, MethodCallType callType, List<StackInfo> poppedValues, Func<string, string> addUniqueSuffix, out string copyBackBoxedExpr)
         {
             StackInfo thisValue = poppedValues[0];
             ByReferenceType type = thisValue.Type as ByReferenceType;
@@ -317,6 +320,7 @@
             {
                 throw new InvalidOperationException($"Attempting to constrain a value of type '{elementType}' to type '{b}'.");
             }
+            copyBackBoxedExpr = null;
             if (!elementType.IsValueType())
             {
                 poppedValues[0] = new StackInfo(Emit.Dereference(thisValue.Expression), elementType);
@@ -330,9 +334,10 @@
             }
             if (GenericSharingAnalysis.IsGenericSharingForValueTypesEnabled && (this._sharingType == SharingType.Shared))
             {
-                string typeInfoVariable = this.NewTempName();
-                object[] args = new object[] { typeInfoVariable, this._runtimeMetadataAccess.TypeInfoFor(this._constrainedCallThisType) };
-                this._writer.WriteLine("Il2CppClass* {0} = {1};", args);
+                string str7;
+                string typeInfoVariable = addUniqueSuffix("il2cpp_this_typeinfo");
+                object[] args = new object[] { "RuntimeClass", typeInfoVariable, this._runtimeMetadataAccess.TypeInfoFor(this._constrainedCallThisType) };
+                this._writer.WriteLine("{0}* {1} = {2};", args);
                 string str3 = this.FakeBox(elementType, typeInfoVariable, thisValue.Expression);
                 List<StackInfo> list = new List<StackInfo>(poppedValues) {
                     [0] = new StackInfo(Emit.Call("Box", typeInfoVariable, thisValue.Expression), TypeProvider.ObjectTypeReference)
@@ -343,19 +348,26 @@
                 };
                 string str5 = this.CallExpressionFor(this._methodReference, methodToCall, MethodCallType.DirectVirtual, list2, addUniqueSuffix, false);
                 string str6 = addUniqueSuffix("il2cpp_virtual_invoke_data_");
-                if (resolvedMethodToCall.DeclaringType.IsInterface())
+                if (!CodeGenOptions.MonoRuntime)
                 {
-                    this._writer.WriteLine($"const VirtualInvokeData& {str6} = il2cpp_codegen_get_interface_invoke_data({this._vTableBuilder.IndexFor(methodToCall.Resolve())}, &{str3}, {this._runtimeMetadataAccess.TypeInfoFor(methodToCall.DeclaringType)});");
+                    if (resolvedMethodToCall.DeclaringType.IsInterface())
+                    {
+                        this._writer.WriteLine($"const VirtualInvokeData& {str6} = il2cpp_codegen_get_interface_invoke_data({this._vTableBuilder.IndexFor(methodToCall.Resolve())}, &{str3}, {this._runtimeMetadataAccess.TypeInfoFor(methodToCall.DeclaringType)});");
+                    }
+                    else
+                    {
+                        this._writer.WriteLine($"const VirtualInvokeData& {str6} = il2cpp_codegen_get_virtual_invoke_data({this._vTableBuilder.IndexFor(methodToCall.Resolve())}, &{str3});");
+                    }
+                    str7 = Emit.Call("il2cpp_codegen_type_implements_virtual_method", typeInfoVariable, $"{str6}.method");
                 }
                 else
                 {
-                    this._writer.WriteLine($"const VirtualInvokeData& {str6} = il2cpp_codegen_get_virtual_invoke_data({this._vTableBuilder.IndexFor(methodToCall.Resolve())}, &{str3});");
+                    str7 = Emit.Call("il2cpp_codegen_type_implements_virtual_method", typeInfoVariable, Emit.MonoMethodMetadataGet(methodToCall.Resolve()));
                 }
-                string str7 = Emit.Call("il2cpp_codegen_type_implements_virtual_method", typeInfoVariable, $"{str6}.method");
                 return $"{str7} ? {str5} : {str4}";
             }
             MethodReference virtualMethodTargetMethodForConstrainedCallOnValueType = this._vTableBuilder.GetVirtualMethodTargetMethodForConstrainedCallOnValueType(b, resolvedMethodToCall);
-            if ((virtualMethodTargetMethodForConstrainedCallOnValueType != null) && Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(virtualMethodTargetMethodForConstrainedCallOnValueType.DeclaringType, b, TypeComparisonMode.Exact))
+            if (((virtualMethodTargetMethodForConstrainedCallOnValueType != null) && Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(virtualMethodTargetMethodForConstrainedCallOnValueType.DeclaringType, b, TypeComparisonMode.Exact)) && !CodeGenOptions.MonoRuntime)
             {
                 if ((elementType.IsGenericInstance && elementType.IsValueType()) && (this._sharingType == SharingType.Shared))
                 {
@@ -381,6 +393,8 @@
                 return this.CallExpressionFor(this._methodReference, methodToCall, callType, poppedValues, addUniqueSuffix, true);
             }
             poppedValues[0] = this.BoxThisForContraintedCallIntoNewTemp(thisValue);
+            StackInfo info2 = poppedValues[0];
+            copyBackBoxedExpr = Emit.Assign(Emit.Dereference(thisValue.Expression), Emit.Dereference(Emit.Cast(Naming.ForVariable(elementType) + "*", Emit.Call("UnBox", info2.Expression))));
             return this.CallExpressionFor(this._methodReference, methodToCall, callType, poppedValues, addUniqueSuffix, true);
         }
 
@@ -461,7 +475,7 @@
             return Emit.LoadArrayElementAddress(array.Expression, indexExpression, this._arrayBoundsCheckSupport.ShouldEmitBoundsChecksForMethod());
         }
 
-        private void EmitCallExpressionAndStoreResult(Instruction instruction, TypeReference returnType, string callExpression)
+        private void EmitCallExpressionAndStoreResult(Instruction instruction, TypeReference returnType, string callExpression, string copyBackBoxedExpr)
         {
             if (returnType.IsVoid())
             {
@@ -486,6 +500,10 @@
                 Local local3 = this.NewTemp(returnType);
                 this._valueStack.Push(new StackInfo(local3.Expression, returnType));
                 this._writer.WriteStatement(Emit.Assign(local3.IdentifierExpression, callExpression));
+            }
+            if (copyBackBoxedExpr != null)
+            {
+                this._writer.WriteStatement(copyBackBoxedExpr);
             }
         }
 
@@ -783,7 +801,7 @@
                 foreach (ExceptionHandler handler in catchNodes.Select<ExceptionSupport.Node, ExceptionHandler>(<>f__am$cache4))
                 {
                     object[] objArray2 = new object[] { this._runtimeMetadataAccess.TypeInfoFor(handler.CatchType) };
-                    this._writer.WriteLine("if(il2cpp_codegen_class_is_assignable_from ({0}, e.ex->klass))", objArray2);
+                    this._writer.WriteLine("if(il2cpp_codegen_class_is_assignable_from ({0}, il2cpp_codegen_exception_class(e.ex)))", objArray2);
                     this._writer.Indent(1);
                     this._writer.WriteLine(this._labeler.ForJump(handler.HandlerStart));
                     this._writer.Dedent(1);
@@ -1125,7 +1143,7 @@
 
         private void GenerateConditionalJump(InstructionBlock block, Instruction ins, string cppOperator, Signedness signedness, bool negate = false)
         {
-            <GenerateConditionalJump>c__AnonStorey7 storey = new <GenerateConditionalJump>c__AnonStorey7();
+            <GenerateConditionalJump>c__AnonStorey6 storey = new <GenerateConditionalJump>c__AnonStorey6();
             string conditional = this.ConditionalExpressionFor(cppOperator, signedness, negate);
             storey.targetInstruction = (Instruction) ins.Operand;
             if (this._valueStack.Count == 0)
@@ -1303,6 +1321,10 @@
             {
                 string methodPointerForVTable = MethodSignatureWriter.GetMethodPointerForVTable(methodToCall);
                 string str5 = addUniqueSuffix("il2cpp_virtual_invoke_data_");
+                if (CodeGenOptions.MonoRuntime)
+                {
+                    return Emit.Call("(" + Emit.Cast(MethodSignatureWriter.GetMethodPointerForVTable(methodToCall), $"il2cpp_codegen_vtable_slot_method_pointer({addUniqueSuffix("il2cpp_this_typeinfo")}, {Emit.MonoMethodMetadataGet(unresolvedMethodtoCall)})") + ")", argumentArray);
+                }
                 return Emit.Call("(" + Emit.Cast(methodPointerForVTable, $"{str5}.methodPtr") + ")", argumentArray);
             }
             if ((callType != MethodCallType.Virtual) || MethodSignatureWriter.CanDevirtualizeMethodCall(methodToCall.Resolve()))
@@ -1327,7 +1349,7 @@
 
         private static List<TypeReference> GetParameterTypes(MethodReference method, Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolverForMethodToCall)
         {
-            <GetParameterTypes>c__AnonStorey9 storey = new <GetParameterTypes>c__AnonStorey9 {
+            <GetParameterTypes>c__AnonStorey8 storey = new <GetParameterTypes>c__AnonStorey8 {
                 typeResolverForMethodToCall = typeResolverForMethodToCall,
                 method = method
             };
@@ -1854,7 +1876,7 @@
                     storey2.suffix = "_" + ins.Offset;
                     MethodReference unresolvedMethodToCall = (MethodReference) ins.Operand;
                     string callExpression = this.CallExpressionFor(this._methodReference, unresolvedMethodToCall, MethodCallType.Normal, PopItemsFromStack(unresolvedMethodToCall.Parameters.Count + (!unresolvedMethodToCall.HasThis ? 0 : 1), this._valueStack), new Func<string, string>(storey2.<>m__0), true);
-                    this.EmitCallExpressionAndStoreResult(ins, this._typeResolver.ResolveReturnType(unresolvedMethodToCall), callExpression);
+                    this.EmitCallExpressionAndStoreResult(ins, this._typeResolver.ResolveReturnType(unresolvedMethodToCall), callExpression, null);
                     return;
                 }
                 case Code.Calli:
@@ -2134,16 +2156,17 @@
                     }
                     List<StackInfo> poppedValues = PopItemsFromStack(methodReference.Parameters.Count + 1, this._valueStack);
                     storey.suffix = "_" + ins.Offset;
+                    string copyBackBoxedExpr = null;
                     if (this._constrainedCallThisType != null)
                     {
                         MethodReference resolvedMethodToCall = this._typeResolver.Resolve(methodReference);
-                        str = this.ConstrainedCallExpressionFor(resolvedMethodToCall, ref methodReference, MethodCallType.Virtual, poppedValues, new Func<string, string>(storey.<>m__0));
+                        str = this.ConstrainedCallExpressionFor(resolvedMethodToCall, ref methodReference, MethodCallType.Virtual, poppedValues, new Func<string, string>(storey.<>m__0), out copyBackBoxedExpr);
                     }
                     else
                     {
                         str = this.CallExpressionFor(this._methodReference, methodReference, MethodCallType.Virtual, poppedValues, new Func<string, string>(storey.<>m__1), true);
                     }
-                    this.EmitCallExpressionAndStoreResult(ins, this._typeResolver.ResolveReturnType(methodReference), str);
+                    this.EmitCallExpressionAndStoreResult(ins, this._typeResolver.ResolveReturnType(methodReference), str, copyBackBoxedExpr);
                     this._constrainedCallThisType = null;
                     return;
                 }
@@ -2156,9 +2179,11 @@
 
                 case Code.Ldstr:
                 {
+                    MetadataToken token;
                     string literal = (string) ins.Operand;
+                    this._methodDefinition.Body.GetInstructionToken(ins, out token);
                     this._writer.AddIncludeForTypeDefinition(this.StringTypeReference);
-                    this._valueStack.Push(new StackInfo(this._runtimeMetadataAccess.StringLiteral(literal), this.StringTypeReference));
+                    this._valueStack.Push(new StackInfo(this._runtimeMetadataAccess.StringLiteral(literal, token, this._methodDefinition.Module.Assembly), this.StringTypeReference));
                     return;
                 }
                 case Code.Newobj:
@@ -2183,8 +2208,8 @@
                     {
                         if (reference8.IsValueType())
                         {
-                            string str5 = Naming.AddressOf(local.Expression);
-                            arguments.Insert(0, str5);
+                            string str6 = Naming.AddressOf(local.Expression);
+                            arguments.Insert(0, str6);
                             this._writer.WriteVariable(reference8, local.Expression);
                             this._writer.WriteStatement(Emit.Call(this._runtimeMetadataAccess.Method(reference7), arguments));
                         }
@@ -2196,6 +2221,10 @@
                         else
                         {
                             this._writer.WriteStatement(Emit.Assign(local.IdentifierExpression, Emit.Cast(reference8, Emit.Call("il2cpp_codegen_object_new", this._runtimeMetadataAccess.Newobj(method)))));
+                            if (CodeGenOptions.MonoRuntime)
+                            {
+                                this.WriteCallToClassAndInitializerAndStaticConstructorIfNeeded(reference8, this._methodDefinition, this._runtimeMetadataAccess);
+                            }
                             arguments.Insert(0, local.Expression);
                             this._writer.WriteStatement(Emit.Call(this._runtimeMetadataAccess.Method(method), arguments));
                         }
@@ -2206,10 +2235,10 @@
                     {
                         throw new NotImplementedException("Attempting to create a multidimensional array of rank lesser than 2");
                     }
-                    string str4 = this.NewTempName();
-                    object[] args = new object[] { Naming.ForArrayIndexType(), str4, Emit.CastEach(Naming.ForArrayIndexType(), arguments).AggregateWithComma() };
+                    string str5 = this.NewTempName();
+                    object[] args = new object[] { Naming.ForArrayIndexType(), str5, Emit.CastEach(Naming.ForArrayIndexType(), arguments).AggregateWithComma() };
                     this._writer.WriteLine("{0} {1}[] = {{ {2} }};", args);
-                    object[] objArray2 = new object[] { Emit.Assign(local.IdentifierExpression, Emit.Cast(type, Emit.Call("GenArrayNew", this._runtimeMetadataAccess.TypeInfoFor(method.DeclaringType), str4))) };
+                    object[] objArray2 = new object[] { Emit.Assign(local.IdentifierExpression, Emit.Cast(type, Emit.Call("GenArrayNew", this._runtimeMetadataAccess.TypeInfoFor(method.DeclaringType), str5))) };
                     this._writer.WriteLine("{0};", objArray2);
                     break;
                 }
@@ -2341,8 +2370,8 @@
                     StackInfo info4 = this._valueStack.Pop();
                     ArrayType type3 = new ArrayType(this._typeResolver.Resolve((TypeReference) ins.Operand));
                     this._writer.AddIncludeForTypeDefinition(type3);
-                    string str6 = $"(uint32_t){info4.Expression}";
-                    this.PushExpression(type3, Emit.Cast(type3, Emit.Call("SZArrayNew", this._runtimeMetadataAccess.ArrayInfo((TypeReference) ins.Operand), str6)));
+                    string str7 = $"(uint32_t){info4.Expression}";
+                    this.PushExpression(type3, Emit.Cast(type3, Emit.Call("SZArrayNew", this._runtimeMetadataAccess.ArrayInfo((TypeReference) ins.Operand), str7)));
                     return;
                 }
                 case Code.Ldlen:
@@ -2647,14 +2676,14 @@
                 {
                     StackInfo info18 = this._valueStack.Pop();
                     PointerType variableType = new PointerType(this.SByteTypeReference);
-                    string str7 = this.NewTempName();
-                    this._writer.WriteLine(string.Format("{0} {1} = ({0}) alloca({2});", Naming.ForVariable(variableType), str7, info18));
+                    string str8 = this.NewTempName();
+                    this._writer.WriteLine(string.Format("{0} {1} = ({0}) alloca({2});", Naming.ForVariable(variableType), str8, info18));
                     if (this._methodDefinition.Body.InitLocals)
                     {
-                        object[] objArray6 = new object[] { str7, info18 };
+                        object[] objArray6 = new object[] { str8, info18 };
                         this._writer.WriteLine("memset({0},0,{1});", objArray6);
                     }
-                    this.PushExpression(variableType, str7);
+                    this.PushExpression(variableType, str8);
                     return;
                 }
                 case Code.Endfilter:
@@ -2789,9 +2818,24 @@
             {
                 str = !flag ? Emit.Call("il2cpp_codegen_get_generic_virtual_method", this._runtimeMetadataAccess.MethodInfo(methodReference), targetExpression) : Emit.Call("il2cpp_codegen_get_generic_interface_method", this._runtimeMetadataAccess.MethodInfo(methodReference), targetExpression);
             }
+            else if (flag)
+            {
+                if (CodeGenOptions.MonoRuntime)
+                {
+                    str = Emit.Call("GetInterfaceMethodInfo", targetExpression, "(MonoMethod*)" + this._runtimeMetadataAccess.MethodInfo(methodReference), this._runtimeMetadataAccess.TypeInfoFor(methodReference.DeclaringType));
+                }
+                else
+                {
+                    str = Emit.Call("GetInterfaceMethodInfo", targetExpression, this._vTableBuilder.IndexFor(methodDefinition).ToString(), this._runtimeMetadataAccess.TypeInfoFor(methodReference.DeclaringType));
+                }
+            }
+            else if (CodeGenOptions.MonoRuntime)
+            {
+                str = Emit.Call("GetVirtualMethodInfo", targetExpression, Emit.MonoMethodMetadataGet(methodReference));
+            }
             else
             {
-                str = !flag ? Emit.Call("GetVirtualMethodInfo", targetExpression, this._vTableBuilder.IndexFor(methodDefinition).ToString()) : Emit.Call("GetInterfaceMethodInfo", targetExpression, this._vTableBuilder.IndexFor(methodDefinition).ToString(), this._runtimeMetadataAccess.TypeInfoFor(methodReference.DeclaringType));
+                str = Emit.Call("GetVirtualMethodInfo", targetExpression, this._vTableBuilder.IndexFor(methodDefinition).ToString());
             }
             this._writer.AddIncludeForTypeDefinition(this._typeResolver.Resolve(methodReference.DeclaringType));
             this.StoreLocalIntPtrAndPush($"(void*){str}");
@@ -2874,34 +2918,70 @@
 
         private void StaticFieldAccess(Instruction ins)
         {
+            TypeReference declaringType;
             FieldReference operand = (FieldReference) ins.Operand;
             if (operand.Resolve().IsLiteral)
             {
                 throw new Exception("literal values should always be embedded rather than accessed via the field itself");
             }
             this.WriteCallToClassAndInitializerAndStaticConstructorIfNeeded(operand.DeclaringType, this._methodDefinition, this._runtimeMetadataAccess);
-            TypeReference leftType = this._typeResolver.ResolveFieldType(operand);
+            TypeReference reference2 = this._typeResolver.ResolveFieldType(operand);
             string str = TypeStaticsExpressionFor(operand, this._typeResolver, this._runtimeMetadataAccess);
+            if (operand.DeclaringType.IsGenericInstance)
+            {
+                declaringType = operand.DeclaringType;
+            }
+            else
+            {
+                declaringType = this._typeResolver.Resolve(operand.DeclaringType);
+            }
             if (ins.OpCode.Code == Code.Stsfld)
             {
                 StackInfo right = this._valueStack.Pop();
                 this.EmitMemoryBarrierIfNecessary(null);
-                this._writer.WriteLine(Statement.Expression(Emit.Call($"{str}{Naming.ForFieldSetter(operand)}", WriteExpressionAndCastIfNeeded(leftType, right, SharingType.NonShared))));
+                if (CodeGenOptions.MonoRuntime)
+                {
+                    Local local = this.NewTemp(reference2);
+                    object[] args = new object[] { local.IdentifierExpression, WriteExpressionAndCastIfNeeded(reference2, right, SharingType.NonShared) };
+                    this._writer.WriteLine("{0} = {1};", args);
+                    this._writer.WriteLine($"il2cpp_codegen_mono_set_static_field({this._runtimeMetadataAccess.StaticData(declaringType)}, {this._runtimeMetadataAccess.FieldInfo(operand)}, {!local.Type.IsValueType() ? string.Empty : "&"}{local.Expression});");
+                }
+                else
+                {
+                    this._writer.WriteLine(Statement.Expression(Emit.Call($"{str}{Naming.ForFieldSetter(operand)}", WriteExpressionAndCastIfNeeded(reference2, right, SharingType.NonShared))));
+                }
             }
             else
             {
                 if (ins.OpCode.Code == Code.Ldsflda)
                 {
-                    ByReferenceType typeReference = new ByReferenceType(leftType);
-                    string expression = Emit.Call($"{str}{Naming.ForFieldAddressGetter(operand)}");
-                    this.PushExpression(typeReference, expression);
+                    string str2;
+                    ByReferenceType variableType = new ByReferenceType(reference2);
+                    if (CodeGenOptions.MonoRuntime)
+                    {
+                        str2 = Emit.Cast(Naming.ForVariable(variableType), $"il2cpp_codegen_mono_get_static_field_address({this._runtimeMetadataAccess.StaticData(declaringType)}, {this._runtimeMetadataAccess.FieldInfo(operand)})");
+                    }
+                    else
+                    {
+                        str2 = Emit.Call($"{str}{Naming.ForFieldAddressGetter(operand)}");
+                    }
+                    this.PushExpression(variableType, str2);
                 }
                 else
                 {
-                    Local local = this.NewTemp(leftType);
-                    object[] args = new object[] { Emit.Assign(local.IdentifierExpression, Emit.Call($"{str}{Naming.ForFieldGetter(operand)}")) };
-                    this._writer.WriteLine("{0};", args);
-                    this._valueStack.Push(new StackInfo(local));
+                    Local local2 = this.NewTemp(reference2);
+                    if (CodeGenOptions.MonoRuntime)
+                    {
+                        object[] objArray3 = new object[] { local2.IdentifierExpression };
+                        this._writer.WriteLine("{0};", objArray3);
+                        this._writer.WriteLine($"il2cpp_codegen_mono_get_static_field({this._runtimeMetadataAccess.StaticData(declaringType)}, {this._runtimeMetadataAccess.FieldInfo(operand)}, &{local2.Expression});");
+                    }
+                    else
+                    {
+                        object[] objArray4 = new object[] { Emit.Assign(local2.IdentifierExpression, Emit.Call($"{str}{Naming.ForFieldGetter(operand)}")) };
+                        this._writer.WriteLine("{0};", objArray4);
+                    }
+                    this._valueStack.Push(new StackInfo(local2));
                 }
                 this.EmitMemoryBarrierIfNecessary(null);
             }
@@ -3024,7 +3104,7 @@
             {
                 return $"(({Naming.ForThreadFieldsStruct(type)}*)il2cpp_codegen_get_thread_static_data({str}))->";
             }
-            return $"(({Naming.ForStaticFieldsStruct(type)}*){str}->static_fields)->";
+            return $"(({Naming.ForStaticFieldsStruct(type)}*)il2cpp_codegen_static_fields_for({str}))->";
         }
 
         private void Unbox(Instruction ins)
@@ -3053,44 +3133,22 @@
 
         private static string VirtualCallFor(MethodReference method, MethodReference unresolvedMethod, IEnumerable<string> args, Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver, IRuntimeMetadataAccess runtimeMetadataAccess, VTableBuilder vTableBuilder)
         {
-            <VirtualCallFor>c__AnonStorey4 storey = new <VirtualCallFor>c__AnonStorey4 {
-                typeResolver = typeResolver,
-                method = method
-            };
-            bool flag = storey.method.ReturnType.MetadataType != MetadataType.Void;
-            List<TypeReference> source = new List<TypeReference>();
-            string str = string.Empty;
-            if (flag)
+            bool isInterface = method.DeclaringType.Resolve().IsInterface;
+            List<string> arguments = new List<string>();
+            if (CodeGenOptions.MonoRuntime)
             {
-                source.Add(storey.typeResolver.ResolveReturnType(storey.method));
+                arguments.Add("(MonoMethod*)" + ((!method.IsGenericInstance && !isInterface) ? Emit.MonoMethodMetadataGet(method) : runtimeMetadataAccess.MethodInfo(unresolvedMethod)));
             }
-            source.AddRange(storey.method.Parameters.Select<ParameterDefinition, TypeReference>(new Func<ParameterDefinition, TypeReference>(storey.<>m__0)));
-            string str2 = "";
-            if (source.Count > 0)
+            else
             {
-                str2 = "< " + source.Select<TypeReference, string>(new Func<TypeReference, string>(Naming.ForVariable)).AggregateWithComma() + " >";
+                arguments.Add(!method.IsGenericInstance ? string.Concat(new object[] { vTableBuilder.IndexFor(method.Resolve()), " /* ", method.FullName, " */" }) : runtimeMetadataAccess.MethodInfo(unresolvedMethod));
             }
-            bool isInterface = storey.method.DeclaringType.Resolve().IsInterface;
-            string str3 = !isInterface ? "Virt" : "Interface";
-            string str4 = $"{str}{!storey.method.IsGenericInstance ? string.Empty : "Generic"}{str3}{!flag ? "Action" : "Func"}Invoker{storey.method.Parameters.Count}{str2}::Invoke";
-            List<string> arguments = new List<string> {
-                !storey.method.IsGenericInstance ? string.Concat(new object[] { 
-                    vTableBuilder.IndexFor(storey.method.Resolve()),
-                    " /* ",
-                    storey.method.FullName,
-                    " */"
-                }) : runtimeMetadataAccess.MethodInfo(unresolvedMethod)
-            };
-            if (isInterface && !storey.method.IsGenericInstance)
+            if (isInterface && !method.IsGenericInstance)
             {
                 arguments.Add(runtimeMetadataAccess.TypeInfoFor(unresolvedMethod.DeclaringType));
             }
             arguments.AddRange(args);
-            if (!storey.method.IsGenericInstance)
-            {
-                VirtualCallCollector.AddMethod(storey.method);
-            }
-            return Emit.Call(str4, arguments);
+            return Emit.Call(Emit.VirtualCallInvokeMethod(method, typeResolver), arguments);
         }
 
         private void WriteAdd(OverflowCheck check)
@@ -3135,7 +3193,7 @@
 
         private void WriteAssignGlobalVariables(GlobalVariable[] globalVariables)
         {
-            <WriteAssignGlobalVariables>c__AnonStorey8 storey = new <WriteAssignGlobalVariables>c__AnonStorey8();
+            <WriteAssignGlobalVariables>c__AnonStorey7 storey = new <WriteAssignGlobalVariables>c__AnonStorey7();
             if (globalVariables.Length != this._valueStack.Count)
             {
                 throw new ArgumentException("Invalid global variables count", "globalVariables");
@@ -3208,7 +3266,6 @@
             if (type.HasStaticConstructor() && !this._classesAlreadyInitializedInBlock.Contains(type))
             {
                 this._classesAlreadyInitializedInBlock.Add(type);
-                string argument = runtimeMetadataAccess.StaticData(type);
                 if (<>f__mg$cache0 == null)
                 {
                     <>f__mg$cache0 = new Func<MethodDefinition, bool>(Extensions.IsStaticConstructor);
@@ -3216,7 +3273,7 @@
                 MethodDefinition definition = type.Resolve().Methods.Single<MethodDefinition>(<>f__mg$cache0);
                 if ((invokingMethod == null) || (definition != invokingMethod))
                 {
-                    this._writer.WriteLine(Statement.Expression(Emit.Call("IL2CPP_RUNTIME_CLASS_INIT", argument)));
+                    this._writer.WriteLine(Statement.Expression(Emit.Call("IL2CPP_RUNTIME_CLASS_INIT", runtimeMetadataAccess.StaticData(type))));
                 }
             }
         }
@@ -3338,7 +3395,7 @@
 
         private void WriteGlobalVariableAssignmentForLeftBranch(InstructionBlock block, Instruction targetInstruction)
         {
-            <WriteGlobalVariableAssignmentForLeftBranch>c__AnonStorey6 storey = new <WriteGlobalVariableAssignmentForLeftBranch>c__AnonStorey6 {
+            <WriteGlobalVariableAssignmentForLeftBranch>c__AnonStorey5 storey = new <WriteGlobalVariableAssignmentForLeftBranch>c__AnonStorey5 {
                 targetInstruction = targetInstruction
             };
             GlobalVariable[] globalVariables = this._stackAnalysis.InputVariablesFor(block.Successors.Single<InstructionBlock>(new Func<InstructionBlock, bool>(storey.<>m__0)));
@@ -3347,7 +3404,7 @@
 
         private void WriteGlobalVariableAssignmentForRightBranch(InstructionBlock block, Instruction targetInstruction)
         {
-            <WriteGlobalVariableAssignmentForRightBranch>c__AnonStorey5 storey = new <WriteGlobalVariableAssignmentForRightBranch>c__AnonStorey5 {
+            <WriteGlobalVariableAssignmentForRightBranch>c__AnonStorey4 storey = new <WriteGlobalVariableAssignmentForRightBranch>c__AnonStorey4 {
                 targetInstruction = targetInstruction
             };
             GlobalVariable[] globalVariables = this._stackAnalysis.InputVariablesFor(block.Successors.Single<InstructionBlock>(new Func<InstructionBlock, bool>(storey.<>m__0)));
@@ -3846,7 +3903,7 @@
             TypeProvider.UIntPtrTypeReference;
 
         [CompilerGenerated]
-        private sealed class <GenerateConditionalJump>c__AnonStorey7
+        private sealed class <GenerateConditionalJump>c__AnonStorey6
         {
             internal Instruction targetInstruction;
 
@@ -3858,7 +3915,7 @@
         }
 
         [CompilerGenerated]
-        private sealed class <GetParameterTypes>c__AnonStorey9
+        private sealed class <GetParameterTypes>c__AnonStorey8
         {
             internal MethodReference method;
             internal Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolverForMethodToCall;
@@ -3917,17 +3974,7 @@
         }
 
         [CompilerGenerated]
-        private sealed class <VirtualCallFor>c__AnonStorey4
-        {
-            internal MethodReference method;
-            internal Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver;
-
-            internal TypeReference <>m__0(ParameterDefinition p) => 
-                this.typeResolver.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveParameterTypeIfNeeded(this.method, p));
-        }
-
-        [CompilerGenerated]
-        private sealed class <WriteAssignGlobalVariables>c__AnonStorey8
+        private sealed class <WriteAssignGlobalVariables>c__AnonStorey7
         {
             internal int stackIndex;
 
@@ -3936,7 +3983,7 @@
         }
 
         [CompilerGenerated]
-        private sealed class <WriteGlobalVariableAssignmentForLeftBranch>c__AnonStorey6
+        private sealed class <WriteGlobalVariableAssignmentForLeftBranch>c__AnonStorey5
         {
             internal Instruction targetInstruction;
 
@@ -3945,7 +3992,7 @@
         }
 
         [CompilerGenerated]
-        private sealed class <WriteGlobalVariableAssignmentForRightBranch>c__AnonStorey5
+        private sealed class <WriteGlobalVariableAssignmentForRightBranch>c__AnonStorey4
         {
             internal Instruction targetInstruction;
 

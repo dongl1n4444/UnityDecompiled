@@ -55,6 +55,20 @@
                         localPath = localPath + Uri.UnescapeDataString(uri.Fragment);
                     }
                     _il2cppRoot = new NPath(localPath).ParentContaining("il2cpp_root");
+                    if (_il2cppRoot == null)
+                    {
+                        NPath path = new NPath(localPath).ParentContaining("build.pl");
+                        if (path != null)
+                        {
+                            string[] append = new string[] { "Tools", "il2cpp", "il2cpp" };
+                            _il2cppRoot = path.Combine(append);
+                            if (!_il2cppRoot.Exists(""))
+                            {
+                                string[] textArray2 = new string[] { "External", "il2cpp", "il2cpp" };
+                                _il2cppRoot = path.Combine(textArray2);
+                            }
+                        }
+                    }
                 }
                 return _il2cppRoot;
             }

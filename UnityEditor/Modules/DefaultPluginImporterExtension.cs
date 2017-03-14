@@ -170,9 +170,9 @@
             private GUIContent <name>k__BackingField;
             [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private string <platformName>k__BackingField;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-            private System.Type <type>k__BackingField;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            private System.Type <type>k__BackingField;
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private object <value>k__BackingField;
 
             internal Property(string name, string key, object defaultValue, string platformName) : this(new GUIContent(name), key, defaultValue, platformName)

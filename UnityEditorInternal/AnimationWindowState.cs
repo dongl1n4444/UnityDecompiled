@@ -10,7 +10,7 @@
     using UnityEngine;
 
     [Serializable]
-    internal class AnimationWindowState : ScriptableObject, ICurveEditorState, IAnimationRecordingState
+    internal class AnimationWindowState : ScriptableObject, ICurveEditorState
     {
         [CompilerGenerated]
         private static Action <>f__am$cache0;
@@ -209,7 +209,7 @@
                     this.SaveCurve(keyframe.curve, "Edit Curve");
                 }
             }
-            this.StartRecording();
+            this.ResampleAnimation();
         }
 
         public void DeleteSelectedKeys()
@@ -536,7 +536,7 @@
             }
             else
             {
-                this.StartRecording();
+                this.ResampleAnimation();
             }
         }
 
@@ -695,6 +695,11 @@
             {
                 this.animEditor.Repaint();
             }
+        }
+
+        public void ResampleAnimation()
+        {
+            this.controlInterface.ResampleAnimation();
         }
 
         public void SaveCurve(AnimationWindowCurve curve)
@@ -861,6 +866,12 @@
             this.controlInterface.StartPlayback();
         }
 
+        public void StartPreview()
+        {
+            this.controlInterface.StartPreview();
+            this.controlInterface.ResampleAnimation();
+        }
+
         public void StartRecording()
         {
             if (this.selectedItem != null)
@@ -873,6 +884,11 @@
         public void StopPlayback()
         {
             this.controlInterface.StopPlayback();
+        }
+
+        public void StopPreview()
+        {
+            this.controlInterface.StopPreview();
         }
 
         public void StopRecording()
@@ -1207,14 +1223,17 @@
             }
         }
 
-        public bool addZeroFrame =>
-            true;
-
         public List<AnimationWindowCurve> allCurves =>
             this.selection.curves;
 
         public bool animatorIsOptimized =>
             ((this.selectedItem != null) && this.selectedItem.objectIsOptimized);
+
+        public bool canPreview =>
+            this.controlInterface.canPreview;
+
+        public bool canRecord =>
+            this.controlInterface.canRecord;
 
         public float clipFrameRate
         {
@@ -1366,6 +1385,9 @@
 
         public bool playing =>
             this.controlInterface.playing;
+
+        public bool previewing =>
+            this.controlInterface.previewing;
 
         public bool recording =>
             this.controlInterface.recording;

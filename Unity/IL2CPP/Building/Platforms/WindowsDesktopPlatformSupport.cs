@@ -7,7 +7,7 @@
 
     internal class WindowsDesktopPlatformSupport : PlatformSupport
     {
-        public override CppToolChain MakeCppToolChain(Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors) => 
+        public override CppToolChain MakeCppToolChain(Unity.IL2CPP.Common.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors) => 
             new MsvcDesktopToolChain(architecture, buildConfiguration, treatWarningsAsErrors);
 
         public override bool Supports(RuntimePlatform platform) => 

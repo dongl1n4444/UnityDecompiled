@@ -103,7 +103,7 @@
             return this.Internal_SetOverrideSampleSettings(buildTargetGroupByName, settings);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("AudioImporter.updateOrigData is deprecated.", true), GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("AudioImporter.updateOrigData is deprecated.", true)]
         internal extern void updateOrigData();
 
         [Obsolete("Setting and getting import channels is not used anymore (use forceToMono instead)", true)]

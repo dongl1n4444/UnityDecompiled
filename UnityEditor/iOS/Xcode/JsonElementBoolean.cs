@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class JsonElementBoolean : JsonElement
+    internal class JsonElementBoolean : JsonElement
     {
         public bool value;
 

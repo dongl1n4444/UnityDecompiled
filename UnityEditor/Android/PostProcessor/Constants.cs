@@ -20,6 +20,7 @@
         public const int Minification_Gradle = 2;
         public const int Minification_None = 0;
         public const int Minification_Proguard = 1;
+        public const string MinSDKVersion = "MinSDKVersion";
         public const string PackageName = "PackageName";
         public const string PlayerPackage = "PlayerPackage";
         public const string ProjectType = "ProjectType";

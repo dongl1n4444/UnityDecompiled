@@ -55,10 +55,10 @@
             {
                 list.Add(new KeyValuePair<uint, uint>(items[MetadataWriter.Naming.AddressOf(MetadataWriter.Naming.ForRuntimeFieldInfo(reference4))], GetEncodedMetadataUsageIndex(Il2CppFieldReferenceCollector.GetOrCreateIndex(reference4), Il2CppMetadataUsage.FieldInfo)));
             }
-            foreach (string str in metadataUsage.GetStringLiterals())
+            foreach (StringMetadataToken token in metadataUsage.GetStringLiterals())
             {
-                int index = StringLiteralCollection.GetIndex(str);
-                list.Add(new KeyValuePair<uint, uint>(items[MetadataWriter.Naming.AddressOf(MetadataWriter.Naming.ForStringLiteralIdentifier(str))], GetEncodedMetadataUsageIndex((uint) index, Il2CppMetadataUsage.StringLiteral)));
+                int index = StringLiteralCollection.GetIndex(token);
+                list.Add(new KeyValuePair<uint, uint>(items[MetadataWriter.Naming.AddressOf(MetadataWriter.Naming.ForStringLiteralIdentifier(token.Literal))], GetEncodedMetadataUsageIndex((uint) index, Il2CppMetadataUsage.StringLiteral)));
             }
             return list;
         }
@@ -73,28 +73,28 @@
             storey.items = new Dictionary<string, uint>(MetadataUsageCollector.UsageCount);
             foreach (TypeReference reference in MetadataUsageCollector.GetIl2CppTypes())
             {
-                base.Writer.WriteStatement("const Il2CppType* " + MetadataWriter.Naming.ForRuntimeIl2CppType(reference));
+                base.Writer.WriteStatement($"const {"RuntimeType"}* " + MetadataWriter.Naming.ForRuntimeIl2CppType(reference));
                 storey.items.Add(MetadataWriter.Naming.AddressOf(MetadataWriter.Naming.ForRuntimeIl2CppType(reference)), (uint) storey.items.Count);
             }
             foreach (TypeReference reference2 in MetadataUsageCollector.GetTypeInfos())
             {
-                base.Writer.WriteStatement("Il2CppClass* " + MetadataWriter.Naming.ForRuntimeTypeInfo(reference2));
+                base.Writer.WriteStatement($"{"RuntimeClass"}* " + MetadataWriter.Naming.ForRuntimeTypeInfo(reference2));
                 storey.items.Add(MetadataWriter.Naming.AddressOf(MetadataWriter.Naming.ForRuntimeTypeInfo(reference2)), (uint) storey.items.Count);
             }
             foreach (MethodReference reference3 in MetadataUsageCollector.GetInflatedMethods())
             {
-                base.Writer.WriteStatement("const MethodInfo* " + MetadataWriter.Naming.ForRuntimeMethodInfo(reference3));
+                base.Writer.WriteStatement($"const {"RuntimeMethod"}* " + MetadataWriter.Naming.ForRuntimeMethodInfo(reference3));
                 storey.items.Add(MetadataWriter.Naming.AddressOf(MetadataWriter.Naming.ForRuntimeMethodInfo(reference3)), (uint) storey.items.Count);
             }
             foreach (FieldReference reference4 in MetadataUsageCollector.GetFieldInfos())
             {
-                base.Writer.WriteStatement("FieldInfo* " + MetadataWriter.Naming.ForRuntimeFieldInfo(reference4));
+                base.Writer.WriteStatement($"{"RuntimeField"}* " + MetadataWriter.Naming.ForRuntimeFieldInfo(reference4));
                 storey.items.Add(MetadataWriter.Naming.AddressOf(MetadataWriter.Naming.ForRuntimeFieldInfo(reference4)), (uint) storey.items.Count);
             }
-            foreach (string str in MetadataUsageCollector.GetStringLiterals())
+            foreach (StringMetadataToken token in MetadataUsageCollector.GetStringLiterals())
             {
-                base.Writer.WriteStatement("Il2CppCodeGenString* " + MetadataWriter.Naming.ForStringLiteralIdentifier(str));
-                storey.items.Add(MetadataWriter.Naming.AddressOf(MetadataWriter.Naming.ForStringLiteralIdentifier(str)), (uint) storey.items.Count);
+                base.Writer.WriteStatement("Il2CppCodeGenString* " + MetadataWriter.Naming.ForStringLiteralIdentifier(token.Literal));
+                storey.items.Add(MetadataWriter.Naming.AddressOf(MetadataWriter.Naming.ForStringLiteralIdentifier(token.Literal)), (uint) storey.items.Count);
             }
             if (<>f__am$cache0 == null)
             {

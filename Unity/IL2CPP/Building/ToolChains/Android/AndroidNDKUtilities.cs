@@ -7,7 +7,6 @@
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using System.Threading;
-    using Unity.IL2CPP.Building;
     using Unity.IL2CPP.Common;
     using Unity.IL2CPP.Common.Portability40;
 
@@ -21,8 +20,12 @@
         private const string GnuStlVersion = "4.9";
         private const string Toolchain = "llvm-3.6";
 
-        public AndroidNDKUtilities(NPath ndkRootPath, Unity.IL2CPP.Building.Architecture architecture)
+        public AndroidNDKUtilities(NPath ndkRootPath, Unity.IL2CPP.Common.Architecture architecture)
         {
+            if ((ndkRootPath == null) || (ndkRootPath.Depth == 0))
+            {
+                ndkRootPath = GetNdkRootDir();
+            }
             if (!ndkRootPath.Exists(""))
             {
                 throw new ArgumentException("Android NDK path does not exist: " + ndkRootPath);
@@ -40,6 +43,16 @@
                 }
                 this._architectureSettings = new X86Settings();
             }
+        }
+
+        private static NPath GetNdkRootDir()
+        {
+            string environmentVariable = Environment.GetEnvironmentVariable("ANDROID_NDK_ROOT");
+            if (string.IsNullOrEmpty(environmentVariable))
+            {
+                throw new Exception("Android NDK not found. Make sure environment variable ANDROID_NDK_ROOT is not empty.");
+            }
+            return new NPath(environmentVariable);
         }
 
         public NPath AndroidNdkRootDir { get; private set; }
@@ -79,6 +92,26 @@
             get
             {
                 string[] append = new string[] { "toolchains", this._architectureSettings.TCPrefix + "-4.9", "prebuilt", HostPlatform };
+                return this.AndroidNdkRootDir.Combine(append);
+            }
+        }
+
+        public NPath GdbPath
+        {
+            [CompilerGenerated]
+            get
+            {
+                string[] append = new string[] { "bin", this._architectureSettings.BinPrefix + "-gdb" };
+                return this.GccToolchain.Combine(append);
+            }
+        }
+
+        public NPath GdbServer
+        {
+            [CompilerGenerated]
+            get
+            {
+                string[] append = new string[] { "prebuilt", "android-" + this._architectureSettings.Arch, "gdbserver", "gdbserver" };
                 return this.AndroidNdkRootDir.Combine(append);
             }
         }

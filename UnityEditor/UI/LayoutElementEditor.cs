@@ -19,6 +19,7 @@
         private SerializedProperty m_FlexibleHeight;
         private SerializedProperty m_FlexibleWidth;
         private SerializedProperty m_IgnoreLayout;
+        private SerializedProperty m_LayoutPriority;
         private SerializedProperty m_MinHeight;
         private SerializedProperty m_MinWidth;
         private SerializedProperty m_PreferredHeight;
@@ -70,6 +71,7 @@
             this.m_PreferredHeight = base.serializedObject.FindProperty("m_PreferredHeight");
             this.m_FlexibleWidth = base.serializedObject.FindProperty("m_FlexibleWidth");
             this.m_FlexibleHeight = base.serializedObject.FindProperty("m_FlexibleHeight");
+            this.m_LayoutPriority = base.serializedObject.FindProperty("m_LayoutPriority");
         }
 
         /// <summary>
@@ -97,6 +99,7 @@
                 this.LayoutElementField(this.m_FlexibleWidth, (float) 1f);
                 this.LayoutElementField(this.m_FlexibleHeight, (float) 1f);
             }
+            EditorGUILayout.PropertyField(this.m_LayoutPriority, new GUILayoutOption[0]);
             base.serializedObject.ApplyModifiedProperties();
         }
 

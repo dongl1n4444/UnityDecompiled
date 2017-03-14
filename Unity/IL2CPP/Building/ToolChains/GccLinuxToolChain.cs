@@ -7,10 +7,11 @@
     using System.Runtime.CompilerServices;
     using System.Threading;
     using Unity.IL2CPP.Building;
+    using Unity.IL2CPP.Common;
 
     public class GccLinuxToolChain : GccToolChain
     {
-        public GccLinuxToolChain(Architecture architecture, BuildConfiguration buildConfiguration) : base(architecture, buildConfiguration)
+        public GccLinuxToolChain(Unity.IL2CPP.Common.Architecture architecture, BuildConfiguration buildConfiguration) : base(architecture, buildConfiguration)
         {
         }
 

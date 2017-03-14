@@ -14,13 +14,13 @@
         private float m_PrevScollPos;
         private float m_PrevTotalHeight;
 
-        [field: CompilerGenerated, DebuggerBrowsable(0)]
+        [field: DebuggerBrowsable(0), CompilerGenerated]
         public event Action mouseAndKeyboardInput;
 
-        [field: DebuggerBrowsable(0), CompilerGenerated]
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event Action scrollHeightChanged;
 
-        [field: CompilerGenerated, DebuggerBrowsable(0)]
+        [field: DebuggerBrowsable(0), CompilerGenerated]
         public event Action scrollPositionChanged;
 
         public GameObjectTreeViewGUI(TreeViewController treeView, bool useHorizontalScroll) : base(treeView, useHorizontalScroll)

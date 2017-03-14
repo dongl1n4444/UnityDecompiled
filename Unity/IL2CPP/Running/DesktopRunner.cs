@@ -43,10 +43,10 @@
             return base.GetAdditionalIncludes();
         }
 
-        public override Shell.ExecuteResult RunAndMakeExecuteResult(string executable) => 
-            this.RunAndMakeExecuteResult(executable, string.Empty);
+        public override Shell.ExecuteResult RunAndMakeExecuteResult(Unity.IL2CPP.Common.Architecture architecture, string executable) => 
+            this.RunAndMakeExecuteResult(architecture, executable, string.Empty);
 
-        public override Shell.ExecuteResult RunAndMakeExecuteResult(string executable, string arguments)
+        public override Shell.ExecuteResult RunAndMakeExecuteResult(Unity.IL2CPP.Common.Architecture architecture, string executable, string arguments)
         {
             Shell.ExecuteArgs executeArgs = new Shell.ExecuteArgs {
                 Executable = executable,

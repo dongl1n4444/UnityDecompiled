@@ -8,10 +8,19 @@
 
     internal class TizenPlatformSupport : PlatformSupport
     {
+        public override Unity.IL2CPP.Common.Architecture GetSupportedArchitectureOfSameBitness(Unity.IL2CPP.Common.Architecture architecture)
+        {
+            if (architecture.Bits != 0x20)
+            {
+                throw new NotSupportedException($"Android doesn't support {architecture.Bits}-bit architecture.");
+            }
+            return new ARMv7Architecture();
+        }
+
         public override CppToolChain MakeCppToolChain(BuildingOptions buildingOptions) => 
             new TizenToolChain(buildingOptions.Architecture, buildingOptions.Configuration, buildingOptions.TreatWarningsAsErrors, buildingOptions.ToolChainPath);
 
-        public override CppToolChain MakeCppToolChain(Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors) => 
+        public override CppToolChain MakeCppToolChain(Unity.IL2CPP.Common.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors) => 
             new TizenToolChain(architecture, buildConfiguration, treatWarningsAsErrors, new NPath(""));
 
         public override bool Supports(RuntimePlatform platform) => 

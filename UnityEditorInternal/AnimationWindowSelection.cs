@@ -14,7 +14,9 @@
         [CompilerGenerated]
         private static Func<AnimationWindowSelectionItem, bool> <>f__am$cache1;
         [CompilerGenerated]
-        private static Action <>f__am$cache2;
+        private static Func<AnimationWindowSelectionItem, bool> <>f__am$cache2;
+        [CompilerGenerated]
+        private static Action <>f__am$cache3;
         private bool m_BatchOperations = false;
         private List<AnimationWindowCurve> m_CurvesCache = null;
         [SerializeField]
@@ -25,15 +27,15 @@
 
         public AnimationWindowSelection()
         {
-            if (<>f__am$cache2 == null)
+            if (<>f__am$cache3 == null)
             {
-                <>f__am$cache2 = new Action(AnimationWindowSelection.<AnimationWindowSelection>m__2);
+                <>f__am$cache3 = new Action(AnimationWindowSelection.<AnimationWindowSelection>m__3);
             }
-            this.onSelectionChanged = (Action) Delegate.Combine(this.onSelectionChanged, <>f__am$cache2);
+            this.onSelectionChanged = (Action) Delegate.Combine(this.onSelectionChanged, <>f__am$cache3);
         }
 
         [CompilerGenerated]
-        private static void <AnimationWindowSelection>m__2()
+        private static void <AnimationWindowSelection>m__3()
         {
         }
 
@@ -195,11 +197,27 @@
             {
                 if (this.m_Selection.Count > 0)
                 {
-                    if (<>f__am$cache1 == null)
+                    if (<>f__am$cache2 == null)
                     {
-                        <>f__am$cache1 = item => !item.canAddCurves;
+                        <>f__am$cache2 = item => !item.canAddCurves;
                     }
-                    return !Enumerable.Any<AnimationWindowSelectionItem>(this.m_Selection, <>f__am$cache1);
+                    return !Enumerable.Any<AnimationWindowSelectionItem>(this.m_Selection, <>f__am$cache2);
+                }
+                return false;
+            }
+        }
+
+        public bool canPreview
+        {
+            get
+            {
+                if (this.m_Selection.Count > 0)
+                {
+                    if (<>f__am$cache0 == null)
+                    {
+                        <>f__am$cache0 = item => !item.canPreview;
+                    }
+                    return !Enumerable.Any<AnimationWindowSelectionItem>(this.m_Selection, <>f__am$cache0);
                 }
                 return false;
             }
@@ -211,11 +229,11 @@
             {
                 if (this.m_Selection.Count > 0)
                 {
-                    if (<>f__am$cache0 == null)
+                    if (<>f__am$cache1 == null)
                     {
-                        <>f__am$cache0 = item => !item.canRecord;
+                        <>f__am$cache1 = item => !item.canRecord;
                     }
-                    return !Enumerable.Any<AnimationWindowSelectionItem>(this.m_Selection, <>f__am$cache0);
+                    return !Enumerable.Any<AnimationWindowSelectionItem>(this.m_Selection, <>f__am$cache1);
                 }
                 return false;
             }

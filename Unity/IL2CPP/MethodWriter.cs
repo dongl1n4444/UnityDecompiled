@@ -23,11 +23,13 @@
         [CompilerGenerated]
         private static Func<MethodDefinition, bool> <>f__am$cache0;
         [CompilerGenerated]
-        private static Func<MethodDefinition, bool> <>f__am$cache1;
+        private static Func<StringMetadataToken, string> <>f__am$cache1;
         [CompilerGenerated]
         private static Func<MethodDefinition, bool> <>f__am$cache2;
         [CompilerGenerated]
         private static Func<MethodDefinition, bool> <>f__am$cache3;
+        [CompilerGenerated]
+        private static Func<MethodDefinition, bool> <>f__am$cache4;
         [Inject]
         public static IGenericSharingAnalysisService GenericSharingAnalysis;
         [Inject]
@@ -40,6 +42,8 @@
         public static IMetadataUsageCollectorWriterService MetadataUsageCollector;
         [Inject]
         public static INamingService Naming;
+        [Inject]
+        public static IRuntimeImplementedMethodWriter RuntimeImplementedMethodWriter;
         [Inject]
         public static IStatsService StatsService;
         [Inject]
@@ -107,10 +111,62 @@
             }
         }
 
+        private static void EmitDirectICallInvocation(MethodReference method, CppCodeWriter writer, string ret, string icall, MethodDefinition methodDefinition)
+        {
+            object[] args = new object[] { MethodSignatureWriter.GetICallMethodVariable(methodDefinition) };
+            writer.WriteLine("typedef {0};", args);
+            writer.WriteLine("using namespace il2cpp::icalls;");
+            object[] objArray2 = new object[] { ret, Naming.ForMethodNameOnly(method), icall, MethodSignatureWriter.FormatParameters(method, ParameterFormat.WithName, methodDefinition.IsStatic, false, false) };
+            writer.WriteLine("{0} (({1}_ftn){2}) ({3});", objArray2);
+        }
+
+        private static void EmitFunctionPointerICallInvocation(MethodReference method, CppCodeWriter writer, MethodDefinition methodDefinition, string ret)
+        {
+            writer.WriteInternalCallResolutionStatement(methodDefinition);
+            if ((CodeGenOptions.MonoRuntime && !string.IsNullOrEmpty(ret)) && MethodSignatureWriter.UsesMonoCodegenICallHandle(method.Resolve()))
+            {
+                string str = Naming.ForVariable(method.ReturnType);
+                object[] args = new object[] { str, str, "_il2cpp_icall_func", MethodSignatureWriter.FormatParameters(method, ParameterFormat.WithName, methodDefinition.IsStatic, false, true) };
+                writer.WriteLine("{0} retVal = ({1})MONO_TYPED_HANDLE_GET_INNER_OBJECT({2}({3}));", args);
+                if (CodeGenOptions.MonoRuntime)
+                {
+                    writer.WriteLine("MonoException *exc = mono_unity_thread_check_exception();");
+                    writer.WriteLine("if (exc) mono_raise_exception(exc);");
+                }
+                writer.WriteLine("return retVal;");
+            }
+            else if (string.IsNullOrEmpty(ret))
+            {
+                object[] objArray2 = new object[] { "_il2cpp_icall_func", MethodSignatureWriter.FormatParameters(method, ParameterFormat.WithName, methodDefinition.IsStatic, false, true) };
+                writer.WriteLine("{0}({1});", objArray2);
+                if (CodeGenOptions.MonoRuntime)
+                {
+                    writer.WriteLine("MonoException *exc = mono_unity_thread_check_exception();");
+                    writer.WriteLine("if (exc) mono_raise_exception(exc);");
+                }
+            }
+            else
+            {
+                object[] objArray3 = new object[] { Naming.ForVariable(method.ReturnType), "_il2cpp_icall_func", MethodSignatureWriter.FormatParameters(method, ParameterFormat.WithName, methodDefinition.IsStatic, false, true) };
+                writer.WriteLine("{0} retVal = {1}({2});", objArray3);
+                if (CodeGenOptions.MonoRuntime)
+                {
+                    writer.WriteLine("MonoException *exc = mono_unity_thread_check_exception();");
+                    writer.WriteLine("if (exc) mono_raise_exception(exc);");
+                }
+                writer.WriteLine("return retVal;");
+            }
+        }
+
         public static IRuntimeMetadataAccess GetDefaultRuntimeMetadataAccess(MethodReference method, MetadataUsage metadataUsage, MethodUsage methodUsage, IMethodVerifier methodVerifier = null)
         {
             DefaultRuntimeMetadataAccess defaultRuntimeMetadataAccess = new DefaultRuntimeMetadataAccess(method, metadataUsage, methodUsage, methodVerifier);
-            return (((method == null) || !GenericSharingAnalysis.IsSharedMethod(method)) ? ((IRuntimeMetadataAccess) defaultRuntimeMetadataAccess) : ((IRuntimeMetadataAccess) new SharedRuntimeMetadataAccess(method, defaultRuntimeMetadataAccess)));
+            if ((method != null) && GenericSharingAnalysis.IsSharedMethod(method))
+            {
+                SharedRuntimeMetadataAccess defaultSharedRuntimeMetadataAccess = new SharedRuntimeMetadataAccess(method, defaultRuntimeMetadataAccess);
+                return (!CodeGenOptions.MonoRuntime ? ((IRuntimeMetadataAccess) defaultSharedRuntimeMetadataAccess) : ((IRuntimeMetadataAccess) new MonoSharedRuntimeMetadataAccess(method, defaultSharedRuntimeMetadataAccess)));
+            }
+            return (!CodeGenOptions.MonoRuntime ? ((IRuntimeMetadataAccess) defaultRuntimeMetadataAccess) : ((IRuntimeMetadataAccess) new MonoRuntimeMetadataAccess(defaultRuntimeMetadataAccess, method, metadataUsage, methodUsage)));
         }
 
         private void InjectEmptyVariableToTheStack(TypeReference type, MethodBody body)
@@ -276,11 +332,11 @@
                 case "System.Int32 System.Double::GetHashCode()":
                 {
                     TypeDefinition type = definition.Module.GetType("System.Int64");
-                    if (<>f__am$cache3 == null)
+                    if (<>f__am$cache4 == null)
                     {
-                        <>f__am$cache3 = m => m.Name == "GetHashCode";
+                        <>f__am$cache4 = m => m.Name == "GetHashCode";
                     }
-                    MethodDefinition definition3 = type.Methods.Single<MethodDefinition>(<>f__am$cache3);
+                    MethodDefinition definition3 = type.Methods.Single<MethodDefinition>(<>f__am$cache4);
                     object[] args = new object[] { Emit.Call(metadataAccess.Method(definition3), Emit.Cast(new ByReferenceType(type), Naming.ThisParameterName), metadataAccess.HiddenMethodInfo(definition3)) };
                     writer.WriteLine("return {0};", args);
                     return true;
@@ -322,7 +378,7 @@
                 method = method
             };
             storey.typeResolver = new Unity.IL2CPP.ILPreProcessor.TypeResolver(storey.method.DeclaringType as GenericInstanceType, storey.method as GenericInstanceMethod);
-            string parameters = MethodSignatureWriter.FormatParameters(storey.method, ParameterFormat.WithTypeAndNameThisObject, false, true);
+            string parameters = MethodSignatureWriter.FormatParameters(storey.method, ParameterFormat.WithTypeAndNameThisObject, false, true, false);
             string methodSignature = MethodSignatureWriter.GetMethodSignature(Naming.ForMethodAdjustorThunk(storey.method), Naming.ForVariable(storey.typeResolver.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveReturnTypeIfNeeded(storey.method))), parameters, "extern \"C\"", "");
             WriteMethodWithMetadataInitialization(this._writer, methodSignature, Naming.ForMethodAdjustorThunk(storey.method), new Action<CppCodeWriter, MetadataUsage, MethodUsage>(storey.<>m__0), Naming.ForMethodAdjustorThunk(storey.method));
         }
@@ -429,11 +485,11 @@
         {
             string str = Naming.ForInteropInterfaceVariable(TypeProvider.IStringableType);
             string str2 = Naming.ForTypeNameOnly(TypeProvider.IStringableType);
-            if (<>f__am$cache1 == null)
+            if (<>f__am$cache2 == null)
             {
-                <>f__am$cache1 = m => m.Name == "ToString";
+                <>f__am$cache2 = m => m.Name == "ToString";
             }
-            MethodDefinition interfaceMethod = TypeProvider.IStringableType.Methods.Single<MethodDefinition>(<>f__am$cache1);
+            MethodDefinition interfaceMethod = TypeProvider.IStringableType.Methods.Single<MethodDefinition>(<>f__am$cache2);
             writer.AddIncludeForTypeDefinition(TypeProvider.IStringableType);
             writer.WriteLine($"{str2}* {str} = {Naming.Null};");
             writer.WriteLine($"if (IL2CPP_HR_SUCCEEDED({Naming.ThisParameterName}->{Naming.ForIl2CppComObjectIdentityField()}->QueryInterface({str2}::IID, reinterpret_cast<void**>(&{str}))))");
@@ -441,11 +497,11 @@
             {
                 new ComMethodWithPreOwnedInterfacePointerMethodBodyWriter(interfaceMethod, true).WriteMethodBody(writer, metadataAccess);
             }
-            if (<>f__am$cache2 == null)
+            if (<>f__am$cache3 == null)
             {
-                <>f__am$cache2 = m => m.Name == "ToString";
+                <>f__am$cache3 = m => m.Name == "ToString";
             }
-            MethodDefinition method = TypeProvider.SystemObject.Methods.Single<MethodDefinition>(<>f__am$cache2);
+            MethodDefinition method = TypeProvider.SystemObject.Methods.Single<MethodDefinition>(<>f__am$cache3);
             List<string> argumentArray = new List<string> {
                 Naming.ThisParameterName
             };
@@ -453,7 +509,7 @@
             {
                 argumentArray.Add(metadataAccess.HiddenMethodInfo(method));
             }
-            string str3 = MethodBodyWriter.GetMethodCallExpression(methodDefinition, method, method, new Unity.IL2CPP.ILPreProcessor.TypeResolver(), MethodCallType.Normal, metadataAccess, new VTableBuilder(), argumentArray, true, null);
+            string str3 = MethodBodyWriter.GetMethodCallExpression(methodDefinition, method, method, Unity.IL2CPP.ILPreProcessor.TypeResolver.Empty, MethodCallType.Normal, metadataAccess, new VTableBuilder(), argumentArray, true, null);
             writer.WriteLine($"return {str3};");
         }
 
@@ -467,7 +523,7 @@
             if (IntrinsicRemap.ShouldRemap(methodToCall))
             {
                 string str = IntrinsicRemap.MappedNameFor(methodToCall);
-                IEnumerable<string> arguments = MethodSignatureWriter.ParametersFor(methodToCall, ParameterFormat.WithName, methodToCall.IsStatic, false, false);
+                IEnumerable<string> arguments = MethodSignatureWriter.ParametersFor(methodToCall, ParameterFormat.WithName, methodToCall.IsStatic, false, false, false);
                 arguments = !IntrinsicRemap.HasCustomArguments(methodToCall) ? arguments : IntrinsicRemap.GetCustomArguments(methodToCall, methodToCall, metadataAccess, arguments);
                 if (methodToCall.ReturnType.MetadataType != MetadataType.Void)
                 {
@@ -486,22 +542,16 @@
                 {
                     throw new NotSupportedException($"Internal calls cannot have generic parameters: {methodToCall.FullName}");
                 }
-                string str2 = !ReturnsVoid(methodToCall) ? "return " : string.Empty;
+                string ret = !ReturnsVoid(methodToCall) ? "return " : string.Empty;
                 string icall = method.FullName.Substring(method.FullName.IndexOf(" ") + 1);
                 string str4 = IcallMap.ResolveICallFunction(icall);
-                if (str4 != null)
+                if ((str4 != null) && !CodeGenOptions.MonoRuntime)
                 {
-                    writer.WriteLine("using namespace il2cpp::icalls;");
-                    object[] objArray3 = new object[] { MethodSignatureWriter.GetICallMethodVariable(methodToCall) };
-                    writer.WriteLine("typedef {0};", objArray3);
-                    object[] objArray4 = new object[] { str2, Naming.ForMethodNameOnly(method), str4, MethodSignatureWriter.FormatParameters(method, ParameterFormat.WithName, methodToCall.IsStatic, false) };
-                    writer.WriteLine("{0} (({1}_ftn){2}) ({3});", objArray4);
+                    EmitDirectICallInvocation(method, writer, ret, str4, methodToCall);
                 }
                 else
                 {
-                    writer.WriteInternalCallResolutionStatement(methodToCall);
-                    object[] objArray5 = new object[] { str2, "_il2cpp_icall_func", MethodSignatureWriter.FormatParameters(method, ParameterFormat.WithName, methodToCall.IsStatic, false) };
-                    writer.WriteLine("{0}{1}({2});", objArray5);
+                    EmitFunctionPointerICallInvocation(method, writer, methodToCall, ret);
                 }
             }
         }
@@ -529,6 +579,10 @@
             else if (definition.IsPInvokeImpl)
             {
                 WriteMethodBodyForPInvokeImpl(writer, definition, metadataAccess);
+            }
+            else if (RuntimeImplementedMethodWriter.IsRuntimeImplementedMethod(definition))
+            {
+                RuntimeImplementedMethodWriter.WriteMethodBody(writer, method, metadataAccess);
             }
             else
             {
@@ -611,6 +665,7 @@
                 if (GenericSharingAnalysis.CanShareMethod(storey.method))
                 {
                     StatsService.ShareableMethods++;
+                    GenericSharingAnalysis.AddSharedMethod(GenericSharingAnalysis.GetSharedMethod(storey.method), storey.method);
                     if (!GenericSharingAnalysis.IsSharedMethod(storey.method))
                     {
                         return;
@@ -676,7 +731,7 @@
             {
                 Unity.IL2CPP.ILPreProcessor.TypeResolver resolver = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(storey.method.DeclaringType, storey.method);
                 string name = Naming.ForDelegatePInvokeWrapper(storey.method.DeclaringType);
-                string methodSignature = MethodSignatureWriter.GetMethodSignature(name, Naming.ForVariable(resolver.Resolve(storey.method.ReturnType)), MethodSignatureWriter.FormatParameters(storey.method, ParameterFormat.WithTypeAndName, false, true), "extern \"C\"", "");
+                string methodSignature = MethodSignatureWriter.GetMethodSignature(name, Naming.ForVariable(resolver.Resolve(storey.method.ReturnType)), MethodSignatureWriter.FormatParameters(storey.method, ParameterFormat.WithTypeAndName, false, true, false), "extern \"C\"", "");
                 WriteMethodWithMetadataInitialization(_writer, methodSignature, storey.method.FullName, new Action<CppCodeWriter, MetadataUsage, MethodUsage>(storey.<>m__0), name);
                 interopDataCollector.AddWrapperForDelegateFromManagedToNative(storey.method);
             }
@@ -697,19 +752,19 @@
         {
             foreach (TypeReference reference in types)
             {
-                writer.AddForwardDeclaration("extern const Il2CppType* " + Naming.ForRuntimeIl2CppType(reference));
+                writer.AddForwardDeclaration($"extern const {"RuntimeType"}* " + Naming.ForRuntimeIl2CppType(reference));
             }
             foreach (TypeReference reference2 in typeInfos)
             {
-                writer.AddForwardDeclaration("extern Il2CppClass* " + Naming.ForRuntimeTypeInfo(reference2));
+                writer.AddForwardDeclaration($"extern {"RuntimeClass"}* " + Naming.ForRuntimeTypeInfo(reference2));
             }
             foreach (MethodReference reference3 in methods)
             {
-                writer.AddForwardDeclaration("extern const MethodInfo* " + Naming.ForRuntimeMethodInfo(reference3));
+                writer.AddForwardDeclaration($"extern const {"RuntimeMethod"}* " + Naming.ForRuntimeMethodInfo(reference3));
             }
             foreach (FieldReference reference4 in fields)
             {
-                writer.AddForwardDeclaration("extern FieldInfo* " + Naming.ForRuntimeFieldInfo(reference4));
+                writer.AddForwardDeclaration($"extern {"RuntimeField"}* " + Naming.ForRuntimeFieldInfo(reference4));
             }
             foreach (string str in stringLiterals)
             {
@@ -742,7 +797,11 @@
                     }
                     if (usage.UsesMetadata)
                     {
-                        WriteMethodMetadataInitializationDeclarations(writer, identifier, usage.GetIl2CppTypes(), usage.GetTypeInfos(), usage.GetInflatedMethods(), usage.GetFieldInfos(), usage.GetStringLiterals());
+                        if (<>f__am$cache1 == null)
+                        {
+                            <>f__am$cache1 = s => s.Literal;
+                        }
+                        WriteMethodMetadataInitializationDeclarations(writer, identifier, usage.GetIl2CppTypes(), usage.GetTypeInfos(), usage.GetInflatedMethods(), usage.GetFieldInfos(), usage.GetStringLiterals().Select<StringMetadataToken, string>(<>f__am$cache1));
                     }
                     using (new OptimizationWriter(writer, methodFullName))
                     {
@@ -765,13 +824,21 @@
         {
             if (CodeGenOptions.EnableStacktrace && !DebuggerOptions.Enabled)
             {
-                object[] args = new object[] { metadataAccess.MethodInfo(method) };
-                writer.WriteLine("StackTraceSentry _stackTraceSentry({0});", args);
+                if (CodeGenOptions.MonoRuntime)
+                {
+                    object[] args = new object[] { metadataAccess.MethodInfo(method) };
+                    writer.WriteLine("StackTraceSentry _stackTraceSentry((MonoMethod*){0});", args);
+                }
+                else
+                {
+                    object[] objArray2 = new object[] { metadataAccess.MethodInfo(method) };
+                    writer.WriteLine("StackTraceSentry _stackTraceSentry({0});", objArray2);
+                }
             }
             if (CodeGenOptions.EnableDeepProfiler)
             {
-                object[] objArray2 = new object[] { metadataAccess.MethodInfo(method) };
-                writer.WriteLine("ProfilerMethodSentry _profilerMethodSentry({0});", objArray2);
+                object[] objArray3 = new object[] { metadataAccess.MethodInfo(method) };
+                writer.WriteLine("ProfilerMethodSentry _profilerMethodSentry({0});", objArray3);
             }
         }
 

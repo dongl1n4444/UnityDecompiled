@@ -5,7 +5,7 @@
     using UnityEditor.IMGUI.Controls;
     using UnityEngine;
 
-    [CustomEditor(typeof(CapsuleCollider2D)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(CapsuleCollider2D))]
     internal class CapsuleCollider2DEditor : PrimitiveCollider2DEditor
     {
         private readonly CapsuleBoundsHandle m_BoundsHandle = new CapsuleBoundsHandle(s_HandleControlIDHint);

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEditor;
@@ -22,14 +23,14 @@
             {
                 AnimationWindowCurve curve = new AnimationWindowCurve(activeAnimationClip, binding, type);
                 object currentValue = CurveBindingUtility.GetCurrentValue(activeRootGameObject, binding);
-                if (curve.length == 0)
+                if (state.addZeroFrame && (curve.length == 0))
                 {
                     object outObject = null;
                     if (!ValueFromPropertyModification(modification, binding, out outObject))
                     {
                         outObject = currentValue;
                     }
-                    if ((state.currentFrame != 0) && state.addZeroFrame)
+                    if (state.currentFrame != 0)
                     {
                         AnimationWindowUtility.AddKeyframeToCurve(curve, outObject, type, AnimationKeyTime.Frame(0, activeAnimationClip.frameRate));
                     }
@@ -48,7 +49,7 @@
                 for (int i = 0; i < 3; i++)
                 {
                     AnimationWindowCurve curve = new AnimationWindowCurve(activeAnimationClip, bindingArray[i], type);
-                    if ((curve.length == 0) && (state.currentFrame != 0))
+                    if ((state.addZeroFrame && (curve.length == 0)) && (state.currentFrame != 0))
                     {
                         AnimationWindowUtility.AddKeyframeToCurve(curve, previousEulerAngles[i], type, AnimationKeyTime.Frame(0, activeAnimationClip.frameRate));
                     }
@@ -64,7 +65,7 @@
             {
                 EditorCurveBinding binding = baseBinding;
                 binding.propertyName = modification.previousValue.propertyPath;
-                UnityEditor.AnimationMode.AddPropertyModification(binding, modification.previousValue, modification.keepPrefabOverride);
+                state.AddPropertyModification(binding, modification.previousValue, modification.keepPrefabOverride);
             }
         }
 
@@ -73,66 +74,218 @@
             List<UndoPropertyModification> list = new List<UndoPropertyModification>();
             foreach (UndoPropertyModification modification in modifications)
             {
-                EditorCurveBinding binding = new EditorCurveBinding();
                 PropertyModification previousValue = modification.previousValue;
-                AnimationUtility.PropertyModificationToEditorCurveBinding(previousValue, state.activeRootGameObject, out binding);
-                if (binding.propertyName.StartsWith("m_LocalRotation"))
+                if (!(previousValue.target is Transform))
                 {
-                    RotationModification modification3;
-                    if (!rotationModifications.TryGetValue(previousValue.target, out modification3))
-                    {
-                        modification3 = new RotationModification();
-                        rotationModifications[previousValue.target] = modification3;
-                    }
-                    if (binding.propertyName.EndsWith("x"))
-                    {
-                        modification3.x = modification;
-                    }
-                    else if (binding.propertyName.EndsWith("y"))
-                    {
-                        modification3.y = modification;
-                    }
-                    else if (binding.propertyName.EndsWith("z"))
-                    {
-                        modification3.z = modification;
-                    }
-                    else if (binding.propertyName.EndsWith("w"))
-                    {
-                        modification3.w = modification;
-                    }
-                    modification3.lastQuatModification = modification;
-                }
-                else if (previousValue.propertyPath.StartsWith("m_LocalEulerAnglesHint"))
-                {
-                    RotationModification modification4;
-                    if (!rotationModifications.TryGetValue(previousValue.target, out modification4))
-                    {
-                        modification4 = new RotationModification();
-                        rotationModifications[previousValue.target] = modification4;
-                    }
-                    modification4.useEuler = true;
-                    if (previousValue.propertyPath.EndsWith("x"))
-                    {
-                        modification4.eulerX = modification;
-                    }
-                    else if (previousValue.propertyPath.EndsWith("y"))
-                    {
-                        modification4.eulerY = modification;
-                    }
-                    else if (previousValue.propertyPath.EndsWith("z"))
-                    {
-                        modification4.eulerZ = modification;
-                    }
+                    list.Add(modification);
                 }
                 else
                 {
-                    list.Add(modification);
+                    EditorCurveBinding binding = new EditorCurveBinding();
+                    AnimationUtility.PropertyModificationToEditorCurveBinding(previousValue, state.activeRootGameObject, out binding);
+                    if (binding.propertyName.StartsWith("m_LocalRotation"))
+                    {
+                        RotationModification modification3;
+                        if (!rotationModifications.TryGetValue(previousValue.target, out modification3))
+                        {
+                            modification3 = new RotationModification();
+                            rotationModifications[previousValue.target] = modification3;
+                        }
+                        if (binding.propertyName.EndsWith("x"))
+                        {
+                            modification3.x = modification;
+                        }
+                        else if (binding.propertyName.EndsWith("y"))
+                        {
+                            modification3.y = modification;
+                        }
+                        else if (binding.propertyName.EndsWith("z"))
+                        {
+                            modification3.z = modification;
+                        }
+                        else if (binding.propertyName.EndsWith("w"))
+                        {
+                            modification3.w = modification;
+                        }
+                        modification3.lastQuatModification = modification;
+                    }
+                    else if (previousValue.propertyPath.StartsWith("m_LocalEulerAnglesHint"))
+                    {
+                        RotationModification modification4;
+                        if (!rotationModifications.TryGetValue(previousValue.target, out modification4))
+                        {
+                            modification4 = new RotationModification();
+                            rotationModifications[previousValue.target] = modification4;
+                        }
+                        modification4.useEuler = true;
+                        if (previousValue.propertyPath.EndsWith("x"))
+                        {
+                            modification4.eulerX = modification;
+                        }
+                        else if (previousValue.propertyPath.EndsWith("y"))
+                        {
+                            modification4.eulerY = modification;
+                        }
+                        else if (previousValue.propertyPath.EndsWith("z"))
+                        {
+                            modification4.eulerZ = modification;
+                        }
+                    }
+                    else
+                    {
+                        list.Add(modification);
+                    }
                 }
             }
             if (rotationModifications.Count > 0)
             {
                 modifications = list.ToArray();
             }
+        }
+
+        private static PropertyModification CreateDummyPropertyModification(GameObject root, PropertyModification baseProperty, EditorCurveBinding binding)
+        {
+            PropertyModification modification = new PropertyModification {
+                target = baseProperty.target,
+                propertyPath = binding.propertyName
+            };
+            object currentValue = CurveBindingUtility.GetCurrentValue(root, binding);
+            if (binding.isPPtrCurve)
+            {
+                modification.objectReference = (UnityEngine.Object) currentValue;
+                return modification;
+            }
+            modification.value = ((float) currentValue).ToString();
+            return modification;
+        }
+
+        private static void DiscardRotationModification(RotationModification rotationModification, ref List<UndoPropertyModification> discardedModifications)
+        {
+            if (rotationModification.x.currentValue != null)
+            {
+                discardedModifications.Add(rotationModification.x);
+            }
+            if (rotationModification.y.currentValue != null)
+            {
+                discardedModifications.Add(rotationModification.y);
+            }
+            if (rotationModification.z.currentValue != null)
+            {
+                discardedModifications.Add(rotationModification.z);
+            }
+            if (rotationModification.w.currentValue != null)
+            {
+                discardedModifications.Add(rotationModification.w);
+            }
+            if (rotationModification.eulerX.currentValue != null)
+            {
+                discardedModifications.Add(rotationModification.eulerX);
+            }
+            if (rotationModification.eulerY.currentValue != null)
+            {
+                discardedModifications.Add(rotationModification.eulerY);
+            }
+            if (rotationModification.eulerZ.currentValue != null)
+            {
+                discardedModifications.Add(rotationModification.eulerZ);
+            }
+        }
+
+        private static UndoPropertyModification[] FilterModifications(IAnimationRecordingState state, ref UndoPropertyModification[] modifications)
+        {
+            AnimationClip activeAnimationClip = state.activeAnimationClip;
+            GameObject activeRootGameObject = state.activeRootGameObject;
+            EditorCurveBinding[] acceptedBindings = state.acceptedBindings;
+            List<UndoPropertyModification> list = new List<UndoPropertyModification>();
+            List<UndoPropertyModification> list2 = new List<UndoPropertyModification>();
+            for (int i = 0; i < modifications.Length; i++)
+            {
+                <FilterModifications>c__AnonStorey2 storey = new <FilterModifications>c__AnonStorey2();
+                UndoPropertyModification item = modifications[i];
+                PropertyModification previousValue = item.previousValue;
+                EditorCurveBinding binding = new EditorCurveBinding();
+                storey.binding = binding;
+                if (AnimationUtility.PropertyModificationToEditorCurveBinding(previousValue, activeRootGameObject, out storey.binding) != null)
+                {
+                    if (acceptedBindings != null)
+                    {
+                        <FilterModifications>c__AnonStorey0 storey2 = new <FilterModifications>c__AnonStorey0 {
+                            <>f__ref$2 = storey,
+                            additionalBindings = RotationCurveInterpolation.RemapAnimationBindingForAddKey(storey.binding, activeAnimationClip)
+                        };
+                        if (storey2.additionalBindings != null)
+                        {
+                            if (Array.Exists<EditorCurveBinding>(acceptedBindings, new Predicate<EditorCurveBinding>(storey2.<>m__0)))
+                            {
+                                list2.Add(item);
+                            }
+                            else
+                            {
+                                list.Add(item);
+                            }
+                        }
+                        else if (Array.Exists<EditorCurveBinding>(acceptedBindings, new Predicate<EditorCurveBinding>(storey2.<>m__1)))
+                        {
+                            list2.Add(item);
+                        }
+                        else
+                        {
+                            list.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        list2.Add(item);
+                    }
+                }
+                else
+                {
+                    list.Add(item);
+                }
+            }
+            if (list.Count > 0)
+            {
+                modifications = list2.ToArray();
+            }
+            return list.ToArray();
+        }
+
+        private static UndoPropertyModification[] FilterRotationModifications(IAnimationRecordingState state, ref Dictionary<object, RotationModification> rotationModifications)
+        {
+            AnimationClip activeAnimationClip = state.activeAnimationClip;
+            GameObject activeRootGameObject = state.activeRootGameObject;
+            EditorCurveBinding[] acceptedBindings = state.acceptedBindings;
+            List<object> list = new List<object>();
+            List<UndoPropertyModification> discardedModifications = new List<UndoPropertyModification>();
+            foreach (KeyValuePair<object, RotationModification> pair in rotationModifications)
+            {
+                RotationModification rotationModification = pair.Value;
+                EditorCurveBinding binding = new EditorCurveBinding();
+                if (AnimationUtility.PropertyModificationToEditorCurveBinding(rotationModification.lastQuatModification.currentValue, activeRootGameObject, out binding) != null)
+                {
+                    if (acceptedBindings != null)
+                    {
+                        <FilterRotationModifications>c__AnonStorey3 storey = new <FilterRotationModifications>c__AnonStorey3 {
+                            additionalBindings = RotationCurveInterpolation.RemapAnimationBindingForRotationAddKey(binding, activeAnimationClip)
+                        };
+                        if (!Array.Exists<EditorCurveBinding>(acceptedBindings, new Predicate<EditorCurveBinding>(storey.<>m__0)))
+                        {
+                            DiscardRotationModification(rotationModification, ref discardedModifications);
+                            list.Add(pair.Key);
+                        }
+                    }
+                }
+                else
+                {
+                    DiscardRotationModification(rotationModification, ref discardedModifications);
+                    list.Add(pair.Key);
+                }
+            }
+            foreach (object obj3 in list)
+            {
+                rotationModifications.Remove(obj3);
+            }
+            return discardedModifications.ToArray();
         }
 
         private static PropertyModification FindPropertyModification(GameObject root, UndoPropertyModification[] modifications, EditorCurveBinding binding)
@@ -169,14 +322,21 @@
             {
                 return modifications;
             }
-            AnimationClip activeAnimationClip = state.activeAnimationClip;
-            Animator component = activeRootGameObject.GetComponent<Animator>();
             if (!HasAnyRecordableModifications(activeRootGameObject, modifications))
             {
                 return modifications;
             }
-            ProcessRotationModifications(state, ref modifications);
-            List<UndoPropertyModification> list = new List<UndoPropertyModification>();
+            UndoPropertyModification[] first = ProcessRotationModifications(state, ref modifications);
+            UndoPropertyModification[] second = ProcessModifications(state, modifications);
+            return first.Concat<UndoPropertyModification>(second).ToArray<UndoPropertyModification>();
+        }
+
+        public static UndoPropertyModification[] ProcessModifications(IAnimationRecordingState state, UndoPropertyModification[] modifications)
+        {
+            AnimationClip activeAnimationClip = state.activeAnimationClip;
+            GameObject activeRootGameObject = state.activeRootGameObject;
+            Animator component = activeRootGameObject.GetComponent<Animator>();
+            UndoPropertyModification[] modificationArray = FilterModifications(state, ref modifications);
             for (int i = 0; i < modifications.Length; i++)
             {
                 EditorCurveBinding binding = new EditorCurveBinding();
@@ -190,33 +350,36 @@
                     }
                     else
                     {
-                        UnityEditor.AnimationMode.AddPropertyModification(binding, previousValue, modifications[i].keepPrefabOverride);
                         EditorCurveBinding[] bindingArray = RotationCurveInterpolation.RemapAnimationBindingForAddKey(binding, activeAnimationClip);
                         if (bindingArray != null)
                         {
                             for (int j = 0; j < bindingArray.Length; j++)
                             {
-                                AddKey(state, bindingArray[j], type, FindPropertyModification(activeRootGameObject, modifications, bindingArray[j]));
+                                PropertyModification propertyModification = FindPropertyModification(activeRootGameObject, modifications, bindingArray[j]);
+                                if (propertyModification == null)
+                                {
+                                    propertyModification = CreateDummyPropertyModification(activeRootGameObject, previousValue, bindingArray[j]);
+                                }
+                                state.AddPropertyModification(bindingArray[j], propertyModification, modifications[i].keepPrefabOverride);
+                                AddKey(state, bindingArray[j], type, propertyModification);
                             }
                         }
                         else
                         {
+                            state.AddPropertyModification(binding, previousValue, modifications[i].keepPrefabOverride);
                             AddKey(state, binding, type, previousValue);
                         }
                     }
                 }
-                else
-                {
-                    list.Add(modifications[i]);
-                }
             }
-            return list.ToArray();
+            return modificationArray;
         }
 
-        private static void ProcessRotationModifications(IAnimationRecordingState state, ref UndoPropertyModification[] modifications)
+        private static UndoPropertyModification[] ProcessRotationModifications(IAnimationRecordingState state, ref UndoPropertyModification[] modifications)
         {
             Dictionary<object, RotationModification> rotationModifications = new Dictionary<object, RotationModification>();
             CollectRotationModifications(state, ref modifications, ref rotationModifications);
+            UndoPropertyModification[] modificationArray = FilterRotationModifications(state, ref rotationModifications);
             foreach (KeyValuePair<object, RotationModification> pair in rotationModifications)
             {
                 RotationModification modification = pair.Value;
@@ -314,6 +477,7 @@
                     }
                 }
             }
+            return modificationArray;
         }
 
         public static void SaveModifiedCurve(AnimationWindowCurve curve, AnimationClip clip)
@@ -367,6 +531,64 @@
             }
             outObject = null;
             return false;
+        }
+
+        [CompilerGenerated]
+        private sealed class <FilterModifications>c__AnonStorey0
+        {
+            internal AnimationRecording.<FilterModifications>c__AnonStorey2 <>f__ref$2;
+            internal EditorCurveBinding[] additionalBindings;
+
+            internal bool <>m__0(EditorCurveBinding acceptedBinding)
+            {
+                <FilterModifications>c__AnonStorey1 storey = new <FilterModifications>c__AnonStorey1 {
+                    <>f__ref$0 = this,
+                    acceptedBinding = acceptedBinding
+                };
+                return Array.Exists<EditorCurveBinding>(this.additionalBindings, new Predicate<EditorCurveBinding>(storey.<>m__0));
+            }
+
+            internal bool <>m__1(EditorCurveBinding acceptedBinding) => 
+                acceptedBinding.Equals(this.<>f__ref$2.binding);
+
+            private sealed class <FilterModifications>c__AnonStorey1
+            {
+                internal AnimationRecording.<FilterModifications>c__AnonStorey0 <>f__ref$0;
+                internal EditorCurveBinding acceptedBinding;
+
+                internal bool <>m__0(EditorCurveBinding additionalBinding) => 
+                    this.acceptedBinding.Equals(additionalBinding);
+            }
+        }
+
+        [CompilerGenerated]
+        private sealed class <FilterModifications>c__AnonStorey2
+        {
+            internal EditorCurveBinding binding;
+        }
+
+        [CompilerGenerated]
+        private sealed class <FilterRotationModifications>c__AnonStorey3
+        {
+            internal EditorCurveBinding[] additionalBindings;
+
+            internal bool <>m__0(EditorCurveBinding acceptedBinding)
+            {
+                <FilterRotationModifications>c__AnonStorey4 storey = new <FilterRotationModifications>c__AnonStorey4 {
+                    <>f__ref$3 = this,
+                    acceptedBinding = acceptedBinding
+                };
+                return Array.Exists<EditorCurveBinding>(this.additionalBindings, new Predicate<EditorCurveBinding>(storey.<>m__0));
+            }
+
+            private sealed class <FilterRotationModifications>c__AnonStorey4
+            {
+                internal AnimationRecording.<FilterRotationModifications>c__AnonStorey3 <>f__ref$3;
+                internal EditorCurveBinding acceptedBinding;
+
+                internal bool <>m__0(EditorCurveBinding additionalBinding) => 
+                    this.acceptedBinding.Equals(additionalBinding);
+            }
         }
 
         internal class RotationModification

@@ -7,7 +7,7 @@
 
     internal class ColorPicker : EditorWindow
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <colorChanged>k__BackingField;
         private const int kColorBoxHeight = 0xa2;
         private const int kColorBoxSize = 0x20;

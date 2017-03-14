@@ -253,13 +253,13 @@
             }
             additionalBlacklist = additionalBlacklist.Concat<string>(userBlacklistFiles);
             List<string> args = new List<string> {
-                "--api " + PlayerSettings.GetApiCompatibilityLevel(EditorUserBuildSettings.activeBuildTargetGroup).ToString(),
-                "-out \"" + outputFolder + "\"",
-                "-l none",
-                "-c link",
-                "-b true",
-                "-x \"" + GetModuleWhitelist("Core", platformProvider.moduleStrippingInformationFolder) + "\"",
-                "-f \"" + Path.Combine(platformProvider.il2CppFolder, "LinkerDescriptors") + "\""
+                "--api=" + PlayerSettings.GetApiCompatibilityLevel(EditorUserBuildSettings.activeBuildTargetGroup).ToString(),
+                "-out=\"" + outputFolder + "\"",
+                "-l=none",
+                "-c=link",
+                "--link-symbols",
+                "-x=\"" + GetModuleWhitelist("Core", platformProvider.moduleStrippingInformationFolder) + "\"",
+                "-f=\"" + Path.Combine(platformProvider.il2CppFolder, "LinkerDescriptors") + "\""
             };
             if (<>f__am$cache0 == null)
             {

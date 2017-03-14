@@ -127,6 +127,10 @@
             CommandLineFormatter.PrepareFileName(fileName);
 
         protected abstract Program StartCompiler();
+        public void WaitForCompilationToFinish()
+        {
+            this.process.WaitForExit();
+        }
     }
 }
 

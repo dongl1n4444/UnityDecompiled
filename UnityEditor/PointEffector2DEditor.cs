@@ -5,7 +5,7 @@
     using UnityEngine;
     using UnityEngine.Events;
 
-    [CustomEditor(typeof(PointEffector2D), true), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(PointEffector2D), true)]
     internal class PointEffector2DEditor : Effector2DEditor
     {
         private SerializedProperty m_AngularDrag;

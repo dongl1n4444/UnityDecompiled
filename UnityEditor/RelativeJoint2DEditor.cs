@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CustomEditor(typeof(RelativeJoint2D)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(RelativeJoint2D))]
     internal class RelativeJoint2DEditor : Joint2DEditor
     {
         public void OnSceneGUI()

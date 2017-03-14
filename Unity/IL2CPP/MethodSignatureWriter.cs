@@ -18,6 +18,7 @@
 
     public class MethodSignatureWriter
     {
+        private const string MonoTypedHandleForMonoObjectType = "MONO_TYPED_HANDLE_NAME(MonoObject)";
         [Inject]
         public static INamingService Naming;
         [Inject]
@@ -86,15 +87,44 @@
             throw new ArgumentOutOfRangeException("format");
         }
 
+        private static string FormatMonoErrorForICall(ParameterFormat format)
+        {
+            switch (format)
+            {
+                case ParameterFormat.WithTypeAndName:
+                case ParameterFormat.WithTypeAndNameNoThis:
+                case ParameterFormat.WithTypeAndNameThisObject:
+                    return "MonoError* unused";
+
+                case ParameterFormat.WithType:
+                case ParameterFormat.WithTypeNoThis:
+                case ParameterFormat.WithTypeThisObject:
+                    return "MonoError*";
+
+                case ParameterFormat.WithName:
+                case ParameterFormat.WithNameCastThis:
+                case ParameterFormat.WithNameUnboxThis:
+                    return "&unused";
+            }
+            throw new ArgumentOutOfRangeException("format");
+        }
+
         private static string FormatParameterAsVoidPointer(string parameterName) => 
             ("void* " + parameterName);
 
-        private static string FormatParameterName(TypeReference parameterType, string parameterName, ParameterFormat format)
+        private static string FormatParameterName(TypeReference parameterType, string parameterName, ParameterFormat format, bool forMonoCodegenICallHandle = false)
         {
             string str = string.Empty;
             if ((((format == ParameterFormat.WithTypeAndName) || (format == ParameterFormat.WithTypeAndNameNoThis)) || ((format == ParameterFormat.WithType) || (format == ParameterFormat.WithTypeNoThis))) || ((format == ParameterFormat.WithTypeAndNameThisObject) || (format == ParameterFormat.WithTypeThisObject)))
             {
-                str = str + Naming.ForVariable(parameterType);
+                if (forMonoCodegenICallHandle)
+                {
+                    str = str + "MONO_TYPED_HANDLE_NAME(MonoObject)";
+                }
+                else
+                {
+                    str = str + Naming.ForVariable(parameterType);
+                }
             }
             if (((format == ParameterFormat.WithTypeAndName) || (format == ParameterFormat.WithTypeAndNameNoThis)) || (format == ParameterFormat.WithTypeAndNameThisObject))
             {
@@ -104,12 +134,16 @@
             {
                 return str;
             }
+            if (forMonoCodegenICallHandle)
+            {
+                return (str + "&handle");
+            }
             return (str + parameterName);
         }
 
-        public static string FormatParameters(MethodReference method, ParameterFormat format = 0, bool forceNoStaticThis = false, bool includeHiddenMethodInfo = false)
+        public static string FormatParameters(MethodReference method, ParameterFormat format = 0, bool forceNoStaticThis = false, bool includeHiddenMethodInfo = false, bool checkForMonoICallHandleUsage = false)
         {
-            List<string> elements = ParametersFor(method, format, forceNoStaticThis, includeHiddenMethodInfo, false).ToList<string>();
+            List<string> elements = ParametersFor(method, format, forceNoStaticThis, includeHiddenMethodInfo, false, checkForMonoICallHandleUsage).ToList<string>();
             return ((elements.Count != 0) ? elements.AggregateWithComma() : string.Empty);
         }
 
@@ -125,7 +159,7 @@
             return $"il2cpp_hresult_t {str2}({str3} {Naming.ThisParameterName}, {str})";
         }
 
-        private static string FormatThis(ParameterFormat format, TypeReference thisType)
+        private static string FormatThis(ParameterFormat format, TypeReference thisType, bool forMonoCodegenICallHandle = false)
         {
             if (format == ParameterFormat.WithNameCastThis)
             {
@@ -135,11 +169,11 @@
             {
                 return $"({Naming.ForVariable(thisType)})UnBox({Naming.ThisParameterName})";
             }
-            return FormatParameterName(thisType, Naming.ThisParameterName, format);
+            return FormatParameterName(thisType, Naming.ThisParameterName, format, forMonoCodegenICallHandle);
         }
 
         public static string GetICallMethodVariable(MethodDefinition method) => 
-            $"{Naming.ForVariable(method.ReturnType)} (*{Naming.ForMethodNameOnly(method)}_ftn) ({FormatParameters(method, ParameterFormat.WithType, method.IsStatic, false)})";
+            $"{ICallReturnTypeFor(method)} (*{Naming.ForMethodNameOnly(method)}_ftn) ({FormatParameters(method, ParameterFormat.WithType, method.IsStatic, false, true)})";
 
         public static string GetMethodPointer(MethodReference method) => 
             GetMethodPointer(method, ParameterFormat.WithType);
@@ -147,7 +181,7 @@
         public static string GetMethodPointer(MethodReference method, ParameterFormat parameterFormat)
         {
             Unity.IL2CPP.ILPreProcessor.TypeResolver resolver = new Unity.IL2CPP.ILPreProcessor.TypeResolver(method.DeclaringType as GenericInstanceType, method as GenericInstanceMethod);
-            return GetMethodSignature("(*)", Naming.ForVariable(resolver.ResolveReturnType(method)), FormatParameters(method, parameterFormat, false, true), string.Empty, "");
+            return GetMethodSignature("(*)", Naming.ForVariable(resolver.ResolveReturnType(method)), FormatParameters(method, parameterFormat, false, true, false), string.Empty, "");
         }
 
         public static string GetMethodPointerForVTable(MethodReference method)
@@ -161,7 +195,7 @@
             Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver = new Unity.IL2CPP.ILPreProcessor.TypeResolver(method.DeclaringType as GenericInstanceType, method as GenericInstanceMethod);
             RecordIncludes(writer, method, typeResolver);
             string attributes = BuildMethodAttributes(method);
-            return GetMethodSignature(Naming.ForMethodNameOnly(method), Naming.ForVariable(typeResolver.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveReturnTypeIfNeeded(method))), FormatParameters(method, ParameterFormat.WithTypeAndName, false, true), "extern \"C\"", attributes);
+            return GetMethodSignature(Naming.ForMethodNameOnly(method), Naming.ForVariable(typeResolver.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveReturnTypeIfNeeded(method))), FormatParameters(method, ParameterFormat.WithTypeAndName, false, true, false), "extern \"C\"", attributes);
         }
 
         internal static string GetMethodSignature(string name, string returnType, string parameters, string specifiers = "", string attributes = "") => 
@@ -171,7 +205,7 @@
         {
             Unity.IL2CPP.ILPreProcessor.TypeResolver resolver = new Unity.IL2CPP.ILPreProcessor.TypeResolver(method.DeclaringType as GenericInstanceType, method as GenericInstanceMethod);
             string attributes = BuildMethodAttributes(method);
-            return GetMethodSignature(Naming.ForMethodNameOnly(method), Naming.ForVariable(resolver.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveReturnTypeIfNeeded(method))), FormatParameters(method, ParameterFormat.WithTypeAndName, false, true), "extern \"C\"", attributes);
+            return GetMethodSignature(Naming.ForMethodNameOnly(method), Naming.ForVariable(resolver.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveReturnTypeIfNeeded(method))), FormatParameters(method, ParameterFormat.WithTypeAndName, false, true, false), "extern \"C\"", attributes);
         }
 
         public static string GetSharedMethodSignature(CppCodeWriter writer, MethodReference method)
@@ -180,14 +214,23 @@
             TypeReference variableType = typeResolver.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveReturnTypeIfNeeded(method));
             RecordIncludes(writer, method, typeResolver);
             string attributes = BuildMethodAttributes(method);
-            return GetMethodSignature(Naming.ForMethodNameOnly(method) + "_gshared", Naming.ForVariable(variableType), FormatParameters(method, ParameterFormat.WithTypeAndName, false, true), "extern \"C\"", attributes);
+            return GetMethodSignature(Naming.ForMethodNameOnly(method) + "_gshared", Naming.ForVariable(variableType), FormatParameters(method, ParameterFormat.WithTypeAndName, false, true, false), "extern \"C\"", attributes);
         }
 
         public static string GetSharedMethodSignatureRaw(MethodReference method)
         {
             TypeReference variableType = new Unity.IL2CPP.ILPreProcessor.TypeResolver(method.DeclaringType as GenericInstanceType, method as GenericInstanceMethod).Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveReturnTypeIfNeeded(method));
             string attributes = BuildMethodAttributes(method);
-            return GetMethodSignature(Naming.ForMethodNameOnly(method) + "_gshared", Naming.ForVariable(variableType), FormatParameters(method, ParameterFormat.WithTypeAndName, false, true), "extern \"C\"", attributes);
+            return GetMethodSignature(Naming.ForMethodNameOnly(method) + "_gshared", Naming.ForVariable(variableType), FormatParameters(method, ParameterFormat.WithTypeAndName, false, true, false), "extern \"C\"", attributes);
+        }
+
+        private static string ICallReturnTypeFor(MethodDefinition method) => 
+            (!UsesMonoCodegenICallHandle(method) ? Naming.ForVariable(method.ReturnType) : "MONO_TYPED_HANDLE_NAME(MonoObject)");
+
+        private static bool IsMonoRuntimeICallWithHandleArgument(string methodName)
+        {
+            string[] source = new string[] { "get_bundled_machine_config", "internalGetEnvironmentVariable_native", "internalGetGacPath", "internalGetHome", "get_temp_path", "GetAotId", "InternalImageRuntimeVersion", "get_location", "GetGuidInternal", "get_Name", "get_Namespace", "getFullName" };
+            return source.Contains<string>(methodName);
         }
 
         public static bool NeedsHiddenMethodInfo(MethodReference method, MethodCallType callType, bool isConstructor)
@@ -223,18 +266,19 @@
             methodDefinition.Resolve().IsStatic;
 
         [DebuggerHidden]
-        public static IEnumerable<string> ParametersFor(MethodReference methodDefinition, ParameterFormat format = 0, bool forceNoStaticThis = false, bool includeHiddenMethodInfo = false, bool useVoidPointerForThis = false) => 
+        public static IEnumerable<string> ParametersFor(MethodReference methodDefinition, ParameterFormat format = 0, bool forceNoStaticThis = false, bool includeHiddenMethodInfo = false, bool useVoidPointerForThis = false, bool checkForMonoICallHandleUsage = false) => 
             new <ParametersFor>c__Iterator0 { 
                 methodDefinition = methodDefinition,
                 forceNoStaticThis = forceNoStaticThis,
                 format = format,
+                checkForMonoICallHandleUsage = checkForMonoICallHandleUsage,
                 useVoidPointerForThis = useVoidPointerForThis,
                 includeHiddenMethodInfo = includeHiddenMethodInfo,
                 $PC = -2
             };
 
         private static string ParameterStringFor(MethodReference methodDefinition, ParameterFormat format, ParameterDefinition parameterDefinition) => 
-            FormatParameterName(Unity.IL2CPP.ILPreProcessor.TypeResolver.For(methodDefinition.DeclaringType).Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveParameterTypeIfNeeded(methodDefinition, parameterDefinition)), Naming.ForParameterName(parameterDefinition), format);
+            FormatParameterName(Unity.IL2CPP.ILPreProcessor.TypeResolver.For(methodDefinition.DeclaringType).Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveParameterTypeIfNeeded(methodDefinition, parameterDefinition)), Naming.ForParameterName(parameterDefinition), format, false);
 
         internal static void RecordIncludes(CppCodeWriter writer, MethodReference method)
         {
@@ -269,6 +313,9 @@
             }
         }
 
+        public static bool UsesMonoCodegenICallHandle(MethodDefinition method) => 
+            (((CodeGenOptions.MonoRuntime && (method != null)) && method.IsInternalCall) && IsMonoRuntimeICallWithHandleArgument(method.Name));
+
         public static void WriteMethodSignature(CppCodeWriter writer, MethodReference method)
         {
             writer.Write(GetMethodSignature(writer, method));
@@ -283,6 +330,8 @@
             internal int $PC;
             internal ParameterDefinition <parameterDefinition>__2;
             internal TypeReference <thisType>__1;
+            internal bool <usesMonoCodegenICallHandle>__0;
+            internal bool checkForMonoICallHandleUsage;
             internal bool forceNoStaticThis;
             internal ParameterFormat format;
             internal bool includeHiddenMethodInfo;
@@ -321,12 +370,12 @@
                         {
                             break;
                         }
-                        this.$current = $"{MethodSignatureWriter.FormatThis(this.format, this.methodDefinition.Module.TypeSystem.Object)} {Formatter.Comment("static, unused")}";
+                        this.$current = $"{MethodSignatureWriter.FormatThis(this.format, this.methodDefinition.Module.TypeSystem.Object, false)} {Formatter.Comment("static, unused")}";
                         if (!this.$disposing)
                         {
                             this.$PC = 1;
                         }
-                        goto Label_0321;
+                        goto Label_0381;
 
                     case 1:
                         break;
@@ -335,17 +384,21 @@
                     case 3:
                     case 4:
                     case 5:
-                        goto Label_024E;
+                        goto Label_027E;
 
                     case 6:
-                        goto Label_0268;
+                        goto Label_0298;
 
                     case 7:
-                        goto Label_0318;
+                        goto Label_0348;
+
+                    case 8:
+                        goto Label_0378;
 
                     default:
-                        goto Label_031F;
+                        goto Label_037F;
                 }
+                this.<usesMonoCodegenICallHandle>__0 = this.checkForMonoICallHandleUsage && MethodSignatureWriter.UsesMonoCodegenICallHandle(this.methodDefinition.Resolve());
                 if (this.format == ParameterFormat.WithTypeAndNameThisObject)
                 {
                     if (this.useVoidPointerForThis)
@@ -358,13 +411,13 @@
                     }
                     else
                     {
-                        this.$current = MethodSignatureWriter.FormatParameterName(this.methodDefinition.Module.TypeSystem.Object, MethodSignatureWriter.Naming.ThisParameterName, this.format);
+                        this.$current = MethodSignatureWriter.FormatParameterName(this.methodDefinition.Module.TypeSystem.Object, MethodSignatureWriter.Naming.ThisParameterName, this.format, false);
                         if (!this.$disposing)
                         {
                             this.$PC = 3;
                         }
                     }
-                    goto Label_0321;
+                    goto Label_0381;
                 }
                 if (this.format == ParameterFormat.WithTypeThisObject)
                 {
@@ -373,7 +426,7 @@
                     {
                         this.$PC = 4;
                     }
-                    goto Label_0321;
+                    goto Label_0381;
                 }
                 if (((this.format != ParameterFormat.WithNameNoThis) && (this.format != ParameterFormat.WithTypeNoThis)) && ((this.format != ParameterFormat.WithTypeAndNameNoThis) && this.methodDefinition.HasThis))
                 {
@@ -386,17 +439,17 @@
                     {
                         this.<thisType>__1 = this.methodDefinition.Module.TypeSystem.Object;
                     }
-                    this.$current = MethodSignatureWriter.FormatThis(this.format, this.<thisType>__1);
+                    this.$current = MethodSignatureWriter.FormatThis(this.format, this.<thisType>__1, this.<usesMonoCodegenICallHandle>__0);
                     if (!this.$disposing)
                     {
                         this.$PC = 5;
                     }
-                    goto Label_0321;
+                    goto Label_0381;
                 }
-            Label_024E:
+            Label_027E:
                 this.$locvar0 = this.methodDefinition.Parameters.GetEnumerator();
                 num = 0xfffffffd;
-            Label_0268:
+            Label_0298:
                 try
                 {
                     while (this.$locvar0.MoveNext())
@@ -408,7 +461,7 @@
                             this.$PC = 6;
                         }
                         flag = true;
-                        goto Label_0321;
+                        goto Label_0381;
                     }
                 }
                 finally
@@ -425,13 +478,23 @@
                     {
                         this.$PC = 7;
                     }
-                    goto Label_0321;
+                    goto Label_0381;
                 }
-            Label_0318:
+            Label_0348:
+                if (this.<usesMonoCodegenICallHandle>__0)
+                {
+                    this.$current = MethodSignatureWriter.FormatMonoErrorForICall(this.format);
+                    if (!this.$disposing)
+                    {
+                        this.$PC = 8;
+                    }
+                    goto Label_0381;
+                }
+            Label_0378:
                 this.$PC = -1;
-            Label_031F:
+            Label_037F:
                 return false;
-            Label_0321:
+            Label_0381:
                 return true;
             }
 
@@ -452,6 +515,7 @@
                     methodDefinition = this.methodDefinition,
                     forceNoStaticThis = this.forceNoStaticThis,
                     format = this.format,
+                    checkForMonoICallHandleUsage = this.checkForMonoICallHandleUsage,
                     useVoidPointerForThis = this.useVoidPointerForThis,
                     includeHiddenMethodInfo = this.includeHiddenMethodInfo
                 };

@@ -840,8 +840,11 @@
                 {
                     if (eui != null)
                     {
-                        eui.UndoRedoPerformed();
                         eui.CheckVisibilityState();
+                        if (eui.foldout)
+                        {
+                            eui.UndoRedoPerformed();
+                        }
                     }
                 }
             }

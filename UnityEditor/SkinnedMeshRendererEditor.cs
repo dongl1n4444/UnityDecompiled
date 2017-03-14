@@ -6,7 +6,7 @@
     using UnityEditorInternal;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(SkinnedMeshRenderer))]
+    [CustomEditor(typeof(SkinnedMeshRenderer)), CanEditMultipleObjects]
     internal class SkinnedMeshRendererEditor : RendererEditorBase
     {
         private const string kDisplayLightingKey = "SkinnedMeshRendererEditor.Lighting.ShowSettings";

@@ -98,48 +98,61 @@
                     object[] objArray3 = new object[] { destinationVariable };
                     writer.WriteLine("{0}->AddRef();", objArray3);
                 }
+                else if (CodeGenOptions.MonoRuntime)
+                {
+                    object[] objArray4 = new object[] { DefaultMarshalInfoWriter.Naming.ForInteropHResultVariable() };
+                    writer.WriteLine("il2cpp_hresult_t {0} = -1;", objArray4);
+                    writer.WriteStatement(Emit.RaiseManagedException("il2cpp_codegen_get_not_supported_exception(\"COM object marhsaling is not yet supported with the libmonoruntime backend.\")"));
+                }
                 else
                 {
-                    object[] objArray4 = new object[] { DefaultMarshalInfoWriter.Naming.ForInteropHResultVariable(), DefaultMarshalInfoWriter.Naming.ForVariable(DefaultMarshalInfoWriter.TypeProvider.Il2CppComObjectTypeReference), sourceVariable.Load(), DefaultMarshalInfoWriter.Naming.ForIl2CppComObjectIdentityField(), this._interfaceTypeName, destinationVariable };
-                    writer.WriteLine("il2cpp_hresult_t {0} = (({1}){2})->{3}->QueryInterface({4}::IID, reinterpret_cast<void**>(&{5}));", objArray4);
+                    object[] objArray5 = new object[] { DefaultMarshalInfoWriter.Naming.ForInteropHResultVariable(), DefaultMarshalInfoWriter.Naming.ForVariable(DefaultMarshalInfoWriter.TypeProvider.Il2CppComObjectTypeReference), sourceVariable.Load(), DefaultMarshalInfoWriter.Naming.ForIl2CppComObjectIdentityField(), this._interfaceTypeName, destinationVariable };
+                    writer.WriteLine("il2cpp_hresult_t {0} = (({1}){2})->{3}->QueryInterface({4}::IID, reinterpret_cast<void**>(&{5}));", objArray5);
                     writer.WriteStatement(Emit.Call("il2cpp_codegen_com_raise_exception_if_failed", DefaultMarshalInfoWriter.Naming.ForInteropHResultVariable(), (this._marshalType != MarshalType.COM) ? "false" : "true"));
                 }
             }
             writer.WriteLine("else");
             using (new BlockWriter(writer, false))
             {
-                object[] objArray5 = new object[] { destinationVariable, this._interfaceTypeName, sourceVariable.Load() };
-                writer.WriteLine("{0} = il2cpp_codegen_com_get_or_create_ccw<{1}>({2});", objArray5);
+                object[] objArray6 = new object[] { destinationVariable, this._interfaceTypeName, sourceVariable.Load() };
+                writer.WriteLine("{0} = il2cpp_codegen_com_get_or_create_ccw<{1}>({2});", objArray6);
             }
         }
 
         public sealed override void WriteMarshalVariableFromNative(CppCodeWriter writer, string variableName, ManagedMarshalValue destinationVariable, IList<MarshaledParameter> methodParameters, bool returnValue, bool forNativeWrapperOfManagedMethod, IRuntimeMetadataAccess metadataAccess)
         {
-            object[] args = new object[] { variableName, DefaultMarshalInfoWriter.Naming.Null };
-            writer.WriteLine("if ({0} != {1})", args);
-            using (new BlockWriter(writer, false))
-            {
-                TypeReference type = (!base._typeRef.IsInterface() && base._typeRef.Resolve().IsComOrWindowsRuntimeType()) ? base._typeRef : DefaultMarshalInfoWriter.TypeProvider.Il2CppComObjectTypeReference;
-                if (this._isSealed)
-                {
-                    object[] objArray2 = new object[] { this._managedTypeName, variableName, metadataAccess.TypeInfoFor(base._typeRef) };
-                    writer.WriteLine(destinationVariable.Store("il2cpp_codegen_com_get_or_create_rcw_for_sealed_class<{0}>({1}, {2})", objArray2));
-                }
-                else if (this._marshalAsInspectable)
-                {
-                    object[] objArray3 = new object[] { this._managedTypeName, variableName, metadataAccess.TypeInfoFor(type) };
-                    writer.WriteLine(destinationVariable.Store("il2cpp_codegen_com_get_or_create_rcw_from_iinspectable<{0}>({1}, {2})", objArray3));
-                }
-                else
-                {
-                    object[] objArray4 = new object[] { this._managedTypeName, variableName, metadataAccess.TypeInfoFor(type) };
-                    writer.WriteLine(destinationVariable.Store("il2cpp_codegen_com_get_or_create_rcw_from_iunknown<{0}>({1}, {2})", objArray4));
-                }
-            }
-            writer.WriteLine("else");
-            using (new BlockWriter(writer, false))
+            if (CodeGenOptions.MonoRuntime)
             {
                 writer.WriteLine(destinationVariable.Store(DefaultMarshalInfoWriter.Naming.Null));
+            }
+            else
+            {
+                object[] args = new object[] { variableName, DefaultMarshalInfoWriter.Naming.Null };
+                writer.WriteLine("if ({0} != {1})", args);
+                using (new BlockWriter(writer, false))
+                {
+                    TypeReference type = (!base._typeRef.IsInterface() && base._typeRef.Resolve().IsComOrWindowsRuntimeType()) ? base._typeRef : DefaultMarshalInfoWriter.TypeProvider.Il2CppComObjectTypeReference;
+                    if (this._isSealed)
+                    {
+                        object[] objArray2 = new object[] { this._managedTypeName, variableName, metadataAccess.TypeInfoFor(base._typeRef) };
+                        writer.WriteLine(destinationVariable.Store("il2cpp_codegen_com_get_or_create_rcw_for_sealed_class<{0}>({1}, {2})", objArray2));
+                    }
+                    else if (this._marshalAsInspectable)
+                    {
+                        object[] objArray3 = new object[] { this._managedTypeName, variableName, metadataAccess.TypeInfoFor(type) };
+                        writer.WriteLine(destinationVariable.Store("il2cpp_codegen_com_get_or_create_rcw_from_iinspectable<{0}>({1}, {2})", objArray3));
+                    }
+                    else
+                    {
+                        object[] objArray4 = new object[] { this._managedTypeName, variableName, metadataAccess.TypeInfoFor(type) };
+                        writer.WriteLine(destinationVariable.Store("il2cpp_codegen_com_get_or_create_rcw_from_iunknown<{0}>({1}, {2})", objArray4));
+                    }
+                }
+                writer.WriteLine("else");
+                using (new BlockWriter(writer, false))
+                {
+                    writer.WriteLine(destinationVariable.Store(DefaultMarshalInfoWriter.Naming.Null));
+                }
             }
         }
 

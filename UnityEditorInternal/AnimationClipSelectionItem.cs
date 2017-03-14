@@ -20,6 +20,9 @@
         public override bool canChangeAnimationClip =>
             false;
 
+        public override bool canPreview =>
+            false;
+
         public override bool canRecord =>
             false;
 

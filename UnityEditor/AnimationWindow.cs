@@ -12,9 +12,11 @@
     {
         [SerializeField]
         private AnimEditor m_AnimEditor;
+        private GUIContent m_DefaultTitleContent;
         private GUIStyle m_LockButtonStyle;
         [SerializeField]
         private bool m_Locked = false;
+        private GUIContent m_RecordTitleContent;
         private static List<AnimationWindow> s_AnimationWindows = new List<AnimationWindow>();
 
         public bool EditAnimationClip(AnimationClip animationClip)
@@ -118,6 +120,8 @@
             }
             s_AnimationWindows.Add(this);
             base.titleContent = base.GetLocalizedTitleContent();
+            this.m_DefaultTitleContent = base.titleContent;
+            this.m_RecordTitleContent = EditorGUIUtility.TextContentWithIcon(base.titleContent.text, "Animation.Record");
             this.OnSelectionChange();
             Undo.undoRedoPerformed = (Undo.UndoRedoCallback) Delegate.Combine(Undo.undoRedoPerformed, new Undo.UndoRedoCallback(this.UndoRedoPerformed));
         }
@@ -130,6 +134,7 @@
         public void OnGUI()
         {
             Profiler.BeginSample("AnimationWindow.OnGUI");
+            base.titleContent = !this.m_AnimEditor.state.recording ? this.m_DefaultTitleContent : this.m_RecordTitleContent;
             this.m_AnimEditor.OnAnimEditorGUI(this, base.position);
             Profiler.EndSample();
         }

@@ -432,7 +432,7 @@
         /// <summary>
         /// <para>Optimizes the mesh for display.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall), EditorBrowsable(EditorBrowsableState.Never), Obsolete("This method is no longer supported (UnityUpgradable)", true), GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, EditorBrowsable(EditorBrowsableState.Never), Obsolete("This method is no longer supported (UnityUpgradable)", true)]
         public extern void Optimize();
         private void PrepareUserBuffer<T>(List<T> buffer, int capacity)
         {
