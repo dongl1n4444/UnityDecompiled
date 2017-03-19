@@ -9,7 +9,7 @@
         protected EditorTestResult m_EditorTestResult;
         protected Test m_Test;
 
-        protected EditorTestTreeViewItem(Test test, int depth, TreeViewItem parent) : base(CreateId(test, parent), depth, parent, test.TestName.Name)
+        protected EditorTestTreeViewItem(Test test, int depth, TreeViewItem parent) : base(CreateId(test, parent), depth, parent, test.get_TestName().get_Name())
         {
             if (this.displayName.Length > 100)
             {
@@ -23,9 +23,9 @@
         {
             if ((parent is TestGroupTreeViewItem) && (((parent as TestGroupTreeViewItem).m_Test is ParameterizedMethodSuite) || (test is ParameterizedFixtureSuite)))
             {
-                return test.TestName.UniqueName.GetHashCode();
+                return test.get_TestName().get_UniqueName().GetHashCode();
             }
-            return test.TestName.FullName.GetHashCode();
+            return test.get_TestName().get_FullName().GetHashCode();
         }
 
         public virtual bool IsVisible(FilteringOptions options) => 
@@ -46,7 +46,7 @@
             this.m_EditorTestResult;
 
         public TestName testName =>
-            this.m_Test.TestName;
+            this.m_Test.get_TestName();
     }
 }
 

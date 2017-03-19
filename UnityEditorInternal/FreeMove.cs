@@ -100,7 +100,7 @@
                 }
                 case EventType.Layout:
                     Handles.matrix = Matrix4x4.identity;
-                    handleFunction(id, position, rotation, size, EventType.Layout);
+                    handleFunction(id, vector, Camera.current.transform.rotation, size, EventType.Layout);
                     Handles.matrix = matrix;
                     return position;
 

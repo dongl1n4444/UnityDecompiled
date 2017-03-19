@@ -549,7 +549,7 @@
                     if (Event.current.clickCount != 2)
                     {
                         List<int> draggedItemIDs = this.GetNewSelection(item, true, false);
-                        if ((this.dragging != null) && this.dragging.CanStartDrag(item, draggedItemIDs, Event.current.mousePosition))
+                        if (((this.dragging != null) && (draggedItemIDs.Count != 0)) && this.dragging.CanStartDrag(item, draggedItemIDs, Event.current.mousePosition))
                         {
                             this.m_DragSelection = draggedItemIDs;
                             DragAndDropDelay stateObject = (DragAndDropDelay) GUIUtility.GetStateObject(typeof(DragAndDropDelay), itemControlID);

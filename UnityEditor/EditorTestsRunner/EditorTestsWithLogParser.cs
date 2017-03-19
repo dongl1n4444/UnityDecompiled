@@ -8,7 +8,7 @@
     /// <summary>
     /// <para>Base class for editor tests which have the ability to assert log messages.</para>
     /// </summary>
-    [TestFixture]
+    [NUnit.Framework.TestFixture]
     public class EditorTestsWithLogParser
     {
         private Queue<MessageMatcher> expectedLogList;
@@ -43,7 +43,7 @@
             this.ExpectLogLine(matcher);
         }
 
-        [TestFixtureSetUp]
+        [NUnit.Framework.TestFixtureSetUp]
         protected virtual void FixtureSetup()
         {
             this.expectedLogList = new Queue<MessageMatcher>();
@@ -51,7 +51,7 @@
             Application.logMessageReceived += new Application.LogCallback(this.LogMessageReceived);
         }
 
-        [TestFixtureTearDown]
+        [NUnit.Framework.TestFixtureTearDown]
         protected virtual void FixtureTeardown()
         {
             Application.logMessageReceived -= new Application.LogCallback(this.LogMessageReceived);
@@ -62,7 +62,7 @@
             this.logList.Enqueue(condition);
         }
 
-        [TearDown]
+        [NUnit.Framework.TearDown]
         protected virtual void TestCleanup()
         {
             while (this.expectedLogList.Count > 0)
@@ -70,14 +70,14 @@
                 MessageMatcher matcher = this.expectedLogList.Dequeue();
                 if (this.logList.Count == 0)
                 {
-                    Assert.Fail("Expected log message never appeared: " + matcher.pattern);
+                    NUnit.Framework.Assert.Fail("Expected log message never appeared: " + matcher.pattern);
                 }
                 string message = this.logList.Dequeue();
                 matcher.Assert(message);
             }
         }
 
-        [SetUp]
+        [NUnit.Framework.SetUp]
         protected virtual void TestSetup()
         {
             this.expectedLogList.Clear();

@@ -91,14 +91,8 @@
             return this._installRoot.Combine(append).Combine(textArray2);
         }
 
-        public static NPath SmartCompiler(DotNetProfile profile)
-        {
-            if (profile == DotNetProfile.Net45)
-            {
-                return BleedingEdge.Mcs;
-            }
-            return TwoSix._Gmcs;
-        }
+        public static NPath SmartCompiler(DotNetProfile profile) => 
+            BleedingEdge.Mcs;
 
         public static MonoInstall SmartInstall(DotNetProfile profile)
         {
@@ -117,9 +111,6 @@
             }
             return TwoSix.ProfilePath(profile);
         }
-
-        public NPath _Gmcs =>
-            this._MonoExecutable("bin/gmcs");
 
         public NPath Cli =>
             this._MonoExecutable("bin/cli");

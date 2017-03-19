@@ -7,7 +7,6 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using Unity.IL2CPP;
-    using Unity.IL2CPP.Common;
     using Unity.IL2CPP.Marshaling;
 
     public abstract class ArrayMarshalInfoWriter : MarshalableMarshalInfoWriter
@@ -41,20 +40,13 @@
             {
                 this._arraySize = info2.Size;
                 this._sizeParameterIndex = info2.SizeParameterIndex;
-                if (CodeGenOptions.Dotnetprofile == DotNetProfile.Net45)
+                if ((this._arraySize == 0) || ((this._arraySize == -1) && (this._sizeParameterIndex >= 0)))
                 {
-                    if ((this._arraySize == 0) || ((this._arraySize == -1) && (this._sizeParameterIndex >= 0)))
-                    {
-                        this._arraySizeSelection = ArraySizeOptions.UseSizeParameterIndex;
-                    }
-                    else
-                    {
-                        this._arraySizeSelection = ArraySizeOptions.UseArraySize;
-                    }
+                    this._arraySizeSelection = ArraySizeOptions.UseSizeParameterIndex;
                 }
                 else
                 {
-                    this._arraySizeSelection = (this._arraySize != 0) ? ArraySizeOptions.UseArraySize : ArraySizeOptions.UseSizeParameterIndex;
+                    this._arraySizeSelection = ArraySizeOptions.UseArraySize;
                 }
                 this._nativeElementType = info2.ElementType;
                 info = new MarshalInfo(this._nativeElementType);

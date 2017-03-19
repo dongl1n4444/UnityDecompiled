@@ -32,8 +32,8 @@
             {
                 listener = new TestRunnerEventListener(testRunnerEventListener);
             }
-            TestExecutionContext.get_CurrentContext().set_Out(new EventListenerTextWriter(listener, TestOutputType.Out));
-            TestExecutionContext.get_CurrentContext().set_Error(new EventListenerTextWriter(listener, TestOutputType.Error));
+            TestExecutionContext.get_CurrentContext().set_Out(new EventListenerTextWriter(listener, 0));
+            TestExecutionContext.get_CurrentContext().set_Error(new EventListenerTextWriter(listener, 1));
             suite.Run(listener, this.GetFilter(filter));
         }
 
@@ -101,7 +101,7 @@
             {
                 if (testRunnerEventListener != null)
                 {
-                    testRunnerEventListener.RunStarted(this.m_TestSuite.TestName.FullName, this.m_TestSuite.TestCount);
+                    testRunnerEventListener.RunStarted(this.m_TestSuite.get_TestName().get_FullName(), this.m_TestSuite.get_TestCount());
                 }
                 this.ExecuteTestSuite(this.m_TestSuite, testRunnerEventListener, filter);
                 if (testRunnerEventListener != null)
@@ -200,14 +200,14 @@
             public void TestFinished(TestResult result)
             {
                 EditorTestResult testResult = new EditorTestResult {
-                    test = new EditorTestInfo(result.Test),
-                    executed = result.Executed,
-                    resultState = (TestResultState) ((byte) result.ResultState),
-                    message = result.Message,
+                    test = new EditorTestInfo(result.get_Test()),
+                    executed = result.get_Executed(),
+                    resultState = (TestResultState) result.get_ResultState(),
+                    message = result.get_Message(),
                     logs = this.m_TestLog.ToString(),
-                    stackTrace = result.StackTrace,
-                    duration = result.Time,
-                    isIgnored = (result.ResultState == (ResultState.Error | ResultState.Failure)) || (result.Test.RunState == RunState.Ignored)
+                    stackTrace = result.get_StackTrace(),
+                    duration = result.get_Time(),
+                    isIgnored = (result.get_ResultState() == 3) || (result.get_Test().get_RunState() == 4)
                 };
                 if (this.assertFromTheLogMessage != null)
                 {
@@ -215,7 +215,7 @@
                     testResult.message = testResult.message + this.assertFromTheLogMessage;
                     testResult.stackTrace = testResult.stackTrace + this.assertFromTheLogStacktrace;
                 }
-                testResult.SetTestMethod(result.Test as TestMethod);
+                testResult.SetTestMethod(result.get_Test() as TestMethod);
                 this.m_TestRunnerEventListener.TestFinished(testResult);
                 this.m_TestLog = null;
             }
@@ -224,7 +224,7 @@
             {
                 if (this.m_TestLog != null)
                 {
-                    this.m_TestLog.AppendLine(testOutput.Text);
+                    this.m_TestLog.AppendLine(testOutput.get_Text());
                 }
             }
 
@@ -232,7 +232,7 @@
             {
                 this.assertFromTheLogMessage = null;
                 this.m_TestLog = new StringBuilder();
-                this.m_TestRunnerEventListener.TestStarted(testName.FullName);
+                this.m_TestRunnerEventListener.TestStarted(testName.get_FullName());
             }
 
             public void UnhandledException(Exception exception)

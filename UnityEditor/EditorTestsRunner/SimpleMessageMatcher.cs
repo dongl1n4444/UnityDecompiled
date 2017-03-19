@@ -7,7 +7,7 @@
     {
         public override void Assert(string message)
         {
-            NUnit.Framework.Assert.That(message, Is.EqualTo(base.pattern));
+            NUnit.Framework.Assert.That(message, NUnit.Framework.Is.EqualTo(base.pattern));
         }
     }
 }

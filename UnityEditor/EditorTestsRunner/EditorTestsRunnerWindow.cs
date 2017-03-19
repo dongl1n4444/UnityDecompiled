@@ -117,7 +117,7 @@
             s_Instance = this;
             this.m_Settings = new EditorTestsRunnerSettings("UnityTest.EditorTestsRunnerWindow");
             this.m_FilterSettings.UpdateCounters(Enumerable.Empty<ITestResult>());
-            if ((s_TestEngine.testSuite != null) && (s_TestEngine.testSuite.TestCount != 0))
+            if ((s_TestEngine.testSuite != null) && (s_TestEngine.testSuite.get_TestCount() != 0))
             {
                 if (this.m_TestListTree == null)
                 {
@@ -195,7 +195,7 @@
                     {
                         if (<>f__am$cache1 == null)
                         {
-                            <>f__am$cache1 = l => l.test.testMethod.TestName;
+                            <>f__am$cache1 = l => l.test.testMethod.get_TestName();
                         }
                         this.RunTests(Enumerable.Select<EditorTestResult, TestName>(source, <>f__am$cache1).ToArray<TestName>());
                         GUIUtility.ExitGUI();

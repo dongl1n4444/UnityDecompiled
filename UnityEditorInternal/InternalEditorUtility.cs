@@ -934,7 +934,8 @@
                 int num8;
                 if (clickedInstanceID == lastClickedInstanceID)
                 {
-                    return selectedInstanceIDs;
+                    list.AddRange(selectedInstanceIDs);
+                    return list;
                 }
                 if (!GetFirstAndLastSelected(allInstanceIDs, selectedInstanceIDs, out num, out num2))
                 {
