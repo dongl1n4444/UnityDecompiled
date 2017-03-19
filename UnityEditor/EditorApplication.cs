@@ -374,7 +374,7 @@
         /// <summary>
         /// <para>Saves all serializable assets that have not yet been written to disk (eg. Materials).</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("Use AssetDatabase.SaveAssets instead (UnityUpgradable) -> AssetDatabase.SaveAssets()", true)]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use AssetDatabase.SaveAssets instead (UnityUpgradable) -> AssetDatabase.SaveAssets()", true), GeneratedByOldBindingsGenerator]
         public static extern void SaveAssets();
         /// <summary>
         /// <para>Ask the user if they want to save the open scene.</para>

@@ -8,7 +8,7 @@
 
     internal class GenericPresetLibraryInspector<T> where T: ScriptableObject
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private PresetLibraryEditorState.ItemViewMode <itemViewMode>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private float <lineSpacing>k__BackingField;
@@ -20,7 +20,7 @@
         private int <maxShowNumPresets>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private Vector2 <presetSize>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <useOnePixelOverlappedGrid>k__BackingField;
         private readonly Action<string> m_EditButtonClickedCallback;
         private readonly VerticalGrid m_Grid;

@@ -6,7 +6,7 @@
     using System.Runtime.CompilerServices;
     using UnityEngine;
 
-    [CustomEditor(typeof(AudioSource)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(AudioSource))]
     internal class AudioSourceInspector : Editor
     {
         [CompilerGenerated]

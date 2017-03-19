@@ -15,7 +15,7 @@
     /// <summary>
     /// <para>The Unity Material Editor.</para>
     /// </summary>
-    [CustomEditor(typeof(Material)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(Material))]
     public class MaterialEditor : Editor
     {
         [CompilerGenerated]

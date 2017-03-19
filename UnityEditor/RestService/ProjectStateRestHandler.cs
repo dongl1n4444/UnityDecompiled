@@ -236,11 +236,11 @@
 
         public class Island
         {
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            private UnityEditor.Scripting.MonoIsland <MonoIsland>k__BackingField;
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            private string <Name>k__BackingField;
             [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            private UnityEditor.Scripting.MonoIsland <MonoIsland>k__BackingField;
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            private string <Name>k__BackingField;
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private List<string> <References>k__BackingField;
 
             public UnityEditor.Scripting.MonoIsland MonoIsland { get; set; }

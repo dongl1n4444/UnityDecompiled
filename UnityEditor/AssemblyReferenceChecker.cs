@@ -20,7 +20,7 @@
         private DateTime _startTime = DateTime.MinValue;
         private System.Action _updateProgressAction;
         private readonly HashSet<string> _userReferencedMethods = new HashSet<string>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <HasMouseEvent>k__BackingField;
 
         public AssemblyReferenceChecker()

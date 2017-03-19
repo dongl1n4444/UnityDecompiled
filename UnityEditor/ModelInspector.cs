@@ -4,7 +4,7 @@
     using UnityEditorInternal;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(Mesh))]
+    [CustomEditor(typeof(Mesh)), CanEditMultipleObjects]
     internal class ModelInspector : Editor
     {
         private Material m_Material;

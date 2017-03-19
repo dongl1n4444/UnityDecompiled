@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CustomEditor(typeof(Animation)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(Animation))]
     internal class AnimationEditor : Editor
     {
         private int m_PrePreviewAnimationArraySize = -1;

@@ -20,10 +20,10 @@
         private Vector2 m_SelectMousePoint;
         private Vector2 m_SelectStartPoint;
 
-        [field: DebuggerBrowsable(0), CompilerGenerated]
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event System.Action ClearSelection;
 
-        [field: DebuggerBrowsable(0), CompilerGenerated]
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event Action<Rect, ShapeEditor.SelectionType> RectSelect;
 
         public ShapeEditorRectSelectionTool(IGUIUtility gu)

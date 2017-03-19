@@ -9,7 +9,7 @@
 
     public sealed class DevDeviceList
     {
-        [field: CompilerGenerated, DebuggerBrowsable(0)]
+        [field: DebuggerBrowsable(0), CompilerGenerated]
         public static  event OnChangedHandler Changed;
 
         public static bool FindDevice(string deviceId, out DevDevice device)

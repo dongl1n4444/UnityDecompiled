@@ -6,7 +6,7 @@
     using UnityEditorInternal;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(Sprite))]
+    [CustomEditor(typeof(Sprite)), CanEditMultipleObjects]
     internal class SpriteInspector : Editor
     {
         public static Texture2D BuildPreviewTexture(int width, int height, Sprite sprite, Material spriteRendererMaterial, bool isPolygon)

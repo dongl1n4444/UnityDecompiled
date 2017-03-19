@@ -10,7 +10,7 @@
     using UnityEngine;
     using UnityEngine.Events;
 
-    [CustomEditor(typeof(RectTransform)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(RectTransform))]
     internal class RectTransformEditor : Editor
     {
         [CompilerGenerated]

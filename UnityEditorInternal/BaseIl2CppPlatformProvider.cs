@@ -16,7 +16,7 @@
         private static Func<Unity.DataContract.PackageInfo, bool> <>f__am$cache0;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <libraryFolder>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private BuildTarget <target>k__BackingField;
 
         public BaseIl2CppPlatformProvider(BuildTarget target, string libraryFolder)

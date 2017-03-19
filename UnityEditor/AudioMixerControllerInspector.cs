@@ -4,7 +4,7 @@
     using UnityEditor.Audio;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(AudioMixerController))]
+    [CustomEditor(typeof(AudioMixerController)), CanEditMultipleObjects]
     internal class AudioMixerControllerInspector : Editor
     {
         private SerializedProperty m_EnableSuspend;

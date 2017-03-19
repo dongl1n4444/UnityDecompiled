@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(Font))]
+    [CustomEditor(typeof(Font)), CanEditMultipleObjects]
     internal class FontInspector : Editor
     {
         public override void OnInspectorGUI()

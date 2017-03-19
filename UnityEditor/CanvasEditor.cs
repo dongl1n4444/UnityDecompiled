@@ -5,7 +5,7 @@
     using UnityEngine;
     using UnityEngine.Events;
 
-    [CustomEditor(typeof(Canvas)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(Canvas))]
     internal class CanvasEditor : Editor
     {
         private bool m_AllNested = false;

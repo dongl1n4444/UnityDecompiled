@@ -4,7 +4,7 @@
     using UnityEditor.IMGUI.Controls;
     using UnityEngine;
 
-    [CustomEditor(typeof(BoxCollider)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(BoxCollider))]
     internal class BoxColliderEditor : PrimitiveCollider3DEditor
     {
         private readonly BoxBoundsHandle m_BoundsHandle = new BoxBoundsHandle(s_HandleControlIDHint);

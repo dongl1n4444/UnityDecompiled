@@ -63,7 +63,7 @@
         /// </summary>
         /// <param name="text">Text string to display in the search field.</param>
         /// <param name="options">An optional list of layout options that specify extra layout properties. &lt;br&gt;
-        /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
+        /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight,
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         /// <returns>
         /// <para>The text entered in the search field. The original input string is returned instead if the search field text was not changed.</para>
@@ -120,7 +120,7 @@
         /// </summary>
         /// <param name="text">Text string to display in the search field.</param>
         /// <param name="options">An optional list of layout options that specify extra layout properties. &lt;br&gt;
-        /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
+        /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight,
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         /// <returns>
         /// <para>The text entered in the search field. The original input string is returned instead if the search field text was not changed.</para>

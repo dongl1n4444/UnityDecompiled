@@ -1289,7 +1289,7 @@
             /// <para>This value is true when the ::item is currently being renamed.</para>
             /// </summary>
             public bool isRenaming;
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private MultiColumnInfo <columnInfo>k__BackingField;
             internal MultiColumnInfo columnInfo { get; set; }
             /// <summary>
@@ -1532,7 +1532,7 @@
         {
             [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private float <cellMargin>k__BackingField;
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private int <columnIndexForTreeFoldouts>k__BackingField;
             public float borderWidth;
             private const float k_BackgroundWidth = 100000f;

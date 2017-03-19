@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(HingeJoint))]
+    [CustomEditor(typeof(HingeJoint)), CanEditMultipleObjects]
     internal class HingeJointEditor : Editor
     {
         public override void OnInspectorGUI()

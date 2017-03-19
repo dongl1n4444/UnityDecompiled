@@ -9,7 +9,7 @@
     [AttributeUsage(AttributeTargets.Class)]
     internal class FilePathAttribute : Attribute
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <filepath>k__BackingField;
 
         public FilePathAttribute(string relativePath, Location location)

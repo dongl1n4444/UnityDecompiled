@@ -5376,7 +5376,7 @@ This warning only shows up in development builds.";
         /// <param name="position">Rectangle on the screen to use for the field.</param>
         /// <param name="property">The SerializedProperty to use for the control.</param>
         /// <param name="displayedOptions">An array with the displayed options the user can choose from.</param>
-        /// <param name="optionValues">An array with the values for each option. If optionValues a direct	mapping of selectedValue to displayedOptions is assumed.</param>
+        /// <param name="optionValues">An array with the values for each option. If optionValues a direct   mapping of selectedValue to displayedOptions is assumed.</param>
         /// <param name="label">Optional label in front of the field.</param>
         [ExcludeFromDocs]
         public static void IntPopup(Rect position, SerializedProperty property, GUIContent[] displayedOptions, int[] optionValues)
@@ -5440,7 +5440,7 @@ This warning only shows up in development builds.";
         /// <param name="position">Rectangle on the screen to use for the field.</param>
         /// <param name="property">The SerializedProperty to use for the control.</param>
         /// <param name="displayedOptions">An array with the displayed options the user can choose from.</param>
-        /// <param name="optionValues">An array with the values for each option. If optionValues a direct	mapping of selectedValue to displayedOptions is assumed.</param>
+        /// <param name="optionValues">An array with the values for each option. If optionValues a direct   mapping of selectedValue to displayedOptions is assumed.</param>
         /// <param name="label">Optional label in front of the field.</param>
         public static void IntPopup(Rect position, SerializedProperty property, GUIContent[] displayedOptions, int[] optionValues, [DefaultValue("null")] GUIContent label)
         {

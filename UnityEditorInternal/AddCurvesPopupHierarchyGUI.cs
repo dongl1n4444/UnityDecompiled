@@ -9,7 +9,7 @@
 
     internal class AddCurvesPopupHierarchyGUI : TreeViewGUI
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <showPlusButton>k__BackingField;
         public EditorWindow owner;
         private GUIStyle plusButtonBackgroundStyle;

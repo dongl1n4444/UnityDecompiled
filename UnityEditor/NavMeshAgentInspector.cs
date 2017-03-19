@@ -5,7 +5,7 @@
     using UnityEngine;
     using UnityEngine.AI;
 
-    [CustomEditor(typeof(NavMeshAgent)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(NavMeshAgent))]
     internal class NavMeshAgentInspector : Editor
     {
         private SerializedProperty m_Acceleration;

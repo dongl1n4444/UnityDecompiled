@@ -27,7 +27,7 @@
         /// <summary>
         /// <para>Does textures source image have RGB channels.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("DoesSourceTextureHaveColor always returns true in Unity."), GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("DoesSourceTextureHaveColor always returns true in Unity.")]
         public extern bool DoesSourceTextureHaveColor();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern TextureImporterFormat FormatFromTextureParameters(TextureImporterSettings settings, TextureImporterPlatformSettings platformSettings, bool doesTextureContainAlpha, bool sourceWasHDR, BuildTarget destinationPlatform);
@@ -37,7 +37,7 @@
         /// <returns>
         /// <para>True if the importer allows alpha split on the imported texture, False otherwise.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("Use UnityEditor.TextureImporter.GetPlatformTextureSettings() instead.")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use UnityEditor.TextureImporter.GetPlatformTextureSettings() instead."), GeneratedByOldBindingsGenerator]
         public extern bool GetAllowsAlphaSplitting();
         /// <summary>
         /// <para>Returns the TextureImporterFormat that would be automatically chosen for this platform.</para>
@@ -132,7 +132,7 @@
         /// <para>Setter for the flag that allows Alpha splitting on the imported texture when needed (for example ETC1 compression for textures with transparency).</para>
         /// </summary>
         /// <param name="flag"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("Use UnityEditor.TextureImporter.SetPlatformTextureSettings() instead.")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use UnityEditor.TextureImporter.SetPlatformTextureSettings() instead."), GeneratedByOldBindingsGenerator]
         public extern void SetAllowsAlphaSplitting(bool flag);
         /// <summary>
         /// <para>Set specific target platform settings.</para>

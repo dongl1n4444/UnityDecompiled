@@ -23,7 +23,7 @@
         private static UnityEditor.Connect.StateChangedDelegate <>f__mg$cache0;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <projectBrowserSingleMetaSelectionPath>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <projectBrowserSingleSelectionPath>k__BackingField;
         public static string[] clientType = new string[] { "Cloud Server", "Mock Server" };
         public string[] currentProjectBrowserSelection;
@@ -31,7 +31,7 @@
         private static Collab s_Instance = new Collab();
         private static bool s_IsFirstStateChange = true;
 
-        [field: DebuggerBrowsable(0), CompilerGenerated]
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event UnityEditor.Collaboration.StateChangedDelegate StateChanged;
 
         static Collab()
@@ -118,7 +118,7 @@
             return (!string.IsNullOrEmpty(configValue) ? configValue : clientType[0]);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         public extern string GetProjectPath();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern Revision[] GetRevisions();

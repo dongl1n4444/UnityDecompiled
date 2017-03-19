@@ -12,9 +12,9 @@
 
     internal class AssetsTreeViewDataSource : LazyTreeViewDataSource
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private bool <foldersFirst>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private bool <foldersFirst>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <foldersOnly>k__BackingField;
         private const HierarchyType k_HierarchyType = HierarchyType.Assets;
         private readonly int m_RootInstanceID;

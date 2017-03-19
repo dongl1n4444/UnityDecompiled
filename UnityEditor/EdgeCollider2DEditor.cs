@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(EdgeCollider2D))]
+    [CustomEditor(typeof(EdgeCollider2D)), CanEditMultipleObjects]
     internal class EdgeCollider2DEditor : Collider2DEditorBase
     {
         private SerializedProperty m_EdgeRadius;

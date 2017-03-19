@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(AudioReverbFilter))]
+    [CustomEditor(typeof(AudioReverbFilter)), CanEditMultipleObjects]
     internal class AudioReverbFilterEditor : Editor
     {
         private SerializedProperty m_DecayHFRatio;

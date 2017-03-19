@@ -173,7 +173,7 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool BuildAssetBundleInternal(UnityEngine.Object mainAsset, UnityEngine.Object[] assets, string[] assetNames, string pathName, BuildAssetBundleOptions assetBundleOptions, BuildTargetGroup targetPlatformGroup, BuildTarget targetPlatform, out uint crc);
-        [ExcludeFromDocs, Obsolete("BuildAssetBundles signature has changed. Please specify the targetPlatform parameter", true)]
+        [Obsolete("BuildAssetBundles signature has changed. Please specify the targetPlatform parameter", true), ExcludeFromDocs]
         public static AssetBundleManifest BuildAssetBundles(string outputPath)
         {
             BuildAssetBundleOptions none = BuildAssetBundleOptions.None;
@@ -187,7 +187,7 @@
             return null;
         }
 
-        [Obsolete("BuildAssetBundles signature has changed. Please specify the targetPlatform parameter", true), ExcludeFromDocs]
+        [ExcludeFromDocs, Obsolete("BuildAssetBundles signature has changed. Please specify the targetPlatform parameter", true)]
         public static AssetBundleManifest BuildAssetBundles(string outputPath, AssetBundleBuild[] builds)
         {
             BuildAssetBundleOptions none = BuildAssetBundleOptions.None;
@@ -437,13 +437,13 @@ Provided path: '{locationPathName}', expected a path with the extension '.{str2}
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern string GetBuildTargetGroupName(BuildTargetGroup buildTargetGroup);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         internal static extern string GetBuildTargetName(BuildTarget targetPlatform);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern string GetBuildToolsDirectory(BuildTarget target);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool GetCRCForAssetBundle(string targetPath, out uint crc);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         internal static extern string GetEditorTargetName();
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool GetHashForAssetBundle(string targetPath, out Hash128 hash);
@@ -467,7 +467,7 @@ Provided path: '{locationPathName}', expected a path with the extension '.{str2}
         internal static extern bool IsBuildTargetSupported(BuildTargetGroup buildTargetGroup, BuildTarget target);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool IsUnityScriptEvalSupported(BuildTarget target);
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         internal static extern bool LicenseCheck(BuildTarget target);
         private static void LogBuildExceptionAndExit(string buildFunctionName, Exception exception)
         {
@@ -480,7 +480,7 @@ Provided path: '{locationPathName}', expected a path with the extension '.{str2}
         /// <summary>
         /// <para>Lets you manage cross-references and dependencies between different asset bundles and player builds.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("PopAssetDependencies has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details.")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("PopAssetDependencies has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details."), GeneratedByOldBindingsGenerator]
         public static extern void PopAssetDependencies();
         /// <summary>
         /// <para>Lets you manage cross-references and dependencies between different asset bundles and player builds.</para>

@@ -8,7 +8,7 @@
     using System.Runtime.InteropServices;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(AnimationWindowEvent))]
+    [CustomEditor(typeof(AnimationWindowEvent)), CanEditMultipleObjects]
     internal class AnimationWindowEventInspector : Editor
     {
         [CompilerGenerated]

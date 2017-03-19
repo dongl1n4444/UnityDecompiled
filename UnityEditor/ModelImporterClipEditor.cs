@@ -13,7 +13,7 @@
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private int <motionNodeIndex>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private int <pivotNodeIndex>k__BackingField;
         private static bool importMessageFoldout = false;
         private const int kFrameColumnWidth = 0x2d;

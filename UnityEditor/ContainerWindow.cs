@@ -19,7 +19,7 @@
         private int m_ShowMode;
         [SerializeField]
         private string m_Title = "";
-        [SerializeField, FormerlySerializedAs("m_MainView")]
+        [FormerlySerializedAs("m_MainView"), SerializeField]
         private View m_RootView;
         [SerializeField]
         private Vector2 m_MinSize = new Vector2(120f, 80f);

@@ -14,7 +14,7 @@
     {
         [CompilerGenerated]
         private static Predicate<AnimationWindowCurve> <>f__am$cache0;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private AnimationWindowState <state>k__BackingField;
         public const float k_AddCurveButtonNodeHeight = 40f;
         private readonly GUIContent k_AnimatePropertyLabel;

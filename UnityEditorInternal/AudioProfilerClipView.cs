@@ -88,7 +88,7 @@
 
         internal class AudioProfilerClipTreeViewItem : TreeViewItem
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private AudioProfilerClipInfoWrapper <info>k__BackingField;
 
             public AudioProfilerClipTreeViewItem(int id, int depth, TreeViewItem parent, string displayName, AudioProfilerClipInfoWrapper info) : base(id, depth, parent, displayName)

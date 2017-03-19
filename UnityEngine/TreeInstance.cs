@@ -23,7 +23,7 @@
         /// </summary>
         public float heightScale;
         /// <summary>
-        /// <para>Read-only. 
+        /// <para>Read-only.
         /// 
         /// Rotation of the tree on X-Z plane (in radians).</para>
         /// </summary>

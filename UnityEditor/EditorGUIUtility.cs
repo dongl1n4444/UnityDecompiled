@@ -725,7 +725,7 @@
             s_ContextWidth = CalcContextWidth();
         }
 
-        [ExcludeFromDocs, Obsolete("LookLikeControls and LookLikeInspector modes are deprecated. Use EditorGUIUtility.labelWidth and EditorGUIUtility.fieldWidth to control label and field widths.")]
+        [Obsolete("LookLikeControls and LookLikeInspector modes are deprecated. Use EditorGUIUtility.labelWidth and EditorGUIUtility.fieldWidth to control label and field widths."), ExcludeFromDocs]
         public static void LookLikeControls()
         {
             float fieldWidth = 0f;
@@ -738,7 +738,7 @@
         /// </summary>
         /// <param name="labelWidth">Width to use for prefixed labels.</param>
         /// <param name="fieldWidth">Width of text entries.</param>
-        [Obsolete("LookLikeControls and LookLikeInspector modes are deprecated. Use EditorGUIUtility.labelWidth and EditorGUIUtility.fieldWidth to control label and field widths."), ExcludeFromDocs]
+        [ExcludeFromDocs, Obsolete("LookLikeControls and LookLikeInspector modes are deprecated. Use EditorGUIUtility.labelWidth and EditorGUIUtility.fieldWidth to control label and field widths.")]
         public static void LookLikeControls(float labelWidth)
         {
             float fieldWidth = 0f;

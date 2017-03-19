@@ -5,7 +5,7 @@
     using UnityEngine;
     using UnityEngine.Events;
 
-    [CustomEditor(typeof(SurfaceEffector2D), true), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(SurfaceEffector2D), true)]
     internal class SurfaceEffector2DEditor : Effector2DEditor
     {
         private SerializedProperty m_ForceScale;

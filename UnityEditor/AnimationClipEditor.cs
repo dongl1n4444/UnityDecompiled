@@ -11,7 +11,7 @@
     [CustomEditor(typeof(AnimationClip))]
     internal class AnimationClipEditor : Editor
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private int <takeIndex>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private string[] <takeNames>k__BackingField;

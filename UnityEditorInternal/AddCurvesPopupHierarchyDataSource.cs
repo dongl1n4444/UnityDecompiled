@@ -11,7 +11,7 @@
 
     internal class AddCurvesPopupHierarchyDataSource : TreeViewDataSource
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static bool <showEntireHierarchy>k__BackingField;
 
         public AddCurvesPopupHierarchyDataSource(TreeViewController treeView) : base(treeView)

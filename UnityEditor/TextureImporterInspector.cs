@@ -11,7 +11,7 @@
     using UnityEngine;
     using UnityEngine.Events;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(TextureImporter))]
+    [CustomEditor(typeof(TextureImporter)), CanEditMultipleObjects]
     internal class TextureImporterInspector : AssetImporterInspector
     {
         internal static readonly TextureImporterFormat[] kFormatsWithCompressionSettings = new TextureImporterFormat[] { TextureImporterFormat.DXT1Crunched };

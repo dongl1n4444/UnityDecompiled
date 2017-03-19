@@ -122,8 +122,6 @@
         /// </summary>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void ClearLightingDataAsset();
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
-        internal static extern void ClearPrecompSetIsDone();
         /// <summary>
         /// <para>Force the Progressive Path Tracer to stop baking and use the computed results as they are.</para>
         /// </summary>

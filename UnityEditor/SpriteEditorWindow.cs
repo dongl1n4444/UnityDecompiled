@@ -13,7 +13,7 @@
 
     internal class SpriteEditorWindow : SpriteUtilityWindow, ISpriteEditor
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <textureIsDirty>k__BackingField;
         private const float k_MarginForFraming = 0.05f;
         private const float k_ModuleListWidth = 90f;

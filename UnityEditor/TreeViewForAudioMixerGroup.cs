@@ -215,7 +215,7 @@
 
         private class TreeViewDataSourceForMixers : TreeViewDataSource
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private AudioMixerController <ignoreThisController>k__BackingField;
 
             public TreeViewDataSourceForMixers(TreeViewController treeView, AudioMixerController ignoreController) : base(treeView)

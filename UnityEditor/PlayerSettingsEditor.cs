@@ -6,6 +6,7 @@
     using System.IO;
     using System.Linq;
     using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
     using UnityEditor.AnimatedValues;
     using UnityEditor.CrashReporting;
     using UnityEditor.Modules;
@@ -164,18 +165,13 @@
 
         private void ApplyChangedGraphicsAPIList(BuildTarget target, GraphicsDeviceType[] apis, bool firstEntryChanged)
         {
-            bool flag = true;
-            bool flag2 = false;
-            if (firstEntryChanged && WillEditorUseFirstGraphicsAPI(target))
-            {
-                flag = false;
-                if (EditorUtility.DisplayDialog("Changing editor graphics device", "Changing active graphics API requires reloading all graphics objects, it might take a while", "Apply", "Cancel") && EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
-                {
-                    flag = true;
-                    flag2 = true;
-                }
-            }
-            if (flag)
+            ChangeGraphicsApiAction action = this.CheckApplyGraphicsAPIList(target, firstEntryChanged);
+            this.ApplyChangeGraphicsApiAction(target, apis, action);
+        }
+
+        private void ApplyChangeGraphicsApiAction(BuildTarget target, GraphicsDeviceType[] apis, ChangeGraphicsApiAction action)
+        {
+            if (action.changeList)
             {
                 PlayerSettings.SetGraphicsAPIs(target, apis);
             }
@@ -183,7 +179,7 @@
             {
                 s_GraphicsDeviceLists.Remove(target);
             }
-            if (flag2)
+            if (action.reloadGfx)
             {
                 ShaderUtil.RecreateGfxDevice();
                 GUIUtility.ExitGUI();
@@ -344,6 +340,21 @@
 
         private bool CanRemoveGraphicsDeviceElement(ReorderableList list) => 
             (list.list.Count >= 2);
+
+        private ChangeGraphicsApiAction CheckApplyGraphicsAPIList(BuildTarget target, bool firstEntryChanged)
+        {
+            bool doChange = true;
+            bool doReload = false;
+            if (firstEntryChanged && WillEditorUseFirstGraphicsAPI(target))
+            {
+                doChange = false;
+                if (EditorUtility.DisplayDialog("Changing editor graphics device", "Changing active graphics API requires reloading all graphics objects, it might take a while", "Apply", "Cancel") && EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                {
+                    doChange = doReload = true;
+                }
+            }
+            return new ChangeGraphicsApiAction(doChange, doReload);
+        }
 
         private void CommonSettings()
         {
@@ -1193,22 +1204,34 @@
             }
             if ((Application.platform == RuntimePlatform.OSXEditor) && (((targetGroup == BuildTargetGroup.Standalone) || (targetGroup == BuildTargetGroup.iPhone)) || (targetGroup == BuildTargetGroup.tvOS)))
             {
-                bool boolValue = this.m_MetalEditorSupport.boolValue;
-                if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Metal)
+                bool flag4 = this.m_MetalEditorSupport.boolValue || (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Metal);
+                bool flag5 = EditorGUILayout.Toggle(Styles.metalEditorSupport, flag4, new GUILayoutOption[0]);
+                if (flag5 != flag4)
                 {
-                    boolValue = true;
-                }
-                bool flag5 = EditorGUILayout.Toggle(Styles.metalEditorSupport, boolValue, new GUILayoutOption[0]);
-                if (boolValue != flag5)
-                {
-                    this.m_MetalEditorSupport.boolValue = flag5;
-                    base.serializedObject.ApplyModifiedProperties();
                     if (Application.platform == RuntimePlatform.OSXEditor)
                     {
-                        BuildTarget standaloneOSXUniversal = BuildTarget.StandaloneOSXUniversal;
-                        GraphicsDeviceType[] apis = PlayerSettings.GetGraphicsAPIs(standaloneOSXUniversal);
-                        bool firstEntryChanged = ((SystemInfo.graphicsDeviceType == GraphicsDeviceType.Metal) && !this.m_MetalEditorSupport.boolValue) || ((apis[0] != SystemInfo.graphicsDeviceType) && this.m_MetalEditorSupport.boolValue);
-                        this.ApplyChangedGraphicsAPIList(standaloneOSXUniversal, apis, firstEntryChanged);
+                        GraphicsDeviceType[] apis = PlayerSettings.GetGraphicsAPIs(BuildTarget.StandaloneOSXUniversal);
+                        bool firstEntryChanged = apis[0] != SystemInfo.graphicsDeviceType;
+                        if (!flag5 && (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Metal))
+                        {
+                            firstEntryChanged = true;
+                        }
+                        if (flag5 && (apis[0] == GraphicsDeviceType.Metal))
+                        {
+                            firstEntryChanged = true;
+                        }
+                        ChangeGraphicsApiAction action = this.CheckApplyGraphicsAPIList(BuildTarget.StandaloneOSXUniversal, firstEntryChanged);
+                        if (action.changeList)
+                        {
+                            this.m_MetalEditorSupport.boolValue = flag5;
+                            base.serializedObject.ApplyModifiedProperties();
+                        }
+                        this.ApplyChangeGraphicsApiAction(BuildTarget.StandaloneOSXUniversal, apis, action);
+                    }
+                    else
+                    {
+                        this.m_MetalEditorSupport.boolValue = flag5;
+                        base.serializedObject.ApplyModifiedProperties();
                     }
                 }
                 if (this.m_MetalEditorSupport.boolValue)
@@ -1662,6 +1685,18 @@
             internal void <>m__4(Rect rect)
             {
                 GUI.Label(rect, this.displayTitle, EditorStyles.label);
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct ChangeGraphicsApiAction
+        {
+            public bool changeList;
+            public bool reloadGfx;
+            public ChangeGraphicsApiAction(bool doChange, bool doReload)
+            {
+                this.changeList = doChange;
+                this.reloadGfx = doReload;
             }
         }
 

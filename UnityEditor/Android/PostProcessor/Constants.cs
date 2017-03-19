@@ -16,6 +16,7 @@
         public const string HasJarPlugins = "HasJarPlugins";
         public const string InstallPath = "InstallPath";
         public const string ManifestName = "ManifestName";
+        public const string MinSDKVersion = "MinSDKVersion";
         public const string PackageName = "PackageName";
         public const string PlayerPackage = "PlayerPackage";
         public const string ProjectType = "ProjectType";

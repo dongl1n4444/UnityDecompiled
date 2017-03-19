@@ -302,7 +302,7 @@
 
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetIncrementalIl2CppBuild(BuildTargetGroup targetGroup, bool enabled);
-        [ExcludeFromDocs, Obsolete("Use explicit API instead.")]
+        [Obsolete("Use explicit API instead."), ExcludeFromDocs]
         public static void SetPropertyBool(string name, bool value)
         {
             BuildTargetGroup unknown = BuildTargetGroup.Unknown;
@@ -323,7 +323,7 @@
         /// <param name="target">BuildTarget for which the property should apply (use default value BuildTargetGroup.Unknown to apply to all targets).</param>
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("Use explicit API instead.")]
         public static extern void SetPropertyBool(string name, bool value, [UnityEngine.Internal.DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
-        [ExcludeFromDocs, Obsolete("Use explicit API instead.")]
+        [Obsolete("Use explicit API instead."), ExcludeFromDocs]
         public static void SetPropertyInt(string name, int value)
         {
             BuildTargetGroup unknown = BuildTargetGroup.Unknown;
@@ -342,7 +342,7 @@
         /// <param name="name">Name of the property.</param>
         /// <param name="value">Value of the property (int).</param>
         /// <param name="target">BuildTarget for which the property should apply (use default value BuildTargetGroup.Unknown to apply to all targets).</param>
-        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("Use explicit API instead.")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use explicit API instead."), GeneratedByOldBindingsGenerator]
         public static extern void SetPropertyInt(string name, int value, [UnityEngine.Internal.DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
         [ExcludeFromDocs, Obsolete("Use explicit API instead.")]
         public static void SetPropertyString(string name, string value)
@@ -363,7 +363,7 @@
         /// <param name="name">Name of the property.</param>
         /// <param name="value">Value of the property (string).</param>
         /// <param name="target">BuildTarget for which the property should apply (use default value BuildTargetGroup.Unknown to apply to all targets).</param>
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use explicit API instead."), GeneratedByOldBindingsGenerator]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("Use explicit API instead.")]
         public static extern void SetPropertyString(string name, string value, [UnityEngine.Internal.DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetScriptingBackend(BuildTargetGroup targetGroup, ScriptingImplementation backend);
@@ -384,7 +384,7 @@
         [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void SetScriptingDefineSymbolsForGroupInternal(BuildTargetGroup targetGroup, string defines);
         /// <summary>
-        /// <para>Set stack trace logging options. 
+        /// <para>Set stack trace logging options.
         /// Note: calling this function will implicitly call Application.SetStackTraceLogType.</para>
         /// </summary>
         /// <param name="logType"></param>
@@ -2413,7 +2413,7 @@
             public static int deploymentTargetType { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
             /// <summary>
-            /// <para>Minimum Tizen OS version that this application is compatible with. 
+            /// <para>Minimum Tizen OS version that this application is compatible with.
             /// IMPORTANT: For example: if you choose Tizen 2.4 your application will only run on devices with Tizen 2.4 or later.</para>
             /// </summary>
             public static TizenOSVersion minOSVersion { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }

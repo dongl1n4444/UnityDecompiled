@@ -7,7 +7,7 @@
     using UnityEditorInternal;
     using UnityEngine;
 
-    [CustomEditor(typeof(PolygonCollider2D)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(PolygonCollider2D))]
     internal class PolygonCollider2DEditor : Collider2DEditorBase
     {
         [CompilerGenerated]

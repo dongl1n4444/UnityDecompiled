@@ -6,7 +6,7 @@
     using UnityEngine;
     using UnityEngine.Events;
 
-    [CustomEditor(typeof(Animator)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(Animator))]
     internal class AnimatorInspector : Editor
     {
         private SerializedProperty m_ApplyRootMotion;

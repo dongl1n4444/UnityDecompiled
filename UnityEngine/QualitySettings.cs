@@ -86,7 +86,7 @@
         /// <summary>
         /// <para>Async texture upload provides timesliced async texture upload on the render thread with tight control over memory and timeslicing. There are no allocations except for the ones which driver has to do. To read data and upload texture data a ringbuffer whose size can be controlled is re-used.
         /// 
-        /// Use asyncUploadTimeSlice to set the time-slice in milliseconds for asynchronous texture uploads per 
+        /// Use asyncUploadTimeSlice to set the time-slice in milliseconds for asynchronous texture uploads per
         /// frame. Minimum value is 1 and maximum is 33.</para>
         /// </summary>
         public static int asyncUploadTimeSlice { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }

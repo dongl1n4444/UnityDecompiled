@@ -6,7 +6,7 @@
     using UnityEditorInternal;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(AnimatorOverrideController))]
+    [CustomEditor(typeof(AnimatorOverrideController)), CanEditMultipleObjects]
     internal class AnimatorOverrideControllerInspector : Editor
     {
         private ReorderableList m_ClipList;

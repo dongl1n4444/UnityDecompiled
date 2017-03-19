@@ -9,11 +9,11 @@
     internal class VrSupportChecker
     {
         private const int kCardboardMinSdkVersion = 0x13;
-        private const int kCardboardTargetSdkVersion = 0x18;
+        private const int kCardboardTargetSdkVersion = 0x15;
         private const int kDaydreamMinSdkVersion = 0x18;
         private const int kDaydreamTargetSdkVersion = 0x18;
-        private const int kOculusGearVRMinSdk = 0x13;
-        private const int kOculusGearVRTargetSdk = 0x13;
+        private const int kOculusGearVRMinSdkVersion = 0x13;
+        private const int kOculusGearVRTargetSdkVersion = 0x13;
         private bool m_IsCardboardEnabled = false;
         private bool m_IsDaydreamEnabled = false;
         private bool m_IsDaydreamPrimary = false;
@@ -28,54 +28,65 @@
             this.m_IsDaydreamPrimary = this.m_IsDaydreamEnabled && (Array.IndexOf<string>(vREnabledDevicesOnTargetGroup, "daydream") == 0);
         }
 
-        public void CheckAllMinimumSdkVersions()
+        private void CheckAllMinimumSdkVersions(PostProcessorContext context)
         {
             if (this.isCardboardEnabled)
             {
-                this.CheckMinimumSdkVersion("Cardboard", 0x13);
+                this.CheckMinimumSdkVersion(context, "Cardboard", 0x13);
             }
             if (this.isDaydreamOnly)
             {
-                this.CheckMinimumSdkVersion("Daydream", 0x18);
+                this.CheckMinimumSdkVersion(context, "Daydream", 0x18);
             }
             if (this.isOculusEnabled)
             {
-                this.CheckMinimumSdkVersion("Oculus", 0x13);
+                this.CheckMinimumSdkVersion(context, "Oculus", 0x13);
             }
         }
 
-        private void CheckMinimumSdkVersion(string vrName, int minSdkRequired)
+        private void CheckAllTargetSdkVersions(PostProcessorContext context)
         {
-            int minSdkVersion = (int) PlayerSettings.Android.minSdkVersion;
-            if (minSdkVersion < minSdkRequired)
+            if (this.isCardboardEnabled)
+            {
+                this.CheckTargetSdkVersion(context, "Cardboard", 0x15);
+            }
+            if (this.isDaydreamEnabled)
+            {
+                this.CheckTargetSdkVersion(context, "Daydream", 0x18);
+            }
+            if (this.isOculusEnabled)
+            {
+                this.CheckTargetSdkVersion(context, "Oculus", 0x13);
+            }
+        }
+
+        private void CheckMinimumSdkVersion(PostProcessorContext context, string vrName, int minSdkRequired)
+        {
+            int num = context.Get<int>("MinSDKVersion");
+            if (num < minSdkRequired)
             {
                 string message = $"{vrName} Requires a Minimum API Level of {minSdkRequired}.
-You have selected {minSdkVersion}";
+You have selected {num}";
                 CancelPostProcess.AbortBuild("Minimum API Level Not Supported on Requested VR Device", message, null);
             }
         }
 
-        public static void CheckVrMinimumSdkVersions()
+        private void CheckTargetSdkVersion(PostProcessorContext context, string vrName, int targetSdkRequired)
         {
-            new VrSupportChecker().CheckAllMinimumSdkVersions();
+            int num = context.Get<int>("TargetSDKVersion");
+            if (num < targetSdkRequired)
+            {
+                string message = $"{vrName} Requires a Target API Level of {targetSdkRequired}.
+You have selected {num}";
+                CancelPostProcess.AbortBuild("Target API Level Not Supported on Requested VR Device", message, null);
+            }
         }
 
-        public int GetHighestRequiredSdk()
+        public static void CheckVrSdkVersions(PostProcessorContext context)
         {
-            int num = 0;
-            if (this.isOculusEnabled)
-            {
-                num = Math.Max(num, Math.Max(0x13, 0x13));
-            }
-            if (this.isCardboardEnabled)
-            {
-                num = Math.Max(num, Math.Max(0x13, 0x18));
-            }
-            if (this.isDaydreamEnabled)
-            {
-                num = Math.Max(num, Math.Max(0x18, 0x18));
-            }
-            return num;
+            VrSupportChecker checker = new VrSupportChecker();
+            checker.CheckAllMinimumSdkVersions(context);
+            checker.CheckAllTargetSdkVersions(context);
         }
 
         public bool isCardboardEnabled =>
@@ -85,7 +96,7 @@ You have selected {minSdkVersion}";
             this.m_IsDaydreamEnabled;
 
         public bool isDaydreamOnly =>
-            (this.m_IsDaydreamEnabled && !this.m_IsCardboardEnabled);
+            ((this.m_IsDaydreamEnabled && !this.m_IsCardboardEnabled) && !this.m_IsOculusEnabled);
 
         public bool isDaydreamPrimary =>
             this.m_IsDaydreamPrimary;

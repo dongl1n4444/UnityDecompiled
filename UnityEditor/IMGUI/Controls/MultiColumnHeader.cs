@@ -27,7 +27,7 @@
         private bool m_ResizeToFit = false;
         private MultiColumnHeaderState m_State;
 
-        [field: CompilerGenerated, DebuggerBrowsable(0)]
+        [field: DebuggerBrowsable(0), CompilerGenerated]
         public event HeaderCallback sortingChanged;
 
         [field: CompilerGenerated, DebuggerBrowsable(0)]

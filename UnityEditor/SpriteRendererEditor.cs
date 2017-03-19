@@ -6,7 +6,7 @@
     using UnityEngine;
     using UnityEngine.Events;
 
-    [CustomEditor(typeof(SpriteRenderer)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(SpriteRenderer))]
     internal class SpriteRendererEditor : RendererEditorBase
     {
         private SerializedProperty m_AdaptiveModeThreshold;

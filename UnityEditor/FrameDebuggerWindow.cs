@@ -215,7 +215,7 @@
             {
                 GUILayout.Space(10f);
                 GUILayout.Label(Styles.causeOfNewDrawCallLabel, EditorStyles.boldLabel, new GUILayoutOption[0]);
-                GUILayout.Label(styles.batchBreakCauses[curEventData.batchBreakCause], new GUILayoutOption[0]);
+                GUILayout.Label(styles.batchBreakCauses[curEventData.batchBreakCause], EditorStyles.wordWrappedLabel, new GUILayoutOption[0]);
             }
             GUILayout.Space(15f);
             this.m_AdditionalInfo = (ShowAdditionalInfo) GUILayout.Toolbar((int) this.m_AdditionalInfo, this.m_AdditionalInfoGuiContents, new GUILayoutOption[0]);

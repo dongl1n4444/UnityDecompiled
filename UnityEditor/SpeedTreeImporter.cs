@@ -13,7 +13,7 @@
     /// </summary>
     public sealed class SpeedTreeImporter : AssetImporter
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private float <shininess>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private Color <specColor>k__BackingField;

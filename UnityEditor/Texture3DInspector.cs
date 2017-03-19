@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(Texture3D))]
+    [CustomEditor(typeof(Texture3D)), CanEditMultipleObjects]
     internal class Texture3DInspector : TextureInspector
     {
         private Material m_Material;

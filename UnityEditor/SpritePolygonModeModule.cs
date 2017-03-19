@@ -14,7 +14,7 @@
     {
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private int <polygonSides>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <showChangeShapeWindow>k__BackingField;
         private const int k_PolygonChangeShapeWindowHeight = 0x2d;
         private const int k_PolygonChangeShapeWindowMargin = 0x11;

@@ -5,7 +5,7 @@
     using UnityEditorInternal;
     using UnityEngine;
 
-    [CustomEditor(typeof(ProceduralMaterial)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(ProceduralMaterial))]
     internal class ProceduralMaterialInspector : MaterialEditor
     {
         private static string[] kMaxLoadBehaviorStrings = new string[] { "Do nothing", "Do nothing and cache", "Build on level load", "Build on level load and cache", "Bake and keep Substance", "Bake and discard Substance" };

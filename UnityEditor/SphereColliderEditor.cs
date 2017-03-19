@@ -4,7 +4,7 @@
     using UnityEditor.IMGUI.Controls;
     using UnityEngine;
 
-    [CustomEditor(typeof(SphereCollider)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(SphereCollider))]
     internal class SphereColliderEditor : PrimitiveCollider3DEditor
     {
         private readonly SphereBoundsHandle m_BoundsHandle = new SphereBoundsHandle(s_HandleControlIDHint);

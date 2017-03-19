@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(AudioLowPassFilter))]
+    [CustomEditor(typeof(AudioLowPassFilter)), CanEditMultipleObjects]
     internal class AudioLowPassFilterInspector : Editor
     {
         private SerializedProperty m_LowpassLevelCustomCurve;

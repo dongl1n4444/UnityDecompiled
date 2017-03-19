@@ -9,7 +9,7 @@
     using UnityEngine.Events;
     using UnityEngine.Rendering;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(LightProbeProxyVolume))]
+    [CustomEditor(typeof(LightProbeProxyVolume)), CanEditMultipleObjects]
     internal class LightProbeProxyVolumeEditor : Editor
     {
         internal static Color kGizmoLightProbeProxyVolumeColor = new Color(1f, 0.8980392f, 0.5803922f, 0.5019608f);

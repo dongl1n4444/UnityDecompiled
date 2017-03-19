@@ -13,7 +13,7 @@
     {
         private static readonly UnityConnect s_Instance = new UnityConnect();
 
-        [field: DebuggerBrowsable(0), CompilerGenerated]
+        [field: CompilerGenerated, DebuggerBrowsable(0)]
         public event ProjectStateChangedDelegate ProjectStateChanged;
 
         [field: CompilerGenerated, DebuggerBrowsable(0)]
